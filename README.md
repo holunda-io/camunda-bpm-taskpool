@@ -34,5 +34,7 @@ This library serves as a foundation of several follow-up projects and tools:
 
 - Centralized task list: running several Camunda BPM Engines in several applications is standard for larger companies. From the user's perspective, it is not feasible to login to several task lists and check for relevant user tasks. The demand for the centralized task-list arises and can be addressed by `camunda-bpm-taskpool` if the tasks from several process engines are collected and transmitted over the network.
 
+- Data enrichment: all use cases in which the data is not stored in the process result in a cascade of queries executed after the task fetch. The task itself has only the information of the `executionId`, so you have to query the `RuntimeService` for the execution, load some variables from it and query external systems for further values. Another approach is presented in [https://blog.holisticon.de/2017/08/prozess-und-business-daten-hand-in-hand-mit-camunda-und-jpa/](a post from Jan Galinski), but still results in a query on the task fetch. In contrast to that, the usage of the `camunda-bpm-taskpool` with a data enrichment plugin mechanism (allowing to plug-in some data enricher on task creation) would allow for caching the additional business data along with the task information, instead of querying it during task fetch.
+
 
 
