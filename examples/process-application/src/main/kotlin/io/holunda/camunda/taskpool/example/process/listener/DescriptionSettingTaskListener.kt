@@ -1,4 +1,4 @@
-package io.holunda.camunda.taskpool.example.process
+package io.holunda.camunda.taskpool.example.process.listener
 
 import io.holunda.camunda.taskpool.collector.TaskEventCollector.Companion.ORDER
 import io.holunda.camunda.taskpool.example.process.ProcessApproveRequest.Variables.ON_BEHALF

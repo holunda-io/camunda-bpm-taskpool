@@ -24,10 +24,14 @@ camunda:
     id-generator: simple
     database:
       schema-update: false
-      #schema-update: drop-create
       type: h2
   taskpool:
-    enricher:
-      processvariables:
+    engine:
+      eventing:
         enabled: true
+    collector:
+      sender:
+        enabled: true
+      enricher:
+        type: processVariables
 

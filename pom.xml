@@ -14,13 +14,16 @@
     <java.version>1.8</java.version>
     <version.java>${java.version}</version.java>
 
+    <camunda-ee>false</camunda-ee>
     <camunda.version>7.9.0</camunda.version>
+    <camunda.version.ee>7.9.2-ee</camunda.version.ee>
+    
     <camunda-springboot.version>3.0.0</camunda-springboot.version>
     <kotlin.version>1.2.51</kotlin.version>
     <kotlin-logging.version>1.5.4</kotlin-logging.version>
     <mockito.version>2.18.3</mockito.version>
     <springboot.version>2.0.3.RELEASE</springboot.version>
-    <axon.version>3.3.5</axon.version>
+    <axon.version>3.3.3</axon.version>
     <version.camunda.spin>1.5.1</version.camunda.spin>
     <jackson.version>2.9.5</jackson.version>
 
@@ -31,6 +34,7 @@
     <module>camunda-engine-plugin</module>
     <module>core</module>
     <module>collector</module>
+    <module>view</module>
     <module>examples</module>
   </modules>
 
@@ -110,8 +114,19 @@
         <artifactId>axon-spring-boot-starter</artifactId>
         <version>${axon.version}</version>
       </dependency>
+      <dependency>
+        <groupId>org.axonframework</groupId>
+        <artifactId>axon-spring</artifactId>
+        <version>${axon.version}</version>
+      </dependency>
 
       <!-- Testing -->
+      <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>4.12</version>
+        <scope>test</scope>
+      </dependency>
       <dependency>
         <groupId>org.mockito</groupId>
         <artifactId>mockito-core</artifactId>
@@ -128,6 +143,12 @@
         <groupId>org.assertj</groupId>
         <artifactId>assertj-core</artifactId>
         <version>3.9.0</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.axonframework</groupId>
+        <artifactId>axon-test</artifactId>
+        <version>${axon.version}</version>
         <scope>test</scope>
       </dependency>
       <dependency>
@@ -152,12 +173,6 @@
         <groupId>org.camunda.bpm.springboot</groupId>
         <artifactId>camunda-bpm-spring-boot-starter-test</artifactId>
         <version>${camunda-springboot.version}</version>
-        <scope>test</scope>
-      </dependency>
-      <dependency>
-        <groupId>junit</groupId>
-        <artifactId>junit</artifactId>
-        <version>4.12</version>
         <scope>test</scope>
       </dependency>
     </dependencies>
@@ -592,6 +607,53 @@
         </plugins>
       </build>
     </profile>
+    
+    <profile>
+      <id>camunda-ce</id>
+      <activation>
+        <property>
+          <name>!camunda-ee</name>
+        </property>
+      </activation>
+      <dependencyManagement>
+        <dependencies>
+          <dependency>
+            <groupId>org.camunda.bpm.springboot</groupId>
+            <artifactId>camunda-bpm-spring-boot-starter-webapp</artifactId>
+            <version>${camunda-spring-boot.version}</version>
+          </dependency>
+        </dependencies>
+      </dependencyManagement>
+    </profile>
+
+    <profile>
+      <id>camunda-ee</id>
+      <activation>
+        <property>
+          <name>camunda-ee</name>
+        </property>
+      </activation>
+      <properties>
+        <camunda.version>${camunda.version.ee}</camunda.version>
+      </properties>
+      <repositories>
+        <repository>
+          <id>camunda-bpm-ee</id>
+          <name>camunda-bpm-ee</name>
+          <url>https://app.camunda.com/nexus/content/repositories/camunda-bpm-ee</url>
+        </repository>
+      </repositories>
+      <dependencyManagement>
+        <dependencies>
+          <dependency>
+            <groupId>org.camunda.bpm.springboot</groupId>
+            <artifactId>camunda-bpm-spring-boot-starter-webapp-ee</artifactId>
+            <version>${camunda-spring-boot.version}</version>
+          </dependency>
+        </dependencies>
+      </dependencyManagement>
+    </profile>    
+    
   </profiles>  
 
   <scm>

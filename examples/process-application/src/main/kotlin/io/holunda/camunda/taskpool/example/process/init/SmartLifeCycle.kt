@@ -1,4 +1,4 @@
-package io.holunda.camunda.taskpool.example.process
+package io.holunda.camunda.taskpool.example.process.init
 
 import org.springframework.context.SmartLifecycle
 

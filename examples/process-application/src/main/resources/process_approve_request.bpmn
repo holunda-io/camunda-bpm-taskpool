@@ -9,7 +9,7 @@
       <bpmn:incoming>SequenceFlow_0xuzqbe</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="SequenceFlow_0xuzqbe" sourceRef="user_approve_request" targetRef="end" />
-    <bpmn:userTask id="user_approve_request" name="Approve Request" camunda:formKey="approve-request">
+    <bpmn:userTask id="user_approve_request" name="Approve Request" camunda:formKey="approve-request" camunda:assignee="gonzo" camunda:candidateUsers="fozzy, gonzo" camunda:candidateGroups="muppetshow" camunda:dueDate="2019-06-26T09:55:00" camunda:followUpDate="2023-06-26T09:55:00" camunda:priority="23">
       <bpmn:incoming>SequenceFlow_1xw9ijb</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0xuzqbe</bpmn:outgoing>
     </bpmn:userTask>

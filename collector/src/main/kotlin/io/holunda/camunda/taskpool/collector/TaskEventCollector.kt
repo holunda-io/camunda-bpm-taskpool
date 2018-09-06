@@ -2,9 +2,10 @@ package io.holunda.camunda.taskpool.collector
 
 import io.holunda.camunda.taskpool.api.task.*
 import mu.KLogging
+import org.camunda.bpm.engine.FormService
 import org.camunda.bpm.engine.delegate.DelegateTask
-import org.camunda.bpm.engine.delegate.TaskListener
 import org.camunda.bpm.engine.task.IdentityLinkType
+import org.camunda.bpm.engine.task.Task
 import org.springframework.context.event.EventListener
 import org.springframework.core.annotation.Order
 import org.springframework.stereotype.Component
@@ -13,11 +14,13 @@ import org.springframework.stereotype.Component
  * Collects Camunda events (event listener order is {@link TaskEventCollector#ORDER}) and emits Commands
  */
 @Component
-class TaskEventCollector {
+class TaskEventCollector(
+  private val formService: FormService
+) {
 
   companion object : KLogging() {
     // high order to be later than all other listeners and work on changed entity
-    const val ORDER = Integer.MAX_VALUE - 100;
+    const val ORDER = Integer.MAX_VALUE - 100
   }
 
   @Order(ORDER)
@@ -36,12 +39,15 @@ class TaskEventCollector {
       name = task.name,
       owner = task.owner,
       priority = task.priority,
+      formKey = formService.getTaskFormKey(task.processDefinitionId, task.taskDefinitionKey),
       taskDefinitionKey = task.taskDefinitionKey,
+      businessKey = task.execution.businessKey,
       processReference = if (task.processDefinitionId != null) {
         ProcessReference(
           processDefinitionId = task.processDefinitionId,
           processInstanceId = task.processInstanceId,
-          executionId = task.executionId
+          executionId = task.executionId,
+          processDefinitionKey = task.processDefinitionKey()
         )
       } else {
         null
@@ -50,7 +56,8 @@ class TaskEventCollector {
         CaseReference(
           caseDefinitionId = task.caseDefinitionId,
           caseInstanceId = task.caseInstanceId,
-          caseExecutionId = task.caseExecutionId
+          caseExecutionId = task.caseExecutionId,
+          caseDefinitionKey = task.caseDefinitionKey()
         )
       } else {
         null
@@ -74,11 +81,14 @@ class TaskEventCollector {
       owner = task.owner,
       priority = task.priority,
       taskDefinitionKey = task.taskDefinitionKey,
+      formKey = formService.getTaskFormKey(task.processDefinitionId, task.taskDefinitionKey),
+      businessKey = task.execution.businessKey,
       processReference = if (task.processDefinitionId != null) {
         ProcessReference(
           processDefinitionId = task.processDefinitionId,
           processInstanceId = task.processInstanceId,
-          executionId = task.executionId
+          executionId = task.executionId,
+          processDefinitionKey = task.processDefinitionKey()
         )
       } else {
         null
@@ -87,7 +97,8 @@ class TaskEventCollector {
         CaseReference(
           caseDefinitionId = task.caseDefinitionId,
           caseInstanceId = task.caseInstanceId,
-          caseExecutionId = task.caseExecutionId
+          caseExecutionId = task.caseExecutionId,
+          caseDefinitionKey = task.caseDefinitionKey()
         )
       } else {
         null
@@ -111,11 +122,14 @@ class TaskEventCollector {
       owner = task.owner,
       priority = task.priority,
       taskDefinitionKey = task.taskDefinitionKey,
+      formKey = formService.getTaskFormKey(task.processDefinitionId, task.taskDefinitionKey),
+      businessKey = task.execution.businessKey,
       processReference = if (task.processDefinitionId != null) {
         ProcessReference(
           processDefinitionId = task.processDefinitionId,
           processInstanceId = task.processInstanceId,
-          executionId = task.executionId
+          executionId = task.executionId,
+          processDefinitionKey = task.processDefinitionKey()
         )
       } else {
         null
@@ -124,7 +138,8 @@ class TaskEventCollector {
         CaseReference(
           caseDefinitionId = task.caseDefinitionId,
           caseInstanceId = task.caseInstanceId,
-          caseExecutionId = task.caseExecutionId
+          caseExecutionId = task.caseExecutionId,
+          caseDefinitionKey = task.caseDefinitionKey()
         )
       } else {
         null
@@ -149,11 +164,14 @@ class TaskEventCollector {
       owner = task.owner,
       priority = task.priority,
       taskDefinitionKey = task.taskDefinitionKey,
+      formKey = formService.getTaskFormKey(task.processDefinitionId, task.taskDefinitionKey),
+      businessKey = task.execution.businessKey,
       processReference = if (task.processDefinitionId != null) {
         ProcessReference(
           processDefinitionId = task.processDefinitionId,
           processInstanceId = task.processInstanceId,
-          executionId = task.executionId
+          executionId = task.executionId,
+          processDefinitionKey = task.processDefinitionKey()
         )
       } else {
         null
@@ -162,10 +180,24 @@ class TaskEventCollector {
         CaseReference(
           caseDefinitionId = task.caseDefinitionId,
           caseInstanceId = task.caseInstanceId,
-          caseExecutionId = task.caseExecutionId
+          caseExecutionId = task.caseExecutionId,
+          caseDefinitionKey = task.caseDefinitionKey()
         )
       } else {
         null
       }
     )
+}
+
+
+fun DelegateTask.processDefinitionKey(): String = extractKey(this.processDefinitionId)
+fun DelegateTask.caseDefinitionKey(): String = extractKey(this.caseDefinitionId)
+fun Task.processDefinitionKey(): String = extractKey(this.processDefinitionId)
+fun Task.caseDefinitionKey(): String = extractKey(this.caseDefinitionId)
+
+private fun extractKey(processDefinitionId: String?): String {
+  if (processDefinitionId == null) {
+    throw IllegalArgumentException("Process definition id must not be null.")
+  }
+  return processDefinitionId.split(":".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[0]
 }

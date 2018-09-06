@@ -16,4 +16,4 @@ fun main(args: Array<String>) {
 @SpringBootApplication
 @EnableProcessApplication
 @Import(CamundaEventingConfiguration::class, TaskCollectorConfiguration::class, TaskPoolCoreConfiguration::class)
-open class ExampleProcessApplication()
+open class ExampleProcessApplication

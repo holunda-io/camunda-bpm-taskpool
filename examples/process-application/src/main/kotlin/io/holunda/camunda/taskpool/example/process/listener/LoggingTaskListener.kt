@@ -1,4 +1,4 @@
-package io.holunda.camunda.taskpool.example.process
+package io.holunda.camunda.taskpool.example.process.listener
 
 import mu.KLogging
 import org.camunda.bpm.engine.delegate.DelegateTask

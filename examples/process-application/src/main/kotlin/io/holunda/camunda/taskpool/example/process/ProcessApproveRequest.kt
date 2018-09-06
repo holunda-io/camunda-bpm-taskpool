@@ -39,7 +39,7 @@ class ProcessApproveRequestBean(private val runtimeService: RuntimeService) {
   fun countInstances() = getAllInstancesQuery().count()
 
   fun deleteAllInstances() {
-    getAllInstancesQuery().list().forEach{ runtimeService.deleteProcessInstance(it.processInstanceId, "Deleted by the mass deletion REST call")}
+    getAllInstancesQuery().list().forEach { runtimeService.deleteProcessInstance(it.processInstanceId, "Deleted by the mass deletion REST call") }
   }
 
   private fun getAllInstancesQuery() = runtimeService.createProcessInstanceQuery().processDefinitionKey(ProcessApproveRequest.KEY)

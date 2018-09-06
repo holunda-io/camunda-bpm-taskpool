@@ -1,5 +1,6 @@
-package io.holunda.camunda.taskpool.example.process
+package io.holunda.camunda.taskpool.example.process.rest
 
+import io.holunda.camunda.taskpool.example.process.ProcessApproveRequestBean
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.PostMapping
