@@ -1,0 +1,33 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    url: jdbc:h2:tcp://localhost:9092/mem:testdb
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+  jpa:
+    generate-ddl: false
+    hibernate.ddl-auto: validate
+    show-sql: false
+  flyway:
+    enabled: true
+    locations: "classpath:db/migrations"
+
+camunda:
+  bpm:
+    default-serialization-format: application/json
+    authorization:
+      enabled: false
+    history-level: activity
+    id-generator: simple
+    database:
+      schema-update: false
+      #schema-update: drop-create
+      type: h2
+  taskpool:
+    enricher:
+      processvariables:
+        enabled: true
+

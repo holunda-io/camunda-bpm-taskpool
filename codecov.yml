@@ -1,0 +1,4 @@
+fixes:
+  - "io/holunda/camunda-bpm-taskpool/api/::src/main/kotlin/"
+  - "io/holunda/camunda-bpm-taskpool/camunda-engine-plugin/::src/main/kotlin/"
+  - "io/holunda/camunda-bpm-taskpool/core/::src/main/kotlin/"
