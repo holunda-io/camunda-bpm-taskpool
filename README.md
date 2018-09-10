@@ -26,6 +26,11 @@ The goal of this project is to provide such component as a library, to be used i
 - configurable caching of tasks
 - creation of read-optimized projections
 
+### Architecture
+
+![Architectural overview](docs/architecture-collector.png "Architecture Collector")
+
+
 ### Further outlook
 
 This library serves as a foundation of several follow-up projects and tools:
