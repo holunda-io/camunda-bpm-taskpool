@@ -1,6 +1,7 @@
 package io.holunda.camunda.taskpool.core
 
 import io.holunda.camunda.taskpool.api.task.CreateTaskCommand
+import io.holunda.camunda.taskpool.api.task.ProcessReference
 import io.holunda.camunda.taskpool.api.task.TaskCreatedEvent
 import org.axonframework.test.aggregate.AggregateTestFixture
 import org.axonframework.test.aggregate.FixtureConfiguration
@@ -11,28 +12,62 @@ import java.util.*
 
 class TaskAggregateTest {
 
-  private lateinit var fixture: FixtureConfiguration<TaskAggregate>
+  private val fixture: AggregateTestFixture<TaskAggregate> = AggregateTestFixture<TaskAggregate>(TaskAggregate::class.java)
   private lateinit var now: Date
 
   @Before
   fun setUp() {
-    fixture = AggregateTestFixture<TaskAggregate>(TaskAggregate::class.java)
     now = Date()
   }
 
-  @Ignore
   @Test
   fun `should create task`() {
     fixture
       .givenNoPriorActivity()
       .`when`(
-        CreateTaskCommand(id = "4711", name = "Foo", createTime = now, eventName = "create", owner = "kermit", taskDefinitionKey = "foo"))
+        CreateTaskCommand(
+          id = "4711",
+          name = "Foo",
+          createTime = now,
+          eventName = "create",
+          owner = "kermit",
+          taskDefinitionKey = "foo",
+          formKey = "some",
+          businessKey = "business123",
+          enriched = true,
+          processReference = ProcessReference(
+            processDefinitionKey = "process_key",
+            processInstanceId = "0815",
+            executionId = "12345",
+            processDefinitionId = "76543"
+          ),
+          candidateUsers = listOf("kermit", "gonzo"),
+          candidateGroups = listOf("muppets"),
+          assignee = "kermit",
+          priority = 51,
+          description = "Funky task",
+          payload = mutableMapOf<String, Any>( "key" to "value")))
       .expectEvents(
         TaskCreatedEvent(
           id = "4711",
-          name = "Foo", createTime = now, eventName = "create", owner = "kermit", taskDefinitionKey = "foo",
-          caseReference = null, processReference = null, payload = mutableMapOf(), assignee = null, candidateGroups = listOf(),
-          candidateUsers = listOf(), deleteReason = null, dueDate = null, priority = 50, description = null))
-
+          name = "Foo",
+          createTime = now,
+          owner = "kermit",
+          taskDefinitionKey = "foo",
+          formKey = "some",
+          businessKey = "business123",
+          processReference = ProcessReference(
+            processDefinitionKey = "process_key",
+            processInstanceId = "0815",
+            executionId = "12345",
+            processDefinitionId = "76543"
+          ),
+          candidateUsers = listOf("kermit", "gonzo"),
+          candidateGroups = listOf("muppets"),
+          assignee = "kermit",
+          priority = 51,
+          description = "Funky task",
+          payload = mutableMapOf<String, Any>( "key" to "value")
+      ))
   }
 }

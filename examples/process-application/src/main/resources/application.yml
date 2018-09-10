@@ -30,8 +30,13 @@ camunda:
       eventing:
         enabled: true
     collector:
-      sender:
-        enabled: true
       enricher:
         type: processVariables
+      sender:
+        enabled: true
+
+logging.level.io.holunda.camunda.taskpool:
+  sender: WARN
+  core: WARN
+  view.simple: DEBUG
 

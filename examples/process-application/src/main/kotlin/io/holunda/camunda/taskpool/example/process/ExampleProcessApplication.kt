@@ -1,12 +1,12 @@
 package io.holunda.camunda.taskpool.example.process
 
-import io.holunda.camunda.taskpool.TaskCollectorConfiguration
-import io.holunda.camunda.taskpool.core.TaskPoolCoreConfiguration
-import io.holunda.camunda.taskpool.plugin.CamundaEventingConfiguration
+import io.holunda.camunda.taskpool.EnableTaskCollector
+import io.holunda.camunda.taskpool.core.EnableTaskPool
+import io.holunda.camunda.taskpool.plugin.EnableCamundaSpringEventing
+import io.holunda.camunda.taskpool.view.simple.EnableTaskPoolSimpleView
 import org.camunda.bpm.spring.boot.starter.annotation.EnableProcessApplication
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
-import org.springframework.context.annotation.Import
 
 
 fun main(args: Array<String>) {
@@ -15,5 +15,8 @@ fun main(args: Array<String>) {
 
 @SpringBootApplication
 @EnableProcessApplication
-@Import(CamundaEventingConfiguration::class, TaskCollectorConfiguration::class, TaskPoolCoreConfiguration::class)
+@EnableCamundaSpringEventing
+@EnableTaskCollector
+@EnableTaskPool
+@EnableTaskPoolSimpleView
 open class ExampleProcessApplication

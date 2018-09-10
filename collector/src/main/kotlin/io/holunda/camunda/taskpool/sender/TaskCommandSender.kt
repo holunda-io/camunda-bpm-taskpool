@@ -1,10 +1,10 @@
 package io.holunda.camunda.taskpool.sender
 
 import io.holunda.camunda.taskpool.TaskCollectorProperties
-import io.holunda.camunda.taskpool.api.task.AssignTaskCommand
-import io.holunda.camunda.taskpool.api.task.CompleteTaskCommand
-import io.holunda.camunda.taskpool.api.task.CreateTaskCommand
-import io.holunda.camunda.taskpool.api.task.DeleteTaskCommand
+import io.holunda.camunda.taskpool.api.task.*
+import mu.KLogging
+import org.axonframework.commandhandling.CommandCallback
+import org.axonframework.commandhandling.CommandMessage
 import org.axonframework.commandhandling.gateway.CommandGateway
 import org.springframework.context.event.EventListener
 import org.springframework.stereotype.Component
@@ -16,9 +16,52 @@ class TaskCommandSender(
   private val properties: TaskCollectorProperties
 ) {
 
+  companion object : KLogging()
+
+  @EventListener(condition = "#command.enriched")
+  fun enrich(command: AssignTaskCommand) {
+    send(CreateOrAssignTaskCommand(
+      id = command.id,
+      taskDefinitionKey = command.taskDefinitionKey,
+      caseReference = command.caseReference,
+      processReference = command.processReference,
+      name = command.name,
+      description = command.description,
+      priority = command.priority,
+      owner = command.owner,
+      eventName = "assignment",
+      dueDate = command.dueDate,
+      createTime = command.createTime,
+      candidateUsers = command.candidateUsers,
+      candidateGroups = command.candidateGroups,
+      assignee = command.assignee,
+      payload = command.payload,
+      businessKey = command.businessKey,
+      formKey = command.formKey
+    ))
+  }
+
   @EventListener(condition = "#command.enriched")
   fun enrich(command: CreateTaskCommand) {
-    send(command)
+    send(CreateOrAssignTaskCommand(
+      id = command.id,
+      taskDefinitionKey = command.taskDefinitionKey,
+      caseReference = command.caseReference,
+      processReference = command.processReference,
+      name = command.name,
+      description = command.description,
+      priority = command.priority,
+      owner = command.owner,
+      eventName = "create",
+      dueDate = command.dueDate,
+      createTime = command.createTime,
+      candidateUsers = command.candidateUsers,
+      candidateGroups = command.candidateGroups,
+      assignee = command.assignee,
+      payload = command.payload,
+      businessKey = command.businessKey,
+      formKey = command.formKey
+    ))
   }
 
   @EventListener(condition = "#command.enriched")
@@ -31,14 +74,19 @@ class TaskCommandSender(
     send(command)
   }
 
-  @EventListener(condition = "#command.enriched")
-  fun enrich(command: AssignTaskCommand) {
-    send(command)
-  }
-
   private fun send(command: Any) {
     if (properties.sender.enabled) {
-      gateway.send<Any>(command)
+      gateway.send<Any, Any?>(command, object : CommandCallback<Any, Any?> {
+        override fun onSuccess(m: CommandMessage<out Any>, result: Any?) {
+          logger.debug("Successfully submitted command ${command}")
+        }
+
+        override fun onFailure(m: CommandMessage<out Any>?, e: Throwable) {
+          logger.error("Error sending command ${m}", e)
+        }
+      })
+    } else {
+      logger.debug("Would have sent command ${command}")
     }
   }
 

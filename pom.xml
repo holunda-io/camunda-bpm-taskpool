@@ -23,7 +23,7 @@
     <kotlin-logging.version>1.5.4</kotlin-logging.version>
     <mockito.version>2.18.3</mockito.version>
     <springboot.version>2.0.3.RELEASE</springboot.version>
-    <axon.version>3.3.3</axon.version>
+    <axon.version>3.3.5</axon.version>
     <version.camunda.spin>1.5.1</version.camunda.spin>
     <jackson.version>2.9.5</jackson.version>
 
@@ -194,6 +194,12 @@
     <dependency>
       <groupId>org.jetbrains.kotlin</groupId>
       <artifactId>kotlin-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.axonframework</groupId>
+      <artifactId>axon-test</artifactId>
+      <version>${axon.version}</version>
       <scope>test</scope>
     </dependency>
   </dependencies>

@@ -10,9 +10,100 @@ import org.axonframework.spring.stereotype.Aggregate
 
 
 @Aggregate
-class TaskAggregate {
+open class TaskAggregate() {
 
-  companion object : KLogging()
+  companion object : KLogging() {
+
+    internal fun assign(command: AssignTaskCommand) =
+      AggregateLifecycle.apply(
+        TaskAssignedEvent(
+          id = command.id,
+          taskDefinitionKey = command.taskDefinitionKey,
+          caseReference = command.caseReference,
+          processReference = command.processReference,
+          name = command.name,
+          description = command.description,
+          formKey = command.formKey,
+          priority = command.priority,
+          owner = command.owner,
+          dueDate = command.dueDate,
+          createTime = command.createTime,
+          candidateUsers = command.candidateUsers,
+          candidateGroups = command.candidateGroups,
+          assignee = command.assignee,
+          payload = command.payload,
+          businessKey = command.businessKey
+        ))
+
+    internal fun create(command: CreateTaskCommand) =
+      AggregateLifecycle.apply(
+        TaskCreatedEvent(
+          id = command.id,
+          taskDefinitionKey = command.taskDefinitionKey,
+          caseReference = command.caseReference,
+          processReference = command.processReference,
+          name = command.name,
+          description = command.description,
+          formKey = command.formKey,
+          priority = command.priority,
+          owner = command.owner,
+          dueDate = command.dueDate,
+          createTime = command.createTime,
+          candidateUsers = command.candidateUsers,
+          candidateGroups = command.candidateGroups,
+          assignee = command.assignee,
+          payload = command.payload,
+          businessKey = command.businessKey
+        ))
+
+    internal fun complete(command: CompleteTaskCommand) =
+      AggregateLifecycle.apply(
+        TaskCompletedEvent(
+          id = command.id,
+          taskDefinitionKey = command.taskDefinitionKey,
+          caseReference = command.caseReference,
+          processReference = command.processReference,
+          name = command.name,
+          description = command.description,
+          formKey = command.formKey,
+          priority = command.priority,
+          owner = command.owner,
+          dueDate = command.dueDate,
+          createTime = command.createTime,
+          candidateUsers = command.candidateUsers,
+          candidateGroups = command.candidateGroups,
+          assignee = command.assignee,
+          payload = command.payload,
+          businessKey = command.businessKey
+        ))
+
+    internal fun delete(command: DeleteTaskCommand) =
+      AggregateLifecycle.apply(
+        TaskDeletedEvent(
+          id = command.id,
+          taskDefinitionKey = command.taskDefinitionKey,
+          caseReference = command.caseReference,
+          processReference = command.processReference,
+          name = command.name,
+          description = command.description,
+          formKey = command.formKey,
+          priority = command.priority,
+          owner = command.owner,
+          dueDate = command.dueDate,
+          deleteReason = command.deleteReason,
+          createTime = command.createTime,
+          candidateUsers = command.candidateUsers,
+          candidateGroups = command.candidateGroups,
+          assignee = command.assignee,
+          payload = command.payload,
+          businessKey = command.businessKey
+        ))
+  }
+
+  @CommandHandler
+  constructor(command: CreateTaskCommand) : this() {
+    create(command)
+  }
 
   @AggregateIdentifier
   private lateinit var id: String
@@ -20,147 +111,48 @@ class TaskAggregate {
   private var deleted = false
   private var completed = false
 
-  constructor() {
-    // empty constructor for restoring from event store
-  }
-
   @CommandHandler
-  constructor(command: CreateTaskCommand) {
-    create(command)
-  }
-
-  @CommandHandler
-  constructor(command: AssignTaskCommand) {
-    assign(command)
-  }
-
-  @CommandHandler
-  fun handle(command: CreateTaskCommand) {
-    create(command)
-  }
-
-  @CommandHandler
-  fun handle(command: AssignTaskCommand) {
-    assign(command)
-  }
-
-  private fun create(command: CreateTaskCommand) {
-    AggregateLifecycle.apply(TaskCreatedEvent(
-      id = command.id,
-      taskDefinitionKey = command.taskDefinitionKey,
-      caseReference = command.caseReference,
-      processReference = command.processReference,
-      name = command.name,
-      description = command.description,
-      priority = command.priority,
-      owner = command.owner,
-      eventName = command.eventName,
-      dueDate = command.dueDate,
-      deleteReason = command.deleteReason,
-      createTime = command.createTime,
-      candidateUsers = command.candidateUsers,
-      candidateGroups = command.candidateGroups,
-      assignee = command.assignee,
-      payload = command.payload
-    ))
-  }
-
-  private fun assign(command: AssignTaskCommand) {
+  open fun handle(command: AssignTaskCommand) {
     if (this.assignee != command.assignee) {
-      AggregateLifecycle.apply(TaskAssignedEvent(
-        id = command.id,
-        taskDefinitionKey = command.taskDefinitionKey,
-        caseReference = command.caseReference,
-        processReference = command.processReference,
-        name = command.name,
-        description = command.description,
-        priority = command.priority,
-        owner = command.owner,
-        eventName = command.eventName,
-        dueDate = command.dueDate,
-        deleteReason = command.deleteReason,
-        createTime = command.createTime,
-        candidateUsers = command.candidateUsers,
-        candidateGroups = command.candidateGroups,
-        assignee = command.assignee,
-        payload = command.payload
-      ))
+      assign(command)
     }
   }
 
   @CommandHandler
-  fun handle(command: CompleteTaskCommand) {
+  open fun handle(command: CompleteTaskCommand) {
     if (!deleted && !completed) {
-      AggregateLifecycle.apply(TaskCompletedEvent(
-        id = command.id,
-        taskDefinitionKey = command.taskDefinitionKey,
-        caseReference = command.caseReference,
-        processReference = command.processReference,
-        name = command.name,
-        description = command.description,
-        priority = command.priority,
-        owner = command.owner,
-        eventName = command.eventName,
-        dueDate = command.dueDate,
-        deleteReason = command.deleteReason,
-        createTime = command.createTime,
-        candidateUsers = command.candidateUsers,
-        candidateGroups = command.candidateGroups,
-        assignee = command.assignee,
-        payload = command.payload
-      ))
+      complete(command)
     }
   }
 
   @CommandHandler
   fun handle(command: DeleteTaskCommand) {
     if (!deleted && !completed) {
-      AggregateLifecycle.apply(TaskDeletedEvent(
-        id = command.id,
-        taskDefinitionKey = command.taskDefinitionKey,
-        caseReference = command.caseReference,
-        processReference = command.processReference,
-        name = command.name,
-        description = command.description,
-        priority = command.priority,
-        owner = command.owner,
-        eventName = command.eventName,
-        dueDate = command.dueDate,
-        deleteReason = command.deleteReason,
-        createTime = command.createTime,
-        candidateUsers = command.candidateUsers,
-        candidateGroups = command.candidateGroups,
-        assignee = command.assignee,
-        payload = command.payload
-      ))
+      delete(command)
     }
   }
 
-
   @EventSourcingHandler
-  fun on(event: TaskCreatedEvent) {
+  open fun on(event: TaskCreatedEvent) {
     this.id = event.id
-    this.assignee = event.assignee
     logger.debug { "Created task $event" }
   }
 
   @EventSourcingHandler
-  fun on(event: TaskAssignedEvent) {
+  open fun on(event: TaskAssignedEvent) {
     this.assignee = event.assignee
     logger.debug { "Assigned task $this.id to ${this.assignee}" }
   }
 
   @EventSourcingHandler
-  fun on(event: TaskCompletedEvent) {
+  open fun on(event: TaskCompletedEvent) {
     this.completed = true
     logger.debug { "Completed task $this.id by ${this.assignee}" }
   }
 
-
   @EventSourcingHandler
-  fun on(event: TaskDeletedEvent) {
+  open fun on(event: TaskDeletedEvent) {
     this.deleted = true
     logger.debug { "Deleted task $this.id with reason ${event.deleteReason}" }
   }
-
 }
