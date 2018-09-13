@@ -1,6 +1,8 @@
 package io.holunda.camunda.taskpool.api.task
 
 import org.axonframework.commandhandling.TargetAggregateIdentifier
+import org.camunda.bpm.engine.variable.VariableMap
+import org.camunda.bpm.engine.variable.Variables
 import java.util.*
 
 interface TaskCommand : WithPayload, TaskIdentity, CamundaTaskEvent {
@@ -48,7 +50,7 @@ data class AssignTaskCommand(
   override val dueDate: Date?,
   override val formKey: String?,
   override val businessKey: String?,
-  override val payload: MutableMap<String, Any> = mutableMapOf(),
+  override val payload: VariableMap = Variables.createVariables(),
   override var enriched: Boolean = false
 ) : TaskCommand
 
@@ -71,7 +73,7 @@ data class CreateTaskCommand(
   override val dueDate: Date? = null,
   override val formKey: String? = null,
   override val businessKey: String? = null,
-  override val payload: MutableMap<String, Any> = mutableMapOf(),
+  override val payload: VariableMap = Variables.createVariables(),
   override var enriched: Boolean = false
 ) : TaskCommand
 
@@ -93,7 +95,7 @@ data class DeleteTaskCommand(
   override val dueDate: Date?,
   override val formKey: String?,
   override val businessKey: String?,
-  override val payload: MutableMap<String, Any> = mutableMapOf(),
+  override val payload: VariableMap = Variables.createVariables(),
   override var enriched: Boolean = false,
   val deleteReason: String?
 ) : TaskCommand
@@ -116,7 +118,7 @@ data class CompleteTaskCommand(
   override val dueDate: Date?,
   override val formKey: String?,
   override val businessKey: String?,
-  override val payload: MutableMap<String, Any> = mutableMapOf(),
+  override val payload: VariableMap = Variables.createVariables(),
   override var enriched: Boolean = false
 ) : TaskCommand
 
@@ -138,7 +140,7 @@ data class CreateOrAssignTaskCommand(
   override val dueDate: Date?,
   override val formKey: String?,
   override val businessKey: String?,
-  override val payload: MutableMap<String, Any> = mutableMapOf(),
+  override val payload: VariableMap = Variables.createVariables(),
   override var enriched: Boolean = false
 ) : TaskCommand
 
@@ -161,6 +163,6 @@ data class ChangeTaskAttributesCommand(
   override val dueDate: Date?,
   override val formKey: String?,
   override val businessKey: String?,
-  override val payload: MutableMap<String, Any> = mutableMapOf(),
+  override val payload: VariableMap = Variables.createVariables(),
   override var enriched: Boolean = false
 ) : TaskCommand

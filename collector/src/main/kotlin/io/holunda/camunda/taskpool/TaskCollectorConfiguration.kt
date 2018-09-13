@@ -24,7 +24,7 @@ open class TaskCollectorConfiguration(
   @ConditionalOnExpression("'\${camunda.taskpool.collector.enricher.type}' != 'custom'")
   open fun createEnricher(): CreateCommandEnricher? =
     when (properties.enricher.type) {
-      TaskCollectorEnricherType.processVariables.name -> ProcessVariableCreateCommandEnricher(runtimeService)
+      TaskCollectorEnricherType.processVariables.name -> ProcessVariablesCreateCommandEnricher(runtimeService)
       TaskCollectorEnricherType.no.name -> EmptyCreateCommandEnricher()
       else -> null
     }
@@ -33,7 +33,7 @@ open class TaskCollectorConfiguration(
   @ConditionalOnExpression("'\${camunda.taskpool.collector.enricher.type}' != 'custom'")
   open fun assignEnricher(): AssignCommandEnricher? =
     when (properties.enricher.type) {
-      TaskCollectorEnricherType.processVariables.name -> ProcessVariableAssignCommandEnricher(runtimeService)
+      TaskCollectorEnricherType.processVariables.name -> ProcessVariablesAssignCommandEnricher(runtimeService)
       TaskCollectorEnricherType.no.name -> EmptyAssignCommandEnricher()
       else -> null
     }
@@ -42,7 +42,7 @@ open class TaskCollectorConfiguration(
   @ConditionalOnExpression("'\${camunda.taskpool.collector.enricher.type}' != 'custom'")
   open fun deleteEnricher(): DeleteCommandEnricher? =
     when (properties.enricher.type) {
-      TaskCollectorEnricherType.processVariables.name -> ProcessVariableDeleteCommandEnricher(runtimeService)
+      TaskCollectorEnricherType.processVariables.name -> ProcessVariablesDeleteCommandEnricher(runtimeService)
       TaskCollectorEnricherType.no.name -> EmptyDeleteCommandEnricher()
       else -> null
     }
@@ -51,7 +51,7 @@ open class TaskCollectorConfiguration(
   @ConditionalOnExpression("'\${camunda.taskpool.collector.enricher.type}' != 'custom'")
   open fun completeEnricher(): CompleteCommandEnricher? =
     when (properties.enricher.type) {
-      TaskCollectorEnricherType.processVariables.name -> ProcessVariableCompleteCommandEnricher(runtimeService)
+      TaskCollectorEnricherType.processVariables.name -> ProcessVariablesCompleteCommandEnricher(runtimeService)
       TaskCollectorEnricherType.no.name -> EmptyCompleteCommandEnricher()
       else -> null
     }

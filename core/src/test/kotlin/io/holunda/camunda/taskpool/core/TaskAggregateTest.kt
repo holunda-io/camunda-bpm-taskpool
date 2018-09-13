@@ -5,9 +5,14 @@ import io.holunda.camunda.taskpool.api.task.ProcessReference
 import io.holunda.camunda.taskpool.api.task.TaskCreatedEvent
 import org.axonframework.test.aggregate.AggregateTestFixture
 import org.axonframework.test.aggregate.FixtureConfiguration
+import org.camunda.bpm.engine.variable.Variables
+import org.camunda.bpm.engine.variable.Variables.stringValue
+import org.camunda.bpm.engine.variable.value.StringValue
+import org.camunda.bpm.engine.variable.value.TypedValue
 import org.junit.Before
 import org.junit.Ignore
 import org.junit.Test
+import org.springframework.beans.factory.config.TypedStringValue
 import java.util.*
 
 class TaskAggregateTest {
@@ -46,7 +51,8 @@ class TaskAggregateTest {
           assignee = "kermit",
           priority = 51,
           description = "Funky task",
-          payload = mutableMapOf<String, Any>( "key" to "value")))
+          payload = Variables.createVariables().putValueTyped("key", stringValue("value"))
+        ))
       .expectEvents(
         TaskCreatedEvent(
           id = "4711",
@@ -67,7 +73,7 @@ class TaskAggregateTest {
           assignee = "kermit",
           priority = 51,
           description = "Funky task",
-          payload = mutableMapOf<String, Any>( "key" to "value")
-      ))
+          payload = Variables.createVariables().putValueTyped("key", stringValue("value"))
+        ))
   }
 }

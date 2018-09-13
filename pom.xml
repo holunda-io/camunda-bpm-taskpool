@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
 
@@ -17,7 +19,8 @@
     <camunda-ee>false</camunda-ee>
     <camunda.version>7.9.0</camunda.version>
     <camunda.version.ee>7.9.2-ee</camunda.version.ee>
-    
+    <camunda-commons.version>1.5.1</camunda-commons.version>
+
     <camunda-springboot.version>3.0.0</camunda-springboot.version>
     <kotlin.version>1.2.51</kotlin.version>
     <kotlin-logging.version>1.5.4</kotlin-logging.version>
@@ -57,6 +60,15 @@
         <type>pom</type>
       </dependency>
       <dependency>
+        <groupId>org.camunda.commons</groupId>
+        <artifactId>camunda-commons-bom</artifactId>
+        <version>${camunda-commons.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+
+
+      <dependency>
         <groupId>org.codehaus.groovy</groupId>
         <artifactId>groovy-all</artifactId>
         <version>2.4.5</version>
@@ -75,7 +87,7 @@
       </dependency>
 
       <dependency>
-      <!-- Import dependency management from SpringBoot -->
+        <!-- Import dependency management from SpringBoot -->
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-dependencies</artifactId>
         <version>${springboot.version}</version>
@@ -600,7 +612,8 @@
                 </goals>
                 <configuration>
                   <dialect>org.hibernate.dialect.H2Dialect</dialect>
-                  <physicalNamingStrategy>org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
+                  <physicalNamingStrategy>
+                    org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
                   </physicalNamingStrategy>
                   <execute>false</execute>
                   <show>true</show>
@@ -613,7 +626,7 @@
         </plugins>
       </build>
     </profile>
-    
+
     <profile>
       <id>camunda-ce</id>
       <activation>
@@ -658,14 +671,15 @@
           </dependency>
         </dependencies>
       </dependencyManagement>
-    </profile>    
-    
-  </profiles>  
+    </profile>
+
+  </profiles>
 
   <scm>
     <connection>scm:git:git@github.com:holunda-io/camunda-bpm-taskpool.git</connection>
     <url>scm:git:git@github.com:holunda-io/camunda-bpm-taskpool.git</url>
-    <developerConnection>scm:git:git@github.com:holunda-io/camunda-bpm-taskpool.git</developerConnection>
+    <developerConnection>scm:git:git@github.com:holunda-io/camunda-bpm-taskpool.git
+    </developerConnection>
     <tag>HEAD</tag>
   </scm>
 </project>

@@ -5,20 +5,24 @@ import io.holunda.camunda.taskpool.api.task.CompleteTaskCommand
 import io.holunda.camunda.taskpool.api.task.CreateTaskCommand
 import io.holunda.camunda.taskpool.api.task.DeleteTaskCommand
 
-
-interface CreateCommandEnricher {
+/*
+interface TaskCommandEnricher<T : TaskCommand> {
+  fun enrich(command: T): T
+}
+*/
+interface CreateCommandEnricher { //: TaskCommandEnricher<CreateTaskCommand> {
   fun enrich(command: CreateTaskCommand): CreateTaskCommand
 }
 
-interface CompleteCommandEnricher {
+interface CompleteCommandEnricher { //: TaskCommandEnricher<CompleteTaskCommand> {
   fun enrich(command: CompleteTaskCommand): CompleteTaskCommand
 }
 
-interface AssignCommandEnricher {
+interface AssignCommandEnricher { //: TaskCommandEnricher<AssignTaskCommand> {
   fun enrich(command: AssignTaskCommand): AssignTaskCommand
 }
 
-interface DeleteCommandEnricher {
+interface DeleteCommandEnricher { // : TaskCommandEnricher<DeleteTaskCommand> {
   fun enrich(command: DeleteTaskCommand): DeleteTaskCommand
 }
 

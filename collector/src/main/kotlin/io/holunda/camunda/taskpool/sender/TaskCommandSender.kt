@@ -19,7 +19,7 @@ class TaskCommandSender(
   companion object : KLogging()
 
   @EventListener(condition = "#command.enriched")
-  fun enrich(command: AssignTaskCommand) {
+  fun sendTaskCommand(command: AssignTaskCommand) {
     send(CreateOrAssignTaskCommand(
       id = command.id,
       taskDefinitionKey = command.taskDefinitionKey,
@@ -42,7 +42,7 @@ class TaskCommandSender(
   }
 
   @EventListener(condition = "#command.enriched")
-  fun enrich(command: CreateTaskCommand) {
+  fun sendTaskCommand(command: CreateTaskCommand) {
     send(CreateOrAssignTaskCommand(
       id = command.id,
       taskDefinitionKey = command.taskDefinitionKey,
@@ -65,12 +65,12 @@ class TaskCommandSender(
   }
 
   @EventListener(condition = "#command.enriched")
-  fun enrich(command: CompleteTaskCommand) {
+  fun sendTaskCommand(command: CompleteTaskCommand) {
     send(command)
   }
 
   @EventListener(condition = "#command.enriched")
-  fun enrich(command: DeleteTaskCommand) {
+  fun sendTaskCommand(command: DeleteTaskCommand) {
     send(command)
   }
 
@@ -78,15 +78,15 @@ class TaskCommandSender(
     if (properties.sender.enabled) {
       gateway.send<Any, Any?>(command, object : CommandCallback<Any, Any?> {
         override fun onSuccess(m: CommandMessage<out Any>, result: Any?) {
-          logger.debug("Successfully submitted command ${command}")
+          logger.debug("Successfully submitted command $command")
         }
 
-        override fun onFailure(m: CommandMessage<out Any>?, e: Throwable) {
-          logger.error("Error sending command ${m}", e)
+        override fun onFailure(message: CommandMessage<out Any>?, e: Throwable) {
+          logger.error("Error sending command $message", e)
         }
       })
     } else {
-      logger.debug("Would have sent command ${command}")
+      logger.debug("Would have sent command $command")
     }
   }
 

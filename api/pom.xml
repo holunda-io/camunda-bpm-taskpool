@@ -16,5 +16,9 @@
       <groupId>org.axonframework</groupId>
       <artifactId>axon-core</artifactId>
     </dependency>
+    <dependency>
+      <groupId>org.camunda.commons</groupId>
+      <artifactId>camunda-commons-typed-values</artifactId>
+    </dependency>
   </dependencies>
 </project>

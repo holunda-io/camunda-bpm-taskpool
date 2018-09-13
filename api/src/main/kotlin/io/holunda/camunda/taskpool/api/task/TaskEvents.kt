@@ -1,5 +1,7 @@
 package io.holunda.camunda.taskpool.api.task
 
+import org.camunda.bpm.engine.variable.VariableMap
+import org.camunda.bpm.engine.variable.Variables
 import java.util.*
 
 data class TaskCreatedEvent(
@@ -7,7 +9,7 @@ data class TaskCreatedEvent(
   override val processReference: ProcessReference? = null,
   override val caseReference: CaseReference? = null,
   override val taskDefinitionKey: String,
-  override val payload: MutableMap<String, Any> = mutableMapOf(),
+  override val payload: VariableMap = Variables.createVariables(),
   override val businessKey: String?,
   override var enriched: Boolean = true,
   val name: String? = null,
@@ -27,13 +29,13 @@ data class TaskAssignedEvent(
   override val processReference: ProcessReference? = null,
   override val caseReference: CaseReference? = null,
   override val taskDefinitionKey: String,
-  override val payload: MutableMap<String, Any> = mutableMapOf(),
+  override val payload: VariableMap = Variables.createVariables(),
   override val businessKey: String?,
   override var enriched: Boolean = true,
   val name: String? = null,
   val description: String? = null,
   val formKey: String? = null,
-  val priority: Int? ,
+  val priority: Int?,
   val createTime: Date? = null,
   val candidateUsers: List<String> = listOf(),
   val candidateGroups: List<String> = listOf(),
@@ -47,7 +49,7 @@ data class TaskCompletedEvent(
   override val processReference: ProcessReference? = null,
   override val caseReference: CaseReference? = null,
   override val taskDefinitionKey: String,
-  override val payload: MutableMap<String, Any> = mutableMapOf(),
+  override val payload: VariableMap = Variables.createVariables(),
   override val businessKey: String?,
   override var enriched: Boolean = true,
   val name: String? = null,
@@ -67,7 +69,7 @@ data class TaskDeletedEvent(
   override val processReference: ProcessReference? = null,
   override val caseReference: CaseReference? = null,
   override val taskDefinitionKey: String,
-  override val payload: MutableMap<String, Any> = mutableMapOf(),
+  override val payload: VariableMap = Variables.createVariables(),
   override val businessKey: String?,
   override var enriched: Boolean = true,
   val name: String? = null,
