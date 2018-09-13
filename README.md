@@ -1,5 +1,5 @@
 # Camunda BPM Taskpool
-A component for pooling Camunda BPM user tasks for performance queries.
+A component for pooling Camunda BPM user tasks with business data for performance queries.
 
 ## Motivation
 
