@@ -1,4 +1,6 @@
 # Camunda BPM Taskpool
+[![Build Status](https://travis-ci.org/holunda-io/camunda-bpm-taskpool.svg?branch=master)](https://travis-ci.org/holunda-io/camunda-bpm-taskpool) 
+
 A component for pooling Camunda BPM user tasks with business data for performance queries.
 
 ## Motivation
