@@ -1,4 +1,4 @@
-package io.holunda.camunda.taskpool.example.process.listener
+package io.holunda.camunda.taskpool.example.process.process
 
 import mu.KLogging
 import org.camunda.bpm.engine.delegate.DelegateTask
@@ -14,4 +14,5 @@ open class LoggingTaskListener {
   open fun logTaskCreation(task: DelegateTask) {
     logger.debug { "Created task ${task.id} of type ${task.taskDefinitionKey}" }
   }
+
 }

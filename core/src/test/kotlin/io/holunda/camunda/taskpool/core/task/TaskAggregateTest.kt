@@ -1,9 +1,8 @@
-package io.holunda.camunda.taskpool.core
+package io.holunda.camunda.taskpool.core.task
 
 import io.holunda.camunda.taskpool.api.business.addCorrelation
 import io.holunda.camunda.taskpool.api.business.newCorrelations
 import io.holunda.camunda.taskpool.api.task.*
-import io.holunda.camunda.taskpool.core.task.TaskAggregate
 import org.axonframework.test.aggregate.AggregateTestFixture
 import org.camunda.bpm.engine.variable.Variables
 import org.camunda.bpm.engine.variable.Variables.stringValue

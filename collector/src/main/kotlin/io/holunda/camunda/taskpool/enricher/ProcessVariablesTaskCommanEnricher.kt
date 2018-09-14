@@ -6,28 +6,42 @@ import org.camunda.bpm.engine.variable.VariableMap
 import org.camunda.bpm.engine.variable.Variables
 import org.springframework.context.event.EventListener
 
-class ProcessVariablesCreateCommandEnricher(runtimeService: RuntimeService) : CreateCommandEnricher, ProcessVariablesTaskCommandEnricher(runtimeService) {
+class ProcessVariablesCreateCommandEnricher(runtimeService: RuntimeService, filter: ProcessVariablesFilter)
+  : CreateCommandEnricher, ProcessVariablesTaskCommandEnricher(runtimeService, filter) {
   @EventListener(condition = "#command.enriched == false")
   override fun enrich(command: CreateTaskCommand): CreateTaskCommand = super.enrich(command)
 }
 
-class ProcessVariablesCompleteCommandEnricher(runtimeService: RuntimeService) : CompleteCommandEnricher, ProcessVariablesTaskCommandEnricher(runtimeService) {
+class ProcessVariablesCompleteCommandEnricher(runtimeService: RuntimeService, filter: ProcessVariablesFilter)
+  : CompleteCommandEnricher, ProcessVariablesTaskCommandEnricher(runtimeService, filter) {
   @EventListener(condition = "#command.enriched == false")
   override fun enrich(command: CompleteTaskCommand): CompleteTaskCommand = super.enrich(command)
 }
 
-class ProcessVariablesDeleteCommandEnricher(runtimeService: RuntimeService) : DeleteCommandEnricher, ProcessVariablesTaskCommandEnricher(runtimeService) {
+class ProcessVariablesDeleteCommandEnricher(runtimeService: RuntimeService, filter: ProcessVariablesFilter)
+  : DeleteCommandEnricher, ProcessVariablesTaskCommandEnricher(runtimeService, filter) {
   @EventListener(condition = "#command.enriched == false")
   override fun enrich(command: DeleteTaskCommand): DeleteTaskCommand = super.enrich(command)
 }
 
-class ProcessVariablesAssignCommandEnricher(runtimeService: RuntimeService) : AssignCommandEnricher, ProcessVariablesTaskCommandEnricher(runtimeService) {
+class ProcessVariablesAssignCommandEnricher(runtimeService: RuntimeService, filter: ProcessVariablesFilter)
+  : AssignCommandEnricher, ProcessVariablesTaskCommandEnricher(runtimeService, filter) {
   @EventListener(condition = "#command.enriched == false")
   override fun enrich(command: AssignTaskCommand): AssignTaskCommand = super.enrich(command)
 }
 
-open class ProcessVariablesTaskCommandEnricher(private val runtimeService: RuntimeService) {
+open class ProcessVariablesTaskCommandEnricher(
+  private val runtimeService: RuntimeService,
+  private val processVariablesFilter: ProcessVariablesFilter
+) {
   protected fun <T : TaskCommand> enrich(command: T): T {
+    val processDefinitionKey =
+      when {
+        command.processReference != null -> command.processReference!!.processDefinitionKey
+        command.caseReference != null -> command.caseReference!!.caseDefinitionKey
+        else -> throw IllegalArgumentException("Can't find neither a process definition nor case definition")
+      }
+
     val variables: VariableMap =
       when {
         command.processReference != null -> runtimeService.getVariablesTyped(command.processReference!!.executionId)
@@ -35,7 +49,7 @@ open class ProcessVariablesTaskCommandEnricher(private val runtimeService: Runti
         else -> Variables.createVariables()
       }
 
-    command.payload.putAllTyped(variables)
+    command.payload.putAllTyped(processVariablesFilter.filterVariables(processDefinitionKey, command.taskDefinitionKey, variables))
     command.enriched = true
 
     return command
@@ -46,4 +60,14 @@ fun VariableMap.putAllTyped(source: VariableMap) {
   source.keys.forEach {
     this.putValueTyped(it, source.getValueTyped(it))
   }
+}
+
+inline fun VariableMap.filterKeys(predicate: (String) -> Boolean): VariableMap {
+  val result = Variables.createVariables()
+  for (entry in this) {
+    if (predicate(entry.key)) {
+      result[entry.key] = entry.value
+    }
+  }
+  return result
 }

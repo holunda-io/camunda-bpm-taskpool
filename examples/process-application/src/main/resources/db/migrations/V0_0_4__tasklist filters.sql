@@ -1,4 +1,4 @@
--- All tasks filter just for admin
+-- All tasks excludes just for admin
 INSERT INTO ACT_RU_FILTER (ID_, REV_, RESOURCE_TYPE_, NAME_, OWNER_, QUERY_, PROPERTIES_)
 VALUES ('F000', 1, 'Task', 'All Tasks', 'admin', '{}', '{"showUndefinedVariable":false,"description":"All tasks (for admin use only!)","refresh":true,"priority":0}');
 
