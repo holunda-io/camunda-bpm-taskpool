@@ -1,4 +1,4 @@
-package io.holunda.camunda.taskpool.core
+package io.holunda.camunda.taskpool.core.task
 
 import io.holunda.camunda.taskpool.api.task.AssignTaskCommand
 import io.holunda.camunda.taskpool.api.task.CreateOrAssignTaskCommand

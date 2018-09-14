@@ -1,5 +1,8 @@
 package io.holunda.camunda.taskpool.api.task
 
+import io.holunda.camunda.taskpool.api.business.CorrelationMap
+import io.holunda.camunda.taskpool.api.business.WithCorrelations
+import io.holunda.camunda.taskpool.api.business.newCorrelations
 import org.camunda.bpm.engine.variable.VariableMap
 import org.camunda.bpm.engine.variable.Variables
 import java.util.*
@@ -10,6 +13,7 @@ data class TaskCreatedEvent(
   override val caseReference: CaseReference? = null,
   override val taskDefinitionKey: String,
   override val payload: VariableMap = Variables.createVariables(),
+  override val correlations: CorrelationMap = newCorrelations(),
   override val businessKey: String?,
   override var enriched: Boolean = true,
   val name: String? = null,
@@ -22,7 +26,7 @@ data class TaskCreatedEvent(
   val assignee: String? = null,
   val owner: String? = null,
   val dueDate: Date? = null
-) : TaskIdentity, WithPayload
+) : TaskIdentity, WithPayload, WithCorrelations
 
 data class TaskAssignedEvent(
   override val id: String,
@@ -30,6 +34,7 @@ data class TaskAssignedEvent(
   override val caseReference: CaseReference? = null,
   override val taskDefinitionKey: String,
   override val payload: VariableMap = Variables.createVariables(),
+  override val correlations: CorrelationMap = newCorrelations(),
   override val businessKey: String?,
   override var enriched: Boolean = true,
   val name: String? = null,
@@ -42,7 +47,7 @@ data class TaskAssignedEvent(
   val assignee: String? = null,
   val owner: String? = null,
   val dueDate: Date? = null
-) : TaskIdentity, WithPayload
+) : TaskIdentity, WithPayload, WithCorrelations
 
 data class TaskCompletedEvent(
   override val id: String,
@@ -50,6 +55,7 @@ data class TaskCompletedEvent(
   override val caseReference: CaseReference? = null,
   override val taskDefinitionKey: String,
   override val payload: VariableMap = Variables.createVariables(),
+  override val correlations: CorrelationMap = newCorrelations(),
   override val businessKey: String?,
   override var enriched: Boolean = true,
   val name: String? = null,
@@ -62,7 +68,7 @@ data class TaskCompletedEvent(
   val assignee: String? = null,
   val owner: String? = null,
   val dueDate: Date? = null
-) : TaskIdentity, WithPayload
+) : TaskIdentity, WithPayload, WithCorrelations
 
 data class TaskDeletedEvent(
   override val id: String,
@@ -70,6 +76,7 @@ data class TaskDeletedEvent(
   override val caseReference: CaseReference? = null,
   override val taskDefinitionKey: String,
   override val payload: VariableMap = Variables.createVariables(),
+  override val correlations: CorrelationMap = newCorrelations(),
   override val businessKey: String?,
   override var enriched: Boolean = true,
   val name: String? = null,
@@ -83,5 +90,5 @@ data class TaskDeletedEvent(
   val owner: String? = null,
   val dueDate: Date? = null,
   val deleteReason: String?
-) : TaskIdentity, WithPayload
+) : TaskIdentity, WithPayload, WithCorrelations
 

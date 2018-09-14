@@ -1,4 +1,4 @@
-package io.holunda.camunda.taskpool.core
+package io.holunda.camunda.taskpool.core.task
 
 import io.holunda.camunda.taskpool.api.task.*
 import mu.KLogging
@@ -12,104 +12,18 @@ import org.axonframework.spring.stereotype.Aggregate
 @Aggregate
 open class TaskAggregate() {
 
-  companion object : KLogging() {
-
-    internal fun assign(command: AssignTaskCommand) =
-      AggregateLifecycle.apply(
-        TaskAssignedEvent(
-          id = command.id,
-          taskDefinitionKey = command.taskDefinitionKey,
-          caseReference = command.caseReference,
-          processReference = command.processReference,
-          name = command.name,
-          description = command.description,
-          formKey = command.formKey,
-          priority = command.priority,
-          owner = command.owner,
-          dueDate = command.dueDate,
-          createTime = command.createTime,
-          candidateUsers = command.candidateUsers,
-          candidateGroups = command.candidateGroups,
-          assignee = command.assignee,
-          payload = command.payload,
-          businessKey = command.businessKey
-        ))
-
-    internal fun create(command: CreateTaskCommand) =
-      AggregateLifecycle.apply(
-        TaskCreatedEvent(
-          id = command.id,
-          taskDefinitionKey = command.taskDefinitionKey,
-          caseReference = command.caseReference,
-          processReference = command.processReference,
-          name = command.name,
-          description = command.description,
-          formKey = command.formKey,
-          priority = command.priority,
-          owner = command.owner,
-          dueDate = command.dueDate,
-          createTime = command.createTime,
-          candidateUsers = command.candidateUsers,
-          candidateGroups = command.candidateGroups,
-          assignee = command.assignee,
-          payload = command.payload,
-          businessKey = command.businessKey
-        ))
-
-    internal fun complete(command: CompleteTaskCommand) =
-      AggregateLifecycle.apply(
-        TaskCompletedEvent(
-          id = command.id,
-          taskDefinitionKey = command.taskDefinitionKey,
-          caseReference = command.caseReference,
-          processReference = command.processReference,
-          name = command.name,
-          description = command.description,
-          formKey = command.formKey,
-          priority = command.priority,
-          owner = command.owner,
-          dueDate = command.dueDate,
-          createTime = command.createTime,
-          candidateUsers = command.candidateUsers,
-          candidateGroups = command.candidateGroups,
-          assignee = command.assignee,
-          payload = command.payload,
-          businessKey = command.businessKey
-        ))
-
-    internal fun delete(command: DeleteTaskCommand) =
-      AggregateLifecycle.apply(
-        TaskDeletedEvent(
-          id = command.id,
-          taskDefinitionKey = command.taskDefinitionKey,
-          caseReference = command.caseReference,
-          processReference = command.processReference,
-          name = command.name,
-          description = command.description,
-          formKey = command.formKey,
-          priority = command.priority,
-          owner = command.owner,
-          dueDate = command.dueDate,
-          deleteReason = command.deleteReason,
-          createTime = command.createTime,
-          candidateUsers = command.candidateUsers,
-          candidateGroups = command.candidateGroups,
-          assignee = command.assignee,
-          payload = command.payload,
-          businessKey = command.businessKey
-        ))
-  }
-
-  @CommandHandler
-  constructor(command: CreateTaskCommand) : this() {
-    create(command)
-  }
+  companion object : KLogging()
 
   @AggregateIdentifier
   private lateinit var id: String
   private var assignee: String? = null
   private var deleted = false
   private var completed = false
+
+  @CommandHandler
+  constructor(command: CreateTaskCommand) : this() {
+    create(command)
+  }
 
   @CommandHandler
   open fun handle(command: AssignTaskCommand) {
@@ -156,3 +70,93 @@ open class TaskAggregate() {
     logger.debug { "Deleted task $this.id with reason ${event.deleteReason}" }
   }
 }
+
+internal fun assign(command: AssignTaskCommand) =
+  AggregateLifecycle.apply(
+    TaskAssignedEvent(
+      id = command.id,
+      taskDefinitionKey = command.taskDefinitionKey,
+      caseReference = command.caseReference,
+      processReference = command.processReference,
+      name = command.name,
+      description = command.description,
+      formKey = command.formKey,
+      priority = command.priority,
+      owner = command.owner,
+      dueDate = command.dueDate,
+      createTime = command.createTime,
+      candidateUsers = command.candidateUsers,
+      candidateGroups = command.candidateGroups,
+      assignee = command.assignee,
+      payload = command.payload,
+      correlations = command.correlations,
+      businessKey = command.businessKey
+    ))
+
+internal fun create(command: CreateTaskCommand) =
+  AggregateLifecycle.apply(
+    TaskCreatedEvent(
+      id = command.id,
+      taskDefinitionKey = command.taskDefinitionKey,
+      caseReference = command.caseReference,
+      processReference = command.processReference,
+      name = command.name,
+      description = command.description,
+      formKey = command.formKey,
+      priority = command.priority,
+      owner = command.owner,
+      dueDate = command.dueDate,
+      createTime = command.createTime,
+      candidateUsers = command.candidateUsers,
+      candidateGroups = command.candidateGroups,
+      assignee = command.assignee,
+      payload = command.payload,
+      correlations = command.correlations,
+      businessKey = command.businessKey
+    ))
+
+internal fun complete(command: CompleteTaskCommand) =
+  AggregateLifecycle.apply(
+    TaskCompletedEvent(
+      id = command.id,
+      taskDefinitionKey = command.taskDefinitionKey,
+      caseReference = command.caseReference,
+      processReference = command.processReference,
+      name = command.name,
+      description = command.description,
+      formKey = command.formKey,
+      priority = command.priority,
+      owner = command.owner,
+      dueDate = command.dueDate,
+      createTime = command.createTime,
+      candidateUsers = command.candidateUsers,
+      candidateGroups = command.candidateGroups,
+      assignee = command.assignee,
+      payload = command.payload,
+      correlations = command.correlations,
+      businessKey = command.businessKey
+    ))
+
+internal fun delete(command: DeleteTaskCommand) =
+  AggregateLifecycle.apply(
+    TaskDeletedEvent(
+      id = command.id,
+      taskDefinitionKey = command.taskDefinitionKey,
+      caseReference = command.caseReference,
+      processReference = command.processReference,
+      name = command.name,
+      description = command.description,
+      formKey = command.formKey,
+      priority = command.priority,
+      owner = command.owner,
+      dueDate = command.dueDate,
+      deleteReason = command.deleteReason,
+      createTime = command.createTime,
+      candidateUsers = command.candidateUsers,
+      candidateGroups = command.candidateGroups,
+      assignee = command.assignee,
+      payload = command.payload,
+      correlations = command.correlations,
+      businessKey = command.businessKey
+    ))
+

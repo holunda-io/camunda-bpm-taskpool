@@ -5,8 +5,9 @@ import org.camunda.bpm.engine.variable.VariableMap
 import org.camunda.bpm.engine.variable.Variables
 
 data class CreateDataEntryCommand(
-  val entryType: String,
+  override val entryType: EntryType,
   @TargetAggregateIdentifier
-  val entryId: String,
+  override val entryId: EntryId,
+  override val correlations: CorrelationMap = newCorrelations(),
   val payload: VariableMap = Variables.createVariables()
-)
+): DataIdentity, WithCorrelations

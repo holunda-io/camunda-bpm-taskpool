@@ -1,5 +1,6 @@
 package io.holunda.camunda.taskpool.core
 
+import io.holunda.camunda.taskpool.core.task.TaskAggregate
 import org.axonframework.eventsourcing.eventstore.EventStore
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.ComponentScan
