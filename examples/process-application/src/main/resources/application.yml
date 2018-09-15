@@ -45,7 +45,7 @@ swagger:
   enabled: true
   redirect: true
   apiInfo:
-    title: Example Process application
+    title: Example Process Application
     description: REST interface of the example process application.
   dockets:
     rest:
