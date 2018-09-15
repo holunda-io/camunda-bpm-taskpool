@@ -2,23 +2,32 @@ package io.holunda.camunda.taskpool.api.task
 
 interface TaskIdentity {
   val id: String
-  val processReference: ProcessReference?
-  val caseReference: CaseReference?
   val taskDefinitionKey: String
+  val sourceReference: SourceReference
+}
+
+/**
+ * Represents the source of the task.
+ * Currently supported is process or case.
+ */
+sealed class SourceReference {
+  abstract val instanceId: String
+  abstract val executionId: String
+  abstract val definitionId: String
+  abstract val definitionKey: String
 }
 
 data class ProcessReference(
-  val processInstanceId: String,
-  // TODO: maybe rename
-  val executionId: String,
-  val processDefinitionId: String,
-  val processDefinitionKey: String
-)
+  override val instanceId: String,
+  override val executionId: String,
+  override val definitionId: String,
+  override val definitionKey: String
+): SourceReference()
 
 data class CaseReference(
-  val caseInstanceId: String,
-  val caseExecutionId: String,
-  val caseDefinitionId: String,
-  val caseDefinitionKey: String
-)
+  override val instanceId: String,
+  override val executionId: String,
+  override val definitionId: String,
+  override val definitionKey: String
+): SourceReference()
 

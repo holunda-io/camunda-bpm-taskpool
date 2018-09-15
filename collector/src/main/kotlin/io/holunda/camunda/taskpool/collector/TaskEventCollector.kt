@@ -41,25 +41,22 @@ class TaskEventCollector(
       formKey = formService.getTaskFormKey(task.processDefinitionId, task.taskDefinitionKey),
       taskDefinitionKey = task.taskDefinitionKey,
       businessKey = task.execution.businessKey,
-      processReference = if (task.processDefinitionId != null) {
+      sourceReference = if (task.processDefinitionId != null) {
         ProcessReference(
-          processDefinitionId = task.processDefinitionId,
-          processInstanceId = task.processInstanceId,
+          definitionId = task.processDefinitionId,
+          instanceId = task.processInstanceId,
           executionId = task.executionId,
-          processDefinitionKey = task.processDefinitionKey()
+          definitionKey = task.processDefinitionKey()
         )
-      } else {
-        null
-      },
-      caseReference = if (task.caseDefinitionId != null) {
+      } else if (task.caseDefinitionId != null) {
         CaseReference(
-          caseDefinitionId = task.caseDefinitionId,
-          caseInstanceId = task.caseInstanceId,
-          caseExecutionId = task.caseExecutionId,
-          caseDefinitionKey = task.caseDefinitionKey()
+          definitionId = task.caseDefinitionId,
+          instanceId = task.caseInstanceId,
+          executionId = task.caseExecutionId,
+          definitionKey = task.caseDefinitionKey()
         )
       } else {
-        null
+        throw IllegalArgumentException("No source reference found.")
       }
     )
 
@@ -81,25 +78,22 @@ class TaskEventCollector(
       taskDefinitionKey = task.taskDefinitionKey,
       formKey = formService.getTaskFormKey(task.processDefinitionId, task.taskDefinitionKey),
       businessKey = task.execution.businessKey,
-      processReference = if (task.processDefinitionId != null) {
+      sourceReference = if (task.processDefinitionId != null) {
         ProcessReference(
-          processDefinitionId = task.processDefinitionId,
-          processInstanceId = task.processInstanceId,
+          definitionId = task.processDefinitionId,
+          instanceId = task.processInstanceId,
           executionId = task.executionId,
-          processDefinitionKey = task.processDefinitionKey()
+          definitionKey = task.processDefinitionKey()
         )
-      } else {
-        null
-      },
-      caseReference = if (task.caseDefinitionId != null) {
+      } else if (task.caseDefinitionId != null) {
         CaseReference(
-          caseDefinitionId = task.caseDefinitionId,
-          caseInstanceId = task.caseInstanceId,
-          caseExecutionId = task.caseExecutionId,
-          caseDefinitionKey = task.caseDefinitionKey()
+          definitionId = task.caseDefinitionId,
+          instanceId = task.caseInstanceId,
+          executionId = task.caseExecutionId,
+          definitionKey = task.caseDefinitionKey()
         )
       } else {
-        null
+        throw IllegalArgumentException("No source reference found.")
       }
     )
 
@@ -121,25 +115,22 @@ class TaskEventCollector(
       taskDefinitionKey = task.taskDefinitionKey,
       formKey = formService.getTaskFormKey(task.processDefinitionId, task.taskDefinitionKey),
       businessKey = task.execution.businessKey,
-      processReference = if (task.processDefinitionId != null) {
+      sourceReference = if (task.processDefinitionId != null) {
         ProcessReference(
-          processDefinitionId = task.processDefinitionId,
-          processInstanceId = task.processInstanceId,
+          definitionId = task.processDefinitionId,
+          instanceId = task.processInstanceId,
           executionId = task.executionId,
-          processDefinitionKey = task.processDefinitionKey()
+          definitionKey = task.processDefinitionKey()
         )
-      } else {
-        null
-      },
-      caseReference = if (task.caseDefinitionId != null) {
+      } else if (task.caseDefinitionId != null) {
         CaseReference(
-          caseDefinitionId = task.caseDefinitionId,
-          caseInstanceId = task.caseInstanceId,
-          caseExecutionId = task.caseExecutionId,
-          caseDefinitionKey = task.caseDefinitionKey()
+          definitionId = task.caseDefinitionId,
+          instanceId = task.caseInstanceId,
+          executionId = task.caseExecutionId,
+          definitionKey = task.caseDefinitionKey()
         )
       } else {
-        null
+        throw IllegalArgumentException("No source reference found.")
       }
     )
 
@@ -163,25 +154,22 @@ class TaskEventCollector(
       taskDefinitionKey = task.taskDefinitionKey,
       formKey = formService.getTaskFormKey(task.processDefinitionId, task.taskDefinitionKey),
       businessKey = task.execution.businessKey,
-      processReference = if (task.processDefinitionId != null) {
+      sourceReference = if (task.processDefinitionId != null) {
         ProcessReference(
-          processDefinitionId = task.processDefinitionId,
-          processInstanceId = task.processInstanceId,
+          definitionId = task.processDefinitionId,
+          instanceId = task.processInstanceId,
           executionId = task.executionId,
-          processDefinitionKey = task.processDefinitionKey()
+          definitionKey = task.processDefinitionKey()
         )
-      } else {
-        null
-      },
-      caseReference = if (task.caseDefinitionId != null) {
+      } else if (task.caseDefinitionId != null) {
         CaseReference(
-          caseDefinitionId = task.caseDefinitionId,
-          caseInstanceId = task.caseInstanceId,
-          caseExecutionId = task.caseExecutionId,
-          caseDefinitionKey = task.caseDefinitionKey()
+          definitionId = task.caseDefinitionId,
+          instanceId = task.caseInstanceId,
+          executionId = task.caseExecutionId,
+          definitionKey = task.caseDefinitionKey()
         )
       } else {
-        null
+        throw IllegalArgumentException("No source reference found.")
       }
     )
 }

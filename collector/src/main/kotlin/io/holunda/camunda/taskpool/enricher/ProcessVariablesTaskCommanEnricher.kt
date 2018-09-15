@@ -35,23 +35,14 @@ open class ProcessVariablesTaskCommandEnricher(
   private val processVariablesFilter: ProcessVariablesFilter
 ) {
   protected fun <T : TaskCommand> enrich(command: T): T {
-    val processDefinitionKey =
-      when {
-        command.processReference != null -> command.processReference!!.processDefinitionKey
-        command.caseReference != null -> command.caseReference!!.caseDefinitionKey
-        else -> throw IllegalArgumentException("Can't find neither a process definition nor case definition")
-      }
-
-    val variables: VariableMap =
-      when {
-        command.processReference != null -> runtimeService.getVariablesTyped(command.processReference!!.executionId)
-        command.caseReference != null -> runtimeService.getVariablesTyped(command.caseReference!!.caseExecutionId)
-        else -> Variables.createVariables()
-      }
-
-    command.payload.putAllTyped(processVariablesFilter.filterVariables(processDefinitionKey, command.taskDefinitionKey, variables))
+    command.payload.putAllTyped(
+      processVariablesFilter.filterVariables(
+        command.sourceReference.definitionKey,
+        command.taskDefinitionKey,
+        runtimeService.getVariablesTyped(command.sourceReference.executionId)
+      )
+    )
     command.enriched = true
-
     return command
   }
 }

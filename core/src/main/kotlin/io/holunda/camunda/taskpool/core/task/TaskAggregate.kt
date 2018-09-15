@@ -76,8 +76,7 @@ internal fun assign(command: AssignTaskCommand) =
     TaskAssignedEvent(
       id = command.id,
       taskDefinitionKey = command.taskDefinitionKey,
-      caseReference = command.caseReference,
-      processReference = command.processReference,
+      sourceReference = command.sourceReference,
       name = command.name,
       description = command.description,
       formKey = command.formKey,
@@ -98,8 +97,7 @@ internal fun create(command: CreateTaskCommand) =
     TaskCreatedEvent(
       id = command.id,
       taskDefinitionKey = command.taskDefinitionKey,
-      caseReference = command.caseReference,
-      processReference = command.processReference,
+      sourceReference = command.sourceReference,
       name = command.name,
       description = command.description,
       formKey = command.formKey,
@@ -120,8 +118,7 @@ internal fun complete(command: CompleteTaskCommand) =
     TaskCompletedEvent(
       id = command.id,
       taskDefinitionKey = command.taskDefinitionKey,
-      caseReference = command.caseReference,
-      processReference = command.processReference,
+      sourceReference = command.sourceReference,
       name = command.name,
       description = command.description,
       formKey = command.formKey,
@@ -142,8 +139,7 @@ internal fun delete(command: DeleteTaskCommand) =
     TaskDeletedEvent(
       id = command.id,
       taskDefinitionKey = command.taskDefinitionKey,
-      caseReference = command.caseReference,
-      processReference = command.processReference,
+      sourceReference = command.sourceReference,
       name = command.name,
       description = command.description,
       formKey = command.formKey,

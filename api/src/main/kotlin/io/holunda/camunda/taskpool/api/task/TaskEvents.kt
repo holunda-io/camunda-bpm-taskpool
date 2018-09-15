@@ -9,8 +9,7 @@ import java.util.*
 
 data class TaskCreatedEvent(
   override val id: String,
-  override val processReference: ProcessReference? = null,
-  override val caseReference: CaseReference? = null,
+  override val sourceReference: SourceReference,
   override val taskDefinitionKey: String,
   override val payload: VariableMap = Variables.createVariables(),
   override val correlations: CorrelationMap = newCorrelations(),
@@ -30,8 +29,7 @@ data class TaskCreatedEvent(
 
 data class TaskAssignedEvent(
   override val id: String,
-  override val processReference: ProcessReference? = null,
-  override val caseReference: CaseReference? = null,
+  override val sourceReference: SourceReference,
   override val taskDefinitionKey: String,
   override val payload: VariableMap = Variables.createVariables(),
   override val correlations: CorrelationMap = newCorrelations(),
@@ -51,9 +49,9 @@ data class TaskAssignedEvent(
 
 data class TaskCompletedEvent(
   override val id: String,
-  override val processReference: ProcessReference? = null,
-  override val caseReference: CaseReference? = null,
+  override val sourceReference: SourceReference,
   override val taskDefinitionKey: String,
+
   override val payload: VariableMap = Variables.createVariables(),
   override val correlations: CorrelationMap = newCorrelations(),
   override val businessKey: String? = null,
@@ -72,9 +70,9 @@ data class TaskCompletedEvent(
 
 data class TaskDeletedEvent(
   override val id: String,
-  override val processReference: ProcessReference? = null,
-  override val caseReference: CaseReference? = null,
+  override val sourceReference: SourceReference,
   override val taskDefinitionKey: String,
+
   override val payload: VariableMap = Variables.createVariables(),
   override val correlations: CorrelationMap = newCorrelations(),
   override val businessKey: String? = null,

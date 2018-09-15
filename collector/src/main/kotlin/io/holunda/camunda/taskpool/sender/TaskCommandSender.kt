@@ -23,8 +23,7 @@ class TaskCommandSender(
     send(CreateOrAssignTaskCommand(
       id = command.id,
       taskDefinitionKey = command.taskDefinitionKey,
-      caseReference = command.caseReference,
-      processReference = command.processReference,
+      sourceReference = command.sourceReference,
       name = command.name,
       description = command.description,
       priority = command.priority,
@@ -46,8 +45,7 @@ class TaskCommandSender(
     send(CreateOrAssignTaskCommand(
       id = command.id,
       taskDefinitionKey = command.taskDefinitionKey,
-      caseReference = command.caseReference,
-      processReference = command.processReference,
+      sourceReference = command.sourceReference,
       name = command.name,
       description = command.description,
       priority = command.priority,
