@@ -157,6 +157,104 @@ class TaskAggregateTest {
   }
 
   @Test
+  fun `should assign task`() {
+    fixture
+      .given(
+        TaskCreatedEvent(
+          id = "4711",
+          name = "Foo",
+          taskDefinitionKey = "foo",
+          formKey = "some"
+        ))
+      .`when`(
+        AssignTaskCommand(
+          id = "4711",
+          name = "Foo",
+          createTime = now,
+          eventName = "create",
+          owner = "kermit",
+          taskDefinitionKey = "foo",
+          formKey = "some",
+          businessKey = "business123",
+          enriched = true,
+          processReference = ProcessReference(
+            processDefinitionKey = "process_key",
+            processInstanceId = "0815",
+            executionId = "12345",
+            processDefinitionId = "76543"
+          ),
+          caseReference = null,
+          dueDate = null,
+          candidateUsers = listOf("kermit", "gonzo"),
+          candidateGroups = listOf("muppets"),
+          assignee = "kermit",
+          priority = 51,
+          description = "Funky task",
+          payload = Variables.createVariables().putValueTyped("another", stringValue("some")),
+          correlations = newCorrelations().addCorrelation("Request", "business456")
+        ))
+      .expectEvents(
+        TaskAssignedEvent(
+          id = "4711",
+          name = "Foo",
+          createTime = now,
+          owner = "kermit",
+          taskDefinitionKey = "foo",
+          formKey = "some",
+          businessKey = "business123",
+          enriched = true,
+          processReference = ProcessReference(
+            processDefinitionKey = "process_key",
+            processInstanceId = "0815",
+            executionId = "12345",
+            processDefinitionId = "76543"
+          ),
+          caseReference = null,
+          dueDate = null,
+          candidateUsers = listOf("kermit", "gonzo"),
+          candidateGroups = listOf("muppets"),
+          assignee = "kermit",
+          priority = 51,
+          description = "Funky task",
+          payload = Variables.createVariables().putValueTyped("another", stringValue("some")),
+          correlations = newCorrelations().addCorrelation("Request", "business456")
+        )
+      )
+  }
+
+
+  @Test
+  fun `should not re-assign task`() {
+    fixture
+      .given(
+        TaskCreatedEvent(
+          id = "4711",
+          name = "Foo",
+          taskDefinitionKey = "foo",
+          formKey = "some"
+        ),
+        TaskAssignedEvent(
+          id = "4711",
+          name = "Foo",
+          taskDefinitionKey = "foo",
+          formKey = "some",
+          assignee = "kermit"
+        )
+      )
+      .`when`(
+        AssignTaskCommand(
+          id = "4711",
+          name = "Foo",
+          createTime = now,
+          taskDefinitionKey = "foo",
+          formKey = "some",
+          assignee = "kermit"
+        ))
+      .expectNoEvents()
+  }
+
+
+  @Test
   fun`should not complete deleted task`() {
     fixture
       .given(
