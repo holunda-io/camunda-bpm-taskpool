@@ -36,6 +36,11 @@
 
 
     <dependency>
+      <groupId>io.toolisticon.springboot</groupId>
+      <artifactId>springboot-swagger-starter</artifactId>
+      <version>0.0.3</version>
+    </dependency>
+    <dependency>
       <groupId>org.axonframework</groupId>
       <artifactId>axon-spring-boot-starter</artifactId>
     </dependency>

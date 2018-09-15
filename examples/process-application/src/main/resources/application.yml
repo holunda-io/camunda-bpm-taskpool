@@ -40,3 +40,14 @@ logging.level.io.holunda.camunda.taskpool:
   core: WARN
   view.simple: DEBUG
 
+
+swagger:
+  enabled: true
+  redirect: true
+  apiInfo:
+    title: Example Process application
+    description: REST interface of the example process application.
+  dockets:
+    rest:
+      basePackage: "io.holunda.camunda.taskpool.example.process.rest"
+      path: "/**"
