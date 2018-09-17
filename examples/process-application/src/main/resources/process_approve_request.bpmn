@@ -8,7 +8,7 @@
     <bpmn:endEvent id="end">
       <bpmn:incoming>SequenceFlow_1i7l22j</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:userTask id="user_approve_request" name="Approve Request" camunda:formKey="approve-request" camunda:candidateUsers="fozzy, gonzo" camunda:candidateGroups="muppetshow" camunda:dueDate="2019-06-26T09:55:00" camunda:followUpDate="2023-06-26T09:55:00" camunda:priority="23">
+    <bpmn:userTask id="user_approve_request" name="Approve Request" camunda:formKey="approve-request" camunda:candidateUsers="fozzy,gonzo" camunda:candidateGroups="muppetshow" camunda:dueDate="2019-06-26T09:55:00" camunda:followUpDate="2023-06-26T09:55:00" camunda:priority="23">
       <bpmn:incoming>SequenceFlow_098sjp9</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0b2x6uf</bpmn:outgoing>
     </bpmn:userTask>

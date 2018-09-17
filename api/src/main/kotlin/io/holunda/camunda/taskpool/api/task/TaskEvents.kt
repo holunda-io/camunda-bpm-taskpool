@@ -3,10 +3,14 @@ package io.holunda.camunda.taskpool.api.task
 import io.holunda.camunda.taskpool.api.business.CorrelationMap
 import io.holunda.camunda.taskpool.api.business.WithCorrelations
 import io.holunda.camunda.taskpool.api.business.newCorrelations
+import org.axonframework.serialization.Revision
 import org.camunda.bpm.engine.variable.VariableMap
 import org.camunda.bpm.engine.variable.Variables
 import java.util.*
 
+sealed class TaskEvent : TaskIdentity, WithPayload, WithCorrelations
+
+@Revision("1")
 data class TaskCreatedEvent(
   override val id: String,
   override val sourceReference: SourceReference,
@@ -25,8 +29,9 @@ data class TaskCreatedEvent(
   val assignee: String? = null,
   val owner: String? = null,
   val dueDate: Date? = null
-) : TaskIdentity, WithPayload, WithCorrelations
+) : TaskEvent()
 
+@Revision("1")
 data class TaskAssignedEvent(
   override val id: String,
   override val sourceReference: SourceReference,
@@ -45,8 +50,9 @@ data class TaskAssignedEvent(
   val assignee: String? = null,
   val owner: String? = null,
   val dueDate: Date? = null
-) : TaskIdentity, WithPayload, WithCorrelations
+) : TaskEvent()
 
+@Revision("1")
 data class TaskCompletedEvent(
   override val id: String,
   override val sourceReference: SourceReference,
@@ -66,8 +72,9 @@ data class TaskCompletedEvent(
   val assignee: String? = null,
   val owner: String? = null,
   val dueDate: Date? = null
-) : TaskIdentity, WithPayload, WithCorrelations
+) : TaskEvent()
 
+@Revision("1")
 data class TaskDeletedEvent(
   override val id: String,
   override val sourceReference: SourceReference,
@@ -88,5 +95,5 @@ data class TaskDeletedEvent(
   val owner: String? = null,
   val dueDate: Date? = null,
   val deleteReason: String?
-) : TaskIdentity, WithPayload, WithCorrelations
+) : TaskEvent()
 

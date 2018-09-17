@@ -48,6 +48,6 @@ swagger:
     title: Example Process Application
     description: REST interface of the example process application.
   dockets:
-    rest:
+    process:
       basePackage: "io.holunda.camunda.taskpool.example.process.rest"
       path: "/**"
