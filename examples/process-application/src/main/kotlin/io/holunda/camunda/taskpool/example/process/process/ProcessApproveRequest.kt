@@ -2,6 +2,7 @@ package io.holunda.camunda.taskpool.example.process.process
 
 import io.holunda.camunda.taskpool.example.process.process.ProcessApproveRequest.Variables.ON_BEHALF
 import io.holunda.camunda.taskpool.example.process.process.ProcessApproveRequest.Variables.ORIGINATOR
+import io.holunda.camunda.taskpool.example.process.process.ProcessApproveRequest.Variables.REQUEST_ID
 import io.holunda.camunda.taskpool.example.process.process.ProcessApproveRequest.Variables.SUBJECT
 import io.holunda.camunda.taskpool.example.process.process.ProcessApproveRequest.Variables.TARGET
 import org.camunda.bpm.engine.RuntimeService
@@ -24,6 +25,7 @@ object ProcessApproveRequest {
     const val TARGET = "target"
     const val APPROVE_DECISION = "approveDecision"
     const val AMEND_ACTION = "amendAction"
+    const val REQUEST_ID = "request"
   }
 
   object Elements {
@@ -39,9 +41,13 @@ class ProcessApproveRequestBean(
 ) {
 
   fun startProcess(): ProcessInstance {
+
+    val requestId = "AR-${UUID.randomUUID()}"
+
     return runtimeService.startProcessInstanceByKey(ProcessApproveRequest.KEY,
-      "AR-${UUID.randomUUID()}",
+      requestId,
       Variables.createVariables()
+        .putValue(REQUEST_ID, requestId)
         .putValue(ORIGINATOR, "kermit")
         .putValue(ON_BEHALF, "piggy")
         .putValue(SUBJECT, "Salary increase")

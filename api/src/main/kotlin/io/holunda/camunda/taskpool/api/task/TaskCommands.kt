@@ -18,7 +18,7 @@ data class AssignTaskCommand(
   override val priority: Int? = 0,
   override val createTime: Date? = null,
   override val owner: String? = null,
-  override val eventName: String = "create",
+  override val eventName: String = "assign",
   override val candidateUsers: List<String> = listOf(),
   override val candidateGroups: List<String> = listOf(),
   override val assignee: String? = null,

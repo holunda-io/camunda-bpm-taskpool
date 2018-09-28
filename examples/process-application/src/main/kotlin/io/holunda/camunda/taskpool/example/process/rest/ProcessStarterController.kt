@@ -17,7 +17,7 @@ open class ProcessStarterController {
 
   @ApiOperation("Starts process instances up to the given number.")
   @PostMapping("/request/start/{count}")
-  open fun startManyInstances(@ApiParam("Total number of instances", defaultValue = "10") @PathVariable("count") count: Int): ResponseEntity<List<String>> {
+  open fun startManyInstances(@ApiParam("Total number of instances", defaultValue = "1") @PathVariable("count") count: Int): ResponseEntity<List<String>> {
     val instances = mutableListOf<String>()
     for (numberOfInstances in processApproveRequestBean.countInstances()..count) {
       instances.add(processApproveRequestBean.startProcess().processInstanceId)

@@ -36,7 +36,8 @@ class TaskCommandSender(
       assignee = command.assignee,
       payload = command.payload,
       businessKey = command.businessKey,
-      formKey = command.formKey
+      formKey = command.formKey,
+      correlations = command.correlations
     ))
   }
 
@@ -58,7 +59,8 @@ class TaskCommandSender(
       assignee = command.assignee,
       payload = command.payload,
       businessKey = command.businessKey,
-      formKey = command.formKey
+      formKey = command.formKey,
+      correlations = command.correlations
     ))
   }
 

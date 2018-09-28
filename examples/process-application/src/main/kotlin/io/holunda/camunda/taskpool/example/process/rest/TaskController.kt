@@ -11,6 +11,7 @@ import org.axonframework.queryhandling.responsetypes.ResponseTypes
 import org.springframework.http.ResponseEntity
 import org.springframework.http.ResponseEntity.ok
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
@@ -24,7 +25,8 @@ open class TaskController(
 
   @ApiOperation("Loads all tasks for a given user.")
   @GetMapping("/tasks")
-  open fun getTasksForUser(@RequestParam("username") @ApiParam("username", required = true) username: String): ResponseEntity<List<Task>> {
+  open fun getTasksForUser(@RequestParam("username") @ApiParam("Username of the user.", required = true) username: String): ResponseEntity<List<Task>> {
+
     val user = userService.getUser(username)
     return ok(queryGateway.query(TasksForUserQuery(user), ResponseTypes.multipleInstancesOf(Task::class.java)).join())
   }

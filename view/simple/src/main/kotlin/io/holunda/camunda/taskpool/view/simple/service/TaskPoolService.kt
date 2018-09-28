@@ -13,6 +13,7 @@ import org.camunda.bpm.engine.variable.VariableMap
 import org.camunda.bpm.engine.variable.Variables
 import org.springframework.stereotype.Component
 import java.util.*
+import java.util.concurrent.ConcurrentHashMap
 
 @Component
 open class TaskPoolService(
@@ -21,7 +22,7 @@ open class TaskPoolService(
 
   companion object : KLogging()
 
-  private val tasks = mutableMapOf<String, Task>()
+  private val tasks = ConcurrentHashMap<String, Task>()
 
   /**
    * Retrieves a list of all user tasks for current user.
@@ -143,8 +144,3 @@ data class Task(
   val owner: String? = null,
   val dueDate: Date? = null
 ) : TaskIdentity, WithPayload, WithCorrelations
-
-
-data class TasksForUserQuery(
-  val user: User
-)

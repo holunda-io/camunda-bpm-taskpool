@@ -39,7 +39,8 @@ open class CreateOrAssignCommandHandler() {
               assignee = command.assignee,
               payload = command.payload,
               businessKey = command.businessKey,
-              formKey = command.formKey
+              formKey = command.formKey,
+              correlations = command.correlations
             ))
         }
       }
@@ -61,7 +62,8 @@ open class CreateOrAssignCommandHandler() {
             assignee = command.assignee,
             payload = command.payload,
             businessKey = command.businessKey,
-            formKey = command.formKey
+            formKey = command.formKey,
+            correlations = command.correlations
           ))
       }
   }

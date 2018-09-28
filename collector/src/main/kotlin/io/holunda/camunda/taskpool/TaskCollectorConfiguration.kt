@@ -17,20 +17,25 @@ import org.springframework.context.annotation.Configuration
 open class TaskCollectorConfiguration(
   private val properties: TaskCollectorProperties,
   private val runtimeService: RuntimeService,
-  private val filter: ProcessVariablesFilter
+  private val filter: ProcessVariablesFilter,
+  private val correlator: ProcessVariablesCorrelator
 ) {
 
   companion object : KLogging()
 
   @Bean
   @ConditionalOnMissingBean(ProcessVariablesFilter::class)
-  open fun processVaraiblesFilter() = ProcessVariablesFilter()
+  open fun processVariablesFilter() = ProcessVariablesFilter()
+
+  @Bean
+  @ConditionalOnMissingBean(ProcessVariablesCorrelator::class)
+  open fun processVariablesCorrelator() = ProcessVariablesCorrelator()
 
   @Bean
   @ConditionalOnExpression("'\${camunda.taskpool.collector.enricher.type}' != 'custom'")
   open fun createEnricher(): CreateCommandEnricher? =
     when (properties.enricher.type) {
-      TaskCollectorEnricherType.processVariables.name -> ProcessVariablesCreateCommandEnricher(runtimeService, filter)
+      TaskCollectorEnricherType.processVariables.name -> ProcessVariablesCreateCommandEnricher(runtimeService, filter, correlator)
       TaskCollectorEnricherType.no.name -> EmptyCreateCommandEnricher()
       else -> null
     }
@@ -39,7 +44,7 @@ open class TaskCollectorConfiguration(
   @ConditionalOnExpression("'\${camunda.taskpool.collector.enricher.type}' != 'custom'")
   open fun assignEnricher(): AssignCommandEnricher? =
     when (properties.enricher.type) {
-      TaskCollectorEnricherType.processVariables.name -> ProcessVariablesAssignCommandEnricher(runtimeService, filter)
+      TaskCollectorEnricherType.processVariables.name -> ProcessVariablesAssignCommandEnricher(runtimeService, filter, correlator)
       TaskCollectorEnricherType.no.name -> EmptyAssignCommandEnricher()
       else -> null
     }
@@ -48,7 +53,7 @@ open class TaskCollectorConfiguration(
   @ConditionalOnExpression("'\${camunda.taskpool.collector.enricher.type}' != 'custom'")
   open fun deleteEnricher(): DeleteCommandEnricher? =
     when (properties.enricher.type) {
-      TaskCollectorEnricherType.processVariables.name -> ProcessVariablesDeleteCommandEnricher(runtimeService, filter)
+      TaskCollectorEnricherType.processVariables.name -> ProcessVariablesDeleteCommandEnricher(runtimeService, filter, correlator)
       TaskCollectorEnricherType.no.name -> EmptyDeleteCommandEnricher()
       else -> null
     }
@@ -57,13 +62,13 @@ open class TaskCollectorConfiguration(
   @ConditionalOnExpression("'\${camunda.taskpool.collector.enricher.type}' != 'custom'")
   open fun completeEnricher(): CompleteCommandEnricher? =
     when (properties.enricher.type) {
-      TaskCollectorEnricherType.processVariables.name -> ProcessVariablesCompleteCommandEnricher(runtimeService, filter)
+      TaskCollectorEnricherType.processVariables.name -> ProcessVariablesCompleteCommandEnricher(runtimeService, filter, correlator)
       TaskCollectorEnricherType.no.name -> EmptyCompleteCommandEnricher()
       else -> null
     }
 
   @Autowired
-  open fun reportConfiguration() {
+  open fun printConfiguration() {
     when (properties.enricher.type) {
       TaskCollectorEnricherType.processVariables.name -> logger.info { "ENRICHER-001: Camunda Taskpool commands will be enriched with process variables." }
       TaskCollectorEnricherType.no.name -> logger.info { "ENRICHER-002: Camunda Taskpool commands will not be enriched." }

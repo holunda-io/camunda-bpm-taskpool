@@ -51,3 +51,6 @@ swagger:
     process:
       basePackage: "io.holunda.camunda.taskpool.example.process.rest"
       path: "/**"
+    webflux:
+      basePackage: "io.holunda.camunda.taskpool.example.process.webflux"
+      path: "/**"
