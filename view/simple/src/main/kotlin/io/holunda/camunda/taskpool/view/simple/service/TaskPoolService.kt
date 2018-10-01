@@ -111,16 +111,18 @@ open class TaskPoolService(
 
 
   private fun updateTaskForUserQuery(taskId: String) {
-    val task = tasks[taskId]!!
-    queryUpdateEmitter.emit(
-      TasksForUserQuery::class.java,
-      { query ->
-        task.assignee == query.user.username
-          || task.candidateUsers.contains(query.user.username)
-          || task.candidateGroups.any { group -> query.user.groups.contains(group) }
-      },
-      task
-    )
+    if (tasks.contains(taskId)) {
+      val task = tasks[taskId]!!
+      queryUpdateEmitter.emit(
+        TasksForUserQuery::class.java,
+        { query ->
+          task.assignee == query.user.username
+            || task.candidateUsers.contains(query.user.username)
+            || task.candidateGroups.any { group -> query.user.groups.contains(group) }
+        },
+        task
+      )
+    }
   }
 
 }

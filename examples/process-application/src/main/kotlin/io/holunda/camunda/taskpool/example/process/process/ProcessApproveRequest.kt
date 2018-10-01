@@ -7,10 +7,8 @@ import io.holunda.camunda.taskpool.example.process.process.ProcessApproveRequest
 import io.holunda.camunda.taskpool.example.process.process.ProcessApproveRequest.Variables.TARGET
 import org.camunda.bpm.engine.RuntimeService
 import org.camunda.bpm.engine.TaskService
-import org.camunda.bpm.engine.runtime.ProcessInstance
 import org.camunda.bpm.engine.variable.Variables
 import org.camunda.bpm.engine.variable.Variables.stringValue
-import org.h2.expression.Variable
 import org.springframework.stereotype.Component
 import java.util.*
 
@@ -20,12 +18,13 @@ object ProcessApproveRequest {
 
   object Variables {
     const val ORIGINATOR = "originator"
-    const val ON_BEHALF = "on-behalf-of"
+    const val ON_BEHALF = "onBehalfOf"
     const val SUBJECT = "subject"
     const val TARGET = "target"
     const val APPROVE_DECISION = "approveDecision"
     const val AMEND_ACTION = "amendAction"
     const val REQUEST_ID = "request"
+    const val COMMENT = "comment"
   }
 
   object Elements {
@@ -40,11 +39,11 @@ class ProcessApproveRequestBean(
   private val taskService: TaskService
 ) {
 
-  fun startProcess(): ProcessInstance {
+  fun startProcess(): String {
 
     val requestId = "AR-${UUID.randomUUID()}"
 
-    return runtimeService.startProcessInstanceByKey(ProcessApproveRequest.KEY,
+    runtimeService.startProcessInstanceByKey(ProcessApproveRequest.KEY,
       requestId,
       Variables.createVariables()
         .putValue(REQUEST_ID, requestId)
@@ -53,17 +52,28 @@ class ProcessApproveRequestBean(
         .putValue(SUBJECT, "Salary increase")
         .putValue(TARGET, "1,000,000.00 USD/Y")
     )
+
+    return requestId
   }
 
-  fun approve(id: String, decision: String) {
+  fun approve(id: String, decision: String, comment: String?) {
 
     if (!arrayOf("APPROVE", "RETURN", "REJECT").contains(decision.toUpperCase())) {
       throw IllegalArgumentException("Only one of APPROVE, RETURN, REJECT is supported.")
     }
 
-    val task = taskService.createTaskQuery().processInstanceId(id).taskDefinitionKey(ProcessApproveRequest.Elements.APPROVE_REQUEST).singleResult()
+    val task = taskService
+      .createTaskQuery()
+      .processInstanceBusinessKey(id)
+      .taskDefinitionKey(ProcessApproveRequest.Elements.APPROVE_REQUEST)
+      .singleResult()
     taskService.claim(task.id, "gonzo")
-    taskService.complete(task.id, Variables.createVariables().putValue(ProcessApproveRequest.Variables.APPROVE_DECISION, stringValue(decision.toUpperCase())))
+    taskService.complete(task.id,
+      Variables
+        .createVariables()
+        .putValue(ProcessApproveRequest.Variables.APPROVE_DECISION, stringValue(decision.toUpperCase()))
+        .putValue(ProcessApproveRequest.Variables.COMMENT, stringValue(comment))
+    )
   }
 
   fun amend(id: String, action: String) {
@@ -73,10 +83,12 @@ class ProcessApproveRequestBean(
     }
 
 
-    val task = taskService.createTaskQuery().processInstanceId(id).taskDefinitionKey(ProcessApproveRequest.Elements.AMEND_REQUEST).singleResult()
+    val task = taskService.createTaskQuery()
+      .processInstanceBusinessKey(id)
+      .taskDefinitionKey(ProcessApproveRequest.Elements.AMEND_REQUEST)
+      .singleResult()
     taskService.complete(task.id, Variables.createVariables().putValue(ProcessApproveRequest.Variables.AMEND_ACTION, stringValue(action.toUpperCase())))
   }
-
 
 
   fun countInstances() = getAllInstancesQuery().count()

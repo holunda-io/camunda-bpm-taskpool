@@ -19,32 +19,33 @@ open class ProcessStarterController {
   @PostMapping("/request/start/{count}")
   open fun startManyInstances(@ApiParam("Total number of instances", defaultValue = "1") @PathVariable("count") count: Int): ResponseEntity<List<String>> {
     val instances = mutableListOf<String>()
-    for (numberOfInstances in processApproveRequestBean.countInstances()..count) {
-      instances.add(processApproveRequestBean.startProcess().processInstanceId)
+    for (numberOfInstances in processApproveRequestBean.countInstances() until count) {
+      instances.add(processApproveRequestBean.startProcess())
     }
     return ResponseEntity.ok(instances)
+  }
+
+  @ApiOperation("Performs approve request task.")
+  @PostMapping("/request/{id}/decision/{decision}")
+  open fun approve(
+    @ApiParam("Request id") @PathVariable("id") id: String,
+    @ApiParam("Decision of the approver", allowableValues = "APPROVE, REJECT, RETURN", required = true) @PathVariable("decision") decision: String,
+    @ApiParam("Comment") @RequestBody comment: String?) {
+    processApproveRequestBean.approve(id, decision, comment)
+  }
+
+  @ApiOperation("Performs amend request task.")
+  @PostMapping("/request/{id}/action/{action}")
+  open fun amend(
+    @ApiParam("Request id") @PathVariable("id") id: String,
+    @ApiParam("Decision of the originator", allowableValues = "CANCEL, RESUBMIT", required = true) @PathVariable("action") action: String) {
+    processApproveRequestBean.amend(id, action)
   }
 
   @ApiOperation("Deletes all process instances.")
   @DeleteMapping("/request")
   open fun deleteAllInstances() {
     processApproveRequestBean.deleteAllInstances()
-  }
-
-  @ApiOperation("Performs approve request task.")
-  @PostMapping("/request/{id}/decision/{decision}")
-  open fun approve(
-    @ApiParam("Process instance id") @PathVariable("id") id: String,
-    @ApiParam("Decision of the approver", allowableValues = "APPROVE, REJECT, RETURN", required=true) @PathVariable("decision") decision: String) {
-    processApproveRequestBean.approve(id, decision)
-  }
-
-  @ApiOperation("Performs amend request task.")
-  @PostMapping("/request/{id}/action/{action}")
-  open fun amend(
-    @ApiParam("Process instance id") @PathVariable("id") id: String,
-    @ApiParam("Decision of the originator", allowableValues = "CANCEL, RESUBMIT", required=true) @PathVariable("action") action: String) {
-    processApproveRequestBean.amend(id, action)
   }
 
 }

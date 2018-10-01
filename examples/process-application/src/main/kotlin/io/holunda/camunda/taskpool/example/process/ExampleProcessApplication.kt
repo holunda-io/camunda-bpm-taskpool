@@ -38,7 +38,7 @@ open class ExampleProcessApplication {
       // define a filter for every task
       ProcessApproveRequest.Elements.APPROVE_REQUEST to listOf(
         ProcessApproveRequest.Variables.REQUEST_ID,
-        ProcessApproveRequest.Variables.TARGET
+        ProcessApproveRequest.Variables.ORIGINATOR
       ),
 
       // and again
@@ -46,7 +46,8 @@ open class ExampleProcessApplication {
         ProcessApproveRequest.Variables.REQUEST_ID,
         ProcessApproveRequest.Variables.ON_BEHALF,
         ProcessApproveRequest.Variables.ORIGINATOR,
-        ProcessApproveRequest.Variables.SUBJECT
+        ProcessApproveRequest.Variables.SUBJECT,
+        ProcessApproveRequest.Variables.COMMENT
       )
     ))
   )
