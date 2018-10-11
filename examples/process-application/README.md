@@ -140,6 +140,71 @@ approve the salary increase (`POST http://localhost/request/AR-c023fafc-ac57-4d3
             "dueDate": "2019-06-26T07:55:00.000+0000"
           }
         ]
+        
+ 7. Now imagine, we are interested in tasks assigned to specific user and having the amount greater than 7500 USD.
+ The `tasks-controller` provides a specific method for selecting such tasks. Just call `GET http://localhost:8080/tasks-with-data?username=gonzo&amount=7500`
+ and you will get the tasks enriched with correlated data entries.
+  
+         [
+           {
+             "task": {
+               "id": "19",
+               "sourceReference": {
+                 "instanceId": "5",
+                 "executionId": "17",
+                 "definitionId": "process_approve_request:1:4",
+                 "definitionKey": "process_approve_request"
+               },
+               "taskDefinitionKey": "user_approve_request",
+               "payload": {
+                 "request": "AR-c023fafc-ac57-4d31-802d-be718f4aff50",
+                 "amount": 10000,
+                 "subject": "Salary increase",
+                 "currency": "USD",
+                 "applicant": "piggy"
+               },
+               "correlations": {
+                 "io.holunda.camunda.taskpool.example.ApprovalRequest": "AR-62a5af44-45e6-4b78-bb04-d84754419941"
+               },
+               "businessKey": "AR-62a5af44-45e6-4b78-bb04-d84754419941",
+               "enriched": true,
+               "name": "Approve Request",
+               "description": "Please approve request AR-62a5af44-45e6-4b78-bb04-d84754419941 from kermit on behalf of piggy",
+               "formKey": "approve-request",
+               "priority": 23,
+               "createTime": "2018-10-11T19:45:28.242+0000",
+               "candidateUsers": [
+                 "fozzy",
+                 "gonzo"
+               ],
+               "candidateGroups": [
+                 "muppetshow"
+               ],
+               "assignee": null,
+               "owner": null,
+               "dueDate": "2019-06-26T07:55:00.000+0000"
+             },
+             "dataEntries": [
+               {
+                 "entryType": "io.holunda.camunda.taskpool.example.ApprovalRequest",
+                 "entryId": "AR-c023fafc-ac57-4d31-802d-be718f4aff50",
+                 "payload": {
+                   "id": "AR-c023fafc-ac57-4d31-802d-be718f4aff50",
+                   "originator": "kermit",
+                   "applicant": "piggy",
+                   "subject": "Salary increase",
+                   "amount": 7501,
+                   "currency": "USD"
+                 }
+               }
+             ]
+           }
+         ]
+        
+8. Have a closer look on the result from the previous call. As the task was created, the amount was 10000 USD.
+After the task was created, we called the `request-controller` and modified the request, so the data
+entry contains the modified value. This demonstrates the ability of the task pool to either snapshot the data 
+during task creation or follow up with data updates, if desired.
 
 
 ## REST API
@@ -161,6 +226,11 @@ approve the salary increase (`POST http://localhost/request/AR-c023fafc-ac57-4d3
 <tr>
   <td>/tasks?username={username}</td><td>GET</td><td>-</td><td>List of tasks</td><td>JSON describing tasks available for user specified by {username}</td>
 </tr>
+<tr>
+  <td>/tasks-with-data?username={username}&amount={amount}</td><td>GET</td><td>-</td><td>List of tasks with data events</td><td>JSON describing tasks available for 
+  user specified by {username} with amount greater or equals to specified {amount}.</td>
+</tr>
+
 <tr>
   <td>/request/{id}/decision/{DECISION}</td><td>POST</td><td>Comment</td><td>-</td><td>Completes "Approve Request" task for request with id {id} with the decision {DECISION}, where
   decision should be one of:
