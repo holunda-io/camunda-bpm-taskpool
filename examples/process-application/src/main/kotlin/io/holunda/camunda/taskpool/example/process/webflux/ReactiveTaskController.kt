@@ -1,6 +1,6 @@
 package io.holunda.camunda.taskpool.example.process.webflux
 
-import io.holunda.camunda.taskpool.view.simple.service.TasksForUserQuery
+import io.holunda.camunda.taskpool.view.simple.query.TasksForUserQuery
 import io.holunda.camunda.taskpool.view.simple.service.UserService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation

@@ -16,3 +16,8 @@ interface DataIdentity {
 
 typealias EntryId = String
 typealias EntryType = String
+
+/**
+ * Constructs the data identity.
+ */
+fun dataIdentity(entryType: EntryType, entryId: EntryId) = "$entryType:$entryId"

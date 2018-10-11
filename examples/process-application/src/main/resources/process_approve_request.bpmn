@@ -11,14 +11,22 @@
     <bpmn:userTask id="user_approve_request" name="Approve Request" camunda:formKey="approve-request" camunda:candidateUsers="fozzy,gonzo" camunda:candidateGroups="muppetshow" camunda:dueDate="2019-06-26T09:55:00" camunda:followUpDate="2023-06-26T09:55:00" camunda:priority="23">
       <bpmn:incoming>SequenceFlow_098sjp9</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0b2x6uf</bpmn:outgoing>
+      <bpmn:property id="Property_0dmzyld" name="__targetRef_placeholder" />
+      <bpmn:dataInputAssociation id="DataInputAssociation_1fwwcra">
+        <bpmn:sourceRef>DataObjectReference_0jgse1v</bpmn:sourceRef>
+        <bpmn:targetRef>Property_0dmzyld</bpmn:targetRef>
+      </bpmn:dataInputAssociation>
     </bpmn:userTask>
     <bpmn:userTask id="user_amend_request" name="Amend&#10;Approval Request&#10;" camunda:formKey="approve-request-two" camunda:assignee="${originator}" camunda:candidateGroups="muppetshow">
       <bpmn:incoming>SequenceFlow_1mfv70h</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1pvuh7o</bpmn:outgoing>
     </bpmn:userTask>
-    <bpmn:serviceTask id="service_store_request" name="Store&#10;Approval Request" camunda:delegateExpression="${storeRequestDelegate}">
+    <bpmn:serviceTask id="service_load_request" name="Load&#10;Approval Request" camunda:delegateExpression="${loadRequestDelegate}">
       <bpmn:incoming>SequenceFlow_1r6yyeb</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_098sjp9</bpmn:outgoing>
+      <bpmn:dataOutputAssociation id="DataOutputAssociation_1bwshok">
+        <bpmn:targetRef>DataObjectReference_0jgse1v</bpmn:targetRef>
+      </bpmn:dataOutputAssociation>
     </bpmn:serviceTask>
     <bpmn:exclusiveGateway id="xor_approve" name="Approve&#10;decision?">
       <bpmn:incoming>SequenceFlow_0b2x6uf</bpmn:incoming>
@@ -35,8 +43,8 @@
       <bpmn:incoming>SequenceFlow_0ohh5u0</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1r6yyeb</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:sequenceFlow id="SequenceFlow_1r6yyeb" sourceRef="ExclusiveGateway_0dupkl5" targetRef="service_store_request" />
-    <bpmn:sequenceFlow id="SequenceFlow_098sjp9" sourceRef="service_store_request" targetRef="user_approve_request" />
+    <bpmn:sequenceFlow id="SequenceFlow_1r6yyeb" sourceRef="ExclusiveGateway_0dupkl5" targetRef="service_load_request" />
+    <bpmn:sequenceFlow id="SequenceFlow_098sjp9" sourceRef="service_load_request" targetRef="user_approve_request" />
     <bpmn:sequenceFlow id="SequenceFlow_1pvuh7o" sourceRef="user_amend_request" targetRef="ExclusiveGateway_0uix7b7" />
     <bpmn:exclusiveGateway id="ExclusiveGateway_0uix7b7" name="Amend&#10;action?">
       <bpmn:incoming>SequenceFlow_1pvuh7o</bpmn:incoming>
@@ -91,14 +99,20 @@
       <bpmn:outgoing>SequenceFlow_0ohh5u0</bpmn:outgoing>
     </bpmn:intermediateThrowEvent>
     <bpmn:sequenceFlow id="SequenceFlow_0ohh5u0" sourceRef="audit_resubmitted" targetRef="ExclusiveGateway_0dupkl5" />
+    <bpmn:dataObjectReference id="DataObjectReference_0jgse1v" name="Request" dataObjectRef="DataObject_0enjlcq" />
+    <bpmn:dataObject id="DataObject_0enjlcq" />
+    <bpmn:textAnnotation id="TextAnnotation_0mneysz">
+      <bpmn:text>BusinessKey = RequestId</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_002wan0" sourceRef="start" targetRef="TextAnnotation_0mneysz" />
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="process_approve_request">
       <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="start">
-        <dc:Bounds x="262" y="247" width="36" height="36" />
+        <dc:Bounds x="260" y="247" width="36" height="36" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="SequenceFlow_1xw9ijb_di" bpmnElement="SequenceFlow_1xw9ijb">
-        <di:waypoint x="298" y="265" />
+        <di:waypoint x="296" y="265" />
         <di:waypoint x="368" y="265" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="EndEvent_1uw48ru_di" bpmnElement="end">
@@ -110,7 +124,7 @@
       <bpmndi:BPMNShape id="UserTask_1pdn0bc_di" bpmnElement="user_amend_request">
         <dc:Bounds x="709" y="427" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="ServiceTask_0tii370_di" bpmnElement="service_store_request">
+      <bpmndi:BPMNShape id="ServiceTask_0tii370_di" bpmnElement="service_load_request">
         <dc:Bounds x="557" y="225" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="ExclusiveGateway_0qz0o2z_di" bpmnElement="xor_approve" isMarkerVisible="true">
@@ -248,6 +262,30 @@
       <bpmndi:BPMNEdge id="SequenceFlow_0ohh5u0_di" bpmnElement="SequenceFlow_0ohh5u0">
         <di:waypoint x="482" y="384" />
         <di:waypoint x="482" y="290" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="TextAnnotation_0mneysz_di" bpmnElement="TextAnnotation_0mneysz">
+        <dc:Bounds x="295" y="132" width="100" height="42" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Association_002wan0_di" bpmnElement="Association_002wan0">
+        <di:waypoint x="278" y="247" />
+        <di:waypoint x="278" y="153" />
+        <di:waypoint x="295" y="153" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="DataObjectReference_0jgse1v_di" bpmnElement="DataObjectReference_0jgse1v">
+        <dc:Bounds x="669" y="128" width="36" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="666" y="185" width="42" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="DataOutputAssociation_1bwshok_di" bpmnElement="DataOutputAssociation_1bwshok">
+        <di:waypoint x="607" y="225" />
+        <di:waypoint x="607" y="153" />
+        <di:waypoint x="669" y="153" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DataInputAssociation_1fwwcra_di" bpmnElement="DataInputAssociation_1fwwcra">
+        <di:waypoint x="705" y="153" />
+        <di:waypoint x="759" y="153" />
+        <di:waypoint x="759" y="225" />
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

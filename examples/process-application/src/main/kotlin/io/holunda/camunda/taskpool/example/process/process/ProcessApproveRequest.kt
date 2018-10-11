@@ -1,30 +1,28 @@
 package io.holunda.camunda.taskpool.example.process.process
 
-import io.holunda.camunda.taskpool.example.process.process.ProcessApproveRequest.Variables.ON_BEHALF
-import io.holunda.camunda.taskpool.example.process.process.ProcessApproveRequest.Variables.ORIGINATOR
 import io.holunda.camunda.taskpool.example.process.process.ProcessApproveRequest.Variables.REQUEST_ID
-import io.holunda.camunda.taskpool.example.process.process.ProcessApproveRequest.Variables.SUBJECT
-import io.holunda.camunda.taskpool.example.process.process.ProcessApproveRequest.Variables.TARGET
 import org.camunda.bpm.engine.RuntimeService
 import org.camunda.bpm.engine.TaskService
 import org.camunda.bpm.engine.variable.Variables
 import org.camunda.bpm.engine.variable.Variables.stringValue
 import org.springframework.stereotype.Component
-import java.util.*
 
 object ProcessApproveRequest {
   const val KEY = "process_approve_request"
   const val RESOURCE = "process_approve_request.bpmn"
 
   object Variables {
+    const val REQUEST_ID = "request"
     const val ORIGINATOR = "originator"
-    const val ON_BEHALF = "onBehalfOf"
+    const val APPLICANT = "applicant"
     const val SUBJECT = "subject"
-    const val TARGET = "target"
+    const val AMOUNT = "amount"
+    const val CURRENCY = "currency"
+
     const val APPROVE_DECISION = "approveDecision"
     const val AMEND_ACTION = "amendAction"
-    const val REQUEST_ID = "request"
     const val COMMENT = "comment"
+
   }
 
   object Elements {
@@ -39,20 +37,12 @@ class ProcessApproveRequestBean(
   private val taskService: TaskService
 ) {
 
-  fun startProcess(): String {
-
-    val requestId = "AR-${UUID.randomUUID()}"
-
+  fun startProcess(requestId: String): String {
     runtimeService.startProcessInstanceByKey(ProcessApproveRequest.KEY,
       requestId,
       Variables.createVariables()
         .putValue(REQUEST_ID, requestId)
-        .putValue(ORIGINATOR, "kermit")
-        .putValue(ON_BEHALF, "piggy")
-        .putValue(SUBJECT, "Salary increase")
-        .putValue(TARGET, "1,000,000.00 USD/Y")
     )
-
     return requestId
   }
 

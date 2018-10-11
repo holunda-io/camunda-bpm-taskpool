@@ -1,18 +1,21 @@
 package io.holunda.camunda.taskpool.view.simple.service
 
-import io.holunda.camunda.taskpool.api.business.CorrelationMap
 import io.holunda.camunda.taskpool.api.business.DataEntryCreatedEvent
-import io.holunda.camunda.taskpool.api.business.WithCorrelations
-import io.holunda.camunda.taskpool.api.business.newCorrelations
-import io.holunda.camunda.taskpool.api.task.*
+import io.holunda.camunda.taskpool.api.business.DataEntryUpdatedEvent
+import io.holunda.camunda.taskpool.api.business.dataIdentity
+import io.holunda.camunda.taskpool.api.task.TaskAssignedEvent
+import io.holunda.camunda.taskpool.api.task.TaskCompletedEvent
+import io.holunda.camunda.taskpool.api.task.TaskCreatedEvent
+import io.holunda.camunda.taskpool.api.task.TaskDeletedEvent
+import io.holunda.camunda.taskpool.view.simple.query.DataEntryQuery
+import io.holunda.camunda.taskpool.view.simple.query.FilterQuery
+import io.holunda.camunda.taskpool.view.simple.query.TasksDataEntryForUserQuery
+import io.holunda.camunda.taskpool.view.simple.query.TasksForUserQuery
 import mu.KLogging
 import org.axonframework.eventhandling.EventHandler
 import org.axonframework.queryhandling.QueryHandler
 import org.axonframework.queryhandling.QueryUpdateEmitter
-import org.camunda.bpm.engine.variable.VariableMap
-import org.camunda.bpm.engine.variable.Variables
 import org.springframework.stereotype.Component
-import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 
 @Component
@@ -23,68 +26,38 @@ open class TaskPoolService(
   companion object : KLogging()
 
   private val tasks = ConcurrentHashMap<String, Task>()
+  private val dataEntries = ConcurrentHashMap<String, DataEntry>()
 
   /**
    * Retrieves a list of all user tasks for current user.
    */
   @QueryHandler
-  open fun query(query: TasksForUserQuery): List<Task> = tasks.values
-    // relevant tasks
-    .filter {
-      // assignee
-      it.assignee == query.user.username
-        // candidate user
-        || (it.candidateUsers.contains(query.user.username))
-        // candidate groups:
-        || (it.candidateGroups.any { candidateGroup -> query.user.groups.contains(candidateGroup) })
-    }
+  open fun query(query: TasksForUserQuery): List<Task> = tasks.values.filter { query.applyFilter(it) }
+
+  /**
+   * Retrieves a list of all data entries of given entry type (and optional id).
+   */
+  @QueryHandler
+  open fun query(query: DataEntryQuery): List<DataEntry> = dataEntries.values.filter { query.applyFilter(it) }
+
+  /**
+   * Retrieves a list of tasks with correlatated data entries of given entry type (and optional id).
+   */
+  @QueryHandler
+  open fun query(query: TasksDataEntryForUserQuery): List<TasksWithDataEntries> = query(TasksForUserQuery(query.user)).map { task -> tasksWithDataEntries(task, this.dataEntries) }
 
   @EventHandler
   open fun on(event: TaskCreatedEvent) {
     logger.debug { "Received task created $event" }
-    val task = Task(
-      id = event.id,
-      sourceReference = event.sourceReference,
-      dueDate = event.dueDate,
-      correlations = event.correlations,
-      payload = event.payload,
-      description = event.description,
-      businessKey = event.businessKey,
-      formKey = event.formKey,
-      priority = event.priority,
-      assignee = event.assignee,
-      candidateGroups = event.candidateGroups,
-      candidateUsers = event.candidateUsers,
-      name = event.name,
-      owner = event.owner,
-      taskDefinitionKey = event.taskDefinitionKey,
-      createTime = event.createTime
-    )
-    tasks.put(task.id, task)
+    val task = task(event)
+    tasks[task.id] = task
     updateTaskForUserQuery(event.id)
   }
 
   @EventHandler
   open fun on(event: TaskAssignedEvent) {
     logger.debug { "Received task assigned $event" }
-    tasks[event.id] = Task(
-      id = event.id,
-      sourceReference = event.sourceReference,
-      dueDate = event.dueDate,
-      correlations = event.correlations,
-      payload = event.payload,
-      description = event.description,
-      businessKey = event.businessKey,
-      formKey = event.formKey,
-      priority = event.priority,
-      assignee = event.assignee,
-      candidateGroups = event.candidateGroups,
-      candidateUsers = event.candidateUsers,
-      name = event.name,
-      owner = event.owner,
-      taskDefinitionKey = event.taskDefinitionKey,
-      createTime = event.createTime
-    )
+    tasks[event.id] = task(event)
     updateTaskForUserQuery(event.id)
   }
 
@@ -93,7 +66,6 @@ open class TaskPoolService(
     logger.debug { "Received task completed $event" }
     tasks.remove(event.id)
     updateTaskForUserQuery(event.id)
-
   }
 
   @EventHandler
@@ -107,42 +79,34 @@ open class TaskPoolService(
   @EventHandler
   open fun on(event: DataEntryCreatedEvent) {
     logger.debug { "Business data entry created $event" }
+    dataEntries[dataIdentity(entryType = event.entryType, entryId = event.entryId)] = DataEntry(
+      entryType = event.entryType,
+      entryId = event.entryId,
+      payload = event.payload
+    )
+    updateDataEntryQuery(dataIdentity(entryType = event.entryType, entryId = event.entryId))
   }
 
+  @EventHandler
+  open fun on(event: DataEntryUpdatedEvent) {
+    logger.debug { "Business data entry updated $event" }
+    dataEntries[dataIdentity(entryType = event.entryType, entryId = event.entryId)] = DataEntry(
+      entryType = event.entryType,
+      entryId = event.entryId,
+      payload = event.payload
+    )
+    updateDataEntryQuery(dataIdentity(entryType = event.entryType, entryId = event.entryId))
+  }
 
-  private fun updateTaskForUserQuery(taskId: String) {
-    if (tasks.contains(taskId)) {
-      val task = tasks[taskId]!!
-      queryUpdateEmitter.emit(
-        TasksForUserQuery::class.java,
-        { query ->
-          task.assignee == query.user.username
-            || task.candidateUsers.contains(query.user.username)
-            || task.candidateGroups.any { group -> query.user.groups.contains(group) }
-        },
-        task
-      )
+  private fun updateTaskForUserQuery(taskId: String) = updateMapFilterQuery(tasks, taskId, TasksForUserQuery::class.java)
+  private fun updateDataEntryQuery(identity: String) = updateMapFilterQuery(dataEntries, identity, DataEntryQuery::class.java)
+
+  private fun <T : Any, Q : FilterQuery<T>> updateMapFilterQuery(map: Map<String, T>, key: String, clazz: Class<Q>) {
+    if (map.contains(key)) {
+      val entry = map[key]!!
+      queryUpdateEmitter.emit(clazz, { query -> query.applyFilter(entry) }, entry)
     }
-  }
 
+  }
 }
 
-data class Task(
-  override val id: String,
-  override val sourceReference: SourceReference,
-  override val taskDefinitionKey: String,
-  override val payload: VariableMap = Variables.createVariables(),
-  override val correlations: CorrelationMap = newCorrelations(),
-  override val businessKey: String? = null,
-  override var enriched: Boolean = true,
-  val name: String? = null,
-  val description: String? = null,
-  val formKey: String? = null,
-  val priority: Int? = 0,
-  val createTime: Date? = null,
-  val candidateUsers: List<String> = listOf(),
-  val candidateGroups: List<String> = listOf(),
-  val assignee: String? = null,
-  val owner: String? = null,
-  val dueDate: Date? = null
-) : TaskIdentity, WithPayload, WithCorrelations

@@ -8,22 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
-@Api("Process Starter Controller")
+@Api("Process Controller")
 @RestController
-open class ProcessStarterController {
+open class ProcessController {
 
   @Autowired
   lateinit var processApproveRequestBean: ProcessApproveRequestBean
-
-  @ApiOperation("Starts process instances up to the given number.")
-  @PostMapping("/request/start/{count}")
-  open fun startManyInstances(@ApiParam("Total number of instances", defaultValue = "1") @PathVariable("count") count: Int): ResponseEntity<List<String>> {
-    val instances = mutableListOf<String>()
-    for (numberOfInstances in processApproveRequestBean.countInstances() until count) {
-      instances.add(processApproveRequestBean.startProcess())
-    }
-    return ResponseEntity.ok(instances)
-  }
 
   @ApiOperation("Performs approve request task.")
   @PostMapping("/request/{id}/decision/{decision}")
@@ -43,7 +33,7 @@ open class ProcessStarterController {
   }
 
   @ApiOperation("Deletes all process instances.")
-  @DeleteMapping("/request")
+  @DeleteMapping("/process")
   open fun deleteAllInstances() {
     processApproveRequestBean.deleteAllInstances()
   }
