@@ -7,6 +7,4 @@ import org.springframework.context.annotation.Import
  */
 @MustBeDocumented
 @Import(TaskPoolSimpleViewConfiguration::class)
-annotation class EnableTaskPoolSimpleView {
-
-}
+annotation class EnableTaskPoolSimpleView

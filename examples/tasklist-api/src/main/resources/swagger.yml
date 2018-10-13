@@ -1,0 +1,67 @@
+swagger: '2.0'
+info:
+  title: Camunda BPM Taskpool Tasklist
+  version: 0.0.1
+  description: API for the task list.
+basePath: '/rest'
+tags:
+- name: Task
+  description: Operations tasks.
+schemes:
+- http
+- https
+paths:
+  '/tasks':
+    get:
+      tags:
+       - Task
+      summary: Lists tasks.
+      produces:
+      - application/json
+      operationId: getTasks
+      parameters:
+      - in: query
+        name: page
+        description: The page number to access (0 indexed, defaults to 0)
+        default: 0
+        type: string
+      - in: query
+        name: size
+        description: The page size requested (defaults to 20)
+        default: 0
+        type: string
+      - in: query
+        name: sort
+        description: A collection of sort directives in the format prop1:asc,prop2:desc,...
+        type: string
+        pattern: '^(([\\w]*)(|(asc|desc))?)(,([\\w]*)(|(asc|desc))?)+$'
+      - in: query
+        name: filter
+        description: One or multiple filter directives in the format prop1=value
+        type: array
+        items:
+          type: string
+        pattern: '^([\\w]*)|([.]+)?$'
+        collectionFormat: multi
+      responses:
+        '200':
+          description: Successful operation.
+          schema:
+            title: List of tasks.
+            type: array
+            items:
+              $ref: '#/definitions/Task'
+        '401':
+          description: Not authenticated.
+        '403':
+          description: Not authorized.
+
+definitions:
+  Task:
+    type: object
+    description: Represents a user task.
+    properties:
+      id:
+        type: string
+
+

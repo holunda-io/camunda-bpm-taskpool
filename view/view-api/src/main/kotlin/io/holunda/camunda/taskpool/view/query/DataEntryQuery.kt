@@ -1,8 +1,8 @@
-package io.holunda.camunda.taskpool.view.simple.query
+package io.holunda.camunda.taskpool.view.query
 
 import io.holunda.camunda.taskpool.api.business.EntryId
 import io.holunda.camunda.taskpool.api.business.EntryType
-import io.holunda.camunda.taskpool.view.simple.service.DataEntry
+import io.holunda.camunda.taskpool.view.DataEntry
 
 data class DataEntryQuery(
   val entryType: EntryType,

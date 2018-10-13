@@ -33,8 +33,18 @@
       <artifactId>camunda-bpm-taskpool-view-simple</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>io.holunda</groupId>
+      <artifactId>camunda-bpm-taskpool-example-tasklist-backend</artifactId>
+      <version>${project.version}</version>
+    </dependency>
 
 
+    <dependency>
+      <groupId>io.springfox</groupId>
+      <artifactId>springfox-swagger2</artifactId>
+      <version>2.9.2</version>
+    </dependency>
     <dependency>
       <groupId>io.toolisticon.springboot</groupId>
       <artifactId>springboot-swagger-starter</artifactId>

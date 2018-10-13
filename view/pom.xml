@@ -13,6 +13,7 @@
 
 
   <modules>
+    <module>view-api</module>
     <module>simple</module>
   </modules>
  </project>

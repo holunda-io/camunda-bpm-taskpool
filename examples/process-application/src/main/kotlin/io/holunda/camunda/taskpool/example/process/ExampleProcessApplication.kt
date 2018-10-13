@@ -5,6 +5,7 @@ import io.holunda.camunda.taskpool.core.EnableTaskPool
 import io.holunda.camunda.taskpool.enricher.*
 import io.holunda.camunda.taskpool.example.process.process.ProcessApproveRequest
 import io.holunda.camunda.taskpool.example.process.service.BusinessDataEntry
+import io.holunda.camunda.taskpool.example.tasklist.EnableTasklist
 import io.holunda.camunda.taskpool.plugin.EnableCamundaSpringEventing
 import io.holunda.camunda.taskpool.view.simple.EnableTaskPoolSimpleView
 import mu.KLogging
@@ -25,6 +26,7 @@ fun main(args: Array<String>) {
 @EnableTaskCollector
 @EnableTaskPool
 @EnableTaskPoolSimpleView
+@EnableTasklist
 @EnableWebFlux
 open class ExampleProcessApplication {
 

@@ -1,4 +1,4 @@
-package io.holunda.camunda.taskpool.view.simple.service
+package io.holunda.camunda.taskpool.view
 
 import io.holunda.camunda.taskpool.api.business.EntryId
 import io.holunda.camunda.taskpool.api.business.dataIdentity

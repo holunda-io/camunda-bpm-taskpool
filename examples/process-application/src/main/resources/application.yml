@@ -43,7 +43,7 @@ logging.level.io.holunda.camunda.taskpool:
 
 swagger:
   enabled: true
-  redirect: true
+  redirect: false
   apiInfo:
     title: Example Process Application
     description: REST interface of the example process application.
@@ -54,3 +54,10 @@ swagger:
     webflux:
       basePackage: "io.holunda.camunda.taskpool.example.process.webflux"
       path: "/**"
+    tasklist:
+      basePackage: "io.holunda.camunda.taskpool.example.tasklist"
+      path: "/**"
+      apiInfo:
+        title: Tasklist Application
+        description: REST interface of the process task list.
+

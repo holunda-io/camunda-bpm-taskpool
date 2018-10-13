@@ -5,6 +5,7 @@
       <list>
         <option value="C:\Projects\camunda-bpm-taskpool\examples\h2/src/main/kotlin" />
         <option value="C:\Projects\camunda-bpm-taskpool\examples\h2/src/test/kotlin" />
+        <option value="C:\Projects\camunda-bpm-taskpool\examples\h2/target/generated-sources/swagger/src/main/java" />
         <option value="src/main/kotlin" />
       </list>
     </option>

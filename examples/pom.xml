@@ -13,7 +13,10 @@
 
   <modules>
     <module>process-application</module>
+    <module>tasklist-api</module>
+    <module>tasklist-backend</module>
   </modules>
+
   <profiles>
     <profile>
       <id>frontend</id>

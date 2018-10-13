@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>io.holunda</groupId>
+    <artifactId>camunda-bpm-taskpool-examples</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>camunda-bpm-taskpool-example-tasklist-backend</artifactId>
+  <packaging>jar</packaging>
+
+  <properties>
+    <application.api-location>../tasklist-api/src/main/resources</application.api-location>
+    <application.base-package>io.holunda.camunda.taskpool.example.tasklist.rest</application.base-package>
+    <application.api-package>${application.base-package}.api</application.api-package>
+    <application.model-package>${application.base-package}.model</application.model-package>
+    <application.config-package>${application.base-package}</application.config-package>
+    <springfox.version>2.7.0</springfox.version>
+  </properties>
+  
+  <dependencies>
+
+    <dependency>
+      <groupId>io.holunda</groupId>
+      <artifactId>camunda-bpm-taskpool-view-api</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-validation</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>io.github.microutils</groupId>
+      <artifactId>kotlin-logging</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.module</groupId>
+      <artifactId>jackson-module-kotlin</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.swagger</groupId>
+      <artifactId>swagger-annotations</artifactId>
+      <version>1.5.20</version>
+    </dependency>
+    <dependency>
+      <groupId>org.axonframework</groupId>
+      <artifactId>axon-core</artifactId>
+    </dependency>
+  </dependencies>
+  
+  <build>
+    <plugins>
+
+      <plugin>
+        <!-- kotlin compiler -->
+        <artifactId>kotlin-maven-plugin</artifactId>
+        <groupId>org.jetbrains.kotlin</groupId>
+      </plugin>
+      <!-- java compiler -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+      </plugin>
+
+      <plugin>
+        <artifactId>maven-resources-plugin</artifactId>
+        <executions>
+          
+          <execution>
+            <id>copy-rest-api</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${project.build.directory}/swagger-model</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>${application.api-location}</directory>
+                  <includes>
+                    <include>swagger.yml</include>
+                  </includes>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+          
+          <execution>
+            <id>copy-swagger-ignore</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${project.build.directory}/generated-sources/swagger</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>src/main/resources</directory>
+                  <includes>
+                    <include>.swagger-codegen-ignore</include>
+                  </includes>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+
+          <!-- Enforce resource copy -->
+          <!-- This is a fix of Kotlin incremental Compiler bug -->
+          <!-- See https://discuss.kotlinlang.org/t/kotlin-compiler-incremental-not-copying-resources/5640/5 -->          
+          <execution>
+            <id>extra-copy-resources</id>
+            <phase>process-classes</phase>
+            <goals>
+              <goal>resources</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>extra-copy-test-resources</id>
+            <phase>process-test-classes</phase>
+            <goals>
+              <goal>testResources</goal>
+            </goals>
+          </execution>
+          
+        </executions>
+      </plugin>
+    
+    
+      <plugin>
+        <!-- generate spring controller stubs -->
+        <groupId>io.swagger</groupId>
+        <artifactId>swagger-codegen-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>generate-server-stubs</id>
+            <phase>process-sources</phase>
+            <goals>
+              <goal>generate</goal>
+            </goals>
+            <configuration>
+              <inputSpec>${project.build.directory}/swagger-model/swagger.yml</inputSpec>
+              <templateDirectory>src/main/swagger-templates</templateDirectory>
+              <language>spring</language>
+              <apiPackage>${application.api-package}</apiPackage>
+              <modelPackage>${application.model-package}</modelPackage>
+              <modelNamePrefix></modelNamePrefix>
+              <modelNameSuffix>Dto</modelNameSuffix>
+              <configOptions>
+                <interfaceOnly>true</interfaceOnly>
+                <basePackage>${application.base-package}</basePackage>
+                <configPackage>${application.config-package}</configPackage>
+                <swaggerDocketConfig>false</swaggerDocketConfig>
+                <dateLibrary>java8</dateLibrary>
+                <useOptional>true</useOptional>
+                <bigDecimalAsString>true</bigDecimalAsString>
+                <useBeanValidation>true</useBeanValidation>
+              </configOptions>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>

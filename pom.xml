@@ -229,6 +229,35 @@
           <version>3.0.0</version>
         </plugin>
 
+        <plugin>
+          <!-- for generating stubs -->
+          <groupId>io.swagger</groupId>
+          <artifactId>swagger-codegen-maven-plugin</artifactId>
+          <version>2.3.1</version>
+        </plugin>
+
+        <plugin>
+          <groupId>com.github.sylvainlaurent.maven</groupId>
+          <artifactId>swagger-validator-maven-plugin</artifactId>
+          <version>1.2.2</version>
+          <executions>
+            <execution>
+              <id>validate</id>
+              <phase>validate</phase>
+              <goals>
+                <goal>validate</goal>
+              </goals>
+              <configuration>
+                <failOnErrors>true</failOnErrors>
+                <includes>
+                  <include>src/main/resources/swagger.yml</include>
+                  <!-- other <include> may be added -->
+                </includes>
+              </configuration>
+            </execution>
+          </executions>
+        </plugin>
+
         <!-- Coverage metering -->
         <plugin>
           <groupId>org.jacoco</groupId>
@@ -475,6 +504,7 @@
                 <jvmTarget>1.8</jvmTarget>
                 <sourceDirs>
                   <sourceDir>${project.basedir}/src/main/kotlin</sourceDir>
+                  <sourceDir>${project.basedir}/target/generated-sources/swagger/src/main/java</sourceDir>
                 </sourceDirs>
               </configuration>
             </execution>

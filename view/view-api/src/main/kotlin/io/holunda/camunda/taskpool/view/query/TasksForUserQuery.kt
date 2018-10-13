@@ -1,7 +1,7 @@
-package io.holunda.camunda.taskpool.view.simple.query
+package io.holunda.camunda.taskpool.view.query
 
-import io.holunda.camunda.taskpool.view.simple.service.Task
-import io.holunda.camunda.taskpool.view.simple.service.User
+import io.holunda.camunda.taskpool.view.Task
+import io.holunda.camunda.taskpool.view.auth.User
 import org.axonframework.queryhandling.QueryGateway
 import org.axonframework.queryhandling.responsetypes.ResponseTypes
 

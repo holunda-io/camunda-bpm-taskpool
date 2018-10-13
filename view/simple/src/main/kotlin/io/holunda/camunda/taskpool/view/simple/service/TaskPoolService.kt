@@ -7,10 +7,11 @@ import io.holunda.camunda.taskpool.api.task.TaskAssignedEvent
 import io.holunda.camunda.taskpool.api.task.TaskCompletedEvent
 import io.holunda.camunda.taskpool.api.task.TaskCreatedEvent
 import io.holunda.camunda.taskpool.api.task.TaskDeletedEvent
-import io.holunda.camunda.taskpool.view.simple.query.DataEntryQuery
-import io.holunda.camunda.taskpool.view.simple.query.FilterQuery
-import io.holunda.camunda.taskpool.view.simple.query.TasksDataEntryForUserQuery
-import io.holunda.camunda.taskpool.view.simple.query.TasksForUserQuery
+import io.holunda.camunda.taskpool.view.*
+import io.holunda.camunda.taskpool.view.query.DataEntryQuery
+import io.holunda.camunda.taskpool.view.query.FilterQuery
+import io.holunda.camunda.taskpool.view.query.TasksDataEntryForUserQuery
+import io.holunda.camunda.taskpool.view.query.TasksForUserQuery
 import mu.KLogging
 import org.axonframework.eventhandling.EventHandler
 import org.axonframework.queryhandling.QueryHandler

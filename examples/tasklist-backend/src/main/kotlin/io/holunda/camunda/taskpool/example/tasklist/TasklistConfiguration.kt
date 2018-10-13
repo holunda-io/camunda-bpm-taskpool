@@ -1,8 +1,9 @@
-package io.holunda.camunda.taskpool.view.simple
+package io.holunda.camunda.taskpool.example.tasklist
 
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
 
-@ComponentScan
 @Configuration
-open class TaskPoolSimpleViewConfiguration
+@ComponentScan
+open class TasklistConfiguration {
+}
