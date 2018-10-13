@@ -7,19 +7,19 @@ import java.lang.reflect.Field
 import java.util.function.Predicate
 import kotlin.reflect.full.memberProperties
 
-const val SEPARATOR = ".-."
+const val SEPARATOR = "="
 
 fun filter(filters: List<String>, values: List<TasksWithDataEntries>): List<TasksWithDataEntries> {
-  val criteria = toCriteria(filters)
-  val predicates = createPredicates(criteria)
-  return filterByPredicates(values, predicates.first, predicates.second)
+  val predicates = createPredicates(toCriteria(filters))
+  return filterByPredicates(values, predicates)
 }
 
-private fun toCriteria(filters: List<String>) = filters
+internal fun toCriteria(filters: List<String>) = filters
   .asSequence()
   .filter { it.contains(SEPARATOR) }
   .map {
     val components = it.split(SEPARATOR)
+    if (components.size != 2 || components[0].isBlank() || components[0].isBlank()) throw IllegalArgumentException("Failed to create criteria from $it.")
     if (isTaskAttribute(components[0])) {
       TaskCriterium(components[0], components[1])
     } else {
@@ -27,41 +27,65 @@ private fun toCriteria(filters: List<String>) = filters
     }
   }.toList()
 
-private fun isTaskAttribute(propertyName: String): Boolean = Task::class.memberProperties.map { it.name }.contains(propertyName)
+internal fun isTaskAttribute(propertyName: String): Boolean = Task::class.memberProperties.map { it.name }.contains(propertyName)
 
-private fun createPredicates(criteria: List<Criterium>): Pair<List<Predicate<Any>>, List<Predicate<Any>>> {
-  val taskPredicates = criteria.asSequence().filter { it is TaskCriterium }.map { PropertyValuePredicate(name = it.name, value = it.value) }.toList()
-  val dataEntriesPredicates = criteria.asSequence().filter { it is DataEntryCriterium }.map { PropertyValuePredicate(name = it.name, value = it.value) }.toList()
-  return taskPredicates to dataEntriesPredicates
-}
-
-fun filterByPredicates(values: List<TasksWithDataEntries>, taskPredicates: List<Predicate<Any>>, dataEntriesPredicates: List<Predicate<Any>>): List<TasksWithDataEntries> {
+internal fun createPredicates(criteria: List<Criterium>): TaskPredicateWrapper {
+  val taskPredicates: List<Predicate<Any>> = criteria.asSequence().filter { it is TaskCriterium }.map { PropertyValuePredicate(name = it.name, value = it.value) }.toList()
+  val dataEntriesPredicates: List<Predicate<Any>> = criteria.asSequence().filter { it is DataEntryCriterium }.map { PropertyValuePredicate(name = it.name, value = it.value) }.toList()
 
   val taskPredicate = if (taskPredicates.isEmpty()) {
     null
   } else {
-    taskPredicates.reduce { combined, predicate -> combined.and(predicate) }
+    taskPredicates.reduce { combined, predicate -> combined.or(predicate) }
   }
   val dataEntriesPredicate = if (dataEntriesPredicates.isEmpty()) {
     null
   } else {
-    dataEntriesPredicates.reduce{combined, predicate -> combined.and(predicate)}
+    dataEntriesPredicates.reduce { combined, predicate -> combined.or(predicate) }
   }
+
+  return TaskPredicateWrapper(taskPredicate, dataEntriesPredicate)
+}
+
+internal fun filterByPredicates(values: List<TasksWithDataEntries>, wrapper: TaskPredicateWrapper): List<TasksWithDataEntries> {
 
   return values.filter {
     // no constraints
-    (taskPredicate == null && dataEntriesPredicate == null)
-    // constraint is defined on task and matches on task property
-    (taskPredicate != null && taskPredicate.test(it.task))
+    (wrapper.taskPredicate == null && wrapper.dataEntriesPredicate == null)
+      // constraint is defined on task and matches on task property
+      || (wrapper.taskPredicate != null && wrapper.taskPredicate.test(it.task))
       // constraint is defined on data and matches on data entry property
-      || (dataEntriesPredicate != null && it.dataEntries.find{ dataEntry: Any -> dataEntriesPredicate.test(dataEntry) } != null)
+      || (wrapper.dataEntriesPredicate != null
+      && it.dataEntries
+      .asSequence()
+      .map { dataEntry -> dataEntry.payload }
+      .find { payload -> wrapper.dataEntriesPredicate.test(payload) } != null)
   }
 }
 
-sealed class Criterium(open val name: String, open val value: String)
+sealed class Criterium(open val name: String, open val value: String) {
+  override fun equals(other: Any?): Boolean {
+
+    if (this === other) return true
+    if (other !is Criterium) return false
+
+    if (name != other.name) return false
+    if (value != other.value) return false
+
+    return true
+  }
+
+  override fun hashCode(): Int {
+    var result = name.hashCode()
+    result = 31 * result + value.hashCode()
+    return result
+  }
+}
+
 class TaskCriterium(override val name: String, override val value: String) : Criterium(name, value)
 class DataEntryCriterium(override val name: String, override val value: String) : Criterium(name, value)
 
+data class TaskPredicateWrapper(val taskPredicate: Predicate<Any>?, val dataEntriesPredicate: Predicate<Any>?)
 
 /**
  * <V> type of the property
@@ -78,7 +102,8 @@ data class PropertyValuePredicate(
     val field = fieldExtractor(target, name)
     return if (field != null) {
       try {
-        value.toString() == valueExtractor(target, field)
+        val extracted = valueExtractor(target, field)
+        value.toString() == extracted
       } catch (e: IllegalStateException) {
         false
       }
@@ -89,6 +114,7 @@ data class PropertyValuePredicate(
 }
 
 fun extractField(target: Any, name: String): Field? = ReflectionUtils.findField(target::class.java, name)
-fun extractValue(target: Any, field: Field): Any? = ReflectionUtils.getField(field, target)
+fun extractValue(target: Any, field: Field): Any? = ReflectionUtils.getField(field.apply { ReflectionUtils.makeAccessible(this) }, target)
+
 
 
