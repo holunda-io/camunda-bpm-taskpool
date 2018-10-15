@@ -17,6 +17,6 @@ typealias CorrelationMap = VariableMap
 
 fun newCorrelations(): CorrelationMap = Variables.createVariables()
 
-fun VariableMap.addCorrelation(entryType: EntryType, entryId: EntryId) = this.putValueTyped(entryType, stringValue(entryId))
+fun VariableMap.addCorrelation(entryType: EntryType, entryId: EntryId) = this.putValueTyped(entryType, stringValue(entryId))!!
 fun VariableMap.removeCorrelation(entryType: EntryType) = this.remove(entryType)
 fun VariableMap.getCorrelation(entryType: EntryType): EntryId = this.getValueTyped<StringValue>(entryType).value
