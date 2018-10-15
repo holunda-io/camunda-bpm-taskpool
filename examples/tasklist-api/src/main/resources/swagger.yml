@@ -24,25 +24,30 @@ paths:
         name: page
         description: The page number to access (0 indexed, defaults to 0)
         default: 0
-        type: string
+        type: integer
       - in: query
         name: size
         description: The page size requested (defaults to 20)
         default: 0
-        type: string
+        type: integer
       - in: query
         name: sort
         description: A collection of sort directives in the format prop1:asc,prop2:desc,...
-        type: string
-        pattern: '^(([\\w]*)(|(asc|desc))?)(,([\\w]*)(|(asc|desc))?)+$'
+        type: array
+        items:
+          type: string
+          pattern: '^[-+]([\w]*)$'
+        collectionFormat: pipes
+        uniqueItems: true
       - in: query
         name: filter
         description: One or multiple filter directives in the format prop1=value
         type: array
         items:
           type: string
-        pattern: '^([\\w]*)|([.]+)?$'
+        pattern: '^([\w]*)=([.]+)?$'
         collectionFormat: multi
+        uniqueItems: true
       responses:
         '200':
           description: Successful operation.
@@ -50,18 +55,97 @@ paths:
             title: List of tasks.
             type: array
             items:
-              $ref: '#/definitions/Task'
+              $ref: '#/definitions/TaskWithDataEntries'
         '401':
           description: Not authenticated.
         '403':
           description: Not authorized.
 
 definitions:
-  Task:
+  TaskWithDataEntries:
     type: object
     description: Represents a user task.
     properties:
+      task:
+        $ref: '#/definitions/Task'
+      dataEntries:
+        type: array
+        items:
+          $ref: '#/definitions/DataEntry'
+    required:
+      - task
+      - dataEntries
+
+  Task:
+    type: object
+    properties:
       id:
         type: string
+        description: Id of the user task.
+      name:
+        type: string
+        description: Action to execute.
+      description:
+        type: string
+        description: Description of the user task.
+      url:
+        type: string
+        description: URL used to open user task.
+      formKey:
+        type: string
+        description: Form key of the task (as defined in the process model).
+      candidateGroups:
+        type: array
+        description: Set of candidate groups represented by their group ids.
+        items:
+          type: string
+      candidateUsers:
+        type: array
+        description: Set of candidate users represented by their user ids.
+        items:
+          type: string
+      assignee:
+        type: string
+        description: User name of assigned user.
+      processName:
+        type: string
+        description: Name of the process.
+      createTime:
+        type: string
+        description: Creation date and time of the task.
+        format: date-time
+      dueDate:
+        type: string
+        description: Due date and time of the task.
+        format: date-time
+      businessKey:
+        type: string
+        description: Business Key of the process.
+      priority:
+        type: integer
+        description: Priority of the task.
+    required:
+    - id
+    - name
+    - description
+    - url
+    - candidateGroups
+    - candidateUsers
+    - processName
+    - createTime
+    - dueDate
+    - businessKey
 
+  DataEntry:
+    type: object
+    properties:
+      entryType:
+        type: string
+        description: Type of entry
+      entryId:
+        type: string
+        description: Id of the entry
+      payload:
+        type: object
+        format: binary
 

@@ -12,6 +12,9 @@ import io.holunda.camunda.taskpool.view.query.DataEntryQuery
 import io.holunda.camunda.taskpool.view.query.FilterQuery
 import io.holunda.camunda.taskpool.view.query.TasksDataEntryForUserQuery
 import io.holunda.camunda.taskpool.view.query.TasksForUserQuery
+import io.holunda.camunda.taskpool.view.simple.createPredicates
+import io.holunda.camunda.taskpool.view.simple.filterByPredicates
+import io.holunda.camunda.taskpool.view.simple.toCriteria
 import mu.KLogging
 import org.axonframework.eventhandling.EventHandler
 import org.axonframework.queryhandling.QueryHandler
@@ -45,7 +48,19 @@ open class TaskPoolService(
    * Retrieves a list of tasks with correlatated data entries of given entry type (and optional id).
    */
   @QueryHandler
-  open fun query(query: TasksDataEntryForUserQuery): List<TasksWithDataEntries> = query(TasksForUserQuery(query.user)).map { task -> tasksWithDataEntries(task, this.dataEntries) }
+  open fun query(query: TasksDataEntryForUserQuery): List<TaskWithDataEntries> {
+
+    val predicates = createPredicates(toCriteria(query.filters))
+
+    val filtered = query(TasksForUserQuery(query.user))
+      .asSequence()
+      .map { task -> tasksWithDataEntries(task, this.dataEntries) }
+      .filter { filterByPredicates(it, predicates) }
+      // TODO add sort
+      // TODO add paging (size + page)
+      .toList()
+    return filtered
+  }
 
   @EventHandler
   open fun on(event: TaskCreatedEvent) {
