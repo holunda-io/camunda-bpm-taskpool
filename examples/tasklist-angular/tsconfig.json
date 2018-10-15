@@ -22,7 +22,12 @@
       "*": [
         "src/*",
         "src-gen/*"
-      ]
+      ],
+      // This path is for npm linked frontend-components accessibility
+      "rxjs": ["node_modules/rxjs"],
+      "rxjs/*": ["node_modules/rxjs/*"],
+      "@angular": [".././node_modules/@angular"],
+      "@angular/*": ["node_modules/@angular/*"]
     }
   }
 }
