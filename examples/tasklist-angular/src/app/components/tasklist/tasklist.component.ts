@@ -14,6 +14,6 @@ export class TasklistComponent {
   constructor(private taskHelper: TaskHelperService) {
     this.taskHelper.tasks.subscribe((tasks) => {
       this.tasks = tasks;
-    })
+    });
   }
 }
