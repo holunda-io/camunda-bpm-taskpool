@@ -31,10 +31,10 @@ open class TaskController(
   companion object : KLogging()
 
   override fun getTasks(
+    @RequestParam(value = "filter") filters: List<String>,
     @RequestParam(value = "page") page: Optional<Int>,
     @RequestParam(value = "size") size: Optional<Int>,
-    @RequestParam(value = "sort") sort: Optional<List<String>>,
-    @RequestParam(value = "filters") filters: Optional<List<String>>
+    @RequestParam(value = "sort") sort: Optional<List<String>>
   ): ResponseEntity<List<TaskWithDataEntriesDto>> {
 
     val username = currentUserService.getCurrentUser()
@@ -46,7 +46,7 @@ open class TaskController(
         page = page,
         size = size,
         sort = sort.orElseGet { listOf() },
-        filters = filters.orElseGet { listOf() }
+        filters = filters
       ), ResponseTypes.multipleInstancesOf(TaskWithDataEntries::class.java))
       .join()
     return ok(result.map { mapper.dto(it) })

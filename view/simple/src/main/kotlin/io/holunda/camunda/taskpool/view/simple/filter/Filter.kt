@@ -48,6 +48,9 @@ internal fun createPredicates(criteria: List<Criterium>): TaskPredicateWrapper {
   return TaskPredicateWrapper(taskPredicate, dataEntriesPredicate)
 }
 
+/**
+ * Forms criteria from key=value filters.
+ */
 internal fun toCriteria(filters: List<String>) = filters
   .asSequence()
   .filter { it.contains(SEPARATOR) }
