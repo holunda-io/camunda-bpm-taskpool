@@ -31,7 +31,7 @@
     <axon.version>3.3.5</axon.version>
     <version.camunda.spin>1.5.1</version.camunda.spin>
     <jackson.version>2.9.5</jackson.version>
-
+    <org.mapstruct.version>1.2.0.Final</org.mapstruct.version>
   </properties>
 
   <modules>
@@ -86,6 +86,18 @@
         <groupId>com.fasterxml.jackson.datatype</groupId>
         <artifactId>jackson-datatype-jsr310</artifactId>
         <version>${jackson.version}</version>
+      </dependency>
+
+      <!-- MapStruct -->
+      <dependency>
+        <groupId>org.mapstruct</groupId>
+        <artifactId>mapstruct-jdk8</artifactId>
+        <version>${org.mapstruct.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.mapstruct</groupId>
+        <artifactId>mapstruct</artifactId>
+        <version>${org.mapstruct.version}</version>
       </dependency>
 
       <dependency>
@@ -486,8 +498,16 @@
               </goals>
               <configuration>
                 <sourceDirs>
+                  <sourceDir>${project.basedir}/target/generated-sources/swagger/src/main/java</sourceDir>
                   <sourceDir>src/main/kotlin</sourceDir>
                 </sourceDirs>
+                <annotationProcessorPaths>
+                  <annotationProcessorPath>
+                    <groupId>org.mapstruct</groupId>
+                    <artifactId>mapstruct-processor</artifactId>
+                    <version>${org.mapstruct.version}</version>
+                  </annotationProcessorPath>
+                </annotationProcessorPaths>
               </configuration>
             </execution>
             <execution>
@@ -503,8 +523,8 @@
                 </compilerPlugins>
                 <jvmTarget>1.8</jvmTarget>
                 <sourceDirs>
-                  <sourceDir>${project.basedir}/src/main/kotlin</sourceDir>
                   <sourceDir>${project.basedir}/target/generated-sources/swagger/src/main/java</sourceDir>
+                  <sourceDir>${project.basedir}/src/main/kotlin</sourceDir>
                 </sourceDirs>
               </configuration>
             </execution>

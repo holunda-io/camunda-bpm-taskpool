@@ -29,7 +29,6 @@
         </configuration>
       </plugin>
 
-      <!--
       <plugin>
         <groupId>io.swagger</groupId>
         <artifactId>swagger-codegen-maven-plugin</artifactId>
@@ -41,20 +40,22 @@
               <goal>generate</goal>
             </goals>
             <configuration>
-              <output>src-gen/application</output>
-              <inputSpec>${project.build.directory}/swagger-model/swagger.yaml</inputSpec>
+              <output>src-gen/tasklist</output>
+              <inputSpec>${project.build.directory}/swagger-model/swagger.yml</inputSpec>
               <language>typescript-angular</language>
               <apiPackage>api</apiPackage>
               <modelPackage>model</modelPackage>
+              <!--
               <configHelp>true</configHelp>
+              -->
               <configOptions>
-                <ngVersion>5.2</ngVersion>
+                <ngVersion>6.1</ngVersion>
               </configOptions>
             </configuration>
           </execution>
         </executions>
       </plugin>
-      -->
+
       <plugin>
         <groupId>com.github.eirslett</groupId>
         <artifactId>frontend-maven-plugin</artifactId>
@@ -80,6 +81,8 @@
             </configuration>
           </execution>
           <!--Karma test run-->
+          <!--
+          Disable for the moment.
           <execution>
             <id>npm test</id>
             <phase>test</phase>
@@ -90,6 +93,7 @@
               <arguments>run test</arguments>
             </configuration>
           </execution>
+          -->
         </executions>
       </plugin>
       <plugin>
@@ -110,7 +114,6 @@
               <outputDirectory>${project.build.directory}/classes/static</outputDirectory>
             </configuration>
           </execution>
-          <!--
           <execution>
             <id>copy-rest-api</id>
             <phase>generate-sources</phase>
@@ -121,12 +124,11 @@
               <outputDirectory>${project.build.directory}/swagger-model</outputDirectory>
               <resources>
                 <resource>
-                  <directory>../rest-api/src/main/resources</directory>
+                  <directory>../tasklist-api/src/main/resources</directory>
                 </resource>
               </resources>
             </configuration>
           </execution>
-          -->
         </executions>
       </plugin>
     </plugins>

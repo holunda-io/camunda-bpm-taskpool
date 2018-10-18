@@ -1,0 +1,39 @@
+<div class="row">
+  <div class="col-lg-12">
+    <h1>Tasks</h1>
+    <p>A list of tasks gathered from Camunda BPM Taskpool.</p>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-lg-12">
+    <div class="card">
+      <div class="card-header">All Tasks</div>
+      <div class="card-body">
+        <table class="table">
+          <thead>
+          <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Created</th>
+            <th>Assigned</th>
+            <th>Priority</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let taskWithEntryData of tasks index as i">
+            <td>{{ taskWithEntryData.task.name }}</td>
+            <td>{{ taskWithEntryData.task.description }}</td>
+            <td>{{ taskWithEntryData.task.createTime }}</td>
+            <td>{{ taskWithEntryData.task.assignee }}</td>
+            <td>{{ taskWithEntryData.task.priority }}</td>
+          </tr>
+          <tr ng-hide="tasks.length">
+            <td colspan="6">No tasks available.</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

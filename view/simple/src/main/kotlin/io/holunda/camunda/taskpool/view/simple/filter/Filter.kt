@@ -1,33 +1,34 @@
-package io.holunda.camunda.taskpool.example.tasklist.rest.filter
+package io.holunda.camunda.taskpool.view.simple
 
 import io.holunda.camunda.taskpool.view.Task
-import io.holunda.camunda.taskpool.view.TasksWithDataEntries
+import io.holunda.camunda.taskpool.view.TaskWithDataEntries
 import org.springframework.util.ReflectionUtils
 import java.lang.reflect.Field
 import java.util.function.Predicate
 import kotlin.reflect.full.memberProperties
 
 const val SEPARATOR = "="
+const val TASK_PREFIX = "task."
 
-fun filter(filters: List<String>, values: List<TasksWithDataEntries>): List<TasksWithDataEntries> {
+internal fun filter(filters: List<String>, values: List<TaskWithDataEntries>): List<TaskWithDataEntries> {
   val predicates = createPredicates(toCriteria(filters))
   return filterByPredicates(values, predicates)
 }
 
-internal fun toCriteria(filters: List<String>) = filters
-  .asSequence()
-  .filter { it.contains(SEPARATOR) }
-  .map {
-    val components = it.split(SEPARATOR)
-    if (components.size != 2 || components[0].isBlank() || components[0].isBlank()) throw IllegalArgumentException("Failed to create criteria from $it.")
-    if (isTaskAttribute(components[0])) {
-      TaskCriterium(components[0], components[1])
-    } else {
-      DataEntryCriterium(components[0], components[1])
-    }
-  }.toList()
+internal fun filterByPredicates(values: List<TaskWithDataEntries>, wrapper: TaskPredicateWrapper): List<TaskWithDataEntries> = values.filter { filterByPredicates(it, wrapper) }
 
-internal fun isTaskAttribute(propertyName: String): Boolean = Task::class.memberProperties.map { it.name }.contains(propertyName)
+
+internal fun filterByPredicates(value: TaskWithDataEntries, wrapper: TaskPredicateWrapper): Boolean =
+// no constraints
+  (wrapper.taskPredicate == null && wrapper.dataEntriesPredicate == null)
+    // constraint is defined on task and matches on task property
+    || (wrapper.taskPredicate != null && wrapper.taskPredicate.test(value.task))
+    // constraint is defined on data and matches on data entry property
+    || (wrapper.dataEntriesPredicate != null
+    && value.dataEntries
+    .asSequence()
+    .map { dataEntry -> dataEntry.payload }
+    .find { payload -> wrapper.dataEntriesPredicate.test(payload) } != null)
 
 internal fun createPredicates(criteria: List<Criterium>): TaskPredicateWrapper {
   val taskPredicates: List<Predicate<Any>> = criteria.asSequence().filter { it is TaskCriterium }.map { PropertyValuePredicate(name = it.name, value = it.value) }.toList()
@@ -47,21 +48,26 @@ internal fun createPredicates(criteria: List<Criterium>): TaskPredicateWrapper {
   return TaskPredicateWrapper(taskPredicate, dataEntriesPredicate)
 }
 
-internal fun filterByPredicates(values: List<TasksWithDataEntries>, wrapper: TaskPredicateWrapper): List<TasksWithDataEntries> {
+/**
+ * Forms criteria from key=value filters.
+ */
+internal fun toCriteria(filters: List<String>) = filters
+  .asSequence()
+  .filter { it.contains(SEPARATOR) }
+  .map {
+    val components = it.split(SEPARATOR)
+    if (components.size != 2 || components[0].isBlank() || components[0].isBlank()) throw IllegalArgumentException("Failed to create criteria from $it.")
+    if (isTaskAttribute(components[0])) {
+      TaskCriterium(components[0].substring(TASK_PREFIX.length), components[1])
+    } else {
+      DataEntryCriterium(components[0], components[1])
+    }
+  }.toList()
 
-  return values.filter {
-    // no constraints
-    (wrapper.taskPredicate == null && wrapper.dataEntriesPredicate == null)
-      // constraint is defined on task and matches on task property
-      || (wrapper.taskPredicate != null && wrapper.taskPredicate.test(it.task))
-      // constraint is defined on data and matches on data entry property
-      || (wrapper.dataEntriesPredicate != null
-      && it.dataEntries
-      .asSequence()
-      .map { dataEntry -> dataEntry.payload }
-      .find { payload -> wrapper.dataEntriesPredicate.test(payload) } != null)
-  }
-}
+internal fun isTaskAttribute(propertyName: String): Boolean =
+  propertyName.startsWith(TASK_PREFIX)
+    && propertyName.length > TASK_PREFIX.length
+    && Task::class.memberProperties.map { it.name }.contains(propertyName.substring(TASK_PREFIX.length))
 
 sealed class Criterium(open val name: String, open val value: String) {
   override fun equals(other: Any?): Boolean {

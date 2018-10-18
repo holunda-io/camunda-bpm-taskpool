@@ -1,9 +1,10 @@
-package io.holunda.camunda.taskpool.example.tasklist.rest.filter
+package io.holunda.camunda.taskpool.view.simple.filter
 
 import io.holunda.camunda.taskpool.api.task.ProcessReference
 import io.holunda.camunda.taskpool.view.DataEntry
 import io.holunda.camunda.taskpool.view.Task
-import io.holunda.camunda.taskpool.view.TasksWithDataEntries
+import io.holunda.camunda.taskpool.view.TaskWithDataEntries
+import io.holunda.camunda.taskpool.view.simple.*
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Rule
 import org.junit.Test
@@ -14,29 +15,31 @@ class FilterTest {
   @get: Rule
   val expected = ExpectedException.none()
 
-  private val filtersList = listOf("name${SEPARATOR}myName", "assignee${SEPARATOR}kermit", "dataAttr1${SEPARATOR}value", "dataAttr2${SEPARATOR}another")
+  private val filtersList = listOf("task.name${SEPARATOR}myName", "task.assignee${SEPARATOR}kermit", "dataAttr1${SEPARATOR}value", "dataAttr2${SEPARATOR}another")
 
   private val ref = ProcessReference("1", "2", "3", "4")
 
-  private val task1 = TasksWithDataEntries(Task("id", ref, "key", name = "myName"), listOf())
-  private val task2 = TasksWithDataEntries(Task("id", ref, "key", assignee = "kermit"), listOf())
-  private val task3 = TasksWithDataEntries(Task("id", ref, "key", name = "foo", assignee = "gonzo"), listOf(
+  private val task1 = TaskWithDataEntries(Task("id", ref, "key", name = "myName"), listOf())
+  private val task2 = TaskWithDataEntries(Task("id", ref, "key", assignee = "kermit"), listOf())
+  private val task3 = TaskWithDataEntries(Task("id", ref, "key", name = "foo", assignee = "gonzo"), listOf(
     DataEntry("type", "4711", DataPayload("another")
     )))
-  private val task4 = TasksWithDataEntries(Task("id", ref, "key", name = "foo", assignee = "gonzo"), listOf(
+  private val task4 = TaskWithDataEntries(Task("id", ref, "key", name = "foo", assignee = "gonzo"), listOf(
     DataEntry("type", "4711", DataPayload("value"))
   ))
-  private val task5 = TasksWithDataEntries(Task("id", ref, "key", name = "foo", assignee = "gonzo"), listOf(
-    DataEntry("type", "4711", DataPayload2("another"))
+  private val task5 = TaskWithDataEntries(Task("id", ref, "key", name = "foo", assignee = "gonzo"), listOf(
+    DataEntry("type", "4711", DataPayload2("another", "myName"))
   ))
 
 
   @Test
   fun `should classify properties`() {
-    assertThat(isTaskAttribute("id")).isTrue()
-    assertThat(isTaskAttribute("name")).isTrue()
-    assertThat(isTaskAttribute("assignee")).isTrue()
+    assertThat(isTaskAttribute("task.id")).isTrue()
+    assertThat(isTaskAttribute("task.name")).isTrue()
+    assertThat(isTaskAttribute("task.assignee")).isTrue()
 
+    assertThat(isTaskAttribute("task.")).isFalse()
+    assertThat(isTaskAttribute("assignee")).isFalse()
     assertThat(isTaskAttribute("someOther")).isFalse()
     assertThat(isTaskAttribute("described")).isFalse()
   }
@@ -92,7 +95,8 @@ class FilterTest {
     val filtered = filter(filtersList, listOf(task1, task2, task3, task4, task5))
     assertThat(filtered).containsExactlyElementsOf(listOf(task1, task2, task4, task5))
   }
+
 }
 
 data class DataPayload(val dataAttr1: String)
-data class DataPayload2(val dataAttr2: String)
+data class DataPayload2(val dataAttr2: String, val name: String)
