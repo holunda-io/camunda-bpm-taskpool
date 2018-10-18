@@ -5,8 +5,8 @@
   <modelVersion>4.0.0</modelVersion>
 
 
-  <groupId>io.holunda</groupId>
-  <artifactId>camunda-bpm-taskpool-root</artifactId>
+  <groupId>io.holunda.taskpool</groupId>
+  <artifactId>camunda-bpm-taskpool</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <packaging>pom</packaging>
 
@@ -35,14 +35,12 @@
   </properties>
 
   <modules>
-    <module>api</module>
     <module>camunda-engine-plugin</module>
-    <module>core</module>
-    <module>collector</module>
+    <module>taskpool</module>
+    <module>datapool</module>
     <module>view</module>
     <module>examples</module>
   </modules>
-
 
   <dependencyManagement>
     <dependencies>

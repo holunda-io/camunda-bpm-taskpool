@@ -1,6 +1,7 @@
 package io.holunda.camunda.taskpool.example.process
 
 import io.holunda.camunda.taskpool.EnableTaskCollector
+import io.holunda.camunda.taskpool.core.EnableDataPool
 import io.holunda.camunda.taskpool.core.EnableTaskPool
 import io.holunda.camunda.taskpool.enricher.*
 import io.holunda.camunda.taskpool.example.process.process.ProcessApproveRequest
@@ -25,6 +26,7 @@ fun main(args: Array<String>) {
 @EnableCamundaSpringEventing
 @EnableTaskCollector
 @EnableTaskPool
+@EnableDataPool
 @EnableTaskPoolSimpleView
 @EnableTasklist
 @EnableWebFlux
