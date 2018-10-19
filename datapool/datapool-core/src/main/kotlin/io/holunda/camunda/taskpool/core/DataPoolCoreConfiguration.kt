@@ -14,7 +14,7 @@ open class DataPoolCoreConfiguration {
 
   @Bean
   open fun dataEntryAggregateRepository(eventStore: EventStore): EventSourcingRepository<DataEntryAggregate> {
-    return EventSourcingRepository(DataEntryAggregate::class.java, eventStore)
+    return EventSourcingRepository.builder(DataEntryAggregate::class.java).eventStore(eventStore).build()
   }
 
 }

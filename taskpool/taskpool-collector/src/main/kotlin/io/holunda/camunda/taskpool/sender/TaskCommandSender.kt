@@ -3,8 +3,6 @@ package io.holunda.camunda.taskpool.sender
 import io.holunda.camunda.taskpool.TaskCollectorProperties
 import io.holunda.camunda.taskpool.api.task.*
 import mu.KLogging
-import org.axonframework.commandhandling.CommandCallback
-import org.axonframework.commandhandling.CommandMessage
 import org.axonframework.commandhandling.gateway.CommandGateway
 import org.springframework.context.event.EventListener
 import org.springframework.stereotype.Component
@@ -76,15 +74,7 @@ class TaskCommandSender(
 
   private fun send(command: Any) {
     if (properties.sender.enabled) {
-      gateway.send<Any, Any?>(command, object : CommandCallback<Any, Any?> {
-        override fun onSuccess(m: CommandMessage<out Any>, result: Any?) {
-          logger.debug("Successfully submitted command $command")
-        }
-
-        override fun onFailure(message: CommandMessage<out Any>?, e: Throwable) {
-          logger.error("Error sending command $message", e)
-        }
-      })
+      gateway.send<Any, Any?>(command) { m, r -> logger.debug("Successfully submitted command $m, $r") }
     } else {
       logger.debug("Would have sent command $command")
     }

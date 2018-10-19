@@ -1,6 +1,6 @@
 package io.holunda.camunda.taskpool.api.business
 
-import org.axonframework.commandhandling.TargetAggregateIdentifier
+import org.axonframework.modelling.command.TargetAggregateIdentifier
 
 data class CreateOrUpdateDataEntryCommand(
   override val entryType: EntryType,

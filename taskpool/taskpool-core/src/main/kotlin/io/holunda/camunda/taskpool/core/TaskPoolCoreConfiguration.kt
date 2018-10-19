@@ -14,7 +14,10 @@ open class TaskPoolCoreConfiguration {
 
   @Bean
   open fun taskAggregateRepository(eventStore: EventStore): EventSourcingRepository<TaskAggregate> {
-    return EventSourcingRepository(TaskAggregate::class.java, eventStore)
+    return EventSourcingRepository
+      .builder(TaskAggregate::class.java)
+      .eventStore(eventStore)
+      .build()
   }
 
 }

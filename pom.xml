@@ -28,7 +28,7 @@
     <kotlin-logging.version>1.5.4</kotlin-logging.version>
     <mockito.version>2.18.3</mockito.version>
     <springboot.version>2.0.3.RELEASE</springboot.version>
-    <axon.version>3.3.5</axon.version>
+    <axon.version>4.0</axon.version>
     <version.camunda.spin>1.5.1</version.camunda.spin>
     <jackson.version>2.9.5</jackson.version>
     <org.mapstruct.version>1.2.0.Final</org.mapstruct.version>
@@ -128,9 +128,20 @@
         <version>${kotlin-logging.version}</version>
       </dependency>
       <!-- Axon Framework -->
+      <!-- https://mvnrepository.com/artifact/org.axonframework/axon -->
       <dependency>
         <groupId>org.axonframework</groupId>
-        <artifactId>axon-core</artifactId>
+        <artifactId>axon-messaging</artifactId>
+        <version>${axon.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.axonframework</groupId>
+        <artifactId>axon-spring</artifactId>
+        <version>${axon.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.axonframework</groupId>
+        <artifactId>axon-eventsourcing</artifactId>
         <version>${axon.version}</version>
       </dependency>
       <dependency>
@@ -140,9 +151,10 @@
       </dependency>
       <dependency>
         <groupId>org.axonframework</groupId>
-        <artifactId>axon-spring</artifactId>
+        <artifactId>axon-modelling</artifactId>
         <version>${axon.version}</version>
       </dependency>
+
 
       <!-- Testing -->
       <dependency>
@@ -218,12 +230,6 @@
     <dependency>
       <groupId>org.jetbrains.kotlin</groupId>
       <artifactId>kotlin-test</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.axonframework</groupId>
-      <artifactId>axon-test</artifactId>
-      <version>${axon.version}</version>
       <scope>test</scope>
     </dependency>
   </dependencies>

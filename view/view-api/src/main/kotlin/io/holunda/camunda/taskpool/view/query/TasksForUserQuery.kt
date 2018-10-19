@@ -2,8 +2,8 @@ package io.holunda.camunda.taskpool.view.query
 
 import io.holunda.camunda.taskpool.view.Task
 import io.holunda.camunda.taskpool.view.auth.User
+import org.axonframework.messaging.responsetypes.ResponseTypes
 import org.axonframework.queryhandling.QueryGateway
-import org.axonframework.queryhandling.responsetypes.ResponseTypes
 
 data class TasksForUserQuery(
   val user: User

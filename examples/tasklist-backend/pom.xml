@@ -60,7 +60,7 @@
     </dependency>
     <dependency>
       <groupId>org.axonframework</groupId>
-      <artifactId>axon-core</artifactId>
+      <artifactId>axon-messaging</artifactId>
     </dependency>
 
     <!-- MapStruct -->
