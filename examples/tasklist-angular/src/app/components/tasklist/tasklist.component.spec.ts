@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { TaskHelperService } from 'app/services/task.helper.service';
 import 'rxjs/add/observable/of';
 import { TasklistComponent } from './tasklist.component';
-import { Observable } from 'rxjs/Rx';
+import { Observable } from 'rxjs-compat';
 
 describe('Component: TasklistComponent', () => {
 
