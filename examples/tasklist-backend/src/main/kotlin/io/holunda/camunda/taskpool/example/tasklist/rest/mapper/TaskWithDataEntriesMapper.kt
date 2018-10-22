@@ -32,7 +32,7 @@ abstract class TaskWithDataEntriesMapper {
   abstract fun dto(task: Task): TaskDto
 
   @Mappings(
-    Mapping(target = "payload", expression="java(objectMapper.writeValueAsString(dataEntry.getPayload()))")
+    Mapping(target = "payload", source="dataEntry.payload")
   )
   @Throws(JsonProcessingException::class)
   abstract fun dto(dataEntry: DataEntry): DataEntryDto

@@ -1,9 +1,9 @@
-package io.holunda.camunda.taskpool.core
+package io.holunda.camunda.datapool.core
 
 import org.springframework.context.annotation.Import
 
 /**
- * Starts task pool component.
+ * Starts data pool component.
  */
 @MustBeDocumented
 @Import(DataPoolCoreConfiguration::class)

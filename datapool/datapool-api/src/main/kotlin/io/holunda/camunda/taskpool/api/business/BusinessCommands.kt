@@ -1,6 +1,7 @@
 package io.holunda.camunda.taskpool.api.business
 
 import org.axonframework.modelling.command.TargetAggregateIdentifier
+import org.camunda.bpm.engine.variable.VariableMap
 
 data class CreateOrUpdateDataEntryCommand(
   override val entryType: EntryType,
@@ -8,8 +9,7 @@ data class CreateOrUpdateDataEntryCommand(
   override val correlations: CorrelationMap = newCorrelations(),
   @TargetAggregateIdentifier
   val dataIdentity: String = dataIdentity(entryType = entryType, entryId = entryId),
-
-  val payload: Any
+  val payload: VariableMap
 ) : DataIdentity, WithCorrelations
 
 data class CreateDataEntryCommand(
@@ -19,7 +19,7 @@ data class CreateDataEntryCommand(
   @TargetAggregateIdentifier
   val dataIdentity: String = dataIdentity(entryType = entryType, entryId = entryId),
 
-  val payload: Any
+  val payload: VariableMap
 ) : DataIdentity, WithCorrelations
 
 data class UpdateDataEntryCommand(
@@ -29,5 +29,5 @@ data class UpdateDataEntryCommand(
   @TargetAggregateIdentifier
   val dataIdentity: String = dataIdentity(entryType = entryType, entryId = entryId),
 
-  val payload: Any
+  val payload: VariableMap
 ) : DataIdentity, WithCorrelations

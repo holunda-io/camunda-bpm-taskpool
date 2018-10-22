@@ -7,14 +7,10 @@ import org.springframework.boot.context.properties.NestedConfigurationProperty
 data class TaskCollectorProperties(
 
   @NestedConfigurationProperty
-  var sender: TaskCollectorSenderProperties = TaskCollectorSenderProperties(),
+  var sender: TaskSenderProperties = TaskSenderProperties(),
 
   @NestedConfigurationProperty
   var enricher: TaskCollectorEnricherProperties = TaskCollectorEnricherProperties()
-)
-
-data class TaskCollectorSenderProperties(
-  var enabled: Boolean = false
 )
 
 data class TaskCollectorEnricherProperties(
@@ -26,5 +22,16 @@ enum class TaskCollectorEnricherType {
   processVariables,
   custom
 }
+
+data class TaskSenderProperties(
+  var enabled: Boolean = false,
+  var type: TaskSenderType = TaskSenderType.simple
+)
+
+enum class TaskSenderType {
+  simple,
+  custom
+}
+
 
 

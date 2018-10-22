@@ -1,4 +1,4 @@
-package io.holunda.camunda.taskpool.core.business
+package io.holunda.camunda.datapool.core.business
 
 import io.holunda.camunda.taskpool.api.business.*
 import org.axonframework.commandhandling.CommandHandler

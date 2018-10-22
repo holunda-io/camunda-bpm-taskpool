@@ -17,13 +17,13 @@ data class TasksForUserQuery(
     initialResult()
   }
 
-  override fun applyFilter(task: Task) =
+  override fun applyFilter(element: Task) =
 // assignee
-    task.assignee == this.user.username
+    element.assignee == this.user.username
       // candidate user
-      || (task.candidateUsers.contains(this.user.username))
+      || (element.candidateUsers.contains(this.user.username))
       // candidate groups:
-      || (task.candidateGroups.any { candidateGroup -> this.user.groups.contains(candidateGroup) })
+      || (element.candidateGroups.any { candidateGroup -> this.user.groups.contains(candidateGroup) })
 
 
 }

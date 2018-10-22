@@ -1,6 +1,6 @@
-package io.holunda.camunda.taskpool.core
+package io.holunda.camunda.datapool.core
 
-import io.holunda.camunda.taskpool.core.business.DataEntryAggregate
+import io.holunda.camunda.datapool.core.business.DataEntryAggregate
 import org.axonframework.eventsourcing.EventSourcingRepository
 import org.axonframework.eventsourcing.eventstore.EventStore
 import org.springframework.context.annotation.Bean
