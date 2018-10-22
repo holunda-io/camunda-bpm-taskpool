@@ -3,8 +3,8 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>io.holunda</groupId>
-    <artifactId>camunda-bpm-taskpool-examples</artifactId>
+    <groupId>io.holunda.taskpool</groupId>
+    <artifactId>camunda-bpm-taskpool-examples-root</artifactId>
     <version>1.0.0-SNAPSHOT</version>
   </parent>
 
@@ -14,29 +14,35 @@
   <dependencies>
 
     <dependency>
-      <groupId>io.holunda</groupId>
-      <artifactId>camunda-bpm-taskpool-camunda-engine-plugin</artifactId>
+      <groupId>io.holunda.taskpool</groupId>
+      <artifactId>camunda-bpm-engine-plugin</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>io.holunda</groupId>
+      <groupId>io.holunda.taskpool</groupId>
       <artifactId>camunda-bpm-taskpool-collector</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>io.holunda</groupId>
+      <groupId>io.holunda.taskpool</groupId>
       <artifactId>camunda-bpm-taskpool-core</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>io.holunda</groupId>
+      <groupId>io.holunda.taskpool</groupId>
       <artifactId>camunda-bpm-taskpool-view-simple</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>io.holunda</groupId>
+      <groupId>io.holunda.taskpool</groupId>
       <artifactId>camunda-bpm-taskpool-example-tasklist-backend</artifactId>
       <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>io.holunda.taskpool</groupId>
+      <artifactId>camunda-bpm-datapool-core</artifactId>
+      <version>1.0.0-SNAPSHOT</version>
+      <scope>compile</scope>
     </dependency>
 
 
@@ -48,7 +54,7 @@
     <dependency>
       <groupId>io.toolisticon.springboot</groupId>
       <artifactId>springboot-swagger-starter</artifactId>
-      <version>0.0.3</version>
+      <version>0.0.4</version>
     </dependency>
     <dependency>
       <groupId>org.axonframework</groupId>
@@ -106,6 +112,22 @@
 
   </dependencies>
 
-  
+  <profiles>
+    <profile>
+      <id>frontend</id>
+      <activation>
+        <property>
+          <name>!skipFrontend</name>
+        </property>
+      </activation>
+      <dependencies>
+        <dependency>
+          <groupId>io.holunda.taskpool</groupId>
+          <artifactId>camunda-bpm-taskpool-example-tasklist-angular</artifactId>
+          <version>${project.version}</version>
+        </dependency>        
+      </dependencies>
+    </profile>
+  </profiles>  
   
 </project>

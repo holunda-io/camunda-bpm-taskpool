@@ -47,7 +47,8 @@ paths:
           type: string
         pattern: '^([\w]*)=([.]+)?$'
         collectionFormat: multi
-        uniqueItems: true
+        required: true
+        default: '[]'
       responses:
         '200':
           description: Successful operation.
@@ -147,5 +148,5 @@ definitions:
         description: Id of the entry
       payload:
         type: object
-        format: binary
+
 
