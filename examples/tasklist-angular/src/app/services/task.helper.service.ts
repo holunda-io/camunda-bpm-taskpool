@@ -1,19 +1,22 @@
-import {Injectable} from '@angular/core';
-import {TaskService, TaskWithDataEntries} from 'tasklist';
-import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+import { Injectable } from '@angular/core';
+import { TaskService, TaskWithDataEntries } from 'tasklist';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 @Injectable()
 export class TaskHelperService {
 
-  tasks: BehaviorSubject<Array<TaskWithDataEntries>> = new BehaviorSubject<Array<TaskWithDataEntries>>([]);
+  tasksSubject: BehaviorSubject<Array<TaskWithDataEntries>> = new BehaviorSubject<Array<TaskWithDataEntries>>([]);
 
+  get tasks() {
+    return this.tasksSubject.asObservable();
+  }
   constructor(private taskService: TaskService) {
     this.loadTasks();
   }
 
   private loadTasks(): void {
     this.taskService.getTasks().subscribe((tasks: Array<TaskWithDataEntries>) => {
-      this.tasks.next(tasks);
+      this.tasksSubject.next(tasks);
     }, (error) => {
       console.log('Error loading tasks', error);
     });
