@@ -81,8 +81,6 @@
             </configuration>
           </execution>
           <!--Karma test run-->
-          <!--
-          Disable for the moment.
           <execution>
             <id>npm test</id>
             <phase>test</phase>
@@ -93,7 +91,6 @@
               <arguments>run test</arguments>
             </configuration>
           </execution>
-          -->
         </executions>
       </plugin>
       <plugin>
