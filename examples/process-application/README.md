@@ -5,10 +5,12 @@ build as a SpringBoot process application and shows a simple approval process.
 
 ## Usage 
 
-The application consists of two Maven modules:
+The demo application consists of two Maven modules:
  * h2 (external database)
  * process-application (example application)
  
+Before starting the application, please start the Axon Server. The easiest way to do so is to run:
+`docker run -d --name my-axon-server -p 8024:8024 -p 8124:8124 axoniq/axonserver`. 
 Both modules can be build using Maven by running `mvn clean install` from the commandOrUpdate line. Then both modules
 can be started by running `mvn spring-boot:run` from commandOrUpdate line. 
 
@@ -241,6 +243,4 @@ during task creation or follow up with data updates, if desired.
   action should be one of:
   <ul><li>CANCEL: cancels the request.</li><li>RESUBMIT: re-submits the request.</li></ul></td>
 </tr>
-
-
 </table>

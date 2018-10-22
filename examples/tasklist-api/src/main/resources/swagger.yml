@@ -148,5 +148,7 @@ definitions:
         description: Id of the entry
       payload:
         type: object
+        additionalProperties:
+          type: object
 
 

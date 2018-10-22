@@ -2,8 +2,8 @@ package io.holunda.camunda.taskpool.view.query
 
 import io.holunda.camunda.taskpool.view.Task
 import io.holunda.camunda.taskpool.view.auth.User
+import org.axonframework.messaging.responsetypes.ResponseTypes
 import org.axonframework.queryhandling.QueryGateway
-import org.axonframework.queryhandling.responsetypes.ResponseTypes
 
 data class TasksForUserQuery(
   val user: User
@@ -17,13 +17,13 @@ data class TasksForUserQuery(
     initialResult()
   }
 
-  override fun applyFilter(task: Task) =
+  override fun applyFilter(element: Task) =
 // assignee
-    task.assignee == this.user.username
+    element.assignee == this.user.username
       // candidate user
-      || (task.candidateUsers.contains(this.user.username))
+      || (element.candidateUsers.contains(this.user.username))
       // candidate groups:
-      || (task.candidateGroups.any { candidateGroup -> this.user.groups.contains(candidateGroup) })
+      || (element.candidateGroups.any { candidateGroup -> this.user.groups.contains(candidateGroup) })
 
 
 }

@@ -1,7 +1,6 @@
 package io.holunda.camunda.taskpool.example.process.service
 
-import io.holunda.camunda.taskpool.api.business.CreateOrUpdateDataEntryCommand
-import io.holunda.camunda.taskpool.sender.DataEntryCommandSender
+import io.holunda.camunda.taskpool.api.sender.DataEntryCommandSender
 import org.springframework.stereotype.Service
 import java.math.BigDecimal
 import java.util.concurrent.ConcurrentHashMap
@@ -38,11 +37,11 @@ class RequestService(
   }
 
   private fun eventModification(request: Request) {
-    sender.sendDataEntryCommand(CreateOrUpdateDataEntryCommand(
+    sender.sendDataEntryCommand(
       entryType = BusinessDataEntry.REQUEST,
       entryId = request.id,
       payload = request
-    ))
+    )
   }
 }
 

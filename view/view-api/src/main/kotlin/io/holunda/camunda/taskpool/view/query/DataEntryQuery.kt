@@ -8,11 +8,11 @@ data class DataEntryQuery(
   val entryType: EntryType,
   val entryId: EntryId? = null
 ) : FilterQuery<DataEntry> {
-  override fun applyFilter(dataEntry: DataEntry) =
+  override fun applyFilter(element: DataEntry) =
 // entry type
-    dataEntry.entryType == this.entryType
+    element.entryType == this.entryType
 // if id is specified, applyFilter by it
-      && (this.entryId == null || dataEntry.entryId == this.entryId)
+      && (this.entryId == null || element.entryId == this.entryId)
 
 }
 

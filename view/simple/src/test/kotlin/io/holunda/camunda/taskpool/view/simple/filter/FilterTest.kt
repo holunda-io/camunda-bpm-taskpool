@@ -6,6 +6,7 @@ import io.holunda.camunda.taskpool.view.Task
 import io.holunda.camunda.taskpool.view.TaskWithDataEntries
 import io.holunda.camunda.taskpool.view.simple.*
 import org.assertj.core.api.Assertions.assertThat
+import org.camunda.bpm.engine.variable.Variables
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.ExpectedException
@@ -22,13 +23,13 @@ class FilterTest {
   private val task1 = TaskWithDataEntries(Task("id", ref, "key", name = "myName"), listOf())
   private val task2 = TaskWithDataEntries(Task("id", ref, "key", assignee = "kermit"), listOf())
   private val task3 = TaskWithDataEntries(Task("id", ref, "key", name = "foo", assignee = "gonzo"), listOf(
-    DataEntry("type", "4711", DataPayload("another")
+    DataEntry("type", "4711", Variables.createVariables().putValue("dataAttr1", "another")
     )))
   private val task4 = TaskWithDataEntries(Task("id", ref, "key", name = "foo", assignee = "gonzo"), listOf(
-    DataEntry("type", "4711", DataPayload("value"))
+    DataEntry("type", "4711", Variables.createVariables().putValue("dataAttr1", "value"))
   ))
   private val task5 = TaskWithDataEntries(Task("id", ref, "key", name = "foo", assignee = "gonzo"), listOf(
-    DataEntry("type", "4711", DataPayload2("another", "myName"))
+    DataEntry("type", "4711", Variables.createVariables().putValue("dataAttr2", "another").putValue("name", "myName"))
   ))
 
 
@@ -95,8 +96,5 @@ class FilterTest {
     val filtered = filter(filtersList, listOf(task1, task2, task3, task4, task5))
     assertThat(filtered).containsExactlyElementsOf(listOf(task1, task2, task4, task5))
   }
-
 }
 
-data class DataPayload(val dataAttr1: String)
-data class DataPayload2(val dataAttr2: String, val name: String)

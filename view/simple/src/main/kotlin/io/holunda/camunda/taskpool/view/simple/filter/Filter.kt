@@ -31,8 +31,31 @@ internal fun filterByPredicates(value: TaskWithDataEntries, wrapper: TaskPredica
     .find { payload -> wrapper.dataEntriesPredicate.test(payload) } != null)
 
 internal fun createPredicates(criteria: List<Criterium>): TaskPredicateWrapper {
-  val taskPredicates: List<Predicate<Any>> = criteria.asSequence().filter { it is TaskCriterium }.map { PropertyValuePredicate(name = it.name, value = it.value) }.toList()
-  val dataEntriesPredicates: List<Predicate<Any>> = criteria.asSequence().filter { it is DataEntryCriterium }.map { PropertyValuePredicate(name = it.name, value = it.value) }.toList()
+  val taskPredicates: List<Predicate<Any>> = criteria
+    .asSequence()
+    .filter { it is TaskCriterium }
+    .map {
+      PropertyValuePredicate(
+        name = it.name,
+        value = it.value,
+        fieldExtractor = { t, fieldName -> extractField(t, fieldName) },
+        valueExtractor = { target, field -> extractValue(target, field) }
+      )
+    }
+    .toList()
+
+  val dataEntriesPredicates: List<Predicate<Any>> = criteria
+    .asSequence()
+    .filter { it is DataEntryCriterium }
+    .map {
+      PropertyValuePredicate(
+        name = it.name,
+        value = it.value,
+        fieldExtractor = { t, fieldName -> extractKey(t, fieldName) },
+        valueExtractor = { t, key -> extractValue(t, key) }
+      )
+    }
+    .toList()
 
   val taskPredicate = if (taskPredicates.isEmpty()) {
     null
@@ -96,11 +119,11 @@ data class TaskPredicateWrapper(val taskPredicate: Predicate<Any>?, val dataEntr
 /**
  * <V> type of the property
  */
-data class PropertyValuePredicate(
+data class PropertyValuePredicate<T>(
   private val name: String,
   private val value: Any,
-  private val fieldExtractor: (Any, String) -> Field? = { t, fieldName -> extractField(t, fieldName) },
-  private val valueExtractor: (Any, Field) -> Any? = { target, field -> extractValue(target, field) },
+  private val fieldExtractor: (Any, String) -> T?,
+  private val valueExtractor: (Any, T) -> Any?,
   private val ignoreMissing: Boolean = true
 ) : Predicate<Any> {
 
@@ -121,6 +144,7 @@ data class PropertyValuePredicate(
 
 fun extractField(target: Any, name: String): Field? = ReflectionUtils.findField(target::class.java, name)
 fun extractValue(target: Any, field: Field): Any? = ReflectionUtils.getField(field.apply { ReflectionUtils.makeAccessible(this) }, target)
-
+fun extractKey(target: Any, name: String): String? = if (target is Map<*, *> && target.containsKey(name)) name else null
+fun extractValue(target: Any, key: String): Any? = if (target is Map<*, *>) target[key] else null
 
 

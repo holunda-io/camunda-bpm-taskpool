@@ -1,4 +1,4 @@
-package io.holunda.camunda.taskpool.core
+package io.holunda.camunda.datapool
 
 import java.util.*
 
