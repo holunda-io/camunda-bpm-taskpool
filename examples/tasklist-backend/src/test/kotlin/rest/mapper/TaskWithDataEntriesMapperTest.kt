@@ -1,10 +1,8 @@
-package rest.mapper
+package io.holunda.camunda.taskpool.example.tasklist.rest.mapper
 
 import io.holunda.camunda.taskpool.api.task.ProcessReference
+import io.holunda.camunda.taskpool.example.tasklist.TaskUrlResolverProperties
 import io.holunda.camunda.taskpool.example.tasklist.TasklistConfiguration
-import io.holunda.camunda.taskpool.example.tasklist.rest.mapper.ApplicationUrlLookup
-import io.holunda.camunda.taskpool.example.tasklist.rest.mapper.TaskUrlResolver
-import io.holunda.camunda.taskpool.example.tasklist.rest.mapper.TaskWithDataEntriesMapper
 import io.holunda.camunda.taskpool.view.Task
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -14,9 +12,13 @@ import org.springframework.test.util.ReflectionTestUtils
 
 class TaskWithDataEntriesMapperTest {
 
-  private val taskUrlResolver: TaskUrlResolver = with(TasklistConfiguration()) {
-    defaultTaskUrlResolver(defaultApplicationUrlLookup())
-  }
+  private val taskUrlResolver = DefaultTaskUrlResolver(
+    lookup = DefaultApplicationUrlLookup(),
+    props = TaskUrlResolverProperties(
+      default = "id/\${id}",
+      tasks = mutableMapOf("the-task" to "forms/\${formKey}/id/\${id}")
+    )
+  )
 
   private val sourceReference: ProcessReference = ProcessReference(
     applicationName = "test",
@@ -40,13 +42,13 @@ class TaskWithDataEntriesMapperTest {
       id="1",
       sourceReference = sourceReference,
       taskDefinitionKey = "the-task",
-      formKey = "forms/the-task.html"
+      formKey = "the-task"
     )
 
     val dto = mapper.dto(task)
 
-    assertThat(dto.url).isEqualTo("http://localhost:8080/test/forms/the-task.html?taskId=1")
-    assertThat(dto.formKey).isEqualTo("forms/the-task.html")
+    assertThat(dto.url).isEqualTo("http://localhost:8080/test/forms/the-task/id/1")
+    assertThat(dto.formKey).isEqualTo("the-task")
     assertThat(dto.processName).isEqualTo(sourceReference.processName)
 
   }

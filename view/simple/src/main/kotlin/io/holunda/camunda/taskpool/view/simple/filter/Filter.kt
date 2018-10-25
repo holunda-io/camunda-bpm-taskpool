@@ -30,10 +30,10 @@ internal fun filterByPredicates(value: TaskWithDataEntries, wrapper: TaskPredica
     .map { dataEntry -> dataEntry.payload }
     .find { payload -> wrapper.dataEntriesPredicate.test(payload) } != null)
 
-internal fun createPredicates(criteria: List<Criterium>): TaskPredicateWrapper {
+internal fun createPredicates(criteria: List<Criterion>): TaskPredicateWrapper {
   val taskPredicates: List<Predicate<Any>> = criteria
     .asSequence()
-    .filter { it is TaskCriterium }
+    .filter { it is TaskCriterion }
     .map {
       PropertyValuePredicate(
         name = it.name,
@@ -46,7 +46,7 @@ internal fun createPredicates(criteria: List<Criterium>): TaskPredicateWrapper {
 
   val dataEntriesPredicates: List<Predicate<Any>> = criteria
     .asSequence()
-    .filter { it is DataEntryCriterium }
+    .filter { it is DataEntryCriterion }
     .map {
       PropertyValuePredicate(
         name = it.name,
@@ -81,9 +81,9 @@ internal fun toCriteria(filters: List<String>) = filters
     val components = it.split(SEPARATOR)
     if (components.size != 2 || components[0].isBlank() || components[0].isBlank()) throw IllegalArgumentException("Failed to create criteria from $it.")
     if (isTaskAttribute(components[0])) {
-      TaskCriterium(components[0].substring(TASK_PREFIX.length), components[1])
+      TaskCriterion(components[0].substring(TASK_PREFIX.length), components[1])
     } else {
-      DataEntryCriterium(components[0], components[1])
+      DataEntryCriterion(components[0], components[1])
     }
   }.toList()
 
@@ -92,11 +92,11 @@ internal fun isTaskAttribute(propertyName: String): Boolean =
     && propertyName.length > TASK_PREFIX.length
     && Task::class.memberProperties.map { it.name }.contains(propertyName.substring(TASK_PREFIX.length))
 
-sealed class Criterium(open val name: String, open val value: String) {
+sealed class Criterion(open val name: String, open val value: String) {
   override fun equals(other: Any?): Boolean {
 
     if (this === other) return true
-    if (other !is Criterium) return false
+    if (other !is Criterion) return false
 
     if (name != other.name) return false
     if (value != other.value) return false
@@ -111,8 +111,8 @@ sealed class Criterium(open val name: String, open val value: String) {
   }
 }
 
-class TaskCriterium(override val name: String, override val value: String) : Criterium(name, value)
-class DataEntryCriterium(override val name: String, override val value: String) : Criterium(name, value)
+class TaskCriterion(override val name: String, override val value: String) : Criterion(name, value)
+class DataEntryCriterion(override val name: String, override val value: String) : Criterion(name, value)
 
 data class TaskPredicateWrapper(val taskPredicate: Predicate<Any>?, val dataEntriesPredicate: Predicate<Any>?)
 

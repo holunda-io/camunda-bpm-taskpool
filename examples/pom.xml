@@ -9,6 +9,7 @@
   </parent>
 
   <artifactId>camunda-bpm-taskpool-examples-root</artifactId>
+  <name>example/${project.artifactId}</name>
   <packaging>pom</packaging>
 
   <modules>

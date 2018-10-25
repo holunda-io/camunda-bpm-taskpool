@@ -10,7 +10,7 @@
   </parent>
 
   <artifactId>camunda-bpm-taskpool-core</artifactId>
-  <packaging>jar</packaging>
+  <name>taskpool/${project.artifactId}</name>
 
   <dependencies>
     <dependency>

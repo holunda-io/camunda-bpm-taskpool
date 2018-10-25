@@ -52,8 +52,8 @@ class FilterTest {
 
     assertThat(criteria).isNotNull
     assertThat(criteria.size).isEqualTo(4)
-    assertThat(criteria).containsExactlyElementsOf(listOf(TaskCriterium("name", "myName"), TaskCriterium("assignee", "kermit"),
-      DataEntryCriterium("dataAttr1", "value"), DataEntryCriterium("dataAttr2", "another")))
+    assertThat(criteria).containsExactlyElementsOf(listOf(TaskCriterion("name", "myName"), TaskCriterion("assignee", "kermit"),
+      DataEntryCriterion("dataAttr1", "value"), DataEntryCriterion("dataAttr2", "another")))
   }
 
   @Test

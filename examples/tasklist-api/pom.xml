@@ -9,7 +9,7 @@
   </parent>
 
   <artifactId>camunda-bpm-taskpool-example-tasklist-api</artifactId>
-  <packaging>jar</packaging>
+  <name>example/${project.artifactId}</name>
 
   <build>
     <plugins>

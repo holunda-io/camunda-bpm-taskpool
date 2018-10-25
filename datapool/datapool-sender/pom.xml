@@ -11,7 +11,7 @@
   </parent>
 
   <artifactId>camunda-bpm-datapool-sender</artifactId>
-  <packaging>jar</packaging>
+  <name>datapool/${project.artifactId}</name>
 
   <dependencies>
     <dependency>

@@ -41,6 +41,10 @@ camunda:
       sender:
         enabled: true
         type: simple
+    url-resolver:
+      default: "id/\\${task.id}"
+      tasks:
+        foo: "forms/\\${task.formKey}/id/\\${task.id}"
 
 logging.level.io.holunda.camunda.taskpool:
   sender: WARN

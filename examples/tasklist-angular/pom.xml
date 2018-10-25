@@ -9,6 +9,7 @@
   </parent>
 
   <artifactId>camunda-bpm-taskpool-example-tasklist-angular</artifactId>
+  <name>example/${project.artifactId}</name>
   <packaging>jar</packaging>
 
   <properties>

@@ -25,6 +25,7 @@ import javax.validation.Valid
 )
 abstract class TaskWithDataEntriesMapper {
 
+  @Suppress("unused")
   @Autowired
   lateinit var taskUrlResolver: TaskUrlResolver
 

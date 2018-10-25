@@ -9,7 +9,7 @@
   </parent>
 
   <artifactId>camunda-bpm-taskpool-example-process-application</artifactId>
-  <packaging>jar</packaging>
+  <name>example/${project.artifactId}</name>
 
   <dependencies>
 

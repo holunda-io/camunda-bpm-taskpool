@@ -11,7 +11,7 @@
   </parent>
 
   <artifactId>camunda-bpm-taskpool-example-tasklist-backend</artifactId>
-  <packaging>jar</packaging>
+  <name>example/${project.artifactId}</name>
 
   <properties>
     <application.api-location>../tasklist-api/src/main/resources</application.api-location>
@@ -34,8 +34,8 @@
       <artifactId>camunda-bpm-taskpool-view-api</artifactId>
       <version>${project.version}</version>
     </dependency>
-    
-    
+
+
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
@@ -71,6 +71,11 @@
     <dependency>
       <groupId>org.mapstruct</groupId>
       <artifactId>mapstruct</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
     </dependency>
 
     <dependency>
@@ -192,7 +197,8 @@
             </goals>
             <configuration>
               <sourceDirs>
-                <sourceDir>${project.basedir}/target/generated-sources/swagger/src/main/java</sourceDir>
+                <sourceDir>${project.basedir}/target/generated-sources/swagger/src/main/java
+                </sourceDir>
                 <sourceDir>src/main/kotlin</sourceDir>
               </sourceDirs>
               <annotationProcessorPaths>
@@ -217,7 +223,8 @@
               </compilerPlugins>
               <jvmTarget>${java.version}</jvmTarget>
               <sourceDirs>
-                <sourceDir>${project.basedir}/target/generated-sources/swagger/src/main/java</sourceDir>
+                <sourceDir>${project.basedir}/target/generated-sources/swagger/src/main/java
+                </sourceDir>
                 <sourceDir>${project.basedir}/src/main/kotlin</sourceDir>
               </sourceDirs>
             </configuration>

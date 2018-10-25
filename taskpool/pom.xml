@@ -11,6 +11,7 @@
   </parent>
 
   <artifactId>camunda-bpm-taskpool-root</artifactId>
+  <name>taskpool/${project.artifactId}</name>
   <packaging>pom</packaging>
   
   <modules>

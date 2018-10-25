@@ -9,7 +9,7 @@
   </parent>
 
   <artifactId>camunda-bpm-engine-plugin</artifactId>
-  <packaging>jar</packaging>
+  <name>plugin/${project.artifactId}</name>
 
   <dependencies>
     <dependency>

@@ -9,8 +9,8 @@
   </parent>
 
   <artifactId>camunda-bpm-taskpool-view-root</artifactId>
+  <name>view/${project.artifactId}</name>
   <packaging>pom</packaging>
-
 
   <modules>
     <module>view-api</module>

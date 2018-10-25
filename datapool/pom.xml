@@ -11,6 +11,7 @@
   </parent>
 
   <artifactId>camunda-bpm-datapool-root</artifactId>
+  <name>datapool/${project.artifactId}</name>
   <packaging>pom</packaging>
   
   <modules>

@@ -10,6 +10,7 @@
   </parent>
 
   <artifactId>example-development-h2-server</artifactId>
+  <name>example/${project.artifactId}</name>
 
   <dependencies>
     <dependency>
