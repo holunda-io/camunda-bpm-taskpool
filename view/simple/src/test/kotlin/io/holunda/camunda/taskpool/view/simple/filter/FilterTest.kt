@@ -18,7 +18,7 @@ class FilterTest {
 
   private val filtersList = listOf("task.name${SEPARATOR}myName", "task.assignee${SEPARATOR}kermit", "dataAttr1${SEPARATOR}value", "dataAttr2${SEPARATOR}another")
 
-  private val ref = ProcessReference("1", "2", "3", "4")
+  private val ref = ProcessReference("1", "2", "3", "4", "My Process", "myExample")
 
   private val task1 = TaskWithDataEntries(Task("id", ref, "key", name = "myName"), listOf())
   private val task2 = TaskWithDataEntries(Task("id", ref, "key", assignee = "kermit"), listOf())

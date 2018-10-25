@@ -64,7 +64,7 @@ open class TaskPoolService(
 
   @EventHandler
   open fun on(event: TaskCreatedEvent) {
-    logger.debug { "Received task created $event" }
+    logger.debug { "Task created $event received" }
     val task = task(event)
     tasks[task.id] = task
     updateTaskForUserQuery(event.id)
@@ -72,21 +72,21 @@ open class TaskPoolService(
 
   @EventHandler
   open fun on(event: TaskAssignedEvent) {
-    logger.debug { "Received task assigned $event" }
+    logger.debug { "Task assigned $event received" }
     tasks[event.id] = task(event)
     updateTaskForUserQuery(event.id)
   }
 
   @EventHandler
   open fun on(event: TaskCompletedEvent) {
-    logger.debug { "Received task completed $event" }
+    logger.debug { "Task completed $event received" }
     tasks.remove(event.id)
     updateTaskForUserQuery(event.id)
   }
 
   @EventHandler
   open fun on(event: TaskDeletedEvent) {
-    logger.debug { "Received task deleted $event" }
+    logger.debug { "Task deleted $event received" }
     tasks.remove(event.id)
     updateTaskForUserQuery(event.id)
   }

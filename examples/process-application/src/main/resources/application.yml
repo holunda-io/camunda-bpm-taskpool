@@ -2,6 +2,8 @@ server:
   port: 8080
 
 spring:
+  application:
+    name: example-process-approval
   datasource:
     url: jdbc:h2:tcp://localhost:9092/mem:testdb
     username: sa
@@ -26,11 +28,11 @@ camunda:
       schema-update: false
       type: h2
   taskpool:
-    engine:
-      eventing:
+    engine-eventing:
         enabled: true
     collector:
       enricher:
+        application-name: ${spring.application.name}  # default
         type: processVariables
       sender:
         enabled: true

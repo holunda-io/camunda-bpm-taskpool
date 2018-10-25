@@ -34,46 +34,45 @@ As a result you will receive the id of the request, acting as a business key of 
 
 2. The approval process will create a user task `Approve Request` which can be either approved, rejected or returned 
 to the originator and will assign it to some users. In order to see the list of available user tasks, send a GET 
-request to the `task-controller` by providing a username (`GET http://localhost:8080/tasks?username=gonzo`) and 
+request to the `task-controller` by providing a username (`GET http://localhost:8080/tasklist/rest/tasks?filter=%5B%5D`) and 
 you will receive a list of tasks with all supplied information available in the task pool:
 
         [
           {
-            "id": "19",
-            "sourceReference": {
-              "instanceId": "5",
-              "executionId": "17",
-              "definitionId": "process_approve_request:1:4",
-              "definitionKey": "process_approve_request"
+            "task": {
+              "id": "19",
+              "name": "Approve Request",
+              "description": "Please approve request AR-b3a1ded3-ba5d-4084-af37-32f89351c172 from kermit on behalf of piggy",
+              "url": null,
+              "formKey": "approve-request",
+              "candidateGroups": [
+                "muppetshow"
+              ],
+              "candidateUsers": [
+                "fozzy",
+                "gonzo"
+              ],
+              "assignee": null,
+              "processName": null,
+              "createTime": "2018-10-24T22:20:17.14Z",
+              "dueDate": "2019-06-26T07:55:00Z",
+              "businessKey": "AR-b3a1ded3-ba5d-4084-af37-32f89351c172",
+              "priority": 23
             },
-            "taskDefinitionKey": "user_approve_request",
-            "payload": {
-              "request": "AR-c023fafc-ac57-4d31-802d-be718f4aff50",
-              "amount": 10000,
-              "subject": "Salary increase",
-              "currency": "USD",
-              "applicant": "piggy"
-            },
-            "correlations": {
-              "io.holunda.camunda.taskpool.example.ApprovalRequest": "AR-c023fafc-ac57-4d31-802d-be718f4aff50"
-            },
-            "businessKey": "AR-c023fafc-ac57-4d31-802d-be718f4aff50",
-            "enriched": true,
-            "name": "Approve Request",
-            "description": "Please approve request AR-c023fafc-ac57-4d31-802d-be718f4aff50 from kermit on behalf of piggy",
-            "formKey": "approve-request",
-            "priority": 23,
-            "createTime": "2018-10-11T12:19:27.871+0000",
-            "candidateUsers": [
-              "fozzy",
-              "gonzo"
-            ],
-            "candidateGroups": [
-              "muppetshow"
-            ],
-            "assignee": null,
-            "owner": null,
-            "dueDate": "2019-06-26T07:55:00.000+0000"
+            "dataEntries": [
+              {
+                "entryType": "io.holunda.camunda.taskpool.example.ApprovalRequest",
+                "entryId": "AR-b3a1ded3-ba5d-4084-af37-32f89351c172",
+                "payload": {
+                  "amount": 10000,
+                  "subject": "Salary increase",
+                  "currency": "USD",
+                  "id": "AR-b3a1ded3-ba5d-4084-af37-32f89351c172",
+                  "originator": "kermit",
+                  "applicant": "piggy"
+                }
+              }
+            ]
           }
         ]
 

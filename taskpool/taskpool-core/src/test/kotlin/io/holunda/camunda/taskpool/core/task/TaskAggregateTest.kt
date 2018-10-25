@@ -15,6 +15,15 @@ class TaskAggregateTest {
   private val fixture: AggregateTestFixture<TaskAggregate> = AggregateTestFixture<TaskAggregate>(TaskAggregate::class.java)
   private lateinit var now: Date
 
+  private val processReference = ProcessReference(
+    definitionKey = "process_key",
+    instanceId = "0815",
+    executionId = "12345",
+    definitionId = "76543",
+    processName = "My process",
+    applicationName = "myExample"
+  )
+
   @Before
   fun setUp() {
     now = Date()
@@ -35,12 +44,7 @@ class TaskAggregateTest {
           formKey = "some",
           businessKey = "business123",
           enriched = true,
-          sourceReference = ProcessReference(
-            definitionKey = "process_key",
-            instanceId = "0815",
-            executionId = "12345",
-            definitionId = "76543"
-          ),
+          sourceReference = processReference,
           candidateUsers = listOf("kermit", "gonzo"),
           candidateGroups = listOf("muppets"),
           assignee = "kermit",
@@ -58,12 +62,7 @@ class TaskAggregateTest {
           taskDefinitionKey = "foo",
           formKey = "some",
           businessKey = "business123",
-          sourceReference = ProcessReference(
-            definitionKey = "process_key",
-            instanceId = "0815",
-            executionId = "12345",
-            definitionId = "76543"
-          ),
+          sourceReference = processReference,
           candidateUsers = listOf("kermit", "gonzo"),
           candidateGroups = listOf("muppets"),
           assignee = "kermit",
@@ -86,12 +85,7 @@ class TaskAggregateTest {
           taskDefinitionKey = "foo",
           formKey = "some",
           businessKey = "business123",
-          sourceReference = ProcessReference(
-            definitionKey = "process_key",
-            instanceId = "0815",
-            executionId = "12345",
-            definitionId = "76543"
-          ),
+          sourceReference = processReference,
           candidateUsers = listOf("kermit", "gonzo"),
           candidateGroups = listOf("muppets"),
           assignee = "kermit",
@@ -111,12 +105,7 @@ class TaskAggregateTest {
           formKey = "some",
           businessKey = "business123",
           enriched = true,
-          sourceReference = ProcessReference(
-            definitionKey = "process_key",
-            instanceId = "0815",
-            executionId = "12345",
-            definitionId = "76543"
-          ),
+          sourceReference = processReference,
           dueDate = null,
           candidateUsers = listOf("kermit", "gonzo"),
           candidateGroups = listOf("muppets"),
@@ -136,12 +125,7 @@ class TaskAggregateTest {
           formKey = "some",
           businessKey = "business123",
           enriched = true,
-          sourceReference = ProcessReference(
-            definitionKey = "process_key",
-            instanceId = "0815",
-            executionId = "12345",
-            definitionId = "76543"
-          ),
+          sourceReference = processReference,
           dueDate = null,
           candidateUsers = listOf("kermit", "gonzo"),
           candidateGroups = listOf("muppets"),
@@ -163,12 +147,7 @@ class TaskAggregateTest {
           name = "Foo",
           taskDefinitionKey = "foo",
           formKey = "some",
-          sourceReference = ProcessReference(
-            definitionKey = "process_key",
-            instanceId = "0815",
-            executionId = "12345",
-            definitionId = "76543"
-          )
+          sourceReference = processReference
         ))
       .`when`(
         AssignTaskCommand(
@@ -181,12 +160,7 @@ class TaskAggregateTest {
           formKey = "some",
           businessKey = "business123",
           enriched = true,
-          sourceReference = ProcessReference(
-            definitionKey = "process_key",
-            instanceId = "0815",
-            executionId = "12345",
-            definitionId = "76543"
-          ),
+          sourceReference = processReference,
           dueDate = null,
           candidateUsers = listOf("kermit", "gonzo"),
           candidateGroups = listOf("muppets"),
@@ -206,12 +180,7 @@ class TaskAggregateTest {
           formKey = "some",
           businessKey = "business123",
           enriched = true,
-          sourceReference = ProcessReference(
-            definitionKey = "process_key",
-            instanceId = "0815",
-            executionId = "12345",
-            definitionId = "76543"
-          ),
+          sourceReference = processReference,
           dueDate = null,
           candidateUsers = listOf("kermit", "gonzo"),
           candidateGroups = listOf("muppets"),
@@ -234,12 +203,7 @@ class TaskAggregateTest {
           name = "Foo",
           taskDefinitionKey = "foo",
           formKey = "some",
-          sourceReference = ProcessReference(
-            definitionKey = "process_key",
-            instanceId = "0815",
-            executionId = "12345",
-            definitionId = "76543"
-          )
+          sourceReference = processReference
         ),
         TaskAssignedEvent(
           id = "4711",
@@ -247,12 +211,7 @@ class TaskAggregateTest {
           taskDefinitionKey = "foo",
           formKey = "some",
           assignee = "kermit",
-          sourceReference = ProcessReference(
-            definitionKey = "process_key",
-            instanceId = "0815",
-            executionId = "12345",
-            definitionId = "76543"
-          )
+          sourceReference = processReference
         )
       )
       .`when`(
@@ -263,12 +222,7 @@ class TaskAggregateTest {
           taskDefinitionKey = "foo",
           formKey = "some",
           assignee = "kermit",
-          sourceReference = ProcessReference(
-            definitionKey = "process_key",
-            instanceId = "0815",
-            executionId = "12345",
-            definitionId = "76543"
-          )
+          sourceReference = processReference
         ))
       .expectNoEvents()
   }
@@ -286,12 +240,7 @@ class TaskAggregateTest {
           taskDefinitionKey = "foo",
           formKey = "some",
           businessKey = "business123",
-          sourceReference = ProcessReference(
-            definitionKey = "process_key",
-            instanceId = "0815",
-            executionId = "12345",
-            definitionId = "76543"
-          ),
+          sourceReference = processReference,
           candidateUsers = listOf("kermit", "gonzo"),
           candidateGroups = listOf("muppets"),
           assignee = "kermit",
@@ -309,12 +258,7 @@ class TaskAggregateTest {
           formKey = "some",
           businessKey = "business123",
           enriched = true,
-          sourceReference = ProcessReference(
-            definitionKey = "process_key",
-            instanceId = "0815",
-            executionId = "12345",
-            definitionId = "76543"
-          ),
+          sourceReference = processReference,
           dueDate = null,
           candidateUsers = listOf("kermit", "gonzo"),
           candidateGroups = listOf("muppets"),
@@ -336,12 +280,7 @@ class TaskAggregateTest {
           formKey = "some",
           businessKey = "business123",
           enriched = true,
-          sourceReference = ProcessReference(
-            definitionKey = "process_key",
-            instanceId = "0815",
-            executionId = "12345",
-            definitionId = "76543"
-          ),
+          sourceReference = processReference,
           dueDate = null,
           candidateUsers = listOf("kermit", "gonzo"),
           candidateGroups = listOf("muppets"),
@@ -366,12 +305,7 @@ class TaskAggregateTest {
           taskDefinitionKey = "foo",
           formKey = "some",
           businessKey = "business123",
-          sourceReference = ProcessReference(
-            definitionKey = "process_key",
-            instanceId = "0815",
-            executionId = "12345",
-            definitionId = "76543"
-          ),
+          sourceReference = processReference,
           candidateUsers = listOf("kermit", "gonzo"),
           candidateGroups = listOf("muppets"),
           assignee = "kermit",
@@ -389,12 +323,7 @@ class TaskAggregateTest {
           formKey = "some",
           businessKey = "business123",
           enriched = true,
-          sourceReference = ProcessReference(
-            definitionKey = "process_key",
-            instanceId = "0815",
-            executionId = "12345",
-            definitionId = "76543"
-          ),
+          sourceReference = processReference,
           dueDate = null,
           candidateUsers = listOf("kermit", "gonzo"),
           candidateGroups = listOf("muppets"),
@@ -410,12 +339,7 @@ class TaskAggregateTest {
           id = "4711",
           taskDefinitionKey = "foo",
           deleteReason = "Not possible",
-          sourceReference = ProcessReference(
-            definitionKey = "process_key",
-            instanceId = "0815",
-            executionId = "12345",
-            definitionId = "76543"
-          )
+          sourceReference = processReference
         )
       ).expectNoEvents()
   }
@@ -432,12 +356,7 @@ class TaskAggregateTest {
           taskDefinitionKey = "foo",
           formKey = "some",
           businessKey = "business123",
-          sourceReference = ProcessReference(
-            definitionKey = "process_key",
-            instanceId = "0815",
-            executionId = "12345",
-            definitionId = "76543"
-          ),
+          sourceReference = processReference,
           candidateUsers = listOf("kermit", "gonzo"),
           candidateGroups = listOf("muppets"),
           assignee = "kermit",
@@ -457,12 +376,7 @@ class TaskAggregateTest {
           formKey = "some",
           businessKey = "business123",
           enriched = true,
-          sourceReference = ProcessReference(
-            definitionKey = "process_key",
-            instanceId = "0815",
-            executionId = "12345",
-            definitionId = "76543"
-          ),
+          sourceReference = processReference,
           dueDate = null,
           candidateUsers = listOf("kermit", "gonzo"),
           candidateGroups = listOf("muppets"),
@@ -483,12 +397,7 @@ class TaskAggregateTest {
           formKey = "some",
           businessKey = "business123",
           enriched = true,
-          sourceReference = ProcessReference(
-            definitionKey = "process_key",
-            instanceId = "0815",
-            executionId = "12345",
-            definitionId = "76543"
-          ),
+          sourceReference = processReference,
           dueDate = null,
           candidateUsers = listOf("kermit", "gonzo"),
           candidateGroups = listOf("muppets"),

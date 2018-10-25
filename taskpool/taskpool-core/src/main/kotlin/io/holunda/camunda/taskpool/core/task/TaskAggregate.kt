@@ -22,6 +22,7 @@ open class TaskAggregate() {
 
   @CommandHandler
   constructor(command: CreateTaskCommand) : this() {
+    logger.info { "Created new aggregate for task ${command.id}" }
     create(command)
   }
 
@@ -155,4 +156,3 @@ internal fun delete(command: DeleteTaskCommand) =
       correlations = command.correlations,
       businessKey = command.businessKey
     ))
-

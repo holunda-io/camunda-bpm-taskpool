@@ -505,25 +505,6 @@
           <version>${kotlin.version}</version>
           <executions>
             <execution>
-              <id>kapt</id>
-              <goals>
-                <goal>kapt</goal>
-              </goals>
-              <configuration>
-                <sourceDirs>
-                  <sourceDir>${project.basedir}/target/generated-sources/swagger/src/main/java</sourceDir>
-                  <sourceDir>src/main/kotlin</sourceDir>
-                </sourceDirs>
-                <annotationProcessorPaths>
-                  <annotationProcessorPath>
-                    <groupId>org.mapstruct</groupId>
-                    <artifactId>mapstruct-processor</artifactId>
-                    <version>${org.mapstruct.version}</version>
-                  </annotationProcessorPath>
-                </annotationProcessorPaths>
-              </configuration>
-            </execution>
-            <execution>
               <id>compile</id>
               <goals>
                 <goal>compile</goal>
@@ -534,7 +515,7 @@
                   <plugin>jpa</plugin>
                   <plugin>no-arg</plugin>
                 </compilerPlugins>
-                <jvmTarget>1.8</jvmTarget>
+                <jvmTarget>${java.version}</jvmTarget>
                 <sourceDirs>
                   <sourceDir>${project.basedir}/target/generated-sources/swagger/src/main/java</sourceDir>
                   <sourceDir>${project.basedir}/src/main/kotlin</sourceDir>
