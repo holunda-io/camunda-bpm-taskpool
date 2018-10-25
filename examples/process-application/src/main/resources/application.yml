@@ -23,7 +23,7 @@ camunda:
     authorization:
       enabled: false
     history-level: activity
-    id-generator: simple
+    id-generator: strong
     database:
       schema-update: false
       type: h2
