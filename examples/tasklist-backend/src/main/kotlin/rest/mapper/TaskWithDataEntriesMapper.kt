@@ -19,15 +19,18 @@ import java.time.ZoneOffset
 import java.util.*
 import javax.validation.Valid
 
-@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.ERROR)
+@Mapper(
+  componentModel = "spring",
+  unmappedTargetPolicy = ReportingPolicy.ERROR
+)
 abstract class TaskWithDataEntriesMapper {
 
   @Autowired
-  lateinit var objectMapper: ObjectMapper
+  lateinit var taskUrlResolver: TaskUrlResolver
 
   @Mappings(
     Mapping(target = "processName", source = "sourceReference.processName"),
-    Mapping(target = "url", ignore = true)
+    Mapping(target = "url", expression = "java(taskUrlResolver.resolveUrl(task))")
   )
   abstract fun dto(task: Task): TaskDto
 
@@ -44,18 +47,22 @@ abstract class TaskWithDataEntriesMapper {
   abstract fun dto(taskWithDataEntries: TaskWithDataEntries): TaskWithDataEntriesDto
 
 
+  @Deprecated("unused")
   fun toLocalDateTime(@Valid time: OffsetDateTime?): LocalDateTime? {
     return time?.toLocalDateTime()
   }
 
+  @Deprecated("unused")
   fun toOffsetDateTime(@Valid time: LocalDateTime?): OffsetDateTime? {
     return time?.atOffset(ZoneOffset.UTC)
   }
 
+  @Deprecated("unused")
   fun toOffsetDateTime(@Valid time: Date?): OffsetDateTime? {
     return if (time == null) null else OffsetDateTime.ofInstant(time.toInstant(), ZoneOffset.UTC)
   }
 
+  @Deprecated("unused")
   fun toDate(@Valid time: OffsetDateTime?): Date? {
     return if (time == null) null else Date.from(time.toInstant())
   }
