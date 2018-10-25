@@ -7,6 +7,4 @@ import org.springframework.context.annotation.Configuration
 @ComponentScan
 @Configuration
 @EnableConfigurationProperties(CamundaEventingProperties::class)
-open class CamundaEventingConfiguration {
-
-}
+open class CamundaEventingConfiguration

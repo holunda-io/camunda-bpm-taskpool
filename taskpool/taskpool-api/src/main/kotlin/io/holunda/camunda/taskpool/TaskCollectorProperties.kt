@@ -14,7 +14,8 @@ data class TaskCollectorProperties(
 )
 
 data class TaskCollectorEnricherProperties(
-  var type: String = TaskCollectorEnricherType.processVariables.name
+  var type: String = TaskCollectorEnricherType.processVariables.name,
+  var applicationName: String = "\${spring.application.name}"
 )
 
 enum class TaskCollectorEnricherType {

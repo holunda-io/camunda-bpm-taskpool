@@ -75,7 +75,7 @@ class SimpleTaskCommandSender(
 
   private fun send(command: Any) {
     if (properties.sender.enabled) {
-      gateway.send<Any, Any?>(command) { m, r -> logger.debug("Successfully submitted command $m, $r") }
+      gateway.send<Any, Any?>(command) { m, r -> logger.info("Successfully submitted command $m, $r") }
     } else {
       logger.debug("Would have sent command $command")
     }

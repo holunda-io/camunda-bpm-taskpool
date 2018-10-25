@@ -1,8 +1,10 @@
 package io.holunda.camunda.taskpool.collector
 
+import io.holunda.camunda.taskpool.TaskCollectorProperties
 import io.holunda.camunda.taskpool.api.task.*
 import mu.KLogging
 import org.camunda.bpm.engine.FormService
+import org.camunda.bpm.engine.RepositoryService
 import org.camunda.bpm.engine.delegate.DelegateTask
 import org.camunda.bpm.engine.task.IdentityLinkType
 import org.camunda.bpm.engine.task.Task
@@ -15,7 +17,9 @@ import org.springframework.stereotype.Component
  */
 @Component
 class TaskEventCollector(
-  private val formService: FormService
+  private val formService: FormService,
+  private val repositoryService: RepositoryService,
+  private val collectorProperties: TaskCollectorProperties
 ) {
 
   companion object : KLogging() {
@@ -41,7 +45,7 @@ class TaskEventCollector(
       formKey = formService.getTaskFormKey(task.processDefinitionId, task.taskDefinitionKey),
       taskDefinitionKey = task.taskDefinitionKey,
       businessKey = task.execution.businessKey,
-      sourceReference = task.sourceReference()
+      sourceReference = task.sourceReference(repositoryService, collectorProperties.enricher.applicationName)
     )
 
   @Order(ORDER)
@@ -62,7 +66,7 @@ class TaskEventCollector(
       taskDefinitionKey = task.taskDefinitionKey,
       formKey = formService.getTaskFormKey(task.processDefinitionId, task.taskDefinitionKey),
       businessKey = task.execution.businessKey,
-      sourceReference = task.sourceReference()
+      sourceReference = task.sourceReference(repositoryService, collectorProperties.enricher.applicationName)
     )
 
   @Order(ORDER)
@@ -83,7 +87,7 @@ class TaskEventCollector(
       taskDefinitionKey = task.taskDefinitionKey,
       formKey = formService.getTaskFormKey(task.processDefinitionId, task.taskDefinitionKey),
       businessKey = task.execution.businessKey,
-      sourceReference = task.sourceReference()
+      sourceReference = task.sourceReference(repositoryService, collectorProperties.enricher.applicationName)
     )
 
 
@@ -106,34 +110,53 @@ class TaskEventCollector(
       taskDefinitionKey = task.taskDefinitionKey,
       formKey = formService.getTaskFormKey(task.processDefinitionId, task.taskDefinitionKey),
       businessKey = task.execution.businessKey,
-      sourceReference = task.sourceReference()
+      sourceReference = task.sourceReference(repositoryService, collectorProperties.enricher.applicationName)
     )
 }
 
 
-fun DelegateTask.sourceReference(): SourceReference =
-  if (this.processDefinitionId != null) {
-    ProcessReference(
+fun DelegateTask.sourceReference(repositoryService: RepositoryService, applicationName: String): SourceReference =
+  when {
+    this.processDefinitionId != null -> ProcessReference(
       definitionId = this.processDefinitionId,
       instanceId = this.processInstanceId,
       executionId = this.executionId,
-      definitionKey = this.processDefinitionKey()
+      definitionKey = this.processDefinitionKey(),
+      processName = this.processName(repositoryService),
+      applicationName = applicationName
     )
-  } else if (this.caseDefinitionId != null) {
-    CaseReference(
+    this.caseDefinitionId != null -> CaseReference(
       definitionId = this.caseDefinitionId,
       instanceId = this.caseInstanceId,
       executionId = this.caseExecutionId,
-      definitionKey = this.caseDefinitionKey()
+      definitionKey = this.caseDefinitionKey(),
+      processName = this.caseName(repositoryService),
+      applicationName = applicationName
     )
-  } else {
-    throw IllegalArgumentException("No source reference found.")
+    else -> throw IllegalArgumentException("No source reference found.")
   }
 
 fun DelegateTask.processDefinitionKey(): String = extractKey(this.processDefinitionId)
 fun DelegateTask.caseDefinitionKey(): String = extractKey(this.caseDefinitionId)
 fun Task.processDefinitionKey(): String = extractKey(this.processDefinitionId)
 fun Task.caseDefinitionKey(): String = extractKey(this.caseDefinitionId)
+
+fun DelegateTask.caseName(repositoryService: RepositoryService): String {
+  val caseDefinition = repositoryService.createCaseDefinitionQuery()
+    .caseDefinitionId(this.caseDefinitionId)
+    .singleResult()
+    ?: throw IllegalArgumentException("Case definition could not be resolved" + this.caseDefinitionId)
+  return caseDefinition.name
+}
+
+fun DelegateTask.processName(repositoryService: RepositoryService): String {
+  val processDefinition = repositoryService.createProcessDefinitionQuery()
+    .processDefinitionId(this.processDefinitionId)
+    .singleResult()
+    ?: throw IllegalArgumentException("Process definition could not be resolved" + this.processDefinitionId)
+  return processDefinition.name
+
+}
 
 private fun extractKey(processDefinitionId: String?): String {
   if (processDefinitionId == null) {

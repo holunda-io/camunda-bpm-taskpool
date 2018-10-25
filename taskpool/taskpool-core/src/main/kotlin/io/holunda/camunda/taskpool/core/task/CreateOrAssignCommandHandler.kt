@@ -3,6 +3,7 @@ package io.holunda.camunda.taskpool.core.task
 import io.holunda.camunda.taskpool.api.task.AssignTaskCommand
 import io.holunda.camunda.taskpool.api.task.CreateOrAssignTaskCommand
 import io.holunda.camunda.taskpool.api.task.CreateTaskCommand
+import mu.KLogging
 import org.axonframework.commandhandling.CommandHandler
 import org.axonframework.eventsourcing.EventSourcingRepository
 import org.axonframework.modelling.command.Aggregate
@@ -12,13 +13,18 @@ import org.springframework.stereotype.Component
 import java.util.*
 
 @Component
-open class CreateOrAssignCommandHandler() {
+open class CreateOrAssignCommandHandler {
+
+  companion object: KLogging()
 
   @Autowired
   private lateinit var eventSourcingRepository: EventSourcingRepository<TaskAggregate>
 
   @CommandHandler
   open fun createOrAssign(command: CreateOrAssignTaskCommand) {
+
+    logger.info { "Received command $command, delegating to the aggregate" }
+
     getAggregateById(command.id)
       .orElseGet {
         eventSourcingRepository.newInstance {

@@ -15,19 +15,25 @@ sealed class SourceReference {
   abstract val executionId: String
   abstract val definitionId: String
   abstract val definitionKey: String
+  abstract val processName: String
+  abstract val applicationName: String
 }
 
 data class ProcessReference(
   override val instanceId: String,
   override val executionId: String,
   override val definitionId: String,
-  override val definitionKey: String
+  override val definitionKey: String,
+  override val processName: String,
+  override val applicationName: String
 ): SourceReference()
 
 data class CaseReference(
   override val instanceId: String,
   override val executionId: String,
   override val definitionId: String,
-  override val definitionKey: String
+  override val definitionKey: String,
+  override val processName: String,
+  override val applicationName: String
 ): SourceReference()
 

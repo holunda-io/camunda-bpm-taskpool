@@ -8,6 +8,4 @@ import org.springframework.context.annotation.ComponentScan
  */
 @ComponentScan
 @ConditionalOnProperty(name = ["camunda.taskpool.collector.sender.type"], havingValue = "simple")
-open class TaskCommandSenderConfiguration {
-
-}
+open class TaskCommandSenderConfiguration

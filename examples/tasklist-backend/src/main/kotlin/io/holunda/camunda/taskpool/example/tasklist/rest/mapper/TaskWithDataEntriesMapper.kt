@@ -26,7 +26,7 @@ abstract class TaskWithDataEntriesMapper {
   lateinit var objectMapper: ObjectMapper
 
   @Mappings(
-    Mapping(target = "processName", ignore = true),
+    Mapping(target = "processName", source = "sourceReference.processName"),
     Mapping(target = "url", ignore = true)
   )
   abstract fun dto(task: Task): TaskDto
