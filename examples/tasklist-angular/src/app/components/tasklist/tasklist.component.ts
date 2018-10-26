@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {TaskHelperService} from 'app/services/task.helper.service';
-import {TaskWithDataEntries} from 'tasklist';
+import {TaskWithDataEntries, DataEntry, Task} from 'tasklist';
 
 @Component({
   selector: 'app-tasklist',
@@ -14,9 +14,11 @@ export class TasklistComponent {
   totalItems: any;
   page: any;
   previousPage: any;
+  currentDataTab = 'description';
 
   constructor(private taskHelper: TaskHelperService) {
     this.loadData();
+    this.page = 1;
   }
 
 
@@ -26,6 +28,16 @@ export class TasklistComponent {
       this.loadData();
     }
   }
+
+  toFieldSet(payload: any) {
+    const payloadProps = Object.keys(payload);
+    const result = [];
+    for (const prop of payloadProps) {
+      result.push({ name: prop, value: payload[prop] });
+    }
+    return result;
+  }
+
 
   loadData() {
     this.taskHelper.tasks.subscribe((tasks) => {

@@ -7,16 +7,20 @@ import {ApiModule, BASE_PATH} from 'tasklist';
 import {AppComponent} from 'app/app.component';
 import {TasklistComponent} from 'app/components/tasklist/tasklist.component';
 import {TaskHelperService} from 'app/services/task.helper.service';
+import {FieldNamePipe} from 'app/services/field-name.pipe';
+import {FormsModule} from '@angular/forms';
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    TasklistComponent
+    TasklistComponent,
+    FieldNamePipe
   ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
+    FormsModule,
     NgbModule,
     ApiModule
   ],

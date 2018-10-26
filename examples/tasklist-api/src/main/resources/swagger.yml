@@ -125,6 +125,11 @@ definitions:
       priority:
         type: integer
         description: Priority of the task.
+      payload:
+        type: object
+        additionalProperties:
+          type: object
+
     required:
     - id
     - name

@@ -3,7 +3,9 @@ import { TaskHelperService } from 'app/services/task.helper.service';
 import 'rxjs/add/observable/of';
 import { TasklistComponent } from './tasklist.component';
 import { Observable } from 'rxjs-compat';
-import { NgbPagination } from '@ng-bootstrap/ng-bootstrap';
+import { NgbPagination, NgbTabset, NgbRadioGroup } from '@ng-bootstrap/ng-bootstrap';
+import { FormsModule } from '@angular/forms';
+import { FieldNamePipe } from 'app/services/field-name.pipe';
 
 describe('Component: TasklistComponent', () => {
 
@@ -14,10 +16,13 @@ describe('Component: TasklistComponent', () => {
 
     TestBed.configureTestingModule({
       imports: [
+        FormsModule
       ],
       declarations: [
         TasklistComponent,
-        NgbPagination
+        NgbPagination,
+        NgbRadioGroup,
+        FieldNamePipe
       ],
       providers: [
         { provide: TaskHelperService, useValue: { tasks: Observable.of([]) } },
