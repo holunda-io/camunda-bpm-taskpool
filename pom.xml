@@ -45,10 +45,58 @@
     <dependencies>
 
       <dependency>
-        <groupId>io.holunda</groupId>
+        <groupId>io.holunda.taskpool</groupId>
         <artifactId>camunda-bpm-taskpool-api</artifactId>
         <version>${project.version}</version>
       </dependency>
+      <dependency>
+        <groupId>io.holunda.taskpool</groupId>
+        <artifactId>camunda-bpm-taskpool-core</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.holunda.taskpool</groupId>
+        <artifactId>camunda-bpm-taskpool-collector</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.holunda.taskpool</groupId>
+        <artifactId>camunda-bpm-taskpool-sender</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.holunda.taskpool</groupId>
+        <artifactId>camunda-bpm-engine-plugin</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.holunda.taskpool</groupId>
+        <artifactId>camunda-bpm-datapool-api</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.holunda.taskpool</groupId>
+        <artifactId>camunda-bpm-datapool-core</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.holunda.taskpool</groupId>
+        <artifactId>camunda-bpm-datapool-sender</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.holunda.taskpool</groupId>
+        <artifactId>camunda-bpm-taskpool-view-api</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.holunda.taskpool</groupId>
+        <artifactId>camunda-bpm-taskpool-view-simple</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
 
       <dependency>
         <!-- Import dependency management from Camunda -->
@@ -444,8 +492,14 @@
           <groupId>org.springframework.boot</groupId>
           <artifactId>spring-boot-maven-plugin</artifactId>
           <version>${springboot.version}</version>
+          <executions>
+            <execution>
+              <goals>
+                <goal>repackage</goal>
+              </goals>
+            </execution>
+          </executions>
           <configuration>
-            <executable>true</executable>
             <excludes>
               <exclude>
                 <groupId>commons-logging</groupId>

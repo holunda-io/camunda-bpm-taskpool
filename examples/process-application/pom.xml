@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
@@ -16,41 +18,40 @@
     <dependency>
       <groupId>io.holunda.taskpool</groupId>
       <artifactId>camunda-bpm-engine-plugin</artifactId>
-      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>io.holunda.taskpool</groupId>
       <artifactId>camunda-bpm-taskpool-collector</artifactId>
-      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>io.holunda.taskpool</groupId>
       <artifactId>camunda-bpm-taskpool-sender</artifactId>
-      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>io.holunda.taskpool</groupId>
       <artifactId>camunda-bpm-taskpool-core</artifactId>
-      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>io.holunda.taskpool</groupId>
       <artifactId>camunda-bpm-taskpool-view-simple</artifactId>
-      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>io.holunda.taskpool</groupId>
       <artifactId>camunda-bpm-datapool-sender</artifactId>
-      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>io.holunda.taskpool</groupId>
       <artifactId>camunda-bpm-datapool-core</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>io.holunda.taskpool</groupId>
+      <artifactId>camunda-bpm-taskpool-example-tasklist-backend</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>io.holunda.taskpool</groupId>
-      <artifactId>camunda-bpm-taskpool-example-tasklist-backend</artifactId>
+      <artifactId>camunda-bpm-taskpool-example-tasklist-api</artifactId>
       <version>${project.version}</version>
     </dependency>
 
@@ -75,8 +76,8 @@
       <artifactId>spring-boot-starter-webflux</artifactId>
     </dependency>
     <dependency>
-		  <groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-jpa</artifactId>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-data-jpa</artifactId>
     </dependency>
     <dependency>
       <groupId>org.flywaydb</groupId>
@@ -85,7 +86,7 @@
     <dependency>
       <groupId>com.h2database</groupId>
       <artifactId>h2</artifactId>
-    </dependency>    
+    </dependency>
     <dependency>
       <groupId>org.camunda.bpm.springboot</groupId>
       <artifactId>camunda-bpm-spring-boot-starter-webapp</artifactId>
@@ -118,8 +119,18 @@
       <groupId>io.github.microutils</groupId>
       <artifactId>kotlin-logging</artifactId>
     </dependency>
-
   </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <!-- for packaging springboot application -->
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+      </plugin>
+    </plugins>
+  </build>
+
 
   <profiles>
     <profile>
@@ -134,9 +145,9 @@
           <groupId>io.holunda.taskpool</groupId>
           <artifactId>camunda-bpm-taskpool-example-tasklist-angular</artifactId>
           <version>${project.version}</version>
-        </dependency>        
+        </dependency>
       </dependencies>
     </profile>
-  </profiles>  
-  
+  </profiles>
+
 </project>

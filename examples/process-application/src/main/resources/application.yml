@@ -13,6 +13,7 @@ spring:
     generate-ddl: false
     hibernate.ddl-auto: validate
     show-sql: false
+    open-in-view: false
   flyway:
     enabled: true
     locations: "classpath:db/migrations"
@@ -27,6 +28,8 @@ camunda:
     database:
       schema-update: false
       type: h2
+    webapp:
+      index-redirect-enabled: false
   taskpool:
     engine-eventing:
         enabled: true

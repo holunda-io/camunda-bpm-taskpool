@@ -15,7 +15,7 @@ export class TaskHelperService {
   }
 
   private loadTasks(): void {
-    const filter = [];
+    const filter = [''];
     this.taskService.getTasks(filter).subscribe((tasks: Array<TaskWithDataEntries>) => {
       this.tasksSubject.next(tasks);
     }, (error) => {

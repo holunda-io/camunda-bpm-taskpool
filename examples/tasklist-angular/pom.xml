@@ -15,8 +15,9 @@
   <properties>
     <npm.version>6.4.1</npm.version>
     <node.version>v8.11.3</node.version>
+    <angular-app-name>tasklist-angular</angular-app-name>
   </properties>
-  
+
   <build>
     <plugins>
       <plugin>
@@ -185,6 +186,16 @@
                   <arguments>install</arguments>
                 </configuration>
               </execution>
+              <execution>
+                <id>node rebuild node-sass</id>
+                <goals>
+                  <goal>npm</goal>
+                </goals>
+                <phase>initialize</phase>
+                <configuration>
+                  <arguments>rebuild node-sass</arguments>
+                </configuration>
+              </execution>
             </executions>
           </plugin>
         </plugins>
@@ -217,5 +228,5 @@
     </profile>
 
   </profiles>
-  
+
 </project>

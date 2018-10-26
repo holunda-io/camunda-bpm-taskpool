@@ -1,8 +1,8 @@
 package io.holunda.camunda.taskpool.example.process
 
 import io.holunda.camunda.datapool.EnableDataEntryCollector
-import io.holunda.camunda.taskpool.EnableTaskCollector
 import io.holunda.camunda.datapool.core.EnableDataPool
+import io.holunda.camunda.taskpool.EnableTaskCollector
 import io.holunda.camunda.taskpool.core.EnableTaskPool
 import io.holunda.camunda.taskpool.enricher.*
 import io.holunda.camunda.taskpool.example.process.process.ProcessApproveRequest
@@ -15,7 +15,6 @@ import org.camunda.bpm.spring.boot.starter.annotation.EnableProcessApplication
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.context.annotation.Bean
-import org.springframework.web.reactive.config.EnableWebFlux
 
 
 fun main(args: Array<String>) {
@@ -32,7 +31,7 @@ fun main(args: Array<String>) {
 @EnableDataPool
 @EnableTaskPoolSimpleView
 @EnableTasklist
-@EnableWebFlux
+// @EnableWebFlux
 open class ExampleProcessApplication {
 
   companion object : KLogging()

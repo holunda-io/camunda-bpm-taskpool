@@ -10,6 +10,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
+import javax.annotation.PostConstruct
 
 @Configuration
 @ComponentScan
@@ -67,7 +68,7 @@ open class TaskCollectorConfiguration(
       else -> null
     }
 
-  @Autowired
+  @PostConstruct
   open fun printConfiguration() {
     when (properties.enricher.type) {
       TaskCollectorEnricherType.processVariables.name -> logger.info { "ENRICHER-001: Camunda Taskpool commands will be enriched with process variables." }

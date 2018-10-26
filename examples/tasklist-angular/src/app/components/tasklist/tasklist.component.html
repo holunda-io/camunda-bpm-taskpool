@@ -8,28 +8,34 @@
 <div class="row">
   <div class="col-lg-12">
     <div class="card">
-      <div class="card-header">All Tasks</div>
-      <div class="card-body">
+      <div class="card-header"><img src="assets/holunda-io-logo.png">All Tasks</div>
+      <div class="card-body no-pad">
         <table class="table">
           <thead>
           <tr>
+            <th>Process</th>
             <th>Name</th>
             <th>Description</th>
             <th>Created</th>
-            <th>Assigned</th>
-            <th>Priority</th>
+            <th>Prio</th>
+            <th>&nbsp;</th>
           </tr>
           </thead>
           <tbody>
           <tr *ngFor="let taskWithEntryData of tasks index as i">
-            <td>{{ taskWithEntryData.task.name }}</td>
+            <td style="white-space: nowrap;">{{ taskWithEntryData.task.processName }}</td>
+            <td style="white-space: nowrap;"><a href="{{ taskWithEntryData.task.url }}">{{ taskWithEntryData.task.name }}</a></td>
             <td>{{ taskWithEntryData.task.description }}</td>
-            <td>{{ taskWithEntryData.task.createTime }}</td>
-            <td>{{ taskWithEntryData.task.assignee }}</td>
+            <td>{{ taskWithEntryData.task.createTime | date: 'mediumDate' }}</td>
             <td>{{ taskWithEntryData.task.priority }}</td>
+            <td>
+              <span *ngIf="taskWithEntryData.task.assignee"><i class="fa fa-user" title="{{ taskWithEntryData.task.assignee }}"></i>&nbsp;</span>
+              <span *ngIf="taskWithEntryData.task.candidateUsers"><i class="fa fa-user-o" title="{{ taskWithEntryData.task.candidateUsers }}"></i>&nbsp;</span>
+              <span *ngIf="taskWithEntryData.task.candidateGroups"><i class="fa fa-users" title="{{ taskWithEntryData.task.candidateGroups }}"></i></span>
+            </td>
           </tr>
-          <tr ng-hide="tasks.length">
-            <td colspan="6">No tasks available.</td>
+          <tr *ngIf="tasks.length === 0">
+            <td colspan="6">No tasks</td>
           </tr>
           </tbody>
         </table>
