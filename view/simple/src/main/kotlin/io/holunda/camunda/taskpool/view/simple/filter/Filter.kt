@@ -25,10 +25,10 @@ internal fun filterByPredicates(value: TaskWithDataEntries, wrapper: TaskPredica
     || (wrapper.taskPredicate != null && wrapper.taskPredicate.test(value.task))
     // constraint is defined on data and matches on data entry property
     || (wrapper.dataEntriesPredicate != null
-    && value.dataEntries
+    && (value.dataEntries
     .asSequence()
     .map { dataEntry -> dataEntry.payload }
-    .find { payload -> wrapper.dataEntriesPredicate.test(payload) } != null)
+    .find { payload -> wrapper.dataEntriesPredicate.test(payload) } != null || wrapper.dataEntriesPredicate.test(value.task.payload)))
 
 internal fun createPredicates(criteria: List<Criterion>): TaskPredicateWrapper {
   val taskPredicates: List<Predicate<Any>> = criteria

@@ -29,7 +29,7 @@ class SimpleDataEntryCommandSender(
 
     val command = CreateOrUpdateDataEntryCommand(entryType = entryType, entryId = entryId, payload = serialize(payload), correlations = correlations)
     if (properties.enabled) {
-      gateway.send<Any, Any?>(command) { m, r -> logger.debug("Successfully submitted commandOrUpdate $m, $r") }
+      gateway.send<Any, Any?>(command) { m, r -> logger.debug("Successfully submitted command $m, $r") }
     } else {
       logger.debug("Would have sent commandOrUpdate $command")
     }

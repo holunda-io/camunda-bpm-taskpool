@@ -20,17 +20,31 @@ class FilterTest {
 
   private val ref = ProcessReference("1", "2", "3", "4", "My Process", "myExample")
 
+  // no match: task.assignee, dataAttr1, dataAttr2
+  // match: task.name
   private val task1 = TaskWithDataEntries(Task("id", ref, "key", name = "myName"), listOf())
+  // no match: task.name, dataAttr1, dataAttr2
+  // match: task.assignee
   private val task2 = TaskWithDataEntries(Task("id", ref, "key", assignee = "kermit"), listOf())
+  // no match: task.name, task.assignee, dataAttr2
+  // match: dataEntries[0].payload -> dataAttr1
   private val task3 = TaskWithDataEntries(Task("id", ref, "key", name = "foo", assignee = "gonzo"), listOf(
     DataEntry("type", "4711", Variables.createVariables().putValue("dataAttr1", "another")
     )))
+  // no match: task.name, task.assignee, dataAttr2
+  // match: dataEntries[0].payload -> dataAttr1
   private val task4 = TaskWithDataEntries(Task("id", ref, "key", name = "foo", assignee = "gonzo"), listOf(
     DataEntry("type", "4711", Variables.createVariables().putValue("dataAttr1", "value"))
   ))
+  // no match: task.name, task.assignee, dataAttr1
+  // match: dataEntries[0].payload -> dataAttr2
   private val task5 = TaskWithDataEntries(Task("id", ref, "key", name = "foo", assignee = "gonzo"), listOf(
     DataEntry("type", "4711", Variables.createVariables().putValue("dataAttr2", "another").putValue("name", "myName"))
   ))
+  // no match: task.name, task.assignee, dataAttr1
+  // match: task.payload -> dataAttr2
+  private val task6 = TaskWithDataEntries(Task("id", ref, "key", name = "foo", assignee = "gonzo",
+    payload = Variables.createVariables().putValue("dataAttr2", "another").putValue("name", "myName")), listOf())
 
 
   @Test
@@ -93,8 +107,8 @@ class FilterTest {
 
   @Test
   fun testFilter() {
-    val filtered = filter(filtersList, listOf(task1, task2, task3, task4, task5))
-    assertThat(filtered).containsExactlyElementsOf(listOf(task1, task2, task4, task5))
+    val filtered = filter(filtersList, listOf(task1, task2, task3, task4, task5, task6))
+    assertThat(filtered).containsExactlyElementsOf(listOf(task1, task2, task4, task5, task6))
   }
 }
 
