@@ -3,6 +3,7 @@ import { TaskHelperService } from 'app/services/task.helper.service';
 import 'rxjs/add/observable/of';
 import { TasklistComponent } from './tasklist.component';
 import { Observable } from 'rxjs-compat';
+import { NgbPagination } from '@ng-bootstrap/ng-bootstrap';
 
 describe('Component: TasklistComponent', () => {
 
@@ -16,6 +17,7 @@ describe('Component: TasklistComponent', () => {
       ],
       declarations: [
         TasklistComponent,
+        NgbPagination
       ],
       providers: [
         { provide: TaskHelperService, useValue: { tasks: Observable.of([]) } },

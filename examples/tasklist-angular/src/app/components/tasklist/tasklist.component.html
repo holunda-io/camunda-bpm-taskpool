@@ -1,17 +1,16 @@
 <div class="row">
   <div class="col-lg-12">
-    <h1>Tasks</h1>
-    <p>A list of tasks gathered from Camunda BPM Taskpool.</p>
+    <h1><img src="assets/holunda-io-logo.png" title="Tasks">Tasks</h1>
+    <p>A list of tasks gathered by Camunda BPM Taskpool.</p>
   </div>
 </div>
 
 <div class="row">
   <div class="col-lg-12">
     <div class="card">
-      <div class="card-header"><img src="assets/holunda-io-logo.png">All Tasks</div>
-      <div class="card-body no-pad">
+      <div class="card-body">
         <table class="table">
-          <thead>
+          <thead class="thead-light">
           <tr>
             <th>Process</th>
             <th>Name</th>
@@ -23,8 +22,8 @@
           </thead>
           <tbody>
           <tr *ngFor="let taskWithEntryData of tasks index as i">
-            <td style="white-space: nowrap;">{{ taskWithEntryData.task.processName }}</td>
-            <td style="white-space: nowrap;"><a href="{{ taskWithEntryData.task.url }}">{{ taskWithEntryData.task.name }}</a></td>
+            <td class="nowrap">{{ taskWithEntryData.task.processName }}</td>
+            <td class="nowrap"><a href="{{ taskWithEntryData.task.url }}">{{ taskWithEntryData.task.name }}</a></td>
             <td>{{ taskWithEntryData.task.description }}</td>
             <td>{{ taskWithEntryData.task.createTime | date: 'mediumDate' }}</td>
             <td>{{ taskWithEntryData.task.priority }}</td>
@@ -39,6 +38,15 @@
           </tr>
           </tbody>
         </table>
+      </div>
+      <div class="card-footer bg-transparent">
+        <ngb-pagination class="d-flex justify-content-center"
+          [collectionSize]="totalItems"
+          [pageSize]="itemsPerPage"
+          [(page)]="page"
+          [maxSize]="7"
+          [rotate]="true"
+          (pageChange)="loadPage($event)"></ngb-pagination>
       </div>
     </div>
   </div>
