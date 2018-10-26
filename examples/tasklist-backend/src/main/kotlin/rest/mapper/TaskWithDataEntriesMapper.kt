@@ -1,7 +1,6 @@
 package io.holunda.camunda.taskpool.example.tasklist.rest.mapper
 
 import com.fasterxml.jackson.core.JsonProcessingException
-import com.fasterxml.jackson.databind.ObjectMapper
 import io.holunda.camunda.taskpool.example.tasklist.rest.model.DataEntryDto
 import io.holunda.camunda.taskpool.example.tasklist.rest.model.TaskDto
 import io.holunda.camunda.taskpool.example.tasklist.rest.model.TaskWithDataEntriesDto
@@ -36,7 +35,7 @@ abstract class TaskWithDataEntriesMapper {
   abstract fun dto(task: Task): TaskDto
 
   @Mappings(
-    Mapping(target = "payload", source="dataEntry.payload")
+    Mapping(target = "payload", source = "dataEntry.payload")
   )
   @Throws(JsonProcessingException::class)
   abstract fun dto(dataEntry: DataEntry): DataEntryDto

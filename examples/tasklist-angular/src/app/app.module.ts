@@ -9,6 +9,7 @@ import {TasklistComponent} from 'app/components/tasklist/tasklist.component';
 import {TaskHelperService} from 'app/services/task.helper.service';
 import {FieldNamePipe} from 'app/services/field-name.pipe';
 import {FormsModule} from '@angular/forms';
+import { FilterService } from './services/filter.service';
 
 
 @NgModule({
@@ -26,6 +27,7 @@ import {FormsModule} from '@angular/forms';
   ],
   providers: [
     TaskHelperService,
+    FilterService,
     {provide: BASE_PATH, useValue: '/tasklist/rest'}
   ],
   bootstrap: [AppComponent]

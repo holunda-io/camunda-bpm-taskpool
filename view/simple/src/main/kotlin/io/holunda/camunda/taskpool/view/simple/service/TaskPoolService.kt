@@ -8,10 +8,7 @@ import io.holunda.camunda.taskpool.api.task.TaskCompletedEvent
 import io.holunda.camunda.taskpool.api.task.TaskCreatedEvent
 import io.holunda.camunda.taskpool.api.task.TaskDeletedEvent
 import io.holunda.camunda.taskpool.view.*
-import io.holunda.camunda.taskpool.view.query.DataEntryQuery
-import io.holunda.camunda.taskpool.view.query.FilterQuery
-import io.holunda.camunda.taskpool.view.query.TasksDataEntryForUserQuery
-import io.holunda.camunda.taskpool.view.query.TasksForUserQuery
+import io.holunda.camunda.taskpool.view.query.*
 import io.holunda.camunda.taskpool.view.simple.createPredicates
 import io.holunda.camunda.taskpool.view.simple.filterByPredicates
 import io.holunda.camunda.taskpool.view.simple.toCriteria
@@ -48,7 +45,7 @@ open class TaskPoolService(
    * Retrieves a list of tasks with correlatated data entries of given entry type (and optional id).
    */
   @QueryHandler
-  open fun query(query: TasksDataEntryForUserQuery): List<TaskWithDataEntries> {
+  open fun query(query: TasksWithDataEntriesForUserQuery): TasksWithDataEntriesResponse {
 
     val predicates = createPredicates(toCriteria(query.filters))
 
@@ -56,10 +53,22 @@ open class TaskPoolService(
       .asSequence()
       .map { task -> tasksWithDataEntries(task, this.dataEntries) }
       .filter { filterByPredicates(it, predicates) }
-      // TODO add sort
-      // TODO add paging (size + page)
       .toList()
-    return filtered
+
+    // TODO add sort
+
+
+    return slice(list = filtered, query = query)
+  }
+
+  fun slice(list: List<TaskWithDataEntries>, query: TasksWithDataEntriesForUserQuery): TasksWithDataEntriesResponse {
+    val totalCount = list.size
+    val offset = query.page * query.size
+    return if (totalCount > offset) {
+      TasksWithDataEntriesResponse(totalCount, list.slice(IntRange(offset, Math.min(offset + query.size, totalCount - 1))))
+    } else {
+      TasksWithDataEntriesResponse(totalCount, list)
+    }
   }
 
   @EventHandler

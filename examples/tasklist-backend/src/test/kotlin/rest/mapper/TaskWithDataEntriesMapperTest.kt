@@ -2,7 +2,6 @@ package io.holunda.camunda.taskpool.example.tasklist.rest.mapper
 
 import io.holunda.camunda.taskpool.api.task.ProcessReference
 import io.holunda.camunda.taskpool.example.tasklist.TaskUrlResolverProperties
-import io.holunda.camunda.taskpool.example.tasklist.TasklistConfiguration
 import io.holunda.camunda.taskpool.view.Task
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -39,7 +38,7 @@ class TaskWithDataEntriesMapperTest {
   @Test
   fun `resolves url for given task`() {
     val task = Task(
-      id="1",
+      id = "1",
       sourceReference = sourceReference,
       taskDefinitionKey = "the-task",
       formKey = "the-task"

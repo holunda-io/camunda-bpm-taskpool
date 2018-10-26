@@ -5,12 +5,13 @@ import io.holunda.camunda.taskpool.example.tasklist.rest.Rest
 import io.holunda.camunda.taskpool.example.tasklist.rest.api.TasksApi
 import io.holunda.camunda.taskpool.example.tasklist.rest.mapper.TaskWithDataEntriesMapper
 import io.holunda.camunda.taskpool.example.tasklist.rest.model.TaskWithDataEntriesDto
-import io.holunda.camunda.taskpool.view.TaskWithDataEntries
 import io.holunda.camunda.taskpool.view.auth.UserService
-import io.holunda.camunda.taskpool.view.query.TasksDataEntryForUserQuery
+import io.holunda.camunda.taskpool.view.query.TasksWithDataEntriesForUserQuery
+import io.holunda.camunda.taskpool.view.query.TasksWithDataEntriesResponse
 import mu.KLogging
 import org.axonframework.messaging.responsetypes.ResponseTypes
 import org.axonframework.queryhandling.QueryGateway
+import org.springframework.http.HttpHeaders
 import org.springframework.http.ResponseEntity
 import org.springframework.http.ResponseEntity.ok
 import org.springframework.web.bind.annotation.RequestMapping
@@ -28,7 +29,9 @@ open class TaskController(
   private val mapper: TaskWithDataEntriesMapper
 ) : TasksApi {
 
-  companion object : KLogging()
+  companion object : KLogging() {
+    const val HEADER_ELEMENT_COUNT = "X-ElementCount"
+  }
 
   override fun getTasks(
     @RequestParam(value = "filter") filters: List<String>,
@@ -40,15 +43,22 @@ open class TaskController(
     val username = currentUserService.getCurrentUser()
     val user = userService.getUser(username)
 
-    val result: List<TaskWithDataEntries> = queryGateway
-      .query(TasksDataEntryForUserQuery(
+    val result: TasksWithDataEntriesResponse = queryGateway
+      .query(TasksWithDataEntriesForUserQuery(
         user = user,
-        page = page,
-        size = size,
+        page = page.orElse(0),
+        size = size.orElse(Int.MAX_VALUE),
         sort = sort.orElseGet { listOf() },
         filters = filters
-      ), ResponseTypes.multipleInstancesOf(TaskWithDataEntries::class.java))
+      ), ResponseTypes.instanceOf(TasksWithDataEntriesResponse::class.java))
       .join()
-    return ok(result.map { mapper.dto(it) })
+
+    val responseHeaders = HttpHeaders().apply {
+      this[HEADER_ELEMENT_COUNT] = result.elementCount.toString()
+    }
+
+    return ok()
+      .headers(responseHeaders)
+      .body(result.tasksWithDataEntries.map { mapper.dto(it) })
   }
 }

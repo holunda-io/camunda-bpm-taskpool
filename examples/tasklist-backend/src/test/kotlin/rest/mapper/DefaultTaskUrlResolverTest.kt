@@ -24,7 +24,7 @@ class DefaultTaskUrlResolverTest {
       id = "1",
       taskDefinitionKey = "foo",
       formKey = "formKey",
-      sourceReference = ProcessReference("","","","","","test")
+      sourceReference = ProcessReference("", "", "", "", "", "test")
     )
 
     assertThat(resolver.resolveUrl(task)).isEqualTo("http://localhost:8080/test/forms/formKey/id/1")

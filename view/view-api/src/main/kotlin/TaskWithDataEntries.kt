@@ -2,10 +2,11 @@ package io.holunda.camunda.taskpool.view
 
 import io.holunda.camunda.taskpool.api.business.EntryId
 import io.holunda.camunda.taskpool.api.business.dataIdentity
+import io.holunda.camunda.taskpool.view.DataEntry
 
 data class TaskWithDataEntries(
   val task: Task,
-  val dataEntries: List<DataEntry>
+  val dataEntries: List<DataEntry> = listOf()
 )
 
 fun tasksWithDataEntries(task: Task, dataEntries: Map<String, DataEntry>) =

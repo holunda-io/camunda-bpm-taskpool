@@ -57,6 +57,10 @@ paths:
             type: array
             items:
               $ref: '#/definitions/TaskWithDataEntries'
+          headers:
+            X-ElementCount:
+              type: integer
+              description: Number of elements in total.
         '401':
           description: Not authenticated.
         '403':

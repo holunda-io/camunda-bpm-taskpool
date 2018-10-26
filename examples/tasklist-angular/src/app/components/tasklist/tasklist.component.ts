@@ -1,6 +1,7 @@
 import {Component} from '@angular/core';
 import {TaskHelperService} from 'app/services/task.helper.service';
 import {TaskWithDataEntries, DataEntry, Task} from 'tasklist';
+import { FilterService } from 'app/services/filter.service';
 
 @Component({
   selector: 'app-tasklist',
@@ -12,20 +13,20 @@ export class TasklistComponent {
   tasks: Array<TaskWithDataEntries> = [];
   itemsPerPage: number;
   totalItems: any;
-  page: any;
-  previousPage: any;
+  page: number;
   currentDataTab = 'description';
 
-  constructor(private taskHelper: TaskHelperService) {
-    this.loadData();
-    this.page = 1;
+  constructor(private taskHelper: TaskHelperService, private filterService: FilterService) {
+    this.subscribe();
+    this.page = this.filterService.page + 1;
+    this.itemsPerPage = this.filterService.itemsPerPage;
   }
 
 
   loadPage(page: number) {
-    if (page !== this.previousPage) {
-      this.previousPage = page;
-      this.loadData();
+    if (this.page - 1 !== this.filterService.page) {
+      this.filterService.page = this.page - 1;
+      this.taskHelper.reload();
     }
   }
 
@@ -39,20 +40,12 @@ export class TasklistComponent {
   }
 
 
-  loadData() {
-    this.taskHelper.tasks.subscribe((tasks) => {
+  subscribe() {
+    this.taskHelper.tasksSubject.subscribe((tasks) => {
       this.tasks = tasks;
     });
+    this.filterService.countSubject.subscribe((count: number) => {
+      this.totalItems = count;
+    });
   }
-
-      /*
-    this.dataService.query({
-      page: this.page - 1,
-      size: this.itemsPerPage,
-    }).subscribe(
-      (res: Response) => this.onSuccess(res.json(), res.headers),
-      (res: Response) => this.onError(res.json())
-      )
-    */
-
 }

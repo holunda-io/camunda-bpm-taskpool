@@ -2,15 +2,14 @@ package io.holunda.camunda.taskpool.view.query
 
 import io.holunda.camunda.taskpool.view.TaskWithDataEntries
 import io.holunda.camunda.taskpool.view.auth.User
-import java.util.*
 
 /**
  * Query for tasks with correlated data entries for given user.
  */
-data class TasksDataEntryForUserQuery(
+data class TasksWithDataEntriesForUserQuery(
   val user: User,
-  val page: Optional<Int> = Optional.empty(),
-  val size: Optional<Int> = Optional.empty(),
+  val page: Int,
+  val size: Int,
   val sort: List<String> = listOf(),
   val filters: List<String> = listOf(),
   val filterMethod: (TaskWithDataEntries) -> Boolean = { true }

@@ -6,6 +6,7 @@ import { Observable } from 'rxjs-compat';
 import { NgbPagination, NgbTabset, NgbRadioGroup } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule } from '@angular/forms';
 import { FieldNamePipe } from 'app/services/field-name.pipe';
+import { FilterService } from 'app/services/filter.service';
 
 describe('Component: TasklistComponent', () => {
 
@@ -25,7 +26,8 @@ describe('Component: TasklistComponent', () => {
         FieldNamePipe
       ],
       providers: [
-        { provide: TaskHelperService, useValue: { tasks: Observable.of([]) } },
+        FilterService,
+        { provide: TaskHelperService, useValue: { tasksSubject: Observable.of([]) } },
       ],
     }).compileComponents().then(() => {
       // create component and test fixture
