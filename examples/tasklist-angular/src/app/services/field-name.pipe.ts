@@ -13,6 +13,10 @@ export class FieldNamePipe implements PipeTransform {
   private toSentence(key) {
     const separator = ' ';
     const split = /(?=[A-Z])/;
+    const lastDot = key.lastIndexOf('.');
+    if (lastDot !== -1) {
+      key = key.substring(lastDot + 1);
+    }
     return key.split(split).join(separator).toLowerCase();
   }
 }

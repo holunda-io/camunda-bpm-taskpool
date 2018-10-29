@@ -14,7 +14,6 @@ class LoadRequestDelegate(private val requestService: RequestService) : JavaDele
     val request = requestService.getRequest(id)
       ?: throw NoSuchElementException("Request with id $id could not found.")
 
-    execution.setVariable(ProcessApproveRequest.Variables.ORIGINATOR, request.originator)
     execution.setVariable(ProcessApproveRequest.Variables.APPLICANT, request.applicant)
     execution.setVariable(ProcessApproveRequest.Variables.AMOUNT, request.amount)
     execution.setVariable(ProcessApproveRequest.Variables.CURRENCY, request.currency)

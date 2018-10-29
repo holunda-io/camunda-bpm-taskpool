@@ -50,14 +50,12 @@ fun createDummyRequest(id: String) = Request(
   subject = "Salary increase",
   amount = BigDecimal(10000),
   currency = "USD",
-  applicant = "piggy",
-  originator = "kermit"
+  applicant = "piggy"
 )
 
 
 data class Request(
   val id: String,
-  val originator: String,
   val applicant: String,
   val subject: String,
   val amount: BigDecimal,

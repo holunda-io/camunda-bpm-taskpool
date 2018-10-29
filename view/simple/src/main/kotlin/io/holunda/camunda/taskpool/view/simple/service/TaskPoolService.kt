@@ -11,6 +11,7 @@ import io.holunda.camunda.taskpool.view.*
 import io.holunda.camunda.taskpool.view.query.*
 import io.holunda.camunda.taskpool.view.simple.createPredicates
 import io.holunda.camunda.taskpool.view.simple.filterByPredicates
+import io.holunda.camunda.taskpool.view.simple.sort.TasksWithDataEntriesComparator
 import io.holunda.camunda.taskpool.view.simple.toCriteria
 import mu.KLogging
 import org.axonframework.eventhandling.EventHandler
@@ -54,9 +55,7 @@ open class TaskPoolService(
       .map { task -> tasksWithDataEntries(task, this.dataEntries) }
       .filter { filterByPredicates(it, predicates) }
       .toList()
-
-    // TODO add sort
-
+      .sortedWith(TasksWithDataEntriesComparator(query.sort.toSet()))
 
     return slice(list = filtered, query = query)
   }

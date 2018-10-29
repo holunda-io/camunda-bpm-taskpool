@@ -16,7 +16,7 @@ open class DescriptionSettingTaskListener {
   open fun changeDescription(task: DelegateTask) {
     task.description = when (task.taskDefinitionKey) {
       ProcessApproveRequest.Elements.APPROVE_REQUEST -> "Please approve request ${task.execution.businessKey} from ${task.variables[ORIGINATOR]} on behalf of ${task.variables[APPLICANT]}"
-      ProcessApproveRequest.Elements.AMEND_REQUEST -> "Please amend request ${task.execution.businessKey}"
+      ProcessApproveRequest.Elements.AMEND_REQUEST -> "Please amend the approval request ${task.execution.businessKey}"
       else -> ""
     }
   }

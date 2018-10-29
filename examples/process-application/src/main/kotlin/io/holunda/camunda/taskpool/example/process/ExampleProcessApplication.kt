@@ -40,25 +40,25 @@ open class ExampleProcessApplication {
   open fun processVariablesFilter() = ProcessVariablesFilter(
 
     // define a applyFilter for every process
-    ProcessVariableFilter(ProcessApproveRequest.KEY, FilterType.INCLUDE, mapOf(
+    ProcessVariableFilter(
+      ProcessApproveRequest.KEY,
+      FilterType.INCLUDE,
+      mapOf(
 
-      // define a applyFilter for every task
-      ProcessApproveRequest.Elements.APPROVE_REQUEST to listOf(
-        ProcessApproveRequest.Variables.REQUEST_ID,
-        ProcessApproveRequest.Variables.SUBJECT,
-        ProcessApproveRequest.Variables.APPLICANT,
-        ProcessApproveRequest.Variables.AMOUNT,
-        ProcessApproveRequest.Variables.CURRENCY
-      ),
+        // define a applyFilter for every task
+        ProcessApproveRequest.Elements.APPROVE_REQUEST to
+          listOf(
+            ProcessApproveRequest.Variables.REQUEST_ID,
+            ProcessApproveRequest.Variables.ORIGINATOR
+          ),
 
-      // and again
-      ProcessApproveRequest.Elements.AMEND_REQUEST to listOf(
-        ProcessApproveRequest.Variables.REQUEST_ID,
-        ProcessApproveRequest.Variables.APPLICANT,
-        ProcessApproveRequest.Variables.SUBJECT,
-        ProcessApproveRequest.Variables.COMMENT
-      )
-    ))
+        // and again
+        ProcessApproveRequest.Elements.AMEND_REQUEST to
+          listOf(
+            ProcessApproveRequest.Variables.REQUEST_ID,
+            ProcessApproveRequest.Variables.COMMENT
+          )
+      ))
   )
 
   @Bean

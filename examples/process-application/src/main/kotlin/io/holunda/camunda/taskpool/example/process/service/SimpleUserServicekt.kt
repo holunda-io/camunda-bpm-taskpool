@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component
 @Component
 class SimpleUserService : UserService, CurrentUserService {
 
-  private val muppetUsers = mutableMapOf<String, User>(
+  private val muppetUsers = mutableMapOf(
     "kermit" to User("kermit", setOf("muppetshow")),
     "piggy" to User("piggy", setOf("muppetshow")),
     "gonzo" to User("gonzo", setOf("muppetshow")),
@@ -19,6 +19,6 @@ class SimpleUserService : UserService, CurrentUserService {
     return muppetUsers[username] ?: throw IllegalArgumentException("Unknown user $username")
   }
 
-  override fun getCurrentUser(): String = "gonzo"
+  override fun getCurrentUser(): String = "kermit"
 
 }

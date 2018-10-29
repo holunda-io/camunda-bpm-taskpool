@@ -1,5 +1,6 @@
 package io.holunda.camunda.taskpool.example.process.process
 
+import io.holunda.camunda.taskpool.example.process.process.ProcessApproveRequest.Variables.ORIGINATOR
 import io.holunda.camunda.taskpool.example.process.process.ProcessApproveRequest.Variables.REQUEST_ID
 import org.camunda.bpm.engine.RuntimeService
 import org.camunda.bpm.engine.TaskService
@@ -42,6 +43,7 @@ class ProcessApproveRequestBean(
       requestId,
       Variables.createVariables()
         .putValue(REQUEST_ID, requestId)
+        .putValue(ORIGINATOR, "kermit")
     )
     return requestId
   }
