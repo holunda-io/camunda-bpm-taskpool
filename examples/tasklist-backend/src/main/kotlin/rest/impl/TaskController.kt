@@ -37,7 +37,7 @@ open class TaskController(
     @RequestParam(value = "filter") filters: List<String>,
     @RequestParam(value = "page") page: Optional<Int>,
     @RequestParam(value = "size") size: Optional<Int>,
-    @RequestParam(value = "sort") sort: Optional<List<String>>
+    @RequestParam(value = "sort") sort: Optional<String>
   ): ResponseEntity<List<TaskWithDataEntriesDto>> {
 
     val username = currentUserService.getCurrentUser()
@@ -48,7 +48,7 @@ open class TaskController(
         user = user,
         page = page.orElse(0),
         size = size.orElse(Int.MAX_VALUE),
-        sort = sort.orElseGet { listOf() },
+        sort = sort.orElseGet { "" },
         filters = filters
       ), ResponseTypes.instanceOf(TasksWithDataEntriesResponse::class.java))
       .join()

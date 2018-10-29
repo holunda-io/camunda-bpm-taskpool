@@ -7,6 +7,7 @@ import { NgbPagination, NgbTabset, NgbRadioGroup } from '@ng-bootstrap/ng-bootst
 import { FormsModule } from '@angular/forms';
 import { FieldNamePipe } from 'app/services/field-name.pipe';
 import { FilterService } from 'app/services/filter.service';
+import { SortableColumnComponent } from '../sorter/sortable-column.component';
 
 describe('Component: TasklistComponent', () => {
 
@@ -23,11 +24,12 @@ describe('Component: TasklistComponent', () => {
         TasklistComponent,
         NgbPagination,
         NgbRadioGroup,
-        FieldNamePipe
+        FieldNamePipe,
+        SortableColumnComponent
       ],
       providers: [
         FilterService,
-        { provide: TaskHelperService, useValue: { tasksSubject: Observable.of([]) } },
+        { provide: TaskHelperService, useValue: { tasks: Observable.of([]) } },
       ],
     }).compileComponents().then(() => {
       // create component and test fixture

@@ -32,13 +32,9 @@ paths:
         type: integer
       - in: query
         name: sort
-        description: A collection of sort directives in the format prop1:asc,prop2:desc,...
-        type: array
-        items:
-          type: string
-          pattern: '^[-+]([\w]*)$'
-        collectionFormat: pipes
-        uniqueItems: true
+        description: A collection of sort directives in the format +prop1.
+        type: string
+        pattern: '^[-+]([\w]*)$'
       - in: query
         name: filter
         description: One or multiple filter directives in the format prop1=value

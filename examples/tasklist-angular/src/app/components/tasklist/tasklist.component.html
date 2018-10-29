@@ -12,8 +12,8 @@
         <table class="table">
           <thead class="thead-light">
           <tr>
-            <th class="align-top">Process</th>
-            <th class="align-top">Name</th>
+            <th class="align-top" sortable-column="task.process">Process</th>
+            <th class="align-top" sortable-column="task.name">Name</th>
             <th class="w-50">
               Details
                 <div class="btn-group btn-group-toggle btn-group-sm pull-right" ngbRadioGroup name="dataTab" [(ngModel)]="currentDataTab">
@@ -23,9 +23,9 @@
                     <input ngbButton type="radio" [value]="'data'">Data</label>
                 </div>
             </th>
-            <th class="align-top">Created</th>
-            <th class="align-top">Due</th>
-            <th class="align-top">Prio</th>
+            <th class="align-top" sortable-column="task.createTime">Created</th>
+            <th class="align-top" sortable-column="task.dueDate">Due</th>
+            <th class="align-top" sortable-column="task.priority">Prio</th>
             <th class="align-top">&nbsp;</th>
           </tr>
           </thead>

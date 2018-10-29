@@ -142,7 +142,8 @@ data class PropertyValuePredicate<T>(
   }
 }
 
-fun extractField(target: Any, name: String): Field? = ReflectionUtils.findField(target::class.java, name)
+fun extractField(targetClass: Class<*>, name: String): Field? = ReflectionUtils.findField(targetClass, name)
+fun extractField(target: Any, name: String): Field? = extractField(target::class.java, name)
 fun extractValue(target: Any, field: Field): Any? = ReflectionUtils.getField(field.apply { ReflectionUtils.makeAccessible(this) }, target)
 fun extractKey(target: Any, name: String): String? = if (target is Map<*, *> && target.containsKey(name)) name else null
 fun extractValue(target: Any, key: String): Any? = if (target is Map<*, *>) target[key] else null

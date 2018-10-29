@@ -2,7 +2,6 @@ package io.holunda.camunda.taskpool.view
 
 import io.holunda.camunda.taskpool.api.business.EntryId
 import io.holunda.camunda.taskpool.api.business.dataIdentity
-import io.holunda.camunda.taskpool.view.DataEntry
 
 data class TaskWithDataEntries(
   val task: Task,

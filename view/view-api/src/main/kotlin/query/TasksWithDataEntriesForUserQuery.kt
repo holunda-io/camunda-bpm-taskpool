@@ -10,7 +10,7 @@ data class TasksWithDataEntriesForUserQuery(
   val user: User,
   val page: Int,
   val size: Int,
-  val sort: List<String> = listOf(),
+  val sort: String? = null,
   val filters: List<String> = listOf(),
   val filterMethod: (TaskWithDataEntries) -> Boolean = { true }
 ) : FilterQuery<TaskWithDataEntries> {

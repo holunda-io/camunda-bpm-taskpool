@@ -13,7 +13,8 @@ import {AppComponent} from 'app/app.component';
 import {TasklistComponent} from 'app/components/tasklist/tasklist.component';
 import {TaskHelperService} from 'app/services/task.helper.service';
 import {FieldNamePipe} from 'app/services/field-name.pipe';
-import {FilterService} from './services/filter.service';
+import {FilterService} from 'app/services/filter.service';
+import {SortableColumnComponent} from 'app/components/sorter/sortable-column.component';
 
 
 registerLocaleData(localeFr, 'fr');
@@ -24,8 +25,9 @@ registerLocaleData(localeEn, 'en');
 @NgModule({
   declarations: [
     AppComponent,
-    TasklistComponent,
-    FieldNamePipe
+    FieldNamePipe,
+    SortableColumnComponent,
+    TasklistComponent
   ],
   imports: [
     BrowserModule,

@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
 import {TaskHelperService} from 'app/services/task.helper.service';
 import {TaskWithDataEntries, DataEntry, Task} from 'tasklist';
-import { FilterService } from 'app/services/filter.service';
+import {FilterService} from 'app/services/filter.service';
 
 @Component({
   selector: 'app-tasklist',
@@ -41,10 +41,10 @@ export class TasklistComponent {
 
 
   subscribe() {
-    this.taskHelper.tasksSubject.subscribe((tasks) => {
+    this.taskHelper.tasks.subscribe((tasks) => {
       this.tasks = tasks;
     });
-    this.filterService.countSubject.subscribe((count: number) => {
+    this.filterService.count.subscribe((count: number) => {
       this.totalItems = count;
     });
   }

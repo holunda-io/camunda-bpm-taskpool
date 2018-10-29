@@ -22,12 +22,12 @@ class DefaultTaskUrlResolver(
 
   override fun resolveUrl(task: Task): String {
     val appUrl = lookup.lookup(task.sourceReference.applicationName)
-    val tmpl = props.getUrlTemplate(task.taskDefinitionKey)
+    val template = props.getUrlTemplate(task.taskDefinitionKey)
 
 
     val taskMap: Map<String, Any> = objectMapper.convertValue(task, object : TypeReference<Map<String, Any>>() {})
 
-    return "$appUrl/${StrSubstitutor(taskMap).replace(tmpl)}"
+    return "$appUrl/${StrSubstitutor(taskMap).replace(template)}"
   }
 
 }
