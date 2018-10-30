@@ -35,19 +35,19 @@ class ComparatorTest {
   @Test
   fun `test greater less with strings`() {
     assertThat(nameComparator!!.compare(task0, task1)).isLessThan(0)
-    assertThat(nameComparator!!.compare(task2, task1)).isGreaterThan(0)
+    assertThat(nameComparator.compare(task2, task1)).isGreaterThan(0)
   }
 
   @Test
   fun `test greater less with ints`() {
     assertThat(prioComparator!!.compare(task0, task1)).isLessThan(0)
-    assertThat(prioComparator!!.compare(task2, task1)).isGreaterThan(0)
+    assertThat(prioComparator.compare(task2, task1)).isGreaterThan(0)
   }
 
   @Test
   fun `test greater less with dates`() {
     assertThat(createTimeComparator!!.compare(task0, task1)).isLessThan(0)
-    assertThat(createTimeComparator!!.compare(task2, task1)).isGreaterThan(0)
+    assertThat(createTimeComparator.compare(task2, task1)).isGreaterThan(0)
   }
 
 
