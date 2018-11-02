@@ -39,6 +39,10 @@ The goal of this project is to provide such component as a library, to be used i
 ![Architectural whitebox](docs/architecture-collector.png "Architecture Collector")
 
 
+### Working Example
+
+See our [Sample Process Application](examples) (including a simple tasklist implementation for demonstration purposes)
+
 ### Further outlook
 
 This library serves as a foundation of several follow-up projects and tools:
