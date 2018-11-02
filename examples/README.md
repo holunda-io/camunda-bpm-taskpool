@@ -32,7 +32,7 @@ An example task list application is implemented and available under [http://loca
 The following storyboard can be used to understand the Camunda BPM Taskpool mechanics. The following sample
 approval process has been implemented:
 
-![Approval Process](src/main/resources/process_approve_request.png)
+![Approval Process](process-application/src/main/resources/process_approve_request.png)
 
 ### Business context 
 Imagine a system that responsible for management of all requests in the company. Using this system, you can submit requests which then get 
