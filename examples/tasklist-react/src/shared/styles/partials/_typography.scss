@@ -1,0 +1,29 @@
+@font-face {
+  font-family: "Rock Salt";
+  font-style: normal;
+  font-weight: 400;
+  src: url("/assets/Rock_Salt/RockSalt-Regular.ttf"); /* IE9 Compat Modes */
+  src: local("Rock Salt"), local("RockSalt-Regular"),
+    url("/assets/Rock_Salt/RockSalt-Regular.ttf") format("truetype"); /* Safari, Android, iOS */
+}
+body {
+  font-family: "Open Sans";
+}
+
+h1 {
+  color: var(--text-color);
+  font-size: 2.2rem;
+  line-height: 1.3;
+  font-family: inherit;
+}
+
+body div#root div header div h2 {
+  font-size: 3.6rem;
+  font-family: inherit;
+  font-weight: 200;
+  margin-left: 2rem;
+}
+
+div > table > thead > tr > th[class^="MuiTableCell-head-"] {
+  font-size: 2.8rem !important;
+}

@@ -1,0 +1,21 @@
+:root {
+	font-size: 62.5%;
+}
+
+body {
+	--text-color: dark-grey;
+	font-size: 1rem;
+	font-family: 'Courier New', Courier, monospace;
+	color: var(--text-color);
+}
+
+.base-grid-container {
+	padding-left: 40px;
+	padding-right: 40px;
+}
+
+div[class^="MuiPaper-root-"] {
+	padding: 8px 24px;
+	border-radius: 2px;
+	margin-top: 8px;
+}
