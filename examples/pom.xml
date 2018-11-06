@@ -30,6 +30,7 @@
       </activation>
       <modules>
         <module>tasklist-angular</module>
+        <module>tasklist-react</module>
       </modules>
     </profile>
   </profiles>
