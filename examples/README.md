@@ -27,6 +27,16 @@ The default user and password are `admin / admin `.
 
 An example task list application is implemented and available under [http://localhost:8080/tasklist/](http://localhost:8080/tasklist/)
 
+## Tasklist
+
+The currently implemented tasklist is a simple application (implemented as a single-page-application based on Angular 6) that shows the list of taks
+available in the task pool. In doing so it provides the ability to filter, sort and page tasks with correlated business events. Here is how it looks like now:
+
+![Angular Task List Classic](examples/tasklist-angular-classic.png "Angualar Tasklist, classic representation of tasks")
+![Angular Task List Data](examples/tasklist-angular-data.png "Angualar Tasklist, representation of tasks with correlated data")
+
+
+
 ## Architecture
 
 The following storyboard can be used to understand the Camunda BPM Taskpool mechanics. The following sample
