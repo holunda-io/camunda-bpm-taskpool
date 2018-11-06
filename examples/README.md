@@ -32,8 +32,8 @@ An example task list application is implemented and available under [http://loca
 The currently implemented tasklist is a simple application (implemented as a single-page-application based on Angular 6) that shows the list of taks
 available in the task pool. In doing so it provides the ability to filter, sort and page tasks with correlated business events. Here is how it looks like now:
 
-![Angular Task List Classic](examples/tasklist-angular-classic.png "Angualar Tasklist, classic representation of tasks")
-![Angular Task List Data](examples/tasklist-angular-data.png "Angualar Tasklist, representation of tasks with correlated data")
+![Angular Task List Classic](tasklist-angular/docs/tasklist-angular-classic.png "Angualar Tasklist, classic representation of tasks")
+![Angular Task List Data](tasklist-angular/docs/tasklist-angular-data.png "Angualar Tasklist, representation of tasks with correlated data")
 
 
 
