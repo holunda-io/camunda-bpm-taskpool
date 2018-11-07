@@ -21,7 +21,7 @@ class TaskWithDataEntriesMapperTest {
 
   private val sourceReference: ProcessReference = ProcessReference(
     applicationName = "test",
-    processName = "Test Process",
+    name = "Test Process",
     instanceId = "1",
     executionId = "1",
     definitionKey = "test-process",
@@ -48,7 +48,7 @@ class TaskWithDataEntriesMapperTest {
 
     assertThat(dto.url).isEqualTo("http://localhost:8080/test/forms/the-task/id/1")
     assertThat(dto.formKey).isEqualTo("the-task")
-    assertThat(dto.processName).isEqualTo(sourceReference.processName)
+    assertThat(dto.processName).isEqualTo(sourceReference.name)
 
   }
 }

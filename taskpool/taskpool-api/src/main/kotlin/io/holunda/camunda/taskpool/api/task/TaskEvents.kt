@@ -97,3 +97,25 @@ data class TaskDeletedEvent(
   val deleteReason: String?
 ) : TaskEvent()
 
+@Revision("1")
+data class TaskClaimedEvent(
+  override val id: String,
+  override val sourceReference: SourceReference,
+  override val taskDefinitionKey: String,
+  val assignee: String
+) :TaskIdentity
+
+@Revision("1")
+data class TaskUnclaimedEvent(
+  override val id: String,
+  override val sourceReference: SourceReference,
+  override val taskDefinitionKey: String
+) : TaskIdentity
+
+@Revision("1")
+data class TaskToBeCompletedEvent(
+  override val id: String,
+  override val sourceReference: SourceReference,
+  override val taskDefinitionKey: String,
+  val payload: VariableMap = Variables.createVariables()
+) : TaskIdentity

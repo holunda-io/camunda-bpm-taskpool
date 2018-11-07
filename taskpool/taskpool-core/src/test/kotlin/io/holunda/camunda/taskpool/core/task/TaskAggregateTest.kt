@@ -20,7 +20,7 @@ class TaskAggregateTest {
     instanceId = "0815",
     executionId = "12345",
     definitionId = "76543",
-    processName = "My process",
+    name = "My process",
     applicationName = "myExample"
   )
 
@@ -410,4 +410,205 @@ class TaskAggregateTest {
         )
       )
   }
+
+  @Test
+  fun `should claim unassigned task`() {
+    fixture
+      .given(
+        TaskCreatedEvent(
+          id = "4711",
+          name = "Foo",
+          createTime = now,
+          owner = "kermit",
+          taskDefinitionKey = "foo",
+          formKey = "some",
+          businessKey = "business123",
+          sourceReference = processReference,
+          candidateUsers = listOf("kermit", "gonzo"),
+          candidateGroups = listOf("muppets"),
+          assignee = null,
+          priority = 51,
+          description = "Funky task",
+          payload = Variables.createVariables().putValueTyped("key", stringValue("value")),
+          correlations = newCorrelations().addCorrelation("Request", "business123")
+        ))
+      .`when`(
+        ClaimInteractionTaskCommand(
+          id = "4711",
+          sourceReference = processReference,
+          taskDefinitionKey = "foo",
+          assignee = "piggy"
+        )
+      ).expectEvents(
+        TaskClaimedEvent(
+          id = "4711",
+          sourceReference = processReference,
+          taskDefinitionKey = "foo",
+          assignee = "piggy"
+        )
+      )
+  }
+
+  @Test
+  fun `should claim assigned task`() {
+    fixture
+      .given(
+        TaskCreatedEvent(
+          id = "4711",
+          name = "Foo",
+          createTime = now,
+          owner = "kermit",
+          taskDefinitionKey = "foo",
+          formKey = "some",
+          businessKey = "business123",
+          sourceReference = processReference,
+          candidateUsers = listOf("kermit", "gonzo"),
+          candidateGroups = listOf("muppets"),
+          assignee = "kermit",
+          priority = 51,
+          description = "Funky task",
+          payload = Variables.createVariables().putValueTyped("key", stringValue("value")),
+          correlations = newCorrelations().addCorrelation("Request", "business123")
+        ))
+      .`when`(
+        ClaimInteractionTaskCommand(
+          id = "4711",
+          sourceReference = processReference,
+          taskDefinitionKey = "foo",
+          assignee = "piggy"
+        )
+      ).expectEvents(
+        TaskUnclaimedEvent(
+          id = "4711",
+          sourceReference = processReference,
+          taskDefinitionKey = "foo"
+        ),
+        TaskClaimedEvent(
+          id = "4711",
+          sourceReference = processReference,
+          taskDefinitionKey = "foo",
+          assignee = "piggy"
+        )
+      )
+  }
+
+  @Test
+  fun `should unclaim assigned task`() {
+    fixture
+      .given(
+        TaskCreatedEvent(
+          id = "4711",
+          name = "Foo",
+          createTime = now,
+          owner = "kermit",
+          taskDefinitionKey = "foo",
+          formKey = "some",
+          businessKey = "business123",
+          sourceReference = processReference,
+          candidateUsers = listOf("kermit", "gonzo"),
+          candidateGroups = listOf("muppets"),
+          assignee = "kermit",
+          priority = 51,
+          description = "Funky task",
+          payload = Variables.createVariables().putValueTyped("key", stringValue("value")),
+          correlations = newCorrelations().addCorrelation("Request", "business123")
+        ))
+      .`when`(
+        UnclaimInteractionTaskCommand(
+          id = "4711",
+          sourceReference = processReference,
+          taskDefinitionKey = "foo"
+        )
+      ).expectEvents(
+        TaskUnclaimedEvent(
+          id = "4711",
+          sourceReference = processReference,
+          taskDefinitionKey = "foo"
+        )
+      )
+  }
+
+  @Test
+  fun `should unclaim unassigned task`() {
+    fixture
+      .given(
+        TaskCreatedEvent(
+          id = "4711",
+          name = "Foo",
+          createTime = now,
+          owner = "kermit",
+          taskDefinitionKey = "foo",
+          formKey = "some",
+          businessKey = "business123",
+          sourceReference = processReference,
+          candidateUsers = listOf("kermit", "gonzo"),
+          candidateGroups = listOf("muppets"),
+          assignee = null,
+          priority = 51,
+          description = "Funky task",
+          payload = Variables.createVariables().putValueTyped("key", stringValue("value")),
+          correlations = newCorrelations().addCorrelation("Request", "business123")
+        ))
+      .`when`(
+        UnclaimInteractionTaskCommand(
+          id = "4711",
+          sourceReference = processReference,
+          taskDefinitionKey = "foo"
+        )
+      ).expectNoEvents()
+  }
+
+  @Test
+  fun `should mark task to be completed`() {
+
+    val completionPayload = Variables.createVariables().putValueTyped("user-input", stringValue("whatever"));
+
+    fixture
+      .given(
+        TaskCreatedEvent(
+          id = "4711",
+          name = "Foo",
+          createTime = now,
+          owner = "kermit",
+          taskDefinitionKey = "foo",
+          formKey = "some",
+          businessKey = "business123",
+          sourceReference = processReference,
+          assignee = "kermit",
+          candidateUsers = listOf("kermit", "gonzo"),
+          candidateGroups = listOf("muppets"),
+          priority = 51,
+          description = "Funky task",
+          payload = Variables.createVariables().putValueTyped("key", stringValue("value")),
+          correlations = newCorrelations().addCorrelation("Request", "business123")
+        ))
+      .`when`(
+        CompleteInteractionTaskCommand(
+          id = "4711",
+          sourceReference = processReference,
+          taskDefinitionKey = "foo",
+          payload = completionPayload,
+          assignee = "gonzo"
+        )
+      ).expectEvents(
+        TaskUnclaimedEvent(
+          id = "4711",
+          sourceReference = processReference,
+          taskDefinitionKey = "foo"
+        ),
+        TaskClaimedEvent(
+          id = "4711",
+          sourceReference = processReference,
+          taskDefinitionKey = "foo",
+          assignee = "gonzo"
+        ),
+        TaskToBeCompletedEvent(
+          id = "4711",
+          sourceReference = processReference,
+          taskDefinitionKey = "foo",
+          payload = completionPayload
+        )
+      )
+  }
+
 }

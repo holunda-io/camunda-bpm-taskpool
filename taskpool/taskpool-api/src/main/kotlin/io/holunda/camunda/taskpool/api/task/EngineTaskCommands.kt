@@ -28,7 +28,7 @@ data class AssignTaskCommand(
   override val payload: VariableMap = Variables.createVariables(),
   override val correlations: CorrelationMap = newCorrelations(),
   override var enriched: Boolean = false
-) : TaskCommand
+) : EngineTaskCommand
 
 
 data class CreateTaskCommand(
@@ -52,7 +52,7 @@ data class CreateTaskCommand(
   override val payload: VariableMap = Variables.createVariables(),
   override val correlations: CorrelationMap = newCorrelations(),
   override var enriched: Boolean = false
-) : TaskCommand
+) : EngineTaskCommand
 
 data class DeleteTaskCommand(
   @TargetAggregateIdentifier
@@ -76,7 +76,7 @@ data class DeleteTaskCommand(
   override val correlations: CorrelationMap = newCorrelations(),
   override var enriched: Boolean = false,
   val deleteReason: String?
-) : TaskCommand
+) : EngineTaskCommand
 
 data class CompleteTaskCommand(
   @TargetAggregateIdentifier
@@ -100,7 +100,9 @@ data class CompleteTaskCommand(
   override val correlations: CorrelationMap = newCorrelations(),
   override var enriched: Boolean = false
 
-) : TaskCommand
+) : EngineTaskCommand
+
+
 
 data class CreateOrAssignTaskCommand(
   @TargetAggregateIdentifier
@@ -123,4 +125,6 @@ data class CreateOrAssignTaskCommand(
   override val payload: VariableMap = Variables.createVariables(),
   override val correlations: CorrelationMap = newCorrelations(),
   override var enriched: Boolean = false
-) : TaskCommand
+) : EngineTaskCommand
+
+

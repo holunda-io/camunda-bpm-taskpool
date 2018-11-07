@@ -3,7 +3,10 @@ package io.holunda.camunda.taskpool.api.task
 import io.holunda.camunda.taskpool.api.business.WithCorrelations
 import java.util.*
 
-interface TaskCommand : TaskIdentity, WithPayload, WithCorrelations, CamundaTaskEvent {
+/**
+ * Task command received from the Camunda Engine.
+ */
+interface EngineTaskCommand : TaskIdentity, WithPayload, WithCorrelations, CamundaTaskEvent {
   val name: String?
   val description: String?
   val formKey: String?

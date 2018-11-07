@@ -122,7 +122,7 @@ fun DelegateTask.sourceReference(repositoryService: RepositoryService, applicati
       instanceId = this.processInstanceId,
       executionId = this.executionId,
       definitionKey = this.processDefinitionKey(),
-      processName = this.processName(repositoryService),
+      name = this.processName(repositoryService),
       applicationName = applicationName
     )
     this.caseDefinitionId != null -> CaseReference(
@@ -130,7 +130,7 @@ fun DelegateTask.sourceReference(repositoryService: RepositoryService, applicati
       instanceId = this.caseInstanceId,
       executionId = this.caseExecutionId,
       definitionKey = this.caseDefinitionKey(),
-      processName = this.caseName(repositoryService),
+      name = this.caseName(repositoryService),
       applicationName = applicationName
     )
     else -> throw IllegalArgumentException("No source reference found.")

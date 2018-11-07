@@ -39,6 +39,7 @@
     <module>datapool</module>
     <module>view</module>
     <module>examples</module>
+    <module>camunda-engine-client</module>
   </modules>
 
   <dependencyManagement>
@@ -280,6 +281,13 @@
         <version>${camunda-springboot.version}</version>
         <scope>test</scope>
       </dependency>
+      <dependency>
+        <groupId>org.camunda.bpm.extension.mockito</groupId>
+        <artifactId>camunda-bpm-mockito</artifactId>
+        <version>4.0.0</version>
+        <scope>test</scope>
+      </dependency>
+
     </dependencies>
   </dependencyManagement>
 
