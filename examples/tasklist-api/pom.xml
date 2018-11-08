@@ -12,7 +12,7 @@
   <name>example/${project.artifactId}</name>
 
   <properties>
-    <skipNexusStagingDeployMojo>true</skipNexusStagingDeployMojo>
+    <skipStaging>true</skipStaging>
   </properties>
 
   <build>

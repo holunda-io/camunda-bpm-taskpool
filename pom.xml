@@ -781,6 +781,7 @@
               <serverId>ossrh</serverId>
               <nexusUrl>https://oss.sonatype.org/</nexusUrl>
               <autoReleaseAfterClose>true</autoReleaseAfterClose>
+              <skipStaging>true</skipStaging>
             </configuration>
           </plugin>
           <!-- To generate javadoc -->
