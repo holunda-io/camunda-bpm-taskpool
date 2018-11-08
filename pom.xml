@@ -31,6 +31,7 @@
     <version.camunda.spin>1.5.1</version.camunda.spin>
     <jackson.version>2.9.5</jackson.version>
     <org.mapstruct.version>1.2.0.Final</org.mapstruct.version>
+    <dokka.version>0.9.13</dokka.version>
   </properties>
 
   <modules>
@@ -849,7 +850,34 @@
 
           <!-- Sources and Javadoc / Dokka -->
           <plugin>
-            <groupId>org.jetbrains.dokka</groupId>
+            <groupId>org.jetbrains.dokka</groupId          <!-- To generate javadoc -->
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-source-plugin</artifactId>
+            <version>3.0.1</version>
+            <executions>
+              <execution>
+                <id>attach-sources</id>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <version>2.10.4</version>
+            <executions>
+              <execution>
+                <id>attach-javadocs</id>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+>
             <artifactId>dokka-maven-plugin</artifactId>
           </plugin>
           <plugin>
