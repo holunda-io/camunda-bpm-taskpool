@@ -13,7 +13,7 @@
   <packaging>pom</packaging>
 
   <properties>
-    <skipNexusStagingDeployMojo>true</skipNexusStagingDeployMojo>
+    <skipStaging>true</skipStaging>
   </properties>
 
   <modules>
