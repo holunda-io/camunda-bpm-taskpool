@@ -8,10 +8,18 @@ RUN npm install
 FROM node:8.9 as builder
 WORKDIR /opt/build
 COPY --from=installer /opt/build ./
-COPY . ./
 
+COPY . ./
 RUN npm run build
 
 CMD ["npm"]
 
+FROM node:8.9 as runner
+
+WORKDIR /opt/build
+COPY --from=builder /opt/build ./
+
+VOLUME /opt/build/src
+
+EXPOSE 4200
 
