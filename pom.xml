@@ -768,6 +768,7 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-failsafe-plugin</artifactId>
+            <version>2.22.1</version>
             <executions>
               <execution>
                 <goals>
@@ -850,7 +851,9 @@
 
           <!-- Sources and Javadoc / Dokka -->
           <plugin>
-            <groupId>org.jetbrains.dokka</groupId          <!-- To generate javadoc -->
+            <groupId>org.jetbrains.dokka</groupId>
+            <artifactId>dokka-maven-plugin</artifactId>
+          </plugin>
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-source-plugin</artifactId>
@@ -876,13 +879,11 @@
                 </goals>
               </execution>
             </executions>
-          </plugin>
->
-            <artifactId>dokka-maven-plugin</artifactId>
-          </plugin>
+          </plugin>>
           <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>build-helper-maven-plugin</artifactId>
+            <version>3.0.0</version>
           </plugin>
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
