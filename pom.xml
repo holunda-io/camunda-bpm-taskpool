@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>io.holunda.taskpool</groupId>
@@ -195,12 +195,12 @@
         <groupId>io.github.microutils</groupId>
         <artifactId>kotlin-logging</artifactId>
         <version>${kotlin-logging.version}</version>
-          <exclusions>
-            <exclusion>
-              <groupId>org.jetbrains.kotlin</groupId>
-              <artifactId>kotlin-stdlib</artifactId>
-            </exclusion>
-          </exclusions>
+        <exclusions>
+          <exclusion>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-stdlib</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
       <!-- Axon Framework -->
       <!-- https://mvnrepository.com/artifact/org.axonframework/axon -->
@@ -637,8 +637,8 @@
           <artifactId>maven-surefire-plugin</artifactId>
           <version>2.22.1</version>
           <configuration>
- 	    <useSystemClassLoader>false</useSystemClassLoader>
-	    <runOrder>random</runOrder>
+            <useSystemClassLoader>false</useSystemClassLoader>
+            <runOrder>random</runOrder>
             <excludes>
               <exclude>${pattern.class.itest}</exclude>
               <exclude>${pattern.package.itest}</exclude>
@@ -686,12 +686,12 @@
           <jvmTarget>1.8</jvmTarget>
         </configuration>
       </plugin>
-        <plugin>
-          <!-- for running npm build -->
-          <groupId>com.github.eirslett</groupId>
-          <artifactId>frontend-maven-plugin</artifactId>
-          <version>1.6</version>
-        </plugin>
+      <plugin>
+        <!-- for running npm build -->
+        <groupId>com.github.eirslett</groupId>
+        <artifactId>frontend-maven-plugin</artifactId>
+        <version>1.6</version>
+      </plugin>
     </plugins>
   </build>
 
@@ -764,7 +764,80 @@
         </plugins>
       </build>
     </profile>
+    <profile>
+      <id>release</id>
+      <activation>
+        <property>
+          <name>release</name>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <!-- To release to Maven central -->
+          <plugin>
+            <groupId>org.sonatype.plugins</groupId>
+            <artifactId>nexus-staging-maven-plugin</artifactId>
+            <version>1.6.8</version>
+            <extensions>true</extensions>
+            <configuration>
+              <serverId>ossrh</serverId>
+              <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+              <autoReleaseAfterClose>true</autoReleaseAfterClose>
+            </configuration>
+          </plugin>
+          <!-- To generate javadoc -->
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-source-plugin</artifactId>
+            <version>3.0.1</version>
+            <executions>
+              <execution>
+                <id>attach-sources</id>
+                <goals>
+                  <goal>jar-no-fork</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <version>2.10.4</version>
+            <executions>
+              <execution>
+                <id>attach-javadocs</id>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
 
+          <!-- To sign the artifacts -->
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-gpg-plugin</artifactId>
+            <version>1.6</version>
+            <executions>
+              <execution>
+                <id>sign-artifacts</id>
+                <phase>verify</phase>
+                <goals>
+                  <goal>sign</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+
+    <!--
+    Profile for selecting the Camunda BPM Engine version.
+    CE stands for Community Edition
+    EE stands for Enterprise Edition
+    -->
     <profile>
       <id>camunda-ce</id>
       <activation>

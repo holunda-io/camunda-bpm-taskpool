@@ -2,12 +2,26 @@ sudo: false
 language: java
 jdk:
   - oraclejdk8
-install: true
-before_install:
-  - chmod +x mvnw
 cache:
   directories:
-    - $HOME/.m2
-script: ./mvnw clean verify
+  - $HOME/.m2
+
+before_install:
+  - chmod +x mvnw
+  - echo $GPG_SECRET_KEYS | base64 --decode | $GPG_EXECUTABLE --import
+  - echo $GPG_OWNERTRUST | base64 --decode | $GPG_EXECUTABLE --import-ownertrust
+script: ./mvnw --settings .travis/settings.xml clean verify
 after_success:
-  - bash <(curl -s https://codecov.io/bash)
+- bash <(curl -s https://codecov.io/bash)
+
+
+deploy:
+  skip_cleanup: true
+  provider: script
+  script: "./mvnw --settings .travis/settings.xml clean deploy -DskipTests=true -B -U -Prelease \
+  && ./mvnw --settings .travis/settings.xml install -DskipTests=true -Dgpg.skip -Dmaven.javadoc.skip=true -B -V"
+  on:
+    branch: release
+    tags: true
+
+
