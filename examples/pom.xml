@@ -12,11 +12,14 @@
   <name>example/${project.artifactId}</name>
   <packaging>pom</packaging>
 
+  <properties>
+    <skipNexusStagingDeployMojo>true</skipNexusStagingDeployMojo>
+  </properties>
+
   <modules>
     <module>h2</module>
     <module>tasklist-api</module>
     <module>tasklist-backend</module>
-    
     <module>process-application</module>
   </modules>
 
