@@ -35,6 +35,20 @@ available in the task pool. In doing so it provides the ability to filter, sort 
 ![Angular Task List Classic](tasklist-angular/docs/tasklist-angular-classic.png "Angualar Tasklist, classic representation of tasks")
 ![Angular Task List Data](tasklist-angular/docs/tasklist-angular-data.png "Angualar Tasklist, representation of tasks with correlated data")
 
+### Features
+
+* Lists tasks in the system for a dummy user (kermit)
+* Tasks include information about the process, name, description, create time, due date, prio and assignment.
+* Tasks include process data (from process instance)
+* Tasks include correlated business data
+* The tasklist is sortable
+* The list is paged (7 items per page)
+
+### Ongoing / TODO
+
+* Claiming / Unclaiming
+* Jump to form
+* Filtering 
 
 
 ## Architecture
