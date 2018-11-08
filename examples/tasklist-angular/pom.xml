@@ -17,6 +17,7 @@
     <node.version>v8.11.3</node.version>
     <angular-app-name>tasklist-angular</angular-app-name>
     <skipStaging>true</skipStaging>
+    <maven.deploy.skip>true</maven.deploy.skip>
   </properties>
 
   <build>

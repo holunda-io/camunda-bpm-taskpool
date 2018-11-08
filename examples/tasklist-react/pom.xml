@@ -16,6 +16,7 @@
     <npm.version>6.4.1</npm.version>
     <node.version>v8.11.3</node.version>
     <skipStaging>true</skipStaging>
+    <maven.deploy.skip>true</maven.deploy.skip>
   </properties>
 
   <build>
