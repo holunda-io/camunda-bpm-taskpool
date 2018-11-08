@@ -6,22 +6,36 @@ cache:
   directories:
   - $HOME/.m2
 
+#
+# Load GPG secrets and make mvnw executable
+#
 before_install:
   - chmod +x mvnw
   - echo $GPG_SECRET_KEYS | base64 --decode | $GPG_EXECUTABLE --import
   - echo $GPG_OWNERTRUST | base64 --decode | $GPG_EXECUTABLE --import-ownertrust
-script: ./mvnw --settings .travis/settings.xml clean verify
+#
+# Verify
+#
+script: "./mvnw --settings .travis/settings.xml clean verify"
+#
+# Coveralls
+#
 after_success:
 - bash <(curl -s https://codecov.io/bash)
 
-
+#
+# Deploy of artifacts is only triggered on release branch by commits with a tag.
+#
 deploy:
   skip_cleanup: true
   provider: script
-  script: "./mvnw --settings .travis/settings.xml clean deploy -DskipTests=true -B -U -Prelease \
-  && ./mvnw --settings .travis/settings.xml install -DskipTests=true -Dgpg.skip -Dmaven.javadoc.skip=true -B -V"
+  script: "./mvnw --settings .travis/settings.xml deploy -DskipTests=true -B -U -V -Prelease"
   on:
     branch: release
     tags: true
 
-
+#
+# Notify slack channel
+#
+notifications:
+  slack: holunda:OBhk0v6b16pLFphCq3siuDIZ
