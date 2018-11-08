@@ -10,7 +10,7 @@ Travis CI is building all branches on commit hook.
 
 Every module is enabled by default. If you want to change this, please provide the property
 
-     <skip.deploy>true</skip.deploy>
+     <skipNexusStagingDeployMojo>true</skipNexusStagingDeployMojo>
    
 inside your `pom.xml`.
 
@@ -40,5 +40,12 @@ on your own:
 If you deploy a SNAPSHOT version, the artifact ends up in the snapshot repository. If you want a release
 in the Maven Central Repository, make sure to create a STABLE version (e.g. 2.1.3) and deploy it. Don't 
 forget to close the release repository in the OSS Nexus.
+
+## References
+
+* https://www.phillip-kruger.com/post/continuous_integration_to_maven_central/ (primary)
+* https://docs.travis-ci.com/user/deployment
+* https://blog.travis-ci.com/2017-03-30-deploy-maven-travis-ci-packagecloud/
+
 
       

@@ -15,7 +15,7 @@
   <properties>
     <npm.version>6.4.1</npm.version>
     <node.version>v8.11.3</node.version>
-    <skip.deploy>true</skip.deploy>
+    <skipNexusStagingDeployMojo>true</skipNexusStagingDeployMojo>
   </properties>
 
   <build>
