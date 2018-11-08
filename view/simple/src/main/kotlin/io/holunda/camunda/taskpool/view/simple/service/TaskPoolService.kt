@@ -11,7 +11,6 @@ import io.holunda.camunda.taskpool.view.*
 import io.holunda.camunda.taskpool.view.query.*
 import io.holunda.camunda.taskpool.view.simple.createPredicates
 import io.holunda.camunda.taskpool.view.simple.filterByPredicates
-import io.holunda.camunda.taskpool.view.simple.sort.TasksWithDataEntriesComparator
 import io.holunda.camunda.taskpool.view.simple.sort.comparator
 import io.holunda.camunda.taskpool.view.simple.toCriteria
 import mu.KLogging
@@ -42,6 +41,13 @@ open class TaskPoolService(
    */
   @QueryHandler
   open fun query(query: DataEntryQuery): List<DataEntry> = dataEntries.values.filter { query.applyFilter(it) }
+
+
+  /**
+   * Retrieves a task for given task id.
+   */
+  @QueryHandler
+  open fun query(query: TaskForIdQuery): Task? = tasks.values.firstOrNull { query.applyFilter(it) }
 
   /**
    * Retrieves a list of tasks with correlatated data entries of given entry type (and optional id).

@@ -15,8 +15,8 @@ class SimpleUserService : UserService, CurrentUserService {
     "fozzy" to User("fozzy", setOf("muppetshow"))
   )
 
-  override fun getUser(username: String): User {
-    return muppetUsers[username] ?: throw IllegalArgumentException("Unknown user $username")
+  override fun getUser(userIdentifier: String): User {
+    return muppetUsers[userIdentifier] ?: throw IllegalArgumentException("Unknown user $userIdentifier")
   }
 
   override fun getCurrentUser(): String = "kermit"

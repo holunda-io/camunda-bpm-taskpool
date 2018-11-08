@@ -1,64 +1,92 @@
 package io.holunda.camunda.taskpool.example.tasklist.rest.impl
 
+import io.holunda.camunda.taskpool.api.task.ClaimInteractionTaskCommand
+import io.holunda.camunda.taskpool.api.task.CompleteInteractionTaskCommand
+import io.holunda.camunda.taskpool.api.task.InteractionTaskCommand
+import io.holunda.camunda.taskpool.api.task.UnclaimInteractionTaskCommand
 import io.holunda.camunda.taskpool.example.tasklist.auth.CurrentUserService
+import io.holunda.camunda.taskpool.example.tasklist.rest.ElementNotFoundException
 import io.holunda.camunda.taskpool.example.tasklist.rest.Rest
-import io.holunda.camunda.taskpool.example.tasklist.rest.api.TasksApi
-import io.holunda.camunda.taskpool.example.tasklist.rest.mapper.TaskWithDataEntriesMapper
-import io.holunda.camunda.taskpool.example.tasklist.rest.model.TaskWithDataEntriesDto
+import io.holunda.camunda.taskpool.example.tasklist.rest.api.TaskApi
+import io.holunda.camunda.taskpool.example.tasklist.rest.model.PayloadDto
+import io.holunda.camunda.taskpool.view.Task
 import io.holunda.camunda.taskpool.view.auth.UserService
-import io.holunda.camunda.taskpool.view.query.TasksWithDataEntriesForUserQuery
-import io.holunda.camunda.taskpool.view.query.TasksWithDataEntriesResponse
+import io.holunda.camunda.taskpool.view.query.TaskForIdQuery
 import mu.KLogging
-import org.axonframework.messaging.responsetypes.ResponseTypes
+import org.axonframework.commandhandling.gateway.CommandGateway
 import org.axonframework.queryhandling.QueryGateway
-import org.springframework.http.HttpHeaders
+import org.camunda.bpm.engine.variable.Variables
 import org.springframework.http.ResponseEntity
-import org.springframework.http.ResponseEntity.ok
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
-import java.util.*
-
+import javax.validation.Valid
 
 @RestController
 @RequestMapping(Rest.REQUEST_PATH)
-open class TaskController(
-  private val currentUserService: CurrentUserService,
-  private val userService: UserService,
+class TaskController(
+  private val gateway: CommandGateway,
   private val queryGateway: QueryGateway,
-  private val mapper: TaskWithDataEntriesMapper
-) : TasksApi {
+  private val currentUserService: CurrentUserService,
+  private val userService: UserService
+) : TaskApi {
 
-  companion object : KLogging() {
-    const val HEADER_ELEMENT_COUNT = "X-ElementCount"
+  companion object : KLogging()
+
+  override fun claim(@PathVariable("id") id: String): ResponseEntity<Void> {
+
+    val task = getTask(id)
+    val userIdentifier = currentUserService.getCurrentUser()
+    val user = userService.getUser(userIdentifier)
+
+    send(ClaimInteractionTaskCommand(
+      id = task.id,
+      sourceReference = task.sourceReference,
+      taskDefinitionKey = task.taskDefinitionKey,
+      assignee = user.username
+    ))
+
+    return ResponseEntity.noContent().build()
   }
 
-  override fun getTasks(
-    @RequestParam(value = "filter") filters: List<String>,
-    @RequestParam(value = "page") page: Optional<Int>,
-    @RequestParam(value = "size") size: Optional<Int>,
-    @RequestParam(value = "sort") sort: Optional<String>
-  ): ResponseEntity<List<TaskWithDataEntriesDto>> {
+  override fun unclaim(@PathVariable("id") id: String): ResponseEntity<Void> {
 
-    val username = currentUserService.getCurrentUser()
-    val user = userService.getUser(username)
+    val task = getTask(id)
 
-    val result: TasksWithDataEntriesResponse = queryGateway
-      .query(TasksWithDataEntriesForUserQuery(
-        user = user,
-        page = page.orElse(0),
-        size = size.orElse(Int.MAX_VALUE),
-        sort = sort.orElseGet { "" },
-        filters = filters
-      ), ResponseTypes.instanceOf(TasksWithDataEntriesResponse::class.java))
-      .join()
+    send(UnclaimInteractionTaskCommand(
+      id = task.id,
+      sourceReference = task.sourceReference,
+      taskDefinitionKey = task.taskDefinitionKey
+    ))
 
-    val responseHeaders = HttpHeaders().apply {
-      this[HEADER_ELEMENT_COUNT] = result.elementCount.toString()
-    }
+    return ResponseEntity.noContent().build()
+  }
 
-    return ok()
-      .headers(responseHeaders)
-      .body(result.tasksWithDataEntries.map { mapper.dto(it) })
+  override fun complete(@PathVariable("id") id: String, @Valid @RequestBody payload: PayloadDto): ResponseEntity<Void> {
+
+    val task = getTask(id)
+    val userIdentifier = currentUserService.getCurrentUser()
+    val user = userService.getUser(userIdentifier)
+
+    send(CompleteInteractionTaskCommand(
+      id = task.id,
+      sourceReference = task.sourceReference,
+      taskDefinitionKey = task.taskDefinitionKey,
+      payload = Variables.createVariables().apply { putAll(payload) },
+      assignee = user.username
+    ))
+
+    return super.complete(id, payload)
+  }
+
+  internal fun getTask(id: String): Task = queryGateway.query(TaskForIdQuery(id), Task::class.java).join()
+    ?: throw ElementNotFoundException()
+
+
+  internal fun send(command: InteractionTaskCommand) {
+    gateway.send<Any, Any?>(command) { m, r -> logger.info("Successfully submitted command $m, $r") }
   }
 }
+
+

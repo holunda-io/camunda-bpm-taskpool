@@ -28,7 +28,7 @@ open class TaskAggregate() {
 
   @CommandHandler
   open fun handle(command: AssignTaskCommand) {
-    if (this.assignee != command.assignee) {
+    if (assignee != command.assignee) {
       assign(command)
     }
   }
@@ -36,33 +36,67 @@ open class TaskAggregate() {
   @CommandHandler
   open fun handle(command: CompleteTaskCommand) {
     if (!deleted && !completed) {
-      complete(command)
+      markToBeCompleted(command)
     }
   }
 
   @CommandHandler
-  fun handle(command: DeleteTaskCommand) {
+  open fun handle(command: DeleteTaskCommand) {
     if (!deleted && !completed) {
       delete(command)
     }
   }
 
+  @CommandHandler
+  open fun handle(command: ClaimInteractionTaskCommand) {
+    if (!deleted && !completed) {
+      if (assignee != null) {
+        // task is assigned, unclaim it first
+        unclaim(command)
+      }
+      claim(command, command.assignee)
+    }
+  }
+
+  @CommandHandler
+  open fun handle(command: UnclaimInteractionTaskCommand) {
+    if (!deleted && !completed && assignee != null) {
+      unclaim(command)
+    }
+  }
+
+  @CommandHandler
+  open fun handle(command: CompleteInteractionTaskCommand) {
+    if (!deleted && !completed) {
+      if (command.assignee != null) {
+        if (assignee != null) {
+          unclaim(command)
+        }
+        // Smart cast is not possible here, because it is a public API declared in a different module.
+        claim(command, command.assignee!!)
+      }
+      markToBeCompleted(command)
+    }
+  }
+
+
   @EventSourcingHandler
   open fun on(event: TaskCreatedEvent) {
     this.id = event.id
+    this.assignee = event.assignee
     logger.debug { "Created task $event" }
   }
 
   @EventSourcingHandler
   open fun on(event: TaskAssignedEvent) {
     this.assignee = event.assignee
-    logger.debug { "Assigned task $this.id to ${this.assignee}" }
+    logger.debug { "Assigned task $this.id to $assignee" }
   }
 
   @EventSourcingHandler
   open fun on(event: TaskCompletedEvent) {
     this.completed = true
-    logger.debug { "Completed task $this.id by ${this.assignee}" }
+    logger.debug { "Completed task $this.id by $assignee" }
   }
 
   @EventSourcingHandler
@@ -114,7 +148,7 @@ internal fun create(command: CreateTaskCommand) =
       businessKey = command.businessKey
     ))
 
-internal fun complete(command: CompleteTaskCommand) =
+internal fun markToBeCompleted(command: CompleteTaskCommand) =
   AggregateLifecycle.apply(
     TaskCompletedEvent(
       id = command.id,
@@ -156,3 +190,32 @@ internal fun delete(command: DeleteTaskCommand) =
       correlations = command.correlations,
       businessKey = command.businessKey
     ))
+
+internal fun claim(command: InteractionTaskCommand, assignee: String) =
+  AggregateLifecycle.apply(
+    TaskClaimedEvent(
+      id = command.id,
+      taskDefinitionKey = command.taskDefinitionKey,
+      sourceReference = command.sourceReference,
+      assignee = assignee
+    )
+  )
+
+internal fun unclaim(command: InteractionTaskCommand) =
+  AggregateLifecycle.apply(
+    TaskUnclaimedEvent(
+      id = command.id,
+      taskDefinitionKey = command.taskDefinitionKey,
+      sourceReference = command.sourceReference
+    )
+  )
+
+internal fun markToBeCompleted(command: CompleteInteractionTaskCommand) =
+  AggregateLifecycle.apply(
+    TaskToBeCompletedEvent(
+      id = command.id,
+      taskDefinitionKey = command.taskDefinitionKey,
+      sourceReference = command.sourceReference,
+      payload = command.payload
+    )
+  )

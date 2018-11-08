@@ -14,7 +14,7 @@ paths:
   '/tasks':
     get:
       tags:
-       - Task
+      - Task
       summary: Lists tasks.
       produces:
       - application/json
@@ -62,6 +62,78 @@ paths:
         '403':
           description: Not authorized.
 
+  '/task/{id}/claim':
+    post:
+      tags:
+      - Task
+      summary: Claims a task.
+      operationId: claim
+      parameters:
+      - in: path
+        name: id
+        type: string
+        description: Task id.
+        required: true
+      responses:
+        '204':
+          description: Sucessful operation.
+        '401':
+          description: Not authenticated.
+        '403':
+          description: Not authorized.
+        '404':
+          description: Task not found.
+
+  '/task/{id}/unclaim':
+    post:
+      tags:
+      - Task
+      summary: Unclaims a task.
+      operationId: unclaim
+      parameters:
+      - in: path
+        name: id
+        type: string
+        description: Task id.
+        required: true
+      responses:
+        '204':
+          description: Sucessful operation.
+        '401':
+          description: Not authenticated.
+        '403':
+          description: Not authorized.
+        '404':
+          description: Task not found.
+
+  '/task/{id}/complete':
+    post:
+      tags:
+      - Task
+      summary: Completes a task.
+      operationId: complete
+      parameters:
+      - in: path
+        name: id
+        type: string
+        description: Task id.
+        required: true
+      - in: body
+        name: payload
+        description: Payload to be added to the process instance on task completion.
+        schema:
+          $ref: '#/definitions/Payload'
+      responses:
+        '204':
+          description: Sucessful operation.
+        '401':
+          description: Not authenticated.
+        '403':
+          description: Not authorized.
+        '404':
+          description: Task not found.
+
+
 definitions:
   TaskWithDataEntries:
     type: object
@@ -74,8 +146,8 @@ definitions:
         items:
           $ref: '#/definitions/DataEntry'
     required:
-      - task
-      - dataEntries
+    - task
+    - dataEntries
 
   Task:
     type: object
@@ -155,5 +227,10 @@ definitions:
         type: object
         additionalProperties:
           type: object
+
+  Payload:
+    type: object
+    additionalProperties:
+      type: object
 
 

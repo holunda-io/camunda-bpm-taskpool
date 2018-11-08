@@ -40,7 +40,7 @@ open class ProcessVariablesTaskCommandEnricher(
   private val processVariablesFilter: ProcessVariablesFilter,
   private val processVarriablesCorrelator: ProcessVariablesCorrelator
 ) {
-  protected fun <T : TaskCommand> enrich(command: T): T {
+  protected fun <T : EngineTaskCommand> enrich(command: T): T {
 
     // Payload enrichment
     command.payload.putAllTyped(

@@ -29,7 +29,7 @@ abstract class TaskWithDataEntriesMapper {
   lateinit var taskUrlResolver: TaskUrlResolver
 
   @Mappings(
-    Mapping(target = "processName", source = "sourceReference.processName"),
+    Mapping(target = "processName", source = "sourceReference.name"),
     Mapping(target = "url", expression = "java(taskUrlResolver.resolveUrl(task))")
   )
   abstract fun dto(task: Task): TaskDto
