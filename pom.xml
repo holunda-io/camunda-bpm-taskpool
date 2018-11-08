@@ -813,11 +813,63 @@
 
   </profiles>
 
+  <licenses>
+    <license>
+      <name>Apache License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+
   <scm>
     <connection>scm:git:git@github.com:holunda-io/camunda-bpm-taskpool.git</connection>
     <url>scm:git:git@github.com:holunda-io/camunda-bpm-taskpool.git</url>
-    <developerConnection>scm:git:git@github.com:holunda-io/camunda-bpm-taskpool.git
-    </developerConnection>
+    <developerConnection>scm:git:git@github.com:holunda-io/camunda-bpm-taskpool.git</developerConnection>
     <tag>HEAD</tag>
   </scm>
+
+  <distributionManagement>
+    <site>
+      <id>README</id>
+      <url>https://github.com/holunda-io/camunda-bpm-taskpool</url>
+    </site>
+    <snapshotRepository>
+      <id>ossrh</id>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+    </snapshotRepository>
+    <repository>
+      <id>ossrh</id>
+      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+    </repository>
+  </distributionManagement>
+
+  <developers>
+    <developer>
+      <id>zambrovski</id>
+      <name>Simon Zambrovski</name>
+      <email>simon.zambrovski@holisticon.de</email>
+      <organization>Holisticon AG</organization>
+      <organizationUrl>http://www.holisticon.de</organizationUrl>
+    </developer>
+    <developer>
+      <id>jangalinski</id>
+      <name>Jan Galinski</name>
+      <email>jan.galinski@holisticon.de</email>
+      <organization>Holisticon AG</organization>
+      <organizationUrl>http://www.holisticon.de</organizationUrl>
+    </developer>
+    <developer>
+      <id>dthuesen</id>
+      <name>Detlef von Thuesen</name>
+      <email>dthuesen@gmx.de</email>
+      <organization>Holisticon AG</organization>
+      <organizationUrl>http://www.holisticon.de</organizationUrl>
+    </developer>
+    <developer>
+      <id>bignesta</id>
+      <name>Christoph Wolff</name>
+      <organization>Holisticon AG</organization>
+      <organizationUrl>http://www.holisticon.de</organizationUrl>
+    </developer>
+  </developers>
 </project>
