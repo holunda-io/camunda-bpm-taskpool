@@ -4,7 +4,7 @@
 
   <groupId>io.holunda.taskpool</groupId>
   <artifactId>camunda-bpm-taskpool</artifactId>
-  <version>1.0.6-SNAPSHOT</version>
+  <version>1.0.6</version>
   <packaging>pom</packaging>
 
   <properties>
@@ -903,7 +903,7 @@
     <connection>scm:git:git@github.com:holunda-io/camunda-bpm-taskpool.git</connection>
     <url>scm:git:git@github.com:holunda-io/camunda-bpm-taskpool.git</url>
     <developerConnection>scm:git:git@github.com:holunda-io/camunda-bpm-taskpool.git</developerConnection>
-    <tag>HEAD</tag>
+    <tag>camunda-bpm-taskpool-1.0.6</tag>
   </scm>
 
   <distributionManagement>
