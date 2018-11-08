@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
     <groupId>io.holunda.taskpool</groupId>
     <artifactId>camunda-bpm-taskpool-examples-root</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.1-SNAPSHOT</version>
   </parent>
 
   <artifactId>camunda-bpm-taskpool-example-tasklist-backend</artifactId>
@@ -20,6 +18,7 @@
     <application.api-package>${application.base-package}.api</application.api-package>
     <application.model-package>${application.base-package}.model</application.model-package>
     <application.config-package>${application.base-package}</application.config-package>
+    <skip.deploy>true</skip.deploy>
   </properties>
 
   <dependencies>
@@ -168,7 +167,7 @@
               <language>spring</language>
               <apiPackage>${application.api-package}</apiPackage>
               <modelPackage>${application.model-package}</modelPackage>
-              <modelNamePrefix></modelNamePrefix>
+              <modelNamePrefix />
               <modelNameSuffix>Dto</modelNameSuffix>
               <configOptions>
                 <interfaceOnly>true</interfaceOnly>

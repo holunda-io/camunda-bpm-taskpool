@@ -5,7 +5,7 @@
   <parent>
     <groupId>io.holunda.taskpool</groupId>
     <artifactId>camunda-bpm-taskpool-examples-root</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.1-SNAPSHOT</version>
   </parent>
 
   <artifactId>camunda-bpm-taskpool-example-tasklist-angular</artifactId>
@@ -16,6 +16,7 @@
     <npm.version>6.4.1</npm.version>
     <node.version>v8.11.3</node.version>
     <angular-app-name>tasklist-angular</angular-app-name>
+    <skip.deploy>true</skip.deploy>
   </properties>
 
   <build>
