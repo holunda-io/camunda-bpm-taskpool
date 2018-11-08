@@ -76,6 +76,8 @@ open class TaskAggregate() {
         claim(command, command.assignee!!)
       }
       markToBeCompleted(command)
+    } else {
+      // FIXME: react if task is marked as deleted or completed
     }
   }
 

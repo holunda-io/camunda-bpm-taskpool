@@ -35,11 +35,11 @@
 
   <modules>
     <module>camunda-engine-plugin</module>
+    <module>camunda-engine-client</module>
     <module>taskpool</module>
     <module>datapool</module>
     <module>view</module>
     <module>examples</module>
-    <module>camunda-engine-client</module>
   </modules>
 
   <dependencyManagement>
@@ -68,6 +68,11 @@
       <dependency>
         <groupId>io.holunda.taskpool</groupId>
         <artifactId>camunda-bpm-engine-plugin</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.holunda.taskpool</groupId>
+        <artifactId>camunda-bpm-engine-client</artifactId>
         <version>${project.version}</version>
       </dependency>
 

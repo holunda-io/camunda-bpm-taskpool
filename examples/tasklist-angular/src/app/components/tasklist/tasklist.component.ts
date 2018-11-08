@@ -39,7 +39,6 @@ export class TasklistComponent {
     return result;
   }
 
-
   subscribe() {
     this.taskHelper.tasks.subscribe((tasks) => {
       this.tasks = tasks;

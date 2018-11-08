@@ -73,9 +73,9 @@
             <td>{{ taskWithEntryData.task.dueDate | date: 'short' }}</td>
             <td>{{ taskWithEntryData.task.priority }}</td>
             <td>
-              <span *ngIf="taskWithEntryData.task.assignee"><i class="fa fa-user" title="{{ taskWithEntryData.task.assignee }}"></i>&nbsp;</span>
-              <span *ngIf="taskWithEntryData.task.candidateUsers"><i class="fa fa-user-o" title="{{ taskWithEntryData.task.candidateUsers }}"></i>&nbsp;</span>
-              <span *ngIf="taskWithEntryData.task.candidateGroups"><i class="fa fa-users" title="{{ taskWithEntryData.task.candidateGroups }}"></i></span>
+              <span *ngIf="taskWithEntryData.task.assignee"><i class="fa fa-user-o" title="{{ taskWithEntryData.task.assignee }}"></i>&nbsp;</span>
+              <span *ngIf="taskWithEntryData.task.candidateUsers && taskWithEntryData.task.candidateUsers.length"><i class="fa fa-user" title="{{ taskWithEntryData.task.candidateUsers }}"></i>&nbsp;</span>
+              <span *ngIf="taskWithEntryData.task.candidateGroups && taskWithEntryData.task.candidateGroups.length"><i class="fa fa-users" title="{{ taskWithEntryData.task.candidateGroups }}"></i></span>
             </td>
           </tr>
           <tr *ngIf="tasks.length === 0">

@@ -5,6 +5,7 @@ import io.holunda.camunda.datapool.core.EnableDataPool
 import io.holunda.camunda.taskpool.EnableTaskCollector
 import io.holunda.camunda.taskpool.core.EnableTaskPool
 import io.holunda.camunda.taskpool.enricher.*
+import io.holunda.camunda.client.*
 import io.holunda.camunda.taskpool.example.process.process.ProcessApproveRequest
 import io.holunda.camunda.taskpool.example.process.service.BusinessDataEntry
 import io.holunda.camunda.taskpool.example.tasklist.EnableTasklist
@@ -24,6 +25,7 @@ fun main(args: Array<String>) {
 @SpringBootApplication
 @EnableProcessApplication
 @EnableCamundaSpringEventing
+@EnableCamundaEngineClient
 @EnableTaskCollector
 @EnableDataEntryCollector
 

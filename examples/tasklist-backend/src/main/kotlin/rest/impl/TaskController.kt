@@ -77,7 +77,7 @@ class TaskController(
       assignee = user.username
     ))
 
-    return super.complete(id, payload)
+    return ResponseEntity.noContent().build()
   }
 
   internal fun getTask(id: String): Task = queryGateway.query(TaskForIdQuery(id), Task::class.java).join()
