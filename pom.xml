@@ -221,6 +221,12 @@
       </dependency>
       <dependency>
         <groupId>org.axonframework</groupId>
+        <artifactId>axon-configuration</artifactId>
+        <version>${axon.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.axonframework</groupId>
         <artifactId>axon-spring-boot-starter</artifactId>
         <version>${axon.version}</version>
       </dependency>

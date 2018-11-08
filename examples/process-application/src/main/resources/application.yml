@@ -5,7 +5,7 @@ spring:
   application:
     name: example-process-approval
   datasource:
-    url: jdbc:h2:tcp://localhost:9092/mem:testdb
+    url: jdbc:h2:tcp://localhost:9092/mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
     username: sa
     password:
     driver-class-name: org.h2.Driver

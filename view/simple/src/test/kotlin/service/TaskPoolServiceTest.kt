@@ -6,6 +6,7 @@ import io.holunda.camunda.taskpool.view.TaskWithDataEntries
 import io.holunda.camunda.taskpool.view.auth.User
 import io.holunda.camunda.taskpool.view.query.TasksWithDataEntriesForUserQuery
 import org.assertj.core.api.Assertions.assertThat
+import org.axonframework.config.EventProcessingConfiguration
 import org.axonframework.queryhandling.QueryUpdateEmitter
 import org.junit.Before
 import org.junit.Test
@@ -24,7 +25,7 @@ class TaskPoolServiceTest {
 
   @Before
   fun init() {
-    testee = TaskPoolService(mock(QueryUpdateEmitter::class.java))
+    testee = TaskPoolService(mock(QueryUpdateEmitter::class.java), mock(EventProcessingConfiguration::class.java))
   }
 
 
