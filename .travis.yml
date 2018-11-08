@@ -10,7 +10,7 @@ before_install:
   - chmod +x mvnw
   - echo $GPG_SECRET_KEYS | base64 --decode | $GPG_EXECUTABLE --import
   - echo $GPG_OWNERTRUST | base64 --decode | $GPG_EXECUTABLE --import-ownertrust
-script: ./mvnw --settings .travis/settings.xml clean verify
+script: "./mvnw --settings .travis/settings.xml clean verify"
 after_success:
 - bash <(curl -s https://codecov.io/bash)
 
@@ -25,3 +25,5 @@ deploy:
     tags: true
 
 
+notifications:
+  slack: holunda:OBhk0v6b16pLFphCq3siuDIZ
