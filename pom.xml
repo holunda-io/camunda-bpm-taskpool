@@ -8,6 +8,8 @@
   <packaging>pom</packaging>
 
   <name>${project.artifactId}</name>
+  <description>Camunda BPM Taskpool</description>
+  <url>https://github.com/holunda-io/camunda-bpm-taskpool/</url>
 
   <properties>
     <skipFrontend>true</skipFrontend>
