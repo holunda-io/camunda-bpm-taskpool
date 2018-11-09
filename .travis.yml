@@ -16,7 +16,7 @@ before_install:
 #
 # Verify
 #
-script: "./mvnw --settings .travis/settings.xml clean verify"
+script: "./mvnw --settings .travis/settings.xml clean verify -T4"
 #
 # Coveralls
 #
