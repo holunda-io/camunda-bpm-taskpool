@@ -1,0 +1,192 @@
+[
+  {
+    "task": {
+      "id": "b4330691-e5ee-11e8-8874-0264ecb1ff4d",
+      "name": "Approve Request",
+      "description": "Please approve request AR-44ef5ae9-e0d5-4e38-8eb5-decb281a998a from kermit on behalf of piggy",
+      "url": "http://localhost:8080/example-process-approval/tasks/approve-request/id/b4330691-e5ee-11e8-8874-0264ecb1ff4d",
+      "formKey": "approve-request",
+      "candidateGroups": [
+        "muppetshow"
+      ],
+      "candidateUsers": [
+        "fozzy",
+        "gonzo"
+      ],
+      "assignee": null,
+      "processName": "Request Approval",
+      "createTime": "2018-11-11T20:16:42.302Z",
+      "dueDate": "2019-06-26T07:55:00Z",
+      "businessKey": "AR-44ef5ae9-e0d5-4e38-8eb5-decb281a998a",
+      "priority": 23,
+      "payload": {
+        "request": "AR-44ef5ae9-e0d5-4e38-8eb5-decb281a998a",
+        "originator": "kermit"
+      }
+    },
+    "dataEntries": [
+      {
+        "entryType": "io.holunda.camunda.taskpool.example.ApprovalRequest",
+        "entryId": "AR-44ef5ae9-e0d5-4e38-8eb5-decb281a998a",
+        "payload": {
+          "amount": 10000,
+          "currency": "USD",
+          "id": "AR-44ef5ae9-e0d5-4e38-8eb5-decb281a998a",
+          "subject": "Salary increase",
+          "applicant": "piggy"
+        }
+      }
+    ]
+  },
+  {
+    "task": {
+      "id": "320f11b0-e5f0-11e8-8874-0264ecb1ff4d",
+      "name": "Amend\nApproval Request\n",
+      "description": null,
+      "url": "http://localhost:8080/example-process-approval/tasks/approve-request-two/id/320f11b0-e5f0-11e8-8874-0264ecb1ff4d",
+      "formKey": "approve-request-two",
+      "candidateGroups": [],
+      "candidateUsers": [],
+      "assignee": "kermit",
+      "processName": "Request Approval",
+      "createTime": "2018-11-11T20:27:22.956Z",
+      "dueDate": null,
+      "businessKey": "AR-bd55f533-36cf-4060-a830-6cba42563b0a",
+      "priority": 50,
+      "payload": {
+        "request": "AR-bd55f533-36cf-4060-a830-6cba42563b0a",
+        "comment": "{}"
+      }
+    },
+    "dataEntries": [
+      {
+        "entryType": "io.holunda.camunda.taskpool.example.ApprovalRequest",
+        "entryId": "AR-bd55f533-36cf-4060-a830-6cba42563b0a",
+        "payload": {
+          "amount": 10000,
+          "currency": "USD",
+          "id": "AR-bd55f533-36cf-4060-a830-6cba42563b0a",
+          "subject": "Salary increase",
+          "applicant": "piggy"
+        }
+      }
+    ]
+  },
+  {
+    "task": {
+      "id": "6bb390b2-e5ed-11e8-8874-0264ecb1ff4d",
+      "name": "Approve Request",
+      "description": "Please approve request AR-8d90ef11-2c81-4f84-8276-c4d3cc479f74 from kermit on behalf of piggy",
+      "url": "http://localhost:8080/example-process-approval/tasks/approve-request/id/6bb390b2-e5ed-11e8-8874-0264ecb1ff4d",
+      "formKey": "approve-request",
+      "candidateGroups": [
+        "muppetshow"
+      ],
+      "candidateUsers": [
+        "fozzy",
+        "gonzo"
+      ],
+      "assignee": null,
+      "processName": "Request Approval",
+      "createTime": "2018-11-11T20:07:31.174Z",
+      "dueDate": "2019-06-26T07:55:00Z",
+      "businessKey": "AR-8d90ef11-2c81-4f84-8276-c4d3cc479f74",
+      "priority": 23,
+      "payload": {
+        "request": "AR-8d90ef11-2c81-4f84-8276-c4d3cc479f74",
+        "originator": "kermit"
+      }
+    },
+    "dataEntries": [
+      {
+        "entryType": "io.holunda.camunda.taskpool.example.ApprovalRequest",
+        "entryId": "AR-8d90ef11-2c81-4f84-8276-c4d3cc479f74",
+        "payload": {
+          "amount": 10000,
+          "currency": "USD",
+          "id": "AR-8d90ef11-2c81-4f84-8276-c4d3cc479f74",
+          "subject": "Salary increase",
+          "applicant": "piggy"
+        }
+      }
+    ]
+  },
+  {
+    "task": {
+      "id": "6d125d86-e5ed-11e8-8874-0264ecb1ff4d",
+      "name": "Approve Request",
+      "description": "Please approve request AR-4ad2ebff-0017-4432-a69f-76168d0375f8 from kermit on behalf of piggy",
+      "url": "http://localhost:8080/example-process-approval/tasks/approve-request/id/6d125d86-e5ed-11e8-8874-0264ecb1ff4d",
+      "formKey": "approve-request",
+      "candidateGroups": [
+        "muppetshow"
+      ],
+      "candidateUsers": [
+        "gonzo",
+        "fozzy"
+      ],
+      "assignee": null,
+      "processName": "Request Approval",
+      "createTime": "2018-11-11T20:07:33.473Z",
+      "dueDate": "2019-06-26T07:55:00Z",
+      "businessKey": "AR-4ad2ebff-0017-4432-a69f-76168d0375f8",
+      "priority": 23,
+      "payload": {
+        "request": "AR-4ad2ebff-0017-4432-a69f-76168d0375f8",
+        "originator": "kermit"
+      }
+    },
+    "dataEntries": [
+      {
+        "entryType": "io.holunda.camunda.taskpool.example.ApprovalRequest",
+        "entryId": "AR-4ad2ebff-0017-4432-a69f-76168d0375f8",
+        "payload": {
+          "amount": 10000,
+          "currency": "USD",
+          "id": "AR-4ad2ebff-0017-4432-a69f-76168d0375f8",
+          "subject": "Salary increase",
+          "applicant": "piggy"
+        }
+      }
+    ]
+  },
+  {
+    "task": {
+      "id": "b3e582bf-e5ee-11e8-8874-0264ecb1ff4d",
+      "name": "Approve Request",
+      "description": "Please approve request AR-529426d3-9ba2-4ab9-b436-0cc616583bc3 from kermit on behalf of piggy",
+      "url": "http://localhost:8080/example-process-approval/tasks/approve-request/id/b3e582bf-e5ee-11e8-8874-0264ecb1ff4d",
+      "formKey": "approve-request",
+      "candidateGroups": [
+        "muppetshow"
+      ],
+      "candidateUsers": [
+        "gonzo",
+        "fozzy"
+      ],
+      "assignee": null,
+      "processName": "Request Approval",
+      "createTime": "2018-11-11T20:16:41.794Z",
+      "dueDate": "2019-06-26T07:55:00Z",
+      "businessKey": "AR-529426d3-9ba2-4ab9-b436-0cc616583bc3",
+      "priority": 23,
+      "payload": {
+        "request": "AR-529426d3-9ba2-4ab9-b436-0cc616583bc3",
+        "originator": "kermit"
+      }
+    },
+    "dataEntries": [
+      {
+        "entryType": "io.holunda.camunda.taskpool.example.ApprovalRequest",
+        "entryId": "AR-529426d3-9ba2-4ab9-b436-0cc616583bc3",
+        "payload": {
+          "amount": 10000,
+          "currency": "USD",
+          "id": "AR-529426d3-9ba2-4ab9-b436-0cc616583bc3",
+          "subject": "Salary increase",
+          "applicant": "piggy"
+        }
+      }
+    ]
+  }
+]
