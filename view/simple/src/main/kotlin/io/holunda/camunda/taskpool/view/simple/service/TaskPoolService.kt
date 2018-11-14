@@ -22,7 +22,6 @@ import org.axonframework.queryhandling.QueryHandler
 import org.axonframework.queryhandling.QueryUpdateEmitter
 import org.springframework.stereotype.Component
 import java.util.concurrent.ConcurrentHashMap
-import javax.annotation.PostConstruct
 
 @Component
 @ProcessingGroup(TaskPoolService.PROCESSING_GROUP)
@@ -103,7 +102,7 @@ open class TaskPoolService(
     val totalCount = list.size
     val offset = query.page * query.size
     return if (totalCount > offset) {
-      TasksWithDataEntriesResponse(totalCount, list.slice(IntRange(offset, Math.min(offset + query.size, totalCount - 1))))
+      TasksWithDataEntriesResponse(totalCount, list.slice(offset until Math.min(offset + query.size, totalCount)))
     } else {
       TasksWithDataEntriesResponse(totalCount, list)
     }
