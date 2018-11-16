@@ -31,7 +31,7 @@ deploy:
   provider: script
   script: "./mvnw --settings .travis/settings.xml deploy -DskipTests=true -B -U -V -Prelease"
   on:
-    branch: release
+    branch: master
     tags: true
 
 #

@@ -14,26 +14,25 @@ Every module is enabled by default. If you want to change this, please provide t
    
 inside your `pom.xml`.
 
+## Trigger release creation
+
+We use gitflow for development (see [A successful git branching model](http://nvie.com/posts/a-successful-git-branching-model/) 
+an introduction). You could use gitflow with native git
+commands, but then you would have to change the versions in the poms manually. Therefore we use the 
+[mvn gitflow plugin](https://github.com/aleksandr-m/gitflow-maven-plugin), which handles this and other things nicely.
+
+You can build a release with:
+
+	./mvnw gitflow:release 
+	
+This will update the versions in the `pom.xml`s accordingly and push the release tag to the `master` branch.
 
 ## Trigger a deploy
 
 Travis will deploy the results of the build if and only if:
 - the build is stable
-- the branch is `release`
+- the branch is `master`
 - the commit contains a git tag
-
-So, to trigger a deploy:
-
-- Merge your changes to `release` branch (to merge from master: `release> git merge master`)
-- Tag the changes `release> git tag -a 1.1.0-SNAPSHOT -m "Deploy of 1.1.0-SNAPSHOT" && git push --tags`
-
-## Changing versions
-
-Currently, no automatic version bumping is set-up. If you want a new version, make sure to bump it 
-on your own:
-
-    ./mvnw release:update-versions -DautoVersionSubmodules=true -DdevelopmentVersion=1.2.0-SNAPSHOT
-
 
 ## SNAPSHOT vs. STABLE
 
