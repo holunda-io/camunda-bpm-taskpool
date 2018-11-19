@@ -24,7 +24,7 @@ class ComparatorTest {
   private val dueDateComparator = comparator("+task.dueDate")
 
   @Before
-  fun `precondition`() {
+  fun precondition() {
     assertThat(nameComparator).isNotNull()
     assertThat(prioComparator).isNotNull()
     assertThat(createTimeComparator).isNotNull()

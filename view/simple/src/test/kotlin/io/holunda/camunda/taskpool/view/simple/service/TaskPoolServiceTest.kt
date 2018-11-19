@@ -30,21 +30,27 @@ class TaskPoolServiceTest {
 
 
   @Test
-  fun `retrieve all`() {
+  fun `slice contains complete list if input list is smaller than desired page size`() {
     val size = 83
     assertThat(testee.slice(smallList, query(0, size)).tasksWithDataEntries.size).isEqualTo(smallList.size)
   }
 
   @Test
-  fun `slice from 0`() {
+  fun `slice for page 0 contains the desired count of elements`() {
     val size = 83
-    assertThat(testee.slice(bigList, query(0, size)).tasksWithDataEntries.size).isEqualTo(size + 1)
+    assertThat(testee.slice(bigList, query(0, size)).tasksWithDataEntries.size).isEqualTo(size)
   }
 
   @Test
-  fun `slice from 1`() {
+  fun `slice for page 1 contains elements from after page 0 to end of list`() {
     val size = 83
     assertThat(testee.slice(bigList, query(1, size)).tasksWithDataEntries.size).isEqualTo(bigList.size - size)
+  }
+
+  @Test
+  fun `paging returns each element exactly once`() {
+    val size = 83
+    assertThat(testee.slice(bigList, query(0, size)).tasksWithDataEntries + testee.slice(bigList, query(1, size)).tasksWithDataEntries).isEqualTo(bigList)
   }
 
 }
