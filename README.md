@@ -56,7 +56,6 @@ This library serves as a foundation of several follow-up projects and tools:
 
 ## Contribution
 
-If you want to contribute to this project, feel free to do so. Start with [contributing guide](.gthub/CONTRIBUTING.MD) 
-and have a look on open [issues](/issues) and submit a pull request.
+If you want to contribute to this project, feel free to do so. Start with [contributing guide](/.github/CONTRIBUTING.md).
 
 
