@@ -24,6 +24,20 @@ _Perform the following steps to get a development setup up and running._
 - `cd camunda-bpm-taskpool`
 - `./mvnw clean install`
 
+## Version control
+
+We are using gitflow in our git SCM. That means that you should start from `develop` branch,
+create a `feature/<name>` out of it and once it is completed create a pull request containing 
+it. Please squash your commits before submitting and use semantic commit messages, if possible. 
+ 
+ 
+
+
+
+## Release management
+
+See [RELEASE.MD](docs/RELEASE.MD)
+
 ## Profiles
 
 ### Camunda Version
