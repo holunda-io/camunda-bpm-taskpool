@@ -36,7 +36,7 @@ it. Please squash your commits before submitting and use semantic commit message
 
 ## Release management
 
-See [RELEASE.MD](docs/RELEASE.MD)
+See [RELEASE.MD](/docs/RELEASE.MD)
 
 ## Profiles
 
