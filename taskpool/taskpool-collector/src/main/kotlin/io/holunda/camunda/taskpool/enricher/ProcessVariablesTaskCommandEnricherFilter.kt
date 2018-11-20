@@ -1,7 +1,6 @@
 package io.holunda.camunda.taskpool.enricher
 
 import org.camunda.bpm.engine.variable.VariableMap
-import org.camunda.bpm.engine.variable.Variables
 
 class ProcessVariablesFilter(vararg filters: ProcessVariableFilter) {
 
@@ -10,16 +9,24 @@ class ProcessVariablesFilter(vararg filters: ProcessVariableFilter) {
   fun filterVariables(processDefinitionKey: ProcessDefinitionKey, taskDefinitionKey: TaskDefinitionKey, variables: VariableMap): VariableMap {
 
     val processFilter = filter[processDefinitionKey] ?: return variables
-    val taskFilter = processFilter.variableFilter[taskDefinitionKey] ?: return variables
 
-    return variables.filterKeys { (processFilter.filterType == FilterType.INCLUDE) == taskFilter.contains(it) }
+    return when (processFilter.filterType) {
+      FilterType.INCLUDE, FilterType.EXCLUDE -> {
+        val taskFilter = processFilter.taskVariableFilter[taskDefinitionKey] ?: return variables
+        variables.filterKeys { (processFilter.filterType == FilterType.INCLUDE) == taskFilter.contains(it) }
+      }
+      FilterType.PROCESS_EXCLUDE, FilterType.PROCESS_INCLUDE -> {
+        variables.filterKeys { (processFilter.filterType == FilterType.PROCESS_INCLUDE) == processFilter.globalVariableFilter.contains(it) }
+      }
+    }
   }
 }
 
 data class ProcessVariableFilter(
   val processDefinitionKey: ProcessDefinitionKey,
   val filterType: FilterType,
-  val variableFilter: Map<TaskDefinitionKey, List<VariableName>>
+  val taskVariableFilter: Map<TaskDefinitionKey, List<VariableName>> = emptyMap(),
+  val globalVariableFilter: List<VariableName> = emptyList()
 )
 
 typealias ProcessDefinitionKey = String
@@ -28,6 +35,8 @@ typealias VariableName = String
 
 enum class FilterType {
   INCLUDE,
-  EXCLUDE
+  EXCLUDE,
+  PROCESS_INCLUDE,
+  PROCESS_EXCLUDE
 }
 
