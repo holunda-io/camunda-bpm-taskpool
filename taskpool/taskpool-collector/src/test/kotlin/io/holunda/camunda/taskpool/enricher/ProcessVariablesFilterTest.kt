@@ -18,7 +18,7 @@ class ProcessVariablesFilterTest {
     .putValueTyped("business_var51", stringValue("51"))
 
   @Test
-  fun checkFilter() {
+  fun `should filter for task`() {
     val filter: ProcessVariablesFilter = ProcessVariablesFilter(
       ProcessVariableFilter("process7411", FilterType.INCLUDE, mapOf(
         "task1" to listOf("business_var1", "business_var2"),
@@ -35,4 +35,19 @@ class ProcessVariablesFilterTest {
     assertThat(filter.filterVariables("process7412", "task3", variables)).containsOnlyKeys("business_var1", "business_var2", "business_var3", "business_var4", "business_var12", "business_var32")
     assertThat(filter.filterVariables("process7412", "task1", variables)).containsOnlyKeys("business_var1", "business_var2", "business_var3", "business_var4", "business_var51", "business_var42")
   }
+
+  @Test
+  fun `should filter globally`() {
+    val filter: ProcessVariablesFilter = ProcessVariablesFilter(
+      ProcessVariableFilter("process7411", FilterType.PROCESS_INCLUDE, emptyMap(), listOf("business_var1", "business_var2")),
+      ProcessVariableFilter("process7412", FilterType.PROCESS_EXCLUDE, emptyMap(), listOf("business_var51", "business_var42", "business_var32", "business_var12"))
+    )
+
+    // only 1, 2
+    assertThat(filter.filterVariables("process7411", "task77", variables)).containsOnlyKeys("business_var1", "business_var2")
+
+    // not 12, 32, 42, 52 -> 1, 2, 3, 4
+    assertThat(filter.filterVariables("process7412", "task88", variables)).containsOnlyKeys("business_var1", "business_var2", "business_var3", "business_var4")
+  }
+
 }

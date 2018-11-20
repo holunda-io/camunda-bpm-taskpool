@@ -1,11 +1,11 @@
 package io.holunda.camunda.taskpool.example.process
 
+import io.holunda.camunda.client.EnableCamundaEngineClient
 import io.holunda.camunda.datapool.EnableDataEntryCollector
 import io.holunda.camunda.datapool.core.EnableDataPool
 import io.holunda.camunda.taskpool.EnableTaskCollector
 import io.holunda.camunda.taskpool.core.EnableTaskPool
 import io.holunda.camunda.taskpool.enricher.*
-import io.holunda.camunda.client.*
 import io.holunda.camunda.taskpool.example.process.process.ProcessApproveRequest
 import io.holunda.camunda.taskpool.example.process.service.BusinessDataEntry
 import io.holunda.camunda.taskpool.example.tasklist.EnableTasklist
@@ -67,18 +67,16 @@ open class ExampleProcessApplication {
   open fun processVariablesCorrelator() = ProcessVariablesCorrelator(
 
     // define correlation for every process
-    ProcessVariableCorrelation(ProcessApproveRequest.KEY, mapOf(
-
-      // define a correlation for every task needed
-      ProcessApproveRequest.Elements.APPROVE_REQUEST to mapOf(
-        ProcessApproveRequest.Variables.REQUEST_ID to BusinessDataEntry.REQUEST
+    ProcessVariableCorrelation(ProcessApproveRequest.KEY,
+      mapOf(
+        // define a correlation for every task needed
+        ProcessApproveRequest.Elements.APPROVE_REQUEST to mapOf(
+          ProcessApproveRequest.Variables.REQUEST_ID to BusinessDataEntry.REQUEST
+        )
       ),
-
-      // and again
-      ProcessApproveRequest.Elements.AMEND_REQUEST to mapOf(
-        ProcessApproveRequest.Variables.REQUEST_ID to BusinessDataEntry.REQUEST
-      )
-    ))
+      // or globally
+      mapOf(ProcessApproveRequest.Variables.REQUEST_ID to BusinessDataEntry.REQUEST)
+    )
   )
 }
 
