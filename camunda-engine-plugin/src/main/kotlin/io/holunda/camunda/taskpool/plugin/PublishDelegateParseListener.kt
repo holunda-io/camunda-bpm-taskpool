@@ -12,7 +12,10 @@ import org.camunda.bpm.engine.impl.task.TaskDefinition
 import org.camunda.bpm.engine.impl.util.xml.Element
 import org.springframework.context.ApplicationEventPublisher
 
-class PublishDelegateParseListener(private val publisher: ApplicationEventPublisher) : AbstractBpmnParseListener() {
+class PublishDelegateParseListener(
+  private val publisher: ApplicationEventPublisher,
+  private val properties: CamundaEventingProperties
+) : AbstractBpmnParseListener() {
 
   companion object {
     val TASK_EVENTS = arrayOf(
@@ -26,9 +29,8 @@ class PublishDelegateParseListener(private val publisher: ApplicationEventPublis
 
   }
 
-  private val taskListener = TaskListener { t -> publisher.publishEvent(t) }
-  private val executionListener = ExecutionListener { e -> publisher.publishEvent(e) }
-
+  private val taskListener = TaskListener { t -> if (properties.taskEventing) publisher.publishEvent(t) }
+  private val executionListener = ExecutionListener { e -> if (properties.executionEventing) publisher.publishEvent(e) }
 
   override fun parseUserTask(userTaskElement: Element, scope: ScopeImpl, activity: ActivityImpl) {
     addTaskListener(taskDefinition(activity))
