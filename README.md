@@ -1,5 +1,8 @@
 # Camunda BPM Taskpool
 [![Build Status](https://travis-ci.org/holunda-io/camunda-bpm-taskpool.svg?branch=master)](https://travis-ci.org/holunda-io/camunda-bpm-taskpool) 
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/holunda-io/camunda-bpm-taskpool/badge.svg)](https://maven-badges.herokuapp.com/maven-central/holunda-io/camunda-bpm-taskpool)
+[![codecov](https://codecov.io/gh/holunda-io/camunda-bpm-taskpool/branch/master/graph/badge.svg)](https://codecov.io/gh/holunda-io/camunda-bpm-taskpool)
+
 
 A component for pooling Camunda BPM user tasks with business data for performance queries.
 
