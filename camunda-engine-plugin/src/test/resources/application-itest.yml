@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: example-process-approval
+camunda:
+  taskpool:
+    engine-eventing:
+      enabled: true
