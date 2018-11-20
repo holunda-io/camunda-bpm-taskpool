@@ -74,7 +74,20 @@ open class TaskPoolService(
   open fun query(query: TaskForIdQuery): Task? = tasks.values.firstOrNull { query.applyFilter(it) }
 
   /**
-   * Retrieves a list of tasks with correlatated data entries of given entry type (and optional id).
+   * Retrieves a task with data entries for given task id.
+   */
+  @QueryHandler
+  open fun query(query: TaskWithDataEntriesForIdQuery): TaskWithDataEntries? {
+    val task = tasks.values.firstOrNull { query.applyFilter(TaskWithDataEntries(it)) }
+    return if (task != null) {
+      tasksWithDataEntries(task, this.dataEntries)
+    } else {
+      null
+    }
+  }
+
+  /**
+   * Retrieves a list of tasks with correlated data entries of given entry type (and optional id).
    */
   @QueryHandler
   open fun query(query: TasksWithDataEntriesForUserQuery): TasksWithDataEntriesResponse {
