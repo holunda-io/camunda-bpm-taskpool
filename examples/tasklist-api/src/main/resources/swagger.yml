@@ -6,11 +6,27 @@ info:
 basePath: '/rest'
 tags:
 - name: Task
-  description: Operations tasks.
+  description: Operations on tasks.
+- name: Profile
+  description: User's propfile.
 schemes:
 - http
 - https
 paths:
+  '/profile':
+    get:
+      tags:
+      - Profile
+      summary: Retrieves the user's profile.
+      produces:
+      - application/json
+      operationId: getProfile
+      responses:
+        200:
+          description: Successful operation.
+          schema:
+            title: User profile.
+            $ref: '#/definitions/UserProfile'
   '/tasks':
     get:
       tags:
@@ -233,4 +249,9 @@ definitions:
     additionalProperties:
       type: object
 
-
+  UserProfile:
+    type: object
+    properties:
+      username:
+        type: string
+        description: username of currently logged-in user.

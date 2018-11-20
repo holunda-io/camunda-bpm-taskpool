@@ -26,7 +26,14 @@
             <th class="align-top" sortable-column="task.createTime">Created</th>
             <th class="align-top" sortable-column="task.dueDate">Due</th>
             <th class="align-top" sortable-column="task.priority">Prio</th>
-            <th class="align-top">&nbsp;</th>
+            <th colspan="2" class="align-top">
+              Actions
+              <div class="pull-right">
+                  <button type="button" name="refresh" class="btn btn-outline-secondary btn-sm " (click)="reload()" title="Refresh tasks">
+                      <i class="fa fa-refresh"></i>
+                  </button>
+              </div>
+            </th>
           </tr>
           </thead>
           <tbody>
@@ -73,9 +80,26 @@
             <td>{{ taskWithEntryData.task.dueDate | date: 'short' }}</td>
             <td>{{ taskWithEntryData.task.priority }}</td>
             <td>
-              <span *ngIf="taskWithEntryData.task.assignee"><i class="fa fa-user-o" title="{{ taskWithEntryData.task.assignee }}"></i>&nbsp;</span>
+              <span *ngIf="taskWithEntryData.task.assignee">
+                <i class="fa fa-user-o" title="{{ taskWithEntryData.task.assignee }}"></i>&nbsp;
+              </span>
               <span *ngIf="taskWithEntryData.task.candidateUsers && taskWithEntryData.task.candidateUsers.length"><i class="fa fa-user" title="{{ taskWithEntryData.task.candidateUsers }}"></i>&nbsp;</span>
               <span *ngIf="taskWithEntryData.task.candidateGroups && taskWithEntryData.task.candidateGroups.length"><i class="fa fa-users" title="{{ taskWithEntryData.task.candidateGroups }}"></i></span>
+            </td>
+            <td>
+              <span *ngIf="!taskWithEntryData.task.assignee">
+                <button type="button" name="claim"
+                  class="btn btn-outline-secondary btn-sm"
+                  (click)="claim($event, taskWithEntryData.task)"
+                  title="{{ userProfile.username }}">claim</button>&nbsp;
+              </span>
+              <span *ngIf="taskWithEntryData.task.assignee == userProfile.username">
+                <button type="button" name="unclaim"
+                  class="btn btn-outline-secondary btn-sm"
+                  (click)="unclaim($event, taskWithEntryData.task)"
+                  title="{{ userProfile.username }}">unclaim</button>&nbsp;
+              </span>
+
             </td>
           </tr>
           <tr *ngIf="tasks.length === 0">
