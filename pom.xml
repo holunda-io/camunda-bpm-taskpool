@@ -558,24 +558,6 @@
         </plugin>
 
         <plugin>
-          <groupId>com.amashchenko.maven.plugin</groupId>
-          <artifactId>gitflow-maven-plugin</artifactId>
-          <version>1.9.0</version>
-          <configuration>
-            <gitFlowConfig>
-              <productionBranch>master</productionBranch>
-              <developmentBranch>develop</developmentBranch>
-              <featureBranchPrefix>feature/</featureBranchPrefix>
-              <releaseBranchPrefix>release/</releaseBranchPrefix>
-              <hotfixBranchPrefix>hotfix/</hotfixBranchPrefix>
-              <supportBranchPrefix>support/</supportBranchPrefix>
-              <origin>origin</origin>
-            </gitFlowConfig>
-            <keepBranch>false</keepBranch>
-          </configuration>
-        </plugin>
-
-        <plugin>
           <groupId>com.coderplus.maven.plugins</groupId>
           <artifactId>copy-rename-maven-plugin</artifactId>
           <version>1.0.1</version>
