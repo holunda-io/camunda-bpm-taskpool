@@ -63,13 +63,4 @@ swagger:
     process:
       basePackage: "io.holunda.camunda.taskpool.example.process.rest"
       path: "/**"
-    webflux:
-      basePackage: "io.holunda.camunda.taskpool.example.process.webflux"
-      path: "/**"
-    tasklist:
-      basePackage: "io.holunda.camunda.taskpool.example.tasklist"
-      path: "/**"
-      apiInfo:
-        title: Tasklist Application
-        description: REST interface of the process task list.
 

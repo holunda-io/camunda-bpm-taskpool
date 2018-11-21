@@ -11,21 +11,24 @@ Before starting the application, please start the Axon Server. The easiest way t
 `docker run -d --name my-axon-server -p 8024:8024 -p 8124:8124 axoniq/axonserver`. To verify t is running,
 open your browser [http://localhost:8024/](http://localhost:8024/).
 
-The demo application consists of several Maven modules. In order to start the example, you will need to start only two
+The demo application consists of several Maven modules. In order to start the example, you will need to start only three
 of them: 
  * h2 (external database)
  * process-application (example application)
+ * taskpool-application
  
-Then both modules can be started by running `mvn spring-boot:run` from command line in the corresponding directories. 
+The modules can be started by running `mvn spring-boot:run` from command line in the corresponding directories. 
 
-The example application provides a REST API for interaction and offers the Swagger UI for easier usage. 
+The example taskpool and process applications both provide REST APIs for interaction and offers the Swagger UI for easier usage. 
 After starting the application, simply open [http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)
-in browser of your choice. 
+and [http://localhost:8081/swagger-ui.html](http://localhost:8081/swagger-ui.html) to use Swagger UI. 
 
-Since the application includes Camunda BPM engine, you can use the standard Camunda webapps by navigating to [http://localhost:8080/](http://localhost:8080/).
+Since the process application includes Camunda BPM engine, you can use the standard Camunda webapps by navigating to [http://localhost:8080/](http://localhost:8080/).
 The default user and password are `admin / admin `. 
 
-An example task list application is implemented and available under [http://localhost:8080/tasklist/](http://localhost:8080/tasklist/)
+The taskpool application consists of the major taskpool components and delivers the example tasklist.
+To use the example tasklist, please call [http://localhost:8081/tasklist/](http://localhost:8081/tasklist/)
+in your browser.
 
 ## Tasklist
 
@@ -43,10 +46,10 @@ available in the task pool. In doing so it provides the ability to filter, sort 
 * Tasks include correlated business data
 * The tasklist is sortable
 * The list is paged (7 items per page)
+* Claiming / Unclaiming
 
 ### Ongoing / TODO
 
-* Claiming / Unclaiming
 * Jump to form
 * Filtering 
 
@@ -80,7 +83,7 @@ As a result you will receive the id of the request, acting as a business key of 
 2. The approval process will execute, load the request from the request system, create a user task `Approve Request` 
 which can be either approved, rejected or returned to the originator and will assign it to some users. 
 In order to see the list of available user tasks, send a GET request to the `task-controller` by providing an empty
-filter criteria `[]` (`GET http://localhost:8080/tasklist/rest/tasks?filter=%5B%5D`) and 
+filter criteria `[]` (`GET http://localhost:8081/tasklist/rest/tasks?filter=%5B%5D`) and 
 you will receive a list of tasks with all supplied information available in the task pool:
 
         [
@@ -193,29 +196,35 @@ version of the request from the request system and create a new approval task.
 
 <table>
 <tr>
-  <th>URL</th><th>HTTP Method</th><th>Body</th><th>Response</th><th>Purpose</th>
+  <th>Application</th><th>URL</th><th>HTTP Method</th><th>Body</th><th>Response</th><th>Purpose</th>
 </tr>
 <tr>
+  <td>Process</td>
   <td>/request</td><td>POST</td><td>-</td><td>Request id</td><td>Creates a new dummy request, stores it in 
   the legacy application and starts the approval process.</td>
 </tr>
 <tr>
+  <td>Process</td>
   <td>/request/{id}</td><td>GET</td><td>-</td><td>Request</td><td>Retrieves the request by id.</td>
 </tr>
 <tr>
+  <td>Process</td>
   <td>/request/{id}</td><td>POST</td><td>Request</td><td>-</td><td>Changes the request by id.</td>
 </tr>
 <tr>
-  <td>/tasks?filter=[filterCriteria]</td><td>GET</td><td>-</td><td>List of tasks</td><td>JSON describing tasks available for user specified by filter criteria</td>
-</tr>
-<tr>
+  <td>Process</td>
   <td>/request/{id}/decision/{DECISION}</td><td>POST</td><td>Comment</td><td>-</td><td>Completes "Approve Request" task for request with id {id} with the decision {DECISION}, where
   decision should be one of:
   <ul><li>APPROVE: approve request.</li><li>REJECT: reject the request.</li><li>RETURN: return to originator.</li></ul></td>
 </tr>
 <tr>
+  <td>Process</td>
   <td>/request/{id}/action/{ACTION}</td><td>POST</td><td>-</td><td>-</td><td>Completes "Amend Request" task for request with id {id} with the action {ACTION}, where
   action should be one of:
   <ul><li>CANCEL: cancels the request.</li><li>RESUBMIT: re-submits the request.</li></ul></td>
+</tr>
+<tr>
+  <td>Taskpool</td>
+  <td>/tasks?filter=[filterCriteria]</td><td>GET</td><td>-</td><td>List of tasks</td><td>JSON describing tasks available for user specified by filter criteria</td>
 </tr>
 </table>

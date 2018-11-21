@@ -47,23 +47,8 @@ abstract class TaskWithDataEntriesMapper {
   abstract fun dto(taskWithDataEntries: TaskWithDataEntries): TaskWithDataEntriesDto
 
 
-  @Deprecated("unused")
-  fun toLocalDateTime(@Valid time: OffsetDateTime?): LocalDateTime? {
-    return time?.toLocalDateTime()
-  }
-
-  @Deprecated("unused")
-  fun toOffsetDateTime(@Valid time: LocalDateTime?): OffsetDateTime? {
-    return time?.atOffset(ZoneOffset.UTC)
-  }
-
-  @Deprecated("unused")
   fun toOffsetDateTime(@Valid time: Date?): OffsetDateTime? {
     return if (time == null) null else OffsetDateTime.ofInstant(time.toInstant(), ZoneOffset.UTC)
   }
 
-  @Deprecated("unused")
-  fun toDate(@Valid time: OffsetDateTime?): Date? {
-    return if (time == null) null else Date.from(time.toInstant())
-  }
 }

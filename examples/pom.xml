@@ -22,6 +22,7 @@
     <module>tasklist-api</module>
     <module>tasklist-backend</module>
     <module>process-application</module>
+    <module>taskpool-application</module>
   </modules>
 
   <profiles>

@@ -85,7 +85,7 @@ class TaskController(
 
 
   internal fun send(command: InteractionTaskCommand) {
-    gateway.send<Any, Any?>(command) { m, r -> logger.info("Successfully submitted command $m, $r") }
+    gateway.send<Any, Any?>(command) { m, r -> logger.debug("Successfully submitted command $m, $r") }
   }
 }
 

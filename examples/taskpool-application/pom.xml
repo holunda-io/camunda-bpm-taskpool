@@ -8,7 +8,7 @@
     <version>1.0.6-SNAPSHOT</version>
   </parent>
 
-  <artifactId>camunda-bpm-taskpool-example-process-application</artifactId>
+  <artifactId>camunda-bpm-taskpool-example-taskpool-application</artifactId>
   <name>example/${project.artifactId}</name>
 
   <properties>
@@ -20,24 +20,34 @@
   <dependencies>
     <dependency>
       <groupId>io.holunda.taskpool</groupId>
-      <artifactId>camunda-bpm-engine-plugin</artifactId>
+      <artifactId>camunda-bpm-taskpool-core</artifactId>
     </dependency>
     <dependency>
       <groupId>io.holunda.taskpool</groupId>
-      <artifactId>camunda-bpm-engine-client</artifactId>
+      <artifactId>camunda-bpm-taskpool-view-simple</artifactId>
     </dependency>
     <dependency>
       <groupId>io.holunda.taskpool</groupId>
-      <artifactId>camunda-bpm-taskpool-collector</artifactId>
+      <artifactId>camunda-bpm-datapool-core</artifactId>
     </dependency>
     <dependency>
       <groupId>io.holunda.taskpool</groupId>
-      <artifactId>camunda-bpm-taskpool-sender</artifactId>
+      <artifactId>camunda-bpm-taskpool-cockpit-backend</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>io.holunda.taskpool</groupId>
+      <artifactId>camunda-bpm-taskpool-example-tasklist-backend</artifactId>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>io.holunda.taskpool</groupId>
-      <artifactId>camunda-bpm-datapool-sender</artifactId>
+      <artifactId>camunda-bpm-taskpool-example-tasklist-api</artifactId>
+      <version>${project.version}</version>
     </dependency>
+
+
     <dependency>
       <groupId>io.springfox</groupId>
       <artifactId>springfox-swagger2</artifactId>
@@ -56,38 +66,6 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-webflux</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-data-jpa</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.flywaydb</groupId>
-      <artifactId>flyway-core</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.h2database</groupId>
-      <artifactId>h2</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.camunda.bpm.springboot</groupId>
-      <artifactId>camunda-bpm-spring-boot-starter-webapp</artifactId>
-      <version>${camunda-springboot.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.codehaus.groovy</groupId>
-      <artifactId>groovy-all</artifactId>
-    </dependency>
-    <!-- SPIN -->
-    <dependency>
-      <groupId>org.camunda.bpm</groupId>
-      <artifactId>camunda-engine-plugin-spin</artifactId>
-      <version>${camunda.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.camunda.spin</groupId>
-      <artifactId>camunda-spin-dataformat-json-jackson</artifactId>
-      <version>${version.camunda.spin}</version>
     </dependency>
     <dependency>
       <groupId>com.fasterxml.jackson.datatype</groupId>
@@ -112,5 +90,29 @@
       </plugin>
     </plugins>
   </build>
+
+
+  <profiles>
+    <profile>
+      <id>frontend</id>
+      <activation>
+        <property>
+          <name>!skipFrontend</name>
+        </property>
+      </activation>
+      <dependencies>
+        <dependency>
+          <groupId>io.holunda.taskpool</groupId>
+          <artifactId>camunda-bpm-taskpool-example-tasklist-angular</artifactId>
+          <version>${project.version}</version>
+        </dependency>
+        <dependency>
+          <groupId>io.holunda.taskpool</groupId>
+          <artifactId>camunda-bpm-taskpool-cockpit-frontend</artifactId>
+          <version>${project.version}</version>
+        </dependency>
+      </dependencies>
+    </profile>
+  </profiles>
 
 </project>
