@@ -11,14 +11,18 @@ cache:
 before_install:
   - chmod +x mvnw
 #
+# Skip installation
+#
+install: true
+#
 # Verify
 #
-script: "./mvnw --settings .travis/settings.xml clean verify"
+script: "./mvnw --settings .travis/settings.xml clean verify -T4"
 #
 # Coveralls
 #
 after_success:
-- bash < (curl -s https://codecov.io/bash)
+- bash <(curl -s https://codecov.io/bash)
 
 #
 # Deploy of artifacts is only triggered on master branch.
