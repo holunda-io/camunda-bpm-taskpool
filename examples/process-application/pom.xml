@@ -36,33 +36,8 @@
     </dependency>
     <dependency>
       <groupId>io.holunda.taskpool</groupId>
-      <artifactId>camunda-bpm-taskpool-core</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.holunda.taskpool</groupId>
-      <artifactId>camunda-bpm-taskpool-view-simple</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.holunda.taskpool</groupId>
       <artifactId>camunda-bpm-datapool-sender</artifactId>
     </dependency>
-    <dependency>
-      <groupId>io.holunda.taskpool</groupId>
-      <artifactId>camunda-bpm-datapool-core</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>io.holunda.taskpool</groupId>
-      <artifactId>camunda-bpm-taskpool-example-tasklist-backend</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>io.holunda.taskpool</groupId>
-      <artifactId>camunda-bpm-taskpool-example-tasklist-api</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-
-
     <dependency>
       <groupId>io.springfox</groupId>
       <artifactId>springfox-swagger2</artifactId>
@@ -137,24 +112,5 @@
       </plugin>
     </plugins>
   </build>
-
-
-  <profiles>
-    <profile>
-      <id>frontend</id>
-      <activation>
-        <property>
-          <name>!skipFrontend</name>
-        </property>
-      </activation>
-      <dependencies>
-        <dependency>
-          <groupId>io.holunda.taskpool</groupId>
-          <artifactId>camunda-bpm-taskpool-example-tasklist-angular</artifactId>
-          <version>${project.version}</version>
-        </dependency>
-      </dependencies>
-    </profile>
-  </profiles>
 
 </project>

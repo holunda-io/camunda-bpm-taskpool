@@ -3,10 +3,10 @@ package io.holunda.camunda.taskpool.view.simple.service
 import io.holunda.camunda.taskpool.api.business.DataEntryCreatedEvent
 import io.holunda.camunda.taskpool.api.business.DataEntryUpdatedEvent
 import io.holunda.camunda.taskpool.api.business.dataIdentity
-import io.holunda.camunda.taskpool.api.task.TaskAssignedEvent
-import io.holunda.camunda.taskpool.api.task.TaskCompletedEvent
-import io.holunda.camunda.taskpool.api.task.TaskCreatedEvent
-import io.holunda.camunda.taskpool.api.task.TaskDeletedEvent
+import io.holunda.camunda.taskpool.api.task.TaskAssignedEngineEvent
+import io.holunda.camunda.taskpool.api.task.TaskCompletedEngineEvent
+import io.holunda.camunda.taskpool.api.task.TaskCreatedEngineEvent
+import io.holunda.camunda.taskpool.api.task.TaskDeletedEngineEvent
 import io.holunda.camunda.taskpool.view.*
 import io.holunda.camunda.taskpool.view.query.*
 import io.holunda.camunda.taskpool.view.simple.createPredicates
@@ -42,7 +42,6 @@ open class TaskPoolService(
    * Configure to run a event replay to fill the simple task view with events on start-up.
    */
   open fun restore() {
-    logger.info { "VIEW-SIMPLE-001: Configuring simple view." }
     this.configuration
       .eventProcessorByProcessingGroup(TaskPoolService.PROCESSING_GROUP, TrackingEventProcessor::class.java)
       .ifPresent {
@@ -122,7 +121,7 @@ open class TaskPoolService(
   }
 
   @EventHandler
-  open fun on(event: TaskCreatedEvent) {
+  open fun on(event: TaskCreatedEngineEvent) {
     logger.debug { "Task created $event received" }
     val task = task(event)
     tasks[task.id] = task
@@ -130,21 +129,21 @@ open class TaskPoolService(
   }
 
   @EventHandler
-  open fun on(event: TaskAssignedEvent) {
+  open fun on(event: TaskAssignedEngineEvent) {
     logger.debug { "Task assigned $event received" }
     tasks[event.id] = task(event)
     updateTaskForUserQuery(event.id)
   }
 
   @EventHandler
-  open fun on(event: TaskCompletedEvent) {
+  open fun on(event: TaskCompletedEngineEvent) {
     logger.debug { "Task completed $event received" }
     tasks.remove(event.id)
     updateTaskForUserQuery(event.id)
   }
 
   @EventHandler
-  open fun on(event: TaskDeletedEvent) {
+  open fun on(event: TaskDeletedEngineEvent) {
     logger.debug { "Task deleted $event received" }
     tasks.remove(event.id)
     updateTaskForUserQuery(event.id)

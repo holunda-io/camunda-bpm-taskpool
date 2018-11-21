@@ -28,7 +28,7 @@ data class Task(
   val dueDate: Date? = null
 ) : TaskIdentity, WithPayload, WithCorrelations
 
-fun task(event: TaskAssignedEvent) = Task(
+fun task(event: TaskAssignedEngineEvent) = Task(
   id = event.id,
   sourceReference = event.sourceReference,
   dueDate = event.dueDate,
@@ -47,7 +47,7 @@ fun task(event: TaskAssignedEvent) = Task(
   createTime = event.createTime
 )
 
-fun task(event: TaskCreatedEvent) = Task(
+fun task(event: TaskCreatedEngineEvent) = Task(
   id = event.id,
   sourceReference = event.sourceReference,
   dueDate = event.dueDate,

@@ -83,26 +83,26 @@ open class TaskAggregate() {
 
 
   @EventSourcingHandler
-  open fun on(event: TaskCreatedEvent) {
+  open fun on(event: TaskCreatedEngineEvent) {
     this.id = event.id
     this.assignee = event.assignee
     logger.debug { "Created task $event" }
   }
 
   @EventSourcingHandler
-  open fun on(event: TaskAssignedEvent) {
+  open fun on(event: TaskAssignedEngineEvent) {
     this.assignee = event.assignee
     logger.debug { "Assigned task $this.id to $assignee" }
   }
 
   @EventSourcingHandler
-  open fun on(event: TaskCompletedEvent) {
+  open fun on(event: TaskCompletedEngineEvent) {
     this.completed = true
     logger.debug { "Completed task $this.id by $assignee" }
   }
 
   @EventSourcingHandler
-  open fun on(event: TaskDeletedEvent) {
+  open fun on(event: TaskDeletedEngineEvent) {
     this.deleted = true
     logger.debug { "Deleted task $this.id with reason ${event.deleteReason}" }
   }
@@ -110,7 +110,7 @@ open class TaskAggregate() {
 
 internal fun assign(command: AssignTaskCommand) =
   AggregateLifecycle.apply(
-    TaskAssignedEvent(
+    TaskAssignedEngineEvent(
       id = command.id,
       taskDefinitionKey = command.taskDefinitionKey,
       sourceReference = command.sourceReference,
@@ -131,7 +131,7 @@ internal fun assign(command: AssignTaskCommand) =
 
 internal fun create(command: CreateTaskCommand) =
   AggregateLifecycle.apply(
-    TaskCreatedEvent(
+    TaskCreatedEngineEvent(
       id = command.id,
       taskDefinitionKey = command.taskDefinitionKey,
       sourceReference = command.sourceReference,
@@ -152,7 +152,7 @@ internal fun create(command: CreateTaskCommand) =
 
 internal fun markToBeCompleted(command: CompleteTaskCommand) =
   AggregateLifecycle.apply(
-    TaskCompletedEvent(
+    TaskCompletedEngineEvent(
       id = command.id,
       taskDefinitionKey = command.taskDefinitionKey,
       sourceReference = command.sourceReference,
@@ -173,7 +173,7 @@ internal fun markToBeCompleted(command: CompleteTaskCommand) =
 
 internal fun delete(command: DeleteTaskCommand) =
   AggregateLifecycle.apply(
-    TaskDeletedEvent(
+    TaskDeletedEngineEvent(
       id = command.id,
       taskDefinitionKey = command.taskDefinitionKey,
       sourceReference = command.sourceReference,

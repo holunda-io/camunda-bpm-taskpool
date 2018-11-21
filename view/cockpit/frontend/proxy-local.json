@@ -1,0 +1,18 @@
+{
+  "/taskpool-cockpit/rest": {
+    "target": "http://localhost:8081",
+    "secure": false,
+    "logLevel": "debug",
+    "pathRewrite": {
+      "^/taskpool-cockpit/rest": "/taskpool-cockpit/rest"
+    }
+  },
+  "/taskpool-cockpit": {
+    "target": "http://localhost:4200",
+    "secure": false,
+    "logLevel": "debug",
+    "pathRewrite": {
+      "^/taskpool-cockpit": "/"
+    }
+  }
+}

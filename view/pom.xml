@@ -15,6 +15,7 @@
   <modules>
     <module>view-api</module>
     <module>simple</module>
+    <module>cockpit</module>
   </modules>
   
   <dependencyManagement>  
@@ -36,4 +37,5 @@
       </dependency>      
     </dependencies>
   </dependencyManagement>
- </project>
+
+</project>
