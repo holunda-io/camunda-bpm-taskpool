@@ -8,10 +8,13 @@ import org.camunda.bpm.engine.variable.VariableMap
 import org.camunda.bpm.engine.variable.Variables
 import java.util.*
 
-sealed class TaskEvent : TaskIdentity, WithPayload, WithCorrelations
+abstract class TaskEvent(val eventType: String) : TaskIdentity
+
+sealed class TaskEngineEvent(eventType: String) : TaskEvent(eventType), WithPayload, WithCorrelations
+sealed class TaskInteractionEvent(eventType: String) : TaskEvent(eventType)
 
 @Revision("1")
-data class TaskCreatedEvent(
+data class TaskCreatedEngineEvent(
   override val id: String,
   override val sourceReference: SourceReference,
   override val taskDefinitionKey: String,
@@ -29,10 +32,10 @@ data class TaskCreatedEvent(
   val assignee: String? = null,
   val owner: String? = null,
   val dueDate: Date? = null
-) : TaskEvent()
+) : TaskEngineEvent("create")
 
 @Revision("1")
-data class TaskAssignedEvent(
+data class TaskAssignedEngineEvent(
   override val id: String,
   override val sourceReference: SourceReference,
   override val taskDefinitionKey: String,
@@ -50,10 +53,10 @@ data class TaskAssignedEvent(
   val assignee: String? = null,
   val owner: String? = null,
   val dueDate: Date? = null
-) : TaskEvent()
+) : TaskEngineEvent("assign")
 
 @Revision("1")
-data class TaskCompletedEvent(
+data class TaskCompletedEngineEvent(
   override val id: String,
   override val sourceReference: SourceReference,
   override val taskDefinitionKey: String,
@@ -72,10 +75,10 @@ data class TaskCompletedEvent(
   val assignee: String? = null,
   val owner: String? = null,
   val dueDate: Date? = null
-) : TaskEvent()
+) : TaskEngineEvent("complete")
 
 @Revision("1")
-data class TaskDeletedEvent(
+data class TaskDeletedEngineEvent(
   override val id: String,
   override val sourceReference: SourceReference,
   override val taskDefinitionKey: String,
@@ -95,7 +98,8 @@ data class TaskDeletedEvent(
   val owner: String? = null,
   val dueDate: Date? = null,
   val deleteReason: String?
-) : TaskEvent()
+) : TaskEngineEvent("delete")
+
 
 @Revision("1")
 data class TaskClaimedEvent(
@@ -103,14 +107,14 @@ data class TaskClaimedEvent(
   override val sourceReference: SourceReference,
   override val taskDefinitionKey: String,
   val assignee: String
-) :TaskIdentity
+) : TaskInteractionEvent("claim")
 
 @Revision("1")
 data class TaskUnclaimedEvent(
   override val id: String,
   override val sourceReference: SourceReference,
   override val taskDefinitionKey: String
-) : TaskIdentity
+) : TaskInteractionEvent("unclaim")
 
 @Revision("1")
 data class TaskToBeCompletedEvent(
@@ -118,4 +122,4 @@ data class TaskToBeCompletedEvent(
   override val sourceReference: SourceReference,
   override val taskDefinitionKey: String,
   val payload: VariableMap = Variables.createVariables()
-) : TaskIdentity
+) : TaskInteractionEvent("mark-complete")

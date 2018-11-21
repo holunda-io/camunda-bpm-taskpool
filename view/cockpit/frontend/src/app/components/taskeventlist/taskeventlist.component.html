@@ -1,0 +1,59 @@
+<div class="row">
+  <div class="col-lg-12">
+    <h1><img src="assets/holunda-io-logo.png" title="Tasks events">Task events</h1>
+    <p>A list of task events in Camunda BPM Taskpool.</p>
+    <p>Total Tasks: {{ taskIds().length }} </p>
+    <button type="button" name="refresh" class="btn btn-outline-secondary btn-sm" (click)="reload()" title="Refresh">
+        <i class="fa fa-refresh"></i>
+    </button>
+  </div>
+</div>
+<div class="row">
+  <div class="col-lg-12">
+    <div class="list-group">
+      <div class="list-group-item" *ngFor="let taskId of taskIds() index as k">
+
+        <div>
+            <span>Task Id:</span><span>{{ taskId }}</span>
+        </div>
+
+        <div>
+            <button type="button" name="show" class="btn btn-outline-secondary btn-sm" (click)="toggleCollapse(taskId)" title="Show Events">
+                <i class="fa fa-search  "></i>
+              </button>
+
+          <button *ngIf="deletable(taskId)" type="button" name="delete" class="btn btn-outline-secondary btn-sm" (click)="deleteTask(taskId)" title="Delete">
+            <i class="fa fa-trash"></i>
+          </button>
+        </div>
+
+        <div *ngFor="let event of taskEvent(taskId) index as e" [ngClass]="collapseClass(event)">
+          <div class="list-group">
+            <div class="list-group-item" [ngClass]="class(event)">
+              <div class="row">
+                  <div class="col-lg-2">{{ event.eventType }}</div>
+                  <div class="col-lg-2">{{ event.created | date: 'yyyy-MM-dd HH:mm:ss.SSS' }}</div>
+                  <div class="col-lg-8 data-block">
+                    <ul class="list-group list-group-flush fieldlist">
+                      <li class="list-group-item" *ngFor="let payloadEntry of toFieldSet(event.task) index as j">
+                        <div class="row">
+                          <div class="col-lg-3">{{ payloadEntry.name | fieldName }}:</div>
+                          <div class="col-lg-9">{{ payloadEntry.value }}</div>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+      <div class="list-group-item" *ngIf="taskIds().length === 0">
+        <span>No events.</span>
+      </div>
+    </div>
+  </div>
+</div>
