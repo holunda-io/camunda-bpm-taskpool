@@ -54,7 +54,7 @@ class TaskAggregateTest {
           correlations = newCorrelations().addCorrelation("Request", "business123")
         ))
       .expectEvents(
-        TaskCreatedEvent(
+        TaskCreatedEngineEvent(
           id = "4711",
           name = "Foo",
           createTime = now,
@@ -77,7 +77,7 @@ class TaskAggregateTest {
   fun `should complete task`() {
     fixture
       .given(
-        TaskCreatedEvent(
+        TaskCreatedEngineEvent(
           id = "4711",
           name = "Foo",
           createTime = now,
@@ -116,7 +116,7 @@ class TaskAggregateTest {
           correlations = newCorrelations().addCorrelation("Request", "business456")
         ))
       .expectEvents(
-        TaskCompletedEvent(
+        TaskCompletedEngineEvent(
           id = "4711",
           name = "Foo",
           createTime = now,
@@ -142,7 +142,7 @@ class TaskAggregateTest {
   fun `should assign task`() {
     fixture
       .given(
-        TaskCreatedEvent(
+        TaskCreatedEngineEvent(
           id = "4711",
           name = "Foo",
           taskDefinitionKey = "foo",
@@ -171,7 +171,7 @@ class TaskAggregateTest {
           correlations = newCorrelations().addCorrelation("Request", "business456")
         ))
       .expectEvents(
-        TaskAssignedEvent(
+        TaskAssignedEngineEvent(
           id = "4711",
           name = "Foo",
           createTime = now,
@@ -198,14 +198,14 @@ class TaskAggregateTest {
   fun `should not re-assign task`() {
     fixture
       .given(
-        TaskCreatedEvent(
+        TaskCreatedEngineEvent(
           id = "4711",
           name = "Foo",
           taskDefinitionKey = "foo",
           formKey = "some",
           sourceReference = processReference
         ),
-        TaskAssignedEvent(
+        TaskAssignedEngineEvent(
           id = "4711",
           name = "Foo",
           taskDefinitionKey = "foo",
@@ -232,7 +232,7 @@ class TaskAggregateTest {
   fun `should not complete deleted task`() {
     fixture
       .given(
-        TaskCreatedEvent(
+        TaskCreatedEngineEvent(
           id = "4711",
           name = "Foo",
           createTime = now,
@@ -249,7 +249,7 @@ class TaskAggregateTest {
           payload = Variables.createVariables().putValueTyped("key", stringValue("value")),
           correlations = newCorrelations().addCorrelation("Request", "business123")
         ),
-        TaskDeletedEvent(
+        TaskDeletedEngineEvent(
           id = "4711",
           name = "Foo",
           createTime = now,
@@ -297,7 +297,7 @@ class TaskAggregateTest {
   fun `should not delete deleted task`() {
     fixture
       .given(
-        TaskCreatedEvent(
+        TaskCreatedEngineEvent(
           id = "4711",
           name = "Foo",
           createTime = now,
@@ -314,7 +314,7 @@ class TaskAggregateTest {
           payload = Variables.createVariables().putValueTyped("key", stringValue("value")),
           correlations = newCorrelations().addCorrelation("Request", "business123")
         ),
-        TaskDeletedEvent(
+        TaskDeletedEngineEvent(
           id = "4711",
           name = "Foo",
           createTime = now,
@@ -348,7 +348,7 @@ class TaskAggregateTest {
   fun `should delete task`() {
     fixture
       .given(
-        TaskCreatedEvent(
+        TaskCreatedEngineEvent(
           id = "4711",
           name = "Foo",
           createTime = now,
@@ -388,7 +388,7 @@ class TaskAggregateTest {
           deleteReason = "Deleted, because not needed"
         ))
       .expectEvents(
-        TaskDeletedEvent(
+        TaskDeletedEngineEvent(
           id = "4711",
           name = "Foo",
           createTime = now,
@@ -415,7 +415,7 @@ class TaskAggregateTest {
   fun `should claim unassigned task`() {
     fixture
       .given(
-        TaskCreatedEvent(
+        TaskCreatedEngineEvent(
           id = "4711",
           name = "Foo",
           createTime = now,
@@ -453,7 +453,7 @@ class TaskAggregateTest {
   fun `should claim assigned task`() {
     fixture
       .given(
-        TaskCreatedEvent(
+        TaskCreatedEngineEvent(
           id = "4711",
           name = "Foo",
           createTime = now,
@@ -496,7 +496,7 @@ class TaskAggregateTest {
   fun `should unclaim assigned task`() {
     fixture
       .given(
-        TaskCreatedEvent(
+        TaskCreatedEngineEvent(
           id = "4711",
           name = "Foo",
           createTime = now,
@@ -532,7 +532,7 @@ class TaskAggregateTest {
   fun `should unclaim unassigned task`() {
     fixture
       .given(
-        TaskCreatedEvent(
+        TaskCreatedEngineEvent(
           id = "4711",
           name = "Foo",
           createTime = now,
@@ -565,7 +565,7 @@ class TaskAggregateTest {
 
     fixture
       .given(
-        TaskCreatedEvent(
+        TaskCreatedEngineEvent(
           id = "4711",
           name = "Foo",
           createTime = now,

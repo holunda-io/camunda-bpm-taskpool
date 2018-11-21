@@ -8,7 +8,7 @@ import org.camunda.bpm.engine.variable.VariableMap
 import org.camunda.bpm.engine.variable.Variables
 import java.util.*
 
-abstract class TaskEvent(val eventType: String) : TaskIdentity
+sealed class TaskEvent(val eventType: String) : TaskIdentity
 
 sealed class TaskEngineEvent(eventType: String) : TaskEvent(eventType), WithPayload, WithCorrelations
 sealed class TaskInteractionEvent(eventType: String) : TaskEvent(eventType)
