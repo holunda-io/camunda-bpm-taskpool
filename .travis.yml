@@ -11,6 +11,10 @@ cache:
 before_install:
   - chmod +x mvnw
 #
+# Skip installation
+#
+install: true
+#
 # Verify
 #
 script: "./mvnw --settings .travis/settings.xml clean verify"
