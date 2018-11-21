@@ -664,7 +664,7 @@
         <plugin>
           <groupId>org.jetbrains.dokka</groupId>
           <artifactId>dokka-maven-plugin</artifactId>
-          <version>${dokka.version}</version>
+          <version>0.9.13</version>
           <executions>
             <execution>
               <phase>test</phase>
