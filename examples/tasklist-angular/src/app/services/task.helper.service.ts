@@ -1,5 +1,5 @@
 import { Injectable, OnInit, OnDestroy } from '@angular/core';
-import { TaskService, TaskWithDataEntries } from 'tasklist';
+import { TaskService, TaskWithDataEntries, Task } from 'tasklist';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { HttpResponse } from '@angular/common/http';
 import { FilterService, Field } from './filter.service';
@@ -25,6 +25,32 @@ export class TaskHelperService implements OnDestroy {
 
   get tasks() {
     return this.tasksSubject.asObservable();
+  }
+
+  claim(task: Task): void {
+    console.log('Claiming task', task.id);
+    this.taskService.claim(task.id).subscribe(
+      (response) => {
+        // claim sucessfull
+        this.reload();
+      },
+      (error) =>  {
+        console.log('Error claiming task', error);
+      }
+    );
+  }
+
+  unclaim(task: Task): void {
+    console.log('Un-claiming task', task.id);
+    this.taskService.unclaim(task.id).subscribe(
+      (response) => {
+        // claim sucessfull
+        this.reload();
+      },
+      (error) =>  {
+        console.log('Error unclaiming task', error);
+      }
+    );
   }
 
   reload(): void {

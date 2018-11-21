@@ -5,7 +5,7 @@
   <parent>
     <groupId>io.holunda.taskpool</groupId>
     <artifactId>camunda-bpm-taskpool</artifactId>
-    <version>1.0.6-SNAPSHOT</version>
+    <version>1.1.0</version>
   </parent>
 
   <artifactId>camunda-bpm-taskpool-examples-root</artifactId>
@@ -22,6 +22,7 @@
     <module>tasklist-api</module>
     <module>tasklist-backend</module>
     <module>process-application</module>
+    <module>taskpool-application</module>
   </modules>
 
   <profiles>

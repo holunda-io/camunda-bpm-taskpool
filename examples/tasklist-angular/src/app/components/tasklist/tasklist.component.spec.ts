@@ -1,13 +1,16 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { TaskHelperService } from 'app/services/task.helper.service';
+
 import 'rxjs/add/observable/of';
 import { TasklistComponent } from './tasklist.component';
 import { Observable } from 'rxjs-compat';
-import { NgbPagination, NgbTabset, NgbRadioGroup } from '@ng-bootstrap/ng-bootstrap';
+import { NgbPagination, NgbRadioGroup } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule } from '@angular/forms';
+
+import { TaskHelperService } from 'app/services/task.helper.service';
 import { FieldNamePipe } from 'app/services/field-name.pipe';
 import { FilterService } from 'app/services/filter.service';
-import { SortableColumnComponent } from '../sorter/sortable-column.component';
+import { ProfileHelperService } from 'app/services/profile.helper.service';
+import { SortableColumnComponent } from 'app/components/sorter/sortable-column.component';
 
 describe('Component: TasklistComponent', () => {
 
@@ -29,6 +32,7 @@ describe('Component: TasklistComponent', () => {
       ],
       providers: [
         FilterService,
+        { provide: ProfileHelperService, useValue: { userProfile: Observable.of([]) }},
         { provide: TaskHelperService, useValue: { tasks: Observable.of([]) } },
       ],
     }).compileComponents().then(() => {

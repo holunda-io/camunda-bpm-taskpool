@@ -1,5 +1,8 @@
 # Camunda BPM Taskpool
 [![Build Status](https://travis-ci.org/holunda-io/camunda-bpm-taskpool.svg?branch=master)](https://travis-ci.org/holunda-io/camunda-bpm-taskpool) 
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.holunda.taskpool/camunda-bpm-taskpool/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.holunda.taskpool/camunda-bpm-taskpool)
+[![codecov](https://codecov.io/gh/holunda-io/camunda-bpm-taskpool/branch/master/graph/badge.svg)](https://codecov.io/gh/holunda-io/camunda-bpm-taskpool)
+
 
 A component for pooling Camunda BPM user tasks with business data for performance queries.
 
@@ -26,24 +29,35 @@ of queries without any performance impact to the process engine itself.
 
 The goal of this project is to provide such component as a library, to be used in the integration layer between the Camunda BPM engine and the task list application. 
 
-### Features
+## Features
 
 - provides a list of tasks in the system
 - reacts on all task lifecycle events 
 - provides configurable caching of tasks
 - creates of read-optimized projections including task-, process- and business data
 
-### Solution Idea
+## Solution Idea
 
 
 ![Architectural whitebox](docs/architecture-collector.png "Architecture Collector")
 
+## Compontents
 
-### Working Example
+* Camunda Engine Eventing Plugin
+* Camunda Engine Interaction Client
+* [Taskpool Collector](taskpool/taskpool-collector)
+* Taskpool Sender
+* Taskpool Core
+* Datapool Sender
+* Datapool Core
+* Simple View
+* Tasklist (example)
+
+## Working Example
 
 See our [Sample Process Application](examples) (including a simple tasklist implementation for demonstration purposes)
 
-### Further outlook
+## Further outlook
 
 This library serves as a foundation of several follow-up projects and tools:
 
@@ -53,5 +67,9 @@ This library serves as a foundation of several follow-up projects and tools:
 
 - Data enrichment: all use cases in which the data is not stored in the process result in a cascade of queries executed after the task fetch. The task itself has only the information of the `executionId`, so you have to query the `RuntimeService` for the execution, load some variables from it and query external systems for further values. Another approach is presented in the post from Jan Galinski  (https://blog.holisticon.de/2017/08/prozess-und-business-daten-hand-in-hand-mit-camunda-und-jpa/), but still results in a query on the task fetch. In contrast to that, the usage of the `camunda-bpm-taskpool` with a data enrichment plugin mechanism (allowing to plug-in some data enricher on task creation) would allow for caching the additional business data along with the task information, instead of querying it during task fetch.
 
+
+## Contribution
+
+If you want to contribute to this project, feel free to do so. Start with [contributing guide](/.github/CONTRIBUTING.md).
 
 

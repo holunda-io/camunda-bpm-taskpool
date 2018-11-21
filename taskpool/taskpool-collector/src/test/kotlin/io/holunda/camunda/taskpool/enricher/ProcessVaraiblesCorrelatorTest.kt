@@ -18,10 +18,9 @@ class ProcessVaraiblesCorrelatorTest {
 
 
   @Test
-  fun testCorrelate() {
+  fun `should correlate on task level`() {
     val correlator = ProcessVariablesCorrelator(
       ProcessVariableCorrelation("process_key", mapOf(
-
         "task1" to mapOf(
           "business_var2" to "MyCorrelationId",
           "business_var3" to "MyOtherCorrelationId",
@@ -33,6 +32,24 @@ class ProcessVaraiblesCorrelatorTest {
     assertThat(correlator.correlateVariables("process_key", "task1", variables)["MyCorrelationId"]).isEqualTo("2")
     assertThat(correlator.correlateVariables("process_key", "task1", variables)["MyOtherCorrelationId"]).isEqualTo("3")
     assertThat(correlator.correlateVariables("process_key", "task1", variables).containsKey("Will be empty")).isFalse()
-
   }
+
+  @Test
+  fun `should correlate on process level (global)`() {
+    val correlator = ProcessVariablesCorrelator(
+      ProcessVariableCorrelation("process_key",
+        emptyMap(),
+        mapOf(
+          "business_var2" to "MyCorrelationId",
+          "business_var3" to "MyOtherCorrelationId",
+          "business_var47" to "Will be empty"
+        )
+      )
+    )
+
+    assertThat(correlator.correlateVariables("process_key", "task56", variables)["MyCorrelationId"]).isEqualTo("2")
+    assertThat(correlator.correlateVariables("process_key", "task67", variables)["MyOtherCorrelationId"]).isEqualTo("3")
+    assertThat(correlator.correlateVariables("process_key", "task121", variables).containsKey("Will be empty")).isFalse()
+  }
+
 }

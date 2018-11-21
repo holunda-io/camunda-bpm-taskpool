@@ -1,7 +1,9 @@
-import {Component} from '@angular/core';
-import {TaskHelperService} from 'app/services/task.helper.service';
-import {TaskWithDataEntries, DataEntry, Task} from 'tasklist';
-import {FilterService} from 'app/services/filter.service';
+import { Component } from '@angular/core';
+import { UserProfile } from 'tasklist/model/userProfile';
+import { TaskWithDataEntries, Task } from 'tasklist';
+import { TaskHelperService } from 'app/services/task.helper.service';
+import { FilterService } from 'app/services/filter.service';
+import { ProfileHelperService } from 'app/services/profile.helper.service';
 
 @Component({
   selector: 'app-tasklist',
@@ -11,15 +13,32 @@ import {FilterService} from 'app/services/filter.service';
 export class TasklistComponent {
 
   tasks: Array<TaskWithDataEntries> = [];
+  userProfile: UserProfile;
   itemsPerPage: number;
   totalItems: any;
   page: number;
   currentDataTab = 'description';
 
-  constructor(private taskHelper: TaskHelperService, private filterService: FilterService) {
+  constructor(
+    private taskHelper: TaskHelperService,
+    private filterService: FilterService,
+    private profileHelper: ProfileHelperService
+  ) {
     this.subscribe();
     this.page = this.filterService.page + 1;
     this.itemsPerPage = this.filterService.itemsPerPage;
+  }
+
+  claim($event, task: Task) {
+    this.taskHelper.claim(task);
+  }
+
+  unclaim($event, task: Task) {
+    this.taskHelper.unclaim(task);
+  }
+
+  reload() {
+    this.taskHelper.reload();
   }
 
 
@@ -46,5 +65,8 @@ export class TasklistComponent {
     this.filterService.count.subscribe((count: number) => {
       this.totalItems = count;
     });
+    this.profileHelper.userProfile.subscribe((profile => {
+      this.userProfile = profile;
+    }));
   }
 }

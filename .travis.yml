@@ -5,14 +5,11 @@ jdk:
 cache:
   directories:
   - $HOME/.m2
-
 #
 # Load GPG secrets and make mvnw executable
 #
 before_install:
   - chmod +x mvnw
-  - echo $GPG_SECRET_KEYS | base64 --decode | $GPG_EXECUTABLE --import
-  - echo $GPG_OWNERTRUST | base64 --decode | $GPG_EXECUTABLE --import-ownertrust
 #
 # Verify
 #
@@ -29,7 +26,10 @@ after_success:
 deploy:
   skip_cleanup: true
   provider: script
-  script: "./mvnw --settings .travis/settings.xml deploy -DskipTests=true -B -U -V -Prelease"
+  script:
+    - echo $GPG_SECRET_KEYS | base64 --decode | $GPG_EXECUTABLE --import
+    - echo $GPG_OWNERTRUST | base64 --decode | $GPG_EXECUTABLE --import-ownertrust
+    - ./mvnw --settings .travis/settings.xml deploy -DskipTests=true -B -U -V -Prelease
   on:
     branch: master
     tags: true

@@ -14,17 +14,17 @@ import java.util.concurrent.TimeUnit
 
 
 object Web {
-  const val BASE_PATH = ""
+  const val BASE_PATH = "tasklist"
 
-  const val CSS = "/**/*.css"
-  const val JS = "/**/*.js"
-  const val FONT2 = "/**/*.woff2"
-  const val FONT = "/**/*.woff"
-  const val TTF = "/**/*.ttf"
-  const val PNG = "/**/*.png"
-  const val JPG = "/**/*.jpg"
-  const val ICO = "/**/*.ico"
-  const val JSON = "/**/*.json"
+  const val CSS = "$BASE_PATH/**/*.css"
+  const val JS = "$BASE_PATH/**/*.js"
+  const val FONT2 = "$BASE_PATH/**/*.woff2"
+  const val FONT = "$BASE_PATH/**/*.woff"
+  const val TTF = "$BASE_PATH/**/*.ttf"
+  const val PNG = "$BASE_PATH/**/*.png"
+  const val JPG = "$BASE_PATH/**/*.jpg"
+  const val ICO = "$BASE_PATH/**/*.ico"
+  const val JSON = "$BASE_PATH/**/*.json"
 
   val STATIC_RESOURCES_LONG_CACHE = arrayOf(CSS, JS, FONT2, FONT, TTF)
   val STATIC_RESOURCES_SHORT_CACHE = arrayOf(PNG, JPG, ICO, JSON)
@@ -32,14 +32,14 @@ object Web {
 
 
 @Configuration
-open class PlatformSPAConfiguration : WebMvcConfigurer {
+open class TasklistSPAConfiguration : WebMvcConfigurer {
 
   override fun addResourceHandlers(registry: ResourceHandlerRegistry) {
     /**
      * Deliver the platform SPA index for all frontend states.
      */
     registry
-      .addResourceHandler("${Web.BASE_PATH}/tasklist/")
+      .addResourceHandler("${Web.BASE_PATH}/")
       .addResourceLocations("classpath:/static/tasklist-angular/index.html")
       .setCacheControl(CacheControl.maxAge(1, TimeUnit.DAYS))
       .resourceChain(true)
