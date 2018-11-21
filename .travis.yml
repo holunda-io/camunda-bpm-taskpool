@@ -18,21 +18,21 @@ script: "./mvnw --settings .travis/settings.xml clean verify"
 # Coveralls
 #
 after_success:
-- bash <(curl -s https://codecov.io/bash)
+- bash < (curl -s https://codecov.io/bash)
 
 #
-# Deploy of artifacts is only triggered on release branch by commits with a tag.
+# Deploy of artifacts is only triggered on master branch.
 #
+before_deploy:
+  - echo $GPG_SECRET_KEYS | base64 --decode | $GPG_EXECUTABLE --import
+  - echo $GPG_OWNERTRUST | base64 --decode | $GPG_EXECUTABLE --import-ownertrust
+
 deploy:
   skip_cleanup: true
   provider: script
-  script:
-    - echo $GPG_SECRET_KEYS | base64 --decode | $GPG_EXECUTABLE --import
-    - echo $GPG_OWNERTRUST | base64 --decode | $GPG_EXECUTABLE --import-ownertrust
-    - ./mvnw --settings .travis/settings.xml deploy -DskipTests=true -B -U -V -Prelease
+  script: "./mvnw --settings .travis/settings.xml deploy -DskipTests=true -B -U -V -Prelease"
   on:
     branch: master
-    tags: true
 
 #
 # Notify slack channel
