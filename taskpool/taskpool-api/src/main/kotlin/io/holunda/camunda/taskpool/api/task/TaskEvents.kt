@@ -31,7 +31,8 @@ data class TaskCreatedEngineEvent(
   val candidateGroups: List<String> = listOf(),
   val assignee: String? = null,
   val owner: String? = null,
-  val dueDate: Date? = null
+  val dueDate: Date? = null,
+  val followUpDate: Date? = null
 ) : TaskEngineEvent("create")
 
 @Revision("1")
@@ -52,7 +53,8 @@ data class TaskAssignedEngineEvent(
   val candidateGroups: List<String> = listOf(),
   val assignee: String? = null,
   val owner: String? = null,
-  val dueDate: Date? = null
+  val dueDate: Date? = null,
+  val followUpDate: Date? = null
 ) : TaskEngineEvent("assign")
 
 @Revision("1")
@@ -74,7 +76,8 @@ data class TaskCompletedEngineEvent(
   val candidateGroups: List<String> = listOf(),
   val assignee: String? = null,
   val owner: String? = null,
-  val dueDate: Date? = null
+  val dueDate: Date? = null,
+  val followUpDate: Date? = null
 ) : TaskEngineEvent("complete")
 
 @Revision("1")
@@ -97,8 +100,24 @@ data class TaskDeletedEngineEvent(
   val assignee: String? = null,
   val owner: String? = null,
   val dueDate: Date? = null,
+  val followUpDate: Date? = null,
   val deleteReason: String?
 ) : TaskEngineEvent("delete")
+
+@Revision("1")
+data class TaskAttributeUpdatedEngineEvent(
+  override val id: String,
+  override val sourceReference: SourceReference,
+  override val taskDefinitionKey: String,
+
+  val name: String? = null,
+  val description: String? = null,
+  val priority: Int? = 0,
+  val assignee: String? = null,
+  val owner: String? = null,
+  val dueDate: Date? = null,
+  val followUpDate: Date? = null
+) : TaskEvent("attribute-update")
 
 
 @Revision("1")
@@ -123,3 +142,18 @@ data class TaskToBeCompletedEvent(
   override val taskDefinitionKey: String,
   val payload: VariableMap = Variables.createVariables()
 ) : TaskInteractionEvent("mark-complete")
+
+@Revision("1")
+data class TaskDeferredEvent(
+  override val id: String,
+  override val sourceReference: SourceReference,
+  override val taskDefinitionKey: String,
+  val followUpDate: Date
+) : TaskInteractionEvent("defer")
+
+@Revision("1")
+data class TaskUndeferredEvent(
+  override val id: String,
+  override val sourceReference: SourceReference,
+  override val taskDefinitionKey: String
+) : TaskInteractionEvent("undefer")

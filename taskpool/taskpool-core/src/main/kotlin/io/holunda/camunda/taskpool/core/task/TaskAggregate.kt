@@ -36,7 +36,7 @@ open class TaskAggregate() {
   @CommandHandler
   open fun handle(command: CompleteTaskCommand) {
     if (!deleted && !completed) {
-      markToBeCompleted(command)
+      complete(command)
     }
   }
 
@@ -44,6 +44,14 @@ open class TaskAggregate() {
   open fun handle(command: DeleteTaskCommand) {
     if (!deleted && !completed) {
       delete(command)
+    }
+  }
+
+  @CommandHandler
+  open fun handle(command: AttributeUpdateTaskCommand) {
+    if (!deleted && !completed) {
+      logger.debug { "Received updateAttributes intent for task $this.id of type ${command.javaClass}" }
+      updateAttributes(command)
     }
   }
 
@@ -78,6 +86,20 @@ open class TaskAggregate() {
       markToBeCompleted(command)
     } else {
       // FIXME: react if task is marked as deleted or completed
+    }
+  }
+
+  @CommandHandler
+  open fun handle(command: DeferInteractionTaskCommand) {
+    if (!deleted && !completed) {
+      defer(command)
+    }
+  }
+
+  @CommandHandler
+  open fun handle(command: UndeferInteractionTaskCommand) {
+    if (!deleted && !completed) {
+      undefer(command)
     }
   }
 
@@ -126,7 +148,8 @@ internal fun assign(command: AssignTaskCommand) =
       assignee = command.assignee,
       payload = command.payload,
       correlations = command.correlations,
-      businessKey = command.businessKey
+      businessKey = command.businessKey,
+      followUpDate = command.followUpDate
     ))
 
 internal fun create(command: CreateTaskCommand) =
@@ -147,10 +170,11 @@ internal fun create(command: CreateTaskCommand) =
       assignee = command.assignee,
       payload = command.payload,
       correlations = command.correlations,
-      businessKey = command.businessKey
+      businessKey = command.businessKey,
+      followUpDate = command.followUpDate
     ))
 
-internal fun markToBeCompleted(command: CompleteTaskCommand) =
+internal fun complete(command: CompleteTaskCommand) =
   AggregateLifecycle.apply(
     TaskCompletedEngineEvent(
       id = command.id,
@@ -168,7 +192,8 @@ internal fun markToBeCompleted(command: CompleteTaskCommand) =
       assignee = command.assignee,
       payload = command.payload,
       correlations = command.correlations,
-      businessKey = command.businessKey
+      businessKey = command.businessKey,
+      followUpDate = command.followUpDate
     ))
 
 internal fun delete(command: DeleteTaskCommand) =
@@ -190,8 +215,25 @@ internal fun delete(command: DeleteTaskCommand) =
       assignee = command.assignee,
       payload = command.payload,
       correlations = command.correlations,
-      businessKey = command.businessKey
+      businessKey = command.businessKey,
+      followUpDate = command.followUpDate
     ))
+
+internal fun updateAttributes(command: AttributeUpdateTaskCommand) {
+  AggregateLifecycle.apply(
+    TaskAttributeUpdatedEngineEvent(
+      id = command.id,
+      taskDefinitionKey = command.taskDefinitionKey,
+      sourceReference = command.sourceReference,
+      name = command.name,
+      description = command.description,
+      priority = command.priority,
+      owner = command.owner,
+      dueDate = command.dueDate,
+      followUpDate = command.followUpDate,
+      assignee = command.assignee
+    ))
+}
 
 internal fun claim(command: InteractionTaskCommand, assignee: String) =
   AggregateLifecycle.apply(
@@ -219,5 +261,24 @@ internal fun markToBeCompleted(command: CompleteInteractionTaskCommand) =
       taskDefinitionKey = command.taskDefinitionKey,
       sourceReference = command.sourceReference,
       payload = command.payload
+    )
+  )
+
+internal fun defer(command: DeferInteractionTaskCommand) =
+  AggregateLifecycle.apply(
+    TaskDeferredEvent(
+      id = command.id,
+      taskDefinitionKey = command.taskDefinitionKey,
+      sourceReference = command.sourceReference,
+      followUpDate = command.followUpDate
+    )
+  )
+
+internal fun undefer(command: UndeferInteractionTaskCommand) =
+  AggregateLifecycle.apply(
+    TaskUndeferredEvent(
+      id = command.id,
+      taskDefinitionKey = command.taskDefinitionKey,
+      sourceReference = command.sourceReference
     )
   )

@@ -25,7 +25,8 @@ data class Task(
   val candidateGroups: List<String> = listOf(),
   val assignee: String? = null,
   val owner: String? = null,
-  val dueDate: Date? = null
+  val dueDate: Date? = null,
+  val followUpDate: Date? = null
 ) : TaskIdentity, WithPayload, WithCorrelations
 
 fun task(event: TaskAssignedEngineEvent) = Task(
@@ -44,7 +45,8 @@ fun task(event: TaskAssignedEngineEvent) = Task(
   name = event.name,
   owner = event.owner,
   taskDefinitionKey = event.taskDefinitionKey,
-  createTime = event.createTime
+  createTime = event.createTime,
+  followUpDate = event.followUpDate
 )
 
 fun task(event: TaskCreatedEngineEvent) = Task(
@@ -63,5 +65,28 @@ fun task(event: TaskCreatedEngineEvent) = Task(
   name = event.name,
   owner = event.owner,
   taskDefinitionKey = event.taskDefinitionKey,
-  createTime = event.createTime
+  createTime = event.createTime,
+  followUpDate = event.followUpDate
+)
+
+fun task(event: TaskAttributeUpdatedEngineEvent, task: Task) = Task(
+  id = event.id,
+  sourceReference = event.sourceReference,
+  taskDefinitionKey = event.taskDefinitionKey,
+
+  correlations = task.correlations,
+  payload = task.payload,
+  businessKey = task.businessKey,
+  formKey = task.formKey,
+  createTime = task.createTime,
+  candidateGroups = task.candidateGroups,
+  candidateUsers = task.candidateUsers,
+
+  name = event.name,
+  description = event.description,
+  priority = event.priority,
+  assignee = event.assignee,
+  owner = event.owner,
+  followUpDate = event.followUpDate
+
 )

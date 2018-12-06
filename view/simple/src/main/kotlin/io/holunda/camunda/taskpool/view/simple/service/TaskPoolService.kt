@@ -3,10 +3,7 @@ package io.holunda.camunda.taskpool.view.simple.service
 import io.holunda.camunda.taskpool.api.business.DataEntryCreatedEvent
 import io.holunda.camunda.taskpool.api.business.DataEntryUpdatedEvent
 import io.holunda.camunda.taskpool.api.business.dataIdentity
-import io.holunda.camunda.taskpool.api.task.TaskAssignedEngineEvent
-import io.holunda.camunda.taskpool.api.task.TaskCompletedEngineEvent
-import io.holunda.camunda.taskpool.api.task.TaskCreatedEngineEvent
-import io.holunda.camunda.taskpool.api.task.TaskDeletedEngineEvent
+import io.holunda.camunda.taskpool.api.task.*
 import io.holunda.camunda.taskpool.view.*
 import io.holunda.camunda.taskpool.view.query.*
 import io.holunda.camunda.taskpool.view.simple.createPredicates
@@ -147,6 +144,15 @@ open class TaskPoolService(
     logger.debug { "Task deleted $event received" }
     tasks.remove(event.id)
     updateTaskForUserQuery(event.id)
+  }
+
+  @EventHandler
+  open fun on(event: TaskAttributeUpdatedEngineEvent) {
+    logger.debug { "Task attributes updated $event received" }
+    if (tasks.containsKey(event.id)) {
+      tasks[event.id] = task(event, tasks[event.id]!!)
+      updateTaskForUserQuery(event.id)
+    }
   }
 
 

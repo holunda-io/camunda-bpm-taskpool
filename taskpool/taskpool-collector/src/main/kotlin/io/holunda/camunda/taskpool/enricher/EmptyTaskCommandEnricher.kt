@@ -1,9 +1,6 @@
 package io.holunda.camunda.taskpool.enricher
 
-import io.holunda.camunda.taskpool.api.task.AssignTaskCommand
-import io.holunda.camunda.taskpool.api.task.CompleteTaskCommand
-import io.holunda.camunda.taskpool.api.task.CreateTaskCommand
-import io.holunda.camunda.taskpool.api.task.DeleteTaskCommand
+import io.holunda.camunda.taskpool.api.task.*
 import org.springframework.context.event.EventListener
 
 class EmptyCreateCommandEnricher : CreateCommandEnricher {

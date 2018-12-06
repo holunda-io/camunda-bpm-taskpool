@@ -1,9 +1,6 @@
 package io.holunda.camunda.taskpool.api.sender
 
-import io.holunda.camunda.taskpool.api.task.AssignTaskCommand
-import io.holunda.camunda.taskpool.api.task.CompleteTaskCommand
-import io.holunda.camunda.taskpool.api.task.CreateTaskCommand
-import io.holunda.camunda.taskpool.api.task.DeleteTaskCommand
+import io.holunda.camunda.taskpool.api.task.*
 
 /**
  * Sender of task commands.
@@ -29,4 +26,9 @@ interface TaskCommandSender {
    * Sends command for task deletion.
    */
   fun sendTaskCommand(command: DeleteTaskCommand)
+
+  /**
+   * Sends command for task update.
+   */
+  fun sendTaskCommand(command: UpdateTaskCommand)
 }
