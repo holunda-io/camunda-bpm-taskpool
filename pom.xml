@@ -24,6 +24,7 @@
     <camunda.version.ee>7.9.2-ee</camunda.version.ee>
     <camunda-commons.version>1.5.1</camunda-commons.version>
 
+
     <camunda-springboot.version>3.0.0</camunda-springboot.version>
     <kotlin.version>1.3.0</kotlin.version>
     <kotlin-logging.version>1.5.4</kotlin-logging.version>
@@ -885,7 +886,7 @@
           <dependency>
             <groupId>org.camunda.bpm.springboot</groupId>
             <artifactId>camunda-bpm-spring-boot-starter-webapp</artifactId>
-            <version>${camunda-spring-boot.version}</version>
+            <version>${camunda-springboot.version}</version>
           </dependency>
         </dependencies>
       </dependencyManagement>
@@ -913,7 +914,7 @@
           <dependency>
             <groupId>org.camunda.bpm.springboot</groupId>
             <artifactId>camunda-bpm-spring-boot-starter-webapp-ee</artifactId>
-            <version>${camunda-spring-boot.version}</version>
+            <version>${camunda-springboot.version}</version>
           </dependency>
         </dependencies>
       </dependencyManagement>
