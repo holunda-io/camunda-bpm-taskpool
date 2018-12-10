@@ -31,13 +31,19 @@ before_deploy:
   - echo $GPG_SECRET_KEYS | base64 --decode | $GPG_EXECUTABLE --import
   - echo $GPG_OWNERTRUST | base64 --decode | $GPG_EXECUTABLE --import-ownertrust
 
+#
+# Deploy will be executed on all branches matching the condition.
+# This is the branch name must match x.y.z
+# Github handles git tags as "branches" and triggers a build here.
+# The result is a branch named x.y.z having a tag.
+#
 deploy:
   skip_cleanup: true
   provider: script
   script: "./mvnw --settings .travis/settings.xml deploy -T4 -DskipTests=true -B -U -V -Prelease"
   on:
     all_branches: true
-    condition: $TRAVIS_BRANCH =~ ^release\/[[:digit:]]*\.[[:digit:]]*\.[[:digit:]]*$
+    condition: $TRAVIS_BRANCH =~ ^[[:digit:]]*\.[[:digit:]]*\.[[:digit:]]*$
     tags: true
 
 #

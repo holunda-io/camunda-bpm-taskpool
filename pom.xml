@@ -656,7 +656,7 @@
             </gitFlowConfig>
             <useSnapshotInHotfix>true</useSnapshotInHotfix>
             <useSnapshotInRelease>true</useSnapshotInRelease>
-            <keepBranch>true</keepBranch>
+            <keepBranch>false</keepBranch>
             <pushRemote>true</pushRemote>
           </configuration>
         </plugin>
