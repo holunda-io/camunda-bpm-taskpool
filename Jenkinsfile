@@ -31,7 +31,7 @@ node {
         }
 
         stage('Build') {
-            sh "./mvnw clean verify -T4 ${mvnOpts}"
+            sh "./mvnw clean verify ${mvnOpts}"
         }
 
         stage('I-Test') {
