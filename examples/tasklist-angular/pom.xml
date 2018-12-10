@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
@@ -31,110 +32,123 @@
           </filesets>
         </configuration>
       </plugin>
-
-      <plugin>
-        <groupId>io.swagger</groupId>
-        <artifactId>swagger-codegen-maven-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>generate-client-stubs</id>
-            <phase>process-sources</phase>
-            <goals>
-              <goal>generate</goal>
-            </goals>
-            <configuration>
-              <output>src-gen/tasklist</output>
-              <inputSpec>${project.build.directory}/swagger-model/swagger.yml</inputSpec>
-              <language>typescript-angular</language>
-              <apiPackage>api</apiPackage>
-              <modelPackage>model</modelPackage>
-              <!--
-              <configHelp>true</configHelp>
-              -->
-              <configOptions>
-                <ngVersion>6.1</ngVersion>
-              </configOptions>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-
-      <plugin>
-        <groupId>com.github.eirslett</groupId>
-        <artifactId>frontend-maven-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>npm build</id>
-            <phase>compile</phase>
-            <goals>
-              <goal>npm</goal>
-            </goals>
-            <configuration>
-              <arguments>run build</arguments>
-            </configuration>
-          </execution>
-          <execution>
-            <id>npm run lint</id>
-            <phase>compile</phase>
-            <goals>
-              <goal>npm</goal>
-            </goals>
-            <configuration>
-              <arguments>run lint</arguments>
-            </configuration>
-          </execution>
-          <!--Karma test run-->
-          <execution>
-            <id>npm test</id>
-            <phase>test</phase>
-            <goals>
-              <goal>npm</goal>
-            </goals>
-            <configuration>
-              <arguments>run test</arguments>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <artifactId>maven-resources-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>copy-resources</id>
-            <phase>process-classes</phase>
-            <goals>
-              <goal>copy-resources</goal>
-            </goals>
-            <configuration>
-              <resources>
-                <resource>
-                  <directory>${project.basedir}/dist</directory>
-                </resource>
-              </resources>
-              <outputDirectory>${project.build.directory}/classes/static</outputDirectory>
-            </configuration>
-          </execution>
-          <execution>
-            <id>copy-rest-api</id>
-            <phase>generate-sources</phase>
-            <goals>
-              <goal>copy-resources</goal>
-            </goals>
-            <configuration>
-              <outputDirectory>${project.build.directory}/swagger-model</outputDirectory>
-              <resources>
-                <resource>
-                  <directory>../tasklist-api/src/main/resources</directory>
-                </resource>
-              </resources>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
     </plugins>
   </build>
 
   <profiles>
+
+    <profile>
+      <id>node-build</id>
+      <activation>
+        <property>
+          <name>!skipNodeBuild</name>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-codegen-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>generate-client-stubs</id>
+                <phase>process-sources</phase>
+                <goals>
+                  <goal>generate</goal>
+                </goals>
+                <configuration>
+                  <output>src-gen/tasklist</output>
+                  <inputSpec>${project.build.directory}/swagger-model/swagger.yml</inputSpec>
+                  <language>typescript-angular</language>
+                  <apiPackage>api</apiPackage>
+                  <modelPackage>model</modelPackage>
+                  <!--
+                  <configHelp>true</configHelp>
+                  -->
+                  <configOptions>
+                    <ngVersion>6.1</ngVersion>
+                  </configOptions>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+
+          <plugin>
+            <groupId>com.github.eirslett</groupId>
+            <artifactId>frontend-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>npm build</id>
+                <phase>compile</phase>
+                <goals>
+                  <goal>npm</goal>
+                </goals>
+                <configuration>
+                  <arguments>run build</arguments>
+                </configuration>
+              </execution>
+              <execution>
+                <id>npm run lint</id>
+                <phase>compile</phase>
+                <goals>
+                  <goal>npm</goal>
+                </goals>
+                <configuration>
+                  <arguments>run lint</arguments>
+                </configuration>
+              </execution>
+              <!--Karma test run-->
+              <execution>
+                <id>npm test</id>
+                <phase>test</phase>
+                <goals>
+                  <goal>npm</goal>
+                </goals>
+                <configuration>
+                  <arguments>run test</arguments>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <artifactId>maven-resources-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>copy-resources</id>
+                <phase>process-classes</phase>
+                <goals>
+                  <goal>copy-resources</goal>
+                </goals>
+                <configuration>
+                  <resources>
+                    <resource>
+                      <directory>${project.basedir}/dist</directory>
+                    </resource>
+                  </resources>
+                  <outputDirectory>${project.build.directory}/classes/static</outputDirectory>
+                </configuration>
+              </execution>
+              <execution>
+                <id>copy-rest-api</id>
+                <phase>generate-sources</phase>
+                <goals>
+                  <goal>copy-resources</goal>
+                </goals>
+                <configuration>
+                  <outputDirectory>${project.build.directory}/swagger-model</outputDirectory>
+                  <resources>
+                    <resource>
+                      <directory>../tasklist-api/src/main/resources</directory>
+                    </resource>
+                  </resources>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
     <profile>
       <id>node-and-npm</id>
       <activation>
