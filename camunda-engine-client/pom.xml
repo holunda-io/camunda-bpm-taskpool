@@ -4,7 +4,7 @@
   <parent>
     <artifactId>camunda-bpm-taskpool</artifactId>
     <groupId>io.holunda.taskpool</groupId>
-    <version>1.1.1</version>
+    <version>1.1.2</version>
   </parent>
   <artifactId>camunda-bpm-engine-client</artifactId>
 

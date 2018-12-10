@@ -3,7 +3,6 @@ package io.holunda.camunda.taskpool
 import io.holunda.camunda.taskpool.enricher.*
 import mu.KLogging
 import org.camunda.bpm.engine.RuntimeService
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.context.properties.EnableConfigurationProperties

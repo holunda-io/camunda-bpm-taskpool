@@ -73,6 +73,15 @@ class SimpleTaskCommandSender(
     send(command)
   }
 
+  /**
+   * Update task commands are sent without being enriched.
+   */
+  @EventListener
+  override fun sendTaskCommand(command: UpdateTaskCommand) {
+    send(command)
+  }
+
+
   private fun send(command: Any) {
     if (properties.sender.enabled) {
       gateway.send<Any, Any?>(command) { m, r -> logger.info("Successfully submitted command $m, $r") }

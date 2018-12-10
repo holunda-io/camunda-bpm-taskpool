@@ -122,6 +122,57 @@ paths:
         '404':
           description: Task not found.
 
+  '/task/{id}/defer':
+    post:
+      tags:
+      - Task
+      summary: Defers a task.
+      operationId: defer
+      parameters:
+      - in: path
+        name: id
+        type: string
+        description: Task id.
+        required: true
+      - in: body
+        name: followUpDate
+        description: A date until the task is deferred.
+        schema:
+          type: string
+          format: date-time
+      responses:
+        '204':
+          description: Sucessful operation.
+        '401':
+          description: Not authenticated.
+        '403':
+          description: Not authorized.
+        '404':
+          description: Task not found.
+
+  '/task/{id}/undefer':
+    post:
+      tags:
+      - Task
+      summary: Undefers a task.
+      operationId: undefer
+      parameters:
+      - in: path
+        name: id
+        type: string
+        description: Task id.
+        required: true
+      responses:
+        '204':
+          description: Sucessful operation.
+        '401':
+          description: Not authenticated.
+        '403':
+          description: Not authorized.
+        '404':
+          description: Task not found.
+
+
   '/task/{id}/complete':
     post:
       tags:
@@ -206,6 +257,10 @@ definitions:
       dueDate:
         type: string
         description: Due date and time of the task.
+        format: date-time
+      followUpDate:
+        type: string
+        description: Follow-up date and time of the task.
         format: date-time
       businessKey:
         type: string

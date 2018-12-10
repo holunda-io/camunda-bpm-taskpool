@@ -1,10 +1,7 @@
 package io.holunda.camunda.client.task
 
 import io.holunda.camunda.taskpool.TaskCollectorProperties
-import io.holunda.camunda.taskpool.api.task.TaskClaimedEvent
-import io.holunda.camunda.taskpool.api.task.TaskIdentity
-import io.holunda.camunda.taskpool.api.task.TaskToBeCompletedEvent
-import io.holunda.camunda.taskpool.api.task.TaskUnclaimedEvent
+import io.holunda.camunda.taskpool.api.task.*
 import mu.KLogging
 import org.axonframework.eventhandling.EventHandler
 import org.camunda.bpm.engine.ProcessEngineException
@@ -20,7 +17,7 @@ class TaskEventHandlers(
   companion object : KLogging()
 
   @EventHandler
-  open fun on(event: TaskClaimedEvent) {
+  fun on(event: TaskClaimedEvent) {
     // filter by application name.
     if (isAddressedToMe(event)) {
       try {
@@ -38,7 +35,7 @@ class TaskEventHandlers(
   }
 
   @EventHandler
-  open fun on(event: TaskUnclaimedEvent) {
+  fun on(event: TaskUnclaimedEvent) {
     // filter by application name.
     if (isAddressedToMe(event)) {
       try {
@@ -56,7 +53,7 @@ class TaskEventHandlers(
   }
 
   @EventHandler
-  open fun on(event: TaskToBeCompletedEvent) {
+  fun on(event: TaskToBeCompletedEvent) {
     // filter by application name.
     if (isAddressedToMe(event)) {
       try {
@@ -73,6 +70,52 @@ class TaskEventHandlers(
     }
   }
 
+  @EventHandler
+  fun on(event: TaskDeferredEvent) {
+    // filter by application name.
+    if (isAddressedToMe(event)) {
+      try {
+        logger.debug { "Deferring task $event" }
+        val task = taskService.createTaskQuery().taskId(event.id).singleResult()
+        if (task != null) {
+          if (task.followUpDate != event.followUpDate) {
+            task.followUpDate = event.followUpDate
+            taskService.saveTask(task)
+          } else {
+            logger.debug("CLIENT-008: Task deferred event ignored because task with id ${event.id} had equal follow-up date set already.")
+          }
+        } else {
+          logger.error { "CLIENT-006: Task with id ${event.id} was not found in the engine. Ignoring the event $event." }
+        }
+      } catch (e: ProcessEngineException) {
+        logger.error("CLIENT-003: Error deferring task", e)
+      }
+    }
+  }
 
-  internal fun isAddressedToMe(event: TaskIdentity) = taskCollectorProperties.enricher.applicationName == event.sourceReference.applicationName
+  @EventHandler
+  fun on(event: TaskUndeferredEvent) {
+    // filter by application name.
+    if (isAddressedToMe(event)) {
+      try {
+        logger.debug { "Deferring task $event" }
+        val task = taskService.createTaskQuery().taskId(event.id).singleResult()
+        if (task != null) {
+          if (task.followUpDate != null) {
+            task.followUpDate = null
+            taskService.saveTask(task)
+          } else {
+            logger.debug("CLIENT-007: Task undeferred event ignored because task with id ${event.id} was not deferred.")
+          }
+        } else {
+          logger.error { "CLIENT-006: Task with id ${event.id} was not found in the engine. Ignoring the event $event." }
+        }
+      } catch (e: ProcessEngineException) {
+        logger.error("CLIENT-003: Error deferring task", e)
+      }
+    }
+  }
+
+
+  private fun isAddressedToMe(event: TaskIdentity) = taskCollectorProperties.enricher.applicationName == event.sourceReference.applicationName
 }

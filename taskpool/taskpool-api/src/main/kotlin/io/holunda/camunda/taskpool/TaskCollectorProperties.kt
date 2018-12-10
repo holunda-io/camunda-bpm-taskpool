@@ -1,21 +1,25 @@
 package io.holunda.camunda.taskpool
 
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.context.properties.NestedConfigurationProperty
 
 @ConfigurationProperties(prefix = "camunda.taskpool.collector")
-data class TaskCollectorProperties(
+class TaskCollectorProperties(
+
+  @Value("\${spring.application.name}")
+  springApplicationName: String,
 
   @NestedConfigurationProperty
   var sender: TaskSenderProperties = TaskSenderProperties(),
 
   @NestedConfigurationProperty
-  var enricher: TaskCollectorEnricherProperties = TaskCollectorEnricherProperties()
+  var enricher: TaskCollectorEnricherProperties = TaskCollectorEnricherProperties(applicationName = springApplicationName)
 )
 
 data class TaskCollectorEnricherProperties(
   var type: String = TaskCollectorEnricherType.processVariables.name,
-  var applicationName: String = "\${spring.application.name}"
+  var applicationName: String
 )
 
 enum class TaskCollectorEnricherType {
