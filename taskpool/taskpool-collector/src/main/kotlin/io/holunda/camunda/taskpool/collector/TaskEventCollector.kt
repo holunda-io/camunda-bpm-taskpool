@@ -162,41 +162,42 @@ class TaskEventCollector(
   @EventListener
   fun update(changeEvent: HistoricIdentityLinkLogEventEntity): UpdateTaskCommand? =
     when (changeEvent.operationType) {
-      "add" -> if (changeEvent.userId != null) {
-        CandidateUserAddCommand(
+      "add" -> when {
+        changeEvent.userId != null -> CandidateUserAddCommand(
           id = changeEvent.taskId,
           taskDefinitionKey = taskDefinitionKey(changeEvent.taskId, taskService),
           sourceReference = changeEvent.sourceReference(repositoryService, collectorProperties.enricher.applicationName, changeEvent.tenantId),
           userId = changeEvent.userId)
-      } else {
-        CandidateGroupAddCommand(
+        changeEvent.groupId != null -> CandidateGroupAddCommand(
           id = changeEvent.taskId,
           taskDefinitionKey = taskDefinitionKey(changeEvent.taskId, taskService),
           sourceReference = changeEvent.sourceReference(repositoryService, collectorProperties.enricher.applicationName, changeEvent.tenantId),
           groupId = changeEvent.groupId)
+        else -> {
+          logger.warn { "Received unexpected identity link historic update event ${changeEvent.type} ${changeEvent.operationType} ${changeEvent.eventType} on ${changeEvent.taskId}" }
+          null
+        }
       }
-
-      "delete" -> if (changeEvent.userId != null) {
-        CandidateUserDeleteCommand(
+      "delete" -> when {
+        changeEvent.userId != null -> CandidateUserDeleteCommand(
           id = changeEvent.taskId,
           taskDefinitionKey = taskDefinitionKey(changeEvent.taskId, taskService),
           sourceReference = changeEvent.sourceReference(repositoryService, collectorProperties.enricher.applicationName, changeEvent.tenantId),
           userId = changeEvent.userId)
-      } else {
-        CandidateGroupDeleteCommand(
+        changeEvent.groupId != null -> CandidateGroupDeleteCommand(
           id = changeEvent.taskId,
           taskDefinitionKey = taskDefinitionKey(changeEvent.taskId, taskService),
           sourceReference = changeEvent.sourceReference(repositoryService, collectorProperties.enricher.applicationName, changeEvent.tenantId),
           groupId = changeEvent.groupId)
+        else -> {
+          logger.warn { "Received unexpected identity link historic update event ${changeEvent.type} ${changeEvent.operationType} ${changeEvent.eventType} on ${changeEvent.taskId}" }
+          null
+        }
       }
-
       else -> {
         logger.warn { "Received unexpected identity link historic update event ${changeEvent.type} ${changeEvent.operationType} ${changeEvent.eventType} on ${changeEvent.taskId}" }
-        // throw IllegalArgumentException("Unknown identity historic event.")
         null
       }
-
-
     }
 }
 
