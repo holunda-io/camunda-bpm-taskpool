@@ -17,8 +17,7 @@ install: true
 #
 # Verify
 #
-script:
-  - ./mvnw --settings .travis/settings.xml clean verify -T4
+script: "./mvnw --settings .travis/settings.xml clean verify -T4"
 #
 # Coveralls
 #
@@ -47,9 +46,7 @@ before_deploy:
 deploy:
   skip_cleanup: true
   provider: script
-  script:
-    - ./mvnw --settings .travis/settings.xml install -DskipTests=true -B -U -V -Prelease
-    - ./mvnw --settings .travis/settings.xml deploy:deploy
+  script: "./mvnw --settings .travis/settings.xml install -DskipTests=true -B -U -V -Prelease && ./mvnw --settings .travis/settings.xml deploy:deploy"
   on:
     all_branches: true
     condition: $TRAVIS_BRANCH =~ ^[[:digit:]]*\.[[:digit:]]*\.[[:digit:]]*$
