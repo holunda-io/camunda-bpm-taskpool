@@ -12,7 +12,6 @@
   <name>example/${project.artifactId}</name>
 
   <properties>
-    <skipStaging>true</skipStaging>
     <maven.deploy.skip>true</maven.deploy.skip>
   </properties>
 

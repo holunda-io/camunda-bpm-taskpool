@@ -17,12 +17,19 @@ install: true
 #
 # Verify
 #
-script: "./mvnw --settings .travis/settings.xml clean verify -T4"
+script:
+  - ./mvnw --settings .travis/settings.xml clean verify -T4
 #
 # Coveralls
 #
 after_success:
 - bash <(curl -s https://codecov.io/bash)
+
+#
+# Notify slack channel
+#
+notifications:
+  slack: holunda:OBhk0v6b16pLFphCq3siuDIZ
 
 #
 # Deploy of artifacts is only triggered on master branch.
@@ -40,14 +47,10 @@ before_deploy:
 deploy:
   skip_cleanup: true
   provider: script
-  script: "./mvnw --settings .travis/settings.xml deploy -DskipTests=true -B -U -V -Prelease"
+  script:
+    - ./mvnw --settings .travis/settings.xml install -DskipTests=true -B -U -V -Prelease
+    - ./mvnw --settings .travis/settings.xml deploy:deploy
   on:
     all_branches: true
     condition: $TRAVIS_BRANCH =~ ^[[:digit:]]*\.[[:digit:]]*\.[[:digit:]]*$
     tags: true
-
-#
-# Notify slack channel
-#
-notifications:
-  slack: holunda:OBhk0v6b16pLFphCq3siuDIZ

@@ -18,7 +18,6 @@
     <application.api-package>${application.base-package}.api</application.api-package>
     <application.model-package>${application.base-package}.model</application.model-package>
     <application.config-package>${application.base-package}</application.config-package>
-    <skipStaging>true</skipStaging>
     <maven.deploy.skip>true</maven.deploy.skip>
   </properties>
 

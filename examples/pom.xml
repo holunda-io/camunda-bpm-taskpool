@@ -13,7 +13,6 @@
   <packaging>pom</packaging>
 
   <properties>
-    <skipStaging>true</skipStaging>
     <maven.deploy.skip>true</maven.deploy.skip>
   </properties>
 
