@@ -34,9 +34,11 @@ before_deploy:
 deploy:
   skip_cleanup: true
   provider: script
-  script: "./mvnw --settings .travis/settings.xml deploy -DskipTests=true -B -U -V -Prelease"
+  script: "./mvnw --settings .travis/settings.xml deploy -T4 -DskipTests=true -B -U -V -Prelease"
   on:
-    branch: master
+    all_branches: true
+    condition: $TRAVIS_BRANCH =~ ^release\/[[:digit:]]*\.[[:digit:]]*\.[[:digit:]]*$
+    tags: true
 
 #
 # Notify slack channel
