@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
@@ -69,11 +70,6 @@
       <artifactId>h2</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.camunda.bpm.springboot</groupId>
-      <artifactId>camunda-bpm-spring-boot-starter-webapp</artifactId>
-      <version>${camunda-springboot.version}</version>
-    </dependency>
-    <dependency>
       <groupId>org.codehaus.groovy</groupId>
       <artifactId>groovy-all</artifactId>
     </dependency>
@@ -111,5 +107,37 @@
       </plugin>
     </plugins>
   </build>
+
+  <profiles>
+    <profile>
+      <id>camunda-ce</id>
+      <activation>
+        <property>
+          <name>!camunda-ee</name>
+        </property>
+      </activation>
+      <dependencies>
+        <dependency>
+          <groupId>org.camunda.bpm.springboot</groupId>
+          <artifactId>camunda-bpm-spring-boot-starter-webapp</artifactId>
+        </dependency>
+      </dependencies>
+    </profile>
+    <profile>
+      <id>camunda-ee</id>
+      <activation>
+        <property>
+          <name>camunda-ee</name>
+        </property>
+      </activation>
+      <dependencies>
+        <dependency>
+          <groupId>org.camunda.bpm.springboot</groupId>
+          <artifactId>camunda-bpm-spring-boot-starter-webapp-ee</artifactId>
+        </dependency>
+      </dependencies>
+    </profile>
+  </profiles>
+
 
 </project>
