@@ -23,15 +23,16 @@ commands, but then you would have to change the versions in the poms manually. T
 
 You can build a release with:
 
-	./mvnw gitflow:release 
+	./mvnw -B gitflow:release-start gitflow:release-finish
 	
-This will update the versions in the `pom.xml`s accordingly and push the release tag to the `master` branch.
+This will update the versions in the `pom.xml`s accordingly and push the release tag to the `master` branch
+and update the `develop` branch for the new development version.
 
 ## Trigger a deploy
 
 Travis will deploy the results of the build if and only if:
 - the build is stable
-- the branch is `master`
+- the branch matches x.y.z, where x, y, z are numbers
 - the commit contains a git tag
 
 ## SNAPSHOT vs. STABLE
