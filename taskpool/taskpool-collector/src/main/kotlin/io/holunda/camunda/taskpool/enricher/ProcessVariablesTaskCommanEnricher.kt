@@ -38,9 +38,9 @@ class ProcessVariablesAssignCommandEnricher(runtimeService: RuntimeService, filt
 open class ProcessVariablesTaskCommandEnricher(
   private val runtimeService: RuntimeService,
   private val processVariablesFilter: ProcessVariablesFilter,
-  private val processVarriablesCorrelator: ProcessVariablesCorrelator
+  private val processVariablesCorrelator: ProcessVariablesCorrelator
 ) {
-  protected fun <T : EngineTaskCommand> enrich(command: T): T {
+  protected fun <T : EnrichedEngineTaskCommand> enrich(command: T): T {
 
     // Payload enrichment
     command.payload.putAllTyped(
@@ -53,13 +53,12 @@ open class ProcessVariablesTaskCommandEnricher(
 
     // Correlations
     command.correlations.putAllTyped(
-      processVarriablesCorrelator.correlateVariables(
+      processVariablesCorrelator.correlateVariables(
         command.sourceReference.definitionKey,
         command.taskDefinitionKey,
         runtimeService.getVariablesTyped(command.sourceReference.executionId)
       )
     )
-
     // Mark as enriched
     command.enriched = true
     return command

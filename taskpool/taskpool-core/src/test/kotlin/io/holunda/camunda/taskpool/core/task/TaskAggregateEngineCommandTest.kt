@@ -8,12 +8,14 @@ import org.camunda.bpm.engine.variable.Variables
 import org.camunda.bpm.engine.variable.Variables.stringValue
 import org.junit.Before
 import org.junit.Test
+import java.time.Instant
 import java.util.*
 
-class TaskAggregateTest {
+class TaskAggregateEngineCommandTest {
 
   private val fixture: AggregateTestFixture<TaskAggregate> = AggregateTestFixture<TaskAggregate>(TaskAggregate::class.java)
   private lateinit var now: Date
+  private lateinit var now2: Date
 
   private val processReference = ProcessReference(
     definitionKey = "process_key",
@@ -27,6 +29,7 @@ class TaskAggregateTest {
   @Before
   fun setUp() {
     now = Date()
+    now2 = Date.from(Instant.now().plusSeconds(1000));
   }
 
   @Test
@@ -49,6 +52,8 @@ class TaskAggregateTest {
           candidateGroups = listOf("muppets"),
           assignee = "kermit",
           priority = 51,
+          followUpDate = now2,
+          dueDate = now,
           description = "Funky task",
           payload = Variables.createVariables().putValueTyped("key", stringValue("value")),
           correlations = newCorrelations().addCorrelation("Request", "business123")
@@ -67,6 +72,8 @@ class TaskAggregateTest {
           candidateGroups = listOf("muppets"),
           assignee = "kermit",
           priority = 51,
+          followUpDate = now2,
+          dueDate = now,
           description = "Funky task",
           payload = Variables.createVariables().putValueTyped("key", stringValue("value")),
           correlations = newCorrelations().addCorrelation("Request", "business123")
@@ -89,6 +96,8 @@ class TaskAggregateTest {
           candidateUsers = listOf("kermit", "gonzo"),
           candidateGroups = listOf("muppets"),
           assignee = "kermit",
+          followUpDate = now2,
+          dueDate = now,
           priority = 51,
           description = "Funky task",
           payload = Variables.createVariables().putValueTyped("key", stringValue("value")),
@@ -106,11 +115,12 @@ class TaskAggregateTest {
           businessKey = "business123",
           enriched = true,
           sourceReference = processReference,
-          dueDate = null,
           candidateUsers = listOf("kermit", "gonzo"),
           candidateGroups = listOf("muppets"),
           assignee = "kermit",
           priority = 51,
+          followUpDate = now2,
+          dueDate = now,
           description = "Funky task",
           payload = Variables.createVariables().putValueTyped("another", stringValue("some")),
           correlations = newCorrelations().addCorrelation("Request", "business456")
@@ -126,7 +136,8 @@ class TaskAggregateTest {
           businessKey = "business123",
           enriched = true,
           sourceReference = processReference,
-          dueDate = null,
+          followUpDate = now2,
+          dueDate = now,
           candidateUsers = listOf("kermit", "gonzo"),
           candidateGroups = listOf("muppets"),
           assignee = "kermit",
@@ -161,7 +172,8 @@ class TaskAggregateTest {
           businessKey = "business123",
           enriched = true,
           sourceReference = processReference,
-          dueDate = null,
+          followUpDate = now2,
+          dueDate = now,
           candidateUsers = listOf("kermit", "gonzo"),
           candidateGroups = listOf("muppets"),
           assignee = "kermit",
@@ -181,7 +193,8 @@ class TaskAggregateTest {
           businessKey = "business123",
           enriched = true,
           sourceReference = processReference,
-          dueDate = null,
+          followUpDate = now2,
+          dueDate = now,
           candidateUsers = listOf("kermit", "gonzo"),
           candidateGroups = listOf("muppets"),
           assignee = "kermit",
@@ -259,7 +272,8 @@ class TaskAggregateTest {
           businessKey = "business123",
           enriched = true,
           sourceReference = processReference,
-          dueDate = null,
+          followUpDate = now2,
+          dueDate = now,
           candidateUsers = listOf("kermit", "gonzo"),
           candidateGroups = listOf("muppets"),
           assignee = "kermit",
@@ -281,7 +295,8 @@ class TaskAggregateTest {
           businessKey = "business123",
           enriched = true,
           sourceReference = processReference,
-          dueDate = null,
+          followUpDate = now2,
+          dueDate = now,
           candidateUsers = listOf("kermit", "gonzo"),
           candidateGroups = listOf("muppets"),
           assignee = "kermit",
@@ -377,7 +392,8 @@ class TaskAggregateTest {
           businessKey = "business123",
           enriched = true,
           sourceReference = processReference,
-          dueDate = null,
+          followUpDate = now2,
+          dueDate = now,
           candidateUsers = listOf("kermit", "gonzo"),
           candidateGroups = listOf("muppets"),
           assignee = "kermit",
@@ -398,7 +414,8 @@ class TaskAggregateTest {
           businessKey = "business123",
           enriched = true,
           sourceReference = processReference,
-          dueDate = null,
+          followUpDate = now2,
+          dueDate = now,
           candidateUsers = listOf("kermit", "gonzo"),
           candidateGroups = listOf("muppets"),
           assignee = "kermit",
@@ -412,45 +429,7 @@ class TaskAggregateTest {
   }
 
   @Test
-  fun `should claim unassigned task`() {
-    fixture
-      .given(
-        TaskCreatedEngineEvent(
-          id = "4711",
-          name = "Foo",
-          createTime = now,
-          owner = "kermit",
-          taskDefinitionKey = "foo",
-          formKey = "some",
-          businessKey = "business123",
-          sourceReference = processReference,
-          candidateUsers = listOf("kermit", "gonzo"),
-          candidateGroups = listOf("muppets"),
-          assignee = null,
-          priority = 51,
-          description = "Funky task",
-          payload = Variables.createVariables().putValueTyped("key", stringValue("value")),
-          correlations = newCorrelations().addCorrelation("Request", "business123")
-        ))
-      .`when`(
-        ClaimInteractionTaskCommand(
-          id = "4711",
-          sourceReference = processReference,
-          taskDefinitionKey = "foo",
-          assignee = "piggy"
-        )
-      ).expectEvents(
-        TaskClaimedEvent(
-          id = "4711",
-          sourceReference = processReference,
-          taskDefinitionKey = "foo",
-          assignee = "piggy"
-        )
-      )
-  }
-
-  @Test
-  fun `should claim assigned task`() {
+  fun `should update task attributes`() {
     fixture
       .given(
         TaskCreatedEngineEvent(
@@ -471,142 +450,33 @@ class TaskAggregateTest {
           correlations = newCorrelations().addCorrelation("Request", "business123")
         ))
       .`when`(
-        ClaimInteractionTaskCommand(
+        AttributeUpdateTaskCommand(
           id = "4711",
-          sourceReference = processReference,
           taskDefinitionKey = "foo",
-          assignee = "piggy"
-        )
-      ).expectEvents(
-        TaskUnclaimedEvent(
-          id = "4711",
           sourceReference = processReference,
-          taskDefinitionKey = "foo"
-        ),
-        TaskClaimedEvent(
-          id = "4711",
-          sourceReference = processReference,
-          taskDefinitionKey = "foo",
-          assignee = "piggy"
+
+          name = "New name",
+          description = "New description",
+          dueDate = now,
+          followUpDate = now2,
+          assignee = "piggy",
+          owner = "gonzo",
+          priority = 13
         )
       )
-  }
+      .expectEvents(
+        TaskAttributeUpdatedEngineEvent(
+          id = "4711",
+          taskDefinitionKey = "foo",
+          sourceReference = processReference,
 
-  @Test
-  fun `should unclaim assigned task`() {
-    fixture
-      .given(
-        TaskCreatedEngineEvent(
-          id = "4711",
-          name = "Foo",
-          createTime = now,
-          owner = "kermit",
-          taskDefinitionKey = "foo",
-          formKey = "some",
-          businessKey = "business123",
-          sourceReference = processReference,
-          candidateUsers = listOf("kermit", "gonzo"),
-          candidateGroups = listOf("muppets"),
-          assignee = "kermit",
-          priority = 51,
-          description = "Funky task",
-          payload = Variables.createVariables().putValueTyped("key", stringValue("value")),
-          correlations = newCorrelations().addCorrelation("Request", "business123")
-        ))
-      .`when`(
-        UnclaimInteractionTaskCommand(
-          id = "4711",
-          sourceReference = processReference,
-          taskDefinitionKey = "foo"
-        )
-      ).expectEvents(
-        TaskUnclaimedEvent(
-          id = "4711",
-          sourceReference = processReference,
-          taskDefinitionKey = "foo"
-        )
-      )
-  }
-
-  @Test
-  fun `should unclaim unassigned task`() {
-    fixture
-      .given(
-        TaskCreatedEngineEvent(
-          id = "4711",
-          name = "Foo",
-          createTime = now,
-          owner = "kermit",
-          taskDefinitionKey = "foo",
-          formKey = "some",
-          businessKey = "business123",
-          sourceReference = processReference,
-          candidateUsers = listOf("kermit", "gonzo"),
-          candidateGroups = listOf("muppets"),
-          assignee = null,
-          priority = 51,
-          description = "Funky task",
-          payload = Variables.createVariables().putValueTyped("key", stringValue("value")),
-          correlations = newCorrelations().addCorrelation("Request", "business123")
-        ))
-      .`when`(
-        UnclaimInteractionTaskCommand(
-          id = "4711",
-          sourceReference = processReference,
-          taskDefinitionKey = "foo"
-        )
-      ).expectNoEvents()
-  }
-
-  @Test
-  fun `should mark task to be completed`() {
-
-    val completionPayload = Variables.createVariables().putValueTyped("user-input", stringValue("whatever"));
-
-    fixture
-      .given(
-        TaskCreatedEngineEvent(
-          id = "4711",
-          name = "Foo",
-          createTime = now,
-          owner = "kermit",
-          taskDefinitionKey = "foo",
-          formKey = "some",
-          businessKey = "business123",
-          sourceReference = processReference,
-          assignee = "kermit",
-          candidateUsers = listOf("kermit", "gonzo"),
-          candidateGroups = listOf("muppets"),
-          priority = 51,
-          description = "Funky task",
-          payload = Variables.createVariables().putValueTyped("key", stringValue("value")),
-          correlations = newCorrelations().addCorrelation("Request", "business123")
-        ))
-      .`when`(
-        CompleteInteractionTaskCommand(
-          id = "4711",
-          sourceReference = processReference,
-          taskDefinitionKey = "foo",
-          payload = completionPayload,
-          assignee = "gonzo"
-        )
-      ).expectEvents(
-        TaskUnclaimedEvent(
-          id = "4711",
-          sourceReference = processReference,
-          taskDefinitionKey = "foo"
-        ),
-        TaskClaimedEvent(
-          id = "4711",
-          sourceReference = processReference,
-          taskDefinitionKey = "foo",
-          assignee = "gonzo"
-        ),
-        TaskToBeCompletedEvent(
-          id = "4711",
-          sourceReference = processReference,
-          taskDefinitionKey = "foo",
-          payload = completionPayload
+          name = "New name",
+          description = "New description",
+          dueDate = now,
+          followUpDate = now2,
+          assignee = "piggy",
+          owner = "gonzo",
+          priority = 13
         )
       )
   }

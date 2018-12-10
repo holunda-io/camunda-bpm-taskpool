@@ -19,6 +19,7 @@ import org.springframework.context.event.EventListener
 import org.springframework.stereotype.Component
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit4.SpringRunner
+import java.time.LocalDate.now
 import java.util.*
 
 @RunWith(SpringRunner::class)
@@ -132,10 +133,75 @@ open class CamundaEventingITest {
     task.name = "new Name"
     taskService.saveTask(task)
 
+
     var taskChangeEvent = eventCaptor.events.pop()
     assertThat(taskChangeEvent.eventType).isEqualTo("update")
     if (taskChangeEvent is HistoricTaskInstanceEventEntity) {
       assertThat(taskChangeEvent.name).isEqualTo("new Name")
+    } else {
+      fail("Expected task instance change event")
+    }
+
+  }
+
+  @Test
+  fun `should event task multiple assignment changes`() {
+
+    // given
+    assertThat(eventCaptor.events).isNotEmpty
+    eventCaptor.events.clear()
+    assertThat(eventCaptor.events).isEmpty()
+
+    val task = taskService.createTaskQuery().active().singleResult()
+
+    // when
+    taskService.addCandidateUser(task.id, "user1")
+    taskService.addCandidateUser(task.id, "user2")
+
+    // then in reverse order
+
+    // Add candidate user
+    var candidateUserEvent = eventCaptor.events.pop()
+    assertThat(candidateUserEvent.eventType).isEqualTo("add-identity-link")
+    if (candidateUserEvent is HistoricIdentityLinkLogEventEntity) {
+      assertThat(candidateUserEvent.type).isEqualTo("candidate")
+      assertThat(candidateUserEvent.operationType).isEqualTo("add")
+      assertThat(candidateUserEvent.userId).isEqualTo("user2")
+    } else {
+      fail("Expected identity link log event")
+    }
+
+    // Add candidate user
+    candidateUserEvent = eventCaptor.events.pop()
+    assertThat(candidateUserEvent.eventType).isEqualTo("add-identity-link")
+    if (candidateUserEvent is HistoricIdentityLinkLogEventEntity) {
+      assertThat(candidateUserEvent.type).isEqualTo("candidate")
+      assertThat(candidateUserEvent.operationType).isEqualTo("add")
+      assertThat(candidateUserEvent.userId).isEqualTo("user1")
+    } else {
+      fail("Expected identity link log event")
+    }
+
+    assertThat(eventCaptor.events).isEmpty()
+  }
+
+    @Test
+  fun `should event task follow-up data changes`() {
+    assertThat(eventCaptor.events).isNotEmpty
+    eventCaptor.events.clear()
+
+    val task = taskService.createTaskQuery().active().singleResult()
+
+    val now = Date()
+
+    task.followUpDate = now
+    taskService.saveTask(task)
+
+
+    var taskChangeEvent = eventCaptor.events.pop()
+    assertThat(taskChangeEvent.eventType).isEqualTo("update")
+    if (taskChangeEvent is HistoricTaskInstanceEventEntity) {
+      assertThat(taskChangeEvent.followUpDate).isEqualTo(now)
     } else {
       fail("Expected task instance change event")
     }

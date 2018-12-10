@@ -6,7 +6,7 @@ import java.util.*
 /**
  * Task command received from the Camunda Engine.
  */
-interface EngineTaskCommand : TaskIdentity, WithPayload, WithCorrelations, CamundaTaskEvent {
+interface EngineTaskCommand : TaskIdentity, CamundaTaskEvent {
   val name: String?
   val description: String?
   val formKey: String?
@@ -16,5 +16,11 @@ interface EngineTaskCommand : TaskIdentity, WithPayload, WithCorrelations, Camun
   val candidateUsers: List<String>
   val candidateGroups: List<String>
   val dueDate: Date?
+  val followUpDate: Date?
   val priority: Int?
 }
+
+/**
+ * Enriched command received from Camunda Engine (with variables and corellations)
+ */
+interface EnrichedEngineTaskCommand : EngineTaskCommand, WithPayload, WithCorrelations

@@ -1,9 +1,6 @@
 package io.holunda.camunda.taskpool.example.tasklist.rest.impl
 
-import io.holunda.camunda.taskpool.api.task.ClaimInteractionTaskCommand
-import io.holunda.camunda.taskpool.api.task.CompleteInteractionTaskCommand
-import io.holunda.camunda.taskpool.api.task.InteractionTaskCommand
-import io.holunda.camunda.taskpool.api.task.UnclaimInteractionTaskCommand
+import io.holunda.camunda.taskpool.api.task.*
 import io.holunda.camunda.taskpool.example.tasklist.auth.CurrentUserService
 import io.holunda.camunda.taskpool.example.tasklist.rest.ElementNotFoundException
 import io.holunda.camunda.taskpool.example.tasklist.rest.Rest
@@ -21,7 +18,10 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import java.time.OffsetDateTime
+import java.util.*
 import javax.validation.Valid
+import javax.validation.constraints.NotNull
 
 @RestController
 @RequestMapping(Rest.REQUEST_PATH)
@@ -63,7 +63,7 @@ class TaskController(
     return ResponseEntity.noContent().build()
   }
 
-  override fun complete(@PathVariable("id") id: String, @Valid @RequestBody payload: PayloadDto): ResponseEntity<Void> {
+  override fun complete(@PathVariable("id") id: String, @Valid @RequestBody @NotNull payload: PayloadDto): ResponseEntity<Void> {
 
     val task = getTask(id)
     val userIdentifier = currentUserService.getCurrentUser()
@@ -80,11 +80,37 @@ class TaskController(
     return ResponseEntity.noContent().build()
   }
 
-  internal fun getTask(id: String): Task = queryGateway.query(TaskForIdQuery(id), Task::class.java).join()
+
+  override fun defer(@PathVariable("id") id: String, @Valid @RequestBody @NotNull followUpDate: OffsetDateTime): ResponseEntity<Void> {
+    val task = getTask(id)
+
+    send(DeferInteractionTaskCommand(
+      id = task.id,
+      sourceReference = task.sourceReference,
+      taskDefinitionKey = task.taskDefinitionKey,
+      followUpDate = Date.from(followUpDate.toInstant())
+    ))
+
+    return ResponseEntity.noContent().build()
+  }
+
+  override fun undefer(@PathVariable("id") id: String): ResponseEntity<Void> {
+    val task = getTask(id)
+
+    send(UndeferInteractionTaskCommand(
+      id = task.id,
+      sourceReference = task.sourceReference,
+      taskDefinitionKey = task.taskDefinitionKey
+    ))
+
+    return ResponseEntity.noContent().build()
+  }
+
+  private fun getTask(id: String): Task = queryGateway.query(TaskForIdQuery(id), Task::class.java).join()
     ?: throw ElementNotFoundException()
 
 
-  internal fun send(command: InteractionTaskCommand) {
+  private fun send(command: InteractionTaskCommand) {
     gateway.send<Any, Any?>(command) { m, r -> logger.debug("Successfully submitted command $m, $r") }
   }
 }
