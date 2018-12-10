@@ -177,4 +177,174 @@ class TaskAggregateClaimTest {
       ).expectNoEvents()
   }
 
+
+  @Test
+  fun `should not unclaim task if already deleted`() {
+    fixture
+      .given(
+        TaskCreatedEngineEvent(
+          id = "4711",
+          name = "Foo",
+          createTime = now,
+          owner = "kermit",
+          taskDefinitionKey = "foo",
+          formKey = "some",
+          businessKey = "business123",
+          sourceReference = processReference,
+          candidateUsers = listOf("kermit", "gonzo"),
+          candidateGroups = listOf("muppets"),
+          assignee = null,
+          priority = 51,
+          description = "Funky task",
+          payload = Variables.createVariables().putValueTyped("key", Variables.stringValue("value")),
+          correlations = newCorrelations().addCorrelation("Request", "business123")
+        ),
+        TaskDeletedEngineEvent(
+          id = "4711",
+          name = "Foo",
+          createTime = now,
+          owner = "kermit",
+          taskDefinitionKey = "foo",
+          formKey = "some",
+          businessKey = "business123",
+          sourceReference = processReference,
+          deleteReason = "Test delete"
+        ))
+      .`when`(
+        UnclaimInteractionTaskCommand(
+          id = "4711",
+          sourceReference = processReference,
+          taskDefinitionKey = "foo"
+        )
+      ).expectNoEvents()
+  }
+
+  @Test
+  fun `should not unclaim task if already completed`() {
+
+    fixture
+      .given(
+        TaskCreatedEngineEvent(
+          id = "4711",
+          name = "Foo",
+          createTime = now,
+          owner = "kermit",
+          taskDefinitionKey = "foo",
+          formKey = "some",
+          businessKey = "business123",
+          sourceReference = processReference,
+          assignee = "kermit",
+          candidateUsers = listOf("kermit", "gonzo"),
+          candidateGroups = listOf("muppets"),
+          priority = 51,
+          description = "Funky task",
+          payload = Variables.createVariables().putValueTyped("key", Variables.stringValue("value")),
+          correlations = newCorrelations().addCorrelation("Request", "business123")
+        ),
+        TaskCompletedEngineEvent(
+          id = "4711",
+          name = "Foo",
+          createTime = now,
+          owner = "kermit",
+          taskDefinitionKey = "foo",
+          formKey = "some",
+          businessKey = "business123",
+          sourceReference = processReference
+        ))
+      .`when`(
+        UnclaimInteractionTaskCommand(
+          id = "4711",
+          sourceReference = processReference,
+          taskDefinitionKey = "foo"
+        )
+      )
+      .expectNoEvents()
+  }
+
+  @Test
+  fun `should not claim task if already deleted`() {
+    fixture
+      .given(
+        TaskCreatedEngineEvent(
+          id = "4711",
+          name = "Foo",
+          createTime = now,
+          owner = "kermit",
+          taskDefinitionKey = "foo",
+          formKey = "some",
+          businessKey = "business123",
+          sourceReference = processReference,
+          candidateUsers = listOf("kermit", "gonzo"),
+          candidateGroups = listOf("muppets"),
+          assignee = null,
+          priority = 51,
+          description = "Funky task",
+          payload = Variables.createVariables().putValueTyped("key", Variables.stringValue("value")),
+          correlations = newCorrelations().addCorrelation("Request", "business123")
+        ),
+        TaskDeletedEngineEvent(
+          id = "4711",
+          name = "Foo",
+          createTime = now,
+          owner = "kermit",
+          taskDefinitionKey = "foo",
+          formKey = "some",
+          businessKey = "business123",
+          sourceReference = processReference,
+          deleteReason = "Test delete"
+        ))
+      .`when`(
+        ClaimInteractionTaskCommand(
+          id = "4711",
+          sourceReference = processReference,
+          taskDefinitionKey = "foo",
+          assignee = "fozzy"
+        )
+      ).expectNoEvents()
+  }
+
+  @Test
+  fun `should not claim task if already completed`() {
+
+    fixture
+      .given(
+        TaskCreatedEngineEvent(
+          id = "4711",
+          name = "Foo",
+          createTime = now,
+          owner = "kermit",
+          taskDefinitionKey = "foo",
+          formKey = "some",
+          businessKey = "business123",
+          sourceReference = processReference,
+          assignee = "kermit",
+          candidateUsers = listOf("kermit", "gonzo"),
+          candidateGroups = listOf("muppets"),
+          priority = 51,
+          description = "Funky task",
+          payload = Variables.createVariables().putValueTyped("key", Variables.stringValue("value")),
+          correlations = newCorrelations().addCorrelation("Request", "business123")
+        ),
+        TaskCompletedEngineEvent(
+          id = "4711",
+          name = "Foo",
+          createTime = now,
+          owner = "kermit",
+          taskDefinitionKey = "foo",
+          formKey = "some",
+          businessKey = "business123",
+          sourceReference = processReference
+        ))
+      .`when`(
+        ClaimInteractionTaskCommand(
+          id = "4711",
+          sourceReference = processReference,
+          taskDefinitionKey = "foo",
+          assignee = "fozzy"
+        )
+      )
+      .expectNoEvents()
+  }
+
+
 }

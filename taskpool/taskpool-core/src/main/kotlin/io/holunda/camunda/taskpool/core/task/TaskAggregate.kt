@@ -22,7 +22,7 @@ open class TaskAggregate() {
 
   @CommandHandler
   constructor(command: CreateTaskCommand) : this() {
-    logger.info { "Created new aggregate for task ${command.id}" }
+    logger.debug { "Created new aggregate for task ${command.id}" }
     create(command)
   }
 
@@ -84,8 +84,6 @@ open class TaskAggregate() {
         claim(command, command.assignee!!)
       }
       markToBeCompleted(command)
-    } else {
-      // FIXME: react if task is marked as deleted or completed
     }
   }
 

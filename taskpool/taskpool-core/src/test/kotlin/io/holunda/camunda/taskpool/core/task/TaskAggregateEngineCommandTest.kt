@@ -29,7 +29,7 @@ class TaskAggregateEngineCommandTest {
   @Before
   fun setUp() {
     now = Date()
-    now2 = Date.from(Instant.now().plusSeconds(1000));
+    now2 = Date.from(Instant.now().plusSeconds(1000))
   }
 
   @Test
