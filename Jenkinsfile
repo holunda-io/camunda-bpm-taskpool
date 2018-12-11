@@ -53,8 +53,7 @@ node {
         if (isMasterBranch()) {
           stage('Deploy') {
             echo "Running a deploy"
-            when {
-              buildingTag()
+            if (buildingTag()) {
               echo "Building a tag $TAG_NAME"
             }
           }
