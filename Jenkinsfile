@@ -9,7 +9,6 @@ def isMasterBranch() {
     // use !(expr) to negate something, || for or, && for and
     // env.BRANCH_NAME =~ /^[[:digit:]]*\.[[:digit:]]*\.[[:digit:]]*/$
     return env.BRANCH_NAME.startsWith("master")
-
   }
 }
 
@@ -54,7 +53,7 @@ node {
           stage('Deploy') {
             echo "Running a deploy"
             if (buildingTag()) {
-              echo "Building a tag $TAG_NAME"
+              echo "Building a tag " + env.TAG_NAME
             }
           }
         }
