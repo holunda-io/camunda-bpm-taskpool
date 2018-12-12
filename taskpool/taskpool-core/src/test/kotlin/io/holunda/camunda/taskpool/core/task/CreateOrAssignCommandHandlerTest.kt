@@ -2,7 +2,7 @@ package io.holunda.camunda.taskpool.core.task
 
 import io.holunda.camunda.taskpool.api.business.addCorrelation
 import io.holunda.camunda.taskpool.api.business.newCorrelations
-import io.holunda.camunda.taskpool.api.task.CreateOrAssignTaskCommand
+import io.holunda.camunda.taskpool.api.task.InitialTaskCommand
 import io.holunda.camunda.taskpool.api.task.ProcessReference
 import org.assertj.core.api.Assertions.assertThat
 import org.axonframework.eventsourcing.EventSourcingRepository
@@ -33,16 +33,16 @@ class CreateOrAssignCommandHandlerTest {
   @Mock
   private lateinit var eventSourcingRepository: EventSourcingRepository<TaskAggregate>
 
-  private lateinit var createOrAssignTaskCommand: CreateOrAssignTaskCommand
+  private lateinit var initialTaskCommand: InitialTaskCommand
   private lateinit var now: Date
   private lateinit var now2: Date
-  private lateinit var createOrAssignCommandHandler: CreateOrAssignCommandHandler
+  private lateinit var createOrAssignCommandHandler: TaskCommandOrderingHandler
 
   @Before
   fun setUp() {
     now = Date()
     now2 = Date.from(Instant.now().plusSeconds(1000))
-    createOrAssignTaskCommand = CreateOrAssignTaskCommand(
+    initialTaskCommand = InitialTaskCommand(
       id = "4711",
       name = "Foo",
       createTime = now,
@@ -64,60 +64,60 @@ class CreateOrAssignCommandHandlerTest {
       correlations = newCorrelations().addCorrelation("Request", "business123")
     )
 
-    createOrAssignCommandHandler = CreateOrAssignCommandHandler(eventSourcingRepository)
+    createOrAssignCommandHandler = TaskCommandOrderingHandler(eventSourcingRepository)
   }
 
 
   @Test
   fun `should create TaskCreate command`() {
 
-    val command = createOrAssignCommandHandler.create(createOrAssignTaskCommand)
+    val command = createOrAssignCommandHandler.create(initialTaskCommand)
 
-    assertThat(command.assignee).isEqualTo(createOrAssignTaskCommand.assignee)
-    assertThat(command.businessKey).isEqualTo(createOrAssignTaskCommand.businessKey)
-    assertThat(command.candidateGroups).isEqualTo(createOrAssignTaskCommand.candidateGroups)
-    assertThat(command.candidateUsers).isEqualTo(createOrAssignTaskCommand.candidateUsers)
-    assertThat(command.correlations).isEqualTo(createOrAssignTaskCommand.correlations)
-    assertThat(command.createTime).isEqualTo(createOrAssignTaskCommand.createTime)
-    assertThat(command.description).isEqualTo(createOrAssignTaskCommand.description)
-    assertThat(command.dueDate).isEqualTo(createOrAssignTaskCommand.dueDate)
-    assertThat(command.enriched).isEqualTo(createOrAssignTaskCommand.enriched)
-    assertThat(command.eventName).isEqualTo(createOrAssignTaskCommand.eventName)
-    assertThat(command.followUpDate).isEqualTo(createOrAssignTaskCommand.followUpDate)
-    assertThat(command.formKey).isEqualTo(createOrAssignTaskCommand.formKey)
-    assertThat(command.id).isEqualTo(createOrAssignTaskCommand.id)
-    assertThat(command.name).isEqualTo(createOrAssignTaskCommand.name)
-    assertThat(command.owner).isEqualTo(createOrAssignTaskCommand.owner)
-    assertThat(command.payload).isEqualTo(createOrAssignTaskCommand.payload)
-    assertThat(command.priority).isEqualTo(createOrAssignTaskCommand.priority)
-    assertThat(command.sourceReference).isEqualTo(createOrAssignTaskCommand.sourceReference)
-    assertThat(command.taskDefinitionKey).isEqualTo(createOrAssignTaskCommand.taskDefinitionKey)
+    assertThat(command.assignee).isEqualTo(initialTaskCommand.assignee)
+    assertThat(command.businessKey).isEqualTo(initialTaskCommand.businessKey)
+    assertThat(command.candidateGroups).isEqualTo(initialTaskCommand.candidateGroups)
+    assertThat(command.candidateUsers).isEqualTo(initialTaskCommand.candidateUsers)
+    assertThat(command.correlations).isEqualTo(initialTaskCommand.correlations)
+    assertThat(command.createTime).isEqualTo(initialTaskCommand.createTime)
+    assertThat(command.description).isEqualTo(initialTaskCommand.description)
+    assertThat(command.dueDate).isEqualTo(initialTaskCommand.dueDate)
+    assertThat(command.enriched).isEqualTo(initialTaskCommand.enriched)
+    assertThat(command.eventName).isEqualTo(initialTaskCommand.eventName)
+    assertThat(command.followUpDate).isEqualTo(initialTaskCommand.followUpDate)
+    assertThat(command.formKey).isEqualTo(initialTaskCommand.formKey)
+    assertThat(command.id).isEqualTo(initialTaskCommand.id)
+    assertThat(command.name).isEqualTo(initialTaskCommand.name)
+    assertThat(command.owner).isEqualTo(initialTaskCommand.owner)
+    assertThat(command.payload).isEqualTo(initialTaskCommand.payload)
+    assertThat(command.priority).isEqualTo(initialTaskCommand.priority)
+    assertThat(command.sourceReference).isEqualTo(initialTaskCommand.sourceReference)
+    assertThat(command.taskDefinitionKey).isEqualTo(initialTaskCommand.taskDefinitionKey)
   }
 
   @Test
   fun `should create TaskAssign command`() {
 
-    val command = createOrAssignCommandHandler.assign(createOrAssignTaskCommand)
+    val command = createOrAssignCommandHandler.assign(initialTaskCommand)
 
-    assertThat(command.assignee).isEqualTo(createOrAssignTaskCommand.assignee)
-    assertThat(command.businessKey).isEqualTo(createOrAssignTaskCommand.businessKey)
-    assertThat(command.candidateGroups).isEqualTo(createOrAssignTaskCommand.candidateGroups)
-    assertThat(command.candidateUsers).isEqualTo(createOrAssignTaskCommand.candidateUsers)
-    assertThat(command.correlations).isEqualTo(createOrAssignTaskCommand.correlations)
-    assertThat(command.createTime).isEqualTo(createOrAssignTaskCommand.createTime)
-    assertThat(command.description).isEqualTo(createOrAssignTaskCommand.description)
-    assertThat(command.dueDate).isEqualTo(createOrAssignTaskCommand.dueDate)
-    assertThat(command.enriched).isEqualTo(createOrAssignTaskCommand.enriched)
-    assertThat(command.eventName).isEqualTo(createOrAssignTaskCommand.eventName)
-    assertThat(command.followUpDate).isEqualTo(createOrAssignTaskCommand.followUpDate)
-    assertThat(command.formKey).isEqualTo(createOrAssignTaskCommand.formKey)
-    assertThat(command.id).isEqualTo(createOrAssignTaskCommand.id)
-    assertThat(command.name).isEqualTo(createOrAssignTaskCommand.name)
-    assertThat(command.owner).isEqualTo(createOrAssignTaskCommand.owner)
-    assertThat(command.payload).isEqualTo(createOrAssignTaskCommand.payload)
-    assertThat(command.priority).isEqualTo(createOrAssignTaskCommand.priority)
-    assertThat(command.sourceReference).isEqualTo(createOrAssignTaskCommand.sourceReference)
-    assertThat(command.taskDefinitionKey).isEqualTo(createOrAssignTaskCommand.taskDefinitionKey)
+    assertThat(command.assignee).isEqualTo(initialTaskCommand.assignee)
+    assertThat(command.businessKey).isEqualTo(initialTaskCommand.businessKey)
+    assertThat(command.candidateGroups).isEqualTo(initialTaskCommand.candidateGroups)
+    assertThat(command.candidateUsers).isEqualTo(initialTaskCommand.candidateUsers)
+    assertThat(command.correlations).isEqualTo(initialTaskCommand.correlations)
+    assertThat(command.createTime).isEqualTo(initialTaskCommand.createTime)
+    assertThat(command.description).isEqualTo(initialTaskCommand.description)
+    assertThat(command.dueDate).isEqualTo(initialTaskCommand.dueDate)
+    assertThat(command.enriched).isEqualTo(initialTaskCommand.enriched)
+    assertThat(command.eventName).isEqualTo(initialTaskCommand.eventName)
+    assertThat(command.followUpDate).isEqualTo(initialTaskCommand.followUpDate)
+    assertThat(command.formKey).isEqualTo(initialTaskCommand.formKey)
+    assertThat(command.id).isEqualTo(initialTaskCommand.id)
+    assertThat(command.name).isEqualTo(initialTaskCommand.name)
+    assertThat(command.owner).isEqualTo(initialTaskCommand.owner)
+    assertThat(command.payload).isEqualTo(initialTaskCommand.payload)
+    assertThat(command.priority).isEqualTo(initialTaskCommand.priority)
+    assertThat(command.sourceReference).isEqualTo(initialTaskCommand.sourceReference)
+    assertThat(command.taskDefinitionKey).isEqualTo(initialTaskCommand.taskDefinitionKey)
   }
 
 }

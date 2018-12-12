@@ -65,19 +65,22 @@ class TaskMarkToBeCompletedTest {
         TaskUnclaimedEvent(
           id = "4711",
           sourceReference = processReference,
-          taskDefinitionKey = "foo"
+          taskDefinitionKey = "foo",
+          formKey = "some"
         ),
         TaskClaimedEvent(
           id = "4711",
           sourceReference = processReference,
           taskDefinitionKey = "foo",
-          assignee = "gonzo"
+          assignee = "gonzo",
+          formKey = "some"
         ),
         TaskToBeCompletedEvent(
           id = "4711",
           sourceReference = processReference,
           taskDefinitionKey = "foo",
-          payload = completionPayload
+          payload = completionPayload,
+          formKey = "some"
         )
       )
   }
@@ -119,7 +122,8 @@ class TaskMarkToBeCompletedTest {
           id = "4711",
           sourceReference = processReference,
           taskDefinitionKey = "foo",
-          payload = completionPayload
+          payload = completionPayload,
+          formKey = "some"
         )
       )
   }
@@ -161,13 +165,15 @@ class TaskMarkToBeCompletedTest {
           id = "4711",
           sourceReference = processReference,
           taskDefinitionKey = "foo",
-          assignee = "gonzo"
+          assignee = "gonzo",
+          formKey = "some"
         ),
         TaskToBeCompletedEvent(
           id = "4711",
           sourceReference = processReference,
           taskDefinitionKey = "foo",
-          payload = completionPayload
+          payload = completionPayload,
+          formKey = "some"
         )
       )
   }

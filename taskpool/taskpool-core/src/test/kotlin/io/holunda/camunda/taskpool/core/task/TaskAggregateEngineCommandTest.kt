@@ -106,15 +106,14 @@ class TaskAggregateEngineCommandTest {
       .`when`(
         CompleteTaskCommand(
           id = "4711",
+          taskDefinitionKey = "foo",
+          sourceReference = processReference,
           name = "Foo",
           createTime = now,
           eventName = "create",
           owner = "kermit",
-          taskDefinitionKey = "foo",
-          formKey = "some",
           businessKey = "business123",
           enriched = true,
-          sourceReference = processReference,
           candidateUsers = listOf("kermit", "gonzo"),
           candidateGroups = listOf("muppets"),
           assignee = "kermit",
@@ -286,15 +285,14 @@ class TaskAggregateEngineCommandTest {
       .`when`(
         CompleteTaskCommand(
           id = "4711",
+          taskDefinitionKey = "foo",
+          sourceReference = processReference,
           name = "Foo",
           createTime = now,
           eventName = "create",
           owner = "kermit",
-          taskDefinitionKey = "foo",
-          formKey = "some",
           businessKey = "business123",
           enriched = true,
-          sourceReference = processReference,
           followUpDate = now2,
           dueDate = now,
           candidateUsers = listOf("kermit", "gonzo"),
@@ -352,15 +350,14 @@ class TaskAggregateEngineCommandTest {
       .`when`(
         CompleteTaskCommand(
           id = "4711",
+          taskDefinitionKey = "foo",
+          sourceReference = processReference,
           name = "Foo",
           createTime = now,
           eventName = "create",
           owner = "kermit",
-          taskDefinitionKey = "foo",
-          formKey = "some",
           businessKey = "business123",
           enriched = true,
-          sourceReference = processReference,
           followUpDate = now2,
           dueDate = now,
           candidateUsers = listOf("kermit", "gonzo"),
@@ -419,8 +416,8 @@ class TaskAggregateEngineCommandTest {
         DeleteTaskCommand(
           id = "4711",
           taskDefinitionKey = "foo",
-          deleteReason = "Not possible",
-          sourceReference = processReference
+          sourceReference = processReference,
+          deleteReason = "Not possible"
         )
       ).expectNoEvents()
   }
@@ -471,8 +468,8 @@ class TaskAggregateEngineCommandTest {
         DeleteTaskCommand(
           id = "4711",
           taskDefinitionKey = "foo",
-          deleteReason = "Not possible",
-          sourceReference = processReference
+          sourceReference = processReference,
+          deleteReason = "Not possible"
         )
       ).expectNoEvents()
   }
@@ -501,15 +498,14 @@ class TaskAggregateEngineCommandTest {
       .`when`(
         DeleteTaskCommand(
           id = "4711",
+          taskDefinitionKey = "foo",
+          sourceReference = processReference,
           name = "Foo",
           createTime = now,
           eventName = "create",
           owner = "kermit",
-          taskDefinitionKey = "foo",
-          formKey = "some",
           businessKey = "business123",
           enriched = true,
-          sourceReference = processReference,
           followUpDate = now2,
           dueDate = now,
           candidateUsers = listOf("kermit", "gonzo"),
@@ -568,11 +564,10 @@ class TaskAggregateEngineCommandTest {
           correlations = newCorrelations().addCorrelation("Request", "business123")
         ))
       .`when`(
-        AttributeUpdateTaskCommand(
+        UpdateAttributeTaskCommand(
           id = "4711",
           taskDefinitionKey = "foo",
           sourceReference = processReference,
-
           name = "New name",
           description = "New description",
           dueDate = now,
@@ -641,7 +636,7 @@ class TaskAggregateEngineCommandTest {
           correlations = newCorrelations().addCorrelation("Request", "business789")
         ))
       .`when`(
-        AttributeUpdateTaskCommand(
+        UpdateAttributeTaskCommand(
           id = "4711",
           taskDefinitionKey = "foo",
           sourceReference = processReference,
@@ -688,7 +683,7 @@ class TaskAggregateEngineCommandTest {
           deleteReason = "deleted"
         ))
       .`when`(
-        AttributeUpdateTaskCommand(
+        UpdateAttributeTaskCommand(
           id = "4711",
           taskDefinitionKey = "foo",
           sourceReference = processReference,

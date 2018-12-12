@@ -1,25 +1,17 @@
 package io.holunda.camunda.taskpool.enricher
 
-import io.holunda.camunda.taskpool.api.task.*
-import org.springframework.context.event.EventListener
+import io.holunda.camunda.taskpool.api.task.EnrichedEngineTaskCommand
 
-class EmptyCreateCommandEnricher : CreateCommandEnricher {
-  @EventListener(condition = "#command.enriched == false")
-  override fun enrich(command: CreateTaskCommand): CreateTaskCommand = command.apply { enriched = true }
+/**
+ * Enriches commands with payload.
+ */
+interface VariablesEnricher {
+  fun <T : EnrichedEngineTaskCommand> enrich(command: T): T
 }
 
-class EmptyCompleteCommandEnricher : CompleteCommandEnricher {
-  @EventListener(condition = "#command.enriched == false")
-  override fun enrich(command: CompleteTaskCommand): CompleteTaskCommand = command.apply { enriched = true }
+/**
+ * Empty implementation without eny enrichment. Used for compliance of the commands.
+ */
+class EmptyEnricher : VariablesEnricher {
+  override fun <T : EnrichedEngineTaskCommand> enrich(command: T): T = command.apply { enriched = true }
 }
-
-class EmptyDeleteCommandEnricher : DeleteCommandEnricher {
-  @EventListener(condition = "#command.enriched == false")
-  override fun enrich(command: DeleteTaskCommand): DeleteTaskCommand = command.apply { enriched = true }
-}
-
-class EmptyAssignCommandEnricher : AssignCommandEnricher {
-  @EventListener(condition = "#command.enriched == false")
-  override fun enrich(command: AssignTaskCommand): AssignTaskCommand = command.apply { enriched = true }
-}
-

@@ -18,7 +18,7 @@ class TaskCollectorProperties(
 )
 
 data class TaskCollectorEnricherProperties(
-  var type: String = TaskCollectorEnricherType.processVariables.name,
+  var type: TaskCollectorEnricherType = TaskCollectorEnricherType.processVariables,
   var applicationName: String
 )
 
@@ -30,11 +30,12 @@ enum class TaskCollectorEnricherType {
 
 data class TaskSenderProperties(
   var enabled: Boolean = false,
-  var type: TaskSenderType = TaskSenderType.simple
+  var type: TaskSenderType = TaskSenderType.tx
 )
 
 enum class TaskSenderType {
   simple,
+  tx,
   custom
 }
 
