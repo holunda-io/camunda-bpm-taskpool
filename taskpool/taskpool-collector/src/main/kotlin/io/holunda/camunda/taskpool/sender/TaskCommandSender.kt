@@ -1,25 +1,26 @@
-package io.holunda.camunda.taskpool.sender.simple
+package io.holunda.camunda.taskpool.sender
 
-import io.holunda.camunda.taskpool.TaskCollectorProperties
 import io.holunda.camunda.taskpool.api.sender.TaskCommandSender
 import io.holunda.camunda.taskpool.api.task.*
-import org.axonframework.commandhandling.gateway.CommandGateway
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
+import io.holunda.camunda.taskpool.api.task.CamundaTaskEvent.Companion.ASSIGN
+import io.holunda.camunda.taskpool.api.task.CamundaTaskEvent.Companion.ATTRIBUTES
+import io.holunda.camunda.taskpool.api.task.CamundaTaskEvent.Companion.CREATE
 import org.springframework.context.event.EventListener
 import org.springframework.stereotype.Component
 
+/**
+ * Receives task commands from Spring event bus and forwards them to the
+ * corresponding sender.
+ */
 @Component
-class SimpleTaskCommandSender(
-  private val gateway: CommandGateway,
-  private val properties: TaskCollectorProperties
-) : TaskCommandSender {
+class TaskCommandCollectorSender(private val sender: CommandSender) : TaskCommandSender {
 
-  val logger: Logger = LoggerFactory.getLogger(TaskCommandSender::class.java)
-
-  @EventListener(condition = "#command.enriched")
+  /**
+   * Sends initial command.
+   */
+  @EventListener
   override fun sendTaskCommand(command: AssignTaskCommand) {
-    send(CreateOrAssignTaskCommand(
+    sender.send(InitialTaskCommand(
       id = command.id,
       taskDefinitionKey = command.taskDefinitionKey,
       sourceReference = command.sourceReference,
@@ -27,7 +28,7 @@ class SimpleTaskCommandSender(
       description = command.description,
       priority = command.priority,
       owner = command.owner,
-      eventName = "assignment",
+      eventName = ASSIGN,
       dueDate = command.dueDate,
       createTime = command.createTime,
       candidateUsers = command.candidateUsers,
@@ -40,9 +41,12 @@ class SimpleTaskCommandSender(
     ))
   }
 
-  @EventListener(condition = "#command.enriched")
+  /**
+   * Sends initial command.
+   */
+  @EventListener
   override fun sendTaskCommand(command: CreateTaskCommand) {
-    send(CreateOrAssignTaskCommand(
+    sender.send(InitialTaskCommand(
       id = command.id,
       taskDefinitionKey = command.taskDefinitionKey,
       sourceReference = command.sourceReference,
@@ -50,7 +54,7 @@ class SimpleTaskCommandSender(
       description = command.description,
       priority = command.priority,
       owner = command.owner,
-      eventName = "create",
+      eventName = CREATE,
       dueDate = command.dueDate,
       createTime = command.createTime,
       candidateUsers = command.candidateUsers,
@@ -61,16 +65,6 @@ class SimpleTaskCommandSender(
       formKey = command.formKey,
       correlations = command.correlations
     ))
-  }
-
-  @EventListener(condition = "#command.enriched")
-  override fun sendTaskCommand(command: CompleteTaskCommand) {
-    send(command)
-  }
-
-  @EventListener(condition = "#command.enriched")
-  override fun sendTaskCommand(command: DeleteTaskCommand) {
-    send(command)
   }
 
   /**
@@ -78,16 +72,43 @@ class SimpleTaskCommandSender(
    */
   @EventListener
   override fun sendTaskCommand(command: UpdateTaskCommand) {
-    send(command)
-  }
 
-
-  private fun send(command: Any) {
-    if (properties.sender.enabled) {
-      gateway.send<Any, Any?>(command) { m, r -> logger.info("Successfully submitted command $m, $r") }
-    } else {
-      logger.debug("Would have sent command $command")
+    when (command) {
+      is UpdateAttributeTaskCommand -> sender.send(InitialTaskCommand(
+        id = command.id,
+        taskDefinitionKey = command.taskDefinitionKey,
+        sourceReference = command.sourceReference,
+        name = command.name,
+        description = command.description,
+        priority = command.priority,
+        owner = command.owner,
+        eventName = ATTRIBUTES,
+        dueDate = command.dueDate,
+        createTime = command.createTime,
+        candidateUsers = command.candidateUsers,
+        candidateGroups = command.candidateGroups,
+        assignee = command.assignee
+      ))
+      is UpdateAssignmentTaskCommand -> sender.send(command)
     }
   }
+
+
+  /**
+   * Sends the complete command.
+   */
+  @EventListener
+  override fun sendTaskCommand(command: CompleteTaskCommand) {
+    sender.send(command)
+  }
+
+  /**
+   * Sends the delete command.
+   */
+  @EventListener
+  override fun sendTaskCommand(command: DeleteTaskCommand) {
+    sender.send(command)
+  }
+
 
 }

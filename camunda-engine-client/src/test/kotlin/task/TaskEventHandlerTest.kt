@@ -56,11 +56,11 @@ class TaskEventHandlerTest {
       executionId = UUID.randomUUID().toString()
     )
 
-    taskEventHandlers.on(TaskClaimedEvent(id = "4711", taskDefinitionKey = "TASK-001", sourceReference = otherReference, assignee = "kermit"))
-    taskEventHandlers.on(TaskUnclaimedEvent(id = "4711", taskDefinitionKey = "TASK-001", sourceReference = otherReference))
-    taskEventHandlers.on(TaskDeferredEvent(id = "4711", taskDefinitionKey = "TASK-001", sourceReference = otherReference, followUpDate = now))
-    taskEventHandlers.on(TaskUndeferredEvent(id = "4711", taskDefinitionKey = "TASK-001", sourceReference = otherReference))
-    taskEventHandlers.on(TaskToBeCompletedEvent(id = "4711", taskDefinitionKey = "TASK-001", sourceReference = otherReference))
+    taskEventHandlers.on(TaskClaimedEvent(id = "4711", taskDefinitionKey = "TASK-001", sourceReference = otherReference, assignee = "kermit", formKey = null))
+    taskEventHandlers.on(TaskUnclaimedEvent(id = "4711", taskDefinitionKey = "TASK-001", sourceReference = otherReference, formKey = null))
+    taskEventHandlers.on(TaskDeferredEvent(id = "4711", taskDefinitionKey = "TASK-001", sourceReference = otherReference, followUpDate = now, formKey = null))
+    taskEventHandlers.on(TaskUndeferredEvent(id = "4711", taskDefinitionKey = "TASK-001", sourceReference = otherReference, formKey = null))
+    taskEventHandlers.on(TaskToBeCompletedEvent(id = "4711", taskDefinitionKey = "TASK-001", sourceReference = otherReference, formKey = null))
 
     verifyNoMoreInteractions(taskService)
   }
@@ -71,7 +71,7 @@ class TaskEventHandlerTest {
     val taskFake = TaskFake.builder().id("4711").build()
     QueryMocks.mockTaskQuery(taskService).singleResult(taskFake)
 
-    taskEventHandlers.on(TaskClaimedEvent(id = taskFake.id, taskDefinitionKey = "TASK-001", sourceReference = processReference, assignee = "kermit"))
+    taskEventHandlers.on(TaskClaimedEvent(id = taskFake.id, taskDefinitionKey = "TASK-001", sourceReference = processReference, assignee = "kermit", formKey = null))
 
     verify(taskService).createTaskQuery()
     verify(taskService).setAssignee("4711", "kermit")

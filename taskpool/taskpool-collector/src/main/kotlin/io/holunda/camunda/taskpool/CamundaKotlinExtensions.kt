@@ -9,7 +9,7 @@ fun extractKey(processDefinitionId: String?): String {
   return processDefinitionId.split(regex = ":".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[0]
 }
 
-fun extractProcessName(processDefinitionId: String, repositoryService: RepositoryService): String {
+fun loadProcessName(processDefinitionId: String, repositoryService: RepositoryService): String {
   val processDefinition = repositoryService.createProcessDefinitionQuery()
     .processDefinitionId(processDefinitionId)
     .singleResult()
@@ -17,7 +17,7 @@ fun extractProcessName(processDefinitionId: String, repositoryService: Repositor
   return processDefinition.name
 }
 
-fun extractCaseName(caseDefinitionId: String, repositoryService: RepositoryService): String {
+fun loadCaseName(caseDefinitionId: String, repositoryService: RepositoryService): String {
   val caseDefinition = repositoryService.createCaseDefinitionQuery()
     .caseDefinitionId(caseDefinitionId)
     .singleResult()

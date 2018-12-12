@@ -23,7 +23,7 @@ camunda:
     default-serialization-format: application/json
     authorization:
       enabled: false
-    history-level: activity
+    history-level: audit
     id-generator: strong
     database:
       schema-update: false
@@ -39,7 +39,7 @@ camunda:
         type: processVariables
       sender:
         enabled: true
-        type: simple
+        type: tx
     dataentry:
       sender:
         enabled: true
@@ -48,7 +48,7 @@ camunda:
       default: "tasks/${formKey}/id/${id}"
 
 logging.level.io.holunda.camunda.taskpool:
-  sender: WARN
+  sender: DEBUG
   core: WARN
   view.simple: DEBUG
 

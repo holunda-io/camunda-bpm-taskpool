@@ -16,7 +16,6 @@
     <maven.deploy.skip>true</maven.deploy.skip>
   </properties>
 
-
   <dependencies>
     <dependency>
       <groupId>io.holunda.taskpool</groupId>
@@ -29,10 +28,6 @@
     <dependency>
       <groupId>io.holunda.taskpool</groupId>
       <artifactId>camunda-bpm-taskpool-collector</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.holunda.taskpool</groupId>
-      <artifactId>camunda-bpm-taskpool-sender</artifactId>
     </dependency>
     <dependency>
       <groupId>io.holunda.taskpool</groupId>

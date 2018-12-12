@@ -53,14 +53,18 @@ class TaskAggregateDeferTest {
         ))
       .`when`(
         DeferInteractionTaskCommand(
-          id = "4711", sourceReference = processReference, taskDefinitionKey = "foo", followUpDate = now
+          id = "4711",
+          sourceReference = processReference,
+          taskDefinitionKey = "foo",
+          followUpDate = now
         ))
       .expectEvents(
         TaskDeferredEvent(
           id = "4711",
           sourceReference = processReference,
           taskDefinitionKey = "foo",
-          followUpDate = now
+          followUpDate = now,
+          formKey = "some"
         ))
   }
 
@@ -89,14 +93,21 @@ class TaskAggregateDeferTest {
           id = "4711",
           sourceReference = processReference,
           taskDefinitionKey = "foo",
-          followUpDate = now
+          followUpDate = now,
+          formKey = "some"
         ))
       .`when`(
         UndeferInteractionTaskCommand(
-          id = "4711", sourceReference = processReference, taskDefinitionKey = "foo"
+          id = "4711",
+          sourceReference = processReference,
+          taskDefinitionKey = "foo"
         ))
       .expectEvents(
-        TaskUndeferredEvent(id = "4711", sourceReference = processReference, taskDefinitionKey = "foo")
+        TaskUndeferredEvent(
+          id = "4711",
+          sourceReference = processReference,
+          taskDefinitionKey = "foo",
+          formKey = "some")
       )
   }
 

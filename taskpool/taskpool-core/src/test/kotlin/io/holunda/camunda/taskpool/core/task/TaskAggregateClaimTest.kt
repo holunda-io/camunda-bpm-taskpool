@@ -63,7 +63,8 @@ class TaskAggregateClaimTest {
           id = "4711",
           sourceReference = processReference,
           taskDefinitionKey = "foo",
-          assignee = "piggy"
+          assignee = "piggy",
+          formKey = "some"
         )
       )
   }
@@ -100,13 +101,15 @@ class TaskAggregateClaimTest {
         TaskUnclaimedEvent(
           id = "4711",
           sourceReference = processReference,
-          taskDefinitionKey = "foo"
+          taskDefinitionKey = "foo",
+          formKey = "some"
         ),
         TaskClaimedEvent(
           id = "4711",
           sourceReference = processReference,
           taskDefinitionKey = "foo",
-          assignee = "piggy"
+          assignee = "piggy",
+          formKey = "some"
         )
       )
   }
@@ -142,7 +145,8 @@ class TaskAggregateClaimTest {
         TaskUnclaimedEvent(
           id = "4711",
           sourceReference = processReference,
-          taskDefinitionKey = "foo"
+          taskDefinitionKey = "foo",
+          formKey = "some"
         )
       )
   }
