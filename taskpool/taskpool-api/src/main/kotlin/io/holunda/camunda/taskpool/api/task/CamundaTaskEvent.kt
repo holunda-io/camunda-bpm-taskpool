@@ -4,6 +4,9 @@ package io.holunda.camunda.taskpool.api.task
  * Identifies camunda task event.
  */
 interface CamundaTaskEvent {
+  /**
+   * Event classification.
+   */
   val eventName: String
 
   companion object {

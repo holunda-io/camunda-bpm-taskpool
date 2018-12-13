@@ -24,7 +24,7 @@ class TaskEventCollector(
   private val collectorProperties: TaskCollectorProperties
 ) {
 
-  val logger = LoggerFactory.getLogger(TaskEventCollector::class.java)
+  private val logger = LoggerFactory.getLogger(TaskEventCollector::class.java)
 
   companion object {
     // high order to be later than all other listeners and work on changed entity

@@ -37,7 +37,9 @@ class TaskCommandCollectorSender(private val sender: CommandSender) : TaskComman
       payload = command.payload,
       businessKey = command.businessKey,
       formKey = command.formKey,
-      correlations = command.correlations
+      correlations = command.correlations,
+      followUpDate = command.followUpDate,
+      enriched = command.enriched
     ))
   }
 
@@ -63,7 +65,9 @@ class TaskCommandCollectorSender(private val sender: CommandSender) : TaskComman
       payload = command.payload,
       businessKey = command.businessKey,
       formKey = command.formKey,
-      correlations = command.correlations
+      correlations = command.correlations,
+      followUpDate = command.followUpDate,
+      enriched = command.enriched
     ))
   }
 
@@ -87,7 +91,8 @@ class TaskCommandCollectorSender(private val sender: CommandSender) : TaskComman
         createTime = command.createTime,
         candidateUsers = command.candidateUsers,
         candidateGroups = command.candidateGroups,
-        assignee = command.assignee
+        assignee = command.assignee,
+        followUpDate = command.followUpDate
       ))
       is UpdateAssignmentTaskCommand -> sender.send(command)
     }

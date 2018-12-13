@@ -20,7 +20,7 @@ open class TaskCommandOrderingHandler(private val eventSourcingRepository: Event
   companion object : KLogging()
 
   @CommandHandler
-  open fun createOrAssign(command: InitialTaskCommand) {
+  open fun handle(command: InitialTaskCommand) {
 
     logger.debug { "Received command $command, delegating to the aggregate" }
 

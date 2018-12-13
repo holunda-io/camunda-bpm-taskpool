@@ -6,7 +6,16 @@ import org.camunda.bpm.engine.variable.VariableMap
  * Represents task payload.
  */
 interface WithPayload {
+  /**
+   * Payload.
+   */
   val payload: VariableMap
+  /**
+   * Business key.
+   */
   val businessKey: String?
+  /**
+   * Enrichment flag.
+   */
   var enriched: Boolean
 }

@@ -16,6 +16,9 @@ import org.camunda.bpm.engine.variable.VariableMap
 import org.camunda.bpm.engine.variable.Variables
 import java.util.*
 
+/**
+ * Engine command assigning a task.
+ */
 data class AssignTaskCommand(
   @TargetAggregateIdentifier
   override val id: String,
@@ -40,7 +43,9 @@ data class AssignTaskCommand(
   override var enriched: Boolean = false
 ) : EnrichedEngineTaskCommand, WithFormKey
 
-
+/**
+ * Engine command to create a task.
+ */
 data class CreateTaskCommand(
   @TargetAggregateIdentifier
   override val id: String,
@@ -65,6 +70,9 @@ data class CreateTaskCommand(
   override var enriched: Boolean = false
 ) : EnrichedEngineTaskCommand, WithFormKey
 
+/**
+ * Engine command to delete a task.
+ */
 data class DeleteTaskCommand(
   @TargetAggregateIdentifier
   override val id: String,
@@ -89,6 +97,9 @@ data class DeleteTaskCommand(
   val deleteReason: String?
 ) : EnrichedEngineTaskCommand
 
+/**
+ * Engine command to complete a task.
+ */
 data class CompleteTaskCommand(
   @TargetAggregateIdentifier
   override val id: String,
@@ -113,6 +124,9 @@ data class CompleteTaskCommand(
 
 ) : EnrichedEngineTaskCommand
 
+/**
+ * Engine command encapsulating first command to the task aggregate.
+ */
 data class InitialTaskCommand(
   @TargetAggregateIdentifier
   override val id: String,
@@ -137,7 +151,9 @@ data class InitialTaskCommand(
   override var enriched: Boolean = false
 ) : EnrichedEngineTaskCommand, TaskIdentity, WithFormKey
 
-
+/**
+ * Command to update existing task.
+ */
 sealed class UpdateTaskCommand(
   @TargetAggregateIdentifier
   override val id: String,
@@ -155,6 +171,9 @@ sealed class UpdateTaskCommand(
   override val followUpDate: Date? = null
 ) : EngineTaskCommand
 
+/**
+ * Command to change a task attribute.
+ */
 data class UpdateAttributeTaskCommand(
   @TargetAggregateIdentifier
   override val id: String,
@@ -180,6 +199,9 @@ data class UpdateAttributeTaskCommand(
   eventName = ATTRIBUTES
 ), TaskIdentity
 
+/**
+ * Command to change task assignment.
+ */
 sealed class UpdateAssignmentTaskCommand(
   override val id: String,
   override val eventName: String,
@@ -190,6 +212,9 @@ sealed class UpdateAssignmentTaskCommand(
   eventName = eventName
 )
 
+/**
+ * Assignment command to add a candidate group.
+ */
 data class AddCandidateGroupCommand(
   override val id: String,
   override val groupId: String
@@ -199,7 +224,9 @@ data class AddCandidateGroupCommand(
   groupId = groupId,
   userId = null
 )
-
+/**
+ * Assignment command to delete a candidate group.
+ */
 data class DeleteCandidateGroupCommand(
   override val id: String,
   override val groupId: String
@@ -210,7 +237,9 @@ data class DeleteCandidateGroupCommand(
   userId = null
 )
 
-
+/**
+ * Assignment command to add a candidate user.
+ */
 data class AddCandidateUserCommand(
   override val id: String,
   override val userId: String
@@ -220,7 +249,9 @@ data class AddCandidateUserCommand(
   groupId = null,
   userId = userId
 )
-
+/**
+ * Assignment command to delete a candidate user.
+ */
 data class DeleteCandidateUserCommand(
   override val id: String,
   override val userId: String

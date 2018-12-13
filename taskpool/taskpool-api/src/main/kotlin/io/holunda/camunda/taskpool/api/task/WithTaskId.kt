@@ -5,5 +5,8 @@ package io.holunda.camunda.taskpool.api.task
  * This is a minimum requirement for the task to be identified.
  */
 interface WithTaskId {
+  /**
+   * Task id.
+   */
   val id: String
 }
