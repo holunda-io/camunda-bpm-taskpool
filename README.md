@@ -46,11 +46,11 @@ The goal of this project is to provide such component as a library, to be used i
 * Camunda Engine Eventing Plugin
 * Camunda Engine Interaction Client
 * [Taskpool Collector](taskpool/taskpool-collector)
-* Taskpool Sender
 * Taskpool Core
 * Datapool Sender
 * Datapool Core
 * Simple View
+* Taskpool Cockpit
 * Tasklist (example)
 
 ## Working Example
