@@ -21,14 +21,19 @@ abstract class TaskEventMapper {
 
   fun dto(withMetadata: TaskEventWithMetaData) =
     when (withMetadata.event) {
+
       is TaskToBeCompletedEvent -> dto(withMetadata.event, withMetadata.instant)
       is TaskClaimedEvent -> dto(withMetadata.event, withMetadata.instant)
       is TaskUnclaimedEvent -> dto(withMetadata.event, withMetadata.instant)
+      is TaskDeferredEvent -> dto(withMetadata.event, withMetadata.instant)
+      is TaskUndeferredEvent -> dto(withMetadata.event, withMetadata.instant)
 
       is TaskCompletedEngineEvent -> dto(withMetadata.event, withMetadata.instant)
       is TaskDeletedEngineEvent -> dto(withMetadata.event, withMetadata.instant)
       is TaskCreatedEngineEvent -> dto(withMetadata.event, withMetadata.instant)
       is TaskAssignedEngineEvent -> dto(withMetadata.event, withMetadata.instant)
+      is TaskAttributeUpdatedEngineEvent -> dto(withMetadata.event, withMetadata.instant)
+
       else -> throw IllegalArgumentException("Unexpected type of $withMetadata: ${withMetadata.javaClass}")
     }
 
@@ -42,6 +47,7 @@ abstract class TaskEventMapper {
     Mapping(target = "task.applicationName", source = "task.sourceReference.applicationName"),
     Mapping(target = "task.tenantId", source = "task.sourceReference.tenantId"),
 
+    Mapping(target = "task.name", source = "task.name"),
     Mapping(target = "task.description", source = "task.description"),
     Mapping(target = "task.candidateUsers", source = "task.candidateUsers"),
     Mapping(target = "task.candidateGroups", source = "task.candidateGroups"),
@@ -67,6 +73,7 @@ abstract class TaskEventMapper {
     Mapping(target = "task.applicationName", source = "task.sourceReference.applicationName"),
     Mapping(target = "task.tenantId", source = "task.sourceReference.tenantId"),
 
+    Mapping(target = "task.name", source = "task.name"),
     Mapping(target = "task.description", source = "task.description"),
     Mapping(target = "task.candidateUsers", source = "task.candidateUsers"),
     Mapping(target = "task.candidateGroups", source = "task.candidateGroups"),
@@ -92,6 +99,7 @@ abstract class TaskEventMapper {
     Mapping(target = "task.applicationName", source = "task.sourceReference.applicationName"),
     Mapping(target = "task.tenantId", source = "task.sourceReference.tenantId"),
 
+    Mapping(target = "task.name", source = "task.name"),
     Mapping(target = "task.description", source = "task.description"),
     Mapping(target = "task.candidateUsers", source = "task.candidateUsers"),
     Mapping(target = "task.candidateGroups", source = "task.candidateGroups"),
@@ -110,6 +118,33 @@ abstract class TaskEventMapper {
 
   @Mappings(
     Mapping(target = "task.id", source = "task.id"),
+    Mapping(target = "task.formKey", ignore = true),
+    Mapping(target = "task.taskDefinitionKey", source = "task.taskDefinitionKey"),
+    Mapping(target = "task.processName", source = "task.sourceReference.name"),
+    Mapping(target = "task.processDefinitionKey", source = "task.sourceReference.definitionKey"),
+    Mapping(target = "task.applicationName", source = "task.sourceReference.applicationName"),
+    Mapping(target = "task.tenantId", source = "task.sourceReference.tenantId"),
+
+    Mapping(target = "task.name", source = "task.name"),
+    Mapping(target = "task.description", source = "task.description"),
+    Mapping(target = "task.candidateUsers", ignore = true),
+    Mapping(target = "task.candidateGroups", ignore = true),
+    Mapping(target = "task.assignee", source = "task.assignee"),
+    Mapping(target = "task.createTime", ignore = true),
+    Mapping(target = "task.dueDate", source = "task.dueDate"),
+    Mapping(target = "task.businessKey", ignore = true),
+    Mapping(target = "task.priority", source = "task.priority"),
+    Mapping(target = "task.payload", ignore = true),
+
+    Mapping(target = "id", source = "task.id"),
+    Mapping(target = "eventType", source = "task.eventType"),
+    Mapping(target = "created", source = "instant")
+  )
+  abstract fun dto(task: TaskAttributeUpdatedEngineEvent, instant: Instant?): TaskEventDto
+
+
+  @Mappings(
+    Mapping(target = "task.id", source = "task.id"),
     Mapping(target = "task.formKey", source = "task.formKey"),
     Mapping(target = "task.taskDefinitionKey", source = "task.taskDefinitionKey"),
     Mapping(target = "task.processName", source = "task.sourceReference.name"),
@@ -117,6 +152,7 @@ abstract class TaskEventMapper {
     Mapping(target = "task.applicationName", source = "task.sourceReference.applicationName"),
     Mapping(target = "task.tenantId", source = "task.sourceReference.tenantId"),
 
+    Mapping(target = "task.name", source = "task.name"),
     Mapping(target = "task.description", source = "task.description"),
     Mapping(target = "task.candidateUsers", source = "task.candidateUsers"),
     Mapping(target = "task.candidateGroups", source = "task.candidateGroups"),
@@ -142,6 +178,7 @@ abstract class TaskEventMapper {
     Mapping(target = "task.applicationName", source = "task.sourceReference.applicationName"),
     Mapping(target = "task.tenantId", source = "task.sourceReference.tenantId"),
 
+    Mapping(target = "task.name", ignore = true),
     Mapping(target = "task.description", ignore = true),
     Mapping(target = "task.candidateUsers", ignore = true),
     Mapping(target = "task.candidateGroups", ignore = true),
@@ -167,6 +204,7 @@ abstract class TaskEventMapper {
     Mapping(target = "task.applicationName", source = "task.sourceReference.applicationName"),
     Mapping(target = "task.tenantId", source = "task.sourceReference.tenantId"),
 
+    Mapping(target = "task.name", ignore = true),
     Mapping(target = "task.description", ignore = true),
     Mapping(target = "task.candidateUsers", ignore = true),
     Mapping(target = "task.candidateGroups", ignore = true),
@@ -183,6 +221,61 @@ abstract class TaskEventMapper {
   )
   abstract fun dto(task: TaskUnclaimedEvent, instant: Instant?): TaskEventDto
 
+  // TODO: add follow-up date
+  @Mappings(
+    Mapping(target = "task.id", source = "task.id"),
+    Mapping(target = "task.formKey", ignore = true),
+    Mapping(target = "task.taskDefinitionKey", source = "task.taskDefinitionKey"),
+    Mapping(target = "task.processName", source = "task.sourceReference.name"),
+    Mapping(target = "task.processDefinitionKey", source = "task.sourceReference.definitionKey"),
+    Mapping(target = "task.applicationName", source = "task.sourceReference.applicationName"),
+    Mapping(target = "task.tenantId", source = "task.sourceReference.tenantId"),
+
+    Mapping(target = "task.name", ignore = true),
+    Mapping(target = "task.description", ignore = true),
+    Mapping(target = "task.candidateUsers", ignore = true),
+    Mapping(target = "task.candidateGroups", ignore = true),
+    Mapping(target = "task.assignee", ignore = true),
+    Mapping(target = "task.createTime", ignore = true),
+    Mapping(target = "task.dueDate", ignore = true),
+    Mapping(target = "task.businessKey", ignore = true),
+    Mapping(target = "task.priority", ignore = true),
+    Mapping(target = "task.payload", ignore = true),
+
+    Mapping(target = "id", source = "task.id"),
+    Mapping(target = "eventType", source = "task.eventType"),
+    Mapping(target = "created", source = "instant")
+  )
+  abstract fun dto(task: TaskUndeferredEvent, instant: Instant?): TaskEventDto
+
+  // TODO: add follow-up date
+  @Mappings(
+    Mapping(target = "task.id", source = "task.id"),
+    Mapping(target = "task.formKey", ignore = true),
+    Mapping(target = "task.taskDefinitionKey", source = "task.taskDefinitionKey"),
+    Mapping(target = "task.processName", source = "task.sourceReference.name"),
+    Mapping(target = "task.processDefinitionKey", source = "task.sourceReference.definitionKey"),
+    Mapping(target = "task.applicationName", source = "task.sourceReference.applicationName"),
+    Mapping(target = "task.tenantId", source = "task.sourceReference.tenantId"),
+
+    Mapping(target = "task.name", ignore = true),
+    Mapping(target = "task.description", ignore = true),
+    Mapping(target = "task.candidateUsers", ignore = true),
+    Mapping(target = "task.candidateGroups", ignore = true),
+    Mapping(target = "task.assignee", ignore = true),
+    Mapping(target = "task.createTime", ignore = true),
+    Mapping(target = "task.dueDate", ignore = true),
+    Mapping(target = "task.businessKey", ignore = true),
+    Mapping(target = "task.priority", ignore = true),
+    Mapping(target = "task.payload", ignore = true),
+
+    Mapping(target = "id", source = "task.id"),
+    Mapping(target = "eventType", source = "task.eventType"),
+    Mapping(target = "created", source = "instant")
+  )
+  abstract fun dto(task: TaskDeferredEvent, instant: Instant?): TaskEventDto
+
+
   @Mappings(
     Mapping(target = "task.id", source = "task.id"),
     Mapping(target = "task.taskDefinitionKey", source = "task.taskDefinitionKey"),
@@ -192,6 +285,7 @@ abstract class TaskEventMapper {
     Mapping(target = "task.applicationName", source = "task.sourceReference.applicationName"),
     Mapping(target = "task.tenantId", source = "task.sourceReference.tenantId"),
 
+    Mapping(target = "task.name", ignore = true),
     Mapping(target = "task.description", ignore = true),
     Mapping(target = "task.candidateUsers", ignore = true),
     Mapping(target = "task.candidateGroups", ignore = true),
