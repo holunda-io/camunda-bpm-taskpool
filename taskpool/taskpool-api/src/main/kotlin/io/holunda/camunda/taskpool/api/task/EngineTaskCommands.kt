@@ -28,7 +28,7 @@ data class AssignTaskCommand(
 
   override val name: String? = null,
   override val description: String? = null,
-  override val priority: Int? = 0,
+  override val priority: Int? = 50,
   override val createTime: Date? = null,
   override val owner: String? = null,
   override val eventName: String = ASSIGN,
@@ -55,7 +55,7 @@ data class CreateTaskCommand(
 
   override val name: String? = null,
   override val description: String? = null,
-  override val priority: Int? = 0,
+  override val priority: Int? = 50,
   override val createTime: Date? = null,
   override val owner: String? = null,
   override val eventName: String = CREATE,
@@ -81,7 +81,7 @@ data class DeleteTaskCommand(
 
   override val name: String? = null,
   override val description: String? = null,
-  override val priority: Int? = 0,
+  override val priority: Int? = 50,
   override val createTime: Date? = null,
   override val owner: String? = null,
   override val eventName: String = DELETE,
@@ -108,7 +108,7 @@ data class CompleteTaskCommand(
 
   override val name: String? = null,
   override val description: String? = null,
-  override val priority: Int? = 0,
+  override val priority: Int? = 50,
   override val createTime: Date? = null,
   override val owner: String? = null,
   override val eventName: String = COMPLETE,
@@ -137,7 +137,7 @@ data class InitialTaskCommand(
 
   override val name: String? = null,
   override val description: String? = null,
-  override val priority: Int? = 0,
+  override val priority: Int? = 50,
   override val createTime: Date? = null,
   override val candidateUsers: List<String> = listOf(),
   override val candidateGroups: List<String> = listOf(),
@@ -160,7 +160,7 @@ sealed class UpdateTaskCommand(
 
   override val name: String? = null,
   override val description: String? = null,
-  override val priority: Int? = 0,
+  override val priority: Int? = 50,
   override val createTime: Date? = null,
   override val owner: String? = null,
   override val eventName: String,

@@ -18,6 +18,14 @@ open class ProcessVariablesTaskCommandEnricher(
 
   override fun <T : EnrichedEngineTaskCommand> enrich(command: T): T {
 
+    // check if the execution exists.
+    // stop enrichment if the execution doesn't exist anymore.
+    runtimeService
+      .createExecutionQuery()
+      .executionId(command.sourceReference.executionId)
+      .singleResult() ?: return command
+
+
     // Payload enrichment
     command.payload.putAllTyped(
       processVariablesFilter.filterVariables(

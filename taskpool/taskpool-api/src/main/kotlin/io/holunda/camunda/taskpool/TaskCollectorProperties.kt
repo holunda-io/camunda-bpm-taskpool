@@ -76,10 +76,6 @@ data class TaskSenderProperties(
  */
 enum class TaskSenderType {
   /**
-   * Direct sending.
-   */
-  simple,
-  /**
    * Sending after transaction commit.
    */
   tx,

@@ -6,4 +6,4 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 
 @SpringBootApplication
 @EnableConfigurationProperties(TaskCollectorProperties::class)
-open class TestApplication
+open class PropertiesTestApplication

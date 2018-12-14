@@ -15,7 +15,7 @@ camunda:
 #        type: processVariables
       sender:
         enabled: true
-        type: simple
+        type: tx
     dataentry:
       sender:
         enabled: true
