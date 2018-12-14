@@ -35,6 +35,7 @@
     <jackson.version>2.9.5</jackson.version>
     <org.mapstruct.version>1.2.0.Final</org.mapstruct.version>
     <assertj.version>3.9.0</assertj.version>
+    <camunda-bpm-assert.version>2.0</camunda-bpm-assert.version>
   </properties>
 
   <modules>
@@ -299,6 +300,18 @@
         <groupId>org.camunda.bpm.extension.mockito</groupId>
         <artifactId>camunda-bpm-mockito</artifactId>
         <version>4.0.0</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>io.holunda.testing</groupId>
+        <artifactId>camunda-bpm-assert</artifactId>
+        <version>${camunda-bpm-assert.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.assertj</groupId>
+        <artifactId>assertj-core</artifactId>
+        <version>${assertj.version}</version>
         <scope>test</scope>
       </dependency>
 

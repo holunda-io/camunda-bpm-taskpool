@@ -66,6 +66,8 @@
       <groupId>org.camunda.bpm.springboot</groupId>
       <artifactId>camunda-bpm-spring-boot-starter-test</artifactId>
     </dependency>
+
+    <!-- For I-Testing -->
     <dependency>
       <groupId>org.camunda.bpm.springboot</groupId>
       <artifactId>camunda-bpm-spring-boot-starter</artifactId>
@@ -78,21 +80,18 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>io.holunda.testing</groupId>
-      <artifactId>camunda-bpm-assert</artifactId>
-      <version>2.0-SNAPSHOT</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
       <groupId>com.h2database</groupId>
       <artifactId>h2</artifactId>
       <scope>test</scope>
     </dependency>
+
+    <dependency>
+      <groupId>io.holunda.testing</groupId>
+      <artifactId>camunda-bpm-assert</artifactId>
+    </dependency>
     <dependency>
       <groupId>org.assertj</groupId>
       <artifactId>assertj-core</artifactId>
-      <version>${assertj.version}</version>
-      <scope>test</scope>
     </dependency>
 
   </dependencies>
