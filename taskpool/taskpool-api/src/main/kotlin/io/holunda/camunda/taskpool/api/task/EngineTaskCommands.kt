@@ -224,6 +224,7 @@ data class AddCandidateGroupCommand(
   groupId = groupId,
   userId = null
 )
+
 /**
  * Assignment command to delete a candidate group.
  */
@@ -249,6 +250,7 @@ data class AddCandidateUserCommand(
   groupId = null,
   userId = userId
 )
+
 /**
  * Assignment command to delete a candidate user.
  */

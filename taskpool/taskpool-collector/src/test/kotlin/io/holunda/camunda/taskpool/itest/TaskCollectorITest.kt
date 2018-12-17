@@ -1,7 +1,9 @@
 package io.holunda.camunda.taskpool.itest
 
+import io.holunda.camunda.taskpool.api.task.CamundaTaskEvent.Companion.ATTRIBUTES
 import io.holunda.camunda.taskpool.api.task.CompleteTaskCommand
 import io.holunda.camunda.taskpool.api.task.DeleteTaskCommand
+import io.holunda.camunda.taskpool.api.task.InitialTaskCommand
 import io.holunda.camunda.taskpool.api.task.ProcessReference
 import io.holunda.camunda.taskpool.sender.CommandGatewayProxy
 import org.camunda.bpm.engine.RepositoryService
@@ -22,6 +24,8 @@ import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit4.SpringRunner
+import java.time.Instant.now
+import java.util.*
 
 
 /**
@@ -91,8 +95,7 @@ class TaskCollectorITest {
       name = task().name,
       businessKey = businessKey,
       taskDefinitionKey = taskDefinitionKey,
-      enriched = true,
-      payload = Variables.putValue("key", "value"),
+      enriched = false,
       deleteReason = reason
     )
 
@@ -215,6 +218,62 @@ class TaskCollectorITest {
     verify(commandGatewayProxy).send(completeCommand)
   }
 
+
+  /**
+   * The process is started and wait in a user task.
+   * The update command is send after the TX commit.
+   */
+  @Test
+  fun `should send task update`() {
+
+    val businessKey = "BK1"
+    val processId = "processId"
+    val taskDefinitionKey = "userTask"
+
+    // deploy
+    repositoryService
+      .createDeployment()
+      .addModelInstance("process.bpmn",
+        createUserTaskProcess(processId,
+          taskDefinitionKey,
+          false))
+      .deploy()
+
+    // start
+    val instance = runtimeService
+      .startProcessInstanceByKey(
+        processId,
+        businessKey,
+        Variables.putValue("key", "value")
+      )
+    assertThat(instance).isNotNull
+    assertThat(instance).isStarted
+    assertThat(instance).isWaitingAt(taskDefinitionKey)
+
+    reset(commandGatewayProxy)
+    val now = Date.from(now())
+    val updateCommand = InitialTaskCommand(
+      id = task().id,
+      sourceReference = ProcessReference(
+        instanceId = instance.id,
+        executionId = task().executionId,
+        definitionId = task().processDefinitionId,
+        name = "My Process",
+        definitionKey = processId,
+        applicationName = "collector-test"
+      ),
+      name = task().name,
+      taskDefinitionKey = taskDefinitionKey,
+      enriched = false,
+      eventName = ATTRIBUTES,
+      dueDate = now
+    )
+
+    // set due date to now
+    taskService.saveTask(task().apply { dueDate = now })
+
+    verify(commandGatewayProxy).send(updateCommand)
+  }
 
   /**
    * Creates a process model instance with start -> []user-task -> (optional: another-user-task) -> end
