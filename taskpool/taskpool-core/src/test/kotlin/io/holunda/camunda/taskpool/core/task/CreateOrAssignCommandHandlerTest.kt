@@ -120,4 +120,22 @@ class CreateOrAssignCommandHandlerTest {
     assertThat(command.taskDefinitionKey).isEqualTo(initialTaskCommand.taskDefinitionKey)
   }
 
+  @Test
+  fun `should create TaskAttributeUpdate command`() {
+
+    val command = createOrAssignCommandHandler.update(initialTaskCommand)
+
+    assertThat(command.assignee).isEqualTo(initialTaskCommand.assignee)
+    assertThat(command.description).isEqualTo(initialTaskCommand.description)
+    assertThat(command.dueDate).isEqualTo(initialTaskCommand.dueDate)
+    assertThat(command.eventName).isEqualTo("attribute-update")
+    assertThat(command.followUpDate).isEqualTo(initialTaskCommand.followUpDate)
+    assertThat(command.id).isEqualTo(initialTaskCommand.id)
+    assertThat(command.name).isEqualTo(initialTaskCommand.name)
+    assertThat(command.owner).isEqualTo(initialTaskCommand.owner)
+    assertThat(command.priority).isEqualTo(initialTaskCommand.priority)
+    assertThat(command.sourceReference).isEqualTo(initialTaskCommand.sourceReference)
+    assertThat(command.taskDefinitionKey).isEqualTo(initialTaskCommand.taskDefinitionKey)
+  }
+
 }

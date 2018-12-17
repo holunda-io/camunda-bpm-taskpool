@@ -104,6 +104,47 @@ open class TaskAggregate() {
     }
   }
 
+  /**
+   * Add candidate group.
+   */
+  @CommandHandler
+  open fun handle(command: AddCandidateGroupCommand) {
+    if (!deleted && !completed) {
+      changeAssignment(command)
+    }
+  }
+
+  /**
+   * Delete candidate group.
+   */
+  @CommandHandler
+  open fun handle(command: DeleteCandidateGroupCommand) {
+    if (!deleted && !completed) {
+      changeAssignment(command)
+    }
+  }
+
+  /**
+   * Add candidate user.
+   */
+  @CommandHandler
+  open fun handle(command: AddCandidateUserCommand) {
+    if (!deleted && !completed) {
+      changeAssignment(command)
+    }
+  }
+
+  /**
+   * Delete candidate user.
+   */
+  @CommandHandler
+  open fun handle(command: DeleteCandidateUserCommand) {
+    if (!deleted && !completed) {
+      changeAssignment(command)
+    }
+  }
+
+
   @EventSourcingHandler
   open fun on(event: TaskCreatedEngineEvent) {
     this.id = event.id
@@ -132,7 +173,8 @@ open class TaskAggregate() {
     logger.debug { "Deleted task $this.id with reason ${event.deleteReason}" }
   }
 
-  internal fun assign(command: AssignTaskCommand) =
+
+  private fun assign(command: AssignTaskCommand) =
     AggregateLifecycle.apply(
       TaskAssignedEngineEvent(
         id = this.id,
@@ -154,7 +196,7 @@ open class TaskAggregate() {
         followUpDate = command.followUpDate
       ))
 
-  internal fun create(command: CreateTaskCommand) =
+  private fun create(command: CreateTaskCommand) =
     AggregateLifecycle.apply(
       TaskCreatedEngineEvent(
         id = command.id,
@@ -176,7 +218,7 @@ open class TaskAggregate() {
         followUpDate = command.followUpDate
       ))
 
-  internal fun complete(command: CompleteTaskCommand) =
+  private fun complete(command: CompleteTaskCommand) =
     AggregateLifecycle.apply(
       TaskCompletedEngineEvent(
         id = this.id,
@@ -198,7 +240,7 @@ open class TaskAggregate() {
         followUpDate = command.followUpDate
       ))
 
-  internal fun delete(command: DeleteTaskCommand) =
+  private fun delete(command: DeleteTaskCommand) =
     AggregateLifecycle.apply(
       TaskDeletedEngineEvent(
         id = this.id,
@@ -221,7 +263,7 @@ open class TaskAggregate() {
         followUpDate = command.followUpDate
       ))
 
-  internal fun updateAttributes(command: UpdateAttributeTaskCommand) {
+  private fun updateAttributes(command: UpdateAttributeTaskCommand) {
     AggregateLifecycle.apply(
       TaskAttributeUpdatedEngineEvent(
         id = this.id,
@@ -237,7 +279,7 @@ open class TaskAggregate() {
       ))
   }
 
-  fun claim(command: InteractionTaskCommand, assignee: String) =
+  private fun claim(command: InteractionTaskCommand, assignee: String) =
     AggregateLifecycle.apply(
       TaskClaimedEvent(
         id = this.id,
@@ -248,7 +290,7 @@ open class TaskAggregate() {
       )
     )
 
-  fun unclaim(command: InteractionTaskCommand) =
+  private fun unclaim(command: InteractionTaskCommand) =
     AggregateLifecycle.apply(
       TaskUnclaimedEvent(
         id = this.id,
@@ -258,7 +300,7 @@ open class TaskAggregate() {
       )
     )
 
-  fun markToBeCompleted(command: CompleteInteractionTaskCommand) =
+  private fun markToBeCompleted(command: CompleteInteractionTaskCommand) =
     AggregateLifecycle.apply(
       TaskToBeCompletedEvent(
         id = this.id,
@@ -269,7 +311,7 @@ open class TaskAggregate() {
       )
     )
 
-  fun defer(command: DeferInteractionTaskCommand) =
+  private fun defer(command: DeferInteractionTaskCommand) =
     AggregateLifecycle.apply(
       TaskDeferredEvent(
         id = this.id,
@@ -280,7 +322,7 @@ open class TaskAggregate() {
       )
     )
 
-  fun undefer(command: UndeferInteractionTaskCommand) =
+  private fun undefer(command: UndeferInteractionTaskCommand) =
     AggregateLifecycle.apply(
       TaskUndeferredEvent(
         id = this.id,
@@ -288,5 +330,39 @@ open class TaskAggregate() {
         sourceReference = this.sourceReference,
         formKey = this.formKey
       )
+    )
+
+  private fun changeAssignment(command: UpdateAssignmentTaskCommand) =
+    AggregateLifecycle.apply(
+      when (command) {
+        is AddCandidateGroupCommand -> TaskCandidateGroupChanged(
+          id = this.id,
+          taskDefinitionKey = this.taskDefinitionKey,
+          sourceReference = this.sourceReference,
+          groupId = command.groupId,
+          assignmentUpdateType = CamundaTaskEvent.CANDIDATE_GROUP_ADD
+        )
+        is DeleteCandidateGroupCommand -> TaskCandidateGroupChanged(
+          id = this.id,
+          taskDefinitionKey = this.taskDefinitionKey,
+          sourceReference = this.sourceReference,
+          groupId = command.groupId,
+          assignmentUpdateType = CamundaTaskEvent.CANDIDATE_GROUP_DELETE
+        )
+        is AddCandidateUserCommand -> TaskCandidateUserChanged(
+          id = this.id,
+          taskDefinitionKey = this.taskDefinitionKey,
+          sourceReference = this.sourceReference,
+          userId = command.userId,
+          assignmentUpdateType = CamundaTaskEvent.CANDIDATE_USER_ADD
+        )
+        is DeleteCandidateUserCommand -> TaskCandidateUserChanged(
+          id = this.id,
+          taskDefinitionKey = this.taskDefinitionKey,
+          sourceReference = this.sourceReference,
+          userId = command.userId,
+          assignmentUpdateType = CamundaTaskEvent.CANDIDATE_USER_DELETE
+        )
+      }
     )
 }

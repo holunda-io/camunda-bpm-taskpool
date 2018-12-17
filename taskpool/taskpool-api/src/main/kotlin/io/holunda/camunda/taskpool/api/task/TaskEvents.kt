@@ -8,6 +8,15 @@ import org.camunda.bpm.engine.variable.VariableMap
 import org.camunda.bpm.engine.variable.Variables
 import java.util.*
 
+/**
+ * Task event is either:
+ * <ul>
+ *     <li>TaskEngineEvent</li>
+ *     <li>TaskAttributeUpdateEvent</li>
+ *     <li>TaskAssignmentUpdateEvent</li>
+ *     <li>TaskInteractionEvent</li>
+ * </ul>
+ */
 sealed class TaskEvent(val eventType: String) : TaskIdentity
 
 sealed class TaskEngineEvent(eventType: String) : TaskEvent(eventType), WithPayload, WithCorrelations
@@ -119,6 +128,32 @@ data class TaskAttributeUpdatedEngineEvent(
   val followUpDate: Date? = null
 ) : TaskEvent("attribute-update")
 
+@Revision("1")
+sealed class TaskAssignmentUpdatedEngineEvent(
+  override val id: String,
+  override val sourceReference: SourceReference,
+  override val taskDefinitionKey: String,
+  assignmentUpdateType: String
+) : TaskEvent(assignmentUpdateType)
+
+@Revision("1")
+data class TaskCandidateGroupChanged(
+  override val id: String,
+  override val sourceReference: SourceReference,
+  override val taskDefinitionKey: String,
+  val groupId: String,
+  val assignmentUpdateType: String
+) : TaskAssignmentUpdatedEngineEvent(id, sourceReference, taskDefinitionKey, assignmentUpdateType)
+
+@Revision("1")
+data class TaskCandidateUserChanged(
+  override val id: String,
+  override val sourceReference: SourceReference,
+  override val taskDefinitionKey: String,
+  val userId: String,
+  val assignmentUpdateType: String
+) : TaskAssignmentUpdatedEngineEvent(id, sourceReference, taskDefinitionKey, assignmentUpdateType)
+
 
 @Revision("2")
 data class TaskClaimedEvent(
@@ -162,3 +197,4 @@ data class TaskUndeferredEvent(
   override val taskDefinitionKey: String,
   override val formKey: String?
 ) : TaskInteractionEvent("undefer")
+
