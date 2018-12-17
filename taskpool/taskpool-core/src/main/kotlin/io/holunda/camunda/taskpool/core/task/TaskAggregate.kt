@@ -31,8 +31,10 @@ open class TaskAggregate() {
 
   @CommandHandler
   open fun handle(command: AssignTaskCommand) {
-    if (assignee != command.assignee) {
-      assign(command)
+    if (!deleted && !completed) {
+      if (assignee != command.assignee) {
+        assign(command)
+      }
     }
   }
 
