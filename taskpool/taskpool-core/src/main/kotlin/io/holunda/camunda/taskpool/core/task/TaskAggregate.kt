@@ -63,31 +63,43 @@ open class TaskAggregate() {
   @CommandHandler
   open fun handle(command: ClaimInteractionTaskCommand) {
     if (!deleted && !completed) {
-      if (assignee != null) {
-        // task is assigned, unclaim it first
-        unclaim(command)
+      if (command.assignee != assignee) {
+        // task is assigned to a different user, un-claim it first
+        if (assignee != null) {
+          unclaim()
+        }
+        claim(command.assignee)
       }
-      claim(command, command.assignee)
     }
   }
 
   @CommandHandler
   open fun handle(command: UnclaimInteractionTaskCommand) {
     if (!deleted && !completed && assignee != null) {
-      unclaim(command)
+      unclaim()
     }
   }
 
   @CommandHandler
   open fun handle(command: CompleteInteractionTaskCommand) {
     if (!deleted && !completed) {
+
       if (command.assignee != null) {
-        if (assignee != null) {
-          unclaim(command)
+        // task assignment if the assignee is set in the command
+
+        if (command.assignee != this.assignee) {
+
+          if (this.assignee != null) {
+            // task is assigned, but to a different user, un-claim it first.
+            unclaim()
+          }
+
+          // Smart cast is not possible here, because it is a public API declared in a different module.
+          claim(command.assignee!!)
         }
-        // Smart cast is not possible here, because it is a public API declared in a different module.
-        claim(command, command.assignee!!)
+
       }
+
       markToBeCompleted(command)
     }
   }
@@ -102,7 +114,7 @@ open class TaskAggregate() {
   @CommandHandler
   open fun handle(command: UndeferInteractionTaskCommand) {
     if (!deleted && !completed) {
-      undefer(command)
+      undefer()
     }
   }
 
@@ -281,7 +293,7 @@ open class TaskAggregate() {
       ))
   }
 
-  private fun claim(command: InteractionTaskCommand, assignee: String) =
+  private fun claim(assignee: String) =
     AggregateLifecycle.apply(
       TaskClaimedEvent(
         id = this.id,
@@ -292,7 +304,7 @@ open class TaskAggregate() {
       )
     )
 
-  private fun unclaim(command: InteractionTaskCommand) =
+  private fun unclaim() =
     AggregateLifecycle.apply(
       TaskUnclaimedEvent(
         id = this.id,
@@ -324,7 +336,7 @@ open class TaskAggregate() {
       )
     )
 
-  private fun undefer(command: UndeferInteractionTaskCommand) =
+  private fun undefer() =
     AggregateLifecycle.apply(
       TaskUndeferredEvent(
         id = this.id,

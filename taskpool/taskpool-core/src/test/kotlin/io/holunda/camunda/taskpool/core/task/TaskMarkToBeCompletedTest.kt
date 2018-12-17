@@ -13,6 +13,10 @@ class TaskMarkToBeCompletedTest {
 
   private val fixture: AggregateTestFixture<TaskAggregate> = AggregateTestFixture<TaskAggregate>(TaskAggregate::class.java)
   private lateinit var now: Date
+  private lateinit var assigned: TaskCreatedEngineEvent
+  private lateinit var unassigned: TaskCreatedEngineEvent
+  private lateinit var deleted: TaskDeletedEngineEvent
+  private lateinit var completed: TaskCompletedEngineEvent
 
   private val processReference = ProcessReference(
     definitionKey = "process_key",
@@ -26,33 +30,74 @@ class TaskMarkToBeCompletedTest {
   @Before
   fun setUp() {
     now = Date()
+    assigned = TaskCreatedEngineEvent(
+      id = "4711",
+      name = "Foo",
+      createTime = now,
+      owner = "kermit",
+      taskDefinitionKey = "foo",
+      formKey = "some",
+      businessKey = "business123",
+      sourceReference = processReference,
+      assignee = "kermit",
+      candidateUsers = listOf("kermit", "gonzo"),
+      candidateGroups = listOf("muppets"),
+      priority = 51,
+      description = "Funky task",
+      payload = Variables.createVariables().putValueTyped("key", Variables.stringValue("value")),
+      correlations = newCorrelations().addCorrelation("Request", "business123")
+    )
+
+    unassigned = TaskCreatedEngineEvent(
+      id = "4711",
+      name = "Foo",
+      createTime = now,
+      owner = "kermit",
+      taskDefinitionKey = "foo",
+      formKey = "some",
+      businessKey = "business123",
+      sourceReference = processReference,
+      assignee = null,
+      candidateUsers = listOf("kermit", "gonzo"),
+      candidateGroups = listOf("muppets"),
+      priority = 51,
+      description = "Funky task",
+      payload = Variables.createVariables().putValueTyped("key", Variables.stringValue("value")),
+      correlations = newCorrelations().addCorrelation("Request", "business123")
+    )
+
+    deleted = TaskDeletedEngineEvent(
+      id = "4711",
+      name = "Foo",
+      createTime = now,
+      owner = "kermit",
+      taskDefinitionKey = "foo",
+      formKey = "some",
+      businessKey = "business123",
+      sourceReference = processReference,
+      deleteReason = "Test delete"
+    )
+
+    completed = TaskCompletedEngineEvent(
+      id = "4711",
+      name = "Foo",
+      createTime = now,
+      owner = "kermit",
+      taskDefinitionKey = "foo",
+      formKey = "some",
+      businessKey = "business123",
+      sourceReference = processReference
+    )
   }
 
 
   @Test
-  fun `should unclaim, claim and mark task to be completed`() {
+  fun `should re-assign assigned task and mark task to be completed`() {
 
     val completionPayload = Variables.createVariables().putValueTyped("user-input", Variables.stringValue("whatever"))
 
     fixture
-      .given(
-        TaskCreatedEngineEvent(
-          id = "4711",
-          name = "Foo",
-          createTime = now,
-          owner = "kermit",
-          taskDefinitionKey = "foo",
-          formKey = "some",
-          businessKey = "business123",
-          sourceReference = processReference,
-          assignee = "kermit",
-          candidateUsers = listOf("kermit", "gonzo"),
-          candidateGroups = listOf("muppets"),
-          priority = 51,
-          description = "Funky task",
-          payload = Variables.createVariables().putValueTyped("key", Variables.stringValue("value")),
-          correlations = newCorrelations().addCorrelation("Request", "business123")
-        ))
+      .given(assigned)
       .`when`(
         CompleteInteractionTaskCommand(
           id = "4711",
@@ -86,29 +131,12 @@ class TaskMarkToBeCompletedTest {
   }
 
   @Test
-  fun `should mark task to be completed`() {
+  fun `should mark task to be completed if no assignee`() {
 
     val completionPayload = Variables.createVariables().putValueTyped("user-input", Variables.stringValue("whatever"))
 
     fixture
-      .given(
-        TaskCreatedEngineEvent(
-          id = "4711",
-          name = "Foo",
-          createTime = now,
-          owner = "kermit",
-          taskDefinitionKey = "foo",
-          formKey = "some",
-          businessKey = "business123",
-          sourceReference = processReference,
-          assignee = "kermit",
-          candidateUsers = listOf("kermit", "gonzo"),
-          candidateGroups = listOf("muppets"),
-          priority = 51,
-          description = "Funky task",
-          payload = Variables.createVariables().putValueTyped("key", Variables.stringValue("value")),
-          correlations = newCorrelations().addCorrelation("Request", "business123")
-        ))
+      .given(assigned)
       .`when`(
         CompleteInteractionTaskCommand(
           id = "4711",
@@ -134,24 +162,7 @@ class TaskMarkToBeCompletedTest {
     val completionPayload = Variables.createVariables().putValueTyped("user-input", Variables.stringValue("whatever"))
 
     fixture
-      .given(
-        TaskCreatedEngineEvent(
-          id = "4711",
-          name = "Foo",
-          createTime = now,
-          owner = "kermit",
-          taskDefinitionKey = "foo",
-          formKey = "some",
-          businessKey = "business123",
-          sourceReference = processReference,
-          assignee = null,
-          candidateUsers = listOf("kermit", "gonzo"),
-          candidateGroups = listOf("muppets"),
-          priority = 51,
-          description = "Funky task",
-          payload = Variables.createVariables().putValueTyped("key", Variables.stringValue("value")),
-          correlations = newCorrelations().addCorrelation("Request", "business123")
-        ))
+      .given(unassigned)
       .`when`(
         CompleteInteractionTaskCommand(
           id = "4711",
@@ -177,41 +188,67 @@ class TaskMarkToBeCompletedTest {
         )
       )
   }
+
+  @Test
+  fun `should not re-assign but mark task to be completed if the same assignee`() {
+
+    val completionPayload = Variables.createVariables().putValueTyped("user-input", Variables.stringValue("whatever"))
+
+    fixture
+      .given(assigned)
+      .`when`(
+        CompleteInteractionTaskCommand(
+          id = "4711",
+          sourceReference = processReference,
+          taskDefinitionKey = "foo",
+          payload = completionPayload,
+          assignee = "kermit"
+        )
+      ).expectEvents(
+        TaskToBeCompletedEvent(
+          id = "4711",
+          sourceReference = processReference,
+          taskDefinitionKey = "foo",
+          payload = completionPayload,
+          formKey = "some"
+        )
+      )
+  }
+
+  @Test
+  fun `should not claim but mark task to be completed if the no assignee`() {
+
+    val completionPayload = Variables.createVariables().putValueTyped("user-input", Variables.stringValue("whatever"))
+
+    fixture
+      .given(unassigned)
+      .`when`(
+        CompleteInteractionTaskCommand(
+          id = "4711",
+          sourceReference = processReference,
+          taskDefinitionKey = "foo",
+          payload = completionPayload,
+          assignee = null
+        )
+      ).expectEvents(
+        TaskToBeCompletedEvent(
+          id = "4711",
+          sourceReference = processReference,
+          taskDefinitionKey = "foo",
+          payload = completionPayload,
+          formKey = "some"
+        )
+      )
+  }
+
+
   @Test
   fun `should not mark task to be completed if already deleted`() {
 
     val completionPayload = Variables.createVariables().putValueTyped("user-input", Variables.stringValue("whatever"))
 
     fixture
-      .given(
-        TaskCreatedEngineEvent(
-          id = "4711",
-          name = "Foo",
-          createTime = now,
-          owner = "kermit",
-          taskDefinitionKey = "foo",
-          formKey = "some",
-          businessKey = "business123",
-          sourceReference = processReference,
-          assignee = "kermit",
-          candidateUsers = listOf("kermit", "gonzo"),
-          candidateGroups = listOf("muppets"),
-          priority = 51,
-          description = "Funky task",
-          payload = Variables.createVariables().putValueTyped("key", Variables.stringValue("value")),
-          correlations = newCorrelations().addCorrelation("Request", "business123")
-        ),
-        TaskDeletedEngineEvent(
-          id = "4711",
-          name = "Foo",
-          createTime = now,
-          owner = "kermit",
-          taskDefinitionKey = "foo",
-          formKey = "some",
-          businessKey = "business123",
-          sourceReference = processReference,
-          deleteReason = "Test delete"
-        ))
+      .given(assigned, deleted)
       .`when`(
         CompleteInteractionTaskCommand(
           id = "4711",
@@ -229,34 +266,7 @@ class TaskMarkToBeCompletedTest {
     val completionPayload = Variables.createVariables().putValueTyped("user-input", Variables.stringValue("whatever"))
 
     fixture
-      .given(
-        TaskCreatedEngineEvent(
-          id = "4711",
-          name = "Foo",
-          createTime = now,
-          owner = "kermit",
-          taskDefinitionKey = "foo",
-          formKey = "some",
-          businessKey = "business123",
-          sourceReference = processReference,
-          assignee = "kermit",
-          candidateUsers = listOf("kermit", "gonzo"),
-          candidateGroups = listOf("muppets"),
-          priority = 51,
-          description = "Funky task",
-          payload = Variables.createVariables().putValueTyped("key", Variables.stringValue("value")),
-          correlations = newCorrelations().addCorrelation("Request", "business123")
-        ),
-        TaskCompletedEngineEvent(
-          id = "4711",
-          name = "Foo",
-          createTime = now,
-          owner = "kermit",
-          taskDefinitionKey = "foo",
-          formKey = "some",
-          businessKey = "business123",
-          sourceReference = processReference
-        ))
+      .given(assigned, completed)
       .`when`(
         CompleteInteractionTaskCommand(
           id = "4711",
