@@ -5,6 +5,7 @@ import io.holunda.camunda.taskpool.api.task.*
 import io.holunda.camunda.taskpool.extractKey
 import io.holunda.camunda.taskpool.loadCaseName
 import io.holunda.camunda.taskpool.loadProcessName
+import org.camunda.bpm.engine.FormService
 import org.camunda.bpm.engine.RepositoryService
 import org.camunda.bpm.engine.delegate.DelegateTask
 import org.camunda.bpm.engine.impl.history.event.HistoricIdentityLinkLogEventEntity
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Component
 @Component
 class TaskEventCollector(
   private val repositoryService: RepositoryService,
+  private val formService: FormService,
   private val collectorProperties: TaskCollectorProperties
 ) {
 
@@ -49,7 +51,7 @@ class TaskEventCollector(
       name = task.name,
       owner = task.owner,
       priority = task.priority,
-      formKey = null, // loaded lazily
+      formKey = task.formKey(formService),
       taskDefinitionKey = task.taskDefinitionKey,
       businessKey = task.execution.businessKey,
       sourceReference = task.sourceReference(repositoryService, collectorProperties.enricher.applicationName)
@@ -97,7 +99,6 @@ class TaskEventCollector(
       owner = task.owner,
       priority = task.priority,
       taskDefinitionKey = task.taskDefinitionKey,
-      formKey = null, // loaded lazily
       businessKey = task.execution.businessKey,
       sourceReference = task.sourceReference(repositoryService, collectorProperties.enricher.applicationName)
     )
@@ -241,6 +242,18 @@ fun DelegateTask.sourceReference(repositoryService: RepositoryService, applicati
 
 
 fun DelegateTask.processDefinitionKey(): String = extractKey(this.processDefinitionId)
+/**
+ * Retrieves form key if found, or <code>null</code>.
+ */
+fun DelegateTask.formKey(formService: FormService): String? {
+  val definitionId: String = when {
+    processDefinitionId != null -> processDefinitionId
+    caseDefinitionId != null -> caseDefinitionId
+    else -> return null
+  }
+  return formService.getTaskFormKey(definitionId, this.taskDefinitionKey)
+}
+
 fun HistoricTaskInstanceEventEntity.processDefinitionKey(): String = extractKey(this.processDefinitionId)
 fun DelegateTask.caseDefinitionKey(): String = extractKey(this.caseDefinitionId)
 fun HistoricTaskInstanceEventEntity.caseDefinitionKey(): String = extractKey(this.caseDefinitionId)

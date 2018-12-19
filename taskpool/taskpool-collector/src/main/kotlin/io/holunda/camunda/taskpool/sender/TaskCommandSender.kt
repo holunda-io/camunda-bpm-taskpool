@@ -8,6 +8,7 @@ import io.holunda.camunda.taskpool.api.task.CamundaTaskEvent.Companion.CREATE
 import org.springframework.context.event.EventListener
 import org.springframework.stereotype.Component
 
+// FIXME: remove!
 /**
  * Receives task commands from Spring event bus and forwards them to the
  * corresponding sender.
@@ -20,6 +21,8 @@ class TaskCommandCollectorSender(private val sender: CommandSender) : TaskComman
    */
   @EventListener
   override fun sendTaskCommand(command: AssignTaskCommand) {
+    sender.send(command)
+    /*
     sender.send(InitialTaskCommand(
       id = command.id,
       taskDefinitionKey = command.taskDefinitionKey,
@@ -36,11 +39,11 @@ class TaskCommandCollectorSender(private val sender: CommandSender) : TaskComman
       assignee = command.assignee,
       payload = command.payload,
       businessKey = command.businessKey,
-      formKey = command.formKey,
       correlations = command.correlations,
       followUpDate = command.followUpDate,
       enriched = command.enriched
     ))
+    */
   }
 
   /**
@@ -48,6 +51,8 @@ class TaskCommandCollectorSender(private val sender: CommandSender) : TaskComman
    */
   @EventListener
   override fun sendTaskCommand(command: CreateTaskCommand) {
+    sender.send(command)
+    /*
     sender.send(InitialTaskCommand(
       id = command.id,
       taskDefinitionKey = command.taskDefinitionKey,
@@ -69,6 +74,7 @@ class TaskCommandCollectorSender(private val sender: CommandSender) : TaskComman
       followUpDate = command.followUpDate,
       enriched = command.enriched
     ))
+    */
   }
 
   /**
@@ -76,7 +82,8 @@ class TaskCommandCollectorSender(private val sender: CommandSender) : TaskComman
    */
   @EventListener
   override fun sendTaskCommand(command: UpdateTaskCommand) {
-
+    sender.send(command)
+  /*
     when (command) {
       is UpdateAttributeTaskCommand -> sender.send(InitialTaskCommand(
         id = command.id,
@@ -96,6 +103,7 @@ class TaskCommandCollectorSender(private val sender: CommandSender) : TaskComman
       ))
       is UpdateAssignmentTaskCommand -> sender.send(command)
     }
+    */
   }
 
 

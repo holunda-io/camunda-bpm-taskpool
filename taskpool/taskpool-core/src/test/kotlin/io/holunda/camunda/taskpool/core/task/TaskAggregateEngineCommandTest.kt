@@ -167,7 +167,6 @@ class TaskAggregateEngineCommandTest {
           eventName = "create",
           owner = "kermit",
           taskDefinitionKey = "foo",
-          formKey = "some",
           businessKey = "business123",
           enriched = true,
           sourceReference = processReference,
@@ -186,9 +185,9 @@ class TaskAggregateEngineCommandTest {
           id = "4711",
           name = "Foo",
           createTime = now,
+          formKey = "some",
           owner = "kermit",
           taskDefinitionKey = "foo",
-          formKey = "some",
           businessKey = "business123",
           enriched = true,
           sourceReference = processReference,
@@ -221,7 +220,6 @@ class TaskAggregateEngineCommandTest {
           id = "4711",
           name = "Foo",
           taskDefinitionKey = "foo",
-          formKey = "some",
           assignee = "kermit",
           sourceReference = processReference
         )
@@ -232,7 +230,6 @@ class TaskAggregateEngineCommandTest {
           name = "Foo",
           createTime = now,
           taskDefinitionKey = "foo",
-          formKey = "some",
           assignee = "kermit",
           sourceReference = processReference
         ))
@@ -420,7 +417,6 @@ class TaskAggregateEngineCommandTest {
           eventName = "create",
           owner = "kermit",
           taskDefinitionKey = "foo",
-          formKey = "some",
           businessKey = "business123",
           enriched = true,
           sourceReference = processReference,
@@ -486,7 +482,6 @@ class TaskAggregateEngineCommandTest {
           eventName = "create",
           owner = "kermit",
           taskDefinitionKey = "foo",
-          formKey = "some",
           businessKey = "business123",
           enriched = true,
           sourceReference = processReference,

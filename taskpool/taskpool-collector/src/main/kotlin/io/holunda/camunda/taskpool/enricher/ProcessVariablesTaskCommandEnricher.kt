@@ -1,6 +1,8 @@
 package io.holunda.camunda.taskpool.enricher
 
 import io.holunda.camunda.taskpool.api.task.EnrichedEngineTaskCommand
+import io.holunda.camunda.taskpool.api.task.WithFormKey
+import org.camunda.bpm.engine.FormService
 import org.camunda.bpm.engine.RuntimeService
 import org.camunda.bpm.engine.variable.VariableMap
 import org.camunda.bpm.engine.variable.Variables
@@ -12,6 +14,7 @@ import org.camunda.bpm.engine.variable.Variables
  */
 open class ProcessVariablesTaskCommandEnricher(
   private val runtimeService: RuntimeService,
+  private val formService: FormService,
   private val processVariablesFilter: ProcessVariablesFilter,
   private val processVariablesCorrelator: ProcessVariablesCorrelator
 ) : VariablesEnricher {
@@ -24,7 +27,6 @@ open class ProcessVariablesTaskCommandEnricher(
       .createExecutionQuery()
       .executionId(command.sourceReference.executionId)
       .singleResult() ?: return command
-
 
     // Payload enrichment
     command.payload.putAllTyped(

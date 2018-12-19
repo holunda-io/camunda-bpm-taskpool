@@ -24,7 +24,6 @@ data class AssignTaskCommand(
   override val id: String,
   override val sourceReference: SourceReference,
   override val taskDefinitionKey: String,
-  override val formKey: String? = null,
 
   override val name: String? = null,
   override val description: String? = null,
@@ -41,7 +40,7 @@ data class AssignTaskCommand(
   override val payload: VariableMap = Variables.createVariables(),
   override val correlations: CorrelationMap = newCorrelations(),
   override var enriched: Boolean = false
-) : EnrichedEngineTaskCommand, WithFormKey
+) : EnrichedEngineTaskCommand
 
 /**
  * Engine command to create a task.

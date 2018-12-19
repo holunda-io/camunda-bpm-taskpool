@@ -110,7 +110,6 @@ class CreateOrAssignCommandHandlerTest {
     assertThat(command.enriched).isEqualTo(initialTaskCommand.enriched)
     assertThat(command.eventName).isEqualTo(initialTaskCommand.eventName)
     assertThat(command.followUpDate).isEqualTo(initialTaskCommand.followUpDate)
-    assertThat(command.formKey).isEqualTo(initialTaskCommand.formKey)
     assertThat(command.id).isEqualTo(initialTaskCommand.id)
     assertThat(command.name).isEqualTo(initialTaskCommand.name)
     assertThat(command.owner).isEqualTo(initialTaskCommand.owner)

@@ -67,7 +67,6 @@ open class TaskCommandOrderingHandler(private val eventSourcingRepository: Event
       assignee = command.assignee,
       payload = command.payload,
       businessKey = command.businessKey,
-      formKey = command.formKey,
       correlations = command.correlations
     )
 
