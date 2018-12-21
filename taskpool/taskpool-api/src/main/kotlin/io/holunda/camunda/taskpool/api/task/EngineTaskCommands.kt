@@ -128,34 +128,6 @@ data class CompleteTaskCommand(
 ) : EnrichedEngineTaskCommand
 
 /**
- * Engine command encapsulating first command to the task aggregate.
- */
-data class InitialTaskCommand(
-  @TargetAggregateIdentifier
-  override val id: String,
-  override val sourceReference: SourceReference,
-  override val taskDefinitionKey: String,
-  override val formKey: String? = null,
-  override val eventName: String,
-
-  override val order: Int = 0,
-  override val name: String? = null,
-  override val description: String? = null,
-  override val priority: Int? = 50,
-  override val createTime: Date? = null,
-  override val candidateUsers: List<String> = listOf(),
-  override val candidateGroups: List<String> = listOf(),
-  override val assignee: String? = null,
-  override val owner: String? = null,
-  override val dueDate: Date? = null,
-  override val followUpDate: Date? = null,
-  override val businessKey: String? = null,
-  override val payload: VariableMap = Variables.createVariables(),
-  override val correlations: CorrelationMap = newCorrelations(),
-  override var enriched: Boolean = false
-) : EnrichedEngineTaskCommand, TaskIdentity, WithFormKey
-
-/**
  * Command to update existing task.
  */
 sealed class UpdateTaskCommand(
