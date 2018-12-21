@@ -1,16 +1,20 @@
 package io.holunda.camunda.taskpool.itest
 
-import io.holunda.camunda.taskpool.api.task.CamundaTaskEvent.Companion.ASSIGN
-import io.holunda.camunda.taskpool.api.task.CamundaTaskEvent.Companion.ATTRIBUTES
+import io.holunda.camunda.taskpool.api.task.AddCandidateGroupCommand
+import io.holunda.camunda.taskpool.api.task.AddCandidateUserCommand
+import io.holunda.camunda.taskpool.api.task.AssignTaskCommand
 import io.holunda.camunda.taskpool.api.task.CamundaTaskEvent.Companion.CREATE
 import io.holunda.camunda.taskpool.api.task.CompleteTaskCommand
+import io.holunda.camunda.taskpool.api.task.CreateTaskCommand
 import io.holunda.camunda.taskpool.api.task.DeleteTaskCommand
-import io.holunda.camunda.taskpool.api.task.InitialTaskCommand
 import io.holunda.camunda.taskpool.api.task.ProcessReference
+import io.holunda.camunda.taskpool.api.task.UpdateAttributeTaskCommand
 import io.holunda.camunda.taskpool.sender.AxonCommandGatewayWrapper
 import org.camunda.bpm.engine.RepositoryService
 import org.camunda.bpm.engine.RuntimeService
 import org.camunda.bpm.engine.TaskService
+import org.camunda.bpm.engine.delegate.DelegateTask
+import org.camunda.bpm.engine.delegate.TaskListener
 import org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareAssertions.assertThat
 import org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.*
 import org.camunda.bpm.engine.variable.Variables
@@ -18,11 +22,14 @@ import org.camunda.bpm.model.bpmn.Bpmn
 import org.camunda.bpm.model.xml.instance.ModelElementInstance
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.Mockito.inOrder
 import org.mockito.Mockito.reset
 import org.mockito.Mockito.verify
+import org.mockito.Mockito.verifyNoMoreInteractions
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
+import org.springframework.stereotype.Component
 import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit4.SpringRunner
@@ -254,7 +261,7 @@ class TaskCollectorITest {
 
     reset(commandGateway)
     val now = Date.from(now())
-    val updateCommand = InitialTaskCommand(
+    val updateCommand = UpdateAttributeTaskCommand(
       id = task().id,
       sourceReference = ProcessReference(
         instanceId = instance.id,
@@ -265,10 +272,12 @@ class TaskCollectorITest {
         applicationName = "collector-test"
       ),
       name = task().name,
+      description = null,
       taskDefinitionKey = taskDefinitionKey,
-      enriched = false,
-      eventName = ATTRIBUTES,
-      dueDate = now
+      dueDate = now,
+      assignee = null,
+      owner = null,
+      priority = 50
     )
 
     // set due date to now
@@ -294,6 +303,9 @@ class TaskCollectorITest {
       .addModelInstance("process.bpmn",
         createUserTaskProcess(processId,
           taskDefinitionKey,
+          taskListeners = listOf(
+            Pair("create", "#{addCandidateUserPiggy}"),
+            Pair("create", "#{addCandidateGroupMuppetShow}")),
           additionalUserTask = false,
           asyncOnStart = true))
       .deploy()
@@ -314,7 +326,7 @@ class TaskCollectorITest {
     // user task
     assertThat(instance).isWaitingAt(taskDefinitionKey)
 
-    val createCommand = InitialTaskCommand(
+    val createCommand = CreateTaskCommand(
       id = task().id,
       sourceReference = ProcessReference(
         instanceId = instance.id,
@@ -326,14 +338,46 @@ class TaskCollectorITest {
       ),
       name = task().name,
       taskDefinitionKey = taskDefinitionKey,
+      candidateUsers = listOf("piggy"),
+      candidateGroups = listOf("muppetshow"),
       enriched = true,
       eventName = CREATE,
       createTime = task().createTime,
       businessKey = "BK1",
-      payload = Variables.putValue("key", "value")
+      payload = Variables.putValue("key", Variables.stringValue("value"))
+    )
+    val updateCommand = UpdateAttributeTaskCommand(
+      id = task().id,
+      sourceReference = ProcessReference(
+        instanceId = instance.id,
+        executionId = task().executionId,
+        definitionId = task().processDefinitionId,
+        name = "My Process",
+        definitionKey = processId,
+        applicationName = "collector-test"
+      ),
+      name = task().name,
+      description = null,
+      taskDefinitionKey = taskDefinitionKey,
+      priority = 50,
+      assignee = null,
+      owner = null
+    )
+    val addCandidateUserCommand = AddCandidateUserCommand(
+      id = task().id,
+      userId = "piggy"
+    )
+    val addCandidateGroupCommand = AddCandidateGroupCommand(
+      id = task().id,
+      groupId = "muppetshow"
     )
 
-    verify(commandGateway).sendToGateway(createCommand)
+    val inOrder = inOrder(commandGateway)
+    inOrder.verify(commandGateway).sendToGateway(createCommand)
+    inOrder.verify(commandGateway).sendToGateway(addCandidateUserCommand)
+    inOrder.verify(commandGateway).sendToGateway(addCandidateGroupCommand)
+    inOrder.verify(commandGateway).sendToGateway(updateCommand)
+    verifyNoMoreInteractions(commandGateway)
   }
 
   /**
@@ -368,7 +412,7 @@ class TaskCollectorITest {
     assertThat(instance).isWaitingAt(taskDefinitionKey)
 
     reset(commandGateway)
-    val assignCommand = InitialTaskCommand(
+    val assignCommand = AssignTaskCommand(
       id = task().id,
       sourceReference = ProcessReference(
         instanceId = instance.id,
@@ -381,7 +425,6 @@ class TaskCollectorITest {
       name = task().name,
       taskDefinitionKey = taskDefinitionKey,
       enriched = false,
-      eventName = ASSIGN,
       businessKey = "BK1",
       assignee = "kermit",
       createTime = task().createTime
@@ -396,11 +439,18 @@ class TaskCollectorITest {
   /**
    * Creates a process model instance with start -> []user-task -> (optional: another-user-task) -> end
    */
-  fun createUserTaskProcess(processId: String, taskDefinitionKey: String, additionalUserTask: Boolean = false, asyncOnStart: Boolean = false) =
+  fun createUserTaskProcess(processId: String, taskDefinitionKey: String, additionalUserTask: Boolean = false, asyncOnStart: Boolean = false,
+                            candidateGroups: String = "", candidateUsers: String = "", taskListeners: List<Pair<String, String>> = listOf()) =
     Bpmn
       .createExecutableProcess(processId)
       .startEvent("start").camundaAsyncAfter(asyncOnStart)
-      .userTask(taskDefinitionKey).apply {
+      .userTask(taskDefinitionKey).camundaCandidateGroups(candidateGroups).camundaCandidateUsers(candidateUsers)
+      .apply {
+        taskListeners.forEach {
+          this.camundaTaskListenerDelegateExpression(it.first, it.second)
+        }
+      }
+      .apply {
         if (additionalUserTask) {
           this.userTask("another-user-task")
         }
@@ -410,4 +460,18 @@ class TaskCollectorITest {
         getModelElementById<ModelElementInstance>(processId).setAttributeValue("name", "My Process")
       }
 
+}
+
+@Component
+class AddCandidateUserPiggy : TaskListener {
+  override fun notify(delegateTask: DelegateTask?) {
+    delegateTask!!.addCandidateUser("piggy")
+  }
+}
+
+@Component
+class AddCandidateGroupMuppetShow : TaskListener {
+  override fun notify(delegateTask: DelegateTask?) {
+    delegateTask!!.addCandidateGroup("muppetshow")
+  }
 }

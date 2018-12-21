@@ -25,6 +25,7 @@ data class AssignTaskCommand(
   override val sourceReference: SourceReference,
   override val taskDefinitionKey: String,
 
+  override val order: Int = ORDER_TASK_UPDATE,
   override val name: String? = null,
   override val description: String? = null,
   override val priority: Int? = 50,
@@ -52,6 +53,7 @@ data class CreateTaskCommand(
   override val taskDefinitionKey: String,
   override val formKey: String? = null,
 
+  override val order: Int = ORDER_TASK_CREATION,
   override val name: String? = null,
   override val description: String? = null,
   override val priority: Int? = 50,
@@ -78,6 +80,7 @@ data class DeleteTaskCommand(
   override val sourceReference: SourceReference,
   override val taskDefinitionKey: String,
 
+  override val order: Int = ORDER_TASK_DELETION,
   override val name: String? = null,
   override val description: String? = null,
   override val priority: Int? = 50,
@@ -105,6 +108,7 @@ data class CompleteTaskCommand(
   override val sourceReference: SourceReference,
   override val taskDefinitionKey: String,
 
+  override val order: Int = ORDER_TASK_COMPLETION,
   override val name: String? = null,
   override val description: String? = null,
   override val priority: Int? = 50,
@@ -134,6 +138,7 @@ data class InitialTaskCommand(
   override val formKey: String? = null,
   override val eventName: String,
 
+  override val order: Int = 0,
   override val name: String? = null,
   override val description: String? = null,
   override val priority: Int? = 50,
@@ -157,6 +162,7 @@ sealed class UpdateTaskCommand(
   @TargetAggregateIdentifier
   override val id: String,
 
+  override val order: Int = ORDER_TASK_UPDATE,
   override val name: String? = null,
   override val description: String? = null,
   override val priority: Int? = 50,
@@ -179,6 +185,7 @@ data class UpdateAttributeTaskCommand(
   override val sourceReference: SourceReference,
   override val taskDefinitionKey: String,
 
+  override val order: Int = ORDER_TASK_UPDATE,
   override val name: String?,
   override val description: String?,
   override val priority: Int?,
@@ -262,3 +269,9 @@ data class DeleteCandidateUserCommand(
   groupId = null,
   userId = userId
 )
+
+// defines a partial order on EngineTaskCommand
+const val ORDER_TASK_CREATION = Int.MIN_VALUE
+const val ORDER_TASK_DELETION = Int.MAX_VALUE
+const val ORDER_TASK_COMPLETION = ORDER_TASK_DELETION - 1
+const val ORDER_TASK_UPDATE = 0

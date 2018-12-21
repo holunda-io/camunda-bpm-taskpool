@@ -5,6 +5,7 @@ import io.holunda.camunda.taskpool.api.task.CamundaTaskEvent.Companion.CREATE
 import io.holunda.camunda.taskpool.api.task.EnrichedEngineTaskCommand
 import io.holunda.camunda.taskpool.api.task.WithTaskId
 import io.holunda.camunda.taskpool.enricher.VariablesEnricher
+import org.springframework.context.event.EventListener
 
 /**
  * Leverages the simple task command sender, by executing it after the TX commit.
@@ -14,6 +15,7 @@ class DefaultEnrichingCommandSender(
   private val enricher: VariablesEnricher
 ) : CommandSender {
 
+  @EventListener
   override fun send(command: WithTaskId) {
     // enrich before collect
     commandGatewayProxy.send(enrich(command))

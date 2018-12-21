@@ -8,6 +8,7 @@ camunda:
     id-generator: strong
     database:
       type: h2
+    history-level: full
   taskpool:
     engine-eventing:
       enabled: true

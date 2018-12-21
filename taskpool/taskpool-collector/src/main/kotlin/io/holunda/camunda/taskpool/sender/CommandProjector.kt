@@ -23,6 +23,13 @@ class InvertingCommandAccumulator : CommandAccumulator {
 }
 
 /**
+ * invert the order of commands, because Camunda sends them in reversed order.
+ */
+class SortingCommandAccumulator : CommandAccumulator {
+  override fun invoke(taskCommands: List<WithTaskId>) = taskCommands.sortedWith(CommandSorter())
+}
+
+/**
  * invert the order of commands and project attribute to one command
  */
 class ProjectingCommandAccumulator : CommandAccumulator {
