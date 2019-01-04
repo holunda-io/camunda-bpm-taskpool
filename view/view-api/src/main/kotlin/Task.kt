@@ -29,24 +29,26 @@ data class Task(
   val followUpDate: Date? = null
 ) : TaskIdentity, WithPayload, WithCorrelations
 
-fun task(event: TaskAssignedEngineEvent) = Task(
+fun task(event: TaskAssignedEngineEvent, task: Task) = Task(
   id = event.id,
   sourceReference = event.sourceReference,
+  taskDefinitionKey = event.taskDefinitionKey,
+
+  payload = task.payload,
+  correlations = task.correlations,
+  formKey = task.formKey,
+  followUpDate = task.followUpDate,
+
   dueDate = event.dueDate,
-  correlations = event.correlations,
-  payload = event.payload,
   description = event.description,
   businessKey = event.businessKey,
-  formKey = event.formKey,
   priority = event.priority,
   assignee = event.assignee,
   candidateGroups = event.candidateGroups,
   candidateUsers = event.candidateUsers,
   name = event.name,
   owner = event.owner,
-  taskDefinitionKey = event.taskDefinitionKey,
-  createTime = event.createTime,
-  followUpDate = event.followUpDate
+  createTime = event.createTime
 )
 
 fun task(event: TaskCreatedEngineEvent) = Task(

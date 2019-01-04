@@ -1,14 +1,7 @@
 package io.holunda.camunda.taskpool.itest
 
-import io.holunda.camunda.taskpool.api.task.AddCandidateGroupCommand
-import io.holunda.camunda.taskpool.api.task.AddCandidateUserCommand
-import io.holunda.camunda.taskpool.api.task.AssignTaskCommand
+import io.holunda.camunda.taskpool.api.task.*
 import io.holunda.camunda.taskpool.api.task.CamundaTaskEvent.Companion.CREATE
-import io.holunda.camunda.taskpool.api.task.CompleteTaskCommand
-import io.holunda.camunda.taskpool.api.task.CreateTaskCommand
-import io.holunda.camunda.taskpool.api.task.DeleteTaskCommand
-import io.holunda.camunda.taskpool.api.task.ProcessReference
-import io.holunda.camunda.taskpool.api.task.UpdateAttributeTaskCommand
 import io.holunda.camunda.taskpool.sender.AxonCommandGatewayWrapper
 import org.camunda.bpm.engine.RepositoryService
 import org.camunda.bpm.engine.RuntimeService
@@ -22,10 +15,8 @@ import org.camunda.bpm.model.bpmn.Bpmn
 import org.camunda.bpm.model.xml.instance.ModelElementInstance
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.Mockito.inOrder
 import org.mockito.Mockito.reset
 import org.mockito.Mockito.verify
-import org.mockito.Mockito.verifyNoMoreInteractions
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
