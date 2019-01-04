@@ -15,7 +15,7 @@ class CommandSorter : Comparator<WithTaskId> {
     }
     // Actually we expect only EngineTaskCommands here...
     // For the sake of consistency we provide an ordering here for other commands, too.
-    // TODO: should we rather throw an excpetion instead? Or can we rule out the occurence of commands other than EngineTaskCommand anyway?
+    // TODO: should we rather throw an excpetion instead? Or can we rule out the occurrence of commands other than EngineTaskCommand anyway?
     if (command is EngineTaskCommand || otherCommand is EngineTaskCommand) {
       return if (command is EngineTaskCommand) -1 else 1
     }

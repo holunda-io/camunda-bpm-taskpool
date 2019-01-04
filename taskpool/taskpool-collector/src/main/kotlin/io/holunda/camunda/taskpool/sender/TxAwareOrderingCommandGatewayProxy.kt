@@ -26,7 +26,6 @@ open class TxAwareOrderingCommandGatewayProxy(
 
     // add command to list
     commands.get().getOrPut(command.id) { mutableListOf() }.add(command)
-    // commands.set(commandMap)
 
     // register synchronization only once
     if (!registered.get()) {
@@ -40,14 +39,13 @@ open class TxAwareOrderingCommandGatewayProxy(
 
           // iterate over messages and send them
           commands.get().forEach { (taskId: String, taskCommands: MutableList<WithTaskId>) ->
-            logger.debug("SENDER-005: Handling commands for task $taskId")
+            val accumulatorName = commandAccumulator::class.qualifiedName
+            logger.debug("SENDER-005: Handling commands for task $taskId using command accumulator $accumulatorName")
 
             val commands = commandAccumulator.invoke(taskCommands)
 
             // handle messages for every task
-            commands.forEach {
-              commandGatewayWrapper.sendToGateway(it)
-            }
+            commandGatewayWrapper.sendToGateway(commands)
           }
         }
 
@@ -81,17 +79,24 @@ open class AxonCommandGatewayWrapper(
   /**
    * Sends data to gateway. Ignore any errors, but log.
    */
-  open fun sendToGateway(command: Any) {
-    if (properties.sender.enabled) {
-      commandGateway.send<Any, Any?>(command) { commandMessage, commandResultMessage ->
-        if (commandResultMessage.isExceptional) {
-          logger.error("SENDER-006: Sending command $commandMessage resulted in error ${commandResultMessage.exceptionResult()}")
-        } else {
-          logger.debug("SENDER-004: Successfully submitted command $commandMessage")
+  open fun sendToGateway(commands: List<WithTaskId>) {
+    if (!commands.isEmpty()) {
+      val nextCommand = commands.first()
+      val remainingCommands = commands.subList(1, commands.size)
+
+      if (properties.sender.enabled) {
+        commandGateway.send<Any, Any?>(nextCommand) { commandMessage, commandResultMessage ->
+          if (commandResultMessage.isExceptional) {
+            logger.error("SENDER-006: Sending command $commandMessage resulted in error ${commandResultMessage.exceptionResult()}")
+          } else {
+            logger.debug("SENDER-004: Successfully submitted command $commandMessage")
+          }
+          sendToGateway(remainingCommands)
         }
+      } else {
+        logger.debug("SENDER-003: Would have sent command $nextCommand")
+        sendToGateway(remainingCommands)
       }
-    } else {
-      logger.debug("SENDER-003: Would have sent command $command")
     }
   }
 

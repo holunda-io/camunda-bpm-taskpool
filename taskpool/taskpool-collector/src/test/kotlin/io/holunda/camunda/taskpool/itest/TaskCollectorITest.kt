@@ -111,7 +111,7 @@ class TaskCollectorITest {
     // delete
     runtimeService.deleteProcessInstance(instance.processInstanceId, reason, false)
 
-    verify(commandGateway).sendToGateway(deleteCommand)
+    verify(commandGateway).sendToGateway(listOf(deleteCommand))
   }
 
   /**
@@ -166,7 +166,7 @@ class TaskCollectorITest {
     // complete
     taskService.complete(task().id, Variables.putValue("input", "from user"))
 
-    verify(commandGateway).sendToGateway(completeCommand)
+    verify(commandGateway).sendToGateway(listOf(completeCommand))
   }
 
   /**
@@ -224,7 +224,7 @@ class TaskCollectorITest {
     // complete
     taskService.complete(task().id, Variables.putValue("input", "from user"))
 
-    verify(commandGateway).sendToGateway(completeCommand)
+    verify(commandGateway).sendToGateway(listOf(completeCommand))
   }
 
 
@@ -283,7 +283,7 @@ class TaskCollectorITest {
     // set due date to now
     taskService.saveTask(task().apply { dueDate = now })
 
-    verify(commandGateway).sendToGateway(updateCommand)
+    verify(commandGateway).sendToGateway(listOf(updateCommand))
   }
 
   /**
@@ -372,12 +372,7 @@ class TaskCollectorITest {
       groupId = "muppetshow"
     )
 
-    val inOrder = inOrder(commandGateway)
-    inOrder.verify(commandGateway).sendToGateway(createCommand)
-    inOrder.verify(commandGateway).sendToGateway(addCandidateUserCommand)
-    inOrder.verify(commandGateway).sendToGateway(addCandidateGroupCommand)
-    inOrder.verify(commandGateway).sendToGateway(updateCommand)
-    verifyNoMoreInteractions(commandGateway)
+    verify(commandGateway).sendToGateway(listOf(createCommand, addCandidateUserCommand, addCandidateGroupCommand, updateCommand))
   }
 
   /**
@@ -429,11 +424,34 @@ class TaskCollectorITest {
       assignee = "kermit",
       createTime = task().createTime
     )
+    val addCandidateUserCommand = AddCandidateUserCommand(
+      id = task().id,
+      userId = "kermit"
+    )
+    val updateAttributesTaskCommand = UpdateAttributeTaskCommand(
+      id = task().id,
+      sourceReference = ProcessReference(
+        instanceId = instance.id,
+        executionId = task().executionId,
+        definitionId = task().processDefinitionId,
+        name = "My Process",
+        definitionKey = processId,
+        applicationName = "collector-test"
+      ),
+      taskDefinitionKey = taskDefinitionKey,
+      name = task().name,
+      description = null,
+      assignee = "kermit",
+      owner = null,
+      priority = 50,
+      dueDate = null,
+      followUpDate = null
+    )
 
     // set due date to now
     taskService.setAssignee(task().id, "kermit")
 
-    verify(commandGateway).sendToGateway(assignCommand)
+    verify(commandGateway).sendToGateway(listOf(assignCommand, addCandidateUserCommand, updateAttributesTaskCommand))
   }
 
   /**
