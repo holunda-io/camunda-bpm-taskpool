@@ -3,13 +3,15 @@ package io.holunda.camunda.taskpool.itest
 import io.holunda.camunda.taskpool.api.task.*
 import io.holunda.camunda.taskpool.api.task.CamundaTaskEvent.Companion.CREATE
 import io.holunda.camunda.taskpool.sender.AxonCommandGatewayWrapper
+import org.awaitility.Awaitility.await
 import org.camunda.bpm.engine.RepositoryService
 import org.camunda.bpm.engine.RuntimeService
 import org.camunda.bpm.engine.TaskService
 import org.camunda.bpm.engine.delegate.DelegateTask
 import org.camunda.bpm.engine.delegate.TaskListener
 import org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareAssertions.assertThat
-import org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.*
+import org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.job
+import org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.task
 import org.camunda.bpm.engine.variable.Variables
 import org.camunda.bpm.model.bpmn.Bpmn
 import org.camunda.bpm.model.xml.instance.ModelElementInstance
@@ -309,10 +311,11 @@ class TaskCollectorITest {
         Variables.putValue("key", "value")
       )
 
-    // continue
+    // wait for async continuation: we must not trigger the execution of the job explicitly but instead await its execution
     assertThat(instance).isNotNull
     assertThat(instance).isStarted
-    execute(job())
+    assertThat(job(instance)).isNotNull
+    await().untilAsserted{ assertThat(job(instance)).isNull() }
 
     // user task
     assertThat(instance).isWaitingAt(taskDefinitionKey)
