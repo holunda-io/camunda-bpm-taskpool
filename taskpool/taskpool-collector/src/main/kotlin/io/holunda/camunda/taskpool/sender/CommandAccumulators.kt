@@ -36,7 +36,7 @@ class ProjectingCommandAccumulator : CommandAccumulator {
 
   override fun invoke(taskCommands: List<WithTaskId>): List<WithTaskId> {
     val sorted = sorter.invoke(taskCommands)
-    var command = sorted.first()
+    val command = sorted.first()
     return listOf(collectCommandProperties(command, sorted.subList(1, sorted.size - 1)))
   }
 }
@@ -48,37 +48,37 @@ fun <T : WithTaskId> collectCommandProperties(command: T, details: List<WithTask
    * Configuration to change default behavior of replacing the property.
    * For delta-commands (add/delete candidate groups/users), the lists has to be adjusted
    */
-  opContainerConfig = mutableMapOf<KClass<out Any>, ContainerOperation>().apply {
+  propertyOperationConfig = mutableMapOf<KClass<out Any>, PropertyOperation>().apply {
     // a delete command should remove one element from candidate user
-    // FIXME: rename command property to candidateUsers and make it to a list
     put(DeleteCandidateUserCommand::class) { map, key, value ->
-      when (val original = map[key]) {
-        is MutableCollection<*> -> (value as MutableCollection<String>).forEach { (original as MutableCollection<String>).remove(it) }
-        else -> map[key] = value
+      if (key == DeleteCandidateUserCommand::userId.name) {
+        (map[EnrichedEngineTaskCommand::candidateUsers.name] as MutableCollection<String>).remove(value as String)
+      } else {
+        map[key] = value
       }
     }
     // a delete command should remove one element from candidate group
-    // FIXME: rename command property to candidateGroups and make it to a list
     put(DeleteCandidateGroupCommand::class) { map, key, value ->
-      when (val original = map[key]) {
-        is MutableCollection<*> -> (value as MutableCollection<String>).forEach { (original as MutableCollection<String>).remove(it) }
-        else -> map[key] = value
+      if (key == DeleteCandidateGroupCommand::groupId.name) {
+        (map[EnrichedEngineTaskCommand::candidateGroups.name] as MutableCollection<String>).remove(value as String)
+      } else {
+        map[key] = value
       }
     }
-    // a delete command should remove one element from candidate user
-    // FIXME: rename command property to candidateUsers and make it to a list
+    // add command should add one element to candidate user
     put(AddCandidateUserCommand::class) { map, key, value ->
-      when (val original = map[key]) {
-        is MutableCollection<*> -> (value as MutableCollection<String>).forEach { (original as MutableCollection<String>).add(it) }
-        else -> map[key] = value
+      if (key == AddCandidateUserCommand::userId.name) {
+        (map[EnrichedEngineTaskCommand::candidateUsers.name] as MutableCollection<String>).add(value as String)
+      } else {
+        map[key] = value
       }
     }
-    // a delete command should remove one element from candidate group
-    // FIXME: rename command property to candidateGroups and make it to a list
+    // add command should add one element to candidate group
     put(AddCandidateGroupCommand::class) { map, key, value ->
-      when (val original = map[key]) {
-        is MutableCollection<*> -> (value as MutableCollection<String>).forEach { (original as MutableCollection<String>).add(it) }
-        else -> map[key] = value
+      if (key == AddCandidateGroupCommand::groupId.name) {
+        (map[EnrichedEngineTaskCommand::candidateGroups.name] as MutableCollection<String>).add(value as String)
+      } else {
+        map[key] = value
       }
     }
   }

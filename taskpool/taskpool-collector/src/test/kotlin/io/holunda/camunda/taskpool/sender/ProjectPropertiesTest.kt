@@ -59,7 +59,7 @@ class PropertiesProjectorTest {
       payload(payload = mutableMapOf("zee" to "test"), id = model.id),
       named(name = "new name", id = model.id)),
 
-      mutableMapOf<KClass<out Any>, ContainerOperation>(
+      mutableMapOf<KClass<out Any>, PropertyOperation>(
         Payload::class to { map, key, value ->
           val originalValue = map[key]
           when (originalValue) {
@@ -86,7 +86,7 @@ class PropertiesProjectorTest {
       named(name = "new name", id = model.id)),
 
       // to remove elements
-      mutableMapOf<KClass<out Any>, ContainerOperation>(
+      mutableMapOf<KClass<out Any>, PropertyOperation>(
         Payload::class to { map, key, value ->
           val originalValue = map[key]
           when (originalValue) {

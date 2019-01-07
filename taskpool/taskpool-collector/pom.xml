@@ -18,6 +18,11 @@
       <artifactId>camunda-engine</artifactId>
     </dependency>
     <dependency>
+      <groupId>org.camunda.bpm</groupId>
+      <artifactId>camunda-engine-rest-jaxrs2</artifactId>
+    </dependency>
+
+    <dependency>
       <groupId>io.holunda.taskpool</groupId>
       <artifactId>camunda-bpm-taskpool-api</artifactId>
     </dependency>

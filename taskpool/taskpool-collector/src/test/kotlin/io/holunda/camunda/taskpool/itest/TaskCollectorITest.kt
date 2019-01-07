@@ -314,8 +314,7 @@ class TaskCollectorITest {
     // wait for async continuation: we must not trigger the execution of the job explicitly but instead await its execution
     assertThat(instance).isNotNull
     assertThat(instance).isStarted
-    assertThat(job(instance)).isNotNull
-    await().untilAsserted{ assertThat(job(instance)).isNull() }
+    await().untilAsserted { assertThat(job(instance)).isNull() }
 
     // user task
     assertThat(instance).isWaitingAt(taskDefinitionKey)
@@ -476,14 +475,14 @@ class TaskCollectorITest {
 
 @Component
 class AddCandidateUserPiggy : TaskListener {
-  override fun notify(delegateTask: DelegateTask?) {
-    delegateTask!!.addCandidateUser("piggy")
+  override fun notify(delegateTask: DelegateTask) {
+    delegateTask.addCandidateUser("piggy")
   }
 }
 
 @Component
 class AddCandidateGroupMuppetShow : TaskListener {
-  override fun notify(delegateTask: DelegateTask?) {
-    delegateTask!!.addCandidateGroup("muppetshow")
+  override fun notify(delegateTask: DelegateTask) {
+    delegateTask.addCandidateGroup("muppetshow")
   }
 }

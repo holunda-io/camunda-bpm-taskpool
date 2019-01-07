@@ -69,7 +69,7 @@ data class CreateTaskCommand(
   override val payload: VariableMap = Variables.createVariables(),
   override val correlations: CorrelationMap = newCorrelations(),
   override var enriched: Boolean = false
-) : EnrichedEngineTaskCommand, WithFormKey
+) : EnrichedEngineTaskCommand, WithFormKey, WithTaskId
 
 /**
  * Engine command to delete a task.

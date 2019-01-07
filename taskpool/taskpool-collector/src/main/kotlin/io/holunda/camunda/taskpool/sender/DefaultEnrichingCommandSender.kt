@@ -15,6 +15,7 @@ class DefaultEnrichingCommandSender(
   private val enricher: VariablesEnricher
 ) : CommandSender {
 
+
   @EventListener
   override fun send(command: WithTaskId) {
     // enrich before collect
