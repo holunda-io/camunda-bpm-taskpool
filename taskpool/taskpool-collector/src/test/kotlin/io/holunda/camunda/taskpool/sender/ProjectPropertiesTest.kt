@@ -7,7 +7,7 @@ import org.junit.Test
 import java.util.*
 import kotlin.reflect.KClass
 
-class ProjectPropertiesTest {
+class PropertiesProjectorTest {
 
   @Test
   fun `should return the command if details are empty`() {
