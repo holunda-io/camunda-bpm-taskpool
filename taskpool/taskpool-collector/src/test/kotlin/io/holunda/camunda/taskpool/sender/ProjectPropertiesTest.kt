@@ -1,75 +1,19 @@
 @file:Suppress("UNREACHABLE_CODE")
 
-package io.holunda.camunda.taskpool.accumulator
+package io.holunda.camunda.taskpool.sender
 
-import com.fasterxml.jackson.core.type.TypeReference
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import java.util.*
 import kotlin.reflect.KClass
-import kotlin.reflect.full.memberProperties
 
-/**
- * The container operation defines how a new value can be applied to existing values
- * if the it is a container (MutableMap or MutableList).
- * @param values a map of values
- * @param key the key to access the value
- * @param value the new value
- */
-typealias ContainerOperation = (values: MutableMap<String, Any>, key: String, value: Any) -> Unit
-
-/**
- * Container operation config.
- * Configures the container operations per class.
- */
-typealias ContainerOperationConfiguration = Map<KClass<out Any>, ContainerOperation>
-
-/**
- * Flattens the changes from detail objects into the original by applying operation container configuration.
- */
-fun <T : Any> flatten(original: T, details: List<Any> = emptyList(), opContainerConfig: ContainerOperationConfiguration = mapOf()): T {
-
-  val originalProperties = original.javaClass.kotlin.memberProperties
-  // read original into a map
-  val values: MutableMap<String, Any> = jacksonObjectMapper().convertValue(original, object : TypeReference<Map<String, Any>>() {})
-
-  for (detail: Any in details) {
-
-    val matchingProperties = detail.javaClass.kotlin.memberProperties.filter { detailProperty ->
-      // the property should be taken in consideration if and only if
-      // - a property with the same type exists in the original
-      // - a property with the same return type exists in the original
-      // - the value of the property differs from that in original
-      originalProperties.any {
-        it.name == detailProperty.name
-          && it.returnType == detailProperty.returnType
-          && (detailProperty.get(detail) is MutableMap<*, *>
-          || detailProperty.get(detail) is MutableCollection<*>
-          || it.get(original) != detailProperty.get(detail))
-      }
-    }
-
-    // determine map operation
-    val mapOperation = opContainerConfig.getOrDefault(detail.javaClass.kotlin) { map, key, value -> map[key] = value }
-
-    // store values in a map
-    matchingProperties.forEach {
-      mapOperation(values, it.name, it.get(detail)!!)
-    }
-  }
-
-  // write back
-  return jacksonObjectMapper().convertValue(values, original::class.java)
-}
-
-class FlattenTest {
+class ProjectPropertiesTest {
 
   @Test
   fun `should return the command if details are empty`() {
 
     val model = model("Foo", "My foo model")
-    val result = flatten(model)
+    val result = projectProperties(model)
 
     assertThat(result).isEqualTo(model)
   }
@@ -78,7 +22,7 @@ class FlattenTest {
   fun `should replace a detail`() {
 
     val model = model("Foo", "My foo model")
-    val result = flatten(model, listOf(named(name = "new name", id = model.id)))
+    val result = projectProperties(model, listOf(named(name = "new name", id = model.id)))
 
     assertThat(result).isEqualTo(model.copy(name = "new name"))
   }
@@ -87,7 +31,7 @@ class FlattenTest {
   fun `should replace a detail with the last value`() {
 
     val model = model("Foo", "My foo model")
-    val result = flatten(model, listOf(
+    val result = projectProperties(model, listOf(
       named(name = "wrong name", id = model.id),
       named(name = "new name", id = model.id))
     )
@@ -99,7 +43,7 @@ class FlattenTest {
   fun `should replace detail map`() {
 
     val model = model("Foo", "My foo model", payload = mutableMapOf("foo" to "bar"))
-    val result = flatten(model, listOf(
+    val result = projectProperties(model, listOf(
       payload(payload = mutableMapOf("zee" to "test"), id = model.id),
       named(name = "new name", id = model.id))
     )
@@ -111,18 +55,19 @@ class FlattenTest {
   fun `should add a detail to a map`() {
 
     val model = model("Foo", "My foo model", payload = mutableMapOf("foo" to "bar"))
-    val result = flatten(model, listOf(
+    val result = projectProperties(model, listOf(
       payload(payload = mutableMapOf("zee" to "test"), id = model.id),
       named(name = "new name", id = model.id)),
-      mutableMapOf<KClass<out Any>, ContainerOperation>().apply {
-        put(Payload::class) { map, key, value ->
+
+      mutableMapOf<KClass<out Any>, ContainerOperation>(
+        Payload::class to { map, key, value ->
           val originalValue = map[key]
           when (originalValue) {
             is MutableMap<*, *> -> originalValue.putAll(value as Map<Nothing, Nothing>)
             else -> map[key] = value
           }
         }
-      }
+      )
     )
 
     assertThat(result).isEqualTo(model.copy(name = "new name", enriched = true, payload = mutableMapOf("foo" to "bar", "zee" to "test")))
@@ -133,7 +78,7 @@ class FlattenTest {
   fun `should remove a detail from a map`() {
 
     val model = model("Foo", "My foo model", payload = mutableMapOf("foo" to "bar"), users = mutableListOf("kermit", "gonzo"))
-    val result = flatten(model, listOf(
+    val result = projectProperties(model, listOf(
 
       // use payload
       payload(payload = mutableMapOf("foo" to "bar"), id = model.id, users = mutableListOf("gonzo")),
@@ -141,16 +86,17 @@ class FlattenTest {
       named(name = "new name", id = model.id)),
 
       // to remove elements
-      mutableMapOf<KClass<out Any>, ContainerOperation>().apply {
-        put(Payload::class) { map, key, value ->
+      mutableMapOf<KClass<out Any>, ContainerOperation>(
+        Payload::class to { map, key, value ->
           val originalValue = map[key]
           when (originalValue) {
+            // remove only if the key and the value are equal
             is MutableMap<*, *> -> (value as Map<*, *>).entries.forEach { originalValue.remove(key = it.key, value = it.value) }
             is MutableCollection<*> -> (value as MutableCollection<*>).forEach { originalValue.remove(it) }
             else -> map[key] = value
           }
         }
-      }
+      )
     )
 
     // map elements should vanish, kermit remains alone in the list

@@ -4,7 +4,7 @@ import io.holunda.camunda.taskpool.api.task.*
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 
-class CommandProjectorTest {
+class CommandAccumulatorTest {
 
   private val createTaskCommand = CreateTaskCommand(
     id = "d7c7efe2-0475-11e9-90f1-a0c589a3e9e5",
