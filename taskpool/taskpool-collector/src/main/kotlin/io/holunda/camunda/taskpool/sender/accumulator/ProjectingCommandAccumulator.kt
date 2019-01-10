@@ -1,5 +1,6 @@
 package io.holunda.camunda.taskpool.sender.accumulator
 
+import io.holunda.camunda.taskpool.api.business.WithCorrelations
 import io.holunda.camunda.taskpool.api.task.*
 import kotlin.reflect.KClass
 
@@ -59,8 +60,20 @@ class ProjectingCommandAccumulator : CommandAccumulator {
     ignoredProperties = listOf<String>(
       WithTaskId::id.name,
       CamundaTaskEvent::eventName.name,
-      EngineTaskCommand::order.name
+      EngineTaskCommand::order.name,
+      // handled separately
+      WithPayload::payload.name,
+      WithCorrelations::correlations.name
     )
-  )
-
+  ).let {
+    // handle payload and correlations
+    var result: T = it
+    if (result is CreateTaskCommand && command is CreateTaskCommand) {
+      result = result.copy(
+        payload = command.payload,
+        correlations = command.correlations
+      ) as T
+    }
+    return result
+  }
 }

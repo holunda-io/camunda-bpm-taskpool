@@ -16,7 +16,6 @@ import org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.task
 import org.camunda.bpm.engine.variable.Variables
 import org.camunda.bpm.model.bpmn.Bpmn
 import org.camunda.bpm.model.xml.instance.ModelElementInstance
-import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mockito.reset
@@ -28,6 +27,7 @@ import org.springframework.stereotype.Component
 import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit4.SpringRunner
+import java.io.Serializable
 import java.time.Instant.now
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -236,7 +236,6 @@ class TaskCollectorITest {
    * The create command is send after the TX commit.
    */
   @Test
-  @Ignore // FIXME
   fun `should send task create of async process`() {
 
     val businessKey = "BK1"
@@ -261,7 +260,9 @@ class TaskCollectorITest {
       .startProcessInstanceByKey(
         processId,
         businessKey,
-        Variables.putValue("key", "value")
+        Variables
+          .putValue("key", "value")
+          .putValue("object", MyStructure("name", "key", 1))
       )
 
     // wait for async continuation: we must not trigger the execution of the job explicitly but instead await its execution
@@ -291,7 +292,9 @@ class TaskCollectorITest {
       createTime = task().createTime,
       businessKey = "BK1",
       priority = 50, // default by camunda if not set in explicit
-      payload = Variables.putValue("key", Variables.stringValue("value"))
+      payload = Variables
+        .putValue("key", Variables.stringValue("value"))
+        .putValue("object", MyStructure("name", "key", 1))
     )
 
     // we need to take into account that dispatching the accumulated commands is done asynchronously and therefore we might have to wait a little bit
@@ -379,3 +382,5 @@ class AddCandidateGroupMuppetShow : TaskListener {
     delegateTask.addCandidateGroup("muppetshow")
   }
 }
+
+data class MyStructure(val name: String, val key: String, val value: Int) : Serializable

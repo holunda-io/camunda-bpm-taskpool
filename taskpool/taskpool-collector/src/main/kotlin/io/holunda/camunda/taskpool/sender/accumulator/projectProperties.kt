@@ -1,19 +1,21 @@
 package io.holunda.camunda.taskpool.sender.accumulator
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.module.SimpleModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.holunda.camunda.taskpool.api.task.SourceReference
 import org.camunda.bpm.engine.variable.VariableMap
+import org.camunda.bpm.engine.variable.impl.VariableMapImpl
 import org.slf4j.LoggerFactory
 import kotlin.reflect.KClass
 import kotlin.reflect.full.memberProperties
 
 /**
  * The property operation defines how a new value can be applied to existing value.
- * @param values a map of values
- * @param key the key to access the value
- * @param value the new value
+ * values a map of values
+ * key the key to access the value
+ * value the new value
  */
 typealias PropertyOperation = (values: MutableMap<String, Any?>, key: String, value: Any?) -> Unit
 
@@ -73,9 +75,10 @@ fun <T : Any> projectProperties(
     // - and either a property with the same return type exists in the original and the value of the property differs from that in original
     // - or a property is a collection or a map
     val matchingProperties = potentialMatchingProperties.filter { detailProperty ->
-      originalProperties.any{
+      originalProperties.any {
         it.returnType == detailProperty.returnType && it.get(original) != detailProperty.get(detail)
-          || (detailProperty.get(detail) is MutableMap<*, *> || detailProperty.get(detail) is MutableCollection<*>)}
+          || (detailProperty.get(detail) is MutableMap<*, *> || detailProperty.get(detail) is MutableCollection<*>)
+      }
     }
 
     // determine property operation
@@ -86,25 +89,33 @@ fun <T : Any> projectProperties(
       propertyOperation(values, matchingProperty.name, matchingProperty.get(detail))
     }
   }
-
   // write back
-  val command: T = unmapper.invoke(values)
-  return command
+  return unmapper.invoke(values)
 }
 
 
 fun <T> jacksonMapper(): Mapper<T> = {
-  jacksonObjectMapper().convertValue(it, object : TypeReference<Map<String, Any?>>() {})
+  jacksonObjectMapper()
+    .registerModule(simpleModule)
+    .apply {
+      addMixIn(SourceReference::class.java, KotlinTypeInfo::class.java)
+    }
+    .convertValue(it, object : TypeReference<Map<String, Any?>>() {})
 }
 
 fun <T> jacksonUnmapper(clazz: Class<T>): Unmapper<T> = {
   jacksonObjectMapper()
-    .registerModule(
-      SimpleModule().apply {
-        addDeserializer(VariableMap::class.java, VariableMapDeserializer())
-        addDeserializer(SourceReference::class.java, SourceReferenceDeserializer())
-      }
-    )
+    .apply {
+      addMixIn(SourceReference::class.java, KotlinTypeInfo::class.java)
+    }
+    .registerModule(simpleModule)
     .convertValue(it, clazz)
 }
 
+val simpleModule = SimpleModule()
+  .apply {
+    addAbstractTypeMapping(VariableMap::class.java, VariableMapImpl::class.java)
+  }
+
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "@class", include = JsonTypeInfo.As.PROPERTY)
+class KotlinTypeInfo
