@@ -30,5 +30,11 @@ interface TaskCommandSender {
   /**
    * Sends command for task update.
    */
-  fun sendTaskCommand(command: UpdateTaskCommand)
+  fun sendTaskCommand(command: UpdateAttributeTaskCommand)
+
+  /**
+   * Sends command for task update.
+   */
+  fun sendTaskCommand(command: UpdateAssignmentTaskCommand)
+
 }

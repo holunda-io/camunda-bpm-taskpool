@@ -134,7 +134,7 @@ abstract class TaskEventMapper {
     Mapping(target = "task.description", source = "task.description"),
     Mapping(target = "task.candidateUsers", ignore = true),
     Mapping(target = "task.candidateGroups", ignore = true),
-    Mapping(target = "task.assignee", source = "task.assignee"),
+    Mapping(target = "task.assignee", ignore = true),
     Mapping(target = "task.createTime", ignore = true),
     Mapping(target = "task.dueDate", source = "task.dueDate"),
     Mapping(target = "task.businessKey", ignore = true),

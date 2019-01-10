@@ -1,10 +1,11 @@
-package io.holunda.camunda.taskpool.sender
+package io.holunda.camunda.taskpool.sender.accumulator
 
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.module.SimpleModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.holunda.camunda.taskpool.api.task.SourceReference
 import org.camunda.bpm.engine.variable.VariableMap
+import org.slf4j.LoggerFactory
 import kotlin.reflect.KClass
 import kotlin.reflect.full.memberProperties
 
@@ -22,8 +23,14 @@ typealias PropertyOperation = (values: MutableMap<String, Any?>, key: String, va
  */
 typealias PropertyOperationConfiguration = Map<KClass<out Any>, PropertyOperation>
 
-
+/**
+ * Reads a command and returns its properties as a map.
+ */
 typealias Mapper<T> = (value: T) -> MutableMap<String, Any?>
+
+/**
+ * Reads a map and returns a command.
+ */
 typealias Unmapper<T> = (map: MutableMap<String, Any?>) -> T
 
 /**
@@ -34,7 +41,8 @@ fun <T : Any> projectProperties(
   details: List<Any> = emptyList(),
   propertyOperationConfig: PropertyOperationConfiguration = mapOf(),
   mapper: Mapper<T> = jacksonMapper(),
-  unmapper: Unmapper<T> = jacksonUnmapper(original::class.java)
+  unmapper: Unmapper<T> = jacksonUnmapper(original::class.java),
+  ignoredProperties: List<String> = emptyList()
 ): T {
 
   val originalProperties = original.javaClass.kotlin.memberProperties
@@ -42,16 +50,32 @@ fun <T : Any> projectProperties(
   val values: MutableMap<String, Any?> = mapper.invoke(original)
 
   for (detail in details) {
-    val matchingProperties = detail.javaClass.kotlin.memberProperties.filter { detailProperty ->
-      // the property should be taken in consideration if and only if
-      // - a property with the same name exists in the original
-      // - and either a property with the same return type exists in the original and the value of the property differs from that in original
-      // - or a property is a collection or a map
-      originalProperties.any {
-        it.name == detailProperty.name
-          && (it.returnType == detailProperty.returnType && it.get(original) != detailProperty.get(detail)
-          || (detailProperty.get(detail) is MutableMap<*, *> || detailProperty.get(detail) is MutableCollection<*>))
-      }
+
+    // the property could be taken in consideration if and only if
+    // - a property with the same name exists in the original
+    // - it is not ignored
+    val potentialMatchingProperties = detail.javaClass.kotlin.memberProperties.filter { detailProperty ->
+      // not ignored
+      !ignoredProperties.contains(detailProperty.name) &&
+        originalProperties.any {
+          it.name == detailProperty.name
+        }
+    }
+
+    if (potentialMatchingProperties.isEmpty()) {
+      LoggerFactory
+        .getLogger(ProjectingCommandAccumulator::class.java)
+        .error("PROJECTOR-001: No matching attributes of two commands to the same task found. The second command $detail is ignored.")
+    }
+
+    //
+    // the property should be taken in consideration if and only if
+    // - and either a property with the same return type exists in the original and the value of the property differs from that in original
+    // - or a property is a collection or a map
+    val matchingProperties = potentialMatchingProperties.filter { detailProperty ->
+      originalProperties.any{
+        it.returnType == detailProperty.returnType && it.get(original) != detailProperty.get(detail)
+          || (detailProperty.get(detail) is MutableMap<*, *> || detailProperty.get(detail) is MutableCollection<*>)}
     }
 
     // determine property operation
@@ -63,12 +87,9 @@ fun <T : Any> projectProperties(
     }
   }
 
-  val clonedOriginal = original
-
-  println(values)
-
   // write back
-  return unmapper.invoke(values)
+  val command: T = unmapper.invoke(values)
+  return command
 }
 
 
@@ -84,7 +105,6 @@ fun <T> jacksonUnmapper(clazz: Class<T>): Unmapper<T> = {
         addDeserializer(SourceReference::class.java, SourceReferenceDeserializer())
       }
     )
-
     .convertValue(it, clazz)
 }
 

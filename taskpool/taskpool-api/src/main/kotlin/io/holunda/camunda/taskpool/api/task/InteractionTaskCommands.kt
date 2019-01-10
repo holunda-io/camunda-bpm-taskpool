@@ -16,7 +16,7 @@ data class ClaimInteractionTaskCommand(
 ) : InteractionTaskCommand
 
 /**
- * Unassign a user from the task.
+ * Un-assign a user from the task.
  */
 data class UnclaimInteractionTaskCommand(
   @TargetAggregateIdentifier

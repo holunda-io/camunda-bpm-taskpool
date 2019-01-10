@@ -11,6 +11,8 @@ class CommandSorterTest {
     id = "some-id",
     sourceReference = makeProcessReference(),
     taskDefinitionKey = "task-definition-key-abcde"
+
+
   )
 
   val assignTaskCommand = AssignTaskCommand(
@@ -23,7 +25,6 @@ class CommandSorterTest {
     name = "task name",
     description = "task description",
     owner = null,
-    assignee = "kermit",
     dueDate = Date(1234567890L),
     priority = 0
   )
@@ -39,22 +40,22 @@ class CommandSorterTest {
 
   val addCandidateUserCommand = AddCandidateUsersCommand(
     id = "some-id",
-    candidateUsers = listOf("piggy")
+    candidateUsers = setOf("piggy")
   )
 
   val deleteCandidateUserCommand = DeleteCandidateUsersCommand(
     id = "some-id",
-    candidateUsers = listOf("piggy")
+    candidateUsers = setOf("piggy")
   )
 
   val addCandidateGroupCommand = AddCandidateGroupsCommand(
     id = "some-id",
-    candidateGroups = listOf("muppetshow")
+    candidateGroups = setOf("muppetshow")
   )
 
   val deleteCandidateGroupCommand = DeleteCandidateGroupsCommand(
     id = "some-id",
-    candidateGroups = listOf("muppetshow")
+    candidateGroups = setOf("muppetshow")
   )
 
   private fun makeProcessReference() = ProcessReference(
@@ -69,37 +70,37 @@ class CommandSorterTest {
   @Test
   fun `create task commands should precede other events`() {
     listOf(assignTaskCommand, updateTaskCommand, completeTaskCommand, deleteTaskCommand,
-        addCandidateUserCommand, deleteCandidateUserCommand, addCandidateGroupCommand, deleteCandidateGroupCommand).forEach {
-      assertThat(CommandSorter().compare(createTaskCommand, it)).isEqualTo(-1)
-      assertThat(CommandSorter().compare(it, createTaskCommand)).isEqualTo(1)
+      addCandidateUserCommand, deleteCandidateUserCommand, addCandidateGroupCommand, deleteCandidateGroupCommand).forEach {
+      assertThat(EngineTaskCommandSorter().compare(createTaskCommand, it)).isEqualTo(-1)
+      assertThat(EngineTaskCommandSorter().compare(it, createTaskCommand)).isEqualTo(1)
     }
   }
 
   @Test
   fun `delete task commands should come after all other events`() {
     listOf(createTaskCommand, assignTaskCommand, updateTaskCommand, completeTaskCommand,
-        addCandidateUserCommand, deleteCandidateUserCommand, addCandidateGroupCommand, deleteCandidateGroupCommand).forEach {
-      assertThat(CommandSorter().compare(deleteTaskCommand, it)).isEqualTo(1)
-      assertThat(CommandSorter().compare(it, deleteTaskCommand)).isEqualTo(-1)
+      addCandidateUserCommand, deleteCandidateUserCommand, addCandidateGroupCommand, deleteCandidateGroupCommand).forEach {
+      assertThat(EngineTaskCommandSorter().compare(deleteTaskCommand, it)).isEqualTo(1)
+      assertThat(EngineTaskCommandSorter().compare(it, deleteTaskCommand)).isEqualTo(-1)
     }
   }
 
   @Test
   fun `complete task commands should come after all other events except for delete task`() {
     listOf(createTaskCommand, assignTaskCommand, updateTaskCommand,
-        addCandidateUserCommand, deleteCandidateUserCommand, addCandidateGroupCommand, deleteCandidateGroupCommand).forEach {
-      assertThat(CommandSorter().compare(completeTaskCommand, it)).isEqualTo(1)
-      assertThat(CommandSorter().compare(it, completeTaskCommand)).isEqualTo(-1)
+      addCandidateUserCommand, deleteCandidateUserCommand, addCandidateGroupCommand, deleteCandidateGroupCommand).forEach {
+      assertThat(EngineTaskCommandSorter().compare(completeTaskCommand, it)).isEqualTo(1)
+      assertThat(EngineTaskCommandSorter().compare(it, completeTaskCommand)).isEqualTo(-1)
     }
-    assertThat(CommandSorter().compare(completeTaskCommand, deleteTaskCommand)).isEqualTo(-1)
-    assertThat(CommandSorter().compare(deleteTaskCommand, completeTaskCommand)).isEqualTo(1)
+    assertThat(EngineTaskCommandSorter().compare(completeTaskCommand, deleteTaskCommand)).isEqualTo(-1)
+    assertThat(EngineTaskCommandSorter().compare(deleteTaskCommand, completeTaskCommand)).isEqualTo(1)
   }
 
   @Test
   fun `sorting must be consistent`() {
     listOf(createTaskCommand, assignTaskCommand, updateTaskCommand, completeTaskCommand, deleteTaskCommand,
-        addCandidateUserCommand, deleteCandidateUserCommand, addCandidateGroupCommand, deleteCandidateGroupCommand).forEach {
-      assertThat(CommandSorter().compare(it, it)).isEqualTo(0)
+      addCandidateUserCommand, deleteCandidateUserCommand, addCandidateGroupCommand, deleteCandidateGroupCommand).forEach {
+      assertThat(EngineTaskCommandSorter().compare(it, it)).isEqualTo(0)
     }
   }
 

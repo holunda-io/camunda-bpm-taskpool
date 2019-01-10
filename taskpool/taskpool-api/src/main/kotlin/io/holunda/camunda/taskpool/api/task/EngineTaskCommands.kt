@@ -25,8 +25,7 @@ data class AssignTaskCommand(
 
   override val order: Int = ORDER_TASK_ASSIGNMENT,
   override val eventName: String = ASSIGN,
-  val candidateUsers: List<String> = listOf(),
-  val candidateGroups: List<String> = listOf(),
+
   val assignee: String? = null
 ) : EngineTaskCommand
 
@@ -36,28 +35,33 @@ data class AssignTaskCommand(
 data class CreateTaskCommand(
   @TargetAggregateIdentifier
   override val id: String,
+
   override val sourceReference: SourceReference,
   override val taskDefinitionKey: String,
+
   override val formKey: String? = null,
 
   override val order: Int = ORDER_TASK_CREATION,
   override val eventName: String = CREATE,
+
   override val businessKey: String? = null,
   override val payload: VariableMap = Variables.createVariables(),
+
   override val correlations: CorrelationMap = newCorrelations(),
   override var enriched: Boolean = false,
 
-  val name: String? = null,
-  val description: String? = null,
-  val priority: Int? = 50,
-  val createTime: Date? = null,
-  val owner: String? = null,
-  val candidateUsers: List<String> = listOf(),
-  val candidateGroups: List<String> = listOf(),
   val assignee: String? = null,
+  val candidateUsers: Set<String> = setOf(),
+  val candidateGroups: Set<String> = setOf(),
+  val createTime: Date? = null,
+  val description: String? = null,
   val dueDate: Date? = null,
-  val followUpDate: Date? = null
-) : EnrichedEngineTaskCommand, WithFormKey
+  val followUpDate: Date? = null,
+  val name: String? = null,
+  val owner: String? = null,
+  val priority: Int? = null
+
+) : TaskIdentityWithPayloadAndCorrelations, WithFormKey, EngineTaskCommand
 
 /**
  * Engine command to delete a task.
@@ -68,6 +72,7 @@ data class DeleteTaskCommand(
 
   override val order: Int = ORDER_TASK_DELETION,
   override val eventName: String = DELETE,
+
   val deleteReason: String?
 ) : EngineTaskCommand
 
@@ -92,100 +97,80 @@ data class UpdateAttributeTaskCommand(
   override val order: Int = ORDER_TASK_ATTRIBUTE_UPDATE,
   override val eventName: String = ATTRIBUTES,
 
-  val name: String?,
   val description: String?,
-  val priority: Int?,
-  val assignee: String?,
-  val owner: String?,
-  val dueDate: Date? = null,
-  val followUpDate: Date? = null
-) : EngineTaskCommand
-
-/**
- * Command to update existing task.
- */
-data class UpdateTaskCommand(
-  @TargetAggregateIdentifier
-  override val id: String,
-
-  override val order: Int = ORDER_TASK_ATTRIBUTE_UPDATE,
-  override val eventName: String = ATTRIBUTES,
-
-  val name: String?,
-  val description: String?,
-  val priority: Int?,
-  val assignee: String?,
-  val owner: String?,
   val dueDate: Date? = null,
   val followUpDate: Date? = null,
+  val name: String?,
+  val owner: String?,
+  val priority: Int?
 
-  val candidateUsers: List<String> = listOf(),
-  val candidateGroups: List<String> = listOf()
 ) : EngineTaskCommand
+
 
 /**
  * Command to change task assignment.
  */
 sealed class UpdateAssignmentTaskCommand(
+  @TargetAggregateIdentifier
   override val id: String,
   override val order: Int = ORDER_TASK_CANDIDATES_UPDATE,
   override val eventName: String,
-  open val candidateUsers: List<String> = listOf(),
-  open val candidateGroups: List<String> = listOf()
+  open val candidateUsers: Set<String>,
+  open val candidateGroups: Set<String>
 ) : EngineTaskCommand
 
 /**
  * Assignment command to add one or more candidate groups.
  */
 data class AddCandidateGroupsCommand(
+  @TargetAggregateIdentifier
   override val id: String,
-  override val candidateGroups: List<String>
+  override val candidateGroups: Set<String>
 ) : UpdateAssignmentTaskCommand(
   id = id,
   eventName = CANDIDATE_GROUP_ADD,
-  candidateGroups = candidateGroups
+  candidateGroups = candidateGroups,
+  candidateUsers = setOf()
 )
 
 /**
  * Assignment command to delete one or more candidate groups.
  */
 data class DeleteCandidateGroupsCommand(
+  @TargetAggregateIdentifier
   override val id: String,
-  override val candidateGroups: List<String> = listOf()
+  override val candidateGroups: Set<String> = setOf()
 ) : UpdateAssignmentTaskCommand(
   id = id,
   eventName = CANDIDATE_GROUP_DELETE,
-  candidateGroups = candidateGroups
+  candidateGroups = candidateGroups,
+  candidateUsers = setOf()
 )
 
 /**
  * Assignment command to add one or more candidate users.
  */
 data class AddCandidateUsersCommand(
+  @TargetAggregateIdentifier
   override val id: String,
-  override val candidateUsers: List<String> = listOf()
+  override val candidateUsers: Set<String> = setOf()
 ) : UpdateAssignmentTaskCommand(
   id = id,
   eventName = CANDIDATE_USER_ADD,
-  candidateUsers = candidateUsers
+  candidateUsers = candidateUsers,
+  candidateGroups = setOf()
 )
 
 /**
  * Assignment command to delete one or more candidate users.
  */
 data class DeleteCandidateUsersCommand(
+  @TargetAggregateIdentifier
   override val id: String,
-  override val candidateUsers: List<String> = listOf()
+  override val candidateUsers: Set<String> = setOf()
 ) : UpdateAssignmentTaskCommand(
   id = id,
   eventName = CANDIDATE_USER_DELETE,
-  candidateUsers = candidateUsers
+  candidateUsers = candidateUsers,
+  candidateGroups = setOf()
 )
-
-// defines a partial order on EngineTaskCommand
-const val ORDER_TASK_CREATION = Int.MIN_VALUE
-const val ORDER_TASK_DELETION = Int.MAX_VALUE
-const val ORDER_TASK_COMPLETION = ORDER_TASK_DELETION - 1
-const val ORDER_TASK_ASSIGNMENT = 0
-const val ORDER_TASK_CANDIDATES_UPDATE = 1
-const val ORDER_TASK_ATTRIBUTE_UPDATE = 2

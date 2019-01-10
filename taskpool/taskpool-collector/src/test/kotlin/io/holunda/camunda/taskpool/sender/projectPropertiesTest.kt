@@ -2,6 +2,8 @@
 
 package io.holunda.camunda.taskpool.sender
 
+import io.holunda.camunda.taskpool.sender.accumulator.PropertyOperation
+import io.holunda.camunda.taskpool.sender.accumulator.projectProperties
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import java.util.*

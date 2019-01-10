@@ -42,8 +42,8 @@ class TaskAssignmentChangeTest {
       formKey = "some",
       businessKey = "business123",
       sourceReference = processReference,
-      candidateUsers = listOf("kermit"),
-      candidateGroups = listOf("muppetshow"),
+      candidateUsers = setOf("kermit"),
+      candidateGroups = setOf("muppetshow"),
       assignee = null,
       priority = 51,
       description = "Funky task",
@@ -80,7 +80,7 @@ class TaskAssignmentChangeTest {
       .`when`(
         AddCandidateGroupsCommand(
           id = "4711",
-          groupId = "nasa"
+          candidateGroups = setOf("nasa")
         )
       ).expectEvents(
         TaskCandidateGroupChanged(
@@ -100,7 +100,7 @@ class TaskAssignmentChangeTest {
       .`when`(
         AddCandidateUsersCommand(
           id = "4711",
-          userId = "rocketman"
+          candidateUsers = setOf("rocketman")
         )
       ).expectEvents(
         TaskCandidateUserChanged(
@@ -120,7 +120,7 @@ class TaskAssignmentChangeTest {
       .`when`(
         DeleteCandidateGroupsCommand(
           id = "4711",
-          groupId = "muppetshow"
+          candidateGroups = setOf("muppetshow")
         )
       ).expectEvents(
         TaskCandidateGroupChanged(
@@ -140,7 +140,7 @@ class TaskAssignmentChangeTest {
       .`when`(
         DeleteCandidateUsersCommand(
           id = "4711",
-          userId = "kermit"
+          candidateUsers = setOf("kermit")
         )
       ).expectEvents(
         TaskCandidateUserChanged(
@@ -159,25 +159,25 @@ class TaskAssignmentChangeTest {
       .given(createdEvent, completedEvent)
       .`when`(AddCandidateUsersCommand(
         id = "4711",
-        candidateUsers = listOf("rocketman")
+        candidateUsers = setOf("rocketman")
       )).expectNoEvents()
     fixture
       .given(createdEvent, completedEvent)
       .`when`(DeleteCandidateUsersCommand(
         id = "4711",
-        candidateUsers = listOf("kermit")
+        candidateUsers = setOf("kermit")
       )).expectNoEvents()
     fixture
       .given(createdEvent, completedEvent)
       .`when`(DeleteCandidateGroupsCommand(
         id = "4711",
-        candidateGroups = listOf("muppetshow")
+        candidateGroups = setOf("muppetshow")
       )).expectNoEvents()
     fixture
       .given(createdEvent, completedEvent)
       .`when`(AddCandidateGroupsCommand(
         id = "4711",
-        candidateGroups = listOf("nasa")
+        candidateGroups = setOf("nasa")
       )).expectNoEvents()
 
 
@@ -190,25 +190,25 @@ class TaskAssignmentChangeTest {
       .given(createdEvent, deletedEvent)
       .`when`(AddCandidateUsersCommand(
         id = "4711",
-        candidateUsers = listOf("rocketman")
+        candidateUsers = setOf("rocketman")
       )).expectNoEvents()
     fixture
       .given(createdEvent, deletedEvent)
       .`when`(DeleteCandidateUsersCommand(
         id = "4711",
-        candidateUsers = listOf("kermit")
+        candidateUsers = setOf("kermit")
       )).expectNoEvents()
     fixture
       .given(createdEvent, deletedEvent)
       .`when`(DeleteCandidateGroupsCommand(
         id = "4711",
-        candidateGroups = listOf("muppetshow")
+        candidateGroups = setOf("muppetshow")
       )).expectNoEvents()
     fixture
       .given(createdEvent, deletedEvent)
       .`when`(AddCandidateGroupsCommand(
         id = "4711",
-        candidateGroups = listOf("nasa")
+        candidateGroups = setOf("nasa")
       )).expectNoEvents()
 
   }

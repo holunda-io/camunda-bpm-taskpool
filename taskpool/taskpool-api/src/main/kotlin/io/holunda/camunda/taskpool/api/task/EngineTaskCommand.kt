@@ -11,10 +11,6 @@ interface EngineTaskCommand : WithTaskId, CamundaTaskEvent {
    * Commands with lower order value are sent before commands with higher order value.
    */
   val order: Int
-
 }
 
-/**
- * Enriched command received from Camunda Engine (with variables and correlations)
- */
-interface EnrichedEngineTaskCommand : EngineTaskCommand, WithPayload, WithCorrelations, TaskIdentity
+

@@ -42,8 +42,8 @@ class TaskEventCollector(
     CreateTaskCommand(
       id = task.id,
       assignee = task.assignee,
-      candidateGroups = task.candidates.filter { it.groupId != null }.map { it.groupId },
-      candidateUsers = task.candidates.filter { it.userId != null && it.type == IdentityLinkType.CANDIDATE }.map { it.userId },
+      candidateGroups = task.candidates.filter { it.groupId != null }.map { it.groupId }.toSet(),
+      candidateUsers = task.candidates.filter { it.userId != null && it.type == IdentityLinkType.CANDIDATE }.map { it.userId }.toSet(),
       createTime = task.createTime,
       description = task.description,
       dueDate = task.dueDate,
@@ -77,8 +77,6 @@ class TaskEventCollector(
     AssignTaskCommand(
       id = task.id,
       assignee = task.assignee,
-      candidateGroups = task.candidates.filter { it.groupId != null }.map { it.groupId },
-      candidateUsers = task.candidates.filter { it.userId != null && it.type == IdentityLinkType.CANDIDATE }.map { it.userId },
       eventName = task.eventName
     )
 
@@ -109,7 +107,6 @@ class TaskEventCollector(
       "update" ->
         UpdateAttributeTaskCommand(
           id = changeEvent.taskId,
-          assignee = changeEvent.assignee,
           description = changeEvent.description,
           dueDate = changeEvent.dueDate,
           followUpDate = changeEvent.followUpDate,
@@ -130,10 +127,10 @@ class TaskEventCollector(
       "add" -> when {
         changeEvent.userId != null -> AddCandidateUsersCommand(
           id = changeEvent.taskId,
-          candidateUsers = listOf(changeEvent.userId))
+          candidateUsers = setOf(changeEvent.userId))
         changeEvent.groupId != null -> AddCandidateGroupsCommand(
           id = changeEvent.taskId,
-          candidateGroups = listOf(changeEvent.groupId))
+          candidateGroups = setOf(changeEvent.groupId))
         else -> {
           logger.warn("Received unexpected identity link historic update event ${changeEvent.type} ${changeEvent.operationType} ${changeEvent.eventType} on ${changeEvent.taskId}")
           null
@@ -142,10 +139,10 @@ class TaskEventCollector(
       "delete" -> when {
         changeEvent.userId != null -> DeleteCandidateUsersCommand(
           id = changeEvent.taskId,
-          candidateUsers = listOf(changeEvent.userId))
+          candidateUsers = setOf(changeEvent.userId))
         changeEvent.groupId != null -> DeleteCandidateGroupsCommand(
           id = changeEvent.taskId,
-          candidateGroups = listOf(changeEvent.groupId))
+          candidateGroups = setOf(changeEvent.groupId))
         else -> {
           logger.warn("Received unexpected identity link historic update event ${changeEvent.type} ${changeEvent.operationType} ${changeEvent.eventType} on ${changeEvent.taskId}")
           null

@@ -5,6 +5,7 @@ import io.holunda.camunda.taskpool.TaskSenderProperties
 import io.holunda.camunda.taskpool.api.task.AssignTaskCommand
 import io.holunda.camunda.taskpool.api.task.CreateTaskCommand
 import io.holunda.camunda.taskpool.api.task.ProcessReference
+import io.holunda.camunda.taskpool.sender.gateway.AxonCommandGatewayWrapper
 import org.axonframework.commandhandling.CommandCallback
 import org.axonframework.commandhandling.GenericCommandMessage
 import org.axonframework.commandhandling.GenericCommandResultMessage
