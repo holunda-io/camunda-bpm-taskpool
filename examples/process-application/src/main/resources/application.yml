@@ -23,7 +23,7 @@ camunda:
     default-serialization-format: application/json
     authorization:
       enabled: false
-    history-level: audit
+    history-level: full
     id-generator: strong
     database:
       schema-update: false

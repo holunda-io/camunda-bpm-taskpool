@@ -1,9 +1,9 @@
 package io.holunda.camunda.taskpool
 
 import io.holunda.camunda.taskpool.enricher.*
-import io.holunda.camunda.taskpool.sender.CommandGatewayProxy
-import io.holunda.camunda.taskpool.sender.CommandSender
-import io.holunda.camunda.taskpool.sender.TxAwareCommandSender
+import io.holunda.camunda.taskpool.sender.*
+import io.holunda.camunda.taskpool.sender.accumulator.CommandAccumulator
+import io.holunda.camunda.taskpool.sender.accumulator.ProjectingCommandAccumulator
 import org.camunda.bpm.engine.RuntimeService
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -28,6 +28,9 @@ open class TaskCollectorConfiguration(
   private val logger: Logger = LoggerFactory.getLogger(TaskCollectorConfiguration::class.java)
 
   @Bean
+  open fun commandAccumulator(): CommandAccumulator = ProjectingCommandAccumulator()
+
+  @Bean
   @ConditionalOnExpression("'\${camunda.taskpool.collector.enricher.type}' != 'custom'")
   open fun processVariablesEnricher(): VariablesEnricher? =
     when (properties.enricher.type) {
@@ -38,9 +41,9 @@ open class TaskCollectorConfiguration(
 
   @Bean
   @ConditionalOnExpression("'\${camunda.taskpool.collector.sender.type}' != 'custom'")
-  open fun simpleCommandSender(commandGatewayProxy: CommandGatewayProxy, enricher: VariablesEnricher): CommandSender? =
+  open fun txCommandSender(commandGatewayProxy: TxAwareOrderingCommandGatewayProxy, enricher: VariablesEnricher): CommandSender? =
     when (properties.sender.type) {
-      TaskSenderType.tx -> TxAwareCommandSender(commandGatewayProxy, enricher)
+      TaskSenderType.tx -> DefaultEnrichingCommandSender(commandGatewayProxy, enricher)
       else -> null
     }
 

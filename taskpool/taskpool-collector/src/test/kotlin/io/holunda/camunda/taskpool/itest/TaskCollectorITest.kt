@@ -1,15 +1,17 @@
 package io.holunda.camunda.taskpool.itest
 
-import io.holunda.camunda.taskpool.api.task.CamundaTaskEvent.Companion.ATTRIBUTES
-import io.holunda.camunda.taskpool.api.task.CompleteTaskCommand
-import io.holunda.camunda.taskpool.api.task.DeleteTaskCommand
-import io.holunda.camunda.taskpool.api.task.InitialTaskCommand
-import io.holunda.camunda.taskpool.api.task.ProcessReference
-import io.holunda.camunda.taskpool.sender.CommandGatewayProxy
+import io.holunda.camunda.taskpool.api.task.*
+import io.holunda.camunda.taskpool.api.task.CamundaTaskEvent.Companion.CREATE
+import io.holunda.camunda.taskpool.sender.gateway.AxonCommandGatewayWrapper
+import org.awaitility.Awaitility.await
+import org.awaitility.Awaitility.waitAtMost
 import org.camunda.bpm.engine.RepositoryService
 import org.camunda.bpm.engine.RuntimeService
 import org.camunda.bpm.engine.TaskService
+import org.camunda.bpm.engine.delegate.DelegateTask
+import org.camunda.bpm.engine.delegate.TaskListener
 import org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareAssertions.assertThat
+import org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.job
 import org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.task
 import org.camunda.bpm.engine.variable.Variables
 import org.camunda.bpm.model.bpmn.Bpmn
@@ -21,11 +23,14 @@ import org.mockito.Mockito.verify
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
+import org.springframework.stereotype.Component
 import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit4.SpringRunner
+import java.io.Serializable
 import java.time.Instant.now
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 
 /**
@@ -38,7 +43,7 @@ import java.util.*
 class TaskCollectorITest {
 
   @MockBean
-  lateinit var commandGatewayProxy: CommandGatewayProxy
+  lateinit var commandGateway: AxonCommandGatewayWrapper
 
   @Autowired
   lateinit var repositoryService: RepositoryService
@@ -80,29 +85,16 @@ class TaskCollectorITest {
     assertThat(instance).isStarted
     assertThat(instance).isWaitingAt(taskDefinitionKey)
 
-    reset(commandGatewayProxy)
+    reset(commandGateway)
     val deleteCommand = DeleteTaskCommand(
       id = task().id,
-      sourceReference = ProcessReference(
-        instanceId = instance.id,
-        executionId = task().executionId,
-        definitionId = task().processDefinitionId,
-        name = "My Process",
-        definitionKey = processId,
-        applicationName = "collector-test"
-      ),
-      createTime = task().createTime,
-      name = task().name,
-      businessKey = businessKey,
-      taskDefinitionKey = taskDefinitionKey,
-      enriched = false,
       deleteReason = reason
     )
 
     // delete
     runtimeService.deleteProcessInstance(instance.processInstanceId, reason, false)
 
-    verify(commandGatewayProxy).send(deleteCommand)
+    verify(commandGateway).sendToGateway(listOf(deleteCommand))
   }
 
   /**
@@ -135,29 +127,15 @@ class TaskCollectorITest {
     assertThat(instance).isStarted
     assertThat(instance).isWaitingAt(taskDefinitionKey)
 
-    reset(commandGatewayProxy)
+    reset(commandGateway)
     val completeCommand = CompleteTaskCommand(
-      id = task().id,
-      sourceReference = ProcessReference(
-        instanceId = instance.id,
-        executionId = task().executionId,
-        definitionId = task().processDefinitionId,
-        name = "My Process",
-        definitionKey = processId,
-        applicationName = "collector-test"
-      ),
-      createTime = task().createTime,
-      name = task().name,
-      businessKey = businessKey,
-      taskDefinitionKey = taskDefinitionKey,
-      payload = Variables.putValue("key", "value").putValue("input", "from user"),
-      enriched = true
+      id = task().id
     )
 
     // complete
     taskService.complete(task().id, Variables.putValue("input", "from user"))
 
-    verify(commandGatewayProxy).send(completeCommand)
+    verify(commandGateway).sendToGateway(listOf(completeCommand))
   }
 
   /**
@@ -193,29 +171,15 @@ class TaskCollectorITest {
     assertThat(instance).isStarted
     assertThat(instance).isWaitingAt(taskDefinitionKey)
 
-    reset(commandGatewayProxy)
+    reset(commandGateway)
     val completeCommand = CompleteTaskCommand(
-      id = task().id,
-      sourceReference = ProcessReference(
-        instanceId = instance.id,
-        executionId = task().executionId,
-        definitionId = task().processDefinitionId,
-        name = "My Process",
-        definitionKey = processId,
-        applicationName = "collector-test"
-      ),
-      createTime = task().createTime,
-      name = task().name,
-      businessKey = businessKey,
-      taskDefinitionKey = taskDefinitionKey,
-      payload = Variables.putValue("key", "value").putValue("input", "from user"),
-      enriched = true
+      id = task().id
     )
 
     // complete
     taskService.complete(task().id, Variables.putValue("input", "from user"))
 
-    verify(commandGatewayProxy).send(completeCommand)
+    verify(commandGateway).sendToGateway(listOf(completeCommand))
   }
 
 
@@ -250,9 +214,66 @@ class TaskCollectorITest {
     assertThat(instance).isStarted
     assertThat(instance).isWaitingAt(taskDefinitionKey)
 
-    reset(commandGatewayProxy)
+    reset(commandGateway)
     val now = Date.from(now())
-    val updateCommand = InitialTaskCommand(
+    val updateCommand = UpdateAttributeTaskCommand(
+      id = task().id,
+      name = task().name,
+      description = null,
+      dueDate = now,
+      owner = null,
+      priority = 50
+    )
+
+    // set due date to now
+    taskService.saveTask(task().apply { dueDate = now })
+
+    verify(commandGateway).sendToGateway(listOf(updateCommand))
+  }
+
+  /**
+   * The process is started and runs into a user task.
+   * The create command is send after the TX commit.
+   */
+  @Test
+  fun `should send task create of async process`() {
+
+    val businessKey = "BK1"
+    val processId = "processId"
+    val taskDefinitionKey = "userTask"
+
+    // deploy
+    repositoryService
+      .createDeployment()
+      .addModelInstance("process.bpmn",
+        createUserTaskProcess(processId,
+          taskDefinitionKey,
+          taskListeners = listOf(
+            Pair("create", "#{addCandidateUserPiggy}"),
+            Pair("create", "#{addCandidateGroupMuppetShow}")),
+          additionalUserTask = false,
+          asyncOnStart = true))
+      .deploy()
+
+    // start
+    val instance = runtimeService
+      .startProcessInstanceByKey(
+        processId,
+        businessKey,
+        Variables
+          .putValue("key", "value")
+          .putValue("object", MyStructure("name", "key", 1))
+      )
+
+    // wait for async continuation: we must not trigger the execution of the job explicitly but instead await its execution
+    assertThat(instance).isNotNull
+    assertThat(instance).isStarted
+    await().untilAsserted { assertThat(job(instance)).isNull() }
+
+    // user task
+    assertThat(instance).isWaitingAt(taskDefinitionKey)
+
+    val createCommand = CreateTaskCommand(
       id = task().id,
       sourceReference = ProcessReference(
         instanceId = instance.id,
@@ -264,25 +285,79 @@ class TaskCollectorITest {
       ),
       name = task().name,
       taskDefinitionKey = taskDefinitionKey,
-      enriched = false,
-      eventName = ATTRIBUTES,
-      dueDate = now
+      candidateUsers = setOf("piggy"),
+      candidateGroups = setOf("muppetshow"),
+      enriched = true,
+      eventName = CREATE,
+      createTime = task().createTime,
+      businessKey = "BK1",
+      priority = 50, // default by camunda if not set in explicit
+      payload = Variables
+        .putValue("key", Variables.stringValue("value"))
+        .putValue("object", MyStructure("name", "key", 1))
     )
 
-    // set due date to now
-    taskService.saveTask(task().apply { dueDate = now })
-
-    verify(commandGatewayProxy).send(updateCommand)
+    // we need to take into account that dispatching the accumulated commands is done asynchronously and therefore we might have to wait a little bit
+    waitAtMost(1, TimeUnit.SECONDS).untilAsserted { verify(commandGateway).sendToGateway(listOf(createCommand)) }
   }
 
   /**
-   * Creates a process model instance with start -> []user-task -> (optional: another-user-task) -> end
+   * The process is started and wait in a user task.
+   * The assign command is send after the TX commit.
    */
-  fun createUserTaskProcess(processId: String, taskDefinitionKey: String, additionalUserTask: Boolean = false) =
+  @Test
+  fun `should send task assign`() {
+
+    val businessKey = "BK1"
+    val processId = "processId"
+    val taskDefinitionKey = "userTask"
+
+    // deploy
+    repositoryService
+      .createDeployment()
+      .addModelInstance("process.bpmn",
+        createUserTaskProcess(processId,
+          taskDefinitionKey,
+          additionalUserTask = false))
+      .deploy()
+
+    // start
+    val instance = runtimeService
+      .startProcessInstanceByKey(
+        processId,
+        businessKey,
+        Variables.putValue("key", "value")
+      )
+    assertThat(instance).isNotNull
+    assertThat(instance).isStarted
+    assertThat(instance).isWaitingAt(taskDefinitionKey)
+
+    reset(commandGateway)
+    val assignTaskCommand = AssignTaskCommand(
+      id = task().id,
+      assignee = "kermit"
+    )
+
+    taskService.setAssignee(task().id, "kermit")
+
+    verify(commandGateway).sendToGateway(listOf(assignTaskCommand))
+  }
+
+  /**
+   * Creates a process model instance with start -> user-task -> (optional: another-user-task) -> end
+   */
+  fun createUserTaskProcess(processId: String, taskDefinitionKey: String, additionalUserTask: Boolean = false, asyncOnStart: Boolean = false,
+                            candidateGroups: String = "", candidateUsers: String = "", taskListeners: List<Pair<String, String>> = listOf()) =
     Bpmn
       .createExecutableProcess(processId)
-      .startEvent("start")
-      .userTask(taskDefinitionKey).apply {
+      .startEvent("start").camundaAsyncAfter(asyncOnStart)
+      .userTask(taskDefinitionKey).camundaCandidateGroups(candidateGroups).camundaCandidateUsers(candidateUsers)
+      .apply {
+        taskListeners.forEach {
+          this.camundaTaskListenerDelegateExpression(it.first, it.second)
+        }
+      }
+      .apply {
         if (additionalUserTask) {
           this.userTask("another-user-task")
         }
@@ -293,3 +368,19 @@ class TaskCollectorITest {
       }
 
 }
+
+@Component
+internal class AddCandidateUserPiggy : TaskListener {
+  override fun notify(delegateTask: DelegateTask) {
+    delegateTask.addCandidateUser("piggy")
+  }
+}
+
+@Component
+class AddCandidateGroupMuppetShow : TaskListener {
+  override fun notify(delegateTask: DelegateTask) {
+    delegateTask.addCandidateGroup("muppetshow")
+  }
+}
+
+data class MyStructure(val name: String, val key: String, val value: Int) : Serializable

@@ -11,7 +11,7 @@ interface CamundaTaskEvent {
 
   companion object {
     const val CREATE = "create"
-    const val ASSIGN = "assign"
+    const val ASSIGN = "assignment"
     const val DELETE = "delete"
     const val COMPLETE = "complete"
     const val ATTRIBUTES = "attribute-update"
