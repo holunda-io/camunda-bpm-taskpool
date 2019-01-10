@@ -33,8 +33,6 @@ open class CockpitTaskController(
     val taskReference = cockpitService.findTaskReference(taskId)
     val command = DeleteTaskCommand(
       id = taskReference.id,
-      taskDefinitionKey = taskReference.taskDefinitionKey,
-      sourceReference = taskReference.sourceReference,
       deleteReason = "Deleted from cockpit"
     )
     gateway.sendAndWait<Any>(command)

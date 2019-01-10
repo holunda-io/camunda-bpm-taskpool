@@ -14,8 +14,4 @@ interface WithPayload {
    * Business key.
    */
   val businessKey: String?
-  /**
-   * Enrichment flag.
-   */
-  var enriched: Boolean
 }

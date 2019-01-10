@@ -2,7 +2,8 @@ package io.holunda.camunda.taskpool
 
 import io.holunda.camunda.taskpool.enricher.*
 import io.holunda.camunda.taskpool.sender.*
-import org.camunda.bpm.engine.FormService
+import io.holunda.camunda.taskpool.sender.accumulator.CommandAccumulator
+import io.holunda.camunda.taskpool.sender.accumulator.ProjectingCommandAccumulator
 import org.camunda.bpm.engine.RuntimeService
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -20,7 +21,6 @@ import javax.annotation.PostConstruct
 open class TaskCollectorConfiguration(
   private val properties: TaskCollectorProperties,
   private val runtimeService: RuntimeService,
-  private val formService: FormService,
   private val filter: ProcessVariablesFilter,
   private val correlator: ProcessVariablesCorrelator
 ) {
@@ -28,13 +28,13 @@ open class TaskCollectorConfiguration(
   private val logger: Logger = LoggerFactory.getLogger(TaskCollectorConfiguration::class.java)
 
   @Bean
-  open fun commandProjector(): CommandAccumulator = SortingCommandAccumulator()
+  open fun commandAccumulator(): CommandAccumulator = ProjectingCommandAccumulator()
 
   @Bean
   @ConditionalOnExpression("'\${camunda.taskpool.collector.enricher.type}' != 'custom'")
   open fun processVariablesEnricher(): VariablesEnricher? =
     when (properties.enricher.type) {
-      TaskCollectorEnricherType.processVariables -> ProcessVariablesTaskCommandEnricher(runtimeService, formService, filter, correlator)
+      TaskCollectorEnricherType.processVariables -> ProcessVariablesTaskCommandEnricher(runtimeService, filter, correlator)
       TaskCollectorEnricherType.no -> EmptyEnricher()
       else -> null
     }

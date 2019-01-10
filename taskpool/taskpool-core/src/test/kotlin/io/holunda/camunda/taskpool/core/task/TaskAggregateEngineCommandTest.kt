@@ -46,10 +46,9 @@ class TaskAggregateEngineCommandTest {
           taskDefinitionKey = "foo",
           formKey = "some",
           businessKey = "business123",
-          enriched = true,
           sourceReference = processReference,
-          candidateUsers = listOf("kermit", "gonzo"),
-          candidateGroups = listOf("muppets"),
+          candidateUsers = setOf("kermit", "gonzo"),
+          candidateGroups = setOf("muppets"),
           assignee = "kermit",
           priority = 51,
           followUpDate = now2,
@@ -68,8 +67,8 @@ class TaskAggregateEngineCommandTest {
           formKey = "some",
           businessKey = "business123",
           sourceReference = processReference,
-          candidateUsers = listOf("kermit", "gonzo"),
-          candidateGroups = listOf("muppets"),
+          candidateUsers = setOf("kermit", "gonzo"),
+          candidateGroups = setOf("muppets"),
           assignee = "kermit",
           priority = 51,
           followUpDate = now2,
@@ -93,8 +92,8 @@ class TaskAggregateEngineCommandTest {
           formKey = "some",
           businessKey = "business123",
           sourceReference = processReference,
-          candidateUsers = listOf("kermit", "gonzo"),
-          candidateGroups = listOf("muppets"),
+          candidateUsers = setOf("kermit", "gonzo"),
+          candidateGroups = setOf("muppets"),
           assignee = "kermit",
           followUpDate = now2,
           dueDate = now,
@@ -105,24 +104,7 @@ class TaskAggregateEngineCommandTest {
         ))
       .`when`(
         CompleteTaskCommand(
-          id = "4711",
-          taskDefinitionKey = "foo",
-          sourceReference = processReference,
-          name = "Foo",
-          createTime = now,
-          eventName = "create",
-          owner = "kermit",
-          businessKey = "business123",
-          enriched = true,
-          candidateUsers = listOf("kermit", "gonzo"),
-          candidateGroups = listOf("muppets"),
-          assignee = "kermit",
-          priority = 51,
-          followUpDate = now2,
-          dueDate = now,
-          description = "Funky task",
-          payload = Variables.createVariables().putValueTyped("another", stringValue("some")),
-          correlations = newCorrelations().addCorrelation("Request", "business456")
+          id = "4711"
         ))
       .expectEvents(
         TaskCompletedEngineEvent(
@@ -133,17 +115,16 @@ class TaskAggregateEngineCommandTest {
           taskDefinitionKey = "foo",
           formKey = "some",
           businessKey = "business123",
-          enriched = true,
           sourceReference = processReference,
           followUpDate = now2,
           dueDate = now,
-          candidateUsers = listOf("kermit", "gonzo"),
-          candidateGroups = listOf("muppets"),
+          candidateUsers = setOf("kermit", "gonzo"),
+          candidateGroups = setOf("muppets"),
           assignee = "kermit",
           priority = 51,
           description = "Funky task",
-          payload = Variables.createVariables().putValueTyped("another", stringValue("some")),
-          correlations = newCorrelations().addCorrelation("Request", "business456")
+          payload = Variables.createVariables().putValueTyped("key", stringValue("value")),
+          correlations = newCorrelations().addCorrelation("Request", "business123")
         )
       )
   }
@@ -155,30 +136,26 @@ class TaskAggregateEngineCommandTest {
         TaskCreatedEngineEvent(
           id = "4711",
           name = "Foo",
+          createTime = now,
+          owner = "kermit",
           taskDefinitionKey = "foo",
           formKey = "some",
-          sourceReference = processReference
+          businessKey = "business123",
+          sourceReference = processReference,
+          candidateUsers = setOf("kermit", "gonzo"),
+          candidateGroups = setOf("muppets"),
+          assignee = null,
+          followUpDate = now2,
+          dueDate = now,
+          priority = 51,
+          description = "Funky task",
+          payload = Variables.createVariables().putValueTyped("key", stringValue("value")),
+          correlations = newCorrelations().addCorrelation("Request", "business123")
         ))
       .`when`(
         AssignTaskCommand(
           id = "4711",
-          name = "Foo",
-          createTime = now,
-          eventName = "create",
-          owner = "kermit",
-          taskDefinitionKey = "foo",
-          businessKey = "business123",
-          enriched = true,
-          sourceReference = processReference,
-          followUpDate = now2,
-          dueDate = now,
-          candidateUsers = listOf("kermit", "gonzo"),
-          candidateGroups = listOf("muppets"),
-          assignee = "kermit",
-          priority = 51,
-          description = "Funky task",
-          payload = Variables.createVariables().putValueTyped("another", stringValue("some")),
-          correlations = newCorrelations().addCorrelation("Request", "business456")
+          assignee = "kermit"
         ))
       .expectEvents(
         TaskAssignedEngineEvent(
@@ -189,17 +166,16 @@ class TaskAggregateEngineCommandTest {
           owner = "kermit",
           taskDefinitionKey = "foo",
           businessKey = "business123",
-          enriched = true,
           sourceReference = processReference,
           followUpDate = now2,
           dueDate = now,
-          candidateUsers = listOf("kermit", "gonzo"),
-          candidateGroups = listOf("muppets"),
+          candidateUsers = setOf("kermit", "gonzo"),
+          candidateGroups = setOf("muppets"),
           assignee = "kermit",
           priority = 51,
           description = "Funky task",
-          payload = Variables.createVariables().putValueTyped("another", stringValue("some")),
-          correlations = newCorrelations().addCorrelation("Request", "business456")
+          payload = Variables.createVariables().putValueTyped("key", stringValue("value")),
+          correlations = newCorrelations().addCorrelation("Request", "business123")
         )
       )
   }
@@ -227,11 +203,7 @@ class TaskAggregateEngineCommandTest {
       .`when`(
         AssignTaskCommand(
           id = "4711",
-          name = "Foo",
-          createTime = now,
-          taskDefinitionKey = "foo",
-          assignee = "kermit",
-          sourceReference = processReference
+          assignee = "kermit"
         ))
       .expectNoEvents()
   }
@@ -250,8 +222,8 @@ class TaskAggregateEngineCommandTest {
           formKey = "some",
           businessKey = "business123",
           sourceReference = processReference,
-          candidateUsers = listOf("kermit", "gonzo"),
-          candidateGroups = listOf("muppets"),
+          candidateUsers = setOf("kermit", "gonzo"),
+          candidateGroups = setOf("muppets"),
           assignee = "kermit",
           priority = 51,
           description = "Funky task",
@@ -266,12 +238,11 @@ class TaskAggregateEngineCommandTest {
           taskDefinitionKey = "foo",
           formKey = "some",
           businessKey = "business123",
-          enriched = true,
           sourceReference = processReference,
           followUpDate = now2,
           dueDate = now,
-          candidateUsers = listOf("kermit", "gonzo"),
-          candidateGroups = listOf("muppets"),
+          candidateUsers = setOf("kermit", "gonzo"),
+          candidateGroups = setOf("muppets"),
           assignee = "kermit",
           priority = 51,
           description = "Funky task",
@@ -281,24 +252,7 @@ class TaskAggregateEngineCommandTest {
         ))
       .`when`(
         CompleteTaskCommand(
-          id = "4711",
-          taskDefinitionKey = "foo",
-          sourceReference = processReference,
-          name = "Foo",
-          createTime = now,
-          eventName = "create",
-          owner = "kermit",
-          businessKey = "business123",
-          enriched = true,
-          followUpDate = now2,
-          dueDate = now,
-          candidateUsers = listOf("kermit", "gonzo"),
-          candidateGroups = listOf("muppets"),
-          assignee = "kermit",
-          priority = 51,
-          description = "Funky task",
-          payload = Variables.createVariables().putValueTyped("another", stringValue("some")),
-          correlations = newCorrelations().addCorrelation("Request", "business456")
+          id = "4711"
         )
       ).expectNoEvents()
   }
@@ -316,8 +270,8 @@ class TaskAggregateEngineCommandTest {
           formKey = "some",
           businessKey = "business123",
           sourceReference = processReference,
-          candidateUsers = listOf("kermit", "gonzo"),
-          candidateGroups = listOf("muppets"),
+          candidateUsers = setOf("kermit", "gonzo"),
+          candidateGroups = setOf("muppets"),
           assignee = "kermit",
           priority = 51,
           description = "Funky task",
@@ -332,12 +286,11 @@ class TaskAggregateEngineCommandTest {
           taskDefinitionKey = "foo",
           formKey = "some",
           businessKey = "business123",
-          enriched = true,
           sourceReference = processReference,
           followUpDate = now2,
           dueDate = now,
-          candidateUsers = listOf("kermit", "gonzo"),
-          candidateGroups = listOf("muppets"),
+          candidateUsers = setOf("kermit", "gonzo"),
+          candidateGroups = setOf("muppets"),
           assignee = "kermit",
           priority = 51,
           description = "Funky task",
@@ -346,24 +299,7 @@ class TaskAggregateEngineCommandTest {
         ))
       .`when`(
         CompleteTaskCommand(
-          id = "4711",
-          taskDefinitionKey = "foo",
-          sourceReference = processReference,
-          name = "Foo",
-          createTime = now,
-          eventName = "create",
-          owner = "kermit",
-          businessKey = "business123",
-          enriched = true,
-          followUpDate = now2,
-          dueDate = now,
-          candidateUsers = listOf("kermit", "gonzo"),
-          candidateGroups = listOf("muppets"),
-          assignee = "kermit",
-          priority = 51,
-          description = "Funky task",
-          payload = Variables.createVariables().putValueTyped("another", stringValue("some")),
-          correlations = newCorrelations().addCorrelation("Request", "business456")
+          id = "4711"
         )
       ).expectNoEvents()
   }
@@ -381,8 +317,8 @@ class TaskAggregateEngineCommandTest {
           formKey = "some",
           businessKey = "business123",
           sourceReference = processReference,
-          candidateUsers = listOf("kermit", "gonzo"),
-          candidateGroups = listOf("muppets"),
+          candidateUsers = setOf("kermit", "gonzo"),
+          candidateGroups = setOf("muppets"),
           assignee = "kermit",
           priority = 51,
           description = "Funky task",
@@ -397,12 +333,11 @@ class TaskAggregateEngineCommandTest {
           taskDefinitionKey = "foo",
           formKey = "some",
           businessKey = "business123",
-          enriched = true,
           sourceReference = processReference,
           followUpDate = now2,
           dueDate = now,
-          candidateUsers = listOf("kermit", "gonzo"),
-          candidateGroups = listOf("muppets"),
+          candidateUsers = setOf("kermit", "gonzo"),
+          candidateGroups = setOf("muppets"),
           assignee = "kermit",
           priority = 51,
           description = "Funky task",
@@ -412,23 +347,7 @@ class TaskAggregateEngineCommandTest {
       .`when`(
         AssignTaskCommand(
           id = "4711",
-          name = "Foo",
-          createTime = now,
-          eventName = "create",
-          owner = "kermit",
-          taskDefinitionKey = "foo",
-          businessKey = "business123",
-          enriched = true,
-          sourceReference = processReference,
-          followUpDate = now2,
-          dueDate = now,
-          candidateUsers = listOf("kermit", "gonzo"),
-          candidateGroups = listOf("muppets"),
-          assignee = "another",
-          priority = 51,
-          description = "Funky task",
-          payload = Variables.createVariables().putValueTyped("another", stringValue("some")),
-          correlations = newCorrelations().addCorrelation("Request", "business456")
+          assignee = "another"
         )
       ).expectNoEvents()
   }
@@ -446,8 +365,8 @@ class TaskAggregateEngineCommandTest {
           formKey = "some",
           businessKey = "business123",
           sourceReference = processReference,
-          candidateUsers = listOf("kermit", "gonzo"),
-          candidateGroups = listOf("muppets"),
+          candidateUsers = setOf("kermit", "gonzo"),
+          candidateGroups = setOf("muppets"),
           assignee = "kermit",
           priority = 51,
           description = "Funky task",
@@ -462,11 +381,10 @@ class TaskAggregateEngineCommandTest {
           taskDefinitionKey = "foo",
           formKey = "some",
           businessKey = "business123",
-          enriched = true,
           sourceReference = processReference,
           dueDate = null,
-          candidateUsers = listOf("kermit", "gonzo"),
-          candidateGroups = listOf("muppets"),
+          candidateUsers = setOf("kermit", "gonzo"),
+          candidateGroups = setOf("muppets"),
           assignee = "kermit",
           priority = 51,
           description = "Funky task",
@@ -477,26 +395,11 @@ class TaskAggregateEngineCommandTest {
       .`when`(
         AssignTaskCommand(
           id = "4711",
-          name = "Foo",
-          createTime = now,
-          eventName = "create",
-          owner = "kermit",
-          taskDefinitionKey = "foo",
-          businessKey = "business123",
-          enriched = true,
-          sourceReference = processReference,
-          followUpDate = now2,
-          dueDate = now,
-          candidateUsers = listOf("kermit", "gonzo"),
-          candidateGroups = listOf("muppets"),
-          assignee = "another",
-          priority = 51,
-          description = "Funky task",
-          payload = Variables.createVariables().putValueTyped("another", stringValue("some")),
-          correlations = newCorrelations().addCorrelation("Request", "business456")
+          assignee = "another"
         )
       ).expectNoEvents()
   }
+
   @Test
   fun `should not delete completed task`() {
     fixture
@@ -510,8 +413,8 @@ class TaskAggregateEngineCommandTest {
           formKey = "some",
           businessKey = "business123",
           sourceReference = processReference,
-          candidateUsers = listOf("kermit", "gonzo"),
-          candidateGroups = listOf("muppets"),
+          candidateUsers = setOf("kermit", "gonzo"),
+          candidateGroups = setOf("muppets"),
           assignee = "kermit",
           priority = 51,
           description = "Funky task",
@@ -526,12 +429,11 @@ class TaskAggregateEngineCommandTest {
           taskDefinitionKey = "foo",
           formKey = "some",
           businessKey = "business123",
-          enriched = true,
           sourceReference = processReference,
           followUpDate = now2,
           dueDate = now,
-          candidateUsers = listOf("kermit", "gonzo"),
-          candidateGroups = listOf("muppets"),
+          candidateUsers = setOf("kermit", "gonzo"),
+          candidateGroups = setOf("muppets"),
           assignee = "kermit",
           priority = 51,
           description = "Funky task",
@@ -541,8 +443,6 @@ class TaskAggregateEngineCommandTest {
       .`when`(
         DeleteTaskCommand(
           id = "4711",
-          taskDefinitionKey = "foo",
-          sourceReference = processReference,
           deleteReason = "Not possible"
         )
       ).expectNoEvents()
@@ -562,8 +462,8 @@ class TaskAggregateEngineCommandTest {
           formKey = "some",
           businessKey = "business123",
           sourceReference = processReference,
-          candidateUsers = listOf("kermit", "gonzo"),
-          candidateGroups = listOf("muppets"),
+          candidateUsers = setOf("kermit", "gonzo"),
+          candidateGroups = setOf("muppets"),
           assignee = "kermit",
           priority = 51,
           description = "Funky task",
@@ -578,11 +478,10 @@ class TaskAggregateEngineCommandTest {
           taskDefinitionKey = "foo",
           formKey = "some",
           businessKey = "business123",
-          enriched = true,
           sourceReference = processReference,
           dueDate = null,
-          candidateUsers = listOf("kermit", "gonzo"),
-          candidateGroups = listOf("muppets"),
+          candidateUsers = setOf("kermit", "gonzo"),
+          candidateGroups = setOf("muppets"),
           assignee = "kermit",
           priority = 51,
           description = "Funky task",
@@ -593,8 +492,6 @@ class TaskAggregateEngineCommandTest {
       .`when`(
         DeleteTaskCommand(
           id = "4711",
-          taskDefinitionKey = "foo",
-          sourceReference = processReference,
           deleteReason = "Not possible"
         )
       ).expectNoEvents()
@@ -613,10 +510,12 @@ class TaskAggregateEngineCommandTest {
           formKey = "some",
           businessKey = "business123",
           sourceReference = processReference,
-          candidateUsers = listOf("kermit", "gonzo"),
-          candidateGroups = listOf("muppets"),
+          candidateUsers = setOf("kermit", "gonzo"),
+          candidateGroups = setOf("muppets"),
           assignee = "kermit",
           priority = 51,
+          dueDate = now,
+          followUpDate = now2,
           description = "Funky task",
           payload = Variables.createVariables().putValueTyped("key", stringValue("value")),
           correlations = newCorrelations().addCorrelation("Request", "business123")
@@ -624,23 +523,6 @@ class TaskAggregateEngineCommandTest {
       .`when`(
         DeleteTaskCommand(
           id = "4711",
-          taskDefinitionKey = "foo",
-          sourceReference = processReference,
-          name = "Foo",
-          createTime = now,
-          eventName = "create",
-          owner = "kermit",
-          businessKey = "business123",
-          enriched = true,
-          followUpDate = now2,
-          dueDate = now,
-          candidateUsers = listOf("kermit", "gonzo"),
-          candidateGroups = listOf("muppets"),
-          assignee = "kermit",
-          priority = 51,
-          description = "Funky task",
-          payload = Variables.createVariables().putValueTyped("another", stringValue("some1")),
-          correlations = newCorrelations().addCorrelation("Request", "business789"),
           deleteReason = "Deleted, because not needed"
         ))
       .expectEvents(
@@ -652,17 +534,16 @@ class TaskAggregateEngineCommandTest {
           taskDefinitionKey = "foo",
           formKey = "some",
           businessKey = "business123",
-          enriched = true,
           sourceReference = processReference,
           followUpDate = now2,
           dueDate = now,
-          candidateUsers = listOf("kermit", "gonzo"),
-          candidateGroups = listOf("muppets"),
+          candidateUsers = setOf("kermit", "gonzo"),
+          candidateGroups = setOf("muppets"),
           assignee = "kermit",
           priority = 51,
           description = "Funky task",
-          payload = Variables.createVariables().putValueTyped("another", stringValue("some1")),
-          correlations = newCorrelations().addCorrelation("Request", "business789"),
+          payload = Variables.createVariables().putValueTyped("key", stringValue("value")),
+          correlations = newCorrelations().addCorrelation("Request", "business123"),
           deleteReason = "Deleted, because not needed"
         )
       )
@@ -681,8 +562,8 @@ class TaskAggregateEngineCommandTest {
           formKey = "some",
           businessKey = "business123",
           sourceReference = processReference,
-          candidateUsers = listOf("kermit", "gonzo"),
-          candidateGroups = listOf("muppets"),
+          candidateUsers = setOf("kermit", "gonzo"),
+          candidateGroups = setOf("muppets"),
           assignee = "kermit",
           priority = 51,
           description = "Funky task",
@@ -692,13 +573,10 @@ class TaskAggregateEngineCommandTest {
       .`when`(
         UpdateAttributeTaskCommand(
           id = "4711",
-          taskDefinitionKey = "foo",
-          sourceReference = processReference,
           name = "New name",
           description = "New description",
           dueDate = now,
           followUpDate = now2,
-          assignee = "piggy",
           owner = "gonzo",
           priority = 13
         )
@@ -713,7 +591,6 @@ class TaskAggregateEngineCommandTest {
           description = "New description",
           dueDate = now,
           followUpDate = now2,
-          assignee = "piggy",
           owner = "gonzo",
           priority = 13
         )
@@ -733,8 +610,8 @@ class TaskAggregateEngineCommandTest {
           formKey = "some",
           businessKey = "business123",
           sourceReference = processReference,
-          candidateUsers = listOf("kermit", "gonzo"),
-          candidateGroups = listOf("muppets"),
+          candidateUsers = setOf("kermit", "gonzo"),
+          candidateGroups = setOf("muppets"),
           assignee = "kermit",
           priority = 51,
           description = "Funky task",
@@ -749,12 +626,11 @@ class TaskAggregateEngineCommandTest {
           taskDefinitionKey = "foo",
           formKey = "some",
           businessKey = "business123",
-          enriched = true,
           sourceReference = processReference,
           followUpDate = now2,
           dueDate = now,
-          candidateUsers = listOf("kermit", "gonzo"),
-          candidateGroups = listOf("muppets"),
+          candidateUsers = setOf("kermit", "gonzo"),
+          candidateGroups = setOf("muppets"),
           assignee = "kermit",
           priority = 51,
           description = "Funky task",
@@ -764,14 +640,11 @@ class TaskAggregateEngineCommandTest {
       .`when`(
         UpdateAttributeTaskCommand(
           id = "4711",
-          taskDefinitionKey = "foo",
-          sourceReference = processReference,
 
           name = "New name",
           description = "New description",
           dueDate = now,
           followUpDate = now2,
-          assignee = "piggy",
           owner = "gonzo",
           priority = 13
         )
@@ -791,8 +664,8 @@ class TaskAggregateEngineCommandTest {
           formKey = "some",
           businessKey = "business123",
           sourceReference = processReference,
-          candidateUsers = listOf("kermit", "gonzo"),
-          candidateGroups = listOf("muppets"),
+          candidateUsers = setOf("kermit", "gonzo"),
+          candidateGroups = setOf("muppets"),
           assignee = "kermit",
           priority = 51,
           description = "Funky task",
@@ -804,21 +677,17 @@ class TaskAggregateEngineCommandTest {
           taskDefinitionKey = "foo",
           formKey = "some",
           businessKey = "business123",
-          enriched = true,
           sourceReference = processReference,
           deleteReason = "deleted"
         ))
       .`when`(
         UpdateAttributeTaskCommand(
           id = "4711",
-          taskDefinitionKey = "foo",
-          sourceReference = processReference,
 
           name = "New name",
           description = "New description",
           dueDate = now,
           followUpDate = now2,
-          assignee = "piggy",
           owner = "gonzo",
           priority = 13
         )

@@ -5,6 +5,7 @@ import io.holunda.camunda.taskpool.TaskSenderProperties
 import io.holunda.camunda.taskpool.api.task.AssignTaskCommand
 import io.holunda.camunda.taskpool.api.task.CreateTaskCommand
 import io.holunda.camunda.taskpool.api.task.ProcessReference
+import io.holunda.camunda.taskpool.sender.gateway.AxonCommandGatewayWrapper
 import org.axonframework.commandhandling.CommandCallback
 import org.axonframework.commandhandling.GenericCommandMessage
 import org.axonframework.commandhandling.GenericCommandResultMessage
@@ -54,15 +55,6 @@ class AxonCommandGatewayWrapperTest {
     val createTaskCommand = makeCreateTaskCommand()
     val assignTaskCommand = AssignTaskCommand(
       id = "some-id",
-      sourceReference = ProcessReference(
-        "instance-id-12345",
-        "execution-id-12345",
-        "definition-id-12345",
-        "definition-key-abcde",
-        "process-name",
-        "application-name"
-      ),
-      taskDefinitionKey = "task-definition-key-abcde",
       assignee = "kermit"
     )
     @Suppress("UNCHECKED_CAST")

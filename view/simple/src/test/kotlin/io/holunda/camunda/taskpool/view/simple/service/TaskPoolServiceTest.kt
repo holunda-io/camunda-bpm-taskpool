@@ -85,7 +85,7 @@ class TaskPoolServiceTest : ScenarioTest<TaskPoolGivenStage<*>, TaskPoolWhenStag
       .task_assign_event_is_received(makeTaskAssignedEvent())
 
     then()
-      .task_is_assigned_to("some-id","kermit")
+      .task_is_assigned_to("some-id", "kermit")
   }
 
   @Test
@@ -113,13 +113,13 @@ class TaskPoolServiceTest : ScenarioTest<TaskPoolGivenStage<*>, TaskPoolWhenStag
       .task_assign_event_is_received(makeTaskAssignedEvent())
 
     then()
-      .task_is_assigned_to("some-id",null)
+      .task_is_assigned_to("some-id", null)
   }
 
   private fun makeTaskCreatedEvent(): TaskCreatedEngineEvent =
     TaskCreatedEngineEvent(
-      "some-id",
-      ProcessReference(
+      id = "some-id",
+      sourceReference = ProcessReference(
         "instance-id-12345",
         "execution-id-12345",
         "definition-id-12345",
@@ -127,22 +127,21 @@ class TaskPoolServiceTest : ScenarioTest<TaskPoolGivenStage<*>, TaskPoolWhenStag
         "process-name",
         "application-name"
       ),
-      "task-definition-key-abcde",
-      Variables.fromMap(mapOf(Pair("variableKey", "variableValue"))),
-      Variables.fromMap(mapOf(Pair("correlationKey", "correlationValue"))),
-      "businessKey",
-      true,
-      "task-name",
-      "some task description",
-      "app:form-key",
-      0,
-      Date(1234567890L),
-      listOf("muppetshow"),
-      listOf("kermit", "piggy"),
-      null,
-      null,
-      Date(1234599999L),
-      null
+      taskDefinitionKey = "task-definition-key-abcde",
+      payload = Variables.fromMap(mapOf(Pair("variableKey", "variableValue"))),
+      correlations = Variables.fromMap(mapOf(Pair("correlationKey", "correlationValue"))),
+      businessKey = "businessKey",
+      name = "task-name",
+      description = "some task description",
+      formKey = "app:form-key",
+      priority = 0,
+      createTime = Date(1234567890L),
+      candidateGroups = setOf("muppetshow"),
+      candidateUsers = setOf("kermit", "piggy"),
+      assignee = null,
+      owner = null,
+      dueDate = Date(1234599999L),
+      followUpDate = null
     )
 
   private fun makeTaskAssignedEvent(): TaskAssignedEngineEvent =
@@ -164,8 +163,8 @@ class TaskPoolServiceTest : ScenarioTest<TaskPoolGivenStage<*>, TaskPoolWhenStag
 
   private fun makeTask(assignee: String? = null): Task =
     Task(
-      "some-id",
-      ProcessReference(
+      id = "some-id",
+      sourceReference = ProcessReference(
         "instance-id-12345",
         "execution-id-12345",
         "definition-id-12345",
@@ -173,22 +172,21 @@ class TaskPoolServiceTest : ScenarioTest<TaskPoolGivenStage<*>, TaskPoolWhenStag
         "process-name",
         "application-name"
       ),
-      "task-definition-key-abcde",
-      Variables.fromMap(mapOf(Pair("variableKey", "variableValue"))),
-      Variables.fromMap(mapOf(Pair("correlationKey", "correlationValue"))),
-      "businessKey",
-      true,
-      "task-name",
-      "some task description",
-      "app:form-key",
-      0,
-      Date(1234567890L),
-      listOf("muppetshow"),
-      listOf("kermit", "piggy"),
-      assignee,
-      null,
-      Date(1234599999L),
-      null
+      taskDefinitionKey = "task-definition-key-abcde",
+      payload = Variables.fromMap(mapOf(Pair("variableKey", "variableValue"))),
+      correlations = Variables.fromMap(mapOf(Pair("correlationKey", "correlationValue"))),
+      businessKey = "businessKey",
+      name = "task-name",
+      description = "some task description",
+      formKey = "app:form-key",
+      priority = 0,
+      createTime = Date(1234567890L),
+      candidateGroups = setOf("muppetshow"),
+      candidateUsers = setOf("kermit", "piggy"),
+      assignee = assignee,
+      owner = null,
+      dueDate = Date(1234599999L),
+      followUpDate = null
     )
 
 }

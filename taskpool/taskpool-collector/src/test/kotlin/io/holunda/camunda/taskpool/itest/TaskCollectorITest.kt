@@ -2,8 +2,9 @@ package io.holunda.camunda.taskpool.itest
 
 import io.holunda.camunda.taskpool.api.task.*
 import io.holunda.camunda.taskpool.api.task.CamundaTaskEvent.Companion.CREATE
-import io.holunda.camunda.taskpool.sender.AxonCommandGatewayWrapper
+import io.holunda.camunda.taskpool.sender.gateway.AxonCommandGatewayWrapper
 import org.awaitility.Awaitility.await
+import org.awaitility.Awaitility.waitAtMost
 import org.camunda.bpm.engine.RepositoryService
 import org.camunda.bpm.engine.RuntimeService
 import org.camunda.bpm.engine.TaskService
@@ -26,8 +27,10 @@ import org.springframework.stereotype.Component
 import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit4.SpringRunner
+import java.io.Serializable
 import java.time.Instant.now
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 
 /**
@@ -85,19 +88,6 @@ class TaskCollectorITest {
     reset(commandGateway)
     val deleteCommand = DeleteTaskCommand(
       id = task().id,
-      sourceReference = ProcessReference(
-        instanceId = instance.id,
-        executionId = task().executionId,
-        definitionId = task().processDefinitionId,
-        name = "My Process",
-        definitionKey = processId,
-        applicationName = "collector-test"
-      ),
-      createTime = task().createTime,
-      name = task().name,
-      businessKey = businessKey,
-      taskDefinitionKey = taskDefinitionKey,
-      enriched = false,
       deleteReason = reason
     )
 
@@ -139,21 +129,7 @@ class TaskCollectorITest {
 
     reset(commandGateway)
     val completeCommand = CompleteTaskCommand(
-      id = task().id,
-      sourceReference = ProcessReference(
-        instanceId = instance.id,
-        executionId = task().executionId,
-        definitionId = task().processDefinitionId,
-        name = "My Process",
-        definitionKey = processId,
-        applicationName = "collector-test"
-      ),
-      createTime = task().createTime,
-      name = task().name,
-      businessKey = businessKey,
-      taskDefinitionKey = taskDefinitionKey,
-      payload = Variables.putValue("key", "value").putValue("input", "from user"),
-      enriched = true
+      id = task().id
     )
 
     // complete
@@ -197,21 +173,7 @@ class TaskCollectorITest {
 
     reset(commandGateway)
     val completeCommand = CompleteTaskCommand(
-      id = task().id,
-      sourceReference = ProcessReference(
-        instanceId = instance.id,
-        executionId = task().executionId,
-        definitionId = task().processDefinitionId,
-        name = "My Process",
-        definitionKey = processId,
-        applicationName = "collector-test"
-      ),
-      createTime = task().createTime,
-      name = task().name,
-      businessKey = businessKey,
-      taskDefinitionKey = taskDefinitionKey,
-      payload = Variables.putValue("key", "value").putValue("input", "from user"),
-      enriched = true
+      id = task().id
     )
 
     // complete
@@ -256,19 +218,9 @@ class TaskCollectorITest {
     val now = Date.from(now())
     val updateCommand = UpdateAttributeTaskCommand(
       id = task().id,
-      sourceReference = ProcessReference(
-        instanceId = instance.id,
-        executionId = task().executionId,
-        definitionId = task().processDefinitionId,
-        name = "My Process",
-        definitionKey = processId,
-        applicationName = "collector-test"
-      ),
       name = task().name,
       description = null,
-      taskDefinitionKey = taskDefinitionKey,
       dueDate = now,
-      assignee = null,
       owner = null,
       priority = 50
     )
@@ -308,14 +260,15 @@ class TaskCollectorITest {
       .startProcessInstanceByKey(
         processId,
         businessKey,
-        Variables.putValue("key", "value")
+        Variables
+          .putValue("key", "value")
+          .putValue("object", MyStructure("name", "key", 1))
       )
 
     // wait for async continuation: we must not trigger the execution of the job explicitly but instead await its execution
     assertThat(instance).isNotNull
     assertThat(instance).isStarted
-    assertThat(job(instance)).isNotNull
-    await().untilAsserted{ assertThat(job(instance)).isNull() }
+    await().untilAsserted { assertThat(job(instance)).isNull() }
 
     // user task
     assertThat(instance).isWaitingAt(taskDefinitionKey)
@@ -332,41 +285,20 @@ class TaskCollectorITest {
       ),
       name = task().name,
       taskDefinitionKey = taskDefinitionKey,
-      candidateUsers = listOf("piggy"),
-      candidateGroups = listOf("muppetshow"),
+      candidateUsers = setOf("piggy"),
+      candidateGroups = setOf("muppetshow"),
       enriched = true,
       eventName = CREATE,
       createTime = task().createTime,
       businessKey = "BK1",
-      payload = Variables.putValue("key", Variables.stringValue("value"))
-    )
-    val updateCommand = UpdateAttributeTaskCommand(
-      id = task().id,
-      sourceReference = ProcessReference(
-        instanceId = instance.id,
-        executionId = task().executionId,
-        definitionId = task().processDefinitionId,
-        name = "My Process",
-        definitionKey = processId,
-        applicationName = "collector-test"
-      ),
-      name = task().name,
-      description = null,
-      taskDefinitionKey = taskDefinitionKey,
-      priority = 50,
-      assignee = null,
-      owner = null
-    )
-    val addCandidateUserCommand = AddCandidateUserCommand(
-      id = task().id,
-      userId = "piggy"
-    )
-    val addCandidateGroupCommand = AddCandidateGroupCommand(
-      id = task().id,
-      groupId = "muppetshow"
+      priority = 50, // default by camunda if not set in explicit
+      payload = Variables
+        .putValue("key", Variables.stringValue("value"))
+        .putValue("object", MyStructure("name", "key", 1))
     )
 
-    verify(commandGateway).sendToGateway(listOf(createCommand, addCandidateUserCommand, addCandidateGroupCommand, updateCommand))
+    // we need to take into account that dispatching the accumulated commands is done asynchronously and therefore we might have to wait a little bit
+    waitAtMost(1, TimeUnit.SECONDS).untilAsserted { verify(commandGateway).sendToGateway(listOf(createCommand)) }
   }
 
   /**
@@ -401,55 +333,18 @@ class TaskCollectorITest {
     assertThat(instance).isWaitingAt(taskDefinitionKey)
 
     reset(commandGateway)
-    val assignCommand = AssignTaskCommand(
+    val assignTaskCommand = AssignTaskCommand(
       id = task().id,
-      sourceReference = ProcessReference(
-        instanceId = instance.id,
-        executionId = task().executionId,
-        definitionId = task().processDefinitionId,
-        name = "My Process",
-        definitionKey = processId,
-        applicationName = "collector-test"
-      ),
-      name = task().name,
-      taskDefinitionKey = taskDefinitionKey,
-      enriched = false,
-      businessKey = "BK1",
-      assignee = "kermit",
-      createTime = task().createTime
-    )
-    val addCandidateUserCommand = AddCandidateUserCommand(
-      id = task().id,
-      userId = "kermit"
-    )
-    val updateAttributesTaskCommand = UpdateAttributeTaskCommand(
-      id = task().id,
-      sourceReference = ProcessReference(
-        instanceId = instance.id,
-        executionId = task().executionId,
-        definitionId = task().processDefinitionId,
-        name = "My Process",
-        definitionKey = processId,
-        applicationName = "collector-test"
-      ),
-      taskDefinitionKey = taskDefinitionKey,
-      name = task().name,
-      description = null,
-      assignee = "kermit",
-      owner = null,
-      priority = 50,
-      dueDate = null,
-      followUpDate = null
+      assignee = "kermit"
     )
 
-    // set due date to now
     taskService.setAssignee(task().id, "kermit")
 
-    verify(commandGateway).sendToGateway(listOf(assignCommand, addCandidateUserCommand, updateAttributesTaskCommand))
+    verify(commandGateway).sendToGateway(listOf(assignTaskCommand))
   }
 
   /**
-   * Creates a process model instance with start -> []user-task -> (optional: another-user-task) -> end
+   * Creates a process model instance with start -> user-task -> (optional: another-user-task) -> end
    */
   fun createUserTaskProcess(processId: String, taskDefinitionKey: String, additionalUserTask: Boolean = false, asyncOnStart: Boolean = false,
                             candidateGroups: String = "", candidateUsers: String = "", taskListeners: List<Pair<String, String>> = listOf()) =
@@ -475,15 +370,17 @@ class TaskCollectorITest {
 }
 
 @Component
-class AddCandidateUserPiggy : TaskListener {
-  override fun notify(delegateTask: DelegateTask?) {
-    delegateTask!!.addCandidateUser("piggy")
+internal class AddCandidateUserPiggy : TaskListener {
+  override fun notify(delegateTask: DelegateTask) {
+    delegateTask.addCandidateUser("piggy")
   }
 }
 
 @Component
 class AddCandidateGroupMuppetShow : TaskListener {
-  override fun notify(delegateTask: DelegateTask?) {
-    delegateTask!!.addCandidateGroup("muppetshow")
+  override fun notify(delegateTask: DelegateTask) {
+    delegateTask.addCandidateGroup("muppetshow")
   }
 }
+
+data class MyStructure(val name: String, val key: String, val value: Int) : Serializable

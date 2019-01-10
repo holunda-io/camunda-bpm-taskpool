@@ -15,14 +15,13 @@ data class Task(
   override val payload: VariableMap = Variables.createVariables(),
   override val correlations: CorrelationMap = newCorrelations(),
   override val businessKey: String? = null,
-  override var enriched: Boolean = true,
   val name: String? = null,
   val description: String? = null,
   val formKey: String? = null,
   val priority: Int? = 0,
   val createTime: Date? = null,
-  val candidateUsers: List<String> = listOf(),
-  val candidateGroups: List<String> = listOf(),
+  val candidateUsers: Set<String> = setOf(),
+  val candidateGroups: Set<String> = setOf(),
   val assignee: String? = null,
   val owner: String? = null,
   val dueDate: Date? = null,
@@ -87,8 +86,6 @@ fun task(event: TaskAttributeUpdatedEngineEvent, task: Task) = Task(
   name = event.name,
   description = event.description,
   priority = event.priority,
-  assignee = event.assignee,
   owner = event.owner,
   followUpDate = event.followUpDate
-
 )
