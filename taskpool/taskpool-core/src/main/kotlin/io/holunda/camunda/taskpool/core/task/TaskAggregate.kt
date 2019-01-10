@@ -122,7 +122,7 @@ open class TaskAggregate() {
    * Add candidate group.
    */
   @CommandHandler
-  open fun handle(command: AddCandidateGroupCommand) {
+  open fun handle(command: AddCandidateGroupsCommand) {
     if (!deleted && !completed) {
       changeAssignment(command)
     }
@@ -132,7 +132,7 @@ open class TaskAggregate() {
    * Delete candidate group.
    */
   @CommandHandler
-  open fun handle(command: DeleteCandidateGroupCommand) {
+  open fun handle(command: DeleteCandidateGroupsCommand) {
     if (!deleted && !completed) {
       changeAssignment(command)
     }
@@ -142,7 +142,7 @@ open class TaskAggregate() {
    * Add candidate user.
    */
   @CommandHandler
-  open fun handle(command: AddCandidateUserCommand) {
+  open fun handle(command: AddCandidateUsersCommand) {
     if (!deleted && !completed) {
       changeAssignment(command)
     }
@@ -152,7 +152,7 @@ open class TaskAggregate() {
    * Delete candidate user.
    */
   @CommandHandler
-  open fun handle(command: DeleteCandidateUserCommand) {
+  open fun handle(command: DeleteCandidateUsersCommand) {
     if (!deleted && !completed) {
       changeAssignment(command)
     }
@@ -349,28 +349,28 @@ open class TaskAggregate() {
   private fun changeAssignment(command: UpdateAssignmentTaskCommand) =
     AggregateLifecycle.apply(
       when (command) {
-        is AddCandidateGroupCommand -> TaskCandidateGroupChanged(
+        is AddCandidateGroupsCommand -> TaskCandidateGroupChanged(
           id = this.id,
           taskDefinitionKey = this.taskDefinitionKey,
           sourceReference = this.sourceReference,
           groupId = command.groupId,
           assignmentUpdateType = CamundaTaskEvent.CANDIDATE_GROUP_ADD
         )
-        is DeleteCandidateGroupCommand -> TaskCandidateGroupChanged(
+        is DeleteCandidateGroupsCommand -> TaskCandidateGroupChanged(
           id = this.id,
           taskDefinitionKey = this.taskDefinitionKey,
           sourceReference = this.sourceReference,
           groupId = command.groupId,
           assignmentUpdateType = CamundaTaskEvent.CANDIDATE_GROUP_DELETE
         )
-        is AddCandidateUserCommand -> TaskCandidateUserChanged(
+        is AddCandidateUsersCommand -> TaskCandidateUserChanged(
           id = this.id,
           taskDefinitionKey = this.taskDefinitionKey,
           sourceReference = this.sourceReference,
           userId = command.userId,
           assignmentUpdateType = CamundaTaskEvent.CANDIDATE_USER_ADD
         )
-        is DeleteCandidateUserCommand -> TaskCandidateUserChanged(
+        is DeleteCandidateUsersCommand -> TaskCandidateUserChanged(
           id = this.id,
           taskDefinitionKey = this.taskDefinitionKey,
           sourceReference = this.sourceReference,

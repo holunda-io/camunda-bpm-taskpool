@@ -54,15 +54,6 @@ class AxonCommandGatewayWrapperTest {
     val createTaskCommand = makeCreateTaskCommand()
     val assignTaskCommand = AssignTaskCommand(
       id = "some-id",
-      sourceReference = ProcessReference(
-        "instance-id-12345",
-        "execution-id-12345",
-        "definition-id-12345",
-        "definition-key-abcde",
-        "process-name",
-        "application-name"
-      ),
-      taskDefinitionKey = "task-definition-key-abcde",
       assignee = "kermit"
     )
     @Suppress("UNCHECKED_CAST")

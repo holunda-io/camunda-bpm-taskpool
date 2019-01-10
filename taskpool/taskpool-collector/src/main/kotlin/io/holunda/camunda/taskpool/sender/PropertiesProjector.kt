@@ -63,6 +63,8 @@ fun <T : Any> projectProperties(
     }
   }
 
+  val clonedOriginal = original
+
   println(values)
 
   // write back

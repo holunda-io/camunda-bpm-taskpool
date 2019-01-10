@@ -21,15 +21,6 @@ class CommandAccumulatorTest {
 
   private val updateAttributeTaskCommand = UpdateAttributeTaskCommand(
     id = "d7c7efe2-0475-11e9-90f1-a0c589a3e9e5",
-    sourceReference = ProcessReference(
-      instanceId = "d7c7c8cd-0475-11e9-90f1-a0c589a3e9e5",
-      executionId = "d7c7c8cd-0475-11e9-90f1-a0c589a3e9e5",
-      definitionId = "processId:4:d7c6de6c-0475-11e9-90f1-a0c589a3e9e5",
-      name = "My Process",
-      definitionKey = "processId",
-      applicationName = "command-projector-test"
-    ),
-    taskDefinitionKey = "userTask-123",
     priority = 50,
     assignee = null,
     owner = null,
@@ -38,29 +29,11 @@ class CommandAccumulatorTest {
   )
 
   private val completeTaskCommand = CompleteTaskCommand(
-    id = "d7c7efe2-0475-11e9-90f1-a0c589a3e9e5",
-    sourceReference = ProcessReference(
-      instanceId = "d7c7c8cd-0475-11e9-90f1-a0c589a3e9e5",
-      executionId = "d7c7c8cd-0475-11e9-90f1-a0c589a3e9e5",
-      definitionId = "processId:4:d7c6de6c-0475-11e9-90f1-a0c589a3e9e5",
-      name = "My Process",
-      definitionKey = "processId",
-      applicationName = "command-projector-test"
-    ),
-    taskDefinitionKey = "userTask-123"
+    id = "d7c7efe2-0475-11e9-90f1-a0c589a3e9e5"
   )
 
   private val deleteTaskCommand = DeleteTaskCommand(
     id = "d7c7efe2-0475-11e9-90f1-a0c589a3e9e5",
-    sourceReference = ProcessReference(
-      instanceId = "d7c7c8cd-0475-11e9-90f1-a0c589a3e9e5",
-      executionId = "d7c7c8cd-0475-11e9-90f1-a0c589a3e9e5",
-      definitionId = "processId:4:d7c6de6c-0475-11e9-90f1-a0c589a3e9e5",
-      name = "My Process",
-      definitionKey = "processId",
-      applicationName = "command-projector-test"
-    ),
-    taskDefinitionKey = "userTask-123",
     deleteReason = "wtf?"
   )
 

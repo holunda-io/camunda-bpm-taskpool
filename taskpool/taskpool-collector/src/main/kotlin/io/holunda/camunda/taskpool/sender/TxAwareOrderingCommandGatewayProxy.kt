@@ -1,7 +1,7 @@
 package io.holunda.camunda.taskpool.sender
 
 import io.holunda.camunda.taskpool.TaskCollectorProperties
-import io.holunda.camunda.taskpool.api.task.WithTaskId
+import io.holunda.camunda.taskpool.api.task.EngineTaskCommand
 import org.axonframework.commandhandling.gateway.CommandGateway
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -20,9 +20,9 @@ open class TxAwareOrderingCommandGatewayProxy(
   private val logger: Logger = LoggerFactory.getLogger(CommandSender::class.java)
 
   private val registered: ThreadLocal<Boolean> = ThreadLocal.withInitial { false }
-  private val commands: ThreadLocal<MutableMap<String, MutableList<WithTaskId>>> = ThreadLocal.withInitial { mutableMapOf<String, MutableList<WithTaskId>>() }
+  private val commands: ThreadLocal<MutableMap<String, MutableList<EngineTaskCommand>>> = ThreadLocal.withInitial { mutableMapOf<String, MutableList<EngineTaskCommand>>() }
 
-  open fun send(command: WithTaskId) {
+  open fun send(command: EngineTaskCommand) {
 
     // add command to list
     commands.get().getOrPut(command.id) { mutableListOf() }.add(command)
@@ -38,7 +38,7 @@ open class TxAwareOrderingCommandGatewayProxy(
         override fun afterCommit() {
 
           // iterate over messages and send them
-          commands.get().forEach { (taskId: String, taskCommands: MutableList<WithTaskId>) ->
+          commands.get().forEach { (taskId: String, taskCommands: MutableList<EngineTaskCommand>) ->
             val accumulatorName = commandAccumulator::class.qualifiedName
             logger.debug("SENDER-005: Handling commands for task $taskId using command accumulator $accumulatorName")
 
@@ -79,7 +79,7 @@ open class AxonCommandGatewayWrapper(
   /**
    * Sends data to gateway. Ignore any errors, but log.
    */
-  open fun sendToGateway(commands: List<WithTaskId>) {
+  open fun sendToGateway(commands: List<EngineTaskCommand>) {
     if (!commands.isEmpty()) {
       val nextCommand = commands.first()
       val remainingCommands = commands.subList(1, commands.size)

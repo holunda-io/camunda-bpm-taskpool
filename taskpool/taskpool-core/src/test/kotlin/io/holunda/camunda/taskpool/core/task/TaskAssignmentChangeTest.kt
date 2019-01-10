@@ -78,7 +78,7 @@ class TaskAssignmentChangeTest {
     fixture
       .given(createdEvent)
       .`when`(
-        AddCandidateGroupCommand(
+        AddCandidateGroupsCommand(
           id = "4711",
           groupId = "nasa"
         )
@@ -98,7 +98,7 @@ class TaskAssignmentChangeTest {
     fixture
       .given(createdEvent)
       .`when`(
-        AddCandidateUserCommand(
+        AddCandidateUsersCommand(
           id = "4711",
           userId = "rocketman"
         )
@@ -118,7 +118,7 @@ class TaskAssignmentChangeTest {
     fixture
       .given(createdEvent)
       .`when`(
-        DeleteCandidateGroupCommand(
+        DeleteCandidateGroupsCommand(
           id = "4711",
           groupId = "muppetshow"
         )
@@ -138,7 +138,7 @@ class TaskAssignmentChangeTest {
     fixture
       .given(createdEvent)
       .`when`(
-        DeleteCandidateUserCommand(
+        DeleteCandidateUsersCommand(
           id = "4711",
           userId = "kermit"
         )
@@ -157,27 +157,27 @@ class TaskAssignmentChangeTest {
   fun `should not event on completed task`() {
     fixture
       .given(createdEvent, completedEvent)
-      .`when`(AddCandidateUserCommand(
+      .`when`(AddCandidateUsersCommand(
         id = "4711",
-        userId = "rocketman"
+        candidateUsers = listOf("rocketman")
       )).expectNoEvents()
     fixture
       .given(createdEvent, completedEvent)
-      .`when`(DeleteCandidateUserCommand(
+      .`when`(DeleteCandidateUsersCommand(
         id = "4711",
-        userId = "kermit"
+        candidateUsers = listOf("kermit")
       )).expectNoEvents()
     fixture
       .given(createdEvent, completedEvent)
-      .`when`(DeleteCandidateGroupCommand(
+      .`when`(DeleteCandidateGroupsCommand(
         id = "4711",
-        groupId = "muppetshow"
+        candidateGroups = listOf("muppetshow")
       )).expectNoEvents()
     fixture
       .given(createdEvent, completedEvent)
-      .`when`(AddCandidateGroupCommand(
+      .`when`(AddCandidateGroupsCommand(
         id = "4711",
-        groupId = "nasa"
+        candidateGroups = listOf("nasa")
       )).expectNoEvents()
 
 
@@ -188,27 +188,27 @@ class TaskAssignmentChangeTest {
 
     fixture
       .given(createdEvent, deletedEvent)
-      .`when`(AddCandidateUserCommand(
+      .`when`(AddCandidateUsersCommand(
         id = "4711",
-        userId = "rocketman"
+        candidateUsers = listOf("rocketman")
       )).expectNoEvents()
     fixture
       .given(createdEvent, deletedEvent)
-      .`when`(DeleteCandidateUserCommand(
+      .`when`(DeleteCandidateUsersCommand(
         id = "4711",
-        userId = "kermit"
+        candidateUsers = listOf("kermit")
       )).expectNoEvents()
     fixture
       .given(createdEvent, deletedEvent)
-      .`when`(DeleteCandidateGroupCommand(
+      .`when`(DeleteCandidateGroupsCommand(
         id = "4711",
-        groupId = "muppetshow"
+        candidateGroups = listOf("muppetshow")
       )).expectNoEvents()
     fixture
       .given(createdEvent, deletedEvent)
-      .`when`(AddCandidateGroupCommand(
+      .`when`(AddCandidateGroupsCommand(
         id = "4711",
-        groupId = "nasa"
+        candidateGroups = listOf("nasa")
       )).expectNoEvents()
 
   }

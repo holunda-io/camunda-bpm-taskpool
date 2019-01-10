@@ -65,19 +65,7 @@ class TaskEventCollector(
   fun complete(task: DelegateTask) =
     CompleteTaskCommand(
       id = task.id,
-      taskDefinitionKey = task.taskDefinitionKey,
-      sourceReference = task.sourceReference(repositoryService, collectorProperties.enricher.applicationName),
-      assignee = task.assignee,
-      candidateGroups = task.candidates.filter { it.groupId != null }.map { it.groupId },
-      candidateUsers = task.candidates.filter { it.userId != null && it.type == IdentityLinkType.CANDIDATE }.map { it.userId },
-      createTime = task.createTime,
-      description = task.description,
-      dueDate = task.dueDate,
-      eventName = task.eventName,
-      name = task.name,
-      owner = task.owner,
-      priority = task.priority,
-      businessKey = task.execution.businessKey
+      eventName = task.eventName
     )
 
   /**
@@ -91,16 +79,7 @@ class TaskEventCollector(
       assignee = task.assignee,
       candidateGroups = task.candidates.filter { it.groupId != null }.map { it.groupId },
       candidateUsers = task.candidates.filter { it.userId != null && it.type == IdentityLinkType.CANDIDATE }.map { it.userId },
-      createTime = task.createTime,
-      description = task.description,
-      dueDate = task.dueDate,
-      eventName = task.eventName,
-      name = task.name,
-      owner = task.owner,
-      priority = task.priority,
-      taskDefinitionKey = task.taskDefinitionKey,
-      businessKey = task.execution.businessKey,
-      sourceReference = task.sourceReference(repositoryService, collectorProperties.enricher.applicationName)
+      eventName = task.eventName
     )
 
 
@@ -112,20 +91,8 @@ class TaskEventCollector(
   fun delete(task: DelegateTask) =
     DeleteTaskCommand(
       id = task.id,
-      taskDefinitionKey = task.taskDefinitionKey,
-      sourceReference = task.sourceReference(repositoryService, collectorProperties.enricher.applicationName),
-      assignee = task.assignee,
-      candidateGroups = task.candidates.filter { it.groupId != null }.map { it.groupId },
-      candidateUsers = task.candidates.filter { it.userId != null && it.type == IdentityLinkType.CANDIDATE }.map { it.userId },
-      createTime = task.createTime,
       deleteReason = task.deleteReason,
-      description = task.description,
-      dueDate = task.dueDate,
-      eventName = task.eventName,
-      name = task.name,
-      owner = task.owner,
-      priority = task.priority,
-      businessKey = task.execution.businessKey
+      eventName = task.eventName
     )
 
   /**
@@ -137,13 +104,11 @@ class TaskEventCollector(
    */
   @Order(ORDER)
   @EventListener
-  fun update(changeEvent: HistoricTaskInstanceEventEntity): UpdateTaskCommand? =
+  fun update(changeEvent: HistoricTaskInstanceEventEntity): UpdateAttributeTaskCommand? =
     when (changeEvent.eventType) {
       "update" ->
         UpdateAttributeTaskCommand(
           id = changeEvent.taskId,
-          taskDefinitionKey = changeEvent.taskDefinitionKey,
-          sourceReference = changeEvent.sourceReference(repositoryService, collectorProperties.enricher.applicationName),
           assignee = changeEvent.assignee,
           description = changeEvent.description,
           dueDate = changeEvent.dueDate,
@@ -160,27 +125,27 @@ class TaskEventCollector(
    */
   @Order(ORDER)
   @EventListener
-  fun update(changeEvent: HistoricIdentityLinkLogEventEntity): UpdateTaskCommand? =
+  fun update(changeEvent: HistoricIdentityLinkLogEventEntity): UpdateAssignmentTaskCommand? =
     when (changeEvent.operationType) {
       "add" -> when {
-        changeEvent.userId != null -> AddCandidateUserCommand(
+        changeEvent.userId != null -> AddCandidateUsersCommand(
           id = changeEvent.taskId,
-          userId = changeEvent.userId)
-        changeEvent.groupId != null -> AddCandidateGroupCommand(
+          candidateUsers = listOf(changeEvent.userId))
+        changeEvent.groupId != null -> AddCandidateGroupsCommand(
           id = changeEvent.taskId,
-          groupId = changeEvent.groupId)
+          candidateGroups = listOf(changeEvent.groupId))
         else -> {
           logger.warn("Received unexpected identity link historic update event ${changeEvent.type} ${changeEvent.operationType} ${changeEvent.eventType} on ${changeEvent.taskId}")
           null
         }
       }
       "delete" -> when {
-        changeEvent.userId != null -> DeleteCandidateUserCommand(
+        changeEvent.userId != null -> DeleteCandidateUsersCommand(
           id = changeEvent.taskId,
-          userId = changeEvent.userId)
-        changeEvent.groupId != null -> DeleteCandidateGroupCommand(
+          candidateUsers = listOf(changeEvent.userId))
+        changeEvent.groupId != null -> DeleteCandidateGroupsCommand(
           id = changeEvent.taskId,
-          groupId = changeEvent.groupId)
+          candidateGroups = listOf(changeEvent.groupId))
         else -> {
           logger.warn("Received unexpected identity link historic update event ${changeEvent.type} ${changeEvent.operationType} ${changeEvent.eventType} on ${changeEvent.taskId}")
           null
@@ -192,30 +157,6 @@ class TaskEventCollector(
       }
     }
 }
-
-fun HistoricTaskInstanceEventEntity.sourceReference(repositoryService: RepositoryService, applicationName: String): SourceReference =
-  when {
-    this.processDefinitionId != null -> ProcessReference(
-      definitionId = this.processDefinitionId,
-      instanceId = this.processInstanceId,
-      executionId = this.executionId,
-      definitionKey = this.processDefinitionKey(),
-      name = this.processName(repositoryService),
-      applicationName = applicationName,
-      tenantId = this.tenantId
-    )
-    this.caseDefinitionId != null -> CaseReference(
-      definitionId = this.caseDefinitionId,
-      instanceId = this.caseInstanceId,
-      executionId = this.caseExecutionId,
-      definitionKey = this.caseDefinitionKey(),
-      name = this.caseName(repositoryService),
-      applicationName = applicationName,
-      tenantId = this.tenantId
-    )
-    else -> throw IllegalArgumentException("No source reference found.")
-  }
-
 
 fun DelegateTask.sourceReference(repositoryService: RepositoryService, applicationName: String): SourceReference =
   when {
@@ -254,13 +195,9 @@ fun DelegateTask.formKey(formService: FormService): String? {
   return formService.getTaskFormKey(definitionId, this.taskDefinitionKey)
 }
 
-fun HistoricTaskInstanceEventEntity.processDefinitionKey(): String = extractKey(this.processDefinitionId)
 fun DelegateTask.caseDefinitionKey(): String = extractKey(this.caseDefinitionId)
-fun HistoricTaskInstanceEventEntity.caseDefinitionKey(): String = extractKey(this.caseDefinitionId)
-
 fun DelegateTask.caseName(repositoryService: RepositoryService) = loadCaseName(this.caseDefinitionId, repositoryService)
-fun HistoricTaskInstanceEventEntity.caseName(repositoryService: RepositoryService) = loadCaseName(this.caseDefinitionId, repositoryService)
 fun DelegateTask.processName(repositoryService: RepositoryService) = loadProcessName(this.processDefinitionId, repositoryService)
-fun HistoricTaskInstanceEventEntity.processName(repositoryService: RepositoryService) = loadProcessName(this.processDefinitionId, repositoryService)
+
 
 

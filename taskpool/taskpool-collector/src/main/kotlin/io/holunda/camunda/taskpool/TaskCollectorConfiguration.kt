@@ -28,7 +28,7 @@ open class TaskCollectorConfiguration(
   private val logger: Logger = LoggerFactory.getLogger(TaskCollectorConfiguration::class.java)
 
   @Bean
-  open fun commandAccumulator(): CommandAccumulator = ProjectingCommandAccumulator()
+  open fun commandAccumulator(): CommandAccumulator = MergingCommandAccumulator()
 
   @Bean
   @ConditionalOnExpression("'\${camunda.taskpool.collector.enricher.type}' != 'custom'")
