@@ -33,7 +33,7 @@
     <springboot.version>2.0.3.RELEASE</springboot.version>
     <axon.version>4.0</axon.version>
     <version.camunda.spin>1.5.1</version.camunda.spin>
-    <jackson.version>2.9.7</jackson.version>
+    <jackson.version>2.9.8</jackson.version>
     <org.mapstruct.version>1.2.0.Final</org.mapstruct.version>
     <assertj.version>3.9.0</assertj.version>
     <camunda-bpm-assert.version>2.0</camunda-bpm-assert.version>
