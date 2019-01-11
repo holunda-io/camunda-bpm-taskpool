@@ -128,8 +128,10 @@ open class TaskPoolService(
   @EventHandler
   open fun on(event: TaskAssignedEngineEvent) {
     logger.debug { "Task assigned $event received" }
-    tasks[event.id] = task(event)
-    updateTaskForUserQuery(event.id)
+    if (tasks.containsKey(event.id)) {
+      tasks[event.id] = task(event, tasks[event.id]!!)
+      updateTaskForUserQuery(event.id)
+    }
   }
 
   @EventHandler

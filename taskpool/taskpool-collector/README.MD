@@ -6,18 +6,20 @@ This user guide describes features of the task collector component, how to use a
 
 Taskpool collector is a component deployed on the Camunda BPM engine side that is responsible for
 collecting Spring events fired by the `camunda-eventing-engine-plugin` and creating the commands
-for the taskpool. In doing so, it collects and enriches events before the Taskpool Sender component 
-transmits them to taskpool core.
+for the taskpool. In doing so, it collects and enriches events and transmits them to taskpool core.
 
 ## Features
 
 - Collection of task events (create, assign, complete, delete)
-- Enrichment of task events with process variables
-- Attachment of correlation information to task events
+- Collection of history events
+- Creation of corresponding task engine commands
+- Enrichment of task engine commands with process variables
+- Attachment of correlation information to task engine commands
+- Transmission of task engine commands
 
 ### Event enrichment
 
-Alongside with data received from the Camunda engine, the task events can be enriched with additional
+Alongside with data received from the Camunda engine, the task engine commands can be enriched with additional
 business data. There are three enrichment modes available 
 (controlled by the `camunda.taskpool.collector.enricher.type` property):
 
@@ -114,3 +116,19 @@ and the process reaches the task `task_approve_request`, the task will get the f
     "correlations": [
       { "entryType": "approvalRequest", "entryId": "4711" }
     ]
+    
+### Command transmission
+
+The Spring event listeners receiving events from the engine plugin are called before Camunda commits the transaction.
+Therefor, the sender waits for transaction to commit, prio sending commands to the commnd bus (otherwise, on any error
+the transaction would be rolled back and the command would create an inconsistency between the taskpool and the engine).
+
+The property controlling the sender type is `camunda.taskpool.collector.sender.type` takes the values:
+
+* `tx`: (default) Send commands after transaction commit.
+* `simple`: Send out commands before transaction commit
+* `custom`: Custom handling, a bean implementing `CommandSender` must be provided.
+
+
+
+

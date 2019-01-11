@@ -6,7 +6,7 @@
   <parent>
     <groupId>io.holunda.taskpool</groupId>
     <artifactId>camunda-bpm-taskpool-root</artifactId>
-    <version>1.1.11</version>
+    <version>1.2.0</version>
   </parent>
 
   <artifactId>camunda-bpm-taskpool-collector</artifactId>
@@ -17,6 +17,11 @@
       <groupId>org.camunda.bpm</groupId>
       <artifactId>camunda-engine</artifactId>
     </dependency>
+    <dependency>
+      <groupId>org.camunda.bpm</groupId>
+      <artifactId>camunda-engine-rest-jaxrs2</artifactId>
+    </dependency>
+
     <dependency>
       <groupId>io.holunda.taskpool</groupId>
       <artifactId>camunda-bpm-taskpool-api</artifactId>
@@ -34,6 +39,10 @@
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-databind</artifactId>
       <version>${jackson.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.module</groupId>
+      <artifactId>jackson-module-kotlin</artifactId>
     </dependency>
     <dependency>
       <groupId>org.springframework</groupId>
@@ -55,9 +64,45 @@
       <artifactId>junit</artifactId>
     </dependency>
     <dependency>
+      <groupId>org.camunda.bpm.extension.mockito</groupId>
+      <artifactId>camunda-bpm-mockito</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.camunda.bpm.springboot</groupId>
+      <artifactId>camunda-bpm-spring-boot-starter-test</artifactId>
+    </dependency>
+
+    <!-- For I-Testing -->
+    <dependency>
+      <groupId>org.camunda.bpm.springboot</groupId>
+      <artifactId>camunda-bpm-spring-boot-starter</artifactId>
+      <version>${camunda-springboot.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.holunda.taskpool</groupId>
+      <artifactId>camunda-bpm-engine-plugin</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.h2database</groupId>
+      <artifactId>h2</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>io.holunda.testing</groupId>
+      <artifactId>camunda-bpm-assert</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.assertj</groupId>
       <artifactId>assertj-core</artifactId>
     </dependency>
+    <dependency>
+      <groupId>org.awaitility</groupId>
+      <artifactId>awaitility</artifactId>
+    </dependency>
+
   </dependencies>
 
 </project>

@@ -5,6 +5,7 @@ import io.holunda.camunda.taskpool.api.task.*
 import io.holunda.camunda.taskpool.extractKey
 import io.holunda.camunda.taskpool.loadCaseName
 import io.holunda.camunda.taskpool.loadProcessName
+import org.camunda.bpm.engine.FormService
 import org.camunda.bpm.engine.RepositoryService
 import org.camunda.bpm.engine.delegate.DelegateTask
 import org.camunda.bpm.engine.impl.history.event.HistoricIdentityLinkLogEventEntity
@@ -21,10 +22,11 @@ import org.springframework.stereotype.Component
 @Component
 class TaskEventCollector(
   private val repositoryService: RepositoryService,
+  private val formService: FormService,
   private val collectorProperties: TaskCollectorProperties
 ) {
 
-  val logger = LoggerFactory.getLogger(TaskEventCollector::class.java)
+  private val logger = LoggerFactory.getLogger(TaskEventCollector::class.java)
 
   companion object {
     // high order to be later than all other listeners and work on changed entity
@@ -40,8 +42,8 @@ class TaskEventCollector(
     CreateTaskCommand(
       id = task.id,
       assignee = task.assignee,
-      candidateGroups = task.candidates.filter { it.groupId != null }.map { it.groupId },
-      candidateUsers = task.candidates.filter { it.userId != null && it.type == IdentityLinkType.CANDIDATE }.map { it.userId },
+      candidateGroups = task.candidates.filter { it.groupId != null }.map { it.groupId }.toSet(),
+      candidateUsers = task.candidates.filter { it.userId != null && it.type == IdentityLinkType.CANDIDATE }.map { it.userId }.toSet(),
       createTime = task.createTime,
       description = task.description,
       dueDate = task.dueDate,
@@ -49,7 +51,7 @@ class TaskEventCollector(
       name = task.name,
       owner = task.owner,
       priority = task.priority,
-      formKey = null, // loaded lazily
+      formKey = task.formKey(formService),
       taskDefinitionKey = task.taskDefinitionKey,
       businessKey = task.execution.businessKey,
       sourceReference = task.sourceReference(repositoryService, collectorProperties.enricher.applicationName)
@@ -63,19 +65,7 @@ class TaskEventCollector(
   fun complete(task: DelegateTask) =
     CompleteTaskCommand(
       id = task.id,
-      taskDefinitionKey = task.taskDefinitionKey,
-      sourceReference = task.sourceReference(repositoryService, collectorProperties.enricher.applicationName),
-      assignee = task.assignee,
-      candidateGroups = task.candidates.filter { it.groupId != null }.map { it.groupId },
-      candidateUsers = task.candidates.filter { it.userId != null && it.type == IdentityLinkType.CANDIDATE }.map { it.userId },
-      createTime = task.createTime,
-      description = task.description,
-      dueDate = task.dueDate,
-      eventName = task.eventName,
-      name = task.name,
-      owner = task.owner,
-      priority = task.priority,
-      businessKey = task.execution.businessKey
+      eventName = task.eventName
     )
 
   /**
@@ -87,19 +77,7 @@ class TaskEventCollector(
     AssignTaskCommand(
       id = task.id,
       assignee = task.assignee,
-      candidateGroups = task.candidates.filter { it.groupId != null }.map { it.groupId },
-      candidateUsers = task.candidates.filter { it.userId != null && it.type == IdentityLinkType.CANDIDATE }.map { it.userId },
-      createTime = task.createTime,
-      description = task.description,
-      dueDate = task.dueDate,
-      eventName = task.eventName,
-      name = task.name,
-      owner = task.owner,
-      priority = task.priority,
-      taskDefinitionKey = task.taskDefinitionKey,
-      formKey = null, // loaded lazily
-      businessKey = task.execution.businessKey,
-      sourceReference = task.sourceReference(repositoryService, collectorProperties.enricher.applicationName)
+      eventName = task.eventName
     )
 
 
@@ -111,20 +89,8 @@ class TaskEventCollector(
   fun delete(task: DelegateTask) =
     DeleteTaskCommand(
       id = task.id,
-      taskDefinitionKey = task.taskDefinitionKey,
-      sourceReference = task.sourceReference(repositoryService, collectorProperties.enricher.applicationName),
-      assignee = task.assignee,
-      candidateGroups = task.candidates.filter { it.groupId != null }.map { it.groupId },
-      candidateUsers = task.candidates.filter { it.userId != null && it.type == IdentityLinkType.CANDIDATE }.map { it.userId },
-      createTime = task.createTime,
       deleteReason = task.deleteReason,
-      description = task.description,
-      dueDate = task.dueDate,
-      eventName = task.eventName,
-      name = task.name,
-      owner = task.owner,
-      priority = task.priority,
-      businessKey = task.execution.businessKey
+      eventName = task.eventName
     )
 
   /**
@@ -136,14 +102,11 @@ class TaskEventCollector(
    */
   @Order(ORDER)
   @EventListener
-  fun update(changeEvent: HistoricTaskInstanceEventEntity): UpdateTaskCommand? =
+  fun update(changeEvent: HistoricTaskInstanceEventEntity): UpdateAttributeTaskCommand? =
     when (changeEvent.eventType) {
       "update" ->
         UpdateAttributeTaskCommand(
           id = changeEvent.taskId,
-          taskDefinitionKey = changeEvent.taskDefinitionKey,
-          sourceReference = changeEvent.sourceReference(repositoryService, collectorProperties.enricher.applicationName),
-          assignee = changeEvent.assignee,
           description = changeEvent.description,
           dueDate = changeEvent.dueDate,
           followUpDate = changeEvent.followUpDate,
@@ -159,27 +122,27 @@ class TaskEventCollector(
    */
   @Order(ORDER)
   @EventListener
-  fun update(changeEvent: HistoricIdentityLinkLogEventEntity): UpdateTaskCommand? =
+  fun update(changeEvent: HistoricIdentityLinkLogEventEntity): UpdateAssignmentTaskCommand? =
     when (changeEvent.operationType) {
       "add" -> when {
-        changeEvent.userId != null -> AddCandidateUserCommand(
+        changeEvent.userId != null -> AddCandidateUsersCommand(
           id = changeEvent.taskId,
-          userId = changeEvent.userId)
-        changeEvent.groupId != null -> AddCandidateGroupCommand(
+          candidateUsers = setOf(changeEvent.userId))
+        changeEvent.groupId != null -> AddCandidateGroupsCommand(
           id = changeEvent.taskId,
-          groupId = changeEvent.groupId)
+          candidateGroups = setOf(changeEvent.groupId))
         else -> {
           logger.warn("Received unexpected identity link historic update event ${changeEvent.type} ${changeEvent.operationType} ${changeEvent.eventType} on ${changeEvent.taskId}")
           null
         }
       }
       "delete" -> when {
-        changeEvent.userId != null -> DeleteCandidateUserCommand(
+        changeEvent.userId != null -> DeleteCandidateUsersCommand(
           id = changeEvent.taskId,
-          userId = changeEvent.userId)
-        changeEvent.groupId != null -> DeleteCandidateGroupCommand(
+          candidateUsers = setOf(changeEvent.userId))
+        changeEvent.groupId != null -> DeleteCandidateGroupsCommand(
           id = changeEvent.taskId,
-          groupId = changeEvent.groupId)
+          candidateGroups = setOf(changeEvent.groupId))
         else -> {
           logger.warn("Received unexpected identity link historic update event ${changeEvent.type} ${changeEvent.operationType} ${changeEvent.eventType} on ${changeEvent.taskId}")
           null
@@ -191,30 +154,6 @@ class TaskEventCollector(
       }
     }
 }
-
-fun HistoricTaskInstanceEventEntity.sourceReference(repositoryService: RepositoryService, applicationName: String): SourceReference =
-  when {
-    this.processDefinitionId != null -> ProcessReference(
-      definitionId = this.processDefinitionId,
-      instanceId = this.processInstanceId,
-      executionId = this.executionId,
-      definitionKey = this.processDefinitionKey(),
-      name = this.processName(repositoryService),
-      applicationName = applicationName,
-      tenantId = this.tenantId
-    )
-    this.caseDefinitionId != null -> CaseReference(
-      definitionId = this.caseDefinitionId,
-      instanceId = this.caseInstanceId,
-      executionId = this.caseExecutionId,
-      definitionKey = this.caseDefinitionKey(),
-      name = this.caseName(repositoryService),
-      applicationName = applicationName,
-      tenantId = this.tenantId
-    )
-    else -> throw IllegalArgumentException("No source reference found.")
-  }
-
 
 fun DelegateTask.sourceReference(repositoryService: RepositoryService, applicationName: String): SourceReference =
   when {
@@ -241,13 +180,21 @@ fun DelegateTask.sourceReference(repositoryService: RepositoryService, applicati
 
 
 fun DelegateTask.processDefinitionKey(): String = extractKey(this.processDefinitionId)
-fun HistoricTaskInstanceEventEntity.processDefinitionKey(): String = extractKey(this.processDefinitionId)
-fun DelegateTask.caseDefinitionKey(): String = extractKey(this.caseDefinitionId)
-fun HistoricTaskInstanceEventEntity.caseDefinitionKey(): String = extractKey(this.caseDefinitionId)
+/**
+ * Retrieves form key if found, or <code>null</code>.
+ */
+fun DelegateTask.formKey(formService: FormService): String? {
+  val definitionId: String = when {
+    processDefinitionId != null -> processDefinitionId
+    caseDefinitionId != null -> caseDefinitionId
+    else -> return null
+  }
+  return formService.getTaskFormKey(definitionId, this.taskDefinitionKey)
+}
 
+fun DelegateTask.caseDefinitionKey(): String = extractKey(this.caseDefinitionId)
 fun DelegateTask.caseName(repositoryService: RepositoryService) = loadCaseName(this.caseDefinitionId, repositoryService)
-fun HistoricTaskInstanceEventEntity.caseName(repositoryService: RepositoryService) = loadCaseName(this.caseDefinitionId, repositoryService)
 fun DelegateTask.processName(repositoryService: RepositoryService) = loadProcessName(this.processDefinitionId, repositoryService)
-fun HistoricTaskInstanceEventEntity.processName(repositoryService: RepositoryService) = loadProcessName(this.processDefinitionId, repositoryService)
+
 
 

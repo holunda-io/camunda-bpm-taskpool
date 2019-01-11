@@ -24,33 +24,55 @@ class TaskAggregateClaimTest {
     applicationName = "myExample"
   )
 
+  private lateinit var unassigned: TaskCreatedEngineEvent
+  private lateinit var assigned: TaskCreatedEngineEvent
+
   @Before
   fun setUp() {
     now = Date()
+
+    unassigned = TaskCreatedEngineEvent(
+      id = "4711",
+      name = "Foo",
+      createTime = now,
+      owner = "kermit",
+      taskDefinitionKey = "foo",
+      formKey = "some",
+      businessKey = "business123",
+      sourceReference = processReference,
+      candidateUsers = setOf("kermit", "gonzo"),
+      candidateGroups = setOf("muppets"),
+      assignee = null,
+      priority = 51,
+      description = "Funky task",
+      payload = Variables.createVariables().putValueTyped("key", Variables.stringValue("value")),
+      correlations = newCorrelations().addCorrelation("Request", "business123")
+    )
+
+    assigned = TaskCreatedEngineEvent(
+      id = "4711",
+      name = "Foo",
+      createTime = now,
+      owner = "kermit",
+      taskDefinitionKey = "foo",
+      formKey = "some",
+      businessKey = "business123",
+      sourceReference = processReference,
+      candidateUsers = setOf("kermit", "gonzo"),
+      candidateGroups = setOf("muppets"),
+      assignee = "kermit",
+      priority = 51,
+      description = "Funky task",
+      payload = Variables.createVariables().putValueTyped("key", Variables.stringValue("value")),
+      correlations = newCorrelations().addCorrelation("Request", "business123")
+    )
   }
 
 
   @Test
   fun `should claim unassigned task`() {
     fixture
-      .given(
-        TaskCreatedEngineEvent(
-          id = "4711",
-          name = "Foo",
-          createTime = now,
-          owner = "kermit",
-          taskDefinitionKey = "foo",
-          formKey = "some",
-          businessKey = "business123",
-          sourceReference = processReference,
-          candidateUsers = listOf("kermit", "gonzo"),
-          candidateGroups = listOf("muppets"),
-          assignee = null,
-          priority = 51,
-          description = "Funky task",
-          payload = Variables.createVariables().putValueTyped("key", Variables.stringValue("value")),
-          correlations = newCorrelations().addCorrelation("Request", "business123")
-        ))
+      .given(unassigned)
       .`when`(
         ClaimInteractionTaskCommand(
           id = "4711",
@@ -70,26 +92,9 @@ class TaskAggregateClaimTest {
   }
 
   @Test
-  fun `should claim assigned task`() {
+  fun `should re-claim assigned task`() {
     fixture
-      .given(
-        TaskCreatedEngineEvent(
-          id = "4711",
-          name = "Foo",
-          createTime = now,
-          owner = "kermit",
-          taskDefinitionKey = "foo",
-          formKey = "some",
-          businessKey = "business123",
-          sourceReference = processReference,
-          candidateUsers = listOf("kermit", "gonzo"),
-          candidateGroups = listOf("muppets"),
-          assignee = "kermit",
-          priority = 51,
-          description = "Funky task",
-          payload = Variables.createVariables().putValueTyped("key", Variables.stringValue("value")),
-          correlations = newCorrelations().addCorrelation("Request", "business123")
-        ))
+      .given(assigned)
       .`when`(
         ClaimInteractionTaskCommand(
           id = "4711",
@@ -115,26 +120,23 @@ class TaskAggregateClaimTest {
   }
 
   @Test
-  fun `should unclaim assigned task`() {
+  fun `should note re-claim task assigned to the same assignee`() {
     fixture
-      .given(
-        TaskCreatedEngineEvent(
+      .given(assigned)
+      .`when`(
+        ClaimInteractionTaskCommand(
           id = "4711",
-          name = "Foo",
-          createTime = now,
-          owner = "kermit",
-          taskDefinitionKey = "foo",
-          formKey = "some",
-          businessKey = "business123",
           sourceReference = processReference,
-          candidateUsers = listOf("kermit", "gonzo"),
-          candidateGroups = listOf("muppets"),
-          assignee = "kermit",
-          priority = 51,
-          description = "Funky task",
-          payload = Variables.createVariables().putValueTyped("key", Variables.stringValue("value")),
-          correlations = newCorrelations().addCorrelation("Request", "business123")
-        ))
+          taskDefinitionKey = "foo",
+          assignee = "kermit"
+        )
+      ).expectNoEvents()
+  }
+
+  @Test
+  fun `should un-claim assigned task`() {
+    fixture
+      .given(assigned)
       .`when`(
         UnclaimInteractionTaskCommand(
           id = "4711",
@@ -152,26 +154,9 @@ class TaskAggregateClaimTest {
   }
 
   @Test
-  fun `should unclaim unassigned task`() {
+  fun `should not un-claim unassigned task`() {
     fixture
-      .given(
-        TaskCreatedEngineEvent(
-          id = "4711",
-          name = "Foo",
-          createTime = now,
-          owner = "kermit",
-          taskDefinitionKey = "foo",
-          formKey = "some",
-          businessKey = "business123",
-          sourceReference = processReference,
-          candidateUsers = listOf("kermit", "gonzo"),
-          candidateGroups = listOf("muppets"),
-          assignee = null,
-          priority = 51,
-          description = "Funky task",
-          payload = Variables.createVariables().putValueTyped("key", Variables.stringValue("value")),
-          correlations = newCorrelations().addCorrelation("Request", "business123")
-        ))
+      .given(unassigned)
       .`when`(
         UnclaimInteractionTaskCommand(
           id = "4711",
@@ -183,26 +168,10 @@ class TaskAggregateClaimTest {
 
 
   @Test
-  fun `should not unclaim task if already deleted`() {
+  fun `should not un-claim task if already deleted`() {
     fixture
       .given(
-        TaskCreatedEngineEvent(
-          id = "4711",
-          name = "Foo",
-          createTime = now,
-          owner = "kermit",
-          taskDefinitionKey = "foo",
-          formKey = "some",
-          businessKey = "business123",
-          sourceReference = processReference,
-          candidateUsers = listOf("kermit", "gonzo"),
-          candidateGroups = listOf("muppets"),
-          assignee = null,
-          priority = 51,
-          description = "Funky task",
-          payload = Variables.createVariables().putValueTyped("key", Variables.stringValue("value")),
-          correlations = newCorrelations().addCorrelation("Request", "business123")
-        ),
+        assigned,
         TaskDeletedEngineEvent(
           id = "4711",
           name = "Foo",
@@ -224,27 +193,11 @@ class TaskAggregateClaimTest {
   }
 
   @Test
-  fun `should not unclaim task if already completed`() {
+  fun `should not un-claim task if already completed`() {
 
     fixture
       .given(
-        TaskCreatedEngineEvent(
-          id = "4711",
-          name = "Foo",
-          createTime = now,
-          owner = "kermit",
-          taskDefinitionKey = "foo",
-          formKey = "some",
-          businessKey = "business123",
-          sourceReference = processReference,
-          assignee = "kermit",
-          candidateUsers = listOf("kermit", "gonzo"),
-          candidateGroups = listOf("muppets"),
-          priority = 51,
-          description = "Funky task",
-          payload = Variables.createVariables().putValueTyped("key", Variables.stringValue("value")),
-          correlations = newCorrelations().addCorrelation("Request", "business123")
-        ),
+        assigned,
         TaskCompletedEngineEvent(
           id = "4711",
           name = "Foo",
@@ -269,23 +222,7 @@ class TaskAggregateClaimTest {
   fun `should not claim task if already deleted`() {
     fixture
       .given(
-        TaskCreatedEngineEvent(
-          id = "4711",
-          name = "Foo",
-          createTime = now,
-          owner = "kermit",
-          taskDefinitionKey = "foo",
-          formKey = "some",
-          businessKey = "business123",
-          sourceReference = processReference,
-          candidateUsers = listOf("kermit", "gonzo"),
-          candidateGroups = listOf("muppets"),
-          assignee = null,
-          priority = 51,
-          description = "Funky task",
-          payload = Variables.createVariables().putValueTyped("key", Variables.stringValue("value")),
-          correlations = newCorrelations().addCorrelation("Request", "business123")
-        ),
+        unassigned,
         TaskDeletedEngineEvent(
           id = "4711",
           name = "Foo",
@@ -312,23 +249,7 @@ class TaskAggregateClaimTest {
 
     fixture
       .given(
-        TaskCreatedEngineEvent(
-          id = "4711",
-          name = "Foo",
-          createTime = now,
-          owner = "kermit",
-          taskDefinitionKey = "foo",
-          formKey = "some",
-          businessKey = "business123",
-          sourceReference = processReference,
-          assignee = "kermit",
-          candidateUsers = listOf("kermit", "gonzo"),
-          candidateGroups = listOf("muppets"),
-          priority = 51,
-          description = "Funky task",
-          payload = Variables.createVariables().putValueTyped("key", Variables.stringValue("value")),
-          correlations = newCorrelations().addCorrelation("Request", "business123")
-        ),
+        unassigned,
         TaskCompletedEngineEvent(
           id = "4711",
           name = "Foo",

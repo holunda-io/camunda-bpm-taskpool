@@ -1,10 +1,9 @@
 package io.holunda.camunda.taskpool
 
 import io.holunda.camunda.taskpool.enricher.*
-import io.holunda.camunda.taskpool.sender.CommandSender
-import io.holunda.camunda.taskpool.sender.simple.SimpleCommandSender
-import io.holunda.camunda.taskpool.sender.tx.TxAwareCommandSender
-import org.axonframework.commandhandling.gateway.CommandGateway
+import io.holunda.camunda.taskpool.sender.*
+import io.holunda.camunda.taskpool.sender.accumulator.CommandAccumulator
+import io.holunda.camunda.taskpool.sender.accumulator.ProjectingCommandAccumulator
 import org.camunda.bpm.engine.RuntimeService
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -29,12 +28,7 @@ open class TaskCollectorConfiguration(
   private val logger: Logger = LoggerFactory.getLogger(TaskCollectorConfiguration::class.java)
 
   @Bean
-  @ConditionalOnMissingBean(ProcessVariablesFilter::class)
-  open fun processVariablesFilter() = ProcessVariablesFilter()
-
-  @Bean
-  @ConditionalOnMissingBean(ProcessVariablesCorrelator::class)
-  open fun processVariablesCorrelator() = ProcessVariablesCorrelator()
+  open fun commandAccumulator(): CommandAccumulator = ProjectingCommandAccumulator()
 
   @Bean
   @ConditionalOnExpression("'\${camunda.taskpool.collector.enricher.type}' != 'custom'")
@@ -47,21 +41,11 @@ open class TaskCollectorConfiguration(
 
   @Bean
   @ConditionalOnExpression("'\${camunda.taskpool.collector.sender.type}' != 'custom'")
-  open fun simpleCommandSender(gateway: CommandGateway, enricher: VariablesEnricher): CommandSender? =
+  open fun txCommandSender(commandGatewayProxy: TxAwareOrderingCommandGatewayProxy, enricher: VariablesEnricher): CommandSender? =
     when (properties.sender.type) {
-      TaskSenderType.tx -> TxAwareCommandSender(gateway, properties, enricher)
-      TaskSenderType.simple -> SimpleCommandSender(gateway, properties, enricher)
+      TaskSenderType.tx -> DefaultEnrichingCommandSender(commandGatewayProxy, enricher)
       else -> null
     }
-
-  @PostConstruct
-  open fun printEnricherConfiguration() {
-    when (properties.enricher.type) {
-      TaskCollectorEnricherType.processVariables -> logger.info("ENRICHER-001: Camunda Taskpool commands will be enriched with process variables.")
-      TaskCollectorEnricherType.no -> logger.info("ENRICHER-002: Camunda Taskpool commands will not be enriched.")
-      else -> logger.info("ENRICHER-003: Camunda Taskpool commands will not be enriched by a custom enricher.")
-    }
-  }
 
   @PostConstruct
   open fun printSenderConfiguration() {
@@ -71,5 +55,26 @@ open class TaskCollectorConfiguration(
       logger.info("SENDER-002: Camunda Taskpool command distribution is disabled by property.")
     }
   }
+
+  @PostConstruct
+  open fun printEnricherConfiguration() {
+    when (properties.enricher.type) {
+      TaskCollectorEnricherType.processVariables -> logger.info("ENRICHER-001: Camunda Taskpool commands will be enriched with process variables.")
+      TaskCollectorEnricherType.no -> logger.info("ENRICHER-002: Camunda Taskpool commands will not be enriched.")
+      else -> logger.info("ENRICHER-003: Camunda Taskpool commands will not be enriched by a custom enricher.")
+    }
+  }
+}
+
+@Configuration
+open class TaskEnricherFallbackConfiguration {
+
+  @Bean
+  @ConditionalOnMissingBean(ProcessVariablesFilter::class)
+  open fun processVariablesFilter() = ProcessVariablesFilter()
+
+  @Bean
+  @ConditionalOnMissingBean(ProcessVariablesCorrelator::class)
+  open fun processVariablesCorrelator() = ProcessVariablesCorrelator()
 
 }

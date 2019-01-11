@@ -1,25 +1,16 @@
 package io.holunda.camunda.taskpool.api.task
 
 import io.holunda.camunda.taskpool.api.business.WithCorrelations
-import java.util.*
 
 /**
  * Task command received from the Camunda Engine.
  */
 interface EngineTaskCommand : WithTaskId, CamundaTaskEvent {
-  val name: String?
-  val description: String?
-  val createTime: Date?
-  val owner: String?
-  val assignee: String?
-  val candidateUsers: List<String>
-  val candidateGroups: List<String>
-  val dueDate: Date?
-  val followUpDate: Date?
-  val priority: Int?
+  /**
+   * Used to order commands before sending in case multiple events are received from the engine for the same task in the same transaction.
+   * Commands with lower order value are sent before commands with higher order value.
+   */
+  val order: Int
 }
 
-/**
- * Enriched command received from Camunda Engine (with variables and correlations)
- */
-interface EnrichedEngineTaskCommand : EngineTaskCommand, WithPayload, WithCorrelations, TaskIdentity
+

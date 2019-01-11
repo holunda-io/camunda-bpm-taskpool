@@ -16,217 +16,161 @@ import org.camunda.bpm.engine.variable.VariableMap
 import org.camunda.bpm.engine.variable.Variables
 import java.util.*
 
+/**
+ * Engine command assigning a task.
+ */
 data class AssignTaskCommand(
   @TargetAggregateIdentifier
   override val id: String,
-  override val sourceReference: SourceReference,
-  override val taskDefinitionKey: String,
-  override val formKey: String? = null,
 
-  override val name: String? = null,
-  override val description: String? = null,
-  override val priority: Int? = 0,
-  override val createTime: Date? = null,
-  override val owner: String? = null,
+  override val order: Int = ORDER_TASK_ASSIGNMENT,
   override val eventName: String = ASSIGN,
-  override val candidateUsers: List<String> = listOf(),
-  override val candidateGroups: List<String> = listOf(),
-  override val assignee: String? = null,
-  override val dueDate: Date? = null,
-  override val followUpDate: Date? = null,
-  override val businessKey: String? = null,
-  override val payload: VariableMap = Variables.createVariables(),
-  override val correlations: CorrelationMap = newCorrelations(),
-  override var enriched: Boolean = false
-) : EnrichedEngineTaskCommand, WithFormKey
 
+  val assignee: String? = null
+) : EngineTaskCommand
 
+/**
+ * Engine command to create a task.
+ */
 data class CreateTaskCommand(
   @TargetAggregateIdentifier
   override val id: String,
+
   override val sourceReference: SourceReference,
   override val taskDefinitionKey: String,
+
   override val formKey: String? = null,
 
-  override val name: String? = null,
-  override val description: String? = null,
-  override val priority: Int? = 0,
-  override val createTime: Date? = null,
-  override val owner: String? = null,
+  override val order: Int = ORDER_TASK_CREATION,
   override val eventName: String = CREATE,
-  override val candidateUsers: List<String> = listOf(),
-  override val candidateGroups: List<String> = listOf(),
-  override val assignee: String? = null,
-  override val dueDate: Date? = null,
-  override val followUpDate: Date? = null,
+
   override val businessKey: String? = null,
   override val payload: VariableMap = Variables.createVariables(),
-  override val correlations: CorrelationMap = newCorrelations(),
-  override var enriched: Boolean = false
-) : EnrichedEngineTaskCommand, WithFormKey
 
+  override val correlations: CorrelationMap = newCorrelations(),
+  override var enriched: Boolean = false,
+
+  val assignee: String? = null,
+  val candidateUsers: Set<String> = setOf(),
+  val candidateGroups: Set<String> = setOf(),
+  val createTime: Date? = null,
+  val description: String? = null,
+  val dueDate: Date? = null,
+  val followUpDate: Date? = null,
+  val name: String? = null,
+  val owner: String? = null,
+  val priority: Int? = null
+
+) : TaskIdentityWithPayloadAndCorrelations, WithFormKey, EngineTaskCommand
+
+/**
+ * Engine command to delete a task.
+ */
 data class DeleteTaskCommand(
   @TargetAggregateIdentifier
   override val id: String,
-  override val sourceReference: SourceReference,
-  override val taskDefinitionKey: String,
 
-  override val name: String? = null,
-  override val description: String? = null,
-  override val priority: Int? = 0,
-  override val createTime: Date? = null,
-  override val owner: String? = null,
+  override val order: Int = ORDER_TASK_DELETION,
   override val eventName: String = DELETE,
-  override val candidateUsers: List<String> = listOf(),
-  override val candidateGroups: List<String> = listOf(),
-  override val assignee: String? = null,
-  override val dueDate: Date? = null,
-  override val followUpDate: Date? = null,
-  override val businessKey: String? = null,
-  override val payload: VariableMap = Variables.createVariables(),
-  override val correlations: CorrelationMap = newCorrelations(),
-  override var enriched: Boolean = false,
-  val deleteReason: String?
-) : EnrichedEngineTaskCommand
 
+  val deleteReason: String?
+) : EngineTaskCommand
+
+/**
+ * Engine command to complete a task.
+ */
 data class CompleteTaskCommand(
   @TargetAggregateIdentifier
   override val id: String,
-  override val sourceReference: SourceReference,
-  override val taskDefinitionKey: String,
 
-  override val name: String? = null,
-  override val description: String? = null,
-  override val priority: Int? = 0,
-  override val createTime: Date? = null,
-  override val owner: String? = null,
-  override val eventName: String = COMPLETE,
-  override val candidateUsers: List<String> = listOf(),
-  override val candidateGroups: List<String> = listOf(),
-  override val assignee: String? = null,
-  override val dueDate: Date? = null,
-  override val followUpDate: Date? = null,
-  override val businessKey: String? = null,
-  override val payload: VariableMap = Variables.createVariables(),
-  override val correlations: CorrelationMap = newCorrelations(),
-  override var enriched: Boolean = false
-
-) : EnrichedEngineTaskCommand
-
-data class InitialTaskCommand(
-  @TargetAggregateIdentifier
-  override val id: String,
-  override val sourceReference: SourceReference,
-  override val taskDefinitionKey: String,
-  override val formKey: String? = null,
-  override val eventName: String,
-
-  override val name: String? = null,
-  override val description: String? = null,
-  override val priority: Int? = 0,
-  override val createTime: Date? = null,
-  override val candidateUsers: List<String> = listOf(),
-  override val candidateGroups: List<String> = listOf(),
-  override val assignee: String? = null,
-  override val owner: String? = null,
-  override val dueDate: Date? = null,
-  override val followUpDate: Date? = null,
-  override val businessKey: String? = null,
-  override val payload: VariableMap = Variables.createVariables(),
-  override val correlations: CorrelationMap = newCorrelations(),
-  override var enriched: Boolean = false
-) : EnrichedEngineTaskCommand, TaskIdentity, WithFormKey
-
-
-sealed class UpdateTaskCommand(
-  @TargetAggregateIdentifier
-  override val id: String,
-
-  override val name: String? = null,
-  override val description: String? = null,
-  override val priority: Int? = 0,
-  override val createTime: Date? = null,
-  override val owner: String? = null,
-  override val eventName: String,
-  override val candidateUsers: List<String> = listOf(),
-  override val candidateGroups: List<String> = listOf(),
-  override val assignee: String? = null,
-  override val dueDate: Date? = null,
-  override val followUpDate: Date? = null
+  override val order: Int = ORDER_TASK_COMPLETION,
+  override val eventName: String = COMPLETE
 ) : EngineTaskCommand
 
+/**
+ * Command to change a task attribute.
+ */
 data class UpdateAttributeTaskCommand(
   @TargetAggregateIdentifier
   override val id: String,
-  override val sourceReference: SourceReference,
-  override val taskDefinitionKey: String,
 
-  override val name: String?,
-  override val description: String?,
-  override val priority: Int?,
-  override val assignee: String?,
-  override val owner: String?,
-  override val dueDate: Date? = null,
-  override val followUpDate: Date? = null
+  override val order: Int = ORDER_TASK_ATTRIBUTE_UPDATE,
+  override val eventName: String = ATTRIBUTES,
 
-) : UpdateTaskCommand(id,
-  name = name,
-  description = description,
-  priority = priority,
-  assignee = assignee,
-  owner = owner,
-  dueDate = dueDate,
-  followUpDate = followUpDate,
-  eventName = ATTRIBUTES
-), TaskIdentity
+  val description: String?,
+  val dueDate: Date? = null,
+  val followUpDate: Date? = null,
+  val name: String?,
+  val owner: String?,
+  val priority: Int?
 
+) : EngineTaskCommand
+
+
+/**
+ * Command to change task assignment.
+ */
 sealed class UpdateAssignmentTaskCommand(
+  @TargetAggregateIdentifier
   override val id: String,
+  override val order: Int = ORDER_TASK_CANDIDATES_UPDATE,
   override val eventName: String,
-  open val userId: String?,
-  open val groupId: String?
-) : UpdateTaskCommand(
-  id = id,
-  eventName = eventName
-)
+  open val candidateUsers: Set<String>,
+  open val candidateGroups: Set<String>
+) : EngineTaskCommand
 
-data class AddCandidateGroupCommand(
+/**
+ * Assignment command to add one or more candidate groups.
+ */
+data class AddCandidateGroupsCommand(
+  @TargetAggregateIdentifier
   override val id: String,
-  override val groupId: String
+  override val candidateGroups: Set<String>
 ) : UpdateAssignmentTaskCommand(
   id = id,
   eventName = CANDIDATE_GROUP_ADD,
-  groupId = groupId,
-  userId = null
+  candidateGroups = candidateGroups,
+  candidateUsers = setOf()
 )
 
-data class DeleteCandidateGroupCommand(
+/**
+ * Assignment command to delete one or more candidate groups.
+ */
+data class DeleteCandidateGroupsCommand(
+  @TargetAggregateIdentifier
   override val id: String,
-  override val groupId: String
+  override val candidateGroups: Set<String> = setOf()
 ) : UpdateAssignmentTaskCommand(
   id = id,
   eventName = CANDIDATE_GROUP_DELETE,
-  groupId = groupId,
-  userId = null
+  candidateGroups = candidateGroups,
+  candidateUsers = setOf()
 )
 
-
-data class AddCandidateUserCommand(
+/**
+ * Assignment command to add one or more candidate users.
+ */
+data class AddCandidateUsersCommand(
+  @TargetAggregateIdentifier
   override val id: String,
-  override val userId: String
+  override val candidateUsers: Set<String> = setOf()
 ) : UpdateAssignmentTaskCommand(
   id = id,
   eventName = CANDIDATE_USER_ADD,
-  groupId = null,
-  userId = userId
+  candidateUsers = candidateUsers,
+  candidateGroups = setOf()
 )
 
-data class DeleteCandidateUserCommand(
+/**
+ * Assignment command to delete one or more candidate users.
+ */
+data class DeleteCandidateUsersCommand(
+  @TargetAggregateIdentifier
   override val id: String,
-  override val userId: String
+  override val candidateUsers: Set<String> = setOf()
 ) : UpdateAssignmentTaskCommand(
   id = id,
   eventName = CANDIDATE_USER_DELETE,
-  groupId = null,
-  userId = userId
+  candidateUsers = candidateUsers,
+  candidateGroups = setOf()
 )

@@ -1,0 +1,26 @@
+spring:
+  application.name: collector-test
+camunda:
+  bpm:
+    default-serialization-format: application/json
+    authorization:
+      enabled: false
+    id-generator: strong
+    database:
+      type: h2
+    history-level: full
+  taskpool:
+    engine-eventing:
+      enabled: true
+    collector:
+      enricher:
+#        application-name: collector-test
+        type: processVariables
+      sender:
+        enabled: true
+        type: tx
+
+logging.level.io.holunda.camunda.taskpool:
+  sender: DEBUG
+  core: WARN
+  view.simple: DEBUG
