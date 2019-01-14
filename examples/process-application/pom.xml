@@ -13,7 +13,7 @@
   <name>example/${project.artifactId}</name>
 
   <properties>
-    <application.api-location>./src/main/api</application.api-location>
+    <application.api-location>src/main/api</application.api-location>
     <application.base-package>io.holunda.camunda.taskpool.example.process.rest</application.base-package>
     <application.api-package>${application.base-package}.api</application.api-package>
     <application.model-package>${application.base-package}.model</application.model-package>
@@ -37,11 +37,6 @@
     <dependency>
       <groupId>io.holunda.taskpool</groupId>
       <artifactId>camunda-bpm-datapool-sender</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.holunda.taskpool</groupId>
-      <artifactId>camunda-bpm-taskpool-example-process-forms</artifactId>
-      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>io.springfox</groupId>
@@ -110,6 +105,26 @@
         <executions>
 
           <execution>
+            <id>copy-swagger-api</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${project.build.directory}/swagger</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>${application.api-location}</directory>
+                  <includes>
+                    <include>swagger.yml</include>
+                  </includes>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+
+
+          <execution>
             <id>copy-swagger-ignore</id>
             <phase>generate-sources</phase>
             <goals>
@@ -120,7 +135,7 @@
               </outputDirectory>
               <resources>
                 <resource>
-                  <directory>src/main/api</directory>
+                  <directory>${application.api-location}</directory>
                   <includes>
                     <include>.swagger-codegen-ignore</include>
                   </includes>
@@ -163,7 +178,7 @@
               <goal>generate</goal>
             </goals>
             <configuration>
-              <inputSpec>${application.api-location}/swagger.yml</inputSpec>
+              <inputSpec>${project.build.directory}/swagger/swagger.yml</inputSpec>
               <templateDirectory>src/main/swagger-templates</templateDirectory>
               <language>spring</language>
               <apiPackage>${application.api-package}</apiPackage>
@@ -268,6 +283,21 @@
   </build>
 
   <profiles>
+    <profile>
+      <id>frontend</id>
+      <activation>
+        <property>
+          <name>!skipFrontend</name>
+        </property>
+      </activation>
+      <dependencies>
+        <dependency>
+          <groupId>io.holunda.taskpool</groupId>
+          <artifactId>camunda-bpm-taskpool-example-process-forms</artifactId>
+          <version>${project.version}</version>
+        </dependency>
+      </dependencies>
+    </profile>
     <profile>
       <id>camunda-ce</id>
       <activation>

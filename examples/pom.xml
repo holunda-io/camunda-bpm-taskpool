@@ -20,7 +20,6 @@
     <module>h2</module>
     <module>tasklist-api</module>
     <module>tasklist-backend</module>
-    <module>process-forms</module>
     <module>process-application</module>
     <module>taskpool-application</module>
   </modules>
@@ -36,6 +35,7 @@
       <modules>
         <module>tasklist-angular</module>
         <module>tasklist-react</module>
+        <module>process-forms</module>
       </modules>
     </profile>
   </profiles>
