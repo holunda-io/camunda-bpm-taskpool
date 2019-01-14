@@ -3,7 +3,9 @@ package io.holunda.camunda.taskpool.view.simple.service
 import com.tngtech.jgiven.junit.ScenarioTest
 import io.holunda.camunda.taskpool.api.business.newCorrelations
 import io.holunda.camunda.taskpool.api.task.ProcessReference
+import io.holunda.camunda.taskpool.api.task.SourceReference
 import io.holunda.camunda.taskpool.api.task.TaskAssignedEngineEvent
+import io.holunda.camunda.taskpool.api.task.TaskAttributeUpdatedEngineEvent
 import io.holunda.camunda.taskpool.api.task.TaskCreatedEngineEvent
 import io.holunda.camunda.taskpool.view.Task
 import org.camunda.bpm.engine.variable.Variables
@@ -89,7 +91,7 @@ class TaskPoolServiceTest : ScenarioTest<TaskPoolGivenStage<*>, TaskPoolWhenStag
   }
 
   @Test
-  fun `do not lose task task data by task assignment`() {
+  fun `do not lose task data by task assignment`() {
     given()
       .no_task_exists()
       .and()
@@ -105,7 +107,23 @@ class TaskPoolServiceTest : ScenarioTest<TaskPoolGivenStage<*>, TaskPoolWhenStag
   }
 
   @Test
-  fun `as nonexisting task is not assigned`() {
+  fun `do not lose assignee by task attribute update`() {
+    given()
+      .no_task_exists()
+      .and()
+      .task_created_event_is_received(makeTaskCreatedEvent())
+      .and()
+      .task_assign_event_is_received(makeTaskAssignedEvent())
+
+    `when`()
+      .task_attributes_update_event_is_received(makeTaskAttributeUpdateEvent())
+
+    then()
+      .task_is_assigned_to("some-id", "kermit")
+  }
+
+  @Test
+  fun `a nonexisting task is not assigned`() {
     given()
       .no_task_exists()
 
@@ -119,14 +137,7 @@ class TaskPoolServiceTest : ScenarioTest<TaskPoolGivenStage<*>, TaskPoolWhenStag
   private fun makeTaskCreatedEvent(): TaskCreatedEngineEvent =
     TaskCreatedEngineEvent(
       id = "some-id",
-      sourceReference = ProcessReference(
-        "instance-id-12345",
-        "execution-id-12345",
-        "definition-id-12345",
-        "definition-key-abcde",
-        "process-name",
-        "application-name"
-      ),
+      sourceReference = makeSourceReference(),
       taskDefinitionKey = "task-definition-key-abcde",
       payload = Variables.fromMap(mapOf(Pair("variableKey", "variableValue"))),
       correlations = Variables.fromMap(mapOf(Pair("correlationKey", "correlationValue"))),
@@ -147,31 +158,30 @@ class TaskPoolServiceTest : ScenarioTest<TaskPoolGivenStage<*>, TaskPoolWhenStag
   private fun makeTaskAssignedEvent(): TaskAssignedEngineEvent =
     TaskAssignedEngineEvent(
       id = "some-id",
-      sourceReference = ProcessReference(
-        "instance-id-12345",
-        "execution-id-12345",
-        "definition-id-12345",
-        "definition-key-abcde",
-        "process-name",
-        "application-name"
-      ),
+      sourceReference = makeSourceReference(),
       taskDefinitionKey = "task-definition-key-abcde",
       payload = Variables.createVariables(),
       correlations = newCorrelations(),
       assignee = "kermit"
     )
 
+  private fun makeTaskAttributeUpdateEvent(): TaskAttributeUpdatedEngineEvent =
+    TaskAttributeUpdatedEngineEvent(
+      id = "some-id",
+      sourceReference = makeSourceReference(),
+      taskDefinitionKey = "task-definition-key-abcde",
+      name = "task-name",
+      description = "some task description",
+      priority = 0,
+      owner = null,
+      dueDate = Date(1234599999L),
+      followUpDate = Date(1234699999L)
+    )
+
   private fun makeTask(assignee: String? = null): Task =
     Task(
       id = "some-id",
-      sourceReference = ProcessReference(
-        "instance-id-12345",
-        "execution-id-12345",
-        "definition-id-12345",
-        "definition-key-abcde",
-        "process-name",
-        "application-name"
-      ),
+      sourceReference = makeSourceReference(),
       taskDefinitionKey = "task-definition-key-abcde",
       payload = Variables.fromMap(mapOf(Pair("variableKey", "variableValue"))),
       correlations = Variables.fromMap(mapOf(Pair("correlationKey", "correlationValue"))),
@@ -189,4 +199,13 @@ class TaskPoolServiceTest : ScenarioTest<TaskPoolGivenStage<*>, TaskPoolWhenStag
       followUpDate = null
     )
 
+  private fun makeSourceReference(): SourceReference =
+    ProcessReference(
+      "instance-id-12345",
+      "execution-id-12345",
+      "definition-id-12345",
+      "definition-key-abcde",
+      "process-name",
+      "application-name"
+    )
 }
