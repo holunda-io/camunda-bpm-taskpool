@@ -1,9 +1,14 @@
 package io.holunda.camunda.taskpool.view.simple.service
 
 import com.tngtech.jgiven.Stage
-import com.tngtech.jgiven.annotation.*
+import com.tngtech.jgiven.annotation.As
+import com.tngtech.jgiven.annotation.BeforeScenario
+import com.tngtech.jgiven.annotation.ExpectedScenarioState
+import com.tngtech.jgiven.annotation.ProvidedScenarioState
+import com.tngtech.jgiven.annotation.ScenarioState
 import io.holunda.camunda.taskpool.api.task.ProcessReference
 import io.holunda.camunda.taskpool.api.task.TaskAssignedEngineEvent
+import io.holunda.camunda.taskpool.api.task.TaskAttributeUpdatedEngineEvent
 import io.holunda.camunda.taskpool.api.task.TaskCreatedEngineEvent
 import io.holunda.camunda.taskpool.view.Task
 import io.holunda.camunda.taskpool.view.TaskWithDataEntries
@@ -32,6 +37,11 @@ open class TaskPoolStage<SELF : TaskPoolStage<SELF>> : Stage<SELF>() {
   }
 
   open fun task_assign_event_is_received(event: TaskAssignedEngineEvent): SELF {
+    testee.on(event)
+    return self()
+  }
+
+  open fun task_attributes_update_event_is_received(event: TaskAttributeUpdatedEngineEvent): SELF {
     testee.on(event)
     return self()
   }

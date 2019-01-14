@@ -80,6 +80,7 @@ fun task(event: TaskAttributeUpdatedEngineEvent, task: Task) = Task(
   businessKey = task.businessKey,
   formKey = task.formKey,
   createTime = task.createTime,
+  assignee = task.assignee,
   candidateGroups = task.candidateGroups,
   candidateUsers = task.candidateUsers,
 
