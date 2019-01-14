@@ -1,0 +1,137 @@
+swagger: '2.0'
+info:
+  title: Example Process REST API
+  version: 0.0.1
+  description: API for the example approval process.
+basePath: '/example-process-approval/rest/tasks'
+tags:
+- name: Approve Request
+  description: Operations on task approveProcess request.
+schemes:
+- http
+- https
+paths:
+  '/approve-request/id/{id}':
+    get:
+      tags:
+        - Approve Request
+      summary: Retrieves information about the task approveProcess request with specified id.
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          type: string
+          description: Task id.
+          required: true
+      operationId: loadTaskApproveRequestFormData
+      responses:
+        200:
+          description: Sucessful operation.
+          schema:
+            title: Approve task data.
+            $ref: '#/definitions/TaskApproveRequestFormData'
+    post:
+      tags:
+        - Approve Request
+      summary: Receives form data for the completion of the task approveProcess request with specified id.
+      consumes:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          type: string
+          description: Task id.
+          required: true
+        - in: body
+          name: payload
+          description: Payload to be added to the process instance on task completion.
+          schema:
+            $ref: '#/definitions/TaskApproveRequestSubmitData'
+      operationId: submitTaskApproveRequestSubmitData
+      responses:
+        201:
+          description: Sucessful operation.
+
+definitions:
+  Task:
+    type: object
+    properties:
+      id:
+        type: string
+        description: Id of the user task.
+      name:
+        type: string
+        description: Action to execute.
+      description:
+        type: string
+        description: Description of the user task.
+      formKey:
+        type: string
+        description: Form key of the task (as defined in the process model).
+      assignee:
+        type: string
+        description: User name of assigned user.
+      createTime:
+        type: string
+        description: Creation date and time of the task.
+        format: date-time
+      dueDate:
+        type: string
+        description: Due date and time of the task.
+        format: date-time
+      followUpDate:
+        type: string
+        description: Follow-up date and time of the task.
+        format: date-time
+      priority:
+        type: integer
+        description: Priority of the task.
+
+    required:
+    - id
+    - name
+    - description
+    - createTime
+    - dueDate
+    - businessKey
+
+  ApprovalRequest:
+    type: object
+    properties:
+      amount:
+        type: string
+        format: int
+      currency:
+        type: string
+      id:
+        type: string
+      subject:
+        type: string
+      applicant:
+        type: string
+    required:
+      - id
+      - applicant
+      - subject
+
+  TaskApproveRequestFormData:
+    type: object
+    properties:
+      task:
+        $ref: '#/definitions/Task'
+      approvalRequest:
+        $ref: '#/definitions/ApprovalRequest'
+    required:
+      - task
+      - approvalRequest
+
+  TaskApproveRequestSubmitData:
+    type: object
+    properties:
+      approvalDecision:
+        type: string
+      comment:
+        type: string
+    required:
+      - approvalDecision

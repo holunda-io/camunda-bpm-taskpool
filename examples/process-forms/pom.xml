@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>io.holunda.taskpool</groupId>
+    <artifactId>camunda-bpm-taskpool-examples-root</artifactId>
+    <version>1.2.1-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>camunda-bpm-taskpool-example-process-forms</artifactId>
+  <name>example/${project.artifactId}</name>
+  <packaging>jar</packaging>
+
+  <properties>
+    <npm.version>6.4.1</npm.version>
+    <node.version>v8.11.3</node.version>
+    <angular-app-name>process-forms</angular-app-name>
+    <maven.deploy.skip>true</maven.deploy.skip>
+  </properties>
+
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-clean-plugin</artifactId>
+        <configuration>
+          <filesets>
+            <fileset>
+              <directory>src-gen</directory>
+            </fileset>
+          </filesets>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+  <profiles>
+
+    <profile>
+      <id>node-build</id>
+      <activation>
+        <property>
+          <name>!skipNodeBuild</name>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-codegen-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>generate-client-stubs</id>
+                <phase>process-sources</phase>
+                <goals>
+                  <goal>generate</goal>
+                </goals>
+                <configuration>
+                  <output>src-gen/process</output>
+                  <inputSpec>${project.build.directory}/swagger-model/swagger.yml</inputSpec>
+                  <language>typescript-angular</language>
+                  <apiPackage>api</apiPackage>
+                  <modelPackage>model</modelPackage>
+                  <!--
+                  <configHelp>true</configHelp>
+                  -->
+                  <configOptions>
+                    <ngVersion>6.1</ngVersion>
+                  </configOptions>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+
+          <plugin>
+            <groupId>com.github.eirslett</groupId>
+            <artifactId>frontend-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>npm build</id>
+                <phase>compile</phase>
+                <goals>
+                  <goal>npm</goal>
+                </goals>
+                <configuration>
+                  <arguments>run build</arguments>
+                </configuration>
+              </execution>
+              <execution>
+                <id>npm run lint</id>
+                <phase>compile</phase>
+                <goals>
+                  <goal>npm</goal>
+                </goals>
+                <configuration>
+                  <arguments>run lint</arguments>
+                </configuration>
+              </execution>
+              <!--Karma test run-->
+              <execution>
+                <id>npm test</id>
+                <phase>test</phase>
+                <goals>
+                  <goal>npm</goal>
+                </goals>
+                <configuration>
+                  <arguments>run test</arguments>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <artifactId>maven-resources-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>copy-resources</id>
+                <phase>process-classes</phase>
+                <goals>
+                  <goal>copy-resources</goal>
+                </goals>
+                <configuration>
+                  <resources>
+                    <resource>
+                      <directory>${project.basedir}/dist</directory>
+                    </resource>
+                  </resources>
+                  <outputDirectory>${project.build.directory}/classes/static</outputDirectory>
+                </configuration>
+              </execution>
+              <execution>
+                <id>copy-rest-api</id>
+                <phase>generate-sources</phase>
+                <goals>
+                  <goal>copy-resources</goal>
+                </goals>
+                <configuration>
+                  <outputDirectory>${project.build.directory}/swagger-model</outputDirectory>
+                  <resources>
+                    <resource>
+                      <directory>../process-application/src/main/api</directory>
+                    </resource>
+                  </resources>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <profile>
+      <id>node-and-npm</id>
+      <activation>
+        <file>
+          <missing>node</missing>
+        </file>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>com.github.eirslett</groupId>
+            <artifactId>frontend-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>install node and npm</id>
+                <goals>
+                  <goal>install-node-and-npm</goal>
+                </goals>
+                <phase>initialize</phase>
+                <configuration>
+                  <npmVersion>${npm.version}</npmVersion>
+                  <nodeVersion>${node.version}</nodeVersion>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <id>npm-install</id>
+      <activation>
+        <file>
+          <missing>node_modules</missing>
+        </file>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>com.github.eirslett</groupId>
+            <artifactId>frontend-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>npm install</id>
+                <goals>
+                  <goal>npm</goal>
+                </goals>
+                <phase>initialize</phase>
+                <configuration>
+                  <arguments>install</arguments>
+                </configuration>
+              </execution>
+              <execution>
+                <id>node rebuild node-sass</id>
+                <goals>
+                  <goal>npm</goal>
+                </goals>
+                <phase>initialize</phase>
+                <configuration>
+                  <arguments>rebuild node-sass</arguments>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <id>npm-update</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>com.github.eirslett</groupId>
+            <artifactId>frontend-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>npm-update</id>
+                <goals>
+                  <goal>npm</goal>
+                </goals>
+                <configuration>
+                  <arguments>update</arguments>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+  </profiles>
+
+</project>

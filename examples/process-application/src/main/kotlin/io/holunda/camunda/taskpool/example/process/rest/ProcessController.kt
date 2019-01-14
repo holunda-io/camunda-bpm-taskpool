@@ -5,31 +5,31 @@ import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiParam
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
-@Api("Process Controller")
+@Api("Example Process Controller")
 @RestController
+@RequestMapping(path = [RestConfiguration.REST_PREFIX])
 open class ProcessController {
 
   @Autowired
   lateinit var processApproveRequestBean: ProcessApproveRequestBean
 
-  @ApiOperation("Performs approve request task.")
+  @ApiOperation("Performs approveProcess request task.")
   @PostMapping("/request/{id}/decision/{decision}")
   open fun approve(
     @ApiParam("Request id") @PathVariable("id") id: String,
     @ApiParam("Decision of the approver", allowableValues = "APPROVE, REJECT, RETURN", required = true) @PathVariable("decision") decision: String,
     @ApiParam("Comment") @RequestBody comment: String?) {
-    processApproveRequestBean.approve(id, decision, comment)
+    processApproveRequestBean.approveProcess(id, decision, comment)
   }
 
-  @ApiOperation("Performs amend request task.")
+  @ApiOperation("Performs amendProcess request task.")
   @PostMapping("/request/{id}/action/{action}")
   open fun amend(
     @ApiParam("Request id") @PathVariable("id") id: String,
     @ApiParam("Decision of the originator", allowableValues = "CANCEL, RESUBMIT", required = true) @PathVariable("action") action: String) {
-    processApproveRequestBean.amend(id, action)
+    processApproveRequestBean.amendProcess(id, action)
   }
 
   @ApiOperation("Deletes all process instances.")

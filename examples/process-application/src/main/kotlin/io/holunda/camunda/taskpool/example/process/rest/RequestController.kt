@@ -13,11 +13,11 @@ import java.util.*
 
 @Api("Request Controller")
 @RestController
+@RequestMapping(path = [RestConfiguration.REST_PREFIX])
 class RequestController(
   private val requestService: RequestService,
   private val processApproveRequestBean: ProcessApproveRequestBean
 ) {
-
 
   @ApiOperation("Submits a new request and starts the approval process.")
   @PostMapping("/request")
