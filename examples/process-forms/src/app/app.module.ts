@@ -13,6 +13,7 @@ import { AppComponent } from 'app/app.component';
 import { AppRoutingModule } from 'app/app-routing.module';
 import { ApproveTaskComponent } from 'app/tasks/approve-request/approve-task.component';
 import { PageNotFoundComponent } from 'app/tasks/page-not-found/page-not-found.component';
+import { AmendTaskComponent } from 'app/tasks/amend-request/amend-task.component';
 
 
 registerLocaleData(localeFr, 'fr');
@@ -24,7 +25,8 @@ registerLocaleData(localeEn, 'en');
   declarations: [
     AppComponent,
     PageNotFoundComponent,
-    ApproveTaskComponent
+    ApproveTaskComponent,
+    AmendTaskComponent
   ],
   imports: [
     BrowserModule,

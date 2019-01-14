@@ -7,7 +7,7 @@ import io.swagger.annotations.ApiParam
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 
-@Api("Example Process Controller")
+@Api("Example Process Controller", tags = ["Process Controller"])
 @RestController
 @RequestMapping(path = [RestConfiguration.REST_PREFIX])
 open class ProcessController {
@@ -28,8 +28,10 @@ open class ProcessController {
   @PostMapping("/request/{id}/action/{action}")
   open fun amend(
     @ApiParam("Request id") @PathVariable("id") id: String,
-    @ApiParam("Decision of the originator", allowableValues = "CANCEL, RESUBMIT", required = true) @PathVariable("action") action: String) {
-    processApproveRequestBean.amendProcess(id, action)
+    @ApiParam("Decision of the originator", allowableValues = "CANCEL, RESUBMIT", required = true) @PathVariable("action") action: String,
+    @ApiParam("Comment") @RequestBody comment: String?
+  ) {
+    processApproveRequestBean.amendProcess(id, action, comment)
   }
 
   @ApiOperation("Deletes all process instances.")

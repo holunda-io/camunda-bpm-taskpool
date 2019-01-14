@@ -2,13 +2,13 @@
 
 case "$1" in
    "build")
-     docker build -t tasklist-angular-build .
+     docker build -t process-forms-build .
      ;;
    "run")
      docker run -it --net=host \
         -v `pwd`/src:/opt/build/src \
         -v `pwd`/src-gen:/opt/build/src-gen \
-        tasklist-angular-build \
+        process-forms-build \
         npm start
      ;;
 

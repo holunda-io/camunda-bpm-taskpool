@@ -6,7 +6,7 @@ info:
 basePath: '/example-process-approval/rest/tasks'
 tags:
 - name: Approve Request
-  description: Operations on task approveProcess request.
+  description: Operations on task approve request.
 schemes:
 - http
 - https
@@ -15,7 +15,7 @@ paths:
     get:
       tags:
         - Approve Request
-      summary: Retrieves information about the task approveProcess request with specified id.
+      summary: Retrieves information about the task approve request with specified id.
       produces:
         - application/json
       parameters:
@@ -34,7 +34,7 @@ paths:
     post:
       tags:
         - Approve Request
-      summary: Receives form data for the completion of the task approveProcess request with specified id.
+      summary: Receives form data for the completion of the task approve request with specified id.
       consumes:
         - application/json
       parameters:
@@ -49,6 +49,48 @@ paths:
           schema:
             $ref: '#/definitions/TaskApproveRequestSubmitData'
       operationId: submitTaskApproveRequestSubmitData
+      responses:
+        201:
+          description: Sucessful operation.
+
+  '/amend-request/id/{id}':
+    get:
+      tags:
+        - Amend Request
+      summary: Retrieves information about the task amend request with specified id.
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          type: string
+          description: Task id.
+          required: true
+      operationId: loadTaskAmendRequestFormData
+      responses:
+        200:
+          description: Sucessful operation.
+          schema:
+            title: Amend task data.
+            $ref: '#/definitions/TaskAmendRequestFormData'
+    post:
+      tags:
+        - Amend Request
+      summary: Receives form data for the completion of the task amend request with specified id.
+      consumes:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          type: string
+          description: Task id.
+          required: true
+        - in: body
+          name: payload
+          description: Payload to be added to the process instance on task completion.
+          schema:
+            $ref: '#/definitions/TaskAmendRequestSubmitData'
+      operationId: submitTaskAmendRequestSubmitData
       responses:
         201:
           description: Sucessful operation.
@@ -126,12 +168,43 @@ definitions:
       - task
       - approvalRequest
 
+  TaskAmendRequestFormData:
+    type: object
+    properties:
+      task:
+        $ref: '#/definitions/Task'
+      approvalRequest:
+        $ref: '#/definitions/ApprovalRequest'
+      comment:
+        type: string
+        description: Comment of the approver.
+    required:
+      - task
+      - approvalRequest
+
   TaskApproveRequestSubmitData:
     type: object
     properties:
-      approvalDecision:
+      decision:
         type: string
+        description: One of 'APPROVE', 'REJECT' or 'RETURN' denoting the decition of the approver.
       comment:
         type: string
+        description: Optional comment.
     required:
-      - approvalDecision
+      - decision
+
+  TaskAmendRequestSubmitData:
+    type: object
+    properties:
+      action:
+        type: string
+        description: One of 'CANCEL' or 'RESUBMIT' actions reflecting the decision of the originator, how to proceed with the request.
+      approvalRequest:
+        $ref: '#/definitions/ApprovalRequest'
+        description: Optional changed approval request.
+      comment:
+        type: string
+        description: Optional comment.
+    required:
+      - action

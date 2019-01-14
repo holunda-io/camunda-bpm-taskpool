@@ -11,7 +11,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.util.*
 
-@Api("Request Controller")
+@Api("Request Controller", tags = ["Request Controller"])
 @RestController
 @RequestMapping(path = [RestConfiguration.REST_PREFIX])
 class RequestController(

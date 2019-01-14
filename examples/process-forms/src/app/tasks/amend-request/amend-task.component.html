@@ -7,38 +7,39 @@
 <div class="row">
   <div class="col-lg-9 content">
       <div class="container-fluid">
+          <form #amendForm="ngForm" novalidate>
           <div class="row payload">
             <div class="col-lg-12"><h5>Approval Request</h5></div>
 
             <div class="col-lg-4"><label>Request ID:</label></div>
-            <div class="col-lg-8">{{ approvalRequest.id }}</div>
+            <div class="col-lg-8">{{ submitData.approvalRequest.id }}</div>
 
             <div class="col-lg-4"><label>Applicant:</label></div>
-            <div class="col-lg-8">{{ approvalRequest.applicant }}</div>
+            <div class="col-lg-8"><input type="text" required name="applicant" [(ngModel)]="submitData.approvalRequest.applicant" /></div>
 
             <div class="col-lg-4"><label>Subject:</label></div>
-            <div class="col-lg-8">{{ approvalRequest.subject }}</div>
+            <div class="col-lg-8"><input type="text" required name="subject" [(ngModel)]="submitData.approvalRequest.subject" /></div>
 
             <div class="col-lg-4"><label>Amount (Currency):</label></div>
-            <div class="col-lg-8">{{ approvalRequest.amount }} {{ approvalRequest.currency }}</div>
+            <div class="col-lg-8"><input type="text" required name="amount" [(ngModel)]="submitData.approvalRequest.amount" />&nbsp;
+              <input type="text" required name="currency" [(ngModel)]="submitData.approvalRequest.currency" /></div>
           </div>
           <div class="row form">
               <div class="col-lg-12 description">
                   <h6>{{ task.description }}</h6>
               </div>
               <div class="col-lg-12 description">
-                <form #approvalForm="ngForm" novalidate>
-                  <input type="radio" required name="approvalDecision" value="APPROVE" label="Approve request" [(ngModel)]="submitData.decision">&nbsp;Approve request<br/>
-                  <input type="radio" name="approvalDecision" value="REJECT" label="Reject equestr" [(ngModel)]="submitData.decision">&nbsp;Reject request<br/>
-                  <input type="radio" name="approvalDecision" value="RETURN" label="Return to origintaor" [(ngModel)]="submitData.decision">&nbsp;Return request to originator<br/>
+
+                  <input type="radio" required name="action" value="RESUBMIT" label="Resubmit request" [(ngModel)]="submitData.action">&nbsp;Re-submit request<br/>
+                  <input type="radio" name="action" value="CANCEL" label="Reject request" [(ngModel)]="submitData.action">&nbsp;Cancel request<br/>
 
                   <div class="buttons">
-                    <button [disabled]="!approvalForm.valid" class="btn btn-primary" type="button" (click)="complete()">Complete</button>&nbsp;
+                    <button [disabled]="!amendForm.valid" class="btn btn-primary" type="button" (click)="complete()">Complete</button>&nbsp;
                     <a class="btn btn-secondary" role="button" href="#">Cancel</a>
                   </div>
-                </form>
               </div>
           </div>
+          </form>
       </div>
   </div>
   <div class="col-lg-3 meta">
