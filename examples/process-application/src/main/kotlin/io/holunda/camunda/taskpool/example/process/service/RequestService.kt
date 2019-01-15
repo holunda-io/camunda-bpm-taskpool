@@ -3,7 +3,6 @@ package io.holunda.camunda.taskpool.example.process.service
 import io.holunda.camunda.taskpool.api.sender.DataEntryCommandSender
 import org.springframework.stereotype.Service
 import java.math.BigDecimal
-import java.util.concurrent.ConcurrentHashMap
 
 
 /**
@@ -13,35 +12,39 @@ import java.util.concurrent.ConcurrentHashMap
  */
 @Service
 class RequestService(
-  private val sender: DataEntryCommandSender
+  private val sender: DataEntryCommandSender,
+  private val repository: RequestRepository
 ) {
 
-  private val requestStorage: MutableMap<String, Request> = ConcurrentHashMap()
 
-  fun addRequest(id: String, request: Request) {
-    this.requestStorage[id] = request
-    eventModification(request)
+  fun addRequest(request: Request) {
+    repository.save(request)
+    notify(request)
   }
 
-  fun getRequest(id: String): Request? {
-    return this.requestStorage[id]
+  fun getRequest(id: String): Request {
+    return repository.findById(id).orElseThrow { NoSuchElementException("Request with id $id not found.") }
   }
 
-  fun checkRequest(id: String): Boolean = this.requestStorage.containsKey(id)
+  fun checkRequest(id: String): Boolean = this.repository.existsById(id)
 
   fun updateRequest(id: String, request: Request) {
     if (checkRequest(id)) {
-      this.requestStorage[id] = request
-      eventModification(request)
+      this.repository.save(request)
+      notify(request)
     }
   }
 
-  private fun eventModification(request: Request) {
+  fun notify(request: Request) {
     sender.sendDataEntryCommand(
       entryType = BusinessDataEntry.REQUEST,
       entryId = request.id,
       payload = request
     )
+  }
+
+  fun getAllRequests(): List<Request> {
+    return this.repository.findAll()
   }
 }
 
@@ -52,7 +55,6 @@ fun createDummyRequest(id: String) = Request(
   currency = "USD",
   applicant = "piggy"
 )
-
 
 
 object BusinessDataEntry {

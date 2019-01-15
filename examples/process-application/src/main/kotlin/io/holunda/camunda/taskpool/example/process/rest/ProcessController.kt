@@ -5,6 +5,8 @@ import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiParam
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.ResponseEntity
+import org.springframework.http.ResponseEntity.noContent
 import org.springframework.web.bind.annotation.*
 
 @Api("Example Process Controller", tags = ["Process Controller"])
@@ -14,6 +16,16 @@ open class ProcessController {
 
   @Autowired
   lateinit var processApproveRequestBean: ProcessApproveRequestBean
+
+  @ApiOperation("Starts the process for the specified request.")
+  @PostMapping("/request/{id}/start/{originator}")
+  open fun start(
+    @ApiParam("Request id") @PathVariable("id") id: String,
+    @ApiParam(value = "Originator", defaultValue = "kermit") @PathVariable("originator") originator: String
+  ): ResponseEntity<Void> {
+    processApproveRequestBean.startProcess(id)
+    return noContent().build()
+  }
 
   @ApiOperation("Performs approveProcess request task.")
   @PostMapping("/request/{id}/decision/{decision}")

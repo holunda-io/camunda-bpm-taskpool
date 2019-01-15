@@ -24,7 +24,7 @@ class AmendRequestTaskController(
   override fun loadTaskAmendRequestFormData(
     @ApiParam(value = "Task id.", required = true) @PathVariable("id") id: String
   ): ResponseEntity<TaskAmendRequestFormDataDto> {
-    logger.info { "Loading data for task $id" }
+    logger.debug { "Loading data for task $id" }
     val (task, approvalRequest) = processApproveRequestBean.loadAmendTaskFormData(id)
     return ResponseEntity.ok(TaskAmendRequestFormDataDto().approvalRequest(approvalRequestDto(approvalRequest)).task(taskDto(task)))
   }
@@ -33,7 +33,7 @@ class AmendRequestTaskController(
     @ApiParam(value = "Task id.", required = true) @PathVariable("id") id: String,
     @ApiParam(value = "Payload to be added to the process instance on task completion.") @Valid @RequestBody payload: TaskAmendRequestSubmitDataDto
   ): ResponseEntity<Void> {
-    logger.info { "Submitting data for task $id, $payload" }
+    logger.debug { "Submitting data for task $id, $payload" }
     processApproveRequestBean.amendTask(id, payload.action, request(payload.approvalRequest), payload.comment)
     return ResponseEntity.noContent().build()
   }

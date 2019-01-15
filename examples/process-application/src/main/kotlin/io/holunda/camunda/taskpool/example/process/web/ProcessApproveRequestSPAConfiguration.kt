@@ -20,19 +20,18 @@ object Web {
 
   const val RESOURCE_LOCATION = "classpath:/static/process-forms"
 
-
   const val TASKS = "/tasks" // see process-forms/src/app/app-routing.module.ts
   const val ANY = "/**"
 
-  const val CSS = "/**/*.css"
-  const val JS = "/**/*.js"
-  const val FONT2 = "/**/*.woff2"
-  const val FONT = "/**/*.woff"
-  const val TTF = "/**/*.ttf"
-  const val PNG = "/**/*.png"
-  const val JPG = "/**/*.jpg"
-  const val ICO = "/**/*.ico"
-  const val JSON = "/**/*.json"
+  private const val CSS = "/**/*.css"
+  private const val JS = "/**/*.js"
+  private const val FONT2 = "/**/*.woff2"
+  private const val FONT = "/**/*.woff"
+  private const val TTF = "/**/*.ttf"
+  private const val PNG = "/**/*.png"
+  private const val JPG = "/**/*.jpg"
+  private const val ICO = "/**/*.ico"
+  private const val JSON = "/**/*.json"
 
   val STATIC_RESOURCES_LONG_CACHE = arrayOf(CSS, JS, FONT2, FONT, TTF)
   val STATIC_RESOURCES_SHORT_CACHE = arrayOf(PNG, JPG, ICO, JSON)

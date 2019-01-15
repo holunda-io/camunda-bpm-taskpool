@@ -18,12 +18,12 @@ class ProcessApproveRequestBean(
   /**
    * Starts the process for a given request id.
    */
-  fun startProcess(requestId: String): String {
+  fun startProcess(requestId: String, originator: String = "kermit"): String {
     runtimeService.startProcessInstanceByKey(ProcessApproveRequest.KEY,
       requestId,
       Variables.createVariables()
         .putValue(ProcessApproveRequest.Variables.REQUEST_ID, requestId)
-        .putValue(ProcessApproveRequest.Variables.ORIGINATOR, "kermit")
+        .putValue(ProcessApproveRequest.Variables.ORIGINATOR, originator)
     )
     return requestId
   }
@@ -156,8 +156,6 @@ class ProcessApproveRequestBean(
     val requestId = (this.runtimeService.getVariable(task.executionId, ProcessApproveRequest.Variables.REQUEST_ID)
       ?: throw NoSuchElementException("Request id could not be found for task $id")) as String
     val request = this.requestService.getRequest(requestId)
-      ?: throw NoSuchElementException("Request could not be found for request id $requestId")
-
     return TaskAndRequest(task = task, approvalRequest = request)
   }
 
@@ -174,8 +172,6 @@ class ProcessApproveRequestBean(
     val requestId = (this.runtimeService.getVariable(task.executionId, ProcessApproveRequest.Variables.REQUEST_ID)
       ?: throw NoSuchElementException("Request id could not be found for task $id")) as String
     val request = this.requestService.getRequest(requestId)
-      ?: throw NoSuchElementException("Request could not be found for request id $requestId")
-
     return TaskAndRequest(task = task, approvalRequest = request)
   }
 
