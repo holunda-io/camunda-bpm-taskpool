@@ -9,8 +9,7 @@ import java.math.BigDecimal
 import java.time.OffsetDateTime
 import java.time.ZoneId
 
-@Configuration
-open class RestConfiguration {
+class Rest {
 
   companion object {
     const val REST_PREFIX = "/example-process-approval/rest"
