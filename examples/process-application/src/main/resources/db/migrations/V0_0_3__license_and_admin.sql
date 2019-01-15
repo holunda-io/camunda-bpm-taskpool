@@ -1,6 +1,6 @@
 -- Create admin user (password: admin)
 INSERT INTO ACT_ID_USER (ID_, REV_, FIRST_, LAST_, EMAIL_, PWD_, PICTURE_ID_)
-VALUES ('admin', 1, 'Admin', '', null, '{SHA}0DPiKuNIrrVmD8IUCuw1hQxNqZc=', null);
+VALUES ('admin', 1, 'Admin', 'Administratus', 'bpm@holunda.io', '{SHA}0DPiKuNIrrVmD8IUCuw1hQxNqZc=', null);
 
 -- Create admin group
 INSERT INTO ACT_ID_GROUP (ID_, REV_, NAME_, TYPE_)

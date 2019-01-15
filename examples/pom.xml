@@ -5,7 +5,7 @@
   <parent>
     <groupId>io.holunda.taskpool</groupId>
     <artifactId>camunda-bpm-taskpool</artifactId>
-    <version>1.2.0</version>
+    <version>1.2.1</version>
   </parent>
 
   <artifactId>camunda-bpm-taskpool-examples-root</artifactId>
@@ -35,6 +35,7 @@
       <modules>
         <module>tasklist-angular</module>
         <module>tasklist-react</module>
+        <module>process-forms</module>
       </modules>
     </profile>
   </profiles>

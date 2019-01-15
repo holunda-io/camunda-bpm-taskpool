@@ -16,6 +16,9 @@ import { ProfileHelperService } from 'app/services/profile.helper.service';
 import { FieldNamePipe } from 'app/services/field-name.pipe';
 import { FilterService } from 'app/services/filter.service';
 import { SortableColumnComponent } from 'app/components/sorter/sortable-column.component';
+import { ExternalUrlDirective } from './components/external-url.directive';
+import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
+import { AppRoutingModule } from './app-routing.module';
 
 
 registerLocaleData(localeFr, 'fr');
@@ -28,12 +31,15 @@ registerLocaleData(localeEn, 'en');
     AppComponent,
     FieldNamePipe,
     SortableColumnComponent,
-    TasklistComponent
+    TasklistComponent,
+    ExternalUrlDirective,
+    PageNotFoundComponent
   ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     FormsModule,
+    AppRoutingModule,
     NgbModule,
     ApiModule
   ],
