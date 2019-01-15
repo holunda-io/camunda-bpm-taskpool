@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import javax.validation.Valid
 
 @Controller
-@RequestMapping(path = [RestConfiguration.REST_PREFIX])
+@RequestMapping(path = [Rest.REST_PREFIX])
 class AmendRequestTaskController(
   private val processApproveRequestBean: ProcessApproveRequestBean
 ) : AmendRequestApi {

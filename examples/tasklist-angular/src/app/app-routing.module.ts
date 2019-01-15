@@ -1,21 +1,11 @@
 import { NgModule, InjectionToken } from '@angular/core';
 import { RouterModule, Routes, ActivatedRouteSnapshot } from '@angular/router';
-import { ApproveTaskComponent } from 'app/tasks/approve-request/approve-task.component';
-import { AmendTaskComponent } from './tasks/amend-request/amend-task.component';
-import { PageNotFoundComponent } from 'app/tasks/page-not-found/page-not-found.component';
+import { PageNotFoundComponent } from 'app/components/page-not-found/page-not-found.component';
 
 const externalUrlProvider = new InjectionToken('externalUrlRedirectResolver');
 const deactivateGuard = new InjectionToken('deactivateGuard');
 
 const routes: Routes = [
-  {
-    path: 'tasks/amend-request/id/:taskId',
-    component: AmendTaskComponent,
-  },
-  {
-    path: 'tasks/approve-request/id/:taskId',
-    component: ApproveTaskComponent,
-  },
   {
     path: 'externalRedirect',
     canActivate: [externalUrlProvider],
@@ -47,7 +37,7 @@ const routes: Routes = [
     {
       provide: deactivateGuard,
       useValue: () => {
-        console.log('Guard function is called!');
+        console.log('Guard function is called.');
         return false;
       }
     },

@@ -11,6 +11,16 @@ schemes:
 - http
 - https
 paths:
+  '/environment':
+    get:
+      tags:
+        - Environment
+      summary: Retrieives information about the environment.
+      operationId: getEnvironment
+      responses:
+        200:
+          schema:
+            $ref: '#/definitions/Environment'
   '/approve-request/id/{id}':
     get:
       tags:
@@ -208,3 +218,13 @@ definitions:
         description: Optional comment.
     required:
       - action
+
+  Environment:
+    type: object
+    properties:
+      applicationName:
+        type: string
+        description: Name of this process application.
+      tasklistUrl:
+        type: string
+        description: URL of the tasklist.

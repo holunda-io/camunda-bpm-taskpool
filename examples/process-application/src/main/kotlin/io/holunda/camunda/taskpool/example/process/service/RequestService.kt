@@ -54,13 +54,6 @@ fun createDummyRequest(id: String) = Request(
 )
 
 
-data class Request(
-  val id: String,
-  val applicant: String,
-  val subject: String,
-  val amount: BigDecimal,
-  val currency: String
-)
 
 object BusinessDataEntry {
   const val REQUEST = "io.holunda.camunda.taskpool.example.ApprovalRequest"

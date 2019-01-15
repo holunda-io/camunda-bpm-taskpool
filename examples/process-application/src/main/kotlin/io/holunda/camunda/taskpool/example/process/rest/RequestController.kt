@@ -13,7 +13,7 @@ import java.util.*
 
 @Api("Request Controller", tags = ["Request Controller"])
 @RestController
-@RequestMapping(path = [RestConfiguration.REST_PREFIX])
+@RequestMapping(path = [Rest.REST_PREFIX])
 class RequestController(
   private val requestService: RequestService,
   private val processApproveRequestBean: ProcessApproveRequestBean

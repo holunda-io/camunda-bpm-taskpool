@@ -2,10 +2,12 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import 'rxjs/add/observable/of';
 import { ApproveTaskComponent } from './approve-task.component';
-import { Observable } from 'rxjs-compat';
 import { FormsModule } from '@angular/forms';
 import { ApproveRequestService } from 'process/api/approveRequest.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterModule, Router } from '@angular/router';
+import { EnvironmentHelperService } from 'app/services/environment.helper.service';
+import { Observable } from 'rxjs';
+import { of } from 'rxjs-compat/observable/of';
 
 
 describe('Component: ApproveTaskComponent', () => {
@@ -17,21 +19,32 @@ describe('Component: ApproveTaskComponent', () => {
   beforeEach(async(() => {
 
     const approveRequestServiceSpy = jasmine.createSpyObj('ApproveRequestService', {
-      'loadTaskApproveRequestFormData': Observable.of({
+      loadTaskApproveRequestFormData: of({
         approvalRequest: {},
         task: {},
       }),
-      'submitTaskApproveRequestSubmitData': Observable.of({}),
+      submitTaskApproveRequestSubmitData: of({}),
+    });
+    const envSpy = jasmine.createSpyObj('EnvironmentHelperService', {
+      env: of({
+        applicationName: 'foo',
+        tasklistUrl: 'http://bar',
+      }),
+      none: {
+        applicationName: 'foo',
+        tasklistUrl: 'http://bar',
+      }
     });
 
     TestBed.configureTestingModule({
       imports: [
-        FormsModule
+        FormsModule,
       ],
       declarations: [
         ApproveTaskComponent,
       ],
       providers: [
+        { provide: Router, useValue: jasmine.createSpyObj('Router', { 'navigate': {} }) },
         { provide: ApproveRequestService, useValue: approveRequestServiceSpy },
         { provide: ActivatedRoute, useValue: {
             snapshot: {
@@ -39,6 +52,7 @@ describe('Component: ApproveTaskComponent', () => {
             }
           },
         },
+        { provide: EnvironmentHelperService, useValue: envSpy }
       ],
     }).compileComponents().then(() => {
       // create component and test fixture

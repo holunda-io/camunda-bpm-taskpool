@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*
 
 @Api("Example Process Controller", tags = ["Process Controller"])
 @RestController
-@RequestMapping(path = [RestConfiguration.REST_PREFIX])
+@RequestMapping(path = [Rest.REST_PREFIX])
 open class ProcessController {
 
   @Autowired

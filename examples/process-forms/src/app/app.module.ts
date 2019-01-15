@@ -14,6 +14,8 @@ import { AppRoutingModule } from 'app/app-routing.module';
 import { ApproveTaskComponent } from 'app/tasks/approve-request/approve-task.component';
 import { PageNotFoundComponent } from 'app/tasks/page-not-found/page-not-found.component';
 import { AmendTaskComponent } from 'app/tasks/amend-request/amend-task.component';
+import { ExternalUrlDirective } from './components/external-url.directive';
+import { EnvironmentHelperService } from './services/environment.helper.service';
 
 
 registerLocaleData(localeFr, 'fr');
@@ -26,7 +28,8 @@ registerLocaleData(localeEn, 'en');
     AppComponent,
     PageNotFoundComponent,
     ApproveTaskComponent,
-    AmendTaskComponent
+    AmendTaskComponent,
+    ExternalUrlDirective
   ],
   imports: [
     BrowserModule,
@@ -39,7 +42,8 @@ registerLocaleData(localeEn, 'en');
     AppRoutingModule
   ],
   providers: [
-    { provide: BASE_PATH, useValue: '/example-process-approval/rest' }
+    { provide: BASE_PATH, useValue: '/example-process-approval/rest' },
+    EnvironmentHelperService
   ],
   bootstrap: [AppComponent]
 })

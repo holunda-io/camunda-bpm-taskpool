@@ -34,7 +34,7 @@
 
                   <div class="buttons">
                     <button [disabled]="!approvalForm.valid" class="btn btn-primary" type="button" (click)="complete()">Complete</button>&nbsp;
-                    <a class="btn btn-secondary" role="button" href="#">Cancel</a>
+                    <a appExternalUrl class="btn btn-secondary" role="button" [href]="environment.tasklistUrl">Cancel</a>
                   </div>
                 </form>
               </div>

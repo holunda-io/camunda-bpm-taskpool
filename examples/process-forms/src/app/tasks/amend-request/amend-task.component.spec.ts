@@ -4,9 +4,10 @@ import 'rxjs/add/observable/of';
 import { AmendTaskComponent } from './amend-task.component';
 import { Observable } from 'rxjs-compat';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { AmendRequestService } from 'process/api/amendRequest.service';
-
+import { EnvironmentHelperService } from 'app/services/environment.helper.service';
+import { of } from 'rxjs-compat/observable/of';
 
 describe('Component: ApproveTaskComponent', () => {
 
@@ -17,12 +18,23 @@ describe('Component: ApproveTaskComponent', () => {
   beforeEach(async(() => {
 
     const amendRequestServiceSpy = jasmine.createSpyObj('AmendRequestService', {
-      'loadTaskAmendRequestFormData': Observable.of({
+      'loadTaskAmendRequestFormData': of({
         approvalRequest: {},
         task: {},
       }),
-      'submitTaskAmendRequestSubmitData': Observable.of({}),
+      'submitTaskAmendRequestSubmitData': of({}),
     });
+    const envSpy = jasmine.createSpyObj('EnvironmentHelperService', {
+      'env': of({
+        applicationName: 'foo',
+        tasklistUrl: 'http://bar',
+      }),
+      'none' : {
+        applicationName: 'foo',
+        tasklistUrl: 'http://bar',
+      }
+    });
+
 
     TestBed.configureTestingModule({
       imports: [
@@ -32,6 +44,7 @@ describe('Component: ApproveTaskComponent', () => {
         AmendTaskComponent,
       ],
       providers: [
+        { provide: Router, useValue: jasmine.createSpyObj('Router', { 'navigate': {} }) },
         { provide: AmendRequestService, useValue: amendRequestServiceSpy },
         { provide: ActivatedRoute, useValue: {
             snapshot: {
@@ -39,6 +52,7 @@ describe('Component: ApproveTaskComponent', () => {
             }
           },
         },
+        { provide: EnvironmentHelperService, useValue: envSpy }
       ],
     }).compileComponents().then(() => {
       // create component and test fixture
