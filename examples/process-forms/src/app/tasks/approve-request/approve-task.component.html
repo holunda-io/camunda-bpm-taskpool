@@ -1,0 +1,66 @@
+<div class="row">
+  <div class="col-lg-12">
+    <h1><img src="assets/holunda-io-logo.png" title="holunda logo">{{ task.name }}</h1>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-lg-9 content">
+      <div class="container-fluid">
+          <div class="row payload">
+            <div class="col-lg-12"><h5>Approval Request</h5></div>
+
+            <div class="col-lg-4"><label>Request ID:</label></div>
+            <div class="col-lg-8">{{ approvalRequest.id }}</div>
+
+            <div class="col-lg-4"><label>Applicant:</label></div>
+            <div class="col-lg-8">{{ approvalRequest.applicant }}</div>
+
+            <div class="col-lg-4"><label>Subject:</label></div>
+            <div class="col-lg-8">{{ approvalRequest.subject }}</div>
+
+            <div class="col-lg-4"><label>Amount (Currency):</label></div>
+            <div class="col-lg-8">{{ approvalRequest.amount }} {{ approvalRequest.currency }}</div>
+          </div>
+          <div class="row form">
+              <div class="col-lg-12 description">
+                  <h6>{{ task.description }}</h6>
+              </div>
+              <div class="col-lg-12 description">
+                <form #approvalForm="ngForm" novalidate>
+                  <input type="radio" required name="approvalDecision" value="APPROVE" label="Approve request" [(ngModel)]="submitData.decision">&nbsp;Approve request<br/>
+                  <input type="radio" name="approvalDecision" value="REJECT" label="Reject equestr" [(ngModel)]="submitData.decision">&nbsp;Reject request<br/>
+                  <input type="radio" name="approvalDecision" value="RETURN" label="Return to origintaor" [(ngModel)]="submitData.decision">&nbsp;Return request to originator<br/>
+
+                  <div class="buttons">
+                    <button [disabled]="!approvalForm.valid" class="btn btn-primary" type="button" (click)="complete()">Complete</button>&nbsp;
+                    <a appExternalUrl class="btn btn-secondary" role="button" [href]="environment.tasklistUrl">Cancel</a>
+                  </div>
+                </form>
+              </div>
+          </div>
+      </div>
+  </div>
+  <div class="col-lg-3 meta">
+    <div class="container-fluid">
+      <div class="row">
+          <div class="col-lg-12"><h5>Metadata</h5></div>
+
+          <div class="col-lg-4"><label class="text-only">Created at:</label></div>
+          <div class="col-lg-8">{{ task.createTime | date: 'medium'}}</div>
+
+          <div class="col-lg-4"><label class="text-only">Due at:</label></div>
+          <div class="col-lg-8">{{ task.dueDate | date: 'mediumDate' }}</div>
+
+          <div class="col-lg-4"><label class="text-only">Follow-up at:</label></div>
+          <div class="col-lg-8">{{ task.followUpDate | date: 'mediumDate' }}</div>
+
+          <div class="col-lg-4"><label class="text-only">Assignee:</label></div>
+          <div class="col-lg-8">{{ task.assignee }}</div>
+
+          <div class="col-lg-4"><label class="text-only">Priority:</label></div>
+          <div class="col-lg-8">{{ task.priority }}</div>
+      </div>
+    </div>
+  </div>
+</div>

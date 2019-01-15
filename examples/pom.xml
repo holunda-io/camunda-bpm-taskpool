@@ -35,6 +35,7 @@
       <modules>
         <module>tasklist-angular</module>
         <module>tasklist-react</module>
+        <module>process-forms</module>
       </modules>
     </profile>
   </profiles>

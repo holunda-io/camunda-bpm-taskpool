@@ -1,3 +1,5 @@
+@file:Suppress("UNCHECKED_CAST")
+
 package io.holunda.camunda.datapool.sender.simple
 
 import com.fasterxml.jackson.databind.ObjectMapper

@@ -1,0 +1,20 @@
+#!/bin/bash
+
+case "$1" in
+   "build")
+     docker build -t process-forms-build .
+     ;;
+   "run")
+     docker run -it --net=host \
+        -v `pwd`/src:/opt/build/src \
+        -v `pwd`/src-gen:/opt/build/src-gen \
+        process-forms-build \
+        npm start
+     ;;
+
+   *)
+     echo "No command detected. Try $0 build | run"
+     ;;
+esac
+
+
