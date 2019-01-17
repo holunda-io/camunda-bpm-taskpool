@@ -11,35 +11,36 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.util.*
 
-@Api("Request Controller")
+@Api("Request Controller", tags = ["Request Controller"])
 @RestController
+@RequestMapping(path = [Rest.REST_PREFIX])
 class RequestController(
   private val requestService: RequestService,
   private val processApproveRequestBean: ProcessApproveRequestBean
 ) {
 
-
-  @ApiOperation("Submits a new request and starts the approval process.")
+  @ApiOperation("Submits a new request.")
   @PostMapping("/request")
   fun submitRequest(): ResponseEntity<String> {
-
     val requestId = "AR-${UUID.randomUUID()}"
-    requestService.addRequest(requestId, createDummyRequest(requestId))
-    processApproveRequestBean.startProcess(requestId)
+    requestService.addRequest(createDummyRequest(requestId))
     return ResponseEntity.ok(requestId)
   }
 
   @ApiOperation("Retrieves a request by id.")
   @GetMapping("/request/{id}")
   fun getRequestById(@ApiParam("id") @PathVariable("id") id: String): ResponseEntity<Request> {
-
     val request = requestService.getRequest(id)
-    return if (request != null) {
-      ResponseEntity.ok(request)
-    } else {
-      ResponseEntity.notFound().build()
-    }
+    return ResponseEntity.ok(request)
   }
+
+  @ApiOperation("Retrieves all requests.")
+  @GetMapping("/requests")
+  fun getRequests(): ResponseEntity<List<Request>> {
+    val requests = requestService.getAllRequests()
+    return ResponseEntity.ok(requests)
+  }
+
 
   @ApiOperation("Updates a request by id.")
   @PostMapping("/request/{id}")

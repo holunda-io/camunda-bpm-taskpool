@@ -33,41 +33,43 @@ fun task(event: TaskAssignedEngineEvent, task: Task) = Task(
   sourceReference = event.sourceReference,
   taskDefinitionKey = event.taskDefinitionKey,
 
-  payload = task.payload,
   correlations = task.correlations,
-  formKey = task.formKey,
-  followUpDate = task.followUpDate,
-
-  dueDate = event.dueDate,
-  description = event.description,
+  payload = task.payload,
   businessKey = event.businessKey,
-  priority = event.priority,
+  formKey = task.formKey,
+  createTime = event.createTime,
   assignee = event.assignee,
   candidateGroups = event.candidateGroups,
   candidateUsers = event.candidateUsers,
+
+  priority = event.priority,
   name = event.name,
+  description = event.description,
   owner = event.owner,
-  createTime = event.createTime
+  followUpDate = task.followUpDate,
+  dueDate = event.dueDate
 )
 
 fun task(event: TaskCreatedEngineEvent) = Task(
   id = event.id,
   sourceReference = event.sourceReference,
-  dueDate = event.dueDate,
+  taskDefinitionKey = event.taskDefinitionKey,
+
   correlations = event.correlations,
   payload = event.payload,
-  description = event.description,
   businessKey = event.businessKey,
   formKey = event.formKey,
-  priority = event.priority,
+  createTime = event.createTime,
   assignee = event.assignee,
   candidateGroups = event.candidateGroups,
   candidateUsers = event.candidateUsers,
+
   name = event.name,
+  description = event.description,
+  priority = event.priority,
   owner = event.owner,
-  taskDefinitionKey = event.taskDefinitionKey,
-  createTime = event.createTime,
-  followUpDate = event.followUpDate
+  followUpDate = event.followUpDate,
+  dueDate = event.dueDate
 )
 
 fun task(event: TaskAttributeUpdatedEngineEvent, task: Task) = Task(
@@ -80,6 +82,7 @@ fun task(event: TaskAttributeUpdatedEngineEvent, task: Task) = Task(
   businessKey = task.businessKey,
   formKey = task.formKey,
   createTime = task.createTime,
+  assignee = task.assignee,
   candidateGroups = task.candidateGroups,
   candidateUsers = task.candidateUsers,
 
@@ -87,5 +90,6 @@ fun task(event: TaskAttributeUpdatedEngineEvent, task: Task) = Task(
   description = event.description,
   priority = event.priority,
   owner = event.owner,
-  followUpDate = event.followUpDate
+  followUpDate = event.followUpDate,
+  dueDate = event.dueDate
 )

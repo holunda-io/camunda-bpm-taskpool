@@ -1,4 +1,4 @@
-@file:Suppress("UNREACHABLE_CODE")
+@file:Suppress("UNREACHABLE_CODE", "UNCHECKED_CAST")
 
 package io.holunda.camunda.taskpool.sender
 

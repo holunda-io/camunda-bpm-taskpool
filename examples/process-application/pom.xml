@@ -6,13 +6,18 @@
   <parent>
     <groupId>io.holunda.taskpool</groupId>
     <artifactId>camunda-bpm-taskpool-examples-root</artifactId>
-    <version>1.1.12-SNAPSHOT</version>
+    <version>1.2.2-SNAPSHOT</version>
   </parent>
 
   <artifactId>camunda-bpm-taskpool-example-process-application</artifactId>
   <name>example/${project.artifactId}</name>
 
   <properties>
+    <application.api-location>src/main/api</application.api-location>
+    <application.base-package>io.holunda.camunda.taskpool.example.process.rest</application.base-package>
+    <application.api-package>${application.base-package}.api</application.api-package>
+    <application.model-package>${application.base-package}.model</application.model-package>
+    <application.config-package>${application.base-package}</application.config-package>
     <maven.deploy.skip>true</maven.deploy.skip>
   </properties>
 
@@ -96,6 +101,180 @@
   <build>
     <plugins>
       <plugin>
+        <artifactId>maven-resources-plugin</artifactId>
+        <executions>
+
+          <execution>
+            <id>copy-swagger-api</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${project.build.directory}/swagger</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>${application.api-location}</directory>
+                  <includes>
+                    <include>swagger.yml</include>
+                  </includes>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+
+
+          <execution>
+            <id>copy-swagger-ignore</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${project.build.directory}/generated-sources/swagger
+              </outputDirectory>
+              <resources>
+                <resource>
+                  <directory>${application.api-location}</directory>
+                  <includes>
+                    <include>.swagger-codegen-ignore</include>
+                  </includes>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+
+          <!-- Enforce resource copy -->
+          <!-- This is a fix of Kotlin incremental Compiler bug -->
+          <!-- See https://discuss.kotlinlang.org/t/kotlin-compiler-incremental-not-copying-resources/5640/5 -->
+          <execution>
+            <id>extra-copy-resources</id>
+            <phase>process-classes</phase>
+            <goals>
+              <goal>resources</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>extra-copy-test-resources</id>
+            <phase>process-test-classes</phase>
+            <goals>
+              <goal>testResources</goal>
+            </goals>
+          </execution>
+
+        </executions>
+      </plugin>
+
+      <!-- Order matters! -->
+      <plugin>
+        <!-- generate spring controller stubs -->
+        <groupId>io.swagger</groupId>
+        <artifactId>swagger-codegen-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>generate-server-stubs</id>
+            <phase>process-sources</phase>
+            <goals>
+              <goal>generate</goal>
+            </goals>
+            <configuration>
+              <inputSpec>${project.build.directory}/swagger/swagger.yml</inputSpec>
+              <templateDirectory>src/main/swagger-templates</templateDirectory>
+              <language>spring</language>
+              <apiPackage>${application.api-package}</apiPackage>
+              <modelPackage>${application.model-package}</modelPackage>
+              <modelNamePrefix />
+              <modelNameSuffix>Dto</modelNameSuffix>
+              <configOptions>
+                <interfaceOnly>true</interfaceOnly>
+                <basePackage>${application.base-package}</basePackage>
+                <configPackage>${application.config-package}</configPackage>
+                <swaggerDocketConfig>false</swaggerDocketConfig>
+                <dateLibrary>java8</dateLibrary>
+                <useOptional>true</useOptional>
+                <bigDecimalAsString>true</bigDecimalAsString>
+                <useBeanValidation>true</useBeanValidation>
+              </configOptions>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <!-- kotlin compiler -->
+        <artifactId>kotlin-maven-plugin</artifactId>
+        <groupId>org.jetbrains.kotlin</groupId>
+        <version>${kotlin.version}</version>
+        <executions>
+          <execution>
+            <id>kapt</id>
+            <goals>
+              <goal>kapt</goal>
+            </goals>
+            <configuration>
+              <sourceDirs>
+                <sourceDir>${project.basedir}/target/generated-sources/swagger/src/main/java
+                </sourceDir>
+                <sourceDir>src/main/kotlin</sourceDir>
+              </sourceDirs>
+              <annotationProcessorPaths>
+                <annotationProcessorPath>
+                  <groupId>org.mapstruct</groupId>
+                  <artifactId>mapstruct-processor</artifactId>
+                  <version>${org.mapstruct.version}</version>
+                </annotationProcessorPath>
+              </annotationProcessorPaths>
+            </configuration>
+          </execution>
+          <execution>
+            <id>compile</id>
+            <goals>
+              <goal>compile</goal>
+            </goals>
+            <configuration>
+              <compilerPlugins>
+                <plugin>spring</plugin>
+                <plugin>jpa</plugin>
+                <plugin>no-arg</plugin>
+              </compilerPlugins>
+              <jvmTarget>${java.version}</jvmTarget>
+              <sourceDirs>
+                <sourceDir>${project.basedir}/target/generated-sources/swagger/src/main/java
+                </sourceDir>
+                <sourceDir>${project.basedir}/src/main/kotlin</sourceDir>
+              </sourceDirs>
+            </configuration>
+          </execution>
+          <execution>
+            <id>test-compile</id>
+            <goals>
+              <goal>test-compile</goal>
+            </goals>
+            <configuration>
+              <sourceDirs>
+                <sourceDir>${project.basedir}/src/test/kotlin</sourceDir>
+              </sourceDirs>
+            </configuration>
+          </execution>
+        </executions>
+        <dependencies>
+          <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-maven-allopen</artifactId>
+            <version>${kotlin.version}</version>
+          </dependency>
+          <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-maven-noarg</artifactId>
+            <version>${kotlin.version}</version>
+          </dependency>
+        </dependencies>
+      </plugin>
+      <!-- java compiler -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+      </plugin>
+      <plugin>
         <!-- for packaging springboot application -->
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
@@ -104,6 +283,21 @@
   </build>
 
   <profiles>
+    <profile>
+      <id>frontend</id>
+      <activation>
+        <property>
+          <name>!skipFrontend</name>
+        </property>
+      </activation>
+      <dependencies>
+        <dependency>
+          <groupId>io.holunda.taskpool</groupId>
+          <artifactId>camunda-bpm-taskpool-example-process-forms</artifactId>
+          <version>${project.version}</version>
+        </dependency>
+      </dependencies>
+    </profile>
     <profile>
       <id>camunda-ce</id>
       <activation>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_1j1qqbn" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.15.1">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_1j1qqbn" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="2.0.3">
   <bpmn:process id="process_approve_request" name="Request Approval" isExecutable="true">
     <bpmn:startEvent id="start">
       <bpmn:outgoing>SequenceFlow_1xw9ijb</bpmn:outgoing>
@@ -17,7 +17,7 @@
         <bpmn:targetRef>Property_0dmzyld</bpmn:targetRef>
       </bpmn:dataInputAssociation>
     </bpmn:userTask>
-    <bpmn:userTask id="user_amend_request" name="Amend&#10;Approval Request&#10;" camunda:formKey="approve-request-two" camunda:assignee="${originator}" camunda:candidateGroups="muppetshow">
+    <bpmn:userTask id="user_amend_request" name="Amend&#10;Approval Request&#10;" camunda:formKey="amend-request" camunda:assignee="${originator}" camunda:candidateGroups="muppetshow">
       <bpmn:incoming>SequenceFlow_1mfv70h</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1pvuh7o</bpmn:outgoing>
     </bpmn:userTask>
