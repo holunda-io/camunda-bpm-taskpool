@@ -46,7 +46,7 @@ export class TaskEventListComponent {
   taskIds() {
     return Array.from(this.tasks.keys()).sort((k1, k2) =>
       // sort by earliest event
-      this.getTime(this.taskEvent(k2)[0].created) -this.getTime(this.taskEvent(k1)[0].created)
+      this.getTime(this.taskEvent(k2)[0].created) - this.getTime(this.taskEvent(k1)[0].created)
     );
   }
 
