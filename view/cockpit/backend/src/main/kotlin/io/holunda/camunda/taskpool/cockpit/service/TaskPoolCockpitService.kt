@@ -54,6 +54,12 @@ open class TaskPoolCockpitService(
     )
   }
 
+  @QueryHandler
+  open fun getEventsAsList(query: QueryTaskEvents): List<TaskEventWithMetaData> {
+    return events.filter { query.apply(it.event.id) }
+  }
+
+
   open fun findTaskReference(taskId: String): TaskReference {
     val taskWithMetadata = events.find { it.event.id == taskId }
       ?: throw IllegalArgumentException("No task with id $taskId found")
