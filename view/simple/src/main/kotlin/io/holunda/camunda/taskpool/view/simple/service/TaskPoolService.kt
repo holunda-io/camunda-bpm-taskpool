@@ -157,6 +157,23 @@ open class TaskPoolService(
     }
   }
 
+  @EventHandler
+  open fun on(event: TaskCandidateGroupChanged) {
+    logger.debug { "Task candidate groups changed $event received" }
+    if (tasks.containsKey(event.id)) {
+      tasks[event.id] = task(event, tasks[event.id]!!)
+      updateTaskForUserQuery(event.id)
+    }
+  }
+
+  @EventHandler
+  open fun on(event: TaskCandidateUserChanged) {
+    logger.debug { "Task user groups changed $event received" }
+    if (tasks.containsKey(event.id)) {
+      tasks[event.id] = task(event, tasks[event.id]!!)
+      updateTaskForUserQuery(event.id)
+    }
+  }
 
   @EventHandler
   open fun on(event: DataEntryCreatedEvent) {
