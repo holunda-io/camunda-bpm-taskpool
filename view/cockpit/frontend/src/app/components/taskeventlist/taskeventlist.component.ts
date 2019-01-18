@@ -11,6 +11,7 @@ export class TaskEventListComponent {
 
   tasks = new Map<string, Array<TaskEvent>>();
   collapseStatus = new Map<string, Boolean>();
+  taskId: String = undefined;
 
   constructor(
     private taskEventHelper: TaskEventHelperService
@@ -18,7 +19,12 @@ export class TaskEventListComponent {
     this.subscribe();
   }
 
-  taskEvent(taskId: string) {
+  taskEvent(taskId: string): Array<TaskEvent> {
+
+    if (taskId === undefined || taskId === null || taskId === '') {
+      return [];
+    }
+
     return this.tasks.get(taskId).sort(
       (event1: TaskEvent, event2: TaskEvent) => this.getTime(event2.created) - this.getTime(event1.created)
     );
@@ -29,27 +35,23 @@ export class TaskEventListComponent {
   }
 
   deleteTask(taskId: string) {
+    this.show(taskId);
     this.taskEventHelper.deleteTask(taskId);
   }
 
   deletable(taskId: string): Boolean {
-    return this.tasks.get(taskId).filter((task) => task.eventType === 'delete').length === 0;
+    return this.tasks.get(taskId).filter((task) => task.eventType === 'delete' || task.eventType === 'complete').length === 0;
   }
 
   taskIds() {
-    return Array.from(this.tasks.keys());
+    return Array.from(this.tasks.keys()).sort((k1, k2) =>
+      // sort by earliest event
+      this.getTime(this.taskEvent(k2)[0].created) - this.getTime(this.taskEvent(k1)[0].created)
+    );
   }
 
-  toggleCollapse(taskId: string) {
-    this.collapseStatus.set(taskId, !this.collapseStatus.get(taskId));
-  }
-
-  collapseClass(event: TaskEvent) {
-  if (this.collapseStatus.get(event.id)) {
-      return '';
-    } else {
-      return 'collapse';
-    }
+  show(taskId: string) {
+    this.taskId = taskId;
   }
 
   class(event: TaskEvent) {
@@ -62,7 +64,6 @@ export class TaskEventListComponent {
         return 'list-group-item-success';
       case 'assign':
         return 'list-group-item-warning';
-
       case 'claim':
         return 'list-group-item-light';
       case 'unclaim':

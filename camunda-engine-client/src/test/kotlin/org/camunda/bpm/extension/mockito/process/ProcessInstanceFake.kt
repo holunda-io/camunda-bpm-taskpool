@@ -8,6 +8,7 @@ class ProcessInstanceFake(
   private val businessKey: String,
   private val processDefinitionId: String,
   private val processInstanceId: String?,
+  private val rootProcessInstanceId: String?,
   private val tenantId: String?,
   private val caseInstanceId: String?,
   private var ended: Boolean = false,
@@ -48,6 +49,10 @@ class ProcessInstanceFake(
     return processInstanceId
   }
 
+  override fun getRootProcessInstanceId(): String? {
+    return processInstanceId
+  }
+
   override fun getTenantId(): String? {
     return tenantId
   }
@@ -57,6 +62,7 @@ class ProcessInstanceFakeBuilder {
   private var id: String? = null
   private var businessKey: String? = null
   private var processInstanceId: String? = null
+  private var rootProcessInstanceId: String? = null
   private var processDefinitionId: String? = null
   private var tenantId: String? = null
   private var caseInstanceId: String? = null
@@ -75,6 +81,11 @@ class ProcessInstanceFakeBuilder {
 
   fun processInstanceId(processInstanceId: String): ProcessInstanceFakeBuilder {
     this.processInstanceId = processInstanceId
+    return this
+  }
+
+  fun rootProcessInstanceId(rootProcessInstanceId: String): ProcessInstanceFakeBuilder {
+    this.rootProcessInstanceId = rootProcessInstanceId
     return this
   }
 
@@ -108,6 +119,7 @@ class ProcessInstanceFakeBuilder {
       "id='" + id + '\''.toString() +
       ", businessKey='" + businessKey + '\''.toString() +
       ", processInstanceId='" + processInstanceId + '\''.toString() +
+      ", rootProcessInstanceId='" + rootProcessInstanceId + '\''.toString() +
       ", processDefinitionId='" + processDefinitionId + '\''.toString() +
       ", tenantId='" + tenantId + '\''.toString() +
       ", caseInstanceId='" + caseInstanceId + '\''.toString() +
@@ -121,6 +133,7 @@ class ProcessInstanceFakeBuilder {
       id = id!!,
       businessKey = businessKey!!,
       processInstanceId = processInstanceId,
+      rootProcessInstanceId = rootProcessInstanceId,
       processDefinitionId = processDefinitionId!!,
       tenantId = tenantId,
       caseInstanceId = caseInstanceId,
