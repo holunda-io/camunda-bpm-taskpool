@@ -6,10 +6,7 @@ import com.tngtech.jgiven.annotation.BeforeScenario
 import com.tngtech.jgiven.annotation.ExpectedScenarioState
 import com.tngtech.jgiven.annotation.ProvidedScenarioState
 import com.tngtech.jgiven.annotation.ScenarioState
-import io.holunda.camunda.taskpool.api.task.ProcessReference
-import io.holunda.camunda.taskpool.api.task.TaskAssignedEngineEvent
-import io.holunda.camunda.taskpool.api.task.TaskAttributeUpdatedEngineEvent
-import io.holunda.camunda.taskpool.api.task.TaskCreatedEngineEvent
+import io.holunda.camunda.taskpool.api.task.*
 import io.holunda.camunda.taskpool.view.Task
 import io.holunda.camunda.taskpool.view.TaskWithDataEntries
 import io.holunda.camunda.taskpool.view.auth.User
@@ -42,6 +39,16 @@ open class TaskPoolStage<SELF : TaskPoolStage<SELF>> : Stage<SELF>() {
   }
 
   open fun task_attributes_update_event_is_received(event: TaskAttributeUpdatedEngineEvent): SELF {
+    testee.on(event)
+    return self()
+  }
+
+  open fun task_candidate_group_changed_event_is_received(event: TaskCandidateGroupChanged): SELF {
+    testee.on(event)
+    return self()
+  }
+
+  open fun task_candidate_user_changed_event_is_received(event: TaskCandidateUserChanged): SELF {
     testee.on(event)
     return self()
   }
@@ -116,6 +123,16 @@ open class TaskPoolThenStage<SELF : TaskPoolThenStage<SELF>> : TaskPoolStage<SEL
   @As("task with id $ is assigned to $")
   open fun task_is_assigned_to(taskId: String, assignee: String?): SELF {
     assertThat(testee.query(TaskForIdQuery(taskId))?.assignee).isEqualTo(assignee)
+    return self()
+  }
+
+  open fun task_has_candidate_groups(taskId: String, groupIds: Set<String>): SELF {
+    assertThat(testee.query(TaskForIdQuery(taskId))?.candidateGroups).isEqualTo(groupIds)
+    return self()
+  }
+
+  open fun task_has_candidate_users(taskId: String, groupIds: Set<String>): SELF {
+    assertThat(testee.query(TaskForIdQuery(taskId))?.candidateUsers).isEqualTo(groupIds)
     return self()
   }
 
