@@ -20,8 +20,9 @@ spring:
 
 camunda:
   taskpool:
-    url-resolver:
-      default: "tasks/${formKey}/id/${id}"
+    task-url-resolver:
+      defaultTaskTemplate: "tasks/${formKey}/id/${id}"
+      defaultApplicationTemplate: "http://localhost:8080/${applicationName}"
 
 logging.level.io.holunda.camunda.taskpool:
   core: WARN

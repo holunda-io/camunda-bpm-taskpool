@@ -13,6 +13,10 @@ class TaskCollectorProperties(
   springApplicationName: String,
 
   /**
+   * Optional tasklist url, if no explicit resolver is provided.
+   */
+  var tasklistUrl: String? = null,
+  /**
    * Sender properties.
    */
   @NestedConfigurationProperty
@@ -84,6 +88,5 @@ enum class TaskSenderType {
    */
   custom
 }
-
 
 

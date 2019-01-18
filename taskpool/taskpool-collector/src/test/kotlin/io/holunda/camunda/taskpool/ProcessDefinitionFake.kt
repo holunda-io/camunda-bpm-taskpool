@@ -16,8 +16,7 @@ public class ProcessDefinitionFake internal constructor(
   private val hasStartForm: Boolean?,
   private var suspended: Boolean?,
   private val historyTimeToLive: Int?,
-  private val versionTag: String?,
-  private val startableInTasklist: Boolean = false
+  private val versionTag: String?
   ) : ProcessDefinition {
 
   override fun getId(): String? {
@@ -71,8 +70,6 @@ public class ProcessDefinitionFake internal constructor(
   override fun isSuspended(): Boolean {
     return suspended!!
   }
-
-  override fun isStartableInTasklist(): Boolean = startableInTasklist
 
   override fun getVersionTag(): String? {
     return versionTag

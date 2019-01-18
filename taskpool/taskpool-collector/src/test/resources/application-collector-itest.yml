@@ -13,6 +13,7 @@ camunda:
     engine-eventing:
       enabled: true
     collector:
+      tasklist-url: http://localhost/test-tasklist/
       enricher:
 #        application-name: collector-test
         type: processVariables

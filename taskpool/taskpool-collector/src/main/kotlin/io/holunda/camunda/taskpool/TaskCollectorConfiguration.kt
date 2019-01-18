@@ -4,6 +4,7 @@ import io.holunda.camunda.taskpool.enricher.*
 import io.holunda.camunda.taskpool.sender.*
 import io.holunda.camunda.taskpool.sender.accumulator.CommandAccumulator
 import io.holunda.camunda.taskpool.sender.accumulator.ProjectingCommandAccumulator
+import io.holunda.camunda.taskpool.urlresolver.TasklistUrlResolver
 import org.camunda.bpm.engine.RuntimeService
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -46,6 +47,18 @@ open class TaskCollectorConfiguration(
       TaskSenderType.tx -> DefaultEnrichingCommandSender(commandGatewayProxy, enricher)
       else -> null
     }
+
+  @Bean
+  @ConditionalOnMissingBean
+  open fun propertyBasedTasklistUrlResolver(): TasklistUrlResolver {
+    return if (properties.tasklistUrl == null) {
+      throw IllegalStateException("Either set camunda.taskpool.collector.tasklist-url property or provide own implementation of TasklistUrlResolver")
+    } else {
+      object: TasklistUrlResolver {
+        override fun getTasklistUrl(): String = properties.tasklistUrl!!
+      }
+    }
+  }
 
   @PostConstruct
   open fun printSenderConfiguration() {

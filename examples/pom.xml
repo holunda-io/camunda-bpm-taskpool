@@ -22,6 +22,7 @@
     <module>tasklist-backend</module>
     <module>process-application</module>
     <module>taskpool-application</module>
+    <module>property-taskurl-resolver</module>
   </modules>
 
   <profiles>

@@ -45,7 +45,11 @@
       <artifactId>camunda-bpm-taskpool-example-tasklist-api</artifactId>
       <version>${project.version}</version>
     </dependency>
-
+    <dependency>
+      <groupId>io.holunda.taskpool</groupId>
+      <artifactId>camunda-bpm-taskpool-property-taskurl-resolver</artifactId>
+      <version>${project.version}</version>
+    </dependency>
 
     <dependency>
       <groupId>io.springfox</groupId>

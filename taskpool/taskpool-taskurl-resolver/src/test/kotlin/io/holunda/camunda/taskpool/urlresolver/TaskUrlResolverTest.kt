@@ -1,7 +1,6 @@
-package io.holunda.camunda.taskpool.example.tasklist.rest.mapper
+package io.holunda.camunda.taskpool.urlresolver
 
 import io.holunda.camunda.taskpool.api.task.ProcessReference
-import io.holunda.camunda.taskpool.example.tasklist.TaskUrlResolverProperties
 import io.holunda.camunda.taskpool.view.Task
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
@@ -9,7 +8,7 @@ import org.junit.Test
 
 class DefaultTaskUrlResolverTest {
 
-  private val resolver = DefaultTaskUrlResolver(
+  private val resolver = PropertyBasedTaskUrlResolver(
     lookup = DefaultApplicationUrlLookup(),
     props = TaskUrlResolverProperties(
       default = "id/\${id}",
