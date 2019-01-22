@@ -56,13 +56,13 @@ The goal of this project is to provide such component as a library, to be used i
 
 ![Architectural whitebox](docs/architecture-collector.png "Architecture Collector")
 
-## Compontents
+## Components
 
 * Camunda Engine Eventing Plugin
 * Camunda Engine Interaction Client
-* [Taskpool Collector](taskpool/taskpool-collector)
-* Taskpool Core
+* [Taskpool Collector](taskpool/taskpool-collector/src/main/asciidoc/collector.adoc)
 * Datapool Sender
+* Taskpool Core
 * Datapool Core
 * Simple View
 * Taskpool Cockpit
@@ -76,7 +76,9 @@ See our [Sample Process Application](examples) (including a simple tasklist impl
 
 This library serves as a foundation of several follow-up projects and tools:
 
-- Workload management: apart from the operative task management, the workload management is addressing issues like dynamic task assignment, optimal task distribution, skill-based task assignment, assignment based on presence etc.  For doing so, a task pool to apply all these rules dynamically is required and the `camunda-bpm-taskpool` component can be used for that.
+- Skill-based-routing: based on information stored in the taskpool, a skill-based routing for task assignment can be implemented.
+- Workload management: apart from the operative task management, the workload management is addressing issues like dynamic task assignment, optimal task distribution, assignment based on presence etc.  For doing so, a task pool to apply all these rules dynamically is required and the `camunda-bpm-taskpool` component can be used for that.
+ 
 
 ## Contribution
 
