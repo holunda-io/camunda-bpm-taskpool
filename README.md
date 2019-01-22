@@ -32,16 +32,16 @@ The goal of this project is to provide such component as a library, to be used i
 
 ## Features
 
-- mirroring tasks: provides a list of tasks in the system including all task attributes provided by Camunda BPM Engine  
-- reacts on all task lifecycle events fired by the engine 
-- high performance queries: creates of read-optimized projections 
+  - mirroring tasks: provides a list of tasks in the system including all task attributes provided by Camunda BPM Engine  
+  - reacts on all task lifecycle events fired by the engine 
+  - high performance queries: creates of read-optimized projections 
   including task-, process- and business data
-- centralized task list: running several Camunda BPM Engines in several applications 
+  - centralized task list: running several Camunda BPM Engines in several applications 
   is standard for larger companies. From the user's perspective, it is not feasible 
   to login to several task lists and check for relevant user tasks. The demand for the 
   centralized task-list arises and can be addressed by `camunda-bpm-taskpool` 
   if the tasks from several process engines are collected and transmitted over the network.
-- data enrichment: all use cases in which the data is not stored in the process result 
+  - data enrichment: all use cases in which the data is not stored in the process result 
   in a cascade of queries executed after the task fetch. The task itself has only the 
   information of the `executionId`, so you have to query the `RuntimeService` 
   for the execution, load some variables from it and query external systems for further values. 
@@ -58,15 +58,15 @@ The goal of this project is to provide such component as a library, to be used i
 
 ## Components
 
-* Camunda Engine Eventing Plugin
-* Camunda Engine Interaction Client
-* [Taskpool Collector](taskpool/taskpool-collector/docs/collector.adoc)
-* Datapool Sender
-* Taskpool Core
-* Datapool Core
-* Simple View
-* Taskpool Cockpit
-* Tasklist (example)
+  - Camunda Engine Eventing Plugin
+  -  Camunda Engine Interaction Client
+  - [Taskpool Collector](taskpool/taskpool-collector/docs/collector.adoc)
+  - Datapool Sender
+  - Taskpool Core
+  - Datapool Core
+  - Simple View
+  - Taskpool Cockpit
+  - Tasklist (example)
 
 ## Working Example
 
@@ -76,8 +76,8 @@ See our [Sample Process Application](examples) (including a simple tasklist impl
 
 This library serves as a foundation of several follow-up projects and tools:
 
-- Skill-based-routing: based on information stored in the taskpool, a skill-based routing for task assignment can be implemented.
-- Workload management: apart from the operative task management, the workload management is addressing issues like dynamic task assignment, optimal task distribution, assignment based on presence etc.  For doing so, a task pool to apply all these rules dynamically is required and the `camunda-bpm-taskpool` component can be used for that.
+  - Skill-based-routing: based on information stored in the taskpool, a skill-based routing for task assignment can be implemented.
+  - Workload management: apart from the operative task management, the workload management is addressing issues like dynamic task assignment, optimal task distribution, assignment based on presence etc.  For doing so, a task pool to apply all these rules dynamically is required and the `camunda-bpm-taskpool` component can be used for that.
  
 
 ## Contribution
