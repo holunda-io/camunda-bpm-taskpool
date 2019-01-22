@@ -865,6 +865,7 @@
                 </goals>
                 <configuration>
                   <backend>html5</backend>
+                  <sourceDirectory>${basedir}/docs</sourceDirectory>
                   <outputDirectory>${project.build.directory}/docs/html5</outputDirectory>
                 </configuration>
               </execution>

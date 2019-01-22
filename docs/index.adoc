@@ -1,0 +1,12 @@
+= Camunda BPM Taskpool
+
+== Components
+
+:taskpooldir: ../taskpool
+:sourcedir: docs
+
+include::{taskpooldir}/taskpool-collector/{sourcedir}/collector.adoc[leveloffset=2]
+
+include::contributing.adoc[leveloffset=1]
+
+include::release.adoc[leveloffset=1]

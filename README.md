@@ -60,7 +60,7 @@ The goal of this project is to provide such component as a library, to be used i
 
 * Camunda Engine Eventing Plugin
 * Camunda Engine Interaction Client
-* [Taskpool Collector](taskpool/taskpool-collector/src/main/asciidoc/collector.adoc)
+* [Taskpool Collector](taskpool/taskpool-collector/docs/collector.adoc)
 * Datapool Sender
 * Taskpool Core
 * Datapool Core
@@ -82,6 +82,6 @@ This library serves as a foundation of several follow-up projects and tools:
 
 ## Contribution
 
-If you want to contribute to this project, feel free to do so. Start with [contributing guide](/src/main/asciidoc/contributing.adoc).
+If you want to contribute to this project, feel free to do so. Start with [contributing guide](/docs/contributing.adoc).
 
 
