@@ -8,33 +8,24 @@
     <version>1.2.2-SNAPSHOT</version>
   </parent>
 
-  <artifactId>camunda-bpm-taskpool-root</artifactId>
-  <name>taskpool/${project.artifactId}</name>
+  <artifactId>camunda-bpm-taskpool-engine-root</artifactId>
   <packaging>pom</packaging>
   
   <modules>
-    <module>taskpool-api</module>
-    <module>taskpool-core</module>
+    <module>taskpool-collector</module>
+    <module>datapool-sender</module>
+    <module>camunda-engine-client</module>
+    <module>camunda-engine-plugin</module>
+    <module>taskpool-engine-springboot-starter</module>
   </modules>
 
   <dependencyManagement>
     <dependencies>
       <dependency>
         <groupId>io.holunda.taskpool</groupId>
-        <artifactId>camunda-bpm-taskpool-api</artifactId>
+        <artifactId>camunda-bpm-taskpool-collector</artifactId>
         <version>${project.version}</version>
       </dependency>
-      <dependency>
-        <groupId>io.holunda.taskpool</groupId>
-        <artifactId>camunda-bpm-taskpool-core</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>io.holunda.taskpool</groupId>
-        <artifactId>camunda-bpm-datapool-api</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-
-    </dependencies>    
+    </dependencies>
   </dependencyManagement>
 </project>

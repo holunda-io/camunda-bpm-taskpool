@@ -1,12 +1,13 @@
 fixes:
-  - "io/holunda/camunda-bpm-taskpool/camunda-engine-plugin/::src/main/kotlin/"
-  - "io/holunda/camunda-bpm-taskpool/camunda-engine-client/::src/main/kotlin/"
-  - "io/holunda/camunda-bpm-taskpool/datapool/datapool-api/::src/main/kotlin/"-
-  - "io/holunda/camunda-bpm-taskpool/datapool/datapool-core/::src/main/kotlin/"-
-  - "io/holunda/camunda-bpm-taskpool/datapool/datapool-sender/::src/main/kotlin/"-
+  - "io/holunda/camunda-bpm-taskpool/datapool/datapool-api/::src/main/kotlin/"
+  - "io/holunda/camunda-bpm-taskpool/datapool/datapool-core/::src/main/kotlin/"
+  - "io/holunda/camunda-bpm-taskpool/engine/camunda-engine-plugin/::src/main/kotlin/"
+  - "io/holunda/camunda-bpm-taskpool/engine/camunda-engine-client/::src/main/kotlin/"
+  - "io/holunda/camunda-bpm-taskpool/engine/datapool-sender/::src/main/kotlin/"
+  - "io/holunda/camunda-bpm-taskpool/engine/taskpool-collector/::src/main/kotlin/"
+  - "io/holunda/camunda-bpm-taskpool/engine/taskpool-engine-springboot-starter/::src/main/kotlin/"
   - "io/holunda/camunda-bpm-taskpool/examples/property-taskurl-resolver/::src/main/kotlin/"
-  - "io/holunda/camunda-bpm-taskpool/taskpool/taskpool-api/::src/main/kotlin/"-
-  - "io/holunda/camunda-bpm-taskpool/taskpool/taskpool-collector/::src/main/kotlin/"-
-  - "io/holunda/camunda-bpm-taskpool/taskpool/taskpool-core/::src/main/kotlin/"-
+  - "io/holunda/camunda-bpm-taskpool/taskpool/taskpool-api/::src/main/kotlin/"
+  - "io/holunda/camunda-bpm-taskpool/taskpool/taskpool-core/::src/main/kotlin/"
   - "io/holunda/camunda-bpm-taskpool/view/view-api/::src/main/kotlin/"
   - "io/holunda/camunda-bpm-taskpool/view/simple/::src/main/kotlin/"

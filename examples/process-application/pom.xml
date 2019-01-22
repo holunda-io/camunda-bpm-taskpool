@@ -24,15 +24,8 @@
   <dependencies>
     <dependency>
       <groupId>io.holunda.taskpool</groupId>
-      <artifactId>camunda-bpm-engine-plugin</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.holunda.taskpool</groupId>
-      <artifactId>camunda-bpm-engine-client</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.holunda.taskpool</groupId>
-      <artifactId>camunda-bpm-taskpool-collector</artifactId>
+      <artifactId>camunda-bpm-taskpool-engine-springboot-starter</artifactId>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>io.holunda.taskpool</groupId>

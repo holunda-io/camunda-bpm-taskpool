@@ -48,8 +48,7 @@
   </properties>
 
   <modules>
-    <module>camunda-engine-plugin</module>
-    <module>camunda-engine-client</module>
+    <module>engine</module>
     <module>taskpool</module>
     <module>datapool</module>
     <module>view</module>

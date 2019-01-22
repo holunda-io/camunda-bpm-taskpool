@@ -2,10 +2,11 @@
 
 == Components
 
+:enginedir: ../engine
 :taskpooldir: ../taskpool
 :sourcedir: docs
 
-include::{taskpooldir}/taskpool-collector/{sourcedir}/collector.adoc[leveloffset=2]
+include::{enginedir}/taskpool-collector/{sourcedir}/collector.adoc[leveloffset=2]
 
 include::contributing.adoc[leveloffset=1]
 
