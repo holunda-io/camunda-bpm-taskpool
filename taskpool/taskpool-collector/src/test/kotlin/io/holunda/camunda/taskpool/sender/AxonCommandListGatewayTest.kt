@@ -5,7 +5,7 @@ import io.holunda.camunda.taskpool.TaskSenderProperties
 import io.holunda.camunda.taskpool.api.task.AssignTaskCommand
 import io.holunda.camunda.taskpool.api.task.CreateTaskCommand
 import io.holunda.camunda.taskpool.api.task.ProcessReference
-import io.holunda.camunda.taskpool.sender.gateway.AxonCommandGatewayWrapper
+import io.holunda.camunda.taskpool.sender.gateway.AxonCommandListGateway
 import org.axonframework.commandhandling.CommandCallback
 import org.axonframework.commandhandling.GenericCommandMessage
 import org.axonframework.commandhandling.GenericCommandResultMessage
@@ -21,7 +21,7 @@ import org.mockito.Mockito.verify
 import org.mockito.Mockito.verifyNoMoreInteractions
 import org.mockito.junit.MockitoJUnit
 
-class AxonCommandGatewayWrapperTest {
+class AxonCommandListGatewayTest {
 
   @get: Rule
   val mockitoRule = MockitoJUnit.rule()
@@ -31,7 +31,7 @@ class AxonCommandGatewayWrapperTest {
 
   @Test
   fun `should not send commands if disabled by property`() {
-    val wrapper = AxonCommandGatewayWrapper(commandGateway, TaskCollectorProperties(
+    val wrapper = AxonCommandListGateway(commandGateway, TaskCollectorProperties(
       springApplicationName = "some-name",
       sender = TaskSenderProperties(
         enabled = false
@@ -45,7 +45,7 @@ class AxonCommandGatewayWrapperTest {
 
   @Test
   fun `should send commands in sequence`() {
-    val wrapper = AxonCommandGatewayWrapper(commandGateway, TaskCollectorProperties(
+    val wrapper = AxonCommandListGateway(commandGateway, TaskCollectorProperties(
       springApplicationName = "some-name",
       sender = TaskSenderProperties(
         enabled = true

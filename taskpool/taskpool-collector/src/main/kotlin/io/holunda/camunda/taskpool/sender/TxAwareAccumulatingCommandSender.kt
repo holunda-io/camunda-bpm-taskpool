@@ -2,7 +2,7 @@ package io.holunda.camunda.taskpool.sender
 
 import io.holunda.camunda.taskpool.api.task.EngineTaskCommand
 import io.holunda.camunda.taskpool.sender.accumulator.CommandAccumulator
-import io.holunda.camunda.taskpool.sender.gateway.CommandGatewayWrapper
+import io.holunda.camunda.taskpool.sender.gateway.CommandListGateway
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
@@ -10,13 +10,12 @@ import org.springframework.transaction.support.TransactionSynchronizationAdapter
 import org.springframework.transaction.support.TransactionSynchronizationManager
 
 /**
- * Wraps command gateway and makes it configurable using collector properties.
+ * Collects commands of one transaction, accumulates them to one command and sends it after TX commit.
  */
-@Component
-open class TxAwareOrderingCommandGatewayProxy(
-  private val commandGatewayWrapper: CommandGatewayWrapper,
+open class TxAwareAccumulatingCommandSender(
+  private val commandListGateway: CommandListGateway,
   private val commandAccumulator: CommandAccumulator
-) {
+) : CommandSender {
   private val logger: Logger = LoggerFactory.getLogger(CommandSender::class.java)
 
   private val registered: ThreadLocal<Boolean> = ThreadLocal.withInitial { false }
@@ -25,7 +24,7 @@ open class TxAwareOrderingCommandGatewayProxy(
   /**
    * Sends an engine command.
    */
-  open fun send(command: EngineTaskCommand) {
+  override fun send(command: EngineTaskCommand) {
 
     // add command to list
     commands.get().getOrPut(command.id) { mutableListOf() }.add(command)
@@ -47,7 +46,7 @@ open class TxAwareOrderingCommandGatewayProxy(
             val commands = commandAccumulator.invoke(taskCommands)
 
             // handle messages for every task
-            commandGatewayWrapper.sendToGateway(commands)
+            commandListGateway.sendToGateway(commands)
           }
         }
 

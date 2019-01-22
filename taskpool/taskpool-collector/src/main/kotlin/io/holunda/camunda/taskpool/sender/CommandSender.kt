@@ -1,6 +1,7 @@
 package io.holunda.camunda.taskpool.sender
 
 import io.holunda.camunda.taskpool.api.task.EngineTaskCommand
+import io.holunda.camunda.taskpool.enricher.VariablesEnricher
 
 /**
  * Interface for beans sending commands.

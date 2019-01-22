@@ -9,6 +9,8 @@ camunda:
     database:
       type: h2
     history-level: full
+    metrics:
+      enabled: false
   taskpool:
     engine-eventing:
       enabled: true
