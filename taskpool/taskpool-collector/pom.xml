@@ -12,6 +12,10 @@
   <artifactId>camunda-bpm-taskpool-collector</artifactId>
   <name>taskpool/${project.artifactId}</name>
 
+  <properties>
+    <skipAsciidoctor>false</skipAsciidoctor>
+  </properties>
+
   <dependencies>
     <dependency>
       <groupId>org.camunda.bpm</groupId>

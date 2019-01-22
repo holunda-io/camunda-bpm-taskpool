@@ -4,6 +4,7 @@ import io.holunda.camunda.taskpool.enricher.*
 import io.holunda.camunda.taskpool.sender.*
 import io.holunda.camunda.taskpool.sender.accumulator.CommandAccumulator
 import io.holunda.camunda.taskpool.sender.accumulator.ProjectingCommandAccumulator
+import io.holunda.camunda.taskpool.sender.gateway.CommandListGateway
 import io.holunda.camunda.taskpool.urlresolver.TasklistUrlResolver
 import org.camunda.bpm.engine.RuntimeService
 import org.slf4j.Logger
@@ -33,20 +34,21 @@ open class TaskCollectorConfiguration(
 
   @Bean
   @ConditionalOnExpression("'\${camunda.taskpool.collector.enricher.type}' != 'custom'")
-  open fun processVariablesEnricher(): VariablesEnricher? =
+  open fun processVariablesEnricher(): VariablesEnricher =
     when (properties.enricher.type) {
       TaskCollectorEnricherType.processVariables -> ProcessVariablesTaskCommandEnricher(runtimeService, filter, correlator)
-      TaskCollectorEnricherType.no -> EmptyEnricher()
-      else -> null
+      TaskCollectorEnricherType.no -> EmptyTaskCommandEnricher()
+      else -> throw IllegalStateException("Could not initialize enricher, used ${properties.enricher.type} type.")
     }
 
   @Bean
   @ConditionalOnExpression("'\${camunda.taskpool.collector.sender.type}' != 'custom'")
-  open fun txCommandSender(commandGatewayProxy: TxAwareOrderingCommandGatewayProxy, enricher: VariablesEnricher): CommandSender? =
+  open fun txCommandSender(commandListGateway: CommandListGateway, accumulator: CommandAccumulator): CommandSender =
     when (properties.sender.type) {
-      TaskSenderType.tx -> DefaultEnrichingCommandSender(commandGatewayProxy, enricher)
-      else -> null
+      TaskSenderType.tx -> TxAwareAccumulatingCommandSender(commandListGateway, accumulator)
+      else -> throw IllegalStateException("Could not initialize sender, used ${properties.sender.type} type.")
     }
+
 
   @Bean
   @ConditionalOnMissingBean

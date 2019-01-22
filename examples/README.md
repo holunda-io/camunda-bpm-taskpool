@@ -13,9 +13,9 @@ open your browser [http://localhost:8024/](http://localhost:8024/).
 
 The demo application consists of several Maven modules. In order to start the example, you will need to start only three
 of them: 
- * h2 (external database)
- * process-application (example application)
- * taskpool-application
+  - h2 (external database)
+  - process-application (example application)
+  - taskpool-application
  
 The modules can be started by running `mvn spring-boot:run` from command line in the corresponding directories. 
 
@@ -40,18 +40,18 @@ available in the task pool. In doing so it provides the ability to filter, sort 
 
 ### Features
 
-* Lists tasks in the system for a dummy user (kermit)
-* Tasks include information about the process, name, description, create time, due date, prio and assignment.
-* Tasks include process data (from process instance)
-* Tasks include correlated business data
-* The tasklist is sortable
-* The list is paged (7 items per page)
-* Claiming / Unclaiming
+  - Lists tasks in the system for a dummy user (kermit)
+  - Tasks include information about the process, name, description, create time, due date, prio and assignment.
+  - Tasks include process data (from process instance)
+  - Tasks include correlated business data
+  - The tasklist is sortable
+  - The list is paged (7 items per page)
+  - Claiming / Unclaiming
+  - Jump to form
 
 ### Ongoing / TODO
 
-* Jump to form
-* Filtering 
+  - Filtering 
 
 
 ## Architecture

@@ -6,5 +6,8 @@ import io.holunda.camunda.taskpool.api.task.TaskIdentityWithPayloadAndCorrelatio
  * Enriches commands with payload.
  */
 interface VariablesEnricher {
+  /**
+   * Enriches command <T> with payload and correlations.
+   */
   fun <T : TaskIdentityWithPayloadAndCorrelations> enrich(command: T): T
 }

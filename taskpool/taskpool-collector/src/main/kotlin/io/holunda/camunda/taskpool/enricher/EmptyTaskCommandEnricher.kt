@@ -6,6 +6,6 @@ import io.holunda.camunda.taskpool.api.task.TaskIdentityWithPayloadAndCorrelatio
 /**
  * Empty implementation without eny enrichment. Used for compliance of the commands.
  */
-class EmptyEnricher : VariablesEnricher {
+class EmptyTaskCommandEnricher : VariablesEnricher {
   override fun <T : TaskIdentityWithPayloadAndCorrelations> enrich(command: T): T = command.apply { enriched = true }
 }

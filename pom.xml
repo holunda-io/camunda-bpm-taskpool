@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>io.holunda.taskpool</groupId>
@@ -13,11 +14,16 @@
 
   <properties>
     <skipFrontend>true</skipFrontend>
+    <skipAsciidoctor>true</skipAsciidoctor>
 
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <java.version>1.8</java.version>
     <version.java>${java.version}</version.java>
+
+    <pattern.class.itest>**/*ITest.*</pattern.class.itest>
+    <pattern.package.itest>**/itest/**/*.*</pattern.package.itest>
+
 
     <camunda-ee>false</camunda-ee>
     <camunda.version>7.9.0</camunda.version>
@@ -765,13 +771,51 @@
           <version>2.8.2</version>
         </plugin>
 
+        <!-- ASCII Doctor-->
+        <plugin>
+          <groupId>org.asciidoctor</groupId>
+          <artifactId>asciidoctor-maven-plugin</artifactId>
+          <version>1.5.7.1</version>
+          <dependencies>
+            <dependency>
+              <groupId>org.asciidoctor</groupId>
+              <artifactId>asciidoctorj-diagram</artifactId>
+              <version>1.5.11</version>
+            </dependency>
+          </dependencies>
+          <configuration>
+            <skip>${skipAsciidoctor}</skip>
+            <requires>
+              <require>asciidoctor-diagram</require>
+            </requires>
+          </configuration>
+          <executions>
+            <execution>
+              <id>output-html</id>
+              <phase>generate-resources</phase>
+              <goals>
+                <goal>process-asciidoc</goal>
+              </goals>
+              <configuration>
+                <backend>html5</backend>
+                <sourceDirectory>${project.basedir}/docs</sourceDirectory>
+                <outputDirectory>${project.build.directory}/docs/html5</outputDirectory>
+              </configuration>
+            </execution>
+          </executions>
+        </plugin>
       </plugins>
     </pluginManagement>
 
     <plugins>
+
       <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.asciidoctor</groupId>
+        <artifactId>asciidoctor-maven-plugin</artifactId>
       </plugin>
       <plugin>
         <groupId>org.jetbrains.kotlin</groupId>
@@ -786,6 +830,7 @@
   </build>
 
   <profiles>
+
     <profile>
       <id>itest</id>
       <activation>
@@ -824,6 +869,7 @@
         </plugins>
       </build>
     </profile>
+
     <profile>
       <id>generate-sql</id>
       <build>
@@ -936,6 +982,7 @@
         </dependencies>
       </dependencyManagement>
     </profile>
+
   </profiles>
 
   <licenses>
@@ -1007,6 +1054,13 @@
       <name>Christoph Wolff</name>
       <organization>Holisticon AG</organization>
       <organizationUrl>http://www.holisticon.de</organizationUrl>
+    </developer>
+    <developer>
+      <id>a-hegerath</id>
+      <name>Andre Hegerath</name>
+      <email>ah@hbt.de</email>
+      <organization>HBT GmbH</organization>
+      <organizationUrl>https://www.hbt.de/</organizationUrl>
     </developer>
   </developers>
 </project>

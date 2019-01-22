@@ -34,7 +34,7 @@ node {
         }
 
         stage('I-Test') {
-            sh "./mvnw integration-test -Pitest ${mvnOpts}"
+            sh "./mvnw integration-test -Pitest -DskipFrontend ${mvnOpts}"
 
             try {
             // check if there were errors

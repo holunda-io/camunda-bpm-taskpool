@@ -17,16 +17,16 @@ import org.springframework.core.annotation.Order
 import org.springframework.stereotype.Component
 
 /**
- * Collects Camunda events and Camunda historic events (event listener order is {@link TaskEventCollector#ORDER}) and emits Commands
+ * Collects Camunda events and Camunda historic events (event listener order is {@link TaskEventCollectorService#ORDER}) and emits Commands
  */
 @Component
-class TaskEventCollector(
+class TaskEventCollectorService(
   private val repositoryService: RepositoryService,
   private val formService: FormService,
   private val collectorProperties: TaskCollectorProperties
 ) {
 
-  private val logger = LoggerFactory.getLogger(TaskEventCollector::class.java)
+  private val logger = LoggerFactory.getLogger(TaskEventCollectorService::class.java)
 
   companion object {
     // high order to be later than all other listeners and work on changed entity
@@ -154,47 +154,4 @@ class TaskEventCollector(
       }
     }
 }
-
-fun DelegateTask.sourceReference(repositoryService: RepositoryService, applicationName: String): SourceReference =
-  when {
-    this.processDefinitionId != null -> ProcessReference(
-      definitionId = this.processDefinitionId,
-      instanceId = this.processInstanceId,
-      executionId = this.executionId,
-      definitionKey = this.processDefinitionKey(),
-      name = this.processName(repositoryService),
-      applicationName = applicationName,
-      tenantId = this.tenantId
-    )
-    this.caseDefinitionId != null -> CaseReference(
-      definitionId = this.caseDefinitionId,
-      instanceId = this.caseInstanceId,
-      executionId = this.caseExecutionId,
-      definitionKey = this.caseDefinitionKey(),
-      name = this.caseName(repositoryService),
-      applicationName = applicationName,
-      tenantId = this.tenantId
-    )
-    else -> throw IllegalArgumentException("No source reference found.")
-  }
-
-
-fun DelegateTask.processDefinitionKey(): String = extractKey(this.processDefinitionId)
-/**
- * Retrieves form key if found, or <code>null</code>.
- */
-fun DelegateTask.formKey(formService: FormService): String? {
-  val definitionId: String = when {
-    processDefinitionId != null -> processDefinitionId
-    caseDefinitionId != null -> caseDefinitionId
-    else -> return null
-  }
-  return formService.getTaskFormKey(definitionId, this.taskDefinitionKey)
-}
-
-fun DelegateTask.caseDefinitionKey(): String = extractKey(this.caseDefinitionId)
-fun DelegateTask.caseName(repositoryService: RepositoryService) = loadCaseName(this.caseDefinitionId, repositoryService)
-fun DelegateTask.processName(repositoryService: RepositoryService) = loadProcessName(this.processDefinitionId, repositoryService)
-
-
 

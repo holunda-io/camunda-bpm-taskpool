@@ -15,8 +15,22 @@ interface WithCorrelations {
 
 typealias CorrelationMap = VariableMap
 
+/**
+ * Creates a new correlation map.
+ */
 fun newCorrelations(): CorrelationMap = Variables.createVariables()
 
+/**
+ * Adds correlation to current correlation map.
+ */
 fun VariableMap.addCorrelation(entryType: EntryType, entryId: EntryId) = this.putValueTyped(entryType, stringValue(entryId))!!
+
+/**
+ * Remove correlation from current correlation map.
+ */
 fun VariableMap.removeCorrelation(entryType: EntryType) = this.remove(entryType)
+
+/**
+ * Retrieve correlation for given entry type.
+ */
 fun VariableMap.getCorrelation(entryType: EntryType): EntryId = this.getValueTyped<StringValue>(entryType).value
