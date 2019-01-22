@@ -1,4 +1,5 @@
 # Camunda BPM Taskpool
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/653136bd5cad48c8a9f2621ee304ff26)](https://app.codacy.com/app/zambrovski/camunda-bpm-taskpool?utm_source=github.com&utm_medium=referral&utm_content=holunda-io/camunda-bpm-taskpool&utm_campaign=Badge_Grade_Dashboard)
 [![Build Status](https://travis-ci.org/holunda-io/camunda-bpm-taskpool.svg?branch=master)](https://travis-ci.org/holunda-io/camunda-bpm-taskpool) 
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.holunda.taskpool/camunda-bpm-taskpool/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.holunda.taskpool/camunda-bpm-taskpool)
 [![codecov](https://codecov.io/gh/holunda-io/camunda-bpm-taskpool/branch/master/graph/badge.svg)](https://codecov.io/gh/holunda-io/camunda-bpm-taskpool)
