@@ -24,13 +24,17 @@ Perform the following steps to get a development setup up and running.
 - `cd camunda-bpm-taskpool`
 - `./mvnw clean install`
 
-== Version control
-
-We are using gitflow in our git SCM. That means that you should start from `develop` branch,
-create a `feature/<name>` out of it and once it is completed create a pull request containing 
-it. Please squash your commits before submitting and use semantic commit messages, if possible. 
- 
 == Maven Profiles
+
+=== Integration Tests
+
+By default, the build command will ignore the run of `failsafe` Maven plugin executing the integration tests 
+(usual JUnit tests with class names ending with ITest). In order to run integration tests, please
+call from your command line: 
+
+----
+./mvnw integration-test failsafe:verify -Pitest -DskipFrontend
+----
 
 === Camunda Version
 
@@ -40,3 +44,9 @@ Specify `-Pcamunda-ee` to switch to Camunda Enterprise edition.
 === Skip Frontend
 
 If you are interested in backend only, specify the `-DskipFrontend` switch.
+
+== Version control
+
+We are using gitflow in our git SCM. That means that you should start from `develop` branch,
+create a `feature/<name>` out of it and once it is completed create a pull request containing 
+it. Please squash your commits before submitting and use semantic commit messages, if possible. 

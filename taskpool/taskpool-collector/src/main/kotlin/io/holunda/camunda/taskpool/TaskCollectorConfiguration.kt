@@ -31,7 +31,7 @@ open class TaskCollectorConfiguration(
 
   @Bean
   open fun commandAccumulator(): CommandAccumulator = ProjectingCommandAccumulator()
-  
+
   @Bean
   @ConditionalOnExpression("'\${camunda.taskpool.collector.enricher.type}' != 'custom'")
   open fun processVariablesEnricher(): VariablesEnricher =
