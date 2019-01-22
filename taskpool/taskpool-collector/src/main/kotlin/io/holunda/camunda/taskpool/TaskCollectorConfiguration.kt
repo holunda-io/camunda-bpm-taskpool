@@ -31,7 +31,7 @@ open class TaskCollectorConfiguration(
 
   @Bean
   open fun commandAccumulator(): CommandAccumulator = ProjectingCommandAccumulator()
-
+  
   @Bean
   @ConditionalOnExpression("'\${camunda.taskpool.collector.enricher.type}' != 'custom'")
   open fun processVariablesEnricher(): VariablesEnricher =
@@ -49,8 +49,6 @@ open class TaskCollectorConfiguration(
       else -> throw IllegalStateException("Could not initialize sender, used ${properties.sender.type} type.")
     }
 
-  @Bean
-  open fun projectingAccumulator() : CommandAccumulator = ProjectingCommandAccumulator()
 
   @Bean
   @ConditionalOnMissingBean

@@ -10,7 +10,4 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 @EnableProcessApplication
 @EnableCamundaSpringEventing
 @EnableTaskCollector
-open class TaskCollectorTestApplication {
-
-}
-
+open class TaskCollectorTestApplication
