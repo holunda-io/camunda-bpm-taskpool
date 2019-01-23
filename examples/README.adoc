@@ -81,7 +81,7 @@ who submitted the request). Then, the originator can amend the request and resub
 === Technical context
 
 Imagine the company has the system for request management at place (it could be an ERP system) which is the primary contact point for request storage.
-A request can be created, loaded and modified by this system. Our exmple application integrates with this system and starts a process as soon as a new request
+A request can be created, loaded and modified by this system. Our example application integrates with this system and starts a process as soon as a new request
 has been submitted.   
 
 == Storyboard
