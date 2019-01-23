@@ -1,9 +1,20 @@
 = Camunda BPM Taskpool
 
-image::https://travis-ci.org/holunda-io/camunda-bpm-taskpool.svg?branch=master[caption="Build Status", link=https://travis-ci.org/holunda-io/camunda-bpm-taskpool] image::https://maven-badges.herokuapp.com/maven-central/io.holunda.taskpool/camunda-bpm-taskpool/badge.svg[caption="Maven Central", link=https://maven-badges.herokuapp.com/maven-central/io.holunda.taskpool/camunda-bpm-taskpool]
-image::https://codecov.io/gh/holunda-io/camunda-bpm-taskpool/branch/master/graph/badge.svg[caption="codecov", link=https://codecov.io/gh/holunda-io/camunda-bpm-taskpool]
-image::https://api.codacy.com/project/badge/Grade/653136bd5cad48c8a9f2621ee304ff26[caption="Codacy Badge", link=https://app.codacy.com/app/zambrovski/camunda-bpm-taskpool?utm_source=github.com&utm_medium=referral&utm_content=holunda-io/camunda-bpm-taskpool&utm_campaign=Badge_Grade_Dashboard]
-image::https://www.openhub.net/p/camunda-bpm-taskpool/widgets/project_thin_badge.gif[caption="Project Stats", link=https://www.openhub.net/p/camunda-bpm-taskpool]
+[cols="a,a,a,a,a,a"]
+|====
+// travis
+image::https://travis-ci.org/holunda-io/camunda-bpm-taskpool.svg?branch=master[caption="Build Status", link=https://travis-ci.org/holunda-io/camunda-bpm-taskpool] |
+// maven central
+image::https://maven-badges.herokuapp.com/maven-central/io.holunda.taskpool/camunda-bpm-taskpool/badge.svg[caption="Maven Central", link=https://maven-badges.herokuapp.com/maven-central/io.holunda.taskpool/camunda-bpm-taskpool] |
+// codecov
+image::https://codecov.io/gh/holunda-io/camunda-bpm-taskpool/branch/master/graph/badge.svg[caption="codecov", link=https://codecov.io/gh/holunda-io/camunda-bpm-taskpool] |
+// codacy
+image::https://api.codacy.com/project/badge/Grade/653136bd5cad48c8a9f2621ee304ff26[caption="Codacy Badge", link=https://app.codacy.com/app/zambrovski/camunda-bpm-taskpool?utm_source=github.com&utm_medium=referral&utm_content=holunda-io/camunda-bpm-taskpool&utm_campaign=Badge_Grade_Dashboard] |
+// openhub
+image::https://www.openhub.net/p/camunda-bpm-taskpool/widgets/project_thin_badge.gif[caption="Project Stats", link=https://www.openhub.net/p/camunda-bpm-taskpool] |
+// license
+image::https://img.shields.io/badge/License-Apache%202.0-blue.svg[link="./LICENSE"] 
+|====
 
 A component for pooling Camunda BPM user tasks with business data for performance queries.
 
