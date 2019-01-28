@@ -12,6 +12,7 @@ import { ApiModule, BASE_PATH } from 'cockpit';
 import { AppComponent } from 'app/app.component';
 import { TaskEventListComponent } from 'app/components/taskeventlist/taskeventlist.component';
 import { TaskEventHelperService } from 'app/services/taskeventhelper.service';
+import { TaskEventReactiveService } from 'app/services/taskeventreactive.service';
 import { FieldNamePipe } from 'app/services/field-name.pipe';
 
 registerLocaleData(localeFr, 'fr');
@@ -34,6 +35,7 @@ registerLocaleData(localeEn, 'en');
   ],
   providers: [
     TaskEventHelperService,
+    TaskEventReactiveService,
     { provide: BASE_PATH, useValue: '/taskpool-cockpit/rest' }
   ],
   bootstrap: [AppComponent]

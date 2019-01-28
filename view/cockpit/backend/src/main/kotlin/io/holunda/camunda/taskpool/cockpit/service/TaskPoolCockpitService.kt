@@ -44,14 +44,7 @@ open class TaskPoolCockpitService(
     val withMetaData = TaskEventWithMetaData(event = event, instant = instant, metaData = metaData)
     logger.info { "COCKPIT-002: Received task event $withMetaData" }
     events.add(withMetaData)
-    queryUpdateEmitter.emit(QueryTaskEvents::class.java, { query -> query.apply(event.id) }, event)
-  }
-
-  @QueryHandler
-  open fun getEvents(query: QueryTaskEvents): TaskEventsResponse {
-    return TaskEventsResponse(
-      events.filter { query.apply(it.event.id) }
-    )
+    queryUpdateEmitter.emit(QueryTaskEvents::class.java, { query -> query.apply(event.id) }, withMetaData)
   }
 
   @QueryHandler

@@ -6,12 +6,8 @@ import java.time.Instant
 
 data class TaskEventWithMetaData(
   val event: TaskEvent,
-  val instant: Instant?,
-  val metaData: MetaData?
-)
-
-data class TaskEventsResponse(
-  val events: List<TaskEventWithMetaData>
+  val instant: Instant,
+  val metaData: MetaData
 )
 
 

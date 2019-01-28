@@ -1,51 +1,49 @@
 package io.holunda.camunda.taskpool.cockpit
 
-import io.holunda.camunda.taskpool.cockpit.Web.STATIC_RESOURCES_LONG_CACHE
-import io.holunda.camunda.taskpool.cockpit.Web.STATIC_RESOURCES_SHORT_CACHE
+import io.holunda.camunda.taskpool.cockpit.Web.BASE_PATH
 import io.holunda.camunda.taskpool.cockpit.rest.Rest
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.io.Resource
 import org.springframework.http.CacheControl
 import org.springframework.http.HttpMethod
-import org.springframework.web.servlet.config.annotation.CorsRegistry
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
-import org.springframework.web.servlet.resource.PathResourceResolver
+import org.springframework.web.reactive.config.CorsRegistry
+import org.springframework.web.reactive.config.ResourceHandlerRegistry
+import org.springframework.web.reactive.config.WebFluxConfigurer
+import org.springframework.web.reactive.resource.PathResourceResolver
+import reactor.core.publisher.Mono
 import java.util.concurrent.TimeUnit
 
-
-object Web {
-
-  const val BASE_PATH = "taskpool-cockpit"
-
-  const val CSS = "$BASE_PATH/**/*.css"
-  const val JS = "$BASE_PATH/**/*.js"
-  const val FONT2 = "$BASE_PATH/**/*.woff2"
-  const val FONT = "$BASE_PATH/**/*.woff"
-  const val TTF = "$BASE_PATH/**/*.ttf"
-  const val PNG = "$BASE_PATH/**/*.png"
-  const val JPG = "$BASE_PATH/**/*.jpg"
-  const val ICO = "$BASE_PATH/**/*.ico"
-  const val JSON = "$BASE_PATH/**/*.json"
-
-  val STATIC_RESOURCES_LONG_CACHE = arrayOf(CSS, JS, FONT2, FONT, TTF)
-  val STATIC_RESOURCES_SHORT_CACHE = arrayOf(PNG, JPG, ICO, JSON)
-}
-
-
 @Configuration
-open class CockpitSPAConfiguration : WebMvcConfigurer {
+open class CockpitSPAConfiguration : WebFluxConfigurer {
+
+  companion object {
+    private const val CSS = "$BASE_PATH/*.css"
+    private const val JS = "$BASE_PATH/*.js"
+    private const val FONT2 = "$BASE_PATH/*.woff2"
+    private const val FONT = "$BASE_PATH/*.woff"
+    private const val TTF = "$BASE_PATH/*.ttf"
+    private const val PNG = "$BASE_PATH/**/*.png"
+    private const val JPG = "$BASE_PATH/**/*.jpg"
+    private const val ICO = "$BASE_PATH/*.ico"
+    private const val MAP = "$BASE_PATH/*.map"
+    private const val JSON = "$BASE_PATH/*.json"
+
+    val STATIC_RESOURCES_LONG_CACHE = arrayOf(CSS, JS, FONT2, FONT, TTF, MAP)
+    val STATIC_RESOURCES_SHORT_CACHE = arrayOf(PNG, JPG, ICO, JSON)
+  }
 
   override fun addResourceHandlers(registry: ResourceHandlerRegistry) {
     /**
      * Deliver the platform SPA index for all frontend states.
      */
     registry
-      .addResourceHandler("${Web.BASE_PATH}/")
-      .addResourceLocations("classpath:/static/taskpool-cockpit/index.html")
+      .addResourceHandler("/${Web.BASE_PATH}/*.html")
+      .addResourceLocations("classpath:/static/taskpool-cockpit/")
       .setCacheControl(CacheControl.maxAge(1, TimeUnit.DAYS))
-      .resourceChain(true)
-      .addResolver(ResourcePathResolver())
+//      .resourceChain(true)
+//      .addResolver(PathResourceResolver())
+//      .resourceChain(true)
+//      .addResolver(ResourcePathResolver())
 
     registry
       .addResourceHandler(*STATIC_RESOURCES_LONG_CACHE)
@@ -55,6 +53,7 @@ open class CockpitSPAConfiguration : WebMvcConfigurer {
       .addResourceHandler(*STATIC_RESOURCES_SHORT_CACHE)
       .addResourceLocations("classpath:/static/taskpool-cockpit/")
       .setCacheControl(CacheControl.maxAge(1, TimeUnit.HOURS))
+
   }
 
   override fun addCorsMappings(registry: CorsRegistry) {
@@ -72,12 +71,13 @@ open class CockpitSPAConfiguration : WebMvcConfigurer {
   }
 }
 
+
 class ResourcePathResolver : PathResourceResolver() {
-  override fun getResource(resourcePath: String, location: Resource): Resource? {
+  override fun getResource(resourcePath: String, location: Resource): Mono<Resource> {
     return if (location.exists() && location.isReadable) {
-      location
+      Mono.just(location)
     } else {
-      null
+      Mono.empty()
     }
   }
 }
