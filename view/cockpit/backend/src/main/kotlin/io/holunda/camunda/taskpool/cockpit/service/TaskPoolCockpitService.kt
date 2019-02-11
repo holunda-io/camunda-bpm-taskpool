@@ -15,6 +15,10 @@ import org.axonframework.queryhandling.QueryUpdateEmitter
 import org.springframework.stereotype.Component
 import java.time.Instant
 
+/**
+ * Service collecting the events.
+ */
+@Suppress("unused")
 @Component
 @ProcessingGroup(PROCESSING_GROUP)
 open class TaskPoolCockpitService(
@@ -28,6 +32,9 @@ open class TaskPoolCockpitService(
 
   private val events: MutableList<TaskEventWithMetaData> = mutableListOf()
 
+  /**
+   * Restore the projection.
+   */
   open fun restore() {
     this.configuration
       .eventProcessorByProcessingGroup(TaskPoolCockpitService.PROCESSING_GROUP, TrackingEventProcessor::class.java)
@@ -39,6 +46,9 @@ open class TaskPoolCockpitService(
       }
   }
 
+  /**
+   * Fill the projection.
+   */
   @EventHandler
   open fun on(event: TaskEvent, @Timestamp instant: Instant, metaData: MetaData) {
     val withMetaData = TaskEventWithMetaData(event = event, instant = instant, metaData = metaData)
@@ -47,12 +57,18 @@ open class TaskPoolCockpitService(
     queryUpdateEmitter.emit(QueryTaskEvents::class.java, { query -> query.apply(event.id) }, withMetaData)
   }
 
+  /**
+   * Retrieve events.
+   */
   @QueryHandler
   open fun getEventsAsList(query: QueryTaskEvents): List<TaskEventWithMetaData> {
     return events.filter { query.apply(it.event.id) }
   }
 
 
+  /**
+   * Find task reference.
+   */
   open fun findTaskReference(taskId: String): TaskReference {
     val taskWithMetadata = events.find { it.event.id == taskId }
       ?: throw IllegalArgumentException("No task with id $taskId found")
@@ -60,8 +76,20 @@ open class TaskPoolCockpitService(
   }
 }
 
+/**
+ * Task reference POJO.
+ */
 data class TaskReference(
+  /**
+   * task is.
+   */
   val id: String,
+  /**
+   * task definition key.
+   */
   val taskDefinitionKey: String,
+  /**
+   * Source reference.
+   */
   val sourceReference: SourceReference
 )

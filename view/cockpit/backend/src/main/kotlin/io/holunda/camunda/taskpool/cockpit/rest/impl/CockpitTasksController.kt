@@ -15,6 +15,9 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import reactor.core.publisher.Flux
 
+/**
+ * Task event controller.
+ */
 @RestController
 @RequestMapping(path = [Rest.PATH])
 class CockpitTasksController(
@@ -24,6 +27,9 @@ class CockpitTasksController(
 
   companion object : KLogging()
 
+  /**
+   * Retrieves all task events.
+   */
   @GetMapping(path = ["/task-events"], produces = [MediaType.TEXT_EVENT_STREAM_VALUE, MediaType.APPLICATION_JSON_VALUE])
   fun getEventTasks(): Flux<TaskEventDto> {
 

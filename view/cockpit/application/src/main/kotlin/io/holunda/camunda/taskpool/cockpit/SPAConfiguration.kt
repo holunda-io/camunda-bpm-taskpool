@@ -3,16 +3,16 @@ package io.holunda.camunda.taskpool.cockpit
 import io.holunda.camunda.taskpool.cockpit.Web.BASE_PATH
 import io.holunda.camunda.taskpool.cockpit.rest.Rest
 import org.springframework.context.annotation.Configuration
-import org.springframework.core.io.Resource
 import org.springframework.http.CacheControl
 import org.springframework.http.HttpMethod
 import org.springframework.web.reactive.config.CorsRegistry
 import org.springframework.web.reactive.config.ResourceHandlerRegistry
 import org.springframework.web.reactive.config.WebFluxConfigurer
-import org.springframework.web.reactive.resource.PathResourceResolver
-import reactor.core.publisher.Mono
 import java.util.concurrent.TimeUnit
 
+/**
+ * SPA config.
+ */
 @Configuration
 open class CockpitSPAConfiguration : WebFluxConfigurer {
 
@@ -30,15 +30,17 @@ open class CockpitSPAConfiguration : WebFluxConfigurer {
 
     val STATIC_RESOURCES_LONG_CACHE = arrayOf(CSS, JS, FONT2, FONT, TTF, MAP)
     val STATIC_RESOURCES_SHORT_CACHE = arrayOf(PNG, JPG, ICO, JSON)
+
+    private const val STATIC_LOCATION = "classpath:/static/taskpool-cockpit/"
   }
 
+  /**
+   * Deliver the platform SPA index for all frontend states.
+   */
   override fun addResourceHandlers(registry: ResourceHandlerRegistry) {
-    /**
-     * Deliver the platform SPA index for all frontend states.
-     */
     registry
       .addResourceHandler("/${Web.BASE_PATH}/*.html")
-      .addResourceLocations("classpath:/static/taskpool-cockpit/")
+      .addResourceLocations(STATIC_LOCATION)
       .setCacheControl(CacheControl.maxAge(1, TimeUnit.DAYS))
 //      .resourceChain(true)
 //      .addResolver(PathResourceResolver())
@@ -47,11 +49,11 @@ open class CockpitSPAConfiguration : WebFluxConfigurer {
 
     registry
       .addResourceHandler(*STATIC_RESOURCES_LONG_CACHE)
-      .addResourceLocations("classpath:/static/taskpool-cockpit/")
+      .addResourceLocations(STATIC_LOCATION)
       .setCacheControl(CacheControl.maxAge(365, TimeUnit.DAYS))
     registry
       .addResourceHandler(*STATIC_RESOURCES_SHORT_CACHE)
-      .addResourceLocations("classpath:/static/taskpool-cockpit/")
+      .addResourceLocations(STATIC_LOCATION)
       .setCacheControl(CacheControl.maxAge(1, TimeUnit.HOURS))
 
   }
@@ -71,13 +73,3 @@ open class CockpitSPAConfiguration : WebFluxConfigurer {
   }
 }
 
-
-class ResourcePathResolver : PathResourceResolver() {
-  override fun getResource(resourcePath: String, location: Resource): Mono<Resource> {
-    return if (location.exists() && location.isReadable) {
-      Mono.just(location)
-    } else {
-      Mono.empty()
-    }
-  }
-}
