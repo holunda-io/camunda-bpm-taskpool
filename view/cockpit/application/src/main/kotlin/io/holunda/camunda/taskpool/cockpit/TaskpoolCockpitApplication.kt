@@ -11,6 +11,9 @@ fun main(args: Array<String>) {
   SpringApplication.run(TaskpoolCockpitApplication::class.java, *args)
 }
 
+/**
+ * Cockpit application.
+ */
 @SpringBootApplication
 @EnableTaskPoolCockpit
 @EnableWebFlux

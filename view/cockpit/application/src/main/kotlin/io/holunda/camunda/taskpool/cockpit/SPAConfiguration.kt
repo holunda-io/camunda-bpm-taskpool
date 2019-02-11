@@ -16,6 +16,9 @@ import java.util.concurrent.TimeUnit
 @Configuration
 open class CockpitSPAConfiguration : WebFluxConfigurer {
 
+  /**
+   * Constants.
+   */
   companion object {
     private const val CSS = "$BASE_PATH/*.css"
     private const val JS = "$BASE_PATH/*.js"
@@ -34,10 +37,10 @@ open class CockpitSPAConfiguration : WebFluxConfigurer {
     private const val STATIC_LOCATION = "classpath:/static/taskpool-cockpit/"
   }
 
-  /**
-   * Deliver the platform SPA index for all frontend states.
-   */
   override fun addResourceHandlers(registry: ResourceHandlerRegistry) {
+    /**
+     * Deliver the platform SPA index for all frontend states.
+     */
     registry
       .addResourceHandler("/${Web.BASE_PATH}/*.html")
       .addResourceLocations(STATIC_LOCATION)
