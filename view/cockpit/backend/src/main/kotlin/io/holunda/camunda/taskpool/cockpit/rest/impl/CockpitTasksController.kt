@@ -36,7 +36,7 @@ class CockpitTasksController(
     return taskEvents.initialResult().flatMapMany { Flux.fromIterable(it) }
       .concatWith(taskEvents.updates())
       .map {
-        mapper.dto(it).apply { logger.info{it} }
+        mapper.dto(it)
       }
   }
 }

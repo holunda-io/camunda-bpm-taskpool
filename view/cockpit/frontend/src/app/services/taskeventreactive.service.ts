@@ -1,5 +1,4 @@
 import { Injectable, Inject, NgZone, OnDestroy } from '@angular/core';
-import { EventSourcePolyfill } from 'event-source-polyfill';
 import { Observable } from 'rxjs/Observable';
 import { TaskEvent } from 'cockpit/model/taskEvent';
 import { BASE_PATH } from 'cockpit/variables';
@@ -28,18 +27,13 @@ export class TaskEventReactiveService implements OnDestroy {
     return this.events.asObservable().map((taskEvents: TaskEvent[]) => sortedTaskEvents(taskEvents));
   }
 
-  private createEventSource(): EventSourcePolyfill {
-    const eventSource = new EventSourcePolyfill(`${this.basePath}/task-events`, { });
-    eventSource.onmessage = (message: any) => {
+  private createEventSource(): EventSource {
+    const eventSource = new EventSource(`${this.basePath}/task-events`);
+    eventSource.addEventListener('message', (message: any) => {
       const event: TaskEvent = JSON.parse(message.data);
       const events = this.events.value;
-      // console.log('Message:', message);
       this.zone.run(() => this.events.next(events.concat(event)));
-    };
-    eventSource.onerror = (err: any) => {
-      console.log('Error in EventSource', err);
-      this.events.error('Error in event source.');
-    };
+    });
     return eventSource;
   }
 }
