@@ -1,13 +1,15 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
 import 'rxjs/add/observable/of';
-import { TaskEventListComponent } from './taskeventlist.component';
-import { Observable } from 'rxjs-compat';
-import { FormsModule } from '@angular/forms';
+import {TaskEventListComponent} from './taskeventlist.component';
+import {Observable} from 'rxjs-compat';
+import {FormsModule} from '@angular/forms';
 
-import { TaskEventHelperService } from 'app/services/taskeventhelper.service';
-import { FieldNamePipe } from 'app/services/field-name.pipe';
-import { NgbCollapse } from '@ng-bootstrap/ng-bootstrap';
+import {TaskEventHelperService} from 'app/services/taskeventhelper.service';
+import {FieldNamePipe} from 'app/services/field-name.pipe';
+import {NgbCollapse} from '@ng-bootstrap/ng-bootstrap';
+import {TaskEventReactiveService} from 'app/services/taskeventreactive.service';
+import { AsyncPipe } from '@angular/common';
 
 describe('Component: TaskEventListComponent', () => {
 
@@ -26,7 +28,13 @@ describe('Component: TaskEventListComponent', () => {
         NgbCollapse
       ],
       providers: [
-        { provide: TaskEventHelperService, useValue: { tasks: Observable.of([]) } },
+        { provide: TaskEventHelperService, useValue: { tasks: Observable.of([])} },
+        { provide: TaskEventReactiveService, useValue:
+          {
+            tasks: Observable.of([]),
+            taskEvents: Observable.of([])
+          }
+        }
       ],
     }).compileComponents().then(() => {
       // create component and test fixture

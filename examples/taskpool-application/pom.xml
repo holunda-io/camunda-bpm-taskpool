@@ -29,12 +29,13 @@
       <groupId>io.holunda.taskpool</groupId>
       <artifactId>camunda-bpm-datapool-core</artifactId>
     </dependency>
+    <!--
     <dependency>
       <groupId>io.holunda.taskpool</groupId>
       <artifactId>camunda-bpm-taskpool-cockpit-backend</artifactId>
       <version>${project.version}</version>
     </dependency>
-
+    -->
     <dependency>
       <groupId>io.holunda.taskpool</groupId>
       <artifactId>camunda-bpm-taskpool-example-tasklist-backend</artifactId>
@@ -109,11 +110,13 @@
           <artifactId>camunda-bpm-taskpool-example-tasklist-angular</artifactId>
           <version>${project.version}</version>
         </dependency>
+        <!--
         <dependency>
           <groupId>io.holunda.taskpool</groupId>
           <artifactId>camunda-bpm-taskpool-cockpit-frontend</artifactId>
           <version>${project.version}</version>
         </dependency>
+        -->
       </dependencies>
     </profile>
   </profiles>

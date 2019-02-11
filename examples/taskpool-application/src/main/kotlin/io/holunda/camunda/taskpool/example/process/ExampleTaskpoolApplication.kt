@@ -1,7 +1,6 @@
 package io.holunda.camunda.taskpool.example.process
 
 import io.holunda.camunda.datapool.core.EnableDataPool
-import io.holunda.camunda.taskpool.cockpit.EnableTaskPoolCockpit
 import io.holunda.camunda.taskpool.core.EnableTaskPool
 import io.holunda.camunda.taskpool.example.tasklist.EnableTasklist
 import io.holunda.camunda.taskpool.urlresolver.EnablePropertyBasedTaskUrlResolver
@@ -18,10 +17,5 @@ fun main(args: Array<String>) {
 @EnableDataPool
 @EnableTaskPoolSimpleView
 @EnableTasklist
-@EnableTaskPoolCockpit
 @EnablePropertyBasedTaskUrlResolver
-open class ExampleTaskpoolApplication {
-
-}
-
-
+open class ExampleTaskpoolApplication

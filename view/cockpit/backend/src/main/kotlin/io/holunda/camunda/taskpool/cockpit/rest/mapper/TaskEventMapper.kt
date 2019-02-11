@@ -361,7 +361,7 @@ abstract class TaskEventMapper {
   abstract fun dto(task: TaskCandidateUserChanged, instant: Instant?): TaskEventDto
 
   fun toOffsetDateTime(@Valid time: Date?): OffsetDateTime? {
-    return if (time == null) null else OffsetDateTime.ofInstant(time.toInstant(), ZoneOffset.UTC)
+    return if (time == null) null else toOffsetDateTime(time.toInstant())
   }
 
   fun toOffsetDateTime(@Valid instant: Instant?): OffsetDateTime? {
