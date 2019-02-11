@@ -3,7 +3,7 @@ import { TaskService, TaskWithDataEntries, Task } from 'tasklist';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { HttpResponse } from '@angular/common/http';
 import { FilterService, Field } from './filter.service';
-import { Subscribable, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 
 @Injectable()
 export class TaskHelperService implements OnDestroy {

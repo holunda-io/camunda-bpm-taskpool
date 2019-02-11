@@ -5,19 +5,19 @@ import { Router } from '@angular/router';
     selector: 'a[appExternalUrl]',
 })
 export class ExternalUrlDirective {
-    constructor(private el: ElementRef, private router: Router) {}
+  constructor(private el: ElementRef, private router: Router) {}
 
-    @HostListener('click', ['$event'])
-    clicked(event: Event) {
-        const url = this.el.nativeElement.href;
-        if (url === undefined || url === '') {
-            return;
-        }
+  @HostListener('click', ['$event'])
+  clicked(event: Event) {
+      const url = this.el.nativeElement.href;
+      if (url === undefined || url === '') {
+          return;
+      }
 
-        this.router.navigate(['/externalRedirect', { externalUrl: url }], {
-            skipLocationChange: true,
-        });
+      this.router.navigate(['/externalRedirect', { externalUrl: url }], {
+          skipLocationChange: true,
+      });
 
-        event.preventDefault();
-    }
+      event.preventDefault();
+  }
 }
