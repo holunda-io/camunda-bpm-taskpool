@@ -5,7 +5,6 @@ import io.holunda.camunda.taskpool.core.EnableTaskPool
 import io.holunda.camunda.taskpool.example.tasklist.EnableTasklist
 import io.holunda.camunda.taskpool.urlresolver.EnablePropertyBasedTaskUrlResolver
 import io.holunda.camunda.taskpool.view.mongo.EnableTaskPoolMongoView
-import io.holunda.camunda.taskpool.view.simple.EnableTaskPoolSimpleView
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
 
@@ -16,8 +15,6 @@ fun main(args: Array<String>) {
 @SpringBootApplication
 @EnableTaskPool
 @EnableDataPool
-// @EnableTaskPoolSimpleView
-@EnableTaskPoolMongoView
 @EnableTasklist
 @EnablePropertyBasedTaskUrlResolver
 open class ExampleTaskpoolApplication

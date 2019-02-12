@@ -10,6 +10,7 @@ import io.holunda.camunda.taskpool.view.mongo.repository.TaskRepository
 import io.holunda.camunda.taskpool.view.query.TaskForIdQuery
 import io.holunda.camunda.taskpool.view.query.TasksWithDataEntriesForUserQuery
 import org.assertj.core.api.Assertions.assertThat
+import org.axonframework.config.EventProcessingConfiguration
 import org.axonframework.queryhandling.QueryUpdateEmitter
 import org.camunda.bpm.engine.variable.VariableMap
 import org.mockito.Mockito
@@ -17,13 +18,14 @@ import org.mockito.Mockito
 open class TaskPoolStage<SELF : TaskPoolStage<SELF>> : Stage<SELF>() {
 
   @ScenarioState
-  lateinit var testee: TaskPoolService
+  lateinit var testee: TaskPoolMongoService
 
   @BeforeScenario
   fun init() {
-    testee = TaskPoolService(
+    testee = TaskPoolMongoService(
       queryUpdateEmitter = Mockito.mock(QueryUpdateEmitter::class.java),
-      taskRepository = Mockito.mock(TaskRepository::class.java)
+      taskRepository = Mockito.mock(TaskRepository::class.java),
+      configuration = Mockito.mock(EventProcessingConfiguration::class.java)
     )
   }
 

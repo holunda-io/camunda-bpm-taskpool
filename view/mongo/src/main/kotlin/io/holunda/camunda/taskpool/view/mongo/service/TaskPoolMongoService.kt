@@ -11,6 +11,8 @@ import io.holunda.camunda.taskpool.view.mongo.filter.toCriteria
 import io.holunda.camunda.taskpool.view.mongo.repository.TaskRepository
 import io.holunda.camunda.taskpool.view.mongo.sort.comparator
 import io.holunda.camunda.taskpool.view.query.*
+import io.holunda.camunda.taskpool.view.mongo.repository.task
+import io.holunda.camunda.taskpool.view.mongo.repository.taskDocument
 import mu.KLogging
 import org.axonframework.config.ProcessingGroup
 import org.axonframework.eventhandling.EventHandler
@@ -19,12 +21,13 @@ import org.axonframework.queryhandling.QueryUpdateEmitter
 import org.springframework.stereotype.Component
 import java.util.concurrent.ConcurrentHashMap
 
+
 @Suppress("unused")
 @Component
 @ProcessingGroup(TaskPoolService.PROCESSING_GROUP)
 open class TaskPoolService(
   private val queryUpdateEmitter: QueryUpdateEmitter,
-  private val taskRepository: TaskRepository
+  private var taskRepository: TaskRepository
 ) {
 
   companion object : KLogging() {
@@ -41,6 +44,7 @@ open class TaskPoolService(
   open fun query(query: TasksForUserQuery): List<Task> =
     taskRepository
       .findAll()
+      .map { it.task() }
       .filter { query.applyFilter(it) }
       .collectList()
       .block() ?: listOf()
@@ -56,14 +60,14 @@ open class TaskPoolService(
    * Retrieves a task for given task id.
    */
   @QueryHandler
-  open fun query(query: TaskForIdQuery): Task? = taskRepository.findById(query.id).block()
+  open fun query(query: TaskForIdQuery): Task? = taskRepository.findById(query.id).map { it.task() }.block()
 
   /**
    * Retrieves a task with data entries for given task id.
    */
   @QueryHandler
   open fun query(query: TaskWithDataEntriesForIdQuery): TaskWithDataEntries? {
-    val task = taskRepository.findAll().filter { query.applyFilter(TaskWithDataEntries(it)) }.blockFirst()
+    val task = taskRepository.findAll().map { it.task() }.filter { query.applyFilter(TaskWithDataEntries(it)) }.blockFirst()
     return if (task != null) {
       tasksWithDataEntries(task, this.dataEntries)
     } else {
@@ -110,7 +114,7 @@ open class TaskPoolService(
   open fun on(event: TaskCreatedEngineEvent) {
     logger.debug { "Task created $event received" }
     val task = task(event)
-    taskRepository.save(task).block()
+    taskRepository.save(task.taskDocument()).block()
     updateTaskForUserQuery(event.id)
   }
 
@@ -118,9 +122,9 @@ open class TaskPoolService(
   open fun on(event: TaskAssignedEngineEvent) {
     logger.debug { "Task assigned $event received" }
 
-    val task = taskRepository.findById { event.id }.block()
-    if (task != null) {
-      taskRepository.save(task(event, task)).block()
+    val taskDocument = taskRepository.findById(event.id).block()
+    if (taskDocument != null) {
+      taskRepository.save(task(event, taskDocument.task())).block()
       updateTaskForUserQuery(event.id)
     }
   }
@@ -142,9 +146,9 @@ open class TaskPoolService(
   @EventHandler
   open fun on(event: TaskAttributeUpdatedEngineEvent) {
     logger.debug { "Task attributes updated $event received" }
-    val task = taskRepository.findById { event.id }.block()
-    if (task != null) {
-      taskRepository.save(task(event, task)).block()
+    val taskDocument = taskRepository.findById(event.id).block()
+    if (taskDocument != null) {
+      taskRepository.save(task(event, taskDocument.task())).block()
       updateTaskForUserQuery(event.id)
     }
   }
@@ -152,9 +156,9 @@ open class TaskPoolService(
   @EventHandler
   open fun on(event: TaskCandidateGroupChanged) {
     logger.debug { "Task candidate groups changed $event received" }
-    val task = taskRepository.findById { event.id }.block()
-    if (task != null) {
-      taskRepository.save(task(event, task)).block()
+    val taskDocument = taskRepository.findById(event.id).block()
+    if (taskDocument != null) {
+      taskRepository.save(task(event, taskDocument.task())).block()
       updateTaskForUserQuery(event.id)
     }
   }
@@ -162,9 +166,9 @@ open class TaskPoolService(
   @EventHandler
   open fun on(event: TaskCandidateUserChanged) {
     logger.debug { "Task user groups changed $event received" }
-    val task = taskRepository.findById { event.id }.block()
-    if (task != null) {
-      taskRepository.save(task(event, task)).block()
+    val taskDocument = taskRepository.findById(event.id).block()
+    if (taskDocument != null) {
+      taskRepository.save(task(event, taskDocument.task())).block()
       updateTaskForUserQuery(event.id)
     }
   }
@@ -191,7 +195,9 @@ open class TaskPoolService(
     updateDataEntryQuery(dataIdentity(entryType = event.entryType, entryId = event.entryId))
   }
 
-  private fun updateTaskForUserQuery(taskId: String) = updateMapFilterQuery(taskRepository.findById(taskId).block(), TasksForUserQuery::class.java)
+  private fun updateTaskForUserQuery(taskId: String) = updateMapFilterQuery(
+    taskRepository.findById(taskId).map { it.task() }.block()
+    , TasksForUserQuery::class.java)
 
   private fun updateDataEntryQuery(identity: String) = updateMapFilterQuery(
     if (dataEntries.contains(identity)) {
