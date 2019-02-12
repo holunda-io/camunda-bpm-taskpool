@@ -1,7 +1,8 @@
 package io.holunda.camunda.taskpool
 
 import io.holunda.camunda.taskpool.enricher.*
-import io.holunda.camunda.taskpool.sender.*
+import io.holunda.camunda.taskpool.sender.CommandSender
+import io.holunda.camunda.taskpool.sender.TxAwareAccumulatingCommandSender
 import io.holunda.camunda.taskpool.sender.accumulator.CommandAccumulator
 import io.holunda.camunda.taskpool.sender.accumulator.ProjectingCommandAccumulator
 import io.holunda.camunda.taskpool.sender.gateway.CommandListGateway
@@ -56,7 +57,7 @@ open class TaskCollectorConfiguration(
     return if (properties.tasklistUrl == null) {
       throw IllegalStateException("Either set camunda.taskpool.collector.tasklist-url property or provide own implementation of TasklistUrlResolver")
     } else {
-      object: TasklistUrlResolver {
+      object : TasklistUrlResolver {
         override fun getTasklistUrl(): String = properties.tasklistUrl!!
       }
     }
@@ -79,13 +80,5 @@ open class TaskCollectorConfiguration(
       else -> logger.info("ENRICHER-003: Camunda Taskpool commands will not be enriched by a custom enricher.")
     }
   }
-
-  @Bean
-  @ConditionalOnMissingBean(value = [ProcessVariablesFilter::class])
-  open fun processVariablesFilterFallback() = ProcessVariablesFilter()
-
-  @Bean
-  @ConditionalOnMissingBean(value = [ProcessVariablesCorrelator::class])
-  open fun processVariablesCorrelatorFallback() = ProcessVariablesCorrelator()
-
 }
+

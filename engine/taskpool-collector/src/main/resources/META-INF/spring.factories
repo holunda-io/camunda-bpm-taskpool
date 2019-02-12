@@ -1,0 +1,3 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  io.holunda.camunda.taskpool.FallbackProcessVariablesCorrelatorConfiguration,\
+  io.holunda.camunda.taskpool.FallbackProcessVariablesFilterConfiguration
