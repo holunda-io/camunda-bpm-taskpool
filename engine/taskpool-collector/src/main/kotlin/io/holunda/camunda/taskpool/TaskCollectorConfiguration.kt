@@ -1,7 +1,8 @@
 package io.holunda.camunda.taskpool
 
 import io.holunda.camunda.taskpool.enricher.*
-import io.holunda.camunda.taskpool.sender.*
+import io.holunda.camunda.taskpool.sender.CommandSender
+import io.holunda.camunda.taskpool.sender.TxAwareAccumulatingCommandSender
 import io.holunda.camunda.taskpool.sender.accumulator.CommandAccumulator
 import io.holunda.camunda.taskpool.sender.accumulator.ProjectingCommandAccumulator
 import io.holunda.camunda.taskpool.sender.gateway.CommandListGateway
@@ -29,9 +30,15 @@ open class TaskCollectorConfiguration(
 
   private val logger: Logger = LoggerFactory.getLogger(TaskCollectorConfiguration::class.java)
 
+  /**
+   * Create accumulator.
+   */
   @Bean
   open fun commandAccumulator(): CommandAccumulator = ProjectingCommandAccumulator()
 
+  /**
+   * Create enricher.
+   */
   @Bean
   @ConditionalOnExpression("'\${camunda.taskpool.collector.enricher.type}' != 'custom'")
   open fun processVariablesEnricher(): VariablesEnricher =
@@ -41,6 +48,9 @@ open class TaskCollectorConfiguration(
       else -> throw IllegalStateException("Could not initialize enricher, used ${properties.enricher.type} type.")
     }
 
+  /**
+   * Create command sender.
+   */
   @Bean
   @ConditionalOnExpression("'\${camunda.taskpool.collector.sender.type}' != 'custom'")
   open fun txCommandSender(commandListGateway: CommandListGateway, accumulator: CommandAccumulator): CommandSender =
@@ -49,18 +59,6 @@ open class TaskCollectorConfiguration(
       else -> throw IllegalStateException("Could not initialize sender, used ${properties.sender.type} type.")
     }
 
-
-  @Bean
-  @ConditionalOnMissingBean
-  open fun propertyBasedTasklistUrlResolver(): TasklistUrlResolver {
-    return if (properties.tasklistUrl == null) {
-      throw IllegalStateException("Either set camunda.taskpool.collector.tasklist-url property or provide own implementation of TasklistUrlResolver")
-    } else {
-      object: TasklistUrlResolver {
-        override fun getTasklistUrl(): String = properties.tasklistUrl!!
-      }
-    }
-  }
 
   @PostConstruct
   open fun printSenderConfiguration() {
@@ -81,15 +79,3 @@ open class TaskCollectorConfiguration(
   }
 }
 
-@Configuration
-open class TaskEnricherFallbackConfiguration {
-
-  @Bean
-  @ConditionalOnMissingBean(ProcessVariablesFilter::class)
-  open fun processVariablesFilter() = ProcessVariablesFilter()
-
-  @Bean
-  @ConditionalOnMissingBean(ProcessVariablesCorrelator::class)
-  open fun processVariablesCorrelator() = ProcessVariablesCorrelator()
-
-}

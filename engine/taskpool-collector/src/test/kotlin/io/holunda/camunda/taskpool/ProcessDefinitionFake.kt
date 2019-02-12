@@ -15,9 +15,14 @@ public class ProcessDefinitionFake internal constructor(
   private val description: String?,
   private val hasStartForm: Boolean?,
   private var suspended: Boolean?,
+  private var startableInTasklist: Boolean?,
   private val historyTimeToLive: Int?,
   private val versionTag: String?
-  ) : ProcessDefinition {
+) : ProcessDefinition {
+
+  override fun isStartableInTasklist(): Boolean {
+    return startableInTasklist ?: true
+  }
 
   override fun getId(): String? {
     return id
@@ -101,6 +106,7 @@ class ProcessDefinitionFakeBuilder {
   private var suspended = false
   private var historyTimeToLive = 0
   private var versionTag: String? = null
+  private var startableInTasklist = true
 
   fun id(id: String): ProcessDefinitionFakeBuilder {
     this.id = id
@@ -134,6 +140,11 @@ class ProcessDefinitionFakeBuilder {
 
   fun deploymentId(deploymentId: String): ProcessDefinitionFakeBuilder {
     this.deploymentId = deploymentId
+    return this
+  }
+
+  fun startableInTasklist(startableInTasklist: Boolean): ProcessDefinitionFakeBuilder {
+    this.startableInTasklist = startableInTasklist
     return this
   }
 
@@ -186,6 +197,7 @@ class ProcessDefinitionFakeBuilder {
       ", description='" + description + '\''.toString() +
       ", hasStartForm=" + hasStartForm +
       ", suspended=" + suspended +
+      ", startableInTasklist=" + startableInTasklist +
       ", historyTimeToLive=" + historyTimeToLive +
       ", versionTag='" + versionTag + '\''.toString() +
       '}'.toString()
@@ -195,7 +207,7 @@ class ProcessDefinitionFakeBuilder {
     return ProcessDefinitionFake(
       id, category, name, key, version, resourceName,
       deploymentId, diagramResourceName, tenantId,
-      description, hasStartForm, suspended, historyTimeToLive,
+      description, hasStartForm, suspended, startableInTasklist, historyTimeToLive,
       versionTag
     )
   }

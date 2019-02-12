@@ -23,7 +23,7 @@ open class ExampleProcessApplication {
   companion object : KLogging()
 
   @Bean
-  open fun processVariablesFilter() = ProcessVariablesFilter(
+  open fun processVariablesFilter(): ProcessVariablesFilter = ProcessVariablesFilter(
 
     // define a applyFilter for every process
     ProcessVariableFilter(
@@ -48,7 +48,7 @@ open class ExampleProcessApplication {
   )
 
   @Bean
-  open fun processVariablesCorrelator() = ProcessVariablesCorrelator(
+  open fun processVariablesCorrelator(): ProcessVariablesCorrelator = ProcessVariablesCorrelator(
 
     // define correlation for every process
     ProcessVariableCorrelation(ProcessApproveRequest.KEY,

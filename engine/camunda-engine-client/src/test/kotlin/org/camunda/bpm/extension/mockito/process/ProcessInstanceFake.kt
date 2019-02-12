@@ -11,12 +11,17 @@ class ProcessInstanceFake(
   private val tenantId: String?,
   private val caseInstanceId: String?,
   private var ended: Boolean = false,
-  private var suspended: Boolean = false) : ProcessInstance {
+  private var suspended: Boolean = false,
+  private var rootProcessInstanceId: String?) : ProcessInstance {
 
   companion object {
     fun builder(): ProcessInstanceFakeBuilder {
       return ProcessInstanceFakeBuilder()
     }
+  }
+
+  override fun getRootProcessInstanceId(): String? {
+    return rootProcessInstanceId
   }
 
 
@@ -62,6 +67,7 @@ class ProcessInstanceFakeBuilder {
   private var caseInstanceId: String? = null
   private var ended = false
   private var suspended = false
+  private var rootProcessInstanceId: String? = null
 
   fun id(id: String): ProcessInstanceFakeBuilder {
     this.id = id
@@ -85,6 +91,11 @@ class ProcessInstanceFakeBuilder {
 
   fun tenantId(tenantId: String): ProcessInstanceFakeBuilder {
     this.tenantId = tenantId
+    return this
+  }
+
+  fun rootProcessInstanceId(rootProcessInstanceId: String): ProcessInstanceFakeBuilder {
+    this.rootProcessInstanceId = rootProcessInstanceId
     return this
   }
 
@@ -113,6 +124,7 @@ class ProcessInstanceFakeBuilder {
       ", caseInstanceId='" + caseInstanceId + '\''.toString() +
       ", ended=" + ended +
       ", suspended=" + suspended +
+      ", rootProcessInstanceId=" + rootProcessInstanceId +
       '}'.toString()
   }
 
@@ -125,7 +137,8 @@ class ProcessInstanceFakeBuilder {
       tenantId = tenantId,
       caseInstanceId = caseInstanceId,
       ended = ended,
-      suspended = suspended
+      suspended = suspended,
+      rootProcessInstanceId = rootProcessInstanceId
     )
   }
 
