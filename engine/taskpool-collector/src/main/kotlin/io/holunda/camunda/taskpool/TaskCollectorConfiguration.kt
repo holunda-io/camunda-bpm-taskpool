@@ -79,17 +79,13 @@ open class TaskCollectorConfiguration(
       else -> logger.info("ENRICHER-003: Camunda Taskpool commands will not be enriched by a custom enricher.")
     }
   }
-}
-
-@Configuration
-open class TaskEnricherFallbackConfiguration {
 
   @Bean
-  @ConditionalOnMissingBean(ProcessVariablesFilter::class)
-  open fun processVariablesFilter() = ProcessVariablesFilter()
+  @ConditionalOnMissingBean(value = [ProcessVariablesFilter::class])
+  open fun processVariablesFilterFallback() = ProcessVariablesFilter()
 
   @Bean
-  @ConditionalOnMissingBean(ProcessVariablesCorrelator::class)
-  open fun processVariablesCorrelator() = ProcessVariablesCorrelator()
+  @ConditionalOnMissingBean(value = [ProcessVariablesCorrelator::class])
+  open fun processVariablesCorrelatorFallback() = ProcessVariablesCorrelator()
 
 }
