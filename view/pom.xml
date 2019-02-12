@@ -16,6 +16,7 @@
     <module>view-api</module>
     <module>simple</module>
     <module>cockpit</module>
+    <module>mongo</module>
   </modules>
   
   <dependencyManagement>  
