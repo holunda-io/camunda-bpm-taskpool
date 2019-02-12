@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Configuration
 open class TaskPoolMongoAxonConfiguration {
 
 
+  /*
   @Bean
   open fun configure(mongoTemplate: MongoTemplate): TokenStore = MongoTokenStore.builder().mongoTemplate(mongoTemplate).build()
 
@@ -25,5 +26,5 @@ open class TaskPoolMongoAxonConfiguration {
       .sagasCollectionName("sagas")
       .snapshotEventsCollectionName("snapshots")
       .build()
-
+*/
 }
