@@ -9,13 +9,16 @@ import io.holunda.camunda.taskpool.view.mongo.filter.createPredicates
 import io.holunda.camunda.taskpool.view.mongo.filter.filterByPredicates
 import io.holunda.camunda.taskpool.view.mongo.filter.toCriteria
 import io.holunda.camunda.taskpool.view.mongo.repository.TaskRepository
-import io.holunda.camunda.taskpool.view.mongo.sort.comparator
-import io.holunda.camunda.taskpool.view.query.*
 import io.holunda.camunda.taskpool.view.mongo.repository.task
 import io.holunda.camunda.taskpool.view.mongo.repository.taskDocument
+import io.holunda.camunda.taskpool.view.mongo.sort.comparator
+import io.holunda.camunda.taskpool.view.query.*
 import mu.KLogging
+import org.axonframework.config.EventProcessingConfiguration
 import org.axonframework.config.ProcessingGroup
 import org.axonframework.eventhandling.EventHandler
+import org.axonframework.eventhandling.EventProcessor
+import org.axonframework.eventhandling.TrackingEventProcessor
 import org.axonframework.queryhandling.QueryHandler
 import org.axonframework.queryhandling.QueryUpdateEmitter
 import org.springframework.stereotype.Component
@@ -24,10 +27,11 @@ import java.util.concurrent.ConcurrentHashMap
 
 @Suppress("unused")
 @Component
-@ProcessingGroup(TaskPoolService.PROCESSING_GROUP)
-open class TaskPoolService(
+@ProcessingGroup(TaskPoolMongoService.PROCESSING_GROUP)
+open class TaskPoolMongoService(
   private val queryUpdateEmitter: QueryUpdateEmitter,
-  private var taskRepository: TaskRepository
+  private var taskRepository: TaskRepository,
+  private val configuration: EventProcessingConfiguration
 ) {
 
   companion object : KLogging() {
@@ -35,6 +39,24 @@ open class TaskPoolService(
   }
 
   private val dataEntries = ConcurrentHashMap<String, DataEntry>()
+
+  /**
+   * Runs an event replay to fill the mongo task view with events.
+   */
+  open fun restore() {
+
+    // not needed, will be called automatically, because of the global index stored in mongo DB.
+    this.configuration
+      .eventProcessorByProcessingGroup<EventProcessor>(TaskPoolMongoService.PROCESSING_GROUP)
+      .ifPresent {
+        if (it is TrackingEventProcessor) {
+          logger.info { "VIEW-MONGO-002: Starting mongo view event replay." }
+          it.shutDown()
+          it.resetTokens()
+          it.start()
+        }
+      }
+  }
 
 
   /**
@@ -46,8 +68,6 @@ open class TaskPoolService(
       .findAll()
       .map { it.task() }
       .filter { query.applyFilter(it) }
-      .collectList()
-      .block() ?: listOf()
 
   /**
    * Retrieves a list of all data entries of given entry type (and optional id).
@@ -60,14 +80,14 @@ open class TaskPoolService(
    * Retrieves a task for given task id.
    */
   @QueryHandler
-  open fun query(query: TaskForIdQuery): Task? = taskRepository.findById(query.id).map { it.task() }.block()
+  open fun query(query: TaskForIdQuery): Task? = taskRepository.findById(query.id).orElse(null).task()
 
   /**
    * Retrieves a task with data entries for given task id.
    */
   @QueryHandler
   open fun query(query: TaskWithDataEntriesForIdQuery): TaskWithDataEntries? {
-    val task = taskRepository.findAll().map { it.task() }.filter { query.applyFilter(TaskWithDataEntries(it)) }.blockFirst()
+    val task = taskRepository.findAll().map { it.task() }.filter { query.applyFilter(TaskWithDataEntries(it)) }.firstOrNull()
     return if (task != null) {
       tasksWithDataEntries(task, this.dataEntries)
     } else {
@@ -114,7 +134,7 @@ open class TaskPoolService(
   open fun on(event: TaskCreatedEngineEvent) {
     logger.debug { "Task created $event received" }
     val task = task(event)
-    taskRepository.save(task.taskDocument()).block()
+    taskRepository.save(task.taskDocument())
     updateTaskForUserQuery(event.id)
   }
 
@@ -122,9 +142,8 @@ open class TaskPoolService(
   open fun on(event: TaskAssignedEngineEvent) {
     logger.debug { "Task assigned $event received" }
 
-    val taskDocument = taskRepository.findById(event.id).block()
-    if (taskDocument != null) {
-      taskRepository.save(task(event, taskDocument.task())).block()
+    taskRepository.findById(event.id).ifPresent {
+      taskRepository.save(task(event, it.task()).taskDocument())
       updateTaskForUserQuery(event.id)
     }
   }
@@ -132,23 +151,22 @@ open class TaskPoolService(
   @EventHandler
   open fun on(event: TaskCompletedEngineEvent) {
     logger.debug { "Task completed $event received" }
-    taskRepository.deleteById(event.id).block()
+    taskRepository.deleteById(event.id)
     updateTaskForUserQuery(event.id)
   }
 
   @EventHandler
   open fun on(event: TaskDeletedEngineEvent) {
     logger.debug { "Task deleted $event received" }
-    taskRepository.deleteById(event.id).block()
+    taskRepository.deleteById(event.id)
     updateTaskForUserQuery(event.id)
   }
 
   @EventHandler
   open fun on(event: TaskAttributeUpdatedEngineEvent) {
     logger.debug { "Task attributes updated $event received" }
-    val taskDocument = taskRepository.findById(event.id).block()
-    if (taskDocument != null) {
-      taskRepository.save(task(event, taskDocument.task())).block()
+    taskRepository.findById(event.id).ifPresent {
+      taskRepository.save(task(event, it.task()).taskDocument())
       updateTaskForUserQuery(event.id)
     }
   }
@@ -156,9 +174,8 @@ open class TaskPoolService(
   @EventHandler
   open fun on(event: TaskCandidateGroupChanged) {
     logger.debug { "Task candidate groups changed $event received" }
-    val taskDocument = taskRepository.findById(event.id).block()
-    if (taskDocument != null) {
-      taskRepository.save(task(event, taskDocument.task())).block()
+    taskRepository.findById(event.id).ifPresent {
+      taskRepository.save(task(event, it.task()).taskDocument())
       updateTaskForUserQuery(event.id)
     }
   }
@@ -166,9 +183,8 @@ open class TaskPoolService(
   @EventHandler
   open fun on(event: TaskCandidateUserChanged) {
     logger.debug { "Task user groups changed $event received" }
-    val taskDocument = taskRepository.findById(event.id).block()
-    if (taskDocument != null) {
-      taskRepository.save(task(event, taskDocument.task())).block()
+    taskRepository.findById(event.id).ifPresent {
+      taskRepository.save(task(event, it.task()).taskDocument())
       updateTaskForUserQuery(event.id)
     }
   }
@@ -196,8 +212,7 @@ open class TaskPoolService(
   }
 
   private fun updateTaskForUserQuery(taskId: String) = updateMapFilterQuery(
-    taskRepository.findById(taskId).map { it.task() }.block()
-    , TasksForUserQuery::class.java)
+    taskRepository.findById(taskId).map { it.task() }.orElse(null), TasksForUserQuery::class.java)
 
   private fun updateDataEntryQuery(identity: String) = updateMapFilterQuery(
     if (dataEntries.contains(identity)) {
