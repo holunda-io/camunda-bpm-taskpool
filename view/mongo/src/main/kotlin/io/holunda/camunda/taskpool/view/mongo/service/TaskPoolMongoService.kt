@@ -2,17 +2,19 @@ package io.holunda.camunda.taskpool.view.mongo.service
 
 import io.holunda.camunda.taskpool.api.business.DataEntryCreatedEvent
 import io.holunda.camunda.taskpool.api.business.DataEntryUpdatedEvent
+import io.holunda.camunda.taskpool.api.business.DataIdentity
 import io.holunda.camunda.taskpool.api.business.dataIdentity
 import io.holunda.camunda.taskpool.api.task.*
-import io.holunda.camunda.taskpool.view.*
+import io.holunda.camunda.taskpool.view.DataEntry
+import io.holunda.camunda.taskpool.view.Task
+import io.holunda.camunda.taskpool.view.TaskWithDataEntries
 import io.holunda.camunda.taskpool.view.mongo.filter.createPredicates
 import io.holunda.camunda.taskpool.view.mongo.filter.filterByPredicates
 import io.holunda.camunda.taskpool.view.mongo.filter.toCriteria
-import io.holunda.camunda.taskpool.view.mongo.repository.TaskRepository
-import io.holunda.camunda.taskpool.view.mongo.repository.task
-import io.holunda.camunda.taskpool.view.mongo.repository.taskDocument
+import io.holunda.camunda.taskpool.view.mongo.repository.*
 import io.holunda.camunda.taskpool.view.mongo.sort.comparator
 import io.holunda.camunda.taskpool.view.query.*
+import io.holunda.camunda.taskpool.view.task
 import mu.KLogging
 import org.axonframework.config.EventProcessingConfiguration
 import org.axonframework.config.ProcessingGroup
@@ -22,7 +24,6 @@ import org.axonframework.eventhandling.TrackingEventProcessor
 import org.axonframework.queryhandling.QueryHandler
 import org.axonframework.queryhandling.QueryUpdateEmitter
 import org.springframework.stereotype.Component
-import java.util.concurrent.ConcurrentHashMap
 
 
 @Suppress("unused")
@@ -31,31 +32,12 @@ import java.util.concurrent.ConcurrentHashMap
 open class TaskPoolMongoService(
   private val queryUpdateEmitter: QueryUpdateEmitter,
   private var taskRepository: TaskRepository,
+  private var dataEntryRepository: DataEntryRepository,
   private val configuration: EventProcessingConfiguration
 ) {
 
   companion object : KLogging() {
     const val PROCESSING_GROUP = "io.holunda.camunda.taskpool.view.mongo.service"
-  }
-
-  private val dataEntries = ConcurrentHashMap<String, DataEntry>()
-
-  /**
-   * Runs an event replay to fill the mongo task view with events.
-   */
-  open fun restore() {
-
-    // not needed, will be called automatically, because of the global index stored in mongo DB.
-    this.configuration
-      .eventProcessorByProcessingGroup<EventProcessor>(TaskPoolMongoService.PROCESSING_GROUP)
-      .ifPresent {
-        if (it is TrackingEventProcessor) {
-          logger.info { "VIEW-MONGO-002: Starting mongo view event replay." }
-          it.shutDown()
-          it.resetTokens()
-          it.start()
-        }
-      }
   }
 
 
@@ -73,23 +55,26 @@ open class TaskPoolMongoService(
    * Retrieves a list of all data entries of given entry type (and optional id).
    */
   @QueryHandler
-  open fun query(query: DataEntryQuery): List<DataEntry> = dataEntries.values.filter { query.applyFilter(it) }
+  open fun query(query: DataEntryQuery): List<DataEntry> = dataEntryRepository.findAll().map { it.dataEntry() }.filter { query.applyFilter(it) }
 
 
   /**
    * Retrieves a task for given task id.
    */
   @QueryHandler
-  open fun query(query: TaskForIdQuery): Task? = taskRepository.findById(query.id).orElse(null).task()
+  open fun query(query: TaskForIdQuery): Task? = taskRepository.findById(query.id).orElse(null)?.task()
 
   /**
    * Retrieves a task with data entries for given task id.
    */
   @QueryHandler
   open fun query(query: TaskWithDataEntriesForIdQuery): TaskWithDataEntries? {
-    val task = taskRepository.findAll().map { it.task() }.filter { query.applyFilter(TaskWithDataEntries(it)) }.firstOrNull()
+    val task = taskRepository
+      .findAll()
+      .map { it.task() }
+      .firstOrNull { query.applyFilter(TaskWithDataEntries(it)) }
     return if (task != null) {
-      tasksWithDataEntries(task, this.dataEntries)
+      tasksWithDataEntries(task)
     } else {
       null
     }
@@ -105,7 +90,7 @@ open class TaskPoolMongoService(
 
     val filtered = query(TasksForUserQuery(query.user))
       .asSequence()
-      .map { task -> tasksWithDataEntries(task, this.dataEntries) }
+      .map { task -> tasksWithDataEntries(task) }
       .filter { filterByPredicates(it, predicates) }
       .toList()
 
@@ -192,40 +177,62 @@ open class TaskPoolMongoService(
   @EventHandler
   open fun on(event: DataEntryCreatedEvent) {
     logger.debug { "Business data entry created $event" }
-    dataEntries[dataIdentity(entryType = event.entryType, entryId = event.entryId)] = DataEntry(
-      entryType = event.entryType,
-      entryId = event.entryId,
-      payload = event.payload
-    )
-    updateDataEntryQuery(dataIdentity(entryType = event.entryType, entryId = event.entryId))
+    dataEntryRepository.save(
+      DataEntryDocument(
+        identity = dataIdentity(entryType = event.entryType, entryId = event.entryId),
+        payload = event.payload
+      ))
+    updateDataEntryQuery(event)
   }
 
   @EventHandler
   open fun on(event: DataEntryUpdatedEvent) {
     logger.debug { "Business data entry updated $event" }
-    dataEntries[dataIdentity(entryType = event.entryType, entryId = event.entryId)] = DataEntry(
-      entryType = event.entryType,
-      entryId = event.entryId,
-      payload = event.payload
-    )
-    updateDataEntryQuery(dataIdentity(entryType = event.entryType, entryId = event.entryId))
+    dataEntryRepository.save(
+      DataEntryDocument(
+        identity = dataIdentity(entryType = event.entryType, entryId = event.entryId),
+        payload = event.payload
+      ))
+    updateDataEntryQuery(event)
   }
+
+  /**
+   * Runs an event replay to fill the mongo task view with events.
+   */
+  open fun restore() {
+
+    // not needed, will be called automatically, because of the global index stored in mongo DB.
+    this.configuration
+      .eventProcessorByProcessingGroup<EventProcessor>(TaskPoolMongoService.PROCESSING_GROUP)
+      .ifPresent {
+        if (it is TrackingEventProcessor) {
+          logger.info { "VIEW-MONGO-002: Starting mongo view event replay." }
+          it.shutDown()
+          it.resetTokens()
+          it.start()
+        }
+      }
+  }
+
 
   private fun updateTaskForUserQuery(taskId: String) = updateMapFilterQuery(
     taskRepository.findById(taskId).map { it.task() }.orElse(null), TasksForUserQuery::class.java)
 
-  private fun updateDataEntryQuery(identity: String) = updateMapFilterQuery(
-    if (dataEntries.contains(identity)) {
-      dataEntries.getValue(identity)
-    } else {
-      null
-    }, DataEntryQuery::class.java)
+  private fun updateDataEntryQuery(identity: DataIdentity) = updateMapFilterQuery(
+    dataEntryRepository.findByIdentity(identity).map { it.dataEntry() }.orElse(null), DataEntryQuery::class.java)
 
   private fun <T : Any, Q : FilterQuery<T>> updateMapFilterQuery(entry: T?, clazz: Class<Q>) {
     if (entry != null) {
       queryUpdateEmitter.emit(clazz, { query -> query.applyFilter(entry) }, entry)
     }
-
   }
+
+  private fun tasksWithDataEntries(task: Task) =
+    TaskWithDataEntries(
+      task = task,
+      dataEntries = this.dataEntryRepository.findAllById(
+        task.correlations.map { dataIdentity(entryType = it.key, entryId = it.value.toString()) }).map { it.dataEntry() }
+    )
+
 }
 

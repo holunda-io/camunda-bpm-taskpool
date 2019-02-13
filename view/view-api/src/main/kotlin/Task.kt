@@ -8,6 +8,9 @@ import org.camunda.bpm.engine.variable.VariableMap
 import org.camunda.bpm.engine.variable.Variables
 import java.util.*
 
+/**
+ * User task.
+ */
 data class Task(
   override val id: String,
   override val sourceReference: SourceReference,

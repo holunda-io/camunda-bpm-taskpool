@@ -1,32 +1,52 @@
 package io.holunda.camunda.taskpool.view.mongo.service
 
+import com.mongodb.MongoClient
 import com.tngtech.jgiven.Stage
 import com.tngtech.jgiven.annotation.*
+import com.tngtech.jgiven.integration.spring.JGivenStage
+import de.flapdoodle.embed.mongo.MongodExecutable
+import de.flapdoodle.embed.mongo.MongodProcess
 import io.holunda.camunda.taskpool.api.task.*
 import io.holunda.camunda.taskpool.view.Task
 import io.holunda.camunda.taskpool.view.TaskWithDataEntries
 import io.holunda.camunda.taskpool.view.auth.User
-import io.holunda.camunda.taskpool.view.mongo.repository.TaskRepository
+import io.holunda.camunda.taskpool.view.mongo.utils.MongoLauncher
 import io.holunda.camunda.taskpool.view.query.TaskForIdQuery
 import io.holunda.camunda.taskpool.view.query.TasksWithDataEntriesForUserQuery
 import org.assertj.core.api.Assertions.assertThat
-import org.axonframework.config.EventProcessingConfiguration
-import org.axonframework.queryhandling.QueryUpdateEmitter
+import org.axonframework.extensions.mongo.DefaultMongoTemplate
 import org.camunda.bpm.engine.variable.VariableMap
-import org.mockito.Mockito
+import org.springframework.beans.factory.annotation.Autowired
 
 open class TaskPoolStage<SELF : TaskPoolStage<SELF>> : Stage<SELF>() {
 
+  @Autowired
   @ScenarioState
   lateinit var testee: TaskPoolMongoService
 
+  private var mongod: MongodProcess? = null
+  private var mongoExe: MongodExecutable? = null
+
   @BeforeScenario
-  fun init() {
-    testee = TaskPoolMongoService(
-      queryUpdateEmitter = Mockito.mock(QueryUpdateEmitter::class.java),
-      taskRepository = Mockito.mock(TaskRepository::class.java),
-      configuration = Mockito.mock(EventProcessingConfiguration::class.java)
-    )
+  fun initMongo() {
+    mongoExe = MongoLauncher.prepareExecutable()
+    mongod = mongoExe!!.start()
+    if (mongod == null) {
+      // we're using an existing mongo instance. Make sure it's clean
+      val template = DefaultMongoTemplate.builder().mongoDatabase(MongoClient()).build()
+      template.eventCollection().drop()
+      template.snapshotCollection().drop()
+    }
+  }
+
+  @AfterScenario
+  fun stop() {
+    if (mongod != null) {
+      mongod!!.stop()
+    }
+    if (mongoExe != null) {
+      mongoExe!!.stop()
+    }
   }
 
   open fun task_created_event_is_received(event: TaskCreatedEngineEvent): SELF {
@@ -56,14 +76,14 @@ open class TaskPoolStage<SELF : TaskPoolStage<SELF>> : Stage<SELF>() {
 
 }
 
+@JGivenStage
 open class TaskPoolGivenStage<SELF : TaskPoolGivenStage<SELF>> : TaskPoolStage<SELF>() {
 
   @ProvidedScenarioState(resolution = ScenarioState.Resolution.NAME)
-  private var tasks: List<TaskWithDataEntries> = listOf()
+  private lateinit var tasks: List<TaskWithDataEntries>
 
   private val procRef = ProcessReference("instance1", "exec1", "def1", "def-key", "proce1", "app")
-
-  private fun task(i: Int) = TaskWithDataEntries(Task("id$i", procRef, "task-key-$i", businessKey = "BUS-$i"))
+  private fun task(i: Int) = TaskWithDataEntries(Task(id = "id$i", sourceReference = procRef, taskDefinitionKey = "task-key-$i", businessKey = "BUS-$i"))
 
   open fun no_task_exists(): SELF {
     tasks = listOf()
@@ -78,6 +98,7 @@ open class TaskPoolGivenStage<SELF : TaskPoolGivenStage<SELF>> : TaskPoolStage<S
 
 }
 
+@JGivenStage
 open class TaskPoolWhenStage<SELF : TaskPoolWhenStage<SELF>> : TaskPoolStage<SELF>() {
 
   @ExpectedScenarioState(resolution = ScenarioState.Resolution.NAME, required = true)
@@ -96,6 +117,7 @@ open class TaskPoolWhenStage<SELF : TaskPoolWhenStage<SELF>> : TaskPoolStage<SEL
 
 }
 
+@JGivenStage
 open class TaskPoolThenStage<SELF : TaskPoolThenStage<SELF>> : TaskPoolStage<SELF>() {
 
   @ExpectedScenarioState(resolution = ScenarioState.Resolution.NAME, required = true)

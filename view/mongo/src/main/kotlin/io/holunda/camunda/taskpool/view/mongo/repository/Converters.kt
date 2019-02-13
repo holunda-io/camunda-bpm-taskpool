@@ -55,6 +55,9 @@ fun TaskDocument.task() = Task(
   followUpDate = this.followUpDate
 )
 
+/**
+ * Create source reference out of reference document.
+ */
 fun sourceReference(reference: ReferenceDocument): SourceReference =
   when (reference) {
     is ProcessReferenceDocument -> ProcessReference(
@@ -75,5 +78,4 @@ fun sourceReference(reference: ReferenceDocument): SourceReference =
       applicationName = reference.applicationName,
       tenantId = reference.tenantId
     )
-    else -> throw IllegalArgumentException("Unexpected type of $reference")
   }

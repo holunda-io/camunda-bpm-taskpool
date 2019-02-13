@@ -5,14 +5,13 @@ import io.holunda.camunda.taskpool.api.task.ProcessReference
 import org.springframework.data.annotation.Id
 import org.springframework.data.annotation.TypeAlias
 import org.springframework.data.mongodb.core.mapping.Document
-import org.springframework.data.mongodb.core.mapping.Field
 import java.util.*
 
-@Document
+@Document(collection = "tasks")
+@TypeAlias("task")
 data class TaskDocument(
   @Id
   val id: String,
-  @Field
   val sourceReference: ReferenceDocument,
   val taskDefinitionKey: String,
   val payload: MutableMap<String, Any> = mutableMapOf(),
@@ -31,7 +30,12 @@ data class TaskDocument(
   val followUpDate: Date? = null
 )
 
-abstract class ReferenceDocument {
+sealed class ReferenceDocument {
+  companion object {
+    const val CASE = "case"
+    const val PROCESS = "process"
+  }
+
   abstract val instanceId: String
   abstract val executionId: String
   abstract val definitionId: String
@@ -39,10 +43,13 @@ abstract class ReferenceDocument {
   abstract val name: String
   abstract val applicationName: String
   abstract val tenantId: String?
+
 }
 
-@TypeAlias("case")
+@Document(collection = "sources")
+@TypeAlias(ReferenceDocument.CASE)
 data class CaseReferenceDocument(
+  @Id
   override val instanceId: String,
   override val executionId: String,
   override val definitionId: String,
@@ -63,8 +70,10 @@ data class CaseReferenceDocument(
     )
 }
 
-@TypeAlias("process")
+@Document(collection = "sources")
+@TypeAlias(ReferenceDocument.PROCESS)
 data class ProcessReferenceDocument(
+  @Id
   override val instanceId: String,
   override val executionId: String,
   override val definitionId: String,
@@ -73,6 +82,7 @@ data class ProcessReferenceDocument(
   override val applicationName: String,
   override val tenantId: String? = null
 ) : ReferenceDocument() {
+
   constructor(reference: ProcessReference) :
     this(
       instanceId = reference.instanceId,

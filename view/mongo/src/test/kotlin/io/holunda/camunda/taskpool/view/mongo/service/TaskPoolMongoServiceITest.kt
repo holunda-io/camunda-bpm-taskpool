@@ -1,17 +1,22 @@
 package io.holunda.camunda.taskpool.view.mongo.service
 
-import com.tngtech.jgiven.junit.ScenarioTest
+import com.tngtech.jgiven.integration.spring.SpringRuleScenarioTest
 import io.holunda.camunda.taskpool.api.business.CorrelationMap
 import io.holunda.camunda.taskpool.api.task.*
 import io.holunda.camunda.taskpool.view.Task
+import io.holunda.camunda.taskpool.view.mongo.TaskpoolMongoTestApplication
 import org.camunda.bpm.engine.variable.VariableMap
 import org.camunda.bpm.engine.variable.Variables
-import org.junit.Ignore
 import org.junit.Test
+import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.test.annotation.DirtiesContext
+import org.springframework.test.context.ActiveProfiles
 import java.util.*
 
-@Ignore
-class TaskPoolServiceTest : ScenarioTest<TaskPoolGivenStage<*>, TaskPoolWhenStage<*>, TaskPoolThenStage<*>>() {
+@SpringBootTest(classes = [TaskpoolMongoTestApplication::class])
+@ActiveProfiles("mongo")
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+class TaskPoolMongoServiceITest : SpringRuleScenarioTest<TaskPoolGivenStage<*>, TaskPoolWhenStage<*>, TaskPoolThenStage<*>>() {
 
   @Test
   fun `slice contains complete list if input list is smaller than desired page size`() {
@@ -122,7 +127,7 @@ class TaskPoolServiceTest : ScenarioTest<TaskPoolGivenStage<*>, TaskPoolWhenStag
   }
 
   @Test
-  fun `a nonexisting task is not assigned`() {
+  fun `a non-existing task is not assigned`() {
     given()
       .no_task_exists()
 

@@ -5,6 +5,7 @@ import io.holunda.camunda.taskpool.api.business.addCorrelation
 import io.holunda.camunda.taskpool.api.business.dataIdentity
 import io.holunda.camunda.taskpool.api.business.newCorrelations
 import io.holunda.camunda.taskpool.api.task.ProcessReference
+import io.holunda.camunda.taskpool.view.simple.service.tasksWithDataEntries
 import org.assertj.core.api.Assertions.assertThat
 import org.camunda.bpm.engine.variable.Variables
 import org.junit.Test

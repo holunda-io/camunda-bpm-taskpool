@@ -5,7 +5,7 @@ import org.springframework.stereotype.Repository
 
 
 /**
- * Repository for task.
+ * Repository for task documents.
  */
 @Repository
 interface TaskRepository : MongoRepository<TaskDocument, String>
