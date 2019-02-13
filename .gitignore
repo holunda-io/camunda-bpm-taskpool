@@ -4,6 +4,7 @@ camunda-license.txt
 *.class
 target/
 .tmp/
+.docker/mounts
 
 # Log file
 *.log

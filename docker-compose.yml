@@ -1,0 +1,37 @@
+version: "3.5"
+services:
+
+
+  axonserver:
+    image: axoniq/axonserver
+    container_name: axonserver
+    ports:
+      - 8024:8024
+      - 8124:8124
+    volumes:
+      - ./.docker/mounts/axon-data:/opt/axonserver/data
+    networks:
+      - taskpool-net
+
+  mongodb:
+    image: mongo
+    container_name: mongodb
+    ports:
+      - 27017:27017
+    volumes:
+      - ./.docker/mounts/mongo-data:/data/db
+      - ./.docker/mongodb-conf:/etc/mongo
+    command:
+      - "--config"
+      - "/etc/mongo/mongod.conf"
+      - "--wiredTigerCacheSizeGB"
+      - "0.5"
+
+#
+# This might be required for reactive mongo driver (to detect the change set).
+#      - "--eval"
+#      - "rs.initiate({_id: 'replocal', members: [{_id: 0, host: '127.0.0.1:27017'}] })"
+
+networks:
+  taskpool-net:
+    name: taskpool
