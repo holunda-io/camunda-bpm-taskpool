@@ -12,6 +12,7 @@ import io.holunda.camunda.taskpool.view.TaskWithDataEntries
 import io.holunda.camunda.taskpool.view.auth.User
 import io.holunda.camunda.taskpool.view.mongo.utils.MongoLauncher
 import io.holunda.camunda.taskpool.view.query.TaskForIdQuery
+import io.holunda.camunda.taskpool.view.query.TasksForUserQuery
 import io.holunda.camunda.taskpool.view.query.TasksWithDataEntriesForUserQuery
 import org.assertj.core.api.Assertions.assertThat
 import org.axonframework.extensions.mongo.DefaultMongoTemplate
@@ -166,6 +167,16 @@ open class TaskPoolThenStage<SELF : TaskPoolThenStage<SELF>> : TaskPoolStage<SEL
 
   open fun task_correlations_match(taskId: String, correlations: VariableMap): SELF {
     assertThat(testee.query(TaskForIdQuery(taskId))?.correlations).isEqualTo(correlations)
+    return self()
+  }
+
+  fun tasks_visible_to_assignee_or_candidate_user(username: String, expectedTasks: List<Task>): SELF {
+    assertThat(testee.query(TasksForUserQuery(User(username = username, groups = emptySet())))).containsExactlyElementsOf(expectedTasks)
+    return self()
+  }
+
+  fun tasks_visible_to_candidate_group(groupName: String, expectedTasks: List<Task>): SELF {
+    assertThat(testee.query(TasksForUserQuery(User(username = "<unmet>", groups = setOf(groupName))))).containsExactlyElementsOf(expectedTasks)
     return self()
   }
 

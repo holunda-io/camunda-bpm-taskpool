@@ -21,16 +21,12 @@ services:
     volumes:
       - ./.docker/mounts/mongo-data:/data/db
       - ./.docker/mongodb-conf:/etc/mongo
+      - ./.docker/mongodb-init:/docker-entrypoint-initdb.d/
     command:
       - "--config"
       - "/etc/mongo/mongod.conf"
       - "--wiredTigerCacheSizeGB"
       - "0.5"
-
-#
-# This might be required for reactive mongo driver (to detect the change set).
-#      - "--eval"
-#      - "rs.initiate({_id: 'replocal', members: [{_id: 0, host: '127.0.0.1:27017'}] })"
 
 networks:
   taskpool-net:

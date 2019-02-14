@@ -47,9 +47,11 @@ open class TaskPoolMongoService(
   @QueryHandler
   open fun query(query: TasksForUserQuery): List<Task> =
     taskRepository
-      .findAll()
+      .findAllForUser(
+        query.user.username,
+        query.user.groups
+      )
       .map { it.task() }
-      .filter { query.applyFilter(it) }
 
   /**
    * Retrieves a list of all data entries of given entry type (and optional id).
@@ -69,12 +71,9 @@ open class TaskPoolMongoService(
    */
   @QueryHandler
   open fun query(query: TaskWithDataEntriesForIdQuery): TaskWithDataEntries? {
-    val task = taskRepository
-      .findAll()
-      .map { it.task() }
-      .firstOrNull { query.applyFilter(TaskWithDataEntries(it)) }
-    return if (task != null) {
-      tasksWithDataEntries(task)
+    val taskDocumentOption = taskRepository.findById(query.id)
+    return if (taskDocumentOption.isPresent) {
+      tasksWithDataEntries(taskDocumentOption.get().task())
     } else {
       null
     }
@@ -234,5 +233,7 @@ open class TaskPoolMongoService(
         task.correlations.map { dataIdentity(entryType = it.key, entryId = it.value.toString()) }).map { it.dataEntry() }
     )
 
+  private fun tasksWithDataEntries(taskDocument: TaskDocument) =
+    tasksWithDataEntries(taskDocument.task())
 }
 

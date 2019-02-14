@@ -8,14 +8,12 @@ data class TasksForUserQuery(
 ) : FilterQuery<Task> {
 
   override fun applyFilter(element: Task) =
-// assignee
+  // assignee
     element.assignee == this.user.username
       // candidate user
       || (element.candidateUsers.contains(this.user.username))
       // candidate groups:
       || (element.candidateGroups.any { candidateGroup -> this.user.groups.contains(candidateGroup) })
-
-
 }
 
 data class TaskList(val tasks: List<Task>)

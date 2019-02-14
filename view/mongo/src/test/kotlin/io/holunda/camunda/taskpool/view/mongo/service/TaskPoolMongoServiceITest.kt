@@ -19,65 +19,24 @@ import java.util.*
 class TaskPoolMongoServiceITest : SpringRuleScenarioTest<TaskPoolGivenStage<*>, TaskPoolWhenStage<*>, TaskPoolThenStage<*>>() {
 
   @Test
-  fun `slice contains complete list if input list is smaller than desired page size`() {
-    given()
-      .tasks_exist(13)
-
-    `when`()
-      .tasks_queried(0, 83)
-
-    then()
-      .num_tasks_are_returned(13)
-  }
-
-  @Test
-  fun `slice for page 0 contains the desired count of elements`() {
-    given()
-      .tasks_exist(111)
-
-    `when`()
-      .tasks_queried(0, 83)
-
-    then()
-      .num_tasks_are_returned(83)
-  }
-
-  @Test
-  fun `slice for page 1 contains elements from after page 0 to end of list`() {
-    given()
-      .tasks_exist(111)
-
-    `when`()
-      .tasks_queried(1, 83)
-
-    then()
-      .num_tasks_are_returned(111 - 83)
-  }
-
-  @Test
-  fun `paging returns each element exactly once`() {
-    given()
-      .tasks_exist(111)
-
-    `when`()
-      .tasks_queried(0, 83)
-      .and()
-      .tasks_queried(1, 83)
-
-    then()
-      .all_tasks_are_returned()
-  }
-
-  @Test
   fun `a task is created on receiving TaskCreatedEngineEvent`() {
+
+    val testData = TestTaskData(id = "some-id", assignee = "kermit")
+    val expected = testData.asTask()
+
     given()
       .no_task_exists()
 
     `when`()
-      .task_created_event_is_received(TestTaskData(id = "some-id").asTaskCreatedEngineEvent())
-
+      .task_created_event_is_received(testData.asTaskCreatedEngineEvent())
     then()
-      .task_is_created(TestTaskData(id = "some-id").asTask())
+      .task_is_created(expected)
+      .and()
+      .tasks_visible_to_assignee_or_candidate_user("kermit", listOf(expected))
+      .and()
+      .tasks_visible_to_assignee_or_candidate_user("piggy", listOf(expected))
+      .and()
+      .tasks_visible_to_candidate_group("muppetshow", listOf(expected))
   }
 
   @Test
