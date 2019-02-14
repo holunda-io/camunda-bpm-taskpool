@@ -1,5 +1,7 @@
 package io.holunda.camunda.taskpool.view.mongo.repository
 
+import io.holunda.camunda.taskpool.api.business.EntryType
+import io.holunda.camunda.taskpool.view.DataEntry
 import org.springframework.data.mongodb.repository.MongoRepository
 import org.springframework.data.mongodb.repository.Query
 import org.springframework.data.repository.query.Param

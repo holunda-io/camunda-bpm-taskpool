@@ -25,8 +25,9 @@ import org.axonframework.queryhandling.QueryHandler
 import org.axonframework.queryhandling.QueryUpdateEmitter
 import org.springframework.stereotype.Component
 
-
-@Suppress("unused")
+/**
+ * Mongo-based projection.
+ */
 @Component
 @ProcessingGroup(TaskPoolMongoService.PROCESSING_GROUP)
 open class TaskPoolMongoService(
@@ -39,7 +40,6 @@ open class TaskPoolMongoService(
   companion object : KLogging() {
     const val PROCESSING_GROUP = "io.holunda.camunda.taskpool.view.mongo.service"
   }
-
 
   /**
    * Retrieves a list of all user tasks for current user.
@@ -57,8 +57,18 @@ open class TaskPoolMongoService(
    * Retrieves a list of all data entries of given entry type (and optional id).
    */
   @QueryHandler
-  open fun query(query: DataEntryQuery): List<DataEntry> = dataEntryRepository.findAll().map { it.dataEntry() }.filter { query.applyFilter(it) }
-
+  open fun query(query: DataEntryQuery): List<DataEntry> {
+    return if (query.entryId != null) {
+      val dataEntry = dataEntryRepository.findByIdentity(query.identity()).orElse(null)?.dataEntry()
+      if (dataEntry != null) {
+        listOf(dataEntry)
+      } else {
+        listOf()
+      }
+    } else {
+      dataEntryRepository.findAllByEntryType(query.entryType).map { it.dataEntry() }
+    }
+  }
 
   /**
    * Retrieves a task for given task id.
@@ -71,9 +81,9 @@ open class TaskPoolMongoService(
    */
   @QueryHandler
   open fun query(query: TaskWithDataEntriesForIdQuery): TaskWithDataEntries? {
-    val taskDocumentOption = taskRepository.findById(query.id)
-    return if (taskDocumentOption.isPresent) {
-      tasksWithDataEntries(taskDocumentOption.get().task())
+    val task = taskRepository.findById(query.id).orElse(null)?.task()
+    return if (task != null) {
+      tasksWithDataEntries(task)
     } else {
       null
     }
@@ -117,15 +127,13 @@ open class TaskPoolMongoService(
   @EventHandler
   open fun on(event: TaskCreatedEngineEvent) {
     logger.debug { "Task created $event received" }
-    val task = task(event)
-    taskRepository.save(task.taskDocument())
+    taskRepository.save(task(event).taskDocument())
     updateTaskForUserQuery(event.id)
   }
 
   @EventHandler
   open fun on(event: TaskAssignedEngineEvent) {
     logger.debug { "Task assigned $event received" }
-
     taskRepository.findById(event.id).ifPresent {
       taskRepository.save(task(event, it.task()).taskDocument())
       updateTaskForUserQuery(event.id)
@@ -179,6 +187,7 @@ open class TaskPoolMongoService(
     dataEntryRepository.save(
       DataEntryDocument(
         identity = dataIdentity(entryType = event.entryType, entryId = event.entryId),
+        entryType = event.entryType,
         payload = event.payload
       ))
     updateDataEntryQuery(event)
@@ -190,6 +199,7 @@ open class TaskPoolMongoService(
     dataEntryRepository.save(
       DataEntryDocument(
         identity = dataIdentity(entryType = event.entryType, entryId = event.entryId),
+        entryType = event.entryType,
         payload = event.payload
       ))
     updateDataEntryQuery(event)
