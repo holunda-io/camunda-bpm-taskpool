@@ -13,7 +13,7 @@
 
   <properties>
     <npm.version>6.4.1</npm.version>
-    <node.version>v8.11.3</node.version>
+    <node.version>v10.15.1</node.version>
     <angular-app-name>taskpool-cockpit</angular-app-name>
   </properties>
 
