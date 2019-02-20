@@ -43,7 +43,14 @@
                 <li class="list-group-item" *ngFor="let payloadEntry of toFieldSet(event.task) index as j">
                   <div class="row">
                     <div class="col-lg-3">{{ payloadEntry.name | fieldName }}:</div>
-                    <div class="col-lg-9">{{ payloadEntry.value }}</div>
+                    <div class="col-lg-9" *ngIf="payloadEntry.type === 'scalar'">{{ payloadEntry.value }}</div>
+                    <ng-container *ngIf="payloadEntry.type === 'complex'">
+                      <div class="col-lg-9"></div>
+                      <ng-container *ngFor="let innerPayloadEntry of payloadEntry.value">
+                        <div class="col-lg-3 payloadEntryName">{{ innerPayloadEntry.name }}:</div>
+                        <div class="col-lg-9">{{ innerPayloadEntry.value }}</div>
+                      </ng-container>
+                    </ng-container>
                   </div>
                 </li>
               </ul>
