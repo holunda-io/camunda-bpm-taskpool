@@ -107,6 +107,10 @@ open class TaskPoolService(
     return slice(list = sorted, query = query)
   }
 
+  @QueryHandler
+  open fun query(query: TaskCountByApplicationQuery): Map<String, Int> =
+    tasks.values.groupingBy { it.sourceReference.applicationName }.eachCount()
+
   fun slice(list: List<TaskWithDataEntries>, query: TasksWithDataEntriesForUserQuery): TasksWithDataEntriesResponse {
     val totalCount = list.size
     val offset = query.page * query.size
@@ -123,6 +127,7 @@ open class TaskPoolService(
     val task = task(event)
     tasks[task.id] = task
     updateTaskForUserQuery(event.id)
+    updateTaskCountByApplicationQuery(task.sourceReference.applicationName)
   }
 
   @EventHandler
@@ -131,21 +136,26 @@ open class TaskPoolService(
     if (tasks.containsKey(event.id)) {
       tasks[event.id] = task(event, tasks[event.id]!!)
       updateTaskForUserQuery(event.id)
+      updateTaskCountByApplicationQuery(tasks[event.id]!!.sourceReference.applicationName)
     }
   }
 
   @EventHandler
   open fun on(event: TaskCompletedEngineEvent) {
     logger.debug { "Task completed $event received" }
+    val applicationName = tasks[event.id]?.sourceReference?.applicationName
     tasks.remove(event.id)
     updateTaskForUserQuery(event.id)
+    applicationName?.let{updateTaskCountByApplicationQuery(it)}
   }
 
   @EventHandler
   open fun on(event: TaskDeletedEngineEvent) {
     logger.debug { "Task deleted $event received" }
+    val applicationName = tasks[event.id]?.sourceReference?.applicationName
     tasks.remove(event.id)
     updateTaskForUserQuery(event.id)
+    applicationName?.let{updateTaskCountByApplicationQuery(it)}
   }
 
   @EventHandler
@@ -154,6 +164,7 @@ open class TaskPoolService(
     if (tasks.containsKey(event.id)) {
       tasks[event.id] = task(event, tasks[event.id]!!)
       updateTaskForUserQuery(event.id)
+      updateTaskCountByApplicationQuery(tasks[event.id]!!.sourceReference.applicationName)
     }
   }
 
@@ -163,6 +174,7 @@ open class TaskPoolService(
     if (tasks.containsKey(event.id)) {
       tasks[event.id] = task(event, tasks[event.id]!!)
       updateTaskForUserQuery(event.id)
+      updateTaskCountByApplicationQuery(tasks[event.id]!!.sourceReference.applicationName)
     }
   }
 
@@ -172,6 +184,7 @@ open class TaskPoolService(
     if (tasks.containsKey(event.id)) {
       tasks[event.id] = task(event, tasks[event.id]!!)
       updateTaskForUserQuery(event.id)
+      updateTaskCountByApplicationQuery(tasks[event.id]!!.sourceReference.applicationName)
     }
   }
 
@@ -205,7 +218,10 @@ open class TaskPoolService(
       val entry = map[key]!!
       queryUpdateEmitter.emit(clazz, { query -> query.applyFilter(entry) }, entry)
     }
+  }
 
+  private fun updateTaskCountByApplicationQuery(applicationName: String) {
+    queryUpdateEmitter.emit(TaskCountByApplicationQuery::class.java, { true }, applicationName to tasks.values.count { it.sourceReference.applicationName == applicationName })
   }
 }
 
