@@ -107,6 +107,9 @@ open class TaskPoolService(
     return slice(list = sorted, query = query)
   }
 
+  /**
+   * Retrieves the count of tasks grouped by source application. Supports subscription queries.
+   */
   @QueryHandler
   open fun query(query: TaskCountByApplicationQuery): List<ApplicationWithTaskCount> =
     tasks.values.groupingBy { it.sourceReference.applicationName }.eachCount().map { ApplicationWithTaskCount(it.key, it.value) }
