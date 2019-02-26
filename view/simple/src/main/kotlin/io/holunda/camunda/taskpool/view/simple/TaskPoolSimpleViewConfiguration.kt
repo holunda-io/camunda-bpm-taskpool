@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration
 open class TaskPoolSimpleViewConfiguration {
 
   @Bean
-  @ConditionalOnProperty(prefix = "camunda.taskpool.view.simple", name = ["replay"], value = ["true"], matchIfMissing = true)
+  @ConditionalOnProperty(prefix = "camunda.taskpool.view.simple", name = ["replay"], matchIfMissing = true)
   open fun initializeSimpleView(taskPoolService: TaskPoolService) = ApplicationRunner {
     taskPoolService.restore()
   }

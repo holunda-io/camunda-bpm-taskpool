@@ -13,7 +13,7 @@ camunda:
 
 logging.level.io.holunda.camunda.taskpool:
   core: WARN
-  view.simple: WARN
+  view.simple: INFO
   example.tasklist: WARN
 
 

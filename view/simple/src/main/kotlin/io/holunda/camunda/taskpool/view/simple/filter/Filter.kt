@@ -132,7 +132,7 @@ data class PropertyValuePredicate<T>(
     return if (field != null) {
       try {
         val extracted = valueExtractor(target, field)
-        value.toString() == extracted
+        value.toString() == extracted.toString()
       } catch (e: IllegalStateException) {
         false
       }
