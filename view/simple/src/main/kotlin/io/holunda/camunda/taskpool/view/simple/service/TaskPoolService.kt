@@ -108,8 +108,8 @@ open class TaskPoolService(
   }
 
   @QueryHandler
-  open fun query(query: TaskCountByApplicationQuery): Map<String, Int> =
-    tasks.values.groupingBy { it.sourceReference.applicationName }.eachCount()
+  open fun query(query: TaskCountByApplicationQuery): List<ApplicationWithTaskCount> =
+    tasks.values.groupingBy { it.sourceReference.applicationName }.eachCount().map { ApplicationWithTaskCount(it.key, it.value) }
 
   fun slice(list: List<TaskWithDataEntries>, query: TasksWithDataEntriesForUserQuery): TasksWithDataEntriesResponse {
     val totalCount = list.size
@@ -221,7 +221,7 @@ open class TaskPoolService(
   }
 
   private fun updateTaskCountByApplicationQuery(applicationName: String) {
-    queryUpdateEmitter.emit(TaskCountByApplicationQuery::class.java, { true }, applicationName to tasks.values.count { it.sourceReference.applicationName == applicationName })
+    queryUpdateEmitter.emit(TaskCountByApplicationQuery::class.java, { true }, ApplicationWithTaskCount(applicationName, tasks.values.count { it.sourceReference.applicationName == applicationName }))
   }
 }
 

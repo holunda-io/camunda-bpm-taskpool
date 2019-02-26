@@ -10,6 +10,7 @@ import io.holunda.camunda.taskpool.api.task.*
 import io.holunda.camunda.taskpool.view.Task
 import io.holunda.camunda.taskpool.view.TaskWithDataEntries
 import io.holunda.camunda.taskpool.view.auth.User
+import io.holunda.camunda.taskpool.view.query.ApplicationWithTaskCount
 import io.holunda.camunda.taskpool.view.query.TaskCountByApplicationQuery
 import io.holunda.camunda.taskpool.view.query.TaskForIdQuery
 import io.holunda.camunda.taskpool.view.query.TasksWithDataEntriesForUserQuery
@@ -98,7 +99,7 @@ open class TaskPoolWhenStage<SELF : TaskPoolWhenStage<SELF>> : TaskPoolStage<SEL
   private var queriedTasks: MutableList<TaskWithDataEntries> = mutableListOf()
 
   @ProvidedScenarioState(resolution = ScenarioState.Resolution.NAME)
-  private var returnedTaskCounts: Map<String, Int> = mapOf()
+  private var returnedTaskCounts: List<ApplicationWithTaskCount> = listOf()
 
   private fun query(page: Int, size: Int) = TasksWithDataEntriesForUserQuery(User("kermit", setOf()), page, size)
 
@@ -125,7 +126,7 @@ open class TaskPoolThenStage<SELF : TaskPoolThenStage<SELF>> : TaskPoolStage<SEL
   private lateinit var queriedTasks: List<TaskWithDataEntries>
 
   @ExpectedScenarioState(resolution = ScenarioState.Resolution.NAME, required = true)
-  private lateinit var returnedTaskCounts: Map<String, Int>
+  private lateinit var returnedTaskCounts: List<ApplicationWithTaskCount>
 
   @As("$ tasks are returned")
   open fun num_tasks_are_returned(numTasks: Int): SELF {
@@ -170,8 +171,8 @@ open class TaskPoolThenStage<SELF : TaskPoolThenStage<SELF>> : TaskPoolStage<SEL
     return self()
   }
 
-  open fun task_counts_are(vararg entries: Pair<String, Int>): SELF {
-    assertThat(returnedTaskCounts).containsOnly(*entries.map { entry(it.first, it.second) }.toTypedArray())
+  open fun task_counts_are(vararg entries: ApplicationWithTaskCount): SELF {
+    assertThat(returnedTaskCounts).containsOnly(*entries)
     return self()
   }
 
