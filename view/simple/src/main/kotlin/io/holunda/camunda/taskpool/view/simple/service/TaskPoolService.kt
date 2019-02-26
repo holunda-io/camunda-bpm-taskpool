@@ -2,14 +2,18 @@ package io.holunda.camunda.taskpool.view.simple.service
 
 import io.holunda.camunda.taskpool.api.business.DataEntryCreatedEvent
 import io.holunda.camunda.taskpool.api.business.DataEntryUpdatedEvent
+import io.holunda.camunda.taskpool.api.business.EntryId
 import io.holunda.camunda.taskpool.api.business.dataIdentity
 import io.holunda.camunda.taskpool.api.task.*
-import io.holunda.camunda.taskpool.view.*
+import io.holunda.camunda.taskpool.view.DataEntry
+import io.holunda.camunda.taskpool.view.Task
+import io.holunda.camunda.taskpool.view.TaskWithDataEntries
 import io.holunda.camunda.taskpool.view.query.*
 import io.holunda.camunda.taskpool.view.simple.createPredicates
 import io.holunda.camunda.taskpool.view.simple.filterByPredicates
 import io.holunda.camunda.taskpool.view.simple.sort.comparator
 import io.holunda.camunda.taskpool.view.simple.toCriteria
+import io.holunda.camunda.taskpool.view.task
 import mu.KLogging
 import org.axonframework.config.EventProcessingConfiguration
 import org.axonframework.config.ProcessingGroup
@@ -143,6 +147,7 @@ open class TaskPoolService(
     }
   }
 
+  @Suppress("unused")
   @EventHandler
   open fun on(event: TaskCompletedEngineEvent) {
     logger.debug { "Task completed $event received" }
@@ -152,6 +157,7 @@ open class TaskPoolService(
     applicationName?.let{updateTaskCountByApplicationQuery(it)}
   }
 
+  @Suppress("unused")
   @EventHandler
   open fun on(event: TaskDeletedEngineEvent) {
     logger.debug { "Task deleted $event received" }
@@ -191,6 +197,7 @@ open class TaskPoolService(
     }
   }
 
+  @Suppress("unused")
   @EventHandler
   open fun on(event: DataEntryCreatedEvent) {
     logger.debug { "Business data entry created $event" }
@@ -202,6 +209,7 @@ open class TaskPoolService(
     updateDataEntryQuery(dataIdentity(entryType = event.entryType, entryId = event.entryId))
   }
 
+  @Suppress("unused")
   @EventHandler
   open fun on(event: DataEntryUpdatedEvent) {
     logger.debug { "Business data entry updated $event" }
@@ -218,7 +226,7 @@ open class TaskPoolService(
 
   private fun <T : Any, Q : FilterQuery<T>> updateMapFilterQuery(map: Map<String, T>, key: String, clazz: Class<Q>) {
     if (map.contains(key)) {
-      val entry = map[key]!!
+      val entry = map.getValue(key)
       queryUpdateEmitter.emit(clazz, { query -> query.applyFilter(entry) }, entry)
     }
   }
@@ -228,3 +236,12 @@ open class TaskPoolService(
   }
 }
 
+fun tasksWithDataEntries(task: Task, dataEntries: Map<String, DataEntry>) =
+  TaskWithDataEntries(
+    task = task,
+    dataEntries = dataEntries.filter { entry ->
+      // task correlation list contains entryType -> entryId elements
+      // create data entry identity with it and tak only data entries with this identity
+      task.correlations.map { dataIdentity(it.key, it.value as EntryId) }.contains(entry.key)
+    }.values.toList()
+  )

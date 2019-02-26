@@ -1,0 +1,10 @@
+spring:
+  data:
+    mongodb:
+      database: tasks-payload
+      host: localhost
+      port: 27017
+
+logging.level.io.holunda.camunda.taskpool:
+  view.mongo: INFO
+

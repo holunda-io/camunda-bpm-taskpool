@@ -4,19 +4,6 @@ server:
 spring:
   application:
     name: taskpool
-#  datasource:
-#    url: jdbc:h2:tcp://localhost:9092/mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
-#    username: sa
-#    password:
-#    driver-class-name: org.h2.Driver
-#  jpa:
-#    generate-ddl: false
-#    hibernate.ddl-auto: validate
-#    show-sql: false
-#    open-in-view: false
-#  flyway:
-#    enabled: true
-#    locations: "classpath:db/migrations"
 
 camunda:
   taskpool:
@@ -26,7 +13,7 @@ camunda:
 
 logging.level.io.holunda.camunda.taskpool:
   core: WARN
-  view.simple: WARN
+  view.simple: INFO
   example.tasklist: WARN
 
 
@@ -43,10 +30,3 @@ swagger:
       apiInfo:
         title: Tasklist Application
         description: Rest interface of the task list.
-    cockpit:
-      basePackage: "io.holunda.camunda.taskpool.cockpit"
-      path: "/**"
-      apiInfo:
-        title: Taskpool Cockpit
-        description: Rest interface of the cockpit.
-

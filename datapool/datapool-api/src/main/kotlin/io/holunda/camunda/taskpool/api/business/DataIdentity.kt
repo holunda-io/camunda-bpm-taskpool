@@ -17,7 +17,9 @@ interface DataIdentity {
 typealias EntryId = String
 typealias EntryType = String
 
+const val DATA_IDENTITY_SEPARATOR = "#"
+
 /**
  * Constructs the data identity.
  */
-fun dataIdentity(entryType: EntryType, entryId: EntryId) = "$entryType:$entryId"
+fun dataIdentity(entryType: EntryType, entryId: EntryId) = "$entryType$DATA_IDENTITY_SEPARATOR$entryId"
