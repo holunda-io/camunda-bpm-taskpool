@@ -48,7 +48,7 @@ NOTE: This operation requires special permissions.
 
 Currently, CI support for deployment of artifacts to Maven Central is disabled and manual deployment 
 works as the only option. In order to execute the deployment you need to execute the following command
-on the `master`branch:
+on the `master` branch:
 
 [source,sh]
 ----
