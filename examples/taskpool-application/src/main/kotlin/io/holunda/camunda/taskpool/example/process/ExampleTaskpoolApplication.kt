@@ -15,12 +15,12 @@ fun main(args: Array<String>) {
   SpringApplication.run(ExampleTaskpoolApplication::class.java, *args)
 }
 
-@SpringBootApplication(/* exclude = [
+@SpringBootApplication(exclude = [
   MongoAutoConfiguration::class,
   MongoReactiveAutoConfiguration::class,
   MongoDataAutoConfiguration::class,
   MongoReactiveDataAutoConfiguration::class
-] */)
+])
 @EnableTaskPool
 @EnableDataPool
 @EnableTasklist
