@@ -16,7 +16,6 @@
     <maven.deploy.skip>true</maven.deploy.skip>
   </properties>
 
-
   <dependencies>
     <dependency>
       <groupId>io.holunda.taskpool</groupId>
@@ -50,6 +49,7 @@
       <groupId>io.holunda.taskpool</groupId>
       <artifactId>camunda-bpm-taskpool-view-mongo</artifactId>
     </dependency>
+
 
     <dependency>
       <groupId>io.springfox</groupId>
@@ -96,7 +96,6 @@
 
 
   <profiles>
-
     <profile>
       <id>mongo</id>
       <activation>
@@ -117,10 +116,9 @@
             </configuration>
           </plugin>
         </plugins>
-
       </build>
-    </profile>
 
+    </profile>
 
     <profile>
       <id>frontend</id>
@@ -135,13 +133,6 @@
           <artifactId>camunda-bpm-taskpool-example-tasklist-angular</artifactId>
           <version>${project.version}</version>
         </dependency>
-        <!--
-        <dependency>
-          <groupId>io.holunda.taskpool</groupId>
-          <artifactId>camunda-bpm-taskpool-cockpit-frontend</artifactId>
-          <version>${project.version}</version>
-        </dependency>
-        -->
       </dependencies>
     </profile>
   </profiles>
