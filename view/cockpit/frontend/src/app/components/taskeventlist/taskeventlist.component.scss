@@ -36,3 +36,8 @@ h1 img {
 .bordered {
   border: 1px solid #999999;
 }
+
+.payloadEntryName {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

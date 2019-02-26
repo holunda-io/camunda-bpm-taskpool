@@ -62,22 +62,42 @@ export class TaskEventListComponent {
     }
   }
 
-  toFieldSet(payload: any): object[] {
+  toFieldSet(payload: any): PayloadEntry[] {
     return toFieldSet(payload);
   }
 }
 
-function toFieldSet(payload: any): object[] {
-  const payloadProps = Object.keys(payload);
-  const result = [];
-  for (const prop of payloadProps) {
-    if (isValue(payload[prop])) {
-      if (isObject(payload[prop])) {
-        result.push({ name: prop, value: toFieldSet(payload[prop]) });
-      } else {
-        result.push({ name: prop, value: payload[prop] });
-      }
+interface PayloadEntry {
+  readonly name: string;
+  readonly value: any;
+  readonly type: string;
+}
 
+class ScalarPayloadEntry implements PayloadEntry {
+  readonly type = 'scalar';
+
+  constructor(readonly name: string, readonly value: any) {
+  }
+}
+
+class ComplexPayloadEntry implements PayloadEntry {
+  readonly type = 'complex';
+
+  constructor(readonly name: string, readonly value: PayloadEntry[]) {
+  }
+}
+
+function toFieldSet(payload: any): PayloadEntry[] {
+  const payloadProps = Object.keys(payload);
+  const result: PayloadEntry[] = [];
+  for (const prop of payloadProps) {
+    const value = payload[prop];
+    if (isValue(value)) {
+      if (isObject(value)) {
+        result.push(new ComplexPayloadEntry(prop, toFieldSet(value)));
+      } else {
+        result.push(new ScalarPayloadEntry(prop, value));
+      }
     }
   }
   return result;

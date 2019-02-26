@@ -1,10 +1,8 @@
 package io.holunda.camunda.taskpool.view.simple.service
 
 import com.tngtech.jgiven.junit.ScenarioTest
-import io.holunda.camunda.taskpool.api.business.CorrelationMap
-import io.holunda.camunda.taskpool.api.task.*
-import io.holunda.camunda.taskpool.view.Task
-import org.camunda.bpm.engine.variable.VariableMap
+import io.holunda.camunda.taskpool.api.task.CamundaTaskEvent
+import io.holunda.camunda.taskpool.view.query.ApplicationWithTaskCount
 import org.camunda.bpm.engine.variable.Variables
 import org.junit.Test
 import java.util.*
@@ -163,107 +161,19 @@ class TaskPoolServiceTest : ScenarioTest<TaskPoolGivenStage<*>, TaskPoolWhenStag
       .task_has_candidate_users("some-id", setOf("gonzo"))
   }
 
-}
+  @Test
+  fun `tasks are counted by application name`() {
+    given()
+      .tasks_exist_from_application(5, "app-1")
+      .and()
+      .tasks_exist_from_application(42, "app-2")
 
-data class TestTaskData(
-  val id: String,
-  val sourceReference: SourceReference = ProcessReference(
-    "instance-id-12345",
-    "execution-id-12345",
-    "definition-id-12345",
-    "definition-key-abcde",
-    "process-name",
-    "application-name"
-  ),
-  val taskDefinitionKey: String = "task-definition-key-abcde",
-  val payload: VariableMap = Variables.fromMap(mapOf(Pair("variableKey", "variableValue"))),
-  val correlations: CorrelationMap = Variables.fromMap(mapOf(Pair("correlationKey", "correlationValue"))),
-  val businessKey: String? = "businessKey",
-  val name: String? = "task-name",
-  val description: String? = "some task description",
-  val formKey: String? = "app:form-key",
-  val priority: Int? = 0,
-  val createTime: Date? = Date(1234567890L),
-  val candidateUsers: Set<String> = setOf("kermit", "piggy"),
-  val candidateGroups: Set<String> = setOf("muppetshow"),
-  val assignee: String? = null,
-  val owner: String? = null,
-  val dueDate: Date? = Date(1234599999L),
-  val followUpDate: Date? = null) {
+    `when`()
+      .task_count_queried()
 
-  fun asTaskCreatedEngineEvent() = TaskCreatedEngineEvent(
-    id = id,
-    sourceReference = sourceReference,
-    taskDefinitionKey = taskDefinitionKey,
-    payload = payload,
-    correlations = correlations,
-    businessKey = businessKey,
-    name = name,
-    description = description,
-    formKey = formKey,
-    priority = priority,
-    createTime = createTime,
-    candidateUsers = candidateUsers,
-    candidateGroups = candidateGroups,
-    assignee = assignee,
-    owner = owner,
-    dueDate = dueDate,
-    followUpDate = followUpDate
-  )
+    then()
+      .task_counts_are("app-1" withTaskCount 5, "app-2" withTaskCount 42)
+  }
 
-  fun asTaskAssignedEngineEvent() = TaskAssignedEngineEvent(
-    id = id,
-    sourceReference = sourceReference,
-    taskDefinitionKey = taskDefinitionKey,
-    payload = payload,
-    correlations = correlations,
-    assignee = assignee)
-
-  fun asTaskAttributeUpdatedEvent() = TaskAttributeUpdatedEngineEvent(
-    id = id,
-    sourceReference = sourceReference,
-    taskDefinitionKey = taskDefinitionKey,
-    name = name,
-    description = description,
-    priority = priority,
-    owner = owner,
-    dueDate = dueDate,
-    followUpDate = followUpDate
-  )
-
-  fun asCandidateGroupChangedEvent(groupId: String, assignmentUpdateType: String) = TaskCandidateGroupChanged(
-    id = id,
-    sourceReference = sourceReference,
-    taskDefinitionKey = taskDefinitionKey,
-    groupId = groupId,
-    assignmentUpdateType = assignmentUpdateType
-  )
-
-  fun asCandidateUserChangedEvent(userId: String, assignmentUpdateType: String) = TaskCandidateUserChanged(
-    id = id,
-    sourceReference = sourceReference,
-    taskDefinitionKey = taskDefinitionKey,
-    userId = userId,
-    assignmentUpdateType = assignmentUpdateType
-  )
-
-  fun asTask() = Task(
-    id = id,
-    sourceReference = sourceReference,
-    taskDefinitionKey = taskDefinitionKey,
-    payload = payload,
-    correlations = correlations,
-    businessKey = businessKey,
-    name = name,
-    description = description,
-    formKey = formKey,
-    priority = priority,
-    createTime = createTime,
-    candidateUsers = candidateUsers,
-    candidateGroups = candidateGroups,
-    assignee = assignee,
-    owner = owner,
-    dueDate = dueDate,
-    followUpDate = followUpDate
-  )
+  private infix fun String.withTaskCount(taskCount: Int) = ApplicationWithTaskCount(this, taskCount)
 }

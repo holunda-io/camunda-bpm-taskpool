@@ -1,11 +1,11 @@
-FROM node:8.9 as installer
+FROM node:10.15 as installer
 
 WORKDIR /opt/build
 COPY package.json ./
 RUN npm install
 
 
-FROM node:8.9 as builder
+FROM node:10.15 as builder
 WORKDIR /opt/build
 COPY --from=installer /opt/build ./
 
@@ -14,7 +14,7 @@ RUN npm run build
 
 CMD ["npm"]
 
-FROM node:8.9 as runner
+FROM node:10.15 as runner
 
 WORKDIR /opt/build
 COPY --from=builder /opt/build ./
