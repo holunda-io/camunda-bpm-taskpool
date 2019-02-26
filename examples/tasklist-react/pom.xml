@@ -6,7 +6,7 @@
   <parent>
     <groupId>io.holunda.taskpool</groupId>
     <artifactId>camunda-bpm-taskpool-examples-root</artifactId>
-    <version>1.2.1</version>
+    <version>1.2.2</version>
   </parent>
 
   <artifactId>camunda-bpm-taskpool-example-tasklist-react</artifactId>
@@ -15,7 +15,7 @@
 
   <properties>
     <npm.version>6.4.1</npm.version>
-    <node.version>v8.11.3</node.version>
+    <node.version>v10.15.1</node.version>
     <maven.deploy.skip>true</maven.deploy.skip>
   </properties>
 

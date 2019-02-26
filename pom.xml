@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>io.holunda.taskpool</groupId>
   <artifactId>camunda-bpm-taskpool</artifactId>
-  <version>1.2.1</version>
+  <version>1.2.2</version>
   <packaging>pom</packaging>
 
   <name>${project.artifactId}</name>
@@ -13,25 +14,32 @@
 
   <properties>
     <skipFrontend>true</skipFrontend>
+    <skipAsciidoctor>true</skipAsciidoctor>
 
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <java.version>1.8</java.version>
     <version.java>${java.version}</version.java>
 
+    <pattern.class.itest>**/*ITest.*</pattern.class.itest>
+    <pattern.package.itest>**/itest/**/*.*</pattern.package.itest>
+
+
     <camunda-ee>false</camunda-ee>
-    <camunda.version>7.9.0</camunda.version>
-    <camunda.version.ee>7.9.2-ee</camunda.version.ee>
+    <camunda.version>7.10.0</camunda.version>
+    <camunda.version.ee>7.10.1-ee</camunda.version.ee>
     <camunda-commons.version>1.5.1</camunda-commons.version>
 
 
-    <camunda-springboot.version>3.0.0</camunda-springboot.version>
-    <kotlin.version>1.3.0</kotlin.version>
+    <springboot.version>2.1.2.RELEASE</springboot.version>
+    <camunda-springboot.version>3.2.0</camunda-springboot.version>
+    <axon.version>4.0.3</axon.version>
+    <kotlin.version>1.3.21</kotlin.version>
     <kotlin.compiler.jvmTarget>${java.version}</kotlin.compiler.jvmTarget>
-    <kotlin-logging.version>1.5.4</kotlin-logging.version>
+    <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
+
+    <kotlin-logging.version>1.6.22</kotlin-logging.version>
     <mockito.version>2.18.3</mockito.version>
-    <springboot.version>2.0.3.RELEASE</springboot.version>
-    <axon.version>4.0</axon.version>
     <version.camunda.spin>1.5.1</version.camunda.spin>
     <jackson.version>2.9.8</jackson.version>
     <org.mapstruct.version>1.2.0.Final</org.mapstruct.version>
@@ -41,8 +49,7 @@
   </properties>
 
   <modules>
-    <module>camunda-engine-plugin</module>
-    <module>camunda-engine-client</module>
+    <module>engine</module>
     <module>taskpool</module>
     <module>datapool</module>
     <module>view</module>
@@ -107,6 +114,11 @@
       <dependency>
         <groupId>io.holunda.taskpool</groupId>
         <artifactId>camunda-bpm-taskpool-view-simple</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.holunda.taskpool</groupId>
+        <artifactId>camunda-bpm-taskpool-view-mongo</artifactId>
         <version>${project.version}</version>
       </dependency>
 
@@ -293,6 +305,12 @@
         <scope>test</scope>
       </dependency>
       <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-test</artifactId>
+        <version>${springboot.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
         <groupId>org.camunda.bpm.extension.mockito</groupId>
         <artifactId>camunda-bpm-mockito</artifactId>
         <version>4.0.0</version>
@@ -322,10 +340,6 @@
 
   <dependencies>
     <!-- Kotlin -->
-    <dependency>
-      <groupId>org.jetbrains.kotlin</groupId>
-      <artifactId>kotlin-stdlib</artifactId>
-    </dependency>
     <dependency>
       <groupId>org.jetbrains.kotlin</groupId>
       <artifactId>kotlin-stdlib-jdk8</artifactId>
@@ -764,13 +778,51 @@
           <version>2.8.2</version>
         </plugin>
 
+        <!-- ASCII Doctor-->
+        <plugin>
+          <groupId>org.asciidoctor</groupId>
+          <artifactId>asciidoctor-maven-plugin</artifactId>
+          <version>1.5.7.1</version>
+          <dependencies>
+            <dependency>
+              <groupId>org.asciidoctor</groupId>
+              <artifactId>asciidoctorj-diagram</artifactId>
+              <version>1.5.11</version>
+            </dependency>
+          </dependencies>
+          <configuration>
+            <skip>${skipAsciidoctor}</skip>
+            <requires>
+              <require>asciidoctor-diagram</require>
+            </requires>
+          </configuration>
+          <executions>
+            <execution>
+              <id>output-html</id>
+              <phase>generate-resources</phase>
+              <goals>
+                <goal>process-asciidoc</goal>
+              </goals>
+              <configuration>
+                <backend>html5</backend>
+                <sourceDirectory>${project.basedir}/docs</sourceDirectory>
+                <outputDirectory>${project.build.directory}/docs/html5</outputDirectory>
+              </configuration>
+            </execution>
+          </executions>
+        </plugin>
       </plugins>
     </pluginManagement>
 
     <plugins>
+
       <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.asciidoctor</groupId>
+        <artifactId>asciidoctor-maven-plugin</artifactId>
       </plugin>
       <plugin>
         <groupId>org.jetbrains.kotlin</groupId>
@@ -785,6 +837,7 @@
   </build>
 
   <profiles>
+
     <profile>
       <id>itest</id>
       <activation>
@@ -823,6 +876,7 @@
         </plugins>
       </build>
     </profile>
+
     <profile>
       <id>generate-sql</id>
       <build>
@@ -935,6 +989,7 @@
         </dependencies>
       </dependencyManagement>
     </profile>
+
   </profiles>
 
   <licenses>
@@ -1006,6 +1061,13 @@
       <name>Christoph Wolff</name>
       <organization>Holisticon AG</organization>
       <organizationUrl>http://www.holisticon.de</organizationUrl>
+    </developer>
+    <developer>
+      <id>a-hegerath</id>
+      <name>Andre Hegerath</name>
+      <email>ah@hbt.de</email>
+      <organization>HBT GmbH</organization>
+      <organizationUrl>https://www.hbt.de/</organizationUrl>
     </developer>
   </developers>
 </project>

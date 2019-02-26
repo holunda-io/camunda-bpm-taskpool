@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>io.holunda.taskpool</groupId>
+    <artifactId>camunda-bpm-taskpool</artifactId>
+    <version>1.2.2</version>
+  </parent>
+
+  <artifactId>camunda-bpm-taskpool-engine-root</artifactId>
+  <packaging>pom</packaging>
+  
+  <modules>
+    <module>taskpool-collector</module>
+    <module>datapool-sender</module>
+    <module>camunda-engine-client</module>
+    <module>camunda-engine-plugin</module>
+    <module>taskpool-engine-springboot-starter</module>
+  </modules>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>io.holunda.taskpool</groupId>
+        <artifactId>camunda-bpm-taskpool-collector</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+</project>

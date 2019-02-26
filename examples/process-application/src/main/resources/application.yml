@@ -1,7 +1,3 @@
-application:
-  tasklist:
-    url: http://localhost:8081/tasklist/
-
 server:
   port: 8080
 
@@ -38,6 +34,7 @@ camunda:
     engine-eventing:
         enabled: true
     collector:
+      tasklist-url: http://localhost:8081/tasklist/
       enricher:
         application-name: ${spring.application.name}  # default
         type: processVariables
@@ -48,8 +45,6 @@ camunda:
       sender:
         enabled: true
         type: simple
-    url-resolver:
-      default: "tasks/${formKey}/id/${id}"
 
 logging.level.io.holunda.camunda.taskpool:
   sender: DEBUG

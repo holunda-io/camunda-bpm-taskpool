@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { TaskEventService, TaskEvent } from 'cockpit';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { HttpResponse } from '@angular/common/http';
 
 @Injectable()
 export class TaskEventHelperService {

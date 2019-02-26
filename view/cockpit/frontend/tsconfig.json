@@ -9,6 +9,12 @@
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
+
+    "forceConsistentCasingInFileNames": true,
+    "noImplicitReturns": true,
+    // "strict": true,
+    // "noUnusedLocals": true,
+
     "target": "es5",
     "typeRoots": [
       "node_modules/@types"

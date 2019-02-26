@@ -6,13 +6,13 @@ import io.holunda.camunda.taskpool.example.tasklist.rest.model.TaskDto
 import io.holunda.camunda.taskpool.example.tasklist.rest.model.TaskWithDataEntriesDto
 import io.holunda.camunda.taskpool.view.DataEntry
 import io.holunda.camunda.taskpool.view.Task
+import io.holunda.camunda.taskpool.view.TaskUrlResolver
 import io.holunda.camunda.taskpool.view.TaskWithDataEntries
 import org.mapstruct.Mapper
 import org.mapstruct.Mapping
 import org.mapstruct.Mappings
 import org.mapstruct.ReportingPolicy
 import org.springframework.beans.factory.annotation.Autowired
-import java.time.LocalDateTime
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
 import java.util.*

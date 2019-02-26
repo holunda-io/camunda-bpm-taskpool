@@ -1,0 +1,20 @@
+camunda:
+  taskpool:
+    task-url-resolver:
+      defaultTaskTemplate:  "/forms/${formKey}/${id}"
+      defaultApplicationTemplate: "http://localhost:8080/${applicatioName}"
+      applications:
+        - app1:
+            url: "http://app1.server.io/app"
+            tasks:
+              - task1: "/forms/task1/foo/${id}"
+              - task2: "/bar/2/foo/${id}"
+        - app2:
+            url: "http://foo.app2.com"
+            tasks:
+              - otherTask1: "/views/task1/${id}"
+              - otherTask2: "/other/2/foo/${id}"
+
+#        var tasks: Map<String,Map<String, String>> = mutableMapOf(),
+#        var defaultApplicationTemplate: String = "",
+#        var applications: Map<String, String> = mutableMapOf()

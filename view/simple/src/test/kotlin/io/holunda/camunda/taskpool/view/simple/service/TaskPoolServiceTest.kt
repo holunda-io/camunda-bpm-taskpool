@@ -1,13 +1,8 @@
 package io.holunda.camunda.taskpool.view.simple.service
 
 import com.tngtech.jgiven.junit.ScenarioTest
-import io.holunda.camunda.taskpool.api.business.newCorrelations
-import io.holunda.camunda.taskpool.api.task.ProcessReference
-import io.holunda.camunda.taskpool.api.task.SourceReference
-import io.holunda.camunda.taskpool.api.task.TaskAssignedEngineEvent
-import io.holunda.camunda.taskpool.api.task.TaskAttributeUpdatedEngineEvent
-import io.holunda.camunda.taskpool.api.task.TaskCreatedEngineEvent
-import io.holunda.camunda.taskpool.view.Task
+import io.holunda.camunda.taskpool.api.task.CamundaTaskEvent
+import io.holunda.camunda.taskpool.view.query.ApplicationWithTaskCount
 import org.camunda.bpm.engine.variable.Variables
 import org.junit.Test
 import java.util.*
@@ -70,10 +65,10 @@ class TaskPoolServiceTest : ScenarioTest<TaskPoolGivenStage<*>, TaskPoolWhenStag
       .no_task_exists()
 
     `when`()
-      .task_created_event_is_received(makeTaskCreatedEvent())
+      .task_created_event_is_received(TestTaskData(id = "some-id").asTaskCreatedEngineEvent())
 
     then()
-      .task_is_created(makeTask())
+      .task_is_created(TestTaskData(id = "some-id").asTask())
   }
 
   @Test
@@ -81,10 +76,10 @@ class TaskPoolServiceTest : ScenarioTest<TaskPoolGivenStage<*>, TaskPoolWhenStag
     given()
       .no_task_exists()
       .and()
-      .task_created_event_is_received(makeTaskCreatedEvent())
+      .task_created_event_is_received(TestTaskData(id = "some-id").asTaskCreatedEngineEvent())
 
     `when`()
-      .task_assign_event_is_received(makeTaskAssignedEvent())
+      .task_assign_event_is_received(TestTaskData(id = "some-id", assignee = "kermit").asTaskAssignedEngineEvent())
 
     then()
       .task_is_assigned_to("some-id", "kermit")
@@ -95,10 +90,10 @@ class TaskPoolServiceTest : ScenarioTest<TaskPoolGivenStage<*>, TaskPoolWhenStag
     given()
       .no_task_exists()
       .and()
-      .task_created_event_is_received(makeTaskCreatedEvent())
+      .task_created_event_is_received(TestTaskData(id = "some-id").asTaskCreatedEngineEvent())
 
     `when`()
-      .task_assign_event_is_received(makeTaskAssignedEvent())
+      .task_assign_event_is_received(TestTaskData(id = "some-id", assignee = "kermit").asTaskAssignedEngineEvent())
 
     then()
       .task_payload_matches("some-id", Variables.fromMap(mapOf(Pair("variableKey", "variableValue"))))
@@ -111,12 +106,12 @@ class TaskPoolServiceTest : ScenarioTest<TaskPoolGivenStage<*>, TaskPoolWhenStag
     given()
       .no_task_exists()
       .and()
-      .task_created_event_is_received(makeTaskCreatedEvent())
+      .task_created_event_is_received(TestTaskData(id = "some-id").asTaskCreatedEngineEvent())
       .and()
-      .task_assign_event_is_received(makeTaskAssignedEvent())
+      .task_assign_event_is_received(TestTaskData(id = "some-id", assignee = "kermit").asTaskAssignedEngineEvent())
 
     `when`()
-      .task_attributes_update_event_is_received(makeTaskAttributeUpdateEvent())
+      .task_attributes_update_event_is_received(TestTaskData(id = "some-id", followUpDate = Date(1234699999L)).asTaskAttributeUpdatedEvent())
 
     then()
       .task_is_assigned_to("some-id", "kermit")
@@ -128,84 +123,57 @@ class TaskPoolServiceTest : ScenarioTest<TaskPoolGivenStage<*>, TaskPoolWhenStag
       .no_task_exists()
 
     `when`()
-      .task_assign_event_is_received(makeTaskAssignedEvent())
+      .task_assign_event_is_received(TestTaskData(id = "some-id", assignee = "kermit").asTaskAssignedEngineEvent())
 
     then()
       .task_is_assigned_to("some-id", null)
   }
 
-  private fun makeTaskCreatedEvent(): TaskCreatedEngineEvent =
-    TaskCreatedEngineEvent(
-      id = "some-id",
-      sourceReference = makeSourceReference(),
-      taskDefinitionKey = "task-definition-key-abcde",
-      payload = Variables.fromMap(mapOf(Pair("variableKey", "variableValue"))),
-      correlations = Variables.fromMap(mapOf(Pair("correlationKey", "correlationValue"))),
-      businessKey = "businessKey",
-      name = "task-name",
-      description = "some task description",
-      formKey = "app:form-key",
-      priority = 0,
-      createTime = Date(1234567890L),
-      candidateGroups = setOf("muppetshow"),
-      candidateUsers = setOf("kermit", "piggy"),
-      assignee = null,
-      owner = null,
-      dueDate = Date(1234599999L),
-      followUpDate = null
-    )
+  @Test
+  fun `candidate groups are updated`() {
+    given()
+      .no_task_exists()
+      .and()
+      .task_created_event_is_received(TestTaskData(id = "some-id", candidateGroups = setOf("muppetshow")).asTaskCreatedEngineEvent())
 
-  private fun makeTaskAssignedEvent(): TaskAssignedEngineEvent =
-    TaskAssignedEngineEvent(
-      id = "some-id",
-      sourceReference = makeSourceReference(),
-      taskDefinitionKey = "task-definition-key-abcde",
-      payload = Variables.createVariables(),
-      correlations = newCorrelations(),
-      assignee = "kermit"
-    )
+    `when`()
+      .task_candidate_group_changed_event_is_received(TestTaskData(id = "some-id").asCandidateGroupChangedEvent("muppetshow", CamundaTaskEvent.CANDIDATE_GROUP_DELETE))
+      .and()
+      .task_candidate_group_changed_event_is_received(TestTaskData(id = "some-id").asCandidateGroupChangedEvent("simpsons", CamundaTaskEvent.CANDIDATE_GROUP_ADD))
 
-  private fun makeTaskAttributeUpdateEvent(): TaskAttributeUpdatedEngineEvent =
-    TaskAttributeUpdatedEngineEvent(
-      id = "some-id",
-      sourceReference = makeSourceReference(),
-      taskDefinitionKey = "task-definition-key-abcde",
-      name = "task-name",
-      description = "some task description",
-      priority = 0,
-      owner = null,
-      dueDate = Date(1234599999L),
-      followUpDate = Date(1234699999L)
-    )
+    then()
+      .task_has_candidate_groups("some-id", setOf("simpsons"))
+  }
 
-  private fun makeTask(assignee: String? = null): Task =
-    Task(
-      id = "some-id",
-      sourceReference = makeSourceReference(),
-      taskDefinitionKey = "task-definition-key-abcde",
-      payload = Variables.fromMap(mapOf(Pair("variableKey", "variableValue"))),
-      correlations = Variables.fromMap(mapOf(Pair("correlationKey", "correlationValue"))),
-      businessKey = "businessKey",
-      name = "task-name",
-      description = "some task description",
-      formKey = "app:form-key",
-      priority = 0,
-      createTime = Date(1234567890L),
-      candidateGroups = setOf("muppetshow"),
-      candidateUsers = setOf("kermit", "piggy"),
-      assignee = assignee,
-      owner = null,
-      dueDate = Date(1234599999L),
-      followUpDate = null
-    )
+  @Test
+  fun `candidate users are updated`() {
+    given()
+      .no_task_exists()
+      .and()
+      .task_created_event_is_received(TestTaskData(id = "some-id", candidateUsers = setOf("kermit")).asTaskCreatedEngineEvent())
 
-  private fun makeSourceReference(): SourceReference =
-    ProcessReference(
-      "instance-id-12345",
-      "execution-id-12345",
-      "definition-id-12345",
-      "definition-key-abcde",
-      "process-name",
-      "application-name"
-    )
+    `when`()
+      .task_candidate_user_changed_event_is_received(TestTaskData(id = "some-id").asCandidateUserChangedEvent("kermit", CamundaTaskEvent.CANDIDATE_USER_DELETE))
+      .and()
+      .task_candidate_user_changed_event_is_received(TestTaskData(id = "some-id").asCandidateUserChangedEvent("gonzo", CamundaTaskEvent.CANDIDATE_USER_ADD))
+
+    then()
+      .task_has_candidate_users("some-id", setOf("gonzo"))
+  }
+
+  @Test
+  fun `tasks are counted by application name`() {
+    given()
+      .tasks_exist_from_application(5, "app-1")
+      .and()
+      .tasks_exist_from_application(42, "app-2")
+
+    `when`()
+      .task_count_queried()
+
+    then()
+      .task_counts_are("app-1" withTaskCount 5, "app-2" withTaskCount 42)
+  }
+
+  private infix fun String.withTaskCount(taskCount: Int) = ApplicationWithTaskCount(this, taskCount)
 }

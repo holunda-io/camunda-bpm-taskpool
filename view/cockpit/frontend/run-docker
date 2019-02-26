@@ -1,0 +1,31 @@
+#!/bin/bash
+
+case "$1" in
+
+   "build")
+     docker build -t taskpool-cockpit-build .
+     ;;
+
+   "run")
+     docker run -it --net=host \
+        -v `pwd`/src:/opt/build/src \
+        -v `pwd`/src-gen:/opt/build/src-gen \
+        taskpool-cockpit-build \
+        npm start
+     ;;
+
+   "cli")
+     docker run -it --net=host \
+        -v `pwd`/src:/opt/build/src \
+        -v `pwd`/src-gen:/opt/build/src-gen \
+        taskpool-cockpit-build \
+        $2
+     ;;
+
+   *)
+     echo "No command detected. Try $0 build | run"
+     ;;
+
+esac
+
+

@@ -1,12 +1,9 @@
 package io.holunda.camunda.taskpool.example.process
 
-import io.holunda.camunda.client.EnableCamundaEngineClient
-import io.holunda.camunda.datapool.EnableDataEntryCollector
-import io.holunda.camunda.taskpool.EnableTaskCollector
+import io.holunda.camunda.taskpool.EnableTaskpoolEngineSupport
 import io.holunda.camunda.taskpool.enricher.*
 import io.holunda.camunda.taskpool.example.process.process.ProcessApproveRequest
 import io.holunda.camunda.taskpool.example.process.service.BusinessDataEntry
-import io.holunda.camunda.taskpool.plugin.EnableCamundaSpringEventing
 import mu.KLogging
 import org.camunda.bpm.spring.boot.starter.annotation.EnableProcessApplication
 import org.springframework.boot.SpringApplication
@@ -20,16 +17,13 @@ fun main(args: Array<String>) {
 
 @SpringBootApplication
 @EnableProcessApplication
-@EnableCamundaSpringEventing
-@EnableCamundaEngineClient
-@EnableTaskCollector
-@EnableDataEntryCollector
+@EnableTaskpoolEngineSupport
 open class ExampleProcessApplication {
 
   companion object : KLogging()
 
   @Bean
-  open fun processVariablesFilter() = ProcessVariablesFilter(
+  open fun processVariablesFilter(): ProcessVariablesFilter = ProcessVariablesFilter(
 
     // define a applyFilter for every process
     ProcessVariableFilter(
@@ -54,7 +48,7 @@ open class ExampleProcessApplication {
   )
 
   @Bean
-  open fun processVariablesCorrelator() = ProcessVariablesCorrelator(
+  open fun processVariablesCorrelator(): ProcessVariablesCorrelator = ProcessVariablesCorrelator(
 
     // define correlation for every process
     ProcessVariableCorrelation(ProcessApproveRequest.KEY,

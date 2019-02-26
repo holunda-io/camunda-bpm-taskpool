@@ -8,6 +8,9 @@ import org.camunda.bpm.engine.variable.VariableMap
 import org.camunda.bpm.engine.variable.Variables
 import java.util.*
 
+/**
+ * User task.
+ */
 data class Task(
   override val id: String,
   override val sourceReference: SourceReference,
@@ -92,4 +95,58 @@ fun task(event: TaskAttributeUpdatedEngineEvent, task: Task) = Task(
   owner = event.owner,
   followUpDate = event.followUpDate,
   dueDate = event.dueDate
+)
+
+fun task(event: TaskCandidateGroupChanged, task: Task) = Task(
+  id = event.id,
+  sourceReference = event.sourceReference,
+  taskDefinitionKey = event.taskDefinitionKey,
+
+  correlations = task.correlations,
+  payload = task.payload,
+  businessKey = task.businessKey,
+  formKey = task.formKey,
+  createTime = task.createTime,
+  assignee = task.assignee,
+
+  candidateGroups = when (event.assignmentUpdateType) {
+    CamundaTaskEvent.CANDIDATE_GROUP_ADD -> task.candidateGroups.plus(event.groupId)
+    CamundaTaskEvent.CANDIDATE_GROUP_DELETE -> task.candidateGroups.minus(event.groupId)
+    else -> task.candidateGroups
+  },
+  candidateUsers = task.candidateUsers,
+
+  name = task.name,
+  description = task.description,
+  priority = task.priority,
+  owner = task.owner,
+  followUpDate = task.followUpDate,
+  dueDate = task.dueDate
+)
+
+fun task(event: TaskCandidateUserChanged, task: Task) = Task(
+  id = event.id,
+  sourceReference = event.sourceReference,
+  taskDefinitionKey = event.taskDefinitionKey,
+
+  correlations = task.correlations,
+  payload = task.payload,
+  businessKey = task.businessKey,
+  formKey = task.formKey,
+  createTime = task.createTime,
+  assignee = task.assignee,
+
+  candidateGroups = task.candidateGroups,
+  candidateUsers = when (event.assignmentUpdateType) {
+    CamundaTaskEvent.CANDIDATE_USER_ADD -> task.candidateUsers.plus(event.userId)
+    CamundaTaskEvent.CANDIDATE_USER_DELETE -> task.candidateUsers.minus(event.userId)
+    else -> task.candidateUsers
+  },
+
+  name = task.name,
+  description = task.description,
+  priority = task.priority,
+  owner = task.owner,
+  followUpDate = task.followUpDate,
+  dueDate = task.dueDate
 )

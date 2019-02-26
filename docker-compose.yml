@@ -1,0 +1,33 @@
+version: "3.5"
+services:
+
+
+  axonserver:
+    image: axoniq/axonserver
+    container_name: axonserver
+    ports:
+      - 8024:8024
+      - 8124:8124
+    volumes:
+      - ./.docker/mounts/axon-data:/opt/axonserver/data
+    networks:
+      - taskpool-net
+
+  mongodb:
+    image: mongo
+    container_name: mongodb
+    ports:
+      - 27017:27017
+    volumes:
+      - ./.docker/mounts/mongo-data:/data/db
+      - ./.docker/mongodb-conf:/etc/mongo
+      - ./.docker/mongodb-init:/docker-entrypoint-initdb.d/
+    command:
+      - "--config"
+      - "/etc/mongo/mongod.conf"
+      - "--wiredTigerCacheSizeGB"
+      - "0.5"
+
+networks:
+  taskpool-net:
+    name: taskpool

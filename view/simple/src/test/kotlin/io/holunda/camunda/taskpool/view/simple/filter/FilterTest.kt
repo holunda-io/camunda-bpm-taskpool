@@ -22,28 +22,28 @@ class FilterTest {
 
   // no match: task.assignee, dataAttr1, dataAttr2
   // match: task.name
-  private val task1 = TaskWithDataEntries(Task("id", ref, "key", name = "myName"), listOf())
+  private val task1 = TaskWithDataEntries(Task("id", ref, "key", name = "myName", priority = 90), listOf())
   // no match: task.name, dataAttr1, dataAttr2
   // match: task.assignee
-  private val task2 = TaskWithDataEntries(Task("id", ref, "key", assignee = "kermit"), listOf())
+  private val task2 = TaskWithDataEntries(Task("id", ref, "key", assignee = "kermit", priority = 91), listOf())
   // no match: task.name, task.assignee, dataAttr2
   // match: dataEntries[0].payload -> dataAttr1
-  private val task3 = TaskWithDataEntries(Task("id", ref, "key", name = "foo", assignee = "gonzo"), listOf(
+  private val task3 = TaskWithDataEntries(Task("id", ref, "key", name = "foo", assignee = "gonzo", priority = 80), listOf(
     DataEntry("type", "4711", Variables.createVariables().putValue("dataAttr1", "another")
     )))
   // no match: task.name, task.assignee, dataAttr2
   // match: dataEntries[0].payload -> dataAttr1
-  private val task4 = TaskWithDataEntries(Task("id", ref, "key", name = "foo", assignee = "gonzo"), listOf(
+  private val task4 = TaskWithDataEntries(Task("id", ref, "key", name = "foo", assignee = "gonzo", priority = 78), listOf(
     DataEntry("type", "4711", Variables.createVariables().putValue("dataAttr1", "value"))
   ))
   // no match: task.name, task.assignee, dataAttr1
   // match: dataEntries[0].payload -> dataAttr2
-  private val task5 = TaskWithDataEntries(Task("id", ref, "key", name = "foo", assignee = "gonzo"), listOf(
+  private val task5 = TaskWithDataEntries(Task("id", ref, "key", name = "foo", assignee = "gonzo", priority = 80), listOf(
     DataEntry("type", "4711", Variables.createVariables().putValue("dataAttr2", "another").putValue("name", "myName"))
   ))
   // no match: task.name, task.assignee, dataAttr1
   // match: task.payload -> dataAttr2
-  private val task6 = TaskWithDataEntries(Task("id", ref, "key", name = "foo", assignee = "gonzo",
+  private val task6 = TaskWithDataEntries(Task("id", ref, "key", name = "foo", assignee = "gonzo", priority = 1,
     payload = Variables.createVariables().putValue("dataAttr2", "another").putValue("name", "myName")), listOf())
 
 
@@ -106,9 +106,19 @@ class FilterTest {
   }
 
   @Test
-  fun testFilter() {
+  fun `should filter string properties`() {
     val filtered = filter(filtersList, listOf(task1, task2, task3, task4, task5, task6))
     assertThat(filtered).containsExactlyElementsOf(listOf(task1, task2, task4, task5, task6))
   }
+
+
+  @Test
+  fun `should filter number property`() {
+
+    val numberFilter = listOf("task.priority=80")
+    val filtered  = filter(numberFilter, listOf(task1, task2, task3, task4, task5, task6))
+    assertThat(filtered).containsExactlyElementsOf(listOf(task3, task5))
+  }
+
 }
 

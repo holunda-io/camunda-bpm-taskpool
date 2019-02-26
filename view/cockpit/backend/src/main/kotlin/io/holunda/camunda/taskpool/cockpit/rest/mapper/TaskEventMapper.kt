@@ -13,12 +13,18 @@ import java.time.ZoneOffset
 import java.util.*
 import javax.validation.Valid
 
+/**
+ * DTO mapper.
+ */
 @Mapper(
   componentModel = "spring",
   unmappedTargetPolicy = ReportingPolicy.ERROR
 )
 abstract class TaskEventMapper {
 
+  /**
+   * Create a DTO.
+   */
   fun dto(withMetadata: TaskEventWithMetaData) =
     when (withMetadata.event) {
 
@@ -43,6 +49,9 @@ abstract class TaskEventMapper {
     }
 
 
+  /**
+   * Create a DTO.
+   */
   @Mappings(
     Mapping(target = "task.id", source = "task.id"),
     Mapping(target = "task.formKey", source = "task.formKey"),
@@ -69,6 +78,9 @@ abstract class TaskEventMapper {
   )
   abstract fun dto(task: TaskCreatedEngineEvent, instant: Instant?): TaskEventDto
 
+  /**
+   * Create a DTO.
+   */
   @Mappings(
     Mapping(target = "task.id", source = "task.id"),
     Mapping(target = "task.formKey", source = "task.formKey"),
@@ -95,6 +107,9 @@ abstract class TaskEventMapper {
   )
   abstract fun dto(task: TaskDeletedEngineEvent, instant: Instant?): TaskEventDto
 
+  /**
+   * Create a DTO.
+   */
   @Mappings(
     Mapping(target = "task.id", source = "task.id"),
     Mapping(target = "task.formKey", source = "task.formKey"),
@@ -121,6 +136,9 @@ abstract class TaskEventMapper {
   )
   abstract fun dto(task: TaskAssignedEngineEvent, instant: Instant?): TaskEventDto
 
+  /**
+   * Create a DTO.
+   */
   @Mappings(
     Mapping(target = "task.id", source = "task.id"),
     Mapping(target = "task.formKey", ignore = true),
@@ -147,7 +165,9 @@ abstract class TaskEventMapper {
   )
   abstract fun dto(task: TaskAttributeUpdatedEngineEvent, instant: Instant?): TaskEventDto
 
-
+  /**
+   * Create a DTO.
+   */
   @Mappings(
     Mapping(target = "task.id", source = "task.id"),
     Mapping(target = "task.formKey", source = "task.formKey"),
@@ -174,6 +194,9 @@ abstract class TaskEventMapper {
   )
   abstract fun dto(task: TaskCompletedEngineEvent, instant: Instant?): TaskEventDto
 
+  /**
+   * Create a DTO.
+   */
   @Mappings(
     Mapping(target = "task.id", source = "task.id"),
     Mapping(target = "task.formKey", ignore = true),
@@ -200,6 +223,9 @@ abstract class TaskEventMapper {
   )
   abstract fun dto(task: TaskClaimedEvent, instant: Instant?): TaskEventDto
 
+  /**
+   * Create a DTO.
+   */
   @Mappings(
     Mapping(target = "task.id", source = "task.id"),
     Mapping(target = "task.formKey", ignore = true),
@@ -226,6 +252,9 @@ abstract class TaskEventMapper {
   )
   abstract fun dto(task: TaskUnclaimedEvent, instant: Instant?): TaskEventDto
 
+  /**
+   * Create a DTO.
+   */
   // TODO: add follow-up date
   @Mappings(
     Mapping(target = "task.id", source = "task.id"),
@@ -253,6 +282,9 @@ abstract class TaskEventMapper {
   )
   abstract fun dto(task: TaskUndeferredEvent, instant: Instant?): TaskEventDto
 
+  /**
+   * Create a DTO.
+   */
   // TODO: add follow-up date
   @Mappings(
     Mapping(target = "task.id", source = "task.id"),
@@ -280,7 +312,9 @@ abstract class TaskEventMapper {
   )
   abstract fun dto(task: TaskDeferredEvent, instant: Instant?): TaskEventDto
 
-
+  /**
+   * Create a DTO.
+   */
   @Mappings(
     Mapping(target = "task.id", source = "task.id"),
     Mapping(target = "task.taskDefinitionKey", source = "task.taskDefinitionKey"),
@@ -307,7 +341,9 @@ abstract class TaskEventMapper {
   )
   abstract fun dto(task: TaskToBeCompletedEvent, instant: Instant?): TaskEventDto
 
-
+  /**
+   * Create a DTO.
+   */
   @Mappings(
     Mapping(target = "task.id", source = "task.id"),
     Mapping(target = "task.formKey", ignore = true),
@@ -334,6 +370,9 @@ abstract class TaskEventMapper {
   )
   abstract fun dto(task: TaskCandidateGroupChanged, instant: Instant?): TaskEventDto
 
+  /**
+   * Create a DTO.
+   */
   @Mappings(
     Mapping(target = "task.id", source = "task.id"),
     Mapping(target = "task.formKey", ignore = true),
@@ -360,10 +399,16 @@ abstract class TaskEventMapper {
   )
   abstract fun dto(task: TaskCandidateUserChanged, instant: Instant?): TaskEventDto
 
+  /**
+   * Date converter.
+   */
   fun toOffsetDateTime(@Valid time: Date?): OffsetDateTime? {
-    return if (time == null) null else OffsetDateTime.ofInstant(time.toInstant(), ZoneOffset.UTC)
+    return if (time == null) null else toOffsetDateTime(time.toInstant())
   }
 
+  /**
+   * Date converter.
+   */
   fun toOffsetDateTime(@Valid instant: Instant?): OffsetDateTime? {
     return if (instant == null) null else OffsetDateTime.ofInstant(instant, ZoneOffset.UTC)
   }

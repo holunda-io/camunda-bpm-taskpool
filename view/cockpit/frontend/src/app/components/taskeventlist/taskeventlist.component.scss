@@ -1,6 +1,6 @@
 h1 img {
     height: 1em;
-  }
+}
 
 .nowrap {
   white-space: nowrap;
@@ -20,5 +20,24 @@ h1 img {
 
 .fieldlist .list-group-item {
   padding-top: 0;
-  padding-bottom: 0;
+  padding-bottom: 1px;
+}
+
+.list-group-item {
+  padding: .25em .25em;
+}
+
+.scrolling-list {
+  font-size: 0.9em;
+  height: 70vh;
+  overflow-y: auto;
+}
+
+.bordered {
+  border: 1px solid #999999;
+}
+
+.payloadEntryName {
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

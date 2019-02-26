@@ -5,7 +5,7 @@
   <parent>
     <groupId>io.holunda.taskpool</groupId>
     <artifactId>camunda-bpm-taskpool</artifactId>
-    <version>1.2.1</version>
+    <version>1.2.2</version>
   </parent>
 
   <artifactId>camunda-bpm-taskpool-root</artifactId>
@@ -14,7 +14,6 @@
   
   <modules>
     <module>taskpool-api</module>
-    <module>taskpool-collector</module>
     <module>taskpool-core</module>
   </modules>
 
@@ -27,20 +26,9 @@
       </dependency>
       <dependency>
         <groupId>io.holunda.taskpool</groupId>
-        <artifactId>camunda-bpm-taskpool-collector</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>io.holunda.taskpool</groupId>
-        <artifactId>camunda-bpm-taskpool-sender</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>io.holunda.taskpool</groupId>
         <artifactId>camunda-bpm-taskpool-core</artifactId>
         <version>${project.version}</version>
       </dependency>
-
       <dependency>
         <groupId>io.holunda.taskpool</groupId>
         <artifactId>camunda-bpm-datapool-api</artifactId>
