@@ -97,30 +97,6 @@
 
   <profiles>
     <profile>
-      <id>mongo</id>
-      <activation>
-        <property>
-          <name>mongo</name>
-        </property>
-      </activation>
-      <build>
-        <plugins>
-          <plugin>
-            <!-- for packaging springboot application -->
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-maven-plugin</artifactId>
-            <configuration>
-              <profiles>
-                <profile>mongo</profile>
-              </profiles>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
-
-    </profile>
-
-    <profile>
       <id>frontend</id>
       <activation>
         <property>
