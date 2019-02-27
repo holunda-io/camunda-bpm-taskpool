@@ -44,7 +44,7 @@
     <jackson.version>2.9.8</jackson.version>
     <org.mapstruct.version>1.2.0.Final</org.mapstruct.version>
     <assertj.version>3.9.0</assertj.version>
-    <camunda-bpm-assert.version>2.0</camunda-bpm-assert.version>
+    <camunda-bpm-assert.version>2.1</camunda-bpm-assert.version>
     <awaitability.version>3.1.5</awaitability.version>
   </properties>
 

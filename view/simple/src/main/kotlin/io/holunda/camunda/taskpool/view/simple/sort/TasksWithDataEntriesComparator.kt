@@ -2,10 +2,10 @@ package io.holunda.camunda.taskpool.view.simple.sort
 
 import io.holunda.camunda.taskpool.view.Task
 import io.holunda.camunda.taskpool.view.TaskWithDataEntries
-import io.holunda.camunda.taskpool.view.simple.TASK_PREFIX
-import io.holunda.camunda.taskpool.view.simple.extractField
-import io.holunda.camunda.taskpool.view.simple.extractValue
-import io.holunda.camunda.taskpool.view.simple.isTaskAttribute
+import io.holunda.camunda.taskpool.view.simple.filter.TASK_PREFIX
+import io.holunda.camunda.taskpool.view.simple.filter.extractField
+import io.holunda.camunda.taskpool.view.simple.filter.extractValue
+import io.holunda.camunda.taskpool.view.simple.filter.isTaskAttribute
 import java.lang.reflect.Field
 import java.util.*
 import javax.xml.datatype.DatatypeConstants.LESSER
@@ -53,9 +53,7 @@ data class TasksWithDataEntriesComparator(
       else -> throw UnsupportedOperationException("Unknown type ${this.fieldSort.first.type}")
     }
   }
-
 }
-
 
 fun comparator(sort: String?): TasksWithDataEntriesComparator? {
   if (sort == null || sort.isBlank()) return null

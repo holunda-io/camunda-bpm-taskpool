@@ -4,7 +4,6 @@ import io.holunda.camunda.taskpool.api.task.ProcessReference
 import io.holunda.camunda.taskpool.view.DataEntry
 import io.holunda.camunda.taskpool.view.Task
 import io.holunda.camunda.taskpool.view.TaskWithDataEntries
-import io.holunda.camunda.taskpool.view.simple.*
 import org.assertj.core.api.Assertions.assertThat
 import org.camunda.bpm.engine.variable.Variables
 import org.junit.Rule
@@ -16,7 +15,7 @@ class FilterTest {
   @get: Rule
   val expected = ExpectedException.none()
 
-  private val filtersList = listOf("task.name${SEPARATOR}myName", "task.assignee${SEPARATOR}kermit", "dataAttr1${SEPARATOR}value", "dataAttr2${SEPARATOR}another")
+  private val filtersList = listOf("task.name${EQUALS}myName", "task.assignee${EQUALS}kermit", "dataAttr1${EQUALS}value", "dataAttr2${EQUALS}another")
 
   private val ref = ProcessReference("1", "2", "3", "4", "My Process", "myExample")
 
@@ -66,20 +65,20 @@ class FilterTest {
 
     assertThat(criteria).isNotNull
     assertThat(criteria.size).isEqualTo(4)
-    assertThat(criteria).containsExactlyElementsOf(listOf(TaskCriterion("name", "myName"), TaskCriterion("assignee", "kermit"),
-      DataEntryCriterion("dataAttr1", "value"), DataEntryCriterion("dataAttr2", "another")))
+    assertThat(criteria).containsExactlyElementsOf(listOf(Criterion.TaskCriterion("name", "myName"), Criterion.TaskCriterion("assignee", "kermit"),
+      Criterion.DataEntryCriterion("dataAttr1", "value"), Criterion.DataEntryCriterion("dataAttr2", "another")))
   }
 
   @Test
   fun `should fail to create criteria`() {
     expected.expect(IllegalArgumentException::class.java)
-    toCriteria(listOf("$SEPARATOR$SEPARATOR"))
+    toCriteria(listOf("$EQUALS$EQUALS"))
   }
 
   @Test
   fun `should fail to create criteria 2`() {
     expected.expect(IllegalArgumentException::class.java)
-    toCriteria(listOf("${SEPARATOR}some$SEPARATOR"))
+    toCriteria(listOf("${EQUALS}some$EQUALS"))
   }
 
   @Test
@@ -113,11 +112,43 @@ class FilterTest {
 
 
   @Test
-  fun `should filter number property`() {
+  fun `should filter by equal number property`() {
 
     val numberFilter = listOf("task.priority=80")
-    val filtered  = filter(numberFilter, listOf(task1, task2, task3, task4, task5, task6))
+    val filtered = filter(numberFilter, listOf(task1, task2, task3, task4, task5, task6))
     assertThat(filtered).containsExactlyElementsOf(listOf(task3, task5))
+  }
+
+  @Test
+  fun `should filter by less number property`() {
+
+    val numberFilter = listOf("task.priority<80")
+    val filtered = filter(numberFilter, listOf(task1, task2, task3, task4, task5, task6))
+    assertThat(filtered).containsExactlyElementsOf(listOf(task4, task6))
+  }
+
+  @Test
+  fun `should filter by greater number property`() {
+
+    val numberFilter = listOf("task.priority>80")
+    val filtered = filter(numberFilter, listOf(task1, task2, task3, task4, task5, task6))
+    assertThat(filtered).containsExactlyElementsOf(listOf(task1, task2))
+  }
+
+  @Test
+  fun `should filter by less string property`() {
+
+    val numberFilter = listOf("task.assignee<zo")
+    val filtered = filter(numberFilter, listOf(task1, task2, task3, task4, task5, task6))
+    assertThat(filtered).containsExactlyElementsOf(listOf(task3, task4, task5, task6))
+  }
+
+  @Test
+  fun `should filter by greater string property`() {
+
+    val numberFilter = listOf("task.assignee>ke")
+    val filtered = filter(numberFilter, listOf(task1, task2, task3, task4, task5, task6))
+    assertThat(filtered).containsExactlyElementsOf(listOf(task2))
   }
 
 }
