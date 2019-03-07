@@ -9,10 +9,10 @@ import io.holunda.camunda.taskpool.view.DataEntry
 import io.holunda.camunda.taskpool.view.Task
 import io.holunda.camunda.taskpool.view.TaskWithDataEntries
 import io.holunda.camunda.taskpool.view.query.*
-import io.holunda.camunda.taskpool.view.simple.createPredicates
-import io.holunda.camunda.taskpool.view.simple.filterByPredicates
+import io.holunda.camunda.taskpool.view.simple.filter.createPredicates
+import io.holunda.camunda.taskpool.view.simple.filter.filterByPredicates
+import io.holunda.camunda.taskpool.view.simple.filter.toCriteria
 import io.holunda.camunda.taskpool.view.simple.sort.comparator
-import io.holunda.camunda.taskpool.view.simple.toCriteria
 import io.holunda.camunda.taskpool.view.task
 import mu.KLogging
 import org.axonframework.config.EventProcessingConfiguration
@@ -154,7 +154,7 @@ open class TaskPoolService(
     val applicationName = tasks[event.id]?.sourceReference?.applicationName
     tasks.remove(event.id)
     updateTaskForUserQuery(event.id)
-    applicationName?.let{updateTaskCountByApplicationQuery(it)}
+    applicationName?.let { updateTaskCountByApplicationQuery(it) }
   }
 
   @Suppress("unused")
@@ -164,7 +164,7 @@ open class TaskPoolService(
     val applicationName = tasks[event.id]?.sourceReference?.applicationName
     tasks.remove(event.id)
     updateTaskForUserQuery(event.id)
-    applicationName?.let{updateTaskCountByApplicationQuery(it)}
+    applicationName?.let { updateTaskCountByApplicationQuery(it) }
   }
 
   @EventHandler
