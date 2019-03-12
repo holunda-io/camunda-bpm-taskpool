@@ -1,5 +1,6 @@
 import { Injectable, OnInit, OnDestroy } from '@angular/core';
-import { ProfileService, UserProfile } from 'tasklist';
+import { ProfileService } from 'tasklist/services';
+import { UserProfile } from 'tasklist/models';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 @Injectable()

@@ -2,12 +2,17 @@ package io.holunda.camunda.taskpool.cockpit
 
 import io.holunda.camunda.taskpool.cockpit.Web.BASE_PATH
 import io.holunda.camunda.taskpool.cockpit.rest.Rest
+import org.springframework.beans.factory.annotation.Value
+import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.core.io.Resource
 import org.springframework.http.CacheControl
 import org.springframework.http.HttpMethod
+import org.springframework.http.MediaType
 import org.springframework.web.reactive.config.CorsRegistry
 import org.springframework.web.reactive.config.ResourceHandlerRegistry
 import org.springframework.web.reactive.config.WebFluxConfigurer
+import org.springframework.web.reactive.function.server.router
 import java.util.concurrent.TimeUnit
 
 /**
@@ -37,6 +42,17 @@ open class CockpitSPAConfiguration : WebFluxConfigurer {
     private const val STATIC_LOCATION = "classpath:/static/taskpool-cockpit/"
   }
 
+  @Value("$STATIC_LOCATION/index.html")
+  private lateinit var indexHtml: Resource
+
+  @Bean
+  open fun cokpitSpaRouter() = router {
+    GET("/$BASE_PATH/") {
+      ok().contentType(MediaType.TEXT_HTML).syncBody(indexHtml)
+    }
+  }
+
+
   override fun addResourceHandlers(registry: ResourceHandlerRegistry) {
     /**
      * Deliver the platform SPA index for all frontend states.
@@ -45,10 +61,6 @@ open class CockpitSPAConfiguration : WebFluxConfigurer {
       .addResourceHandler("/${Web.BASE_PATH}/*.html")
       .addResourceLocations(STATIC_LOCATION)
       .setCacheControl(CacheControl.maxAge(1, TimeUnit.DAYS))
-//      .resourceChain(true)
-//      .addResolver(PathResourceResolver())
-//      .resourceChain(true)
-//      .addResolver(ResourcePathResolver())
 
     registry
       .addResourceHandler(*STATIC_RESOURCES_LONG_CACHE)

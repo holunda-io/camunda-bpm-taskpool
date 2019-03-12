@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
-import { UserProfile } from 'tasklist/model/userProfile';
-import { TaskWithDataEntries, Task } from 'tasklist';
+import { UserProfile, TaskWithDataEntries, Task } from 'tasklist/models';
 import { TaskHelperService } from 'app/services/task.helper.service';
 import { FilterService } from 'app/services/filter.service';
 import { ProfileHelperService } from 'app/services/profile.helper.service';

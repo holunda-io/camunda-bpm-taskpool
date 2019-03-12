@@ -47,36 +47,19 @@
       <build>
         <plugins>
           <plugin>
-            <groupId>io.swagger</groupId>
-            <artifactId>swagger-codegen-maven-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>generate-client-stubs</id>
-                <phase>process-sources</phase>
-                <goals>
-                  <goal>generate</goal>
-                </goals>
-                <configuration>
-                  <output>src-gen/tasklist</output>
-                  <inputSpec>${project.build.directory}/swagger-model/swagger.yml</inputSpec>
-                  <language>typescript-angular</language>
-                  <apiPackage>api</apiPackage>
-                  <modelPackage>model</modelPackage>
-                  <!--
-                  <configHelp>true</configHelp>
-                  -->
-                  <configOptions>
-                    <ngVersion>6.1</ngVersion>
-                  </configOptions>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-
-          <plugin>
             <groupId>com.github.eirslett</groupId>
             <artifactId>frontend-maven-plugin</artifactId>
             <executions>
+              <execution>
+                <id>swagger generate sources</id>
+                <phase>generate-sources</phase>
+                <goals>
+                  <goal>npm</goal>
+                </goals>
+                <configuration>
+                  <arguments>run generate-sources</arguments>
+                </configuration>
+              </execution>
               <execution>
                 <id>npm build</id>
                 <phase>compile</phase>
@@ -229,6 +212,7 @@
             <executions>
               <execution>
                 <id>npm-update</id>
+                <phase>initialize</phase>
                 <goals>
                   <goal>npm</goal>
                 </goals>

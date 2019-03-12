@@ -3,7 +3,7 @@ info:
   title: Camunda BPM Taskpool Tasklist
   version: 0.0.1
   description: API for the task list.
-basePath: '/rest'
+basePath: '/tasklist/rest'
 tags:
 - name: Task
   description: Operations on tasks.

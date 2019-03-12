@@ -34,8 +34,14 @@
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-web</artifactId>
+      <artifactId>spring-boot-starter-webflux</artifactId>
     </dependency>
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>javax.servlet-api</artifactId>
+      <version>3.1.0</version>
+    </dependency>
+
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-validation</artifactId>
@@ -52,7 +58,7 @@
     <dependency>
       <groupId>io.swagger</groupId>
       <artifactId>swagger-annotations</artifactId>
-      <version>1.5.20</version>
+      <version>1.5.22</version>
     </dependency>
     <dependency>
       <groupId>org.axonframework</groupId>
@@ -125,9 +131,10 @@
             </configuration>
           </execution>
 
-          <!-- Enforce resource copy -->
-          <!-- This is a fix of Kotlin incremental Compiler bug -->
-          <!-- See https://discuss.kotlinlang.org/t/kotlin-compiler-incremental-not-copying-resources/5640/5 -->
+          <!--
+          Enforce resource copy. This is a fix of Kotlin incremental Compiler bug. See
+          https://discuss.kotlinlang.org/t/kotlin-compiler-incremental-not-copying-resources/5640/5
+          -->
           <execution>
             <id>extra-copy-resources</id>
             <phase>process-classes</phase>
@@ -167,9 +174,10 @@
               <modelNamePrefix />
               <modelNameSuffix>Dto</modelNameSuffix>
               <configOptions>
-                <interfaceOnly>true</interfaceOnly>
                 <basePackage>${application.base-package}</basePackage>
                 <configPackage>${application.config-package}</configPackage>
+                <singleContentTypes>false</singleContentTypes>
+                <interfaceOnly>true</interfaceOnly>
                 <swaggerDocketConfig>false</swaggerDocketConfig>
                 <dateLibrary>java8</dateLibrary>
                 <useOptional>true</useOptional>

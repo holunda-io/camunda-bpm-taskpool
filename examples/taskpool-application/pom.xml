@@ -50,7 +50,7 @@
       <artifactId>camunda-bpm-taskpool-view-mongo</artifactId>
     </dependency>
 
-
+    <!--
     <dependency>
       <groupId>io.springfox</groupId>
       <artifactId>springfox-swagger2</artifactId>
@@ -61,6 +61,7 @@
       <artifactId>springboot-swagger-starter</artifactId>
       <version>0.0.4</version>
     </dependency>
+    -->
     <dependency>
       <groupId>org.axonframework</groupId>
       <artifactId>axon-spring-boot-starter</artifactId>

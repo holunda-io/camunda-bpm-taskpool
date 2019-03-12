@@ -8,7 +8,7 @@ import localeFr from '@angular/common/locales/fr';
 import localeDe from '@angular/common/locales/de';
 import localeEn from '@angular/common/locales/en';
 
-import { ApiModule, BASE_PATH } from 'tasklist';
+import { ApiModule } from 'tasklist/api.module';
 import { AppComponent } from 'app/app.component';
 import { TasklistComponent } from 'app/components/tasklist/tasklist.component';
 import { TaskHelperService } from 'app/services/task.helper.service';
@@ -46,8 +46,7 @@ registerLocaleData(localeEn, 'en');
   providers: [
     TaskHelperService,
     ProfileHelperService,
-    FilterService,
-    { provide: BASE_PATH, useValue: '/tasklist/rest' }
+    FilterService
   ],
   bootstrap: [AppComponent]
 })
