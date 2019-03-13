@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.ResponseStatus
 
 object Rest {
   const val REQUEST_PATH = "/tasklist/rest"
+  const val REACTIVE_PATH = "/tasklist/reactive"
 }
 
 @ResponseStatus(HttpStatus.NOT_FOUND)
