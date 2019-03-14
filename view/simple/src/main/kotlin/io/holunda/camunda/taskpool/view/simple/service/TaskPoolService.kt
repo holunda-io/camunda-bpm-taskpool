@@ -23,6 +23,7 @@ import org.axonframework.queryhandling.QueryHandler
 import org.axonframework.queryhandling.QueryUpdateEmitter
 import org.springframework.stereotype.Component
 import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.atomic.AtomicReference
 
 @Component
 @ProcessingGroup(TaskPoolService.PROCESSING_GROUP)
@@ -221,7 +222,12 @@ open class TaskPoolService(
     updateDataEntryQuery(dataIdentity(entryType = event.entryType, entryId = event.entryId))
   }
 
-  private fun updateTaskForUserQuery(taskId: String) = updateMapFilterQuery(tasks, taskId, TasksForUserQuery::class.java)
+  private fun updateTaskForUserQuery(taskId: String) {
+    updateMapFilterQuery(tasks, taskId, TasksForUserQuery::class.java)
+
+    updateMapFilterQuery(mapTasksWithDataEntries(tasks, dataEntries), taskId, TasksWithDataEntriesForUserQuery::class.java)
+  }
+
   private fun updateDataEntryQuery(identity: String) = updateMapFilterQuery(dataEntries, identity, DataEntryQuery::class.java)
 
   private fun <T : Any, Q : FilterQuery<T>> updateMapFilterQuery(map: Map<String, T>, key: String, clazz: Class<Q>) {
@@ -245,3 +251,9 @@ fun tasksWithDataEntries(task: Task, dataEntries: Map<String, DataEntry>) =
       task.correlations.map { dataIdentity(it.key, it.value as EntryId) }.contains(entry.key)
     }.values.toList()
   )
+
+private fun mapTasksWithDataEntries(tasks: Map<String, Task>, dataEntries: Map<String, DataEntry>) =
+  tasks.map { (id, task) ->
+    id to tasksWithDataEntries(task, dataEntries)
+  }.toMap()
+

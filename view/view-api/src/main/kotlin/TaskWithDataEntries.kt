@@ -4,5 +4,3 @@ data class TaskWithDataEntries(
   val task: Task,
   val dataEntries: List<DataEntry> = listOf()
 )
-
-

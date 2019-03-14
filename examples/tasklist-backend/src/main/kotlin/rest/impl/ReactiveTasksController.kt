@@ -4,6 +4,7 @@ import io.holunda.camunda.taskpool.example.tasklist.auth.CurrentUserService
 import io.holunda.camunda.taskpool.example.tasklist.rest.Rest
 import io.holunda.camunda.taskpool.example.tasklist.rest.mapper.TaskWithDataEntriesMapper
 import io.holunda.camunda.taskpool.example.tasklist.rest.model.TaskWithDataEntriesDto
+import io.holunda.camunda.taskpool.view.TaskWithDataEntries
 import io.holunda.camunda.taskpool.view.auth.UserService
 import io.holunda.camunda.taskpool.view.query.TasksWithDataEntriesForUserQuery
 import io.holunda.camunda.taskpool.view.query.TasksWithDataEntriesResponse
@@ -35,7 +36,7 @@ open class ReactiveTasksController(
 
   companion object : KLogging()
 
-  @GetMapping(path = ["/tasks"], produces = [MediaType.TEXT_EVENT_STREAM_VALUE, MediaType.APPLICATION_JSON_VALUE])
+  @GetMapping(path = ["/tasks"], produces = [MediaType.TEXT_EVENT_STREAM_VALUE])
   fun getTasks(
     @RequestParam(value = "filter") filters: List<String>,
     @RequestParam(value = "page") page: Optional<Int>,
@@ -47,7 +48,7 @@ open class ReactiveTasksController(
     val username = currentUserService.getCurrentUser()
     val user = userService.getUser(username)
 
-    val taskEvents: SubscriptionQueryResult<TasksWithDataEntriesResponse, TasksWithDataEntriesResponse> = queryGateway
+    val taskEvents: SubscriptionQueryResult<TasksWithDataEntriesResponse, TaskWithDataEntries> = queryGateway
       .subscriptionQuery(
         TasksWithDataEntriesForUserQuery(
           user = user,
@@ -56,12 +57,12 @@ open class ReactiveTasksController(
           sort = sort.orElseGet { "" },
           filters = filters),
         ResponseTypes.instanceOf(TasksWithDataEntriesResponse::class.java),
-        ResponseTypes.instanceOf(TasksWithDataEntriesResponse::class.java)
+        ResponseTypes.instanceOf(TaskWithDataEntries::class.java)
       )
 
     return taskEvents
       .initialResult().flatMapMany { Flux.fromIterable(it.tasksWithDataEntries) }
-      .concatWith(taskEvents.updates().flatMap { Flux.fromIterable(it.tasksWithDataEntries) })
+      .concatWith(taskEvents.updates())
       .map {
         mapper.dto(it)
       }
