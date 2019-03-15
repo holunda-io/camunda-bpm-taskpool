@@ -20,6 +20,7 @@ object Web {
 
   const val RESOURCE_LOCATION = "classpath:/static/process-forms"
 
+  const val START = "/start"
   const val TASKS = "/tasks" // see process-forms/src/app/app-routing.module.ts
   const val ANY = "/**"
 
@@ -56,7 +57,8 @@ open class ProcessApproveRequestSPAConfiguration(
      */
     registry
       .addResourceHandler(
-        "/$applicationName" + Web.TASKS + Web.ANY
+        "/$applicationName" + Web.TASKS + Web.ANY,
+        "/$applicationName" + Web.START
       )
       .addResourceLocations("$RESOURCE_LOCATION/index.html")
       .setCacheControl(CacheControl.maxAge(1, TimeUnit.DAYS))
