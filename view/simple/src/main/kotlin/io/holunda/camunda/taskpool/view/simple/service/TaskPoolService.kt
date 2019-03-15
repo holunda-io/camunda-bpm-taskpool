@@ -81,7 +81,7 @@ open class TaskPoolService(
   open fun query(query: TaskWithDataEntriesForIdQuery): TaskWithDataEntries? {
     val task = tasks.values.firstOrNull { query.applyFilter(TaskWithDataEntries(it)) }
     return if (task != null) {
-      tasksWithDataEntries(task, this.dataEntries)
+      TaskWithDataEntries(task, this.dataEntries.values.toList())
     } else {
       null
     }
@@ -97,7 +97,7 @@ open class TaskPoolService(
 
     val filtered = query(TasksForUserQuery(query.user))
       .asSequence()
-      .map { task -> tasksWithDataEntries(task, this.dataEntries) }
+      .map { task -> TaskWithDataEntries.correlate(task, this.dataEntries.values.toList()) }
       .filter { filterByPredicates(it, predicates) }
       .toList()
 
@@ -222,10 +222,16 @@ open class TaskPoolService(
     updateDataEntryQuery(dataIdentity(entryType = event.entryType, entryId = event.entryId))
   }
 
+
+
   private fun updateTaskForUserQuery(taskId: String) {
     updateMapFilterQuery(tasks, taskId, TasksForUserQuery::class.java)
 
-    updateMapFilterQuery(mapTasksWithDataEntries(tasks, dataEntries), taskId, TasksWithDataEntriesForUserQuery::class.java)
+    val mapTasksWithDataEntries = TaskWithDataEntries.correlate(tasks.values.toList(), dataEntries.values.toList() )
+      .map { it.task.id to it }
+      .toMap()
+
+    updateMapFilterQuery(mapTasksWithDataEntries, taskId, TasksWithDataEntriesForUserQuery::class.java)
   }
 
   private fun updateDataEntryQuery(identity: String) = updateMapFilterQuery(dataEntries, identity, DataEntryQuery::class.java)
@@ -241,19 +247,4 @@ open class TaskPoolService(
     queryUpdateEmitter.emit(TaskCountByApplicationQuery::class.java, { true }, ApplicationWithTaskCount(applicationName, tasks.values.count { it.sourceReference.applicationName == applicationName }))
   }
 }
-
-fun tasksWithDataEntries(task: Task, dataEntries: Map<String, DataEntry>) =
-  TaskWithDataEntries(
-    task = task,
-    dataEntries = dataEntries.filter { entry ->
-      // task correlation list contains entryType -> entryId elements
-      // create data entry identity with it and tak only data entries with this identity
-      task.correlations.map { dataIdentity(it.key, it.value as EntryId) }.contains(entry.key)
-    }.values.toList()
-  )
-
-private fun mapTasksWithDataEntries(tasks: Map<String, Task>, dataEntries: Map<String, DataEntry>) =
-  tasks.map { (id, task) ->
-    id to tasksWithDataEntries(task, dataEntries)
-  }.toMap()
 
