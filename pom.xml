@@ -132,6 +132,11 @@
         <type>pom</type>
       </dependency>
       <dependency>
+        <groupId>org.camunda.bpm.springboot</groupId>
+        <artifactId>camunda-bpm-spring-boot-starter</artifactId>
+        <version>${camunda-springboot.version}</version>
+      </dependency>
+      <dependency>
         <groupId>org.camunda.commons</groupId>
         <artifactId>camunda-commons-bom</artifactId>
         <version>${camunda-commons.version}</version>

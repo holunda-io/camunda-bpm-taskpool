@@ -7,8 +7,9 @@ spring:
 
 camunda:
   taskpool:
-    task-url-resolver:
+    form-url-resolver:
       defaultTaskTemplate: "tasks/${formKey}/id/${id}"
+      defaultProcessTemplate: "${processDefinitionKey}/${formKey}"
       defaultApplicationTemplate: "http://localhost:8080/${applicationName}"
 
 logging.level.io.holunda.camunda.taskpool:
