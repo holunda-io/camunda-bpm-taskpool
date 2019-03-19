@@ -105,3 +105,7 @@ This library serves as a foundation of several follow-up projects and tools:
 == Contribution
 
 If you want to contribute to this project, feel free to do so. Start with link:/docs/contributing.adoc[contributing guide].
+
+== Changelog
+
+include::CHANGELOG.adoc
