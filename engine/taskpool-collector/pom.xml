@@ -18,6 +18,11 @@
 
   <dependencies>
     <dependency>
+      <groupId>org.camunda.bpm.springboot</groupId>
+      <artifactId>camunda-bpm-spring-boot-starter</artifactId>
+    </dependency>
+
+    <dependency>
       <groupId>org.camunda.bpm</groupId>
       <artifactId>camunda-engine</artifactId>
     </dependency>
@@ -78,12 +83,6 @@
 
     <!-- For I-Testing -->
     <dependency>
-      <groupId>org.camunda.bpm.springboot</groupId>
-      <artifactId>camunda-bpm-spring-boot-starter</artifactId>
-      <version>${camunda-springboot.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
       <groupId>io.holunda.taskpool</groupId>
       <artifactId>camunda-bpm-engine-plugin</artifactId>
       <scope>test</scope>
@@ -106,7 +105,10 @@
       <groupId>org.awaitility</groupId>
       <artifactId>awaitility</artifactId>
     </dependency>
-
+    <dependency>
+      <groupId>io.github.microutils</groupId>
+      <artifactId>kotlin-logging</artifactId>
+    </dependency>
   </dependencies>
 
 </project>

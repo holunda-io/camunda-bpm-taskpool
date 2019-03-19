@@ -36,6 +36,7 @@ open class TaskCollectorConfiguration(
   @Bean
   open fun commandAccumulator(): CommandAccumulator = ProjectingCommandAccumulator()
 
+
   /**
    * Create enricher.
    */

@@ -1,12 +1,5 @@
 <div class="row">
   <div class="col-lg-12">
-    <h1><img src="assets/holunda-io-logo.png" title="Tasks">Tasks</h1>
-    <p>A list of tasks gathered by Camunda BPM Taskpool.</p>
-  </div>
-</div>
-
-<div class="row">
-  <div class="col-lg-12">
     <div class="card">
       <div class="card-body">
         <table class="table">
@@ -27,7 +20,7 @@
             <th class="align-top" sortable-column="task.dueDate">Due</th>
             <th class="align-top" sortable-column="task.priority">Prio</th>
             <th colspan="2" class="align-top">
-              Actions
+              Assignment / Actions
               <div class="pull-right">
                   <button type="button" name="refresh" class="btn btn-outline-secondary btn-sm " (click)="reload()" title="Reload tasks">
                       <i class="fa fa-refresh"></i> Reload
@@ -87,13 +80,13 @@
               <span *ngIf="taskWithEntryData.task.candidateGroups && taskWithEntryData.task.candidateGroups.length"><i class="fa fa-users" title="{{ taskWithEntryData.task.candidateGroups }}"></i></span>
             </td>
             <td>
-              <span *ngIf="!taskWithEntryData.task.assignee">
+              <span *ngIf="!taskWithEntryData.task.assignee" class="pull-right">
                 <button type="button" name="claim"
                   class="btn btn-outline-secondary btn-sm"
                   (click)="claim($event, taskWithEntryData.task)"
                   title="{{ userProfile.username }}">claim</button>&nbsp;
               </span>
-              <span *ngIf="taskWithEntryData.task.assignee == userProfile.username">
+              <span *ngIf="taskWithEntryData.task.assignee == userProfile.username" class="pull-right">
                 <button type="button" name="unclaim"
                   class="btn btn-outline-secondary btn-sm"
                   (click)="unclaim($event, taskWithEntryData.task)"
