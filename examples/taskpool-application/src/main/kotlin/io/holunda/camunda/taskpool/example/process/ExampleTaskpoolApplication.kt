@@ -3,7 +3,7 @@ package io.holunda.camunda.taskpool.example.process
 import io.holunda.camunda.datapool.core.EnableDataPool
 import io.holunda.camunda.taskpool.core.EnableTaskPool
 import io.holunda.camunda.taskpool.example.tasklist.EnableTasklist
-import io.holunda.camunda.taskpool.urlresolver.EnablePropertyBasedTaskUrlResolver
+import io.holunda.camunda.taskpool.urlresolver.EnablePropertyBasedFormUrlResolver
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration
@@ -24,5 +24,5 @@ fun main(args: Array<String>) {
 @EnableTaskPool
 @EnableDataPool
 @EnableTasklist
-@EnablePropertyBasedTaskUrlResolver
+@EnablePropertyBasedFormUrlResolver
 open class ExampleTaskpoolApplication

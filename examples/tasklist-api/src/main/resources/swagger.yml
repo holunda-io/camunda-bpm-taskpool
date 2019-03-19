@@ -3,23 +3,26 @@ info:
   title: Camunda BPM Taskpool Tasklist
   version: 0.0.1
   description: API for the task list.
-basePath: '/rest'
+basePath: '/tasklist/rest'
 tags:
-- name: Task
-  description: Operations on tasks.
-- name: Profile
-  description: User's propfile.
+  - name: Task
+    description: Operations on tasks.
+  - name: Profile
+    description: User's propfile.
+  - name: Process
+    description: Operations on process definitions.
+
 schemes:
-- http
-- https
+  - http
+  - https
 paths:
   '/profile':
     get:
       tags:
-      - Profile
+        - Profile
       summary: Retrieves the user's profile.
       produces:
-      - application/json
+        - application/json
       operationId: getProfile
       responses:
         200:
@@ -27,40 +30,65 @@ paths:
           schema:
             title: User profile.
             $ref: '#/definitions/UserProfile'
+  '/processes':
+    get:
+      tags:
+        - Process
+      summary: List processes startable by current user.
+      produces:
+        - application/json
+      operationId: getStartableProcesses
+      responses:
+        '200':
+          description: Successful operation.
+          schema:
+            title: List of processes.
+            type: array
+            items:
+              $ref: '#/definitions/ProcessDefinition'
+          headers:
+            X-ElementCount:
+              type: integer
+              description: Number of elements in total.
+        '401':
+          description: Not authenticated.
+        '403':
+          description: Not authorized.
+
   '/tasks':
     get:
       tags:
-      - Task
+        - Task
       summary: Lists tasks.
       produces:
-      - application/json
+        - application/json
       operationId: getTasks
       parameters:
-      - in: query
-        name: page
-        description: The page number to access (0 indexed, defaults to 0)
-        default: 0
-        type: integer
-      - in: query
-        name: size
-        description: The page size requested (defaults to 20)
-        default: 0
-        type: integer
-      - in: query
-        name: sort
-        description: A collection of sort directives in the format +prop1.
-        type: string
-        pattern: '^[-+]([\w]*)$'
-      - in: query
-        name: filter
-        description: One or multiple filter directives in the format prop1=value
-        type: array
-        items:
+        - in: query
+          name: page
+          description: The page number to access (0 indexed, defaults to 0)
+          default: 0
+          type: integer
+        - in: query
+          name: size
+          description: The page size requested (defaults to 20)
+          default: 0
+          type: integer
+        - in: query
+          name: sort
+          description: A collection of sort directives in the format +prop1.
           type: string
-        pattern: '^([\w]*)=([.]+)?$'
-        collectionFormat: multi
-        required: true
-        default: '[]'
+          pattern: '^[-+]([\w]*)$'
+        - in: query
+          name: filter
+          description: One or multiple filter directives in the format prop1=value
+          type: array
+          items:
+            type: string
+          pattern: '^([\w]*)=([.]+)?$'
+          collectionFormat: multi
+          required: true
+          default: '[]'
       responses:
         '200':
           description: Successful operation.
@@ -81,15 +109,15 @@ paths:
   '/task/{id}/claim':
     post:
       tags:
-      - Task
+        - Task
       summary: Claims a task.
       operationId: claim
       parameters:
-      - in: path
-        name: id
-        type: string
-        description: Task id.
-        required: true
+        - in: path
+          name: id
+          type: string
+          description: Task id.
+          required: true
       responses:
         '204':
           description: Sucessful operation.
@@ -103,15 +131,15 @@ paths:
   '/task/{id}/unclaim':
     post:
       tags:
-      - Task
+        - Task
       summary: Unclaims a task.
       operationId: unclaim
       parameters:
-      - in: path
-        name: id
-        type: string
-        description: Task id.
-        required: true
+        - in: path
+          name: id
+          type: string
+          description: Task id.
+          required: true
       responses:
         '204':
           description: Sucessful operation.
@@ -125,21 +153,21 @@ paths:
   '/task/{id}/defer':
     post:
       tags:
-      - Task
+        - Task
       summary: Defers a task.
       operationId: defer
       parameters:
-      - in: path
-        name: id
-        type: string
-        description: Task id.
-        required: true
-      - in: body
-        name: followUpDate
-        description: A date until the task is deferred.
-        schema:
+        - in: path
+          name: id
           type: string
-          format: date-time
+          description: Task id.
+          required: true
+        - in: body
+          name: followUpDate
+          description: A date until the task is deferred.
+          schema:
+            type: string
+            format: date-time
       responses:
         '204':
           description: Sucessful operation.
@@ -153,15 +181,15 @@ paths:
   '/task/{id}/undefer':
     post:
       tags:
-      - Task
+        - Task
       summary: Undefers a task.
       operationId: undefer
       parameters:
-      - in: path
-        name: id
-        type: string
-        description: Task id.
-        required: true
+        - in: path
+          name: id
+          type: string
+          description: Task id.
+          required: true
       responses:
         '204':
           description: Sucessful operation.
@@ -176,20 +204,20 @@ paths:
   '/task/{id}/complete':
     post:
       tags:
-      - Task
+        - Task
       summary: Completes a task.
       operationId: complete
       parameters:
-      - in: path
-        name: id
-        type: string
-        description: Task id.
-        required: true
-      - in: body
-        name: payload
-        description: Payload to be added to the process instance on task completion.
-        schema:
-          $ref: '#/definitions/Payload'
+        - in: path
+          name: id
+          type: string
+          description: Task id.
+          required: true
+        - in: body
+          name: payload
+          description: Payload to be added to the process instance on task completion.
+          schema:
+            $ref: '#/definitions/Payload'
       responses:
         '204':
           description: Sucessful operation.
@@ -213,8 +241,8 @@ definitions:
         items:
           $ref: '#/definitions/DataEntry'
     required:
-    - task
-    - dataEntries
+      - task
+      - dataEntries
 
   Task:
     type: object
@@ -274,16 +302,16 @@ definitions:
           type: object
 
     required:
-    - id
-    - name
-    - description
-    - url
-    - candidateGroups
-    - candidateUsers
-    - processName
-    - createTime
-    - dueDate
-    - businessKey
+      - id
+      - name
+      - description
+      - url
+      - candidateGroups
+      - candidateUsers
+      - processName
+      - createTime
+      - dueDate
+      - businessKey
 
   DataEntry:
     type: object
@@ -298,6 +326,41 @@ definitions:
         type: object
         additionalProperties:
           type: object
+
+  ProcessDefinition:
+    type: object
+    properties:
+      definitionId:
+        type: string
+      definitionKey:
+        type: string
+      definitionVersion:
+        type: string
+      applicationName:
+        type: string
+      processName:
+        type: string
+      versionTag:
+        type: string
+      description:
+        type: string
+      formKey:
+        type: string
+      url:
+        type: string
+      startable:
+        type: boolean
+      candidateGroups:
+        type: array
+        description: Set of candidate groups represented by their group ids.
+        items:
+          type: string
+      candidateUsers:
+        type: array
+        description: Set of candidate users represented by their user ids.
+        items:
+          type: string
+
 
   Payload:
     type: object

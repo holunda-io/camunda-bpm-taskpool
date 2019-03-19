@@ -122,10 +122,10 @@ class TaskEventCollectorService(
   fun update(changeEvent: HistoricIdentityLinkLogEventEntity): UpdateAssignmentTaskCommand? =
     when (changeEvent.operationType) {
       "add" -> when {
-        changeEvent.userId != null -> AddCandidateUsersCommand(
+        changeEvent.taskId != null && changeEvent.userId != null -> AddCandidateUsersCommand(
           id = changeEvent.taskId,
           candidateUsers = setOf(changeEvent.userId))
-        changeEvent.groupId != null -> AddCandidateGroupsCommand(
+        changeEvent.taskId != null && changeEvent.groupId != null -> AddCandidateGroupsCommand(
           id = changeEvent.taskId,
           candidateGroups = setOf(changeEvent.groupId))
         else -> {
@@ -134,10 +134,10 @@ class TaskEventCollectorService(
         }
       }
       "delete" -> when {
-        changeEvent.userId != null -> DeleteCandidateUsersCommand(
+        changeEvent.taskId != null && changeEvent.userId != null -> DeleteCandidateUsersCommand(
           id = changeEvent.taskId,
           candidateUsers = setOf(changeEvent.userId))
-        changeEvent.groupId != null -> DeleteCandidateGroupsCommand(
+        changeEvent.taskId != null && changeEvent.groupId != null -> DeleteCandidateGroupsCommand(
           id = changeEvent.taskId,
           candidateGroups = setOf(changeEvent.groupId))
         else -> {

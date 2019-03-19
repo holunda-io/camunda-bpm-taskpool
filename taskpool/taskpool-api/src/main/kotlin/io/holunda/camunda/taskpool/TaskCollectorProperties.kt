@@ -26,7 +26,10 @@ class TaskCollectorProperties(
    * Enricher properties.
    */
   @NestedConfigurationProperty
-  var enricher: TaskCollectorEnricherProperties = TaskCollectorEnricherProperties(applicationName = springApplicationName)
+  var enricher: TaskCollectorEnricherProperties = TaskCollectorEnricherProperties(applicationName = springApplicationName),
+
+  @NestedConfigurationProperty
+  var process: ProcessDefinitionProperties = ProcessDefinitionProperties()
 )
 
 /**
@@ -88,5 +91,16 @@ enum class TaskSenderType {
    */
   custom
 }
+
+/**
+ * Properties controlling the transfer of process definitions deployments.
+ */
+data class ProcessDefinitionProperties(
+
+  /**
+   * Disable by default.
+   */
+  var enabled: Boolean = false
+)
 
 

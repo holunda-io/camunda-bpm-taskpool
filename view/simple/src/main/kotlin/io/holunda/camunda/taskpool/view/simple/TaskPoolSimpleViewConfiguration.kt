@@ -1,6 +1,6 @@
 package io.holunda.camunda.taskpool.view.simple
 
-import io.holunda.camunda.taskpool.view.simple.service.TaskPoolService
+import io.holunda.camunda.taskpool.view.simple.service.SimpleServiceViewProcessingGroup
 import mu.KLogging
 import org.springframework.boot.ApplicationRunner
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
@@ -13,12 +13,13 @@ import javax.annotation.PostConstruct
 @Configuration
 open class TaskPoolSimpleViewConfiguration {
 
-  companion object: KLogging()
+  companion object : KLogging()
 
   @Bean
   @ConditionalOnProperty(prefix = "camunda.taskpool.view.simple", name = ["replay"], matchIfMissing = true)
-  open fun initializeSimpleView(taskPoolService: TaskPoolService) = ApplicationRunner {
-    taskPoolService.restore()
+  open fun initializeSimpleView(
+    simpleServiceViewProcessingGroup: SimpleServiceViewProcessingGroup) = ApplicationRunner {
+    simpleServiceViewProcessingGroup.restore()
   }
 
   @PostConstruct

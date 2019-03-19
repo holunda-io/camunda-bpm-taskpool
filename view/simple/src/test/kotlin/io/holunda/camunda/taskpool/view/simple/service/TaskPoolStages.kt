@@ -28,7 +28,7 @@ open class TaskPoolStage<SELF : TaskPoolStage<SELF>> : Stage<SELF>() {
 
   @BeforeScenario
   fun init() {
-    testee = TaskPoolService(Mockito.mock(QueryUpdateEmitter::class.java), Mockito.mock(EventProcessingConfiguration::class.java))
+    testee = TaskPoolService(Mockito.mock(QueryUpdateEmitter::class.java))
   }
 
   open fun task_created_event_is_received(event: TaskCreatedEngineEvent): SELF {

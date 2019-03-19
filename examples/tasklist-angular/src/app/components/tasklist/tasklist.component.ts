@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
-import { UserProfile } from 'tasklist/model/userProfile';
-import { TaskWithDataEntries, Task } from 'tasklist';
+import { UserProfile, TaskWithDataEntries, Task } from 'tasklist/models';
 import { TaskHelperService } from 'app/services/task.helper.service';
 import { FilterService } from 'app/services/filter.service';
 import { ProfileHelperService } from 'app/services/profile.helper.service';
@@ -22,7 +21,7 @@ export class TasklistComponent {
   constructor(
     private taskHelper: TaskHelperService,
     private filterService: FilterService,
-    private profileHelper: ProfileHelperService
+    private profileHelper: ProfileHelperService,
   ) {
     this.subscribe();
     this.page = this.filterService.page + 1;
@@ -65,8 +64,8 @@ export class TasklistComponent {
     this.filterService.count.subscribe((count: number) => {
       this.totalItems = count;
     });
-    this.profileHelper.userProfile.subscribe((profile => {
+    this.profileHelper.userProfile.subscribe((profile: UserProfile) => {
       this.userProfile = profile;
-    }));
+    });
   }
 }

@@ -6,7 +6,6 @@ import { FormsModule } from '@angular/forms';
 import { ApproveRequestService } from 'process/api/approveRequest.service';
 import { ActivatedRoute, RouterModule, Router } from '@angular/router';
 import { EnvironmentHelperService } from 'app/services/environment.helper.service';
-import { Observable } from 'rxjs';
 import { of } from 'rxjs-compat/observable/of';
 
 

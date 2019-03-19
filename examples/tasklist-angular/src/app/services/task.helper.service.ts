@@ -1,9 +1,11 @@
-import { Injectable, OnInit, OnDestroy } from '@angular/core';
-import { TaskService, TaskWithDataEntries, Task } from 'tasklist';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { HttpResponse } from '@angular/common/http';
-import { FilterService, Field } from './filter.service';
-import { Subscription } from 'rxjs';
+import {Injectable, OnDestroy} from '@angular/core';
+import {TaskService} from 'tasklist/services';
+import {Task, TaskWithDataEntries} from 'tasklist/models';
+import {StrictHttpResponse} from 'tasklist/strict-http-response';
+import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+import {Field, FilterService} from './filter.service';
+import {Subscription} from 'rxjs';
+
 
 @Injectable()
 export class TaskHelperService implements OnDestroy {
@@ -12,7 +14,7 @@ export class TaskHelperService implements OnDestroy {
   private sortSubscription: Subscription;
 
   constructor(private taskService: TaskService, private filterService: FilterService) {
-    this.sortSubscription = this.filterService.columnSorted$.subscribe( (fieldEvent: Field) => {
+    this.sortSubscription = this.filterService.columnSorted$.subscribe((fieldEvent: Field) => {
       this.reload();
     });
 
@@ -34,7 +36,7 @@ export class TaskHelperService implements OnDestroy {
         // claim sucessfull
         this.reload();
       },
-      (error) =>  {
+      (error) => {
         console.log('Error claiming task', error);
       }
     );
@@ -47,19 +49,19 @@ export class TaskHelperService implements OnDestroy {
         // claim sucessfull
         this.reload();
       },
-      (error) =>  {
+      (error) => {
         console.log('Error unclaiming task', error);
       }
     );
   }
 
   reload(): void {
-    this.taskService.getTasks(
-      this.filterService.filter,
-      this.filterService.page,
-      this.filterService.itemsPerPage,
-      this.filterService.getSort(),
-      'response').subscribe((response: HttpResponse<Array<TaskWithDataEntries>>) => {
+    this.taskService.getTasksResponse({
+      filter: this.filterService.filter,
+      page: this.filterService.page,
+      size: this.filterService.itemsPerPage,
+      sort: this.filterService.getSort()
+    }).subscribe((response: StrictHttpResponse<Array<TaskWithDataEntries>>) => {
       this.tasksSubject.next(response.body);
       this.filterService.countUpdate(Number(response.headers.get('X-ElementCount')));
     }, (error) => {

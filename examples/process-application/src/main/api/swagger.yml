@@ -3,10 +3,12 @@ info:
   title: Example Process REST API
   version: 0.0.1
   description: API for the example approval process.
-basePath: '/example-process-approval/rest/tasks'
+basePath: '/example-process-approval/rest/'
 tags:
 - name: Approve Request
   description: Operations on task approve request.
+- name: Request
+  description: Operations to maniulate requests.
 schemes:
 - http
 - https
@@ -21,6 +23,29 @@ paths:
         200:
           schema:
             $ref: '#/definitions/Environment'
+  '/request/{id}/start/{originator}':
+    post:
+      tags:
+        - Request
+      summary: Starts approaval process.
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          type: string
+          description: Approval request id.
+          required: true
+        - in: path
+          name: originator
+          type: string
+          description: User id of the process starter.
+          required: true
+      operationId: start
+      responses:
+        200:
+          description: Sucessful operation.
+
   '/approve-request/id/{id}':
     get:
       tags:

@@ -14,8 +14,9 @@ import { AppRoutingModule } from 'app/app-routing.module';
 import { ApproveTaskComponent } from 'app/tasks/approve-request/approve-task.component';
 import { PageNotFoundComponent } from 'app/tasks/page-not-found/page-not-found.component';
 import { AmendTaskComponent } from 'app/tasks/amend-request/amend-task.component';
-import { ExternalUrlDirective } from './components/external-url.directive';
-import { EnvironmentHelperService } from './services/environment.helper.service';
+import { ExternalUrlDirective } from 'app/components/external-url.directive';
+import { EnvironmentHelperService } from 'app/services/environment.helper.service';
+import { StartComponent } from 'app/tasks/start/start.component';
 
 
 registerLocaleData(localeFr, 'fr');
@@ -26,6 +27,7 @@ registerLocaleData(localeEn, 'en');
 @NgModule({
   declarations: [
     AppComponent,
+    StartComponent,
     PageNotFoundComponent,
     ApproveTaskComponent,
     AmendTaskComponent,

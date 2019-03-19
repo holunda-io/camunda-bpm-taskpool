@@ -30,11 +30,11 @@ module.exports = function (config) {
     coverageIstanbulReporter: {
       reports: ['html', 'lcovonly'],
       fixWebpackSourcePaths: true,
-      dir: path.join(__dirname, 'target/coverage')
+      dir: path.join(__dirname, '../target/coverage')
     },
     junitReporter: {
       title: 'tasklist-angular',
-      outputDir: path.join(__dirname, 'target/surefire-reports')
+      outputDir: path.join(__dirname, '../target/surefire-reports')
     },
     angularCli: {
       environment: 'dev'

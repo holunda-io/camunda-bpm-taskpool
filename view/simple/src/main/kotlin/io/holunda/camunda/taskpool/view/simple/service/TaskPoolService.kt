@@ -2,7 +2,6 @@ package io.holunda.camunda.taskpool.view.simple.service
 
 import io.holunda.camunda.taskpool.api.business.DataEntryCreatedEvent
 import io.holunda.camunda.taskpool.api.business.DataEntryUpdatedEvent
-import io.holunda.camunda.taskpool.api.business.EntryId
 import io.holunda.camunda.taskpool.api.business.dataIdentity
 import io.holunda.camunda.taskpool.api.task.*
 import io.holunda.camunda.taskpool.view.DataEntry
@@ -15,44 +14,23 @@ import io.holunda.camunda.taskpool.view.simple.filter.toCriteria
 import io.holunda.camunda.taskpool.view.simple.sort.comparator
 import io.holunda.camunda.taskpool.view.task
 import mu.KLogging
-import org.axonframework.config.EventProcessingConfiguration
 import org.axonframework.config.ProcessingGroup
 import org.axonframework.eventhandling.EventHandler
-import org.axonframework.eventhandling.TrackingEventProcessor
 import org.axonframework.queryhandling.QueryHandler
 import org.axonframework.queryhandling.QueryUpdateEmitter
 import org.springframework.stereotype.Component
 import java.util.concurrent.ConcurrentHashMap
 
 @Component
-@ProcessingGroup(TaskPoolService.PROCESSING_GROUP)
+@ProcessingGroup(SimpleServiceViewProcessingGroup.PROCESSING_GROUP)
 open class TaskPoolService(
-  private val queryUpdateEmitter: QueryUpdateEmitter,
-  private val configuration: EventProcessingConfiguration
+  private val queryUpdateEmitter: QueryUpdateEmitter
 ) {
 
-  companion object : KLogging() {
-    const val PROCESSING_GROUP = "io.holunda.camunda.taskpool.view.simple.service"
-  }
+  companion object : KLogging()
 
   private val tasks = ConcurrentHashMap<String, Task>()
   private val dataEntries = ConcurrentHashMap<String, DataEntry>()
-
-
-  /**
-   * Configure to run a event replay to fill the simple task view with events on start-up.
-   */
-  open fun restore() {
-    this.configuration
-      .eventProcessorByProcessingGroup(TaskPoolService.PROCESSING_GROUP, TrackingEventProcessor::class.java)
-      .ifPresent {
-        logger.info { "VIEW-SIMPLE-002: Starting simple view event replay." }
-        it.shutDown()
-        it.resetTokens()
-        it.start()
-      }
-  }
-
 
   /**
    * Retrieves a list of all user tasks for current user.
@@ -80,7 +58,7 @@ open class TaskPoolService(
   open fun query(query: TaskWithDataEntriesForIdQuery): TaskWithDataEntries? {
     val task = tasks.values.firstOrNull { query.applyFilter(TaskWithDataEntries(it)) }
     return if (task != null) {
-      tasksWithDataEntries(task, this.dataEntries)
+      TaskWithDataEntries(task, this.dataEntries.values.toList())
     } else {
       null
     }
@@ -96,7 +74,7 @@ open class TaskPoolService(
 
     val filtered = query(TasksForUserQuery(query.user))
       .asSequence()
-      .map { task -> tasksWithDataEntries(task, this.dataEntries) }
+      .map { task -> TaskWithDataEntries.correlate(task, this.dataEntries.values.toList()) }
       .filter { filterByPredicates(it, predicates) }
       .toList()
 
@@ -221,7 +199,17 @@ open class TaskPoolService(
     updateDataEntryQuery(dataIdentity(entryType = event.entryType, entryId = event.entryId))
   }
 
-  private fun updateTaskForUserQuery(taskId: String) = updateMapFilterQuery(tasks, taskId, TasksForUserQuery::class.java)
+
+  private fun updateTaskForUserQuery(taskId: String) {
+    updateMapFilterQuery(tasks, taskId, TasksForUserQuery::class.java)
+
+    val mapTasksWithDataEntries = TaskWithDataEntries.correlate(tasks.values.toList(), dataEntries.values.toList())
+      .map { it.task.id to it }
+      .toMap()
+
+    updateMapFilterQuery(mapTasksWithDataEntries, taskId, TasksWithDataEntriesForUserQuery::class.java)
+  }
+
   private fun updateDataEntryQuery(identity: String) = updateMapFilterQuery(dataEntries, identity, DataEntryQuery::class.java)
 
   private fun <T : Any, Q : FilterQuery<T>> updateMapFilterQuery(map: Map<String, T>, key: String, clazz: Class<Q>) {
@@ -236,12 +224,3 @@ open class TaskPoolService(
   }
 }
 
-fun tasksWithDataEntries(task: Task, dataEntries: Map<String, DataEntry>) =
-  TaskWithDataEntries(
-    task = task,
-    dataEntries = dataEntries.filter { entry ->
-      // task correlation list contains entryType -> entryId elements
-      // create data entry identity with it and tak only data entries with this identity
-      task.correlations.map { dataIdentity(it.key, it.value as EntryId) }.contains(entry.key)
-    }.values.toList()
-  )

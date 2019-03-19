@@ -1,13 +1,18 @@
 import { NgModule, InjectionToken } from '@angular/core';
 import { RouterModule, Routes, ActivatedRouteSnapshot } from '@angular/router';
 import { ApproveTaskComponent } from 'app/tasks/approve-request/approve-task.component';
-import { AmendTaskComponent } from './tasks/amend-request/amend-task.component';
+import { AmendTaskComponent } from 'app/tasks/amend-request/amend-task.component';
 import { PageNotFoundComponent } from 'app/tasks/page-not-found/page-not-found.component';
+import { StartComponent } from 'app/tasks/start/start.component';
 
 const externalUrlProvider = new InjectionToken('externalUrlRedirectResolver');
 const deactivateGuard = new InjectionToken('deactivateGuard');
 
 const routes: Routes = [
+  {
+    path: 'start',
+    component: StartComponent,
+  },
   {
     path: 'tasks/amend-request/id/:taskId',
     component: AmendTaskComponent,

@@ -11,6 +11,7 @@ import { FieldNamePipe } from 'app/services/field-name.pipe';
 import { FilterService } from 'app/services/filter.service';
 import { ProfileHelperService } from 'app/services/profile.helper.service';
 import { SortableColumnComponent } from 'app/components/sorter/sortable-column.component';
+import { ProcessHelperService } from 'app/services/process.helper.service';
 
 describe('Component: TasklistComponent', () => {
 
@@ -33,7 +34,8 @@ describe('Component: TasklistComponent', () => {
       providers: [
         FilterService,
         { provide: ProfileHelperService, useValue: { userProfile: Observable.of([]) }},
-        { provide: TaskHelperService, useValue: { tasks: Observable.of([]) } },
+        { provide: TaskHelperService, useValue: { tasks: Observable.of([]) }},
+        { provide: ProcessHelperService, useValue: { processes: Observable.of([]) }}
       ],
     }).compileComponents().then(() => {
       // create component and test fixture

@@ -1,6 +1,7 @@
 package io.holunda.camunda.taskpool.example.process.rest
 
 import io.holunda.camunda.taskpool.example.process.process.ProcessApproveRequestBean
+import io.holunda.camunda.taskpool.example.process.rest.api.RequestApi
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiParam
@@ -9,21 +10,19 @@ import org.springframework.http.ResponseEntity
 import org.springframework.http.ResponseEntity.noContent
 import org.springframework.web.bind.annotation.*
 
-@Api("Example Process Controller", tags = ["Process Controller"])
+@Api("Example Process Controller", tags = ["Request"])
 @RestController
 @RequestMapping(path = [Rest.REST_PREFIX])
-open class ProcessController {
+open class ProcessController : RequestApi {
 
   @Autowired
   lateinit var processApproveRequestBean: ProcessApproveRequestBean
 
-  @ApiOperation("Starts the process for the specified request.")
-  @PostMapping("/request/{id}/start/{originator}")
-  open fun start(
+  override fun start(
     @ApiParam("Request id") @PathVariable("id") id: String,
     @ApiParam(value = "Originator", defaultValue = "kermit") @PathVariable("originator") originator: String
   ): ResponseEntity<Void> {
-    processApproveRequestBean.startProcess(id)
+    processApproveRequestBean.startProcess(id, originator)
     return noContent().build()
   }
 

@@ -1,8 +1,6 @@
 package io.holunda.camunda.taskpool.view
 
-import io.holunda.camunda.taskpool.api.business.CorrelationMap
-import io.holunda.camunda.taskpool.api.business.WithCorrelations
-import io.holunda.camunda.taskpool.api.business.newCorrelations
+import io.holunda.camunda.taskpool.api.business.*
 import io.holunda.camunda.taskpool.api.task.*
 import org.camunda.bpm.engine.variable.VariableMap
 import org.camunda.bpm.engine.variable.Variables
@@ -29,7 +27,13 @@ data class Task(
   val owner: String? = null,
   val dueDate: Date? = null,
   val followUpDate: Date? = null
-) : TaskIdentity, WithPayload, WithCorrelations
+) : TaskIdentity, WithPayload, WithCorrelations {
+
+  val correlationIdentities by lazy {
+    correlations.map { dataIdentity(it.key, it.value as EntryId) }.toSet()
+  }
+
+}
 
 fun task(event: TaskAssignedEngineEvent, task: Task) = Task(
   id = event.id,
