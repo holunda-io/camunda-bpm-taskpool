@@ -11,6 +11,12 @@ camunda:
       defaultTaskTemplate: "tasks/${formKey}/id/${id}"
       defaultProcessTemplate: "${processDefinitionKey}/${formKey}"
       defaultApplicationTemplate: "http://localhost:8080/${applicationName}"
+      applications:
+        example-process-approval:
+          url: "http://localhost:8080/example-process-approval"
+          processes:
+            process_approve_request: "start"
+
 
 logging.level.io.holunda.camunda.taskpool:
   core: WARN

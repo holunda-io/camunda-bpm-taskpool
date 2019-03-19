@@ -21,7 +21,7 @@ export class TasklistComponent {
   constructor(
     private taskHelper: TaskHelperService,
     private filterService: FilterService,
-    private profileHelper: ProfileHelperService
+    private profileHelper: ProfileHelperService,
   ) {
     this.subscribe();
     this.page = this.filterService.page + 1;
@@ -64,8 +64,8 @@ export class TasklistComponent {
     this.filterService.count.subscribe((count: number) => {
       this.totalItems = count;
     });
-    this.profileHelper.userProfile.subscribe((profile => {
+    this.profileHelper.userProfile.subscribe((profile: UserProfile) => {
       this.userProfile = profile;
-    }));
+    });
   }
 }

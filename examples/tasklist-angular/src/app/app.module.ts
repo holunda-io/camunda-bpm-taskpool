@@ -16,9 +16,11 @@ import { ProfileHelperService } from 'app/services/profile.helper.service';
 import { FieldNamePipe } from 'app/services/field-name.pipe';
 import { FilterService } from 'app/services/filter.service';
 import { SortableColumnComponent } from 'app/components/sorter/sortable-column.component';
-import { ExternalUrlDirective } from './components/external-url.directive';
-import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
+import { ExternalUrlDirective } from 'app/components/external-url.directive';
+import { PageNotFoundComponent } from 'app/components/page-not-found/page-not-found.component';
 import { AppRoutingModule } from './app-routing.module';
+import { ProcessHelperService } from './services/process.helper.service';
+import { ProcesslistComponent } from './components/process-list/process-list.component';
 
 
 registerLocaleData(localeFr, 'fr');
@@ -32,6 +34,7 @@ registerLocaleData(localeEn, 'en');
     FieldNamePipe,
     SortableColumnComponent,
     TasklistComponent,
+    ProcesslistComponent,
     ExternalUrlDirective,
     PageNotFoundComponent
   ],
@@ -46,6 +49,7 @@ registerLocaleData(localeEn, 'en');
   providers: [
     TaskHelperService,
     ProfileHelperService,
+    ProcessHelperService,
     FilterService
   ],
   bootstrap: [AppComponent]
