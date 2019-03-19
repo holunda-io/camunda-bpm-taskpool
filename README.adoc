@@ -15,7 +15,7 @@ image::https://www.openhub.net/p/camunda-bpm-taskpool/widgets/project_thin_badge
 // license
 image::https://img.shields.io/badge/License-Apache%202.0-blue.svg[link="./LICENSE"] |
 // changelog
-image::https://img.shields.io/badge/CHANGES----blue.svg[link="./blob/develop/CHANGELOG.adoc"] |
+image::https://img.shields.io/badge/CHANGES----blue.svg[link="./CHANGELOG.adoc"] |
 |====
 
 A component for pooling Camunda BPM user tasks with business data for performance queries.
