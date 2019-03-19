@@ -13,7 +13,9 @@ image::https://api.codacy.com/project/badge/Grade/653136bd5cad48c8a9f2621ee304ff
 // openhub
 image::https://www.openhub.net/p/camunda-bpm-taskpool/widgets/project_thin_badge.gif[caption="Project Stats", link=https://www.openhub.net/p/camunda-bpm-taskpool] |
 // license
-image::https://img.shields.io/badge/License-Apache%202.0-blue.svg[link="./LICENSE"]
+image::https://img.shields.io/badge/License-Apache%202.0-blue.svg[link="./LICENSE"] |
+// changelog
+link:CHANGELOG.adoc[CHANGES] |
 |====
 
 A component for pooling Camunda BPM user tasks with business data for performance queries.
@@ -105,7 +107,3 @@ This library serves as a foundation of several follow-up projects and tools:
 == Contribution
 
 If you want to contribute to this project, feel free to do so. Start with link:/docs/contributing.adoc[contributing guide].
-
-== Changelog
-
-include::CHANGELOG.adoc
