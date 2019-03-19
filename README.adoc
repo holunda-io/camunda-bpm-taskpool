@@ -1,6 +1,6 @@
 = Camunda BPM Taskpool
 
-[cols="a,a,a,a,a,a"]
+[cols="a,a,a,a,a,a,a"]
 |====
 // travis
 image::https://travis-ci.org/holunda-io/camunda-bpm-taskpool.svg?branch=master[caption="Build Status", link=https://travis-ci.org/holunda-io/camunda-bpm-taskpool] |
