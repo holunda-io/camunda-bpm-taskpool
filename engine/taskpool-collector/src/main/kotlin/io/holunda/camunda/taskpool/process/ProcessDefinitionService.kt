@@ -37,7 +37,7 @@ class ProcessDefinitionService(
   ): List<RegisterProcessDefinitionCommand> {
 
     require(Context.getCommandContext() != null) { "This method must be executed inside a Camunda command context." }
-    
+
     val query = repositoryService.createProcessDefinitionQuery()
     if (processDefinitionKey != null && processDefinitionKey.isNotBlank()) {
       query.processDefinitionKey(processDefinitionKey)
