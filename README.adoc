@@ -72,7 +72,7 @@ The goal of this project is to provide such component as a library, to be used i
 The solution is implementing the Command Query Responsibility Segregation (CQRS) pattern, by collecting the
 tasks from the process engines and creating a read-optimized projection with tasks and correlated business
 data events. In doing so, `camunda-bpm-taskpool` provides several independent components (see below) which can
-be deployed in different scenarios. The library is implemented using Kotlin programming language and relies on SpringBoot
+be deployed in different scenarios (see below). The library is implemented using Kotlin programming language and relies on SpringBoot
 as execution environment. It makes a massive use of Axon Framework as a basis of the CQRS implementation.
 
 The following diagram depicts the overall architecture.
@@ -96,6 +96,50 @@ image::docs/architecture-collector.png["Architectural white box"]
 == Working Example
 
 See our link:examples[Sample Process Application] including a simple tasklist implementation for demonstration purposes.
+
+== Deployment scenarios
+
+Depending on your requirements and infrastructure available several deployment scenarios of the components is possible.
+
+One of the challenging issues for distribution and connecting microservices is a setup of messaging technology supporting required
+message exchange patterns (MEPs) for a CQRS system. Because of different semantics of commands, events and queries and additional
+requirements of event-sourced persistence a special implementation of command bus, event bus and event store are required.
+
+=== Axon Server Scenario
+
+Axon Server provides such implementation leading to a distributed command and event-bus and a central event store. It is easy
+to use, easy to configure and easy to run. If you need a HA setup, you will need the enterprise license of Axon Server. Essentially,
+if don't have another HA ready-to use messaging, this scenario might be your way to go.
+
+This scenario supports:
+
+-  central task pool / data pool
+-  view must not have a persistent storage (can be replayed)
+-  no direct communcation between tasklist and engine is required (routed via command bus)
+
+The following diagram depicts the distribution of the components and the messaging.
+
+image::docs/deployment-axon-server.png["Deployment of taskpool with axon server"]
+
+=== Scenario without Axon Server
+
+If you already have another messaging at place, like Kafka or RabbitMQ, you might skip the usage of Axon Server. In doing so,
+you will be responsible for distrubution of events and will need to surrender some features.
+
+This scenario supports:
+
+-  distrubuted task pool / data pool
+-  view must be persistent
+-  direct communication between tasklist / engines required (addressing, routing)
+-  concurrent access to engines might become a problem (no unit of work gurantees)
+
+The following diagram depicts the distribution of the components and the messaging.
+
+image::docs/deployment-messaging.png["Deployment of taskpool with other messaging"]
+
+
+
+
 
 == Further outlook
 

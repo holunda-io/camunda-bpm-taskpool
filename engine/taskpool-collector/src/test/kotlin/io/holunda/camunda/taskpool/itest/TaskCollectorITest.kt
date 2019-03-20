@@ -54,7 +54,6 @@ class TaskCollectorITest {
   @Autowired
   lateinit var taskService: TaskService
 
-
   /**
    * The process is started and waits in the user task. If the instance is deleted,
    * and the listeners are notified, the delete command is sent out with process
