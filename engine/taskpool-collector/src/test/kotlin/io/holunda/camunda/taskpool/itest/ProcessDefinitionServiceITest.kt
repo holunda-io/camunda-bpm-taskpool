@@ -4,11 +4,16 @@ import io.holunda.camunda.taskpool.process.ProcessDefinitionService
 import io.holunda.camunda.taskpool.sender.gateway.AxonCommandListGateway
 import org.assertj.core.api.Assertions.assertThat
 import org.camunda.bpm.engine.FormService
+import org.camunda.bpm.engine.IdentityService
 import org.camunda.bpm.engine.RepositoryService
+import org.camunda.bpm.engine.impl.cfg.ProcessEngineConfigurationImpl
 import org.camunda.bpm.model.bpmn.Bpmn
 import org.camunda.bpm.model.xml.instance.ModelElementInstance
+import org.junit.Rule
 import org.junit.Test
+import org.junit.rules.ExpectedException
 import org.junit.runner.RunWith
+import org.mockito.junit.MockitoJUnit
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
@@ -30,9 +35,14 @@ class ProcessDefinitionServiceITest {
     const val NS_CAMUNDA = "http://camunda.org/schema/1.0/bpmn"
   }
 
+  @get: Rule
+  val expectedException = ExpectedException.none()
 
   @MockBean
   lateinit var commandGateway: AxonCommandListGateway
+
+  @Autowired
+  private lateinit var configuration: ProcessEngineConfigurationImpl
 
   @Autowired
   private lateinit var processDefinitionService: ProcessDefinitionService
@@ -44,6 +54,12 @@ class ProcessDefinitionServiceITest {
   private lateinit var formService: FormService
 
   @Test
+  fun `should not run outside of command context`() {
+    expectedException.expectMessage("This method must be executed inside a Camunda command context.")
+    processDefinitionService.getProcessDefinitions(formService, repositoryService)
+  }
+
+    @Test
   fun `should deliver process starter`() {
 
     val processId = "my-id"
@@ -63,7 +79,7 @@ class ProcessDefinitionServiceITest {
       .addModelInstance("process-with-start-form.bpmn", modelInstance)
       .deploy()
 
-    val definitions = processDefinitionService.getProcessDefinitions(formService, repositoryService)
+    val definitions = processDefinitionService.getProcessDefinitions(configuration)
 
     assertThat(definitions).isNotEmpty
   }
