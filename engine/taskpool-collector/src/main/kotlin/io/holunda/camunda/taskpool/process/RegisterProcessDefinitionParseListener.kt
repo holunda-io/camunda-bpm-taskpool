@@ -1,5 +1,6 @@
 package io.holunda.camunda.taskpool.process
 
+import io.holunda.camunda.taskpool.executeInCommandContext
 import org.camunda.bpm.engine.impl.bpmn.parser.AbstractBpmnParseListener
 import org.camunda.bpm.engine.impl.cfg.ProcessEngineConfigurationImpl
 import org.camunda.bpm.engine.impl.persistence.entity.ProcessDefinitionEntity
@@ -12,6 +13,6 @@ class RegisterProcessDefinitionParseListener(
   override fun parseProcess(processElement: Element, processDefinition: ProcessDefinitionEntity) {
     // create job / send command to job executor
     // to handle this deployment asynchronous.
-    processEngineConfiguration.commandExecutorTxRequired.execute(RefreshProcessDefinitionsJobCommand(processDefinitionKey = processDefinition.key))
+    processEngineConfiguration.executeInCommandContext(RefreshProcessDefinitionsJobCommand(processDefinitionKey = processDefinition.key))
   }
 }
