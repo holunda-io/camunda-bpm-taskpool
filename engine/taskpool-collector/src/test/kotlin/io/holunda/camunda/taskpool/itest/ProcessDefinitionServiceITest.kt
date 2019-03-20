@@ -82,6 +82,11 @@ class ProcessDefinitionServiceITest {
     val definitions = processDefinitionService.getProcessDefinitions(configuration)
 
     assertThat(definitions).isNotEmpty
+    assertThat(definitions[0].processName).isEqualTo("My Process")
+    assertThat(definitions[0].processDefinitionKey).isEqualTo("my-id")
+    assertThat(definitions[0].processDefinitionVersion).isEqualTo(1)
+    assertThat(definitions[0].formKey).isEqualTo("start-approval")
+    assertThat(definitions[0].candidateStarterGroups).containsExactlyElementsOf(listOf("muppetshow"))
   }
 
 }
