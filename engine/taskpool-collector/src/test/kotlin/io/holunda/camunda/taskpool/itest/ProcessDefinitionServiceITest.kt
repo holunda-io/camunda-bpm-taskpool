@@ -4,7 +4,6 @@ import io.holunda.camunda.taskpool.process.ProcessDefinitionService
 import io.holunda.camunda.taskpool.sender.gateway.AxonCommandListGateway
 import org.assertj.core.api.Assertions.assertThat
 import org.camunda.bpm.engine.FormService
-import org.camunda.bpm.engine.IdentityService
 import org.camunda.bpm.engine.RepositoryService
 import org.camunda.bpm.engine.impl.cfg.ProcessEngineConfigurationImpl
 import org.camunda.bpm.model.bpmn.Bpmn
@@ -13,7 +12,6 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.ExpectedException
 import org.junit.runner.RunWith
-import org.mockito.junit.MockitoJUnit
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
@@ -59,7 +57,7 @@ class ProcessDefinitionServiceITest {
     processDefinitionService.getProcessDefinitions(formService, repositoryService)
   }
 
-    @Test
+  @Test
   fun `should deliver process starter`() {
 
     val processId = "my-id"
