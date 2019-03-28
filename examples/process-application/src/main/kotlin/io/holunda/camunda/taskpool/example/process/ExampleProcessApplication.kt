@@ -4,8 +4,10 @@ import io.holunda.camunda.taskpool.EnableTaskpoolEngineSupport
 import io.holunda.camunda.taskpool.enricher.*
 import io.holunda.camunda.taskpool.example.process.process.ProcessApproveRequest
 import io.holunda.camunda.taskpool.example.process.service.BusinessDataEntry
+import io.holunda.camunda.taskpool.example.process.service.SimpleUserService
 import mu.KLogging
 import org.camunda.bpm.spring.boot.starter.annotation.EnableProcessApplication
+import org.springframework.boot.ApplicationRunner
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.context.annotation.Bean
@@ -55,13 +57,25 @@ open class ExampleProcessApplication {
       mapOf(
         // define a correlation for every task needed
         ProcessApproveRequest.Elements.APPROVE_REQUEST to mapOf(
-          ProcessApproveRequest.Variables.REQUEST_ID to BusinessDataEntry.REQUEST
+          ProcessApproveRequest.Variables.REQUEST_ID to BusinessDataEntry.REQUEST,
+          ProcessApproveRequest.Variables.ORIGINATOR to BusinessDataEntry.USER
         )
       ),
       // or globally
       mapOf(ProcessApproveRequest.Variables.REQUEST_ID to BusinessDataEntry.REQUEST)
     )
   )
+
+  @Bean
+  open fun registerUsers(simpleUserService: SimpleUserService): ApplicationRunner {
+    return ApplicationRunner {
+      val users = simpleUserService.getAllUsers()
+      users.forEach {
+        simpleUserService.notify(it)
+      }
+    }
+  }
+
 }
 
 

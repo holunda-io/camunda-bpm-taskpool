@@ -8,11 +8,7 @@ import io.holunda.camunda.taskpool.api.task.*
 import io.holunda.camunda.taskpool.view.DataEntry
 import io.holunda.camunda.taskpool.view.Task
 import io.holunda.camunda.taskpool.view.TaskWithDataEntries
-import io.holunda.camunda.taskpool.view.mongo.filter.createPredicates
-import io.holunda.camunda.taskpool.view.mongo.filter.filterByPredicates
-import io.holunda.camunda.taskpool.view.mongo.filter.toCriteria
 import io.holunda.camunda.taskpool.view.mongo.repository.*
-import io.holunda.camunda.taskpool.view.mongo.sort.comparator
 import io.holunda.camunda.taskpool.view.query.*
 import io.holunda.camunda.taskpool.view.task
 import mu.KLogging
@@ -23,6 +19,8 @@ import org.axonframework.eventhandling.EventProcessor
 import org.axonframework.eventhandling.TrackingEventProcessor
 import org.axonframework.queryhandling.QueryHandler
 import org.axonframework.queryhandling.QueryUpdateEmitter
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Component
 
 /**
@@ -30,11 +28,13 @@ import org.springframework.stereotype.Component
  */
 @Component
 @ProcessingGroup(TaskPoolMongoService.PROCESSING_GROUP)
+@Suppress("UNUSED")
 open class TaskPoolMongoService(
   private val queryUpdateEmitter: QueryUpdateEmitter,
   private var taskRepository: TaskRepository,
   private var dataEntryRepository: DataEntryRepository,
-  private val configuration: EventProcessingConfiguration
+  private val configuration: EventProcessingConfiguration,
+  private val readRepo: TaskWithDataEntriesRepository
 ) {
 
   companion object : KLogging() {
@@ -95,25 +95,16 @@ open class TaskPoolMongoService(
   @QueryHandler
   open fun query(query: TasksWithDataEntriesForUserQuery): TasksWithDataEntriesResponse {
 
-    val predicates = createPredicates(toCriteria(query.filters))
+    val read = this.readRepo.findAllFiltered(
+      criteria = toCriteria(query.filters),
+      pageable = PageRequest.of(query.page, query.size, sort(query.sort))
+    ).map { it.taskWithDataEntries() }
 
-    val filtered = query(TasksForUserQuery(query.user))
-      .asSequence()
-      .map { task -> tasksWithDataEntries(task) }
-      .filter { filterByPredicates(it, predicates) }
-      .toList()
-
-    val comparator = comparator(query.sort)
-
-    val sorted = if (comparator != null) {
-      filtered.sortedWith(comparator)
-    } else {
-      filtered
-    }
-
-    return slice(list = sorted, query = query)
+    // FIXME: replace by mongo paging
+    return slice(list = read, query = query)
   }
 
+  @Deprecated("get rid of the slice, use paging of the query.")
   fun slice(list: List<TaskWithDataEntries>, query: TasksWithDataEntriesForUserQuery): TasksWithDataEntriesResponse {
     val totalCount = list.size
     val offset = query.page * query.size
@@ -247,3 +238,15 @@ open class TaskPoolMongoService(
     tasksWithDataEntries(taskDocument.task())
 }
 
+
+internal fun sort(sort: String?): Sort =
+  if (sort != null) {
+    val attribute = sort.substring(1).replace("task.", "")
+    when (sort.substring(0, 1)) {
+      "+" -> Sort(Sort.Direction.ASC, attribute)
+      "-" -> Sort(Sort.Direction.DESC, attribute)
+      else -> Sort.unsorted()
+    }
+  } else {
+    Sort.unsorted()
+  }

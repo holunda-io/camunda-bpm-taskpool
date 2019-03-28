@@ -5,7 +5,7 @@
 
   <groupId>io.holunda.taskpool</groupId>
   <artifactId>camunda-bpm-taskpool</artifactId>
-  <version>1.2.7</version>
+  <version>1.2.8</version>
   <packaging>pom</packaging>
 
   <name>${project.artifactId}</name>
@@ -686,7 +686,7 @@
         <plugin>
           <groupId>com.amashchenko.maven.plugin</groupId>
           <artifactId>gitflow-maven-plugin</artifactId>
-          <version>1.10.0</version>
+          <version>1.11.0</version>
           <configuration>
             <gitFlowConfig>
               <productionBranch>master</productionBranch>

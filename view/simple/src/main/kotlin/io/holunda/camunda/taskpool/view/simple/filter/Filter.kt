@@ -144,7 +144,7 @@ internal fun toCriterion(filter: String): Criterion {
     filter.contains(EQUALS) -> filter.split(EQUALS).plus(EQUALS)
     filter.contains(GREATER) -> filter.split(GREATER).plus(GREATER)
     filter.contains(LESS) -> filter.split(LESS).plus(LESS)
-    else -> listOf<String>()
+    else -> listOf()
   }
   require(segments.size == 3 && !segments[0].isBlank() && !segments[0].isBlank()) { "Failed to create criteria from $filter." }
 
