@@ -5,7 +5,7 @@
 
   <groupId>io.holunda.taskpool</groupId>
   <artifactId>camunda-bpm-taskpool</artifactId>
-  <version>1.2.10</version>
+  <version>1.2.11</version>
   <packaging>pom</packaging>
 
   <name>${project.artifactId}</name>
@@ -946,9 +946,9 @@
             <artifactId>maven-gpg-plugin</artifactId>
             <configuration>
               <gpgArguments>
-                <arg>-c</arg>
                 <arg>--batch</arg>
                 <arg>--yes</arg>
+                <arg>--pinentry-mode loopback</arg>
               </gpgArguments>
             </configuration>
           </plugin>
