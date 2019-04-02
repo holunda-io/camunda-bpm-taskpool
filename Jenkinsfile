@@ -61,14 +61,15 @@ node {
 
             if (isTagged()) {
               withCredentials([string(credentialsId: 'holunda-io-gpg-secret-keys', variable: 'GPG_SECRET_KEYS'),
-                               string(credentialsId: 'holunda-io-gpg-ownertrust', variable: 'GPG_OWNERTRUST '),
-                               string(credentialsId: 'holunda-io-gpg-passphrase', variable: 'GPG_PASSPHRASE ')]) {
+                               string(credentialsId: 'holunda-io-gpg-ownertrust', variable: 'GPG_OWNERTRUST'),
+                               string(credentialsId: 'holunda-io-gpg-passphrase', variable: 'GPG_PASSPHRASE'),
+                               string(credentialsId: 'holunda-io-gpg-keyname', variable: 'GPG_KEYNAME')]) {
                 echo "Releasing version ${env.GIT_TAG} to maven-central"
                 sh '''
                   echo "Importing secret key"
-                  echo $GPG_SECRET_KEYS | base64 --decode | gpg --import || true
+                  echo $GPG_SECRET_KEYS | base64 --decode | gpg --import --batch --yes
                   echo "Importing ownertrust"
-                  echo $GPG_OWNERTRUST | base64 --decode | gpg --import-ownertrust
+                  echo $GPG_OWNERTRUST | base64 --decode | gpg --import-ownertrust --batch --yes
                   ./mvnw deploy -Prelease -DskipNodeBuild=true -DskipTests=true
                 '''
               }

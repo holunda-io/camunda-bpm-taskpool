@@ -5,7 +5,7 @@
 
   <groupId>io.holunda.taskpool</groupId>
   <artifactId>camunda-bpm-taskpool</artifactId>
-  <version>1.2.9</version>
+  <version>1.2.10</version>
   <packaging>pom</packaging>
 
   <name>${project.artifactId}</name>
@@ -923,8 +923,9 @@
         </property>
       </activation>
       <properties>
-        <!--<gpg.executable>${env.GPG_EXECUTABLE}</gpg.executable>-->
+        <gpg.executable>gpg</gpg.executable>
         <gpg.passphrase>${env.GPG_PASSPHRASE}</gpg.passphrase>
+        <gpg.keyname>${env.GPG_KEYNAME}</gpg.keyname>
       </properties>
       <build>
         <plugins>
@@ -943,6 +944,13 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-gpg-plugin</artifactId>
+            <configuration>
+              <gpgArguments>
+                <arg>-c</arg>
+                <arg>--batch</arg>
+                <arg>--yes</arg>
+              </gpgArguments>
+            </configuration>
           </plugin>
         </plugins>
       </build>
