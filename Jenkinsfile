@@ -12,13 +12,19 @@ def isMasterBranch() {
   }
 }
 
+def isTagged() {
+  expression {
+    return !env.GIT_TAG?.isEmpty()
+  }
+}
+
 
 node {
 
   env.JAVA_HOME = tool 'jdk-8-oracle'
   env.PATH = "${env.JAVA_HOME}/bin:${env.PATH}"
   def err = null
-  def mvnOpts = "-V -U --batch-mode"
+  def mvnOpts = "-V -U --batch-mode -T4"
   currentBuild.result = "SUCCESS"
 
   timestamps {
@@ -27,6 +33,7 @@ node {
         stage('Checkout project') {
             checkout scm
             sh "chmod 755 ./mvnw"
+            env.GIT_TAG = sh(returnStdout: true, script: "git tag --contains").trim()
         }
 
         stage('Build') {
@@ -50,10 +57,21 @@ node {
         }
 
         if (isMasterBranch()) {
-          stage('Deploy') {
-            echo "Running a deploy"
-            if (buildingTag()) {
-              echo "Building a tag " + env.TAG_NAME
+          stage('Release') {
+
+            if (isTagged()) {
+              withCredentials([string(credentialsId: 'holunda-io-gpg-secret-keys', variable: 'GPG_SECRET_KEYS'),
+                               string(credentialsId: 'holunda-io-gpg-ownertrust', variable: 'GPG_OWNERTRUST '),
+                               string(credentialsId: 'holunda-io-gpg-passphrase', variable: 'GPG_PASSPHRASE ')]) {
+                echo "Releasing version ${env.GIT_TAG} to maven-central"
+                sh '''
+                  echo "Importing secret key"
+                  echo $GPG_SECRET_KEYS | base64 --decode | gpg --import || true
+                  echo "Importing ownertrust"
+                  echo $GPG_OWNERTRUST | base64 --decode | gpg --import-ownertrust
+                  ./mvnw deploy -Prelease -DskipNodeBuild=true -DskipTests=true
+                '''
+              }
             }
           }
         }

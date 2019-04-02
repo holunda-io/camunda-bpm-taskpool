@@ -5,7 +5,7 @@
 
   <groupId>io.holunda.taskpool</groupId>
   <artifactId>camunda-bpm-taskpool</artifactId>
-  <version>1.2.8</version>
+  <version>1.2.9</version>
   <packaging>pom</packaging>
 
   <name>${project.artifactId}</name>
@@ -922,6 +922,10 @@
           <name>release</name>
         </property>
       </activation>
+      <properties>
+        <!--<gpg.executable>${env.GPG_EXECUTABLE}</gpg.executable>-->
+        <gpg.passphrase>${env.GPG_PASSPHRASE}</gpg.passphrase>
+      </properties>
       <build>
         <plugins>
           <plugin>
