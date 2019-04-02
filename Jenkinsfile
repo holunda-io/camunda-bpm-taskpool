@@ -64,14 +64,19 @@ node {
                                string(credentialsId: 'holunda-io-gpg-ownertrust', variable: 'GPG_OWNERTRUST'),
                                string(credentialsId: 'holunda-io-gpg-passphrase', variable: 'GPG_PASSPHRASE'),
                                string(credentialsId: 'holunda-io-gpg-keyname', variable: 'GPG_KEYNAME')]) {
-                echo "Releasing version ${env.GIT_TAG} to maven-central"
-                sh '''
+
+                // Sonatype mvn settings with credentials
+                configFileProvider([configFile(fileId: 'holunda-io-settings.xml', variable: 'MAVEN_SETTINGS')]) {
+
+                  echo "Releasing version ${env.GIT_TAG} to maven-central"
+                  sh '''
                   echo "Importing secret key"
                   echo $GPG_SECRET_KEYS | base64 --decode | gpg --import --batch --yes
                   echo "Importing ownertrust"
                   echo $GPG_OWNERTRUST | base64 --decode | gpg --import-ownertrust --batch --yes
-                  ./mvnw deploy -Prelease -DskipNodeBuild=true -DskipTests=true
+                  ./mvnw deploy -Prelease -DskipNodeBuild=true -DskipTests=true -s $MAVEN_SETTINGS $mvnOpts
                 '''
+                }
               }
             }
           }

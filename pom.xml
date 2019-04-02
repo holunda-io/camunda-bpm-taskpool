@@ -946,9 +946,9 @@
             <artifactId>maven-gpg-plugin</artifactId>
             <configuration>
               <gpgArguments>
-                <arg>-c</arg>
                 <arg>--batch</arg>
                 <arg>--yes</arg>
+                <arg>--pinentry-mode loopback</arg>
               </gpgArguments>
             </configuration>
           </plugin>
