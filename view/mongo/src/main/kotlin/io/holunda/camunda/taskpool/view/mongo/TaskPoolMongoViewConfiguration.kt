@@ -10,11 +10,7 @@ import org.axonframework.extensions.mongo.DefaultMongoTemplate
 import org.axonframework.extensions.mongo.MongoTemplate
 import org.axonframework.extensions.mongo.eventsourcing.tokenstore.MongoTokenStore
 import org.axonframework.serialization.xml.XStreamSerializer
-import org.springframework.boot.autoconfigure.ImportAutoConfiguration
-import org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration
-import org.springframework.boot.autoconfigure.data.mongo.MongoReactiveDataAutoConfiguration
-import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration
-import org.springframework.boot.autoconfigure.mongo.MongoReactiveAutoConfiguration
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
@@ -33,13 +29,15 @@ import javax.annotation.PostConstruct
 @EnableMongoRepositories
 open class TaskPoolMongoViewConfiguration {
 
-  companion object: KLogging()
+  companion object : KLogging()
+
+  @Value("\${spring.data.mongodb.database:tasks-control}")
+  lateinit var mongoDatabaseName: String
 
   @PostConstruct
   open fun info() {
     logger.info { "VIEW-MONGO-001: Initialized mongo view" }
   }
-
 
   @Bean
   open fun configure(mongoTemplate: MongoTemplate): TokenStore =
@@ -53,8 +51,9 @@ open class TaskPoolMongoViewConfiguration {
   open fun configureAxonMongoTemplate(mongoClient: MongoClient): MongoTemplate =
     DefaultMongoTemplate
       .builder()
-      .mongoDatabase(mongoClient, "tasks-control")
+      .mongoDatabase(mongoClient, mongoDatabaseName)
       .trackingTokensCollectionName("tracking-tokens")
+      // these collections are configured, but not used on the client side.
       .domainEventsCollectionName("domain-events")
       .sagasCollectionName("sagas")
       .snapshotEventsCollectionName("snapshots")
