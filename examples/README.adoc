@@ -1,7 +1,7 @@
 = Sample Approval Application
 
 The following application is an example demonstrating the usage of the Camunda BPM Taskpool. The application is 
-build as a SpringBoot process application and shows a simple approval process.
+built as a SpringBoot process application and shows a simple approval process.
 
 == Preparations 
 
@@ -13,7 +13,7 @@ Before starting the application, please start the Axon Server. The easiest way t
 docker run -d --name my-axon-server -p 8024:8024 -p 8124:8124 axoniq/axonserver
 ----
  
-To verify t is running, open your browser http://localhost:8024/[http://localhost:8024/].
+To verify it is running, open your browser http://localhost:8024/[http://localhost:8024/].
 
 The demo application consists of several Maven modules. In order to start the example, you will need to start only three
 of them:
