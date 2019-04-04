@@ -21,7 +21,12 @@ import org.axonframework.queryhandling.QueryHandler
 import org.axonframework.queryhandling.QueryUpdateEmitter
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
+import org.springframework.data.mongodb.core.aggregation.Aggregation
+import org.springframework.data.mongodb.core.aggregation.AggregationResults
 import org.springframework.stereotype.Component
+import org.springframework.data.mongodb.core.MongoTemplate
+import org.springframework.data.mongodb.core.query.Criteria
+import org.springframework.data.mongodb.core.query.isEqualTo
 
 /**
  * Mongo-based projection.
@@ -34,7 +39,8 @@ open class TaskPoolMongoService(
   private var taskRepository: TaskRepository,
   private var dataEntryRepository: DataEntryRepository,
   private val configuration: EventProcessingConfiguration,
-  private val readRepo: TaskWithDataEntriesRepository
+  private val readRepo: TaskWithDataEntriesRepository,
+  private val mongoTemplate: MongoTemplate
 ) {
 
   companion object : KLogging() {
@@ -115,11 +121,47 @@ open class TaskPoolMongoService(
     }
   }
 
+  @QueryHandler
+  open fun query(query: TaskCountByApplicationQuery): List<ApplicationWithTaskCount> {
+
+    val aggregations = mutableListOf(
+      Aggregation.group("sourceReference.applicationName").count().`as`("count"),
+      Aggregation.project().and("_id").`as`("application").and("count").`as`("taskCount")
+    )
+
+    val result: AggregationResults<ApplicationWithTaskCount> = mongoTemplate.aggregate(
+      Aggregation.newAggregation(aggregations),
+      "tasks",
+      ApplicationWithTaskCount::class.java
+    )
+
+    return result.mappedResults
+  }
+
+  private fun query(applicationName: String): ApplicationWithTaskCount {
+
+    val aggregations = mutableListOf(
+
+      Aggregation.match(Criteria.where("sourceReference.applicationName").isEqualTo(applicationName)),
+      Aggregation.group("sourceReference.applicationName").count().`as`("count"),
+      Aggregation.project().and("_id").`as`("application").and("count").`as`("taskCount")
+    )
+
+    val result: ApplicationWithTaskCount = mongoTemplate.aggregate(
+      Aggregation.newAggregation(aggregations),
+      "tasks",
+      ApplicationWithTaskCount::class.java
+    ).firstOrNull() ?: ApplicationWithTaskCount(applicationName, 0)
+
+    return result
+  }
+
   @EventHandler
   open fun on(event: TaskCreatedEngineEvent) {
     logger.debug { "Task created $event received" }
     taskRepository.save(task(event).taskDocument())
     updateTaskForUserQuery(event.id)
+    updateTaskCountByApplicationQuery(event.sourceReference.applicationName)
   }
 
   @EventHandler
@@ -136,6 +178,7 @@ open class TaskPoolMongoService(
     logger.debug { "Task completed $event received" }
     taskRepository.deleteById(event.id)
     updateTaskForUserQuery(event.id)
+    updateTaskCountByApplicationQuery(event.sourceReference.applicationName)
   }
 
   @EventHandler
@@ -143,6 +186,7 @@ open class TaskPoolMongoService(
     logger.debug { "Task deleted $event received" }
     taskRepository.deleteById(event.id)
     updateTaskForUserQuery(event.id)
+    updateTaskCountByApplicationQuery(event.sourceReference.applicationName)
   }
 
   @EventHandler
@@ -236,6 +280,13 @@ open class TaskPoolMongoService(
 
   private fun tasksWithDataEntries(taskDocument: TaskDocument) =
     tasksWithDataEntries(taskDocument.task())
+
+  private fun updateTaskCountByApplicationQuery(applicationName: String) {
+    queryUpdateEmitter.emit(TaskCountByApplicationQuery::class.java,
+      { true },
+      query(applicationName))
+  }
+
 }
 
 

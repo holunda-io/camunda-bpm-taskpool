@@ -101,6 +101,7 @@ open class TaskWithDataEntriesRepositoryExtensionImpl(
 
     return result.mappedResults
   }
+
 }
 
 fun value(criterion: Criterion): Any =
