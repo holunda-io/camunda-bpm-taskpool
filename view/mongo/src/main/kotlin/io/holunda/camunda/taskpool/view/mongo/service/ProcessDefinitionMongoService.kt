@@ -1,36 +1,32 @@
-package io.holunda.camunda.taskpool.view.simple.service
+package io.holunda.camunda.taskpool.view.mongo.service
 
 import io.holunda.camunda.taskpool.api.task.ProcessDefinitionRegisteredEvent
 import io.holunda.camunda.taskpool.view.ProcessDefinition
+import io.holunda.camunda.taskpool.view.mongo.repository.ProcessDefinitionDocument
+import io.holunda.camunda.taskpool.view.mongo.repository.ProcessDefinitionRepository
 import io.holunda.camunda.taskpool.view.query.ProcessDefinitionApi
 import io.holunda.camunda.taskpool.view.query.ProcessDefinitionsStartableByUserQuery
 import mu.KLogging
-import org.axonframework.config.ProcessingGroup
 import org.axonframework.eventhandling.EventHandler
 import org.axonframework.queryhandling.QueryHandler
 import org.axonframework.queryhandling.QueryUpdateEmitter
 import org.springframework.stereotype.Component
-import java.util.*
-import java.util.concurrent.ConcurrentHashMap
 
 @Component
-@ProcessingGroup(SimpleServiceViewProcessingGroup.PROCESSING_GROUP)
-open class ProcessDefinitionService(
-  private val queryUpdateEmitter: QueryUpdateEmitter
+open class ProcessDefinitionMongoService(
+  private val queryUpdateEmitter: QueryUpdateEmitter,
+  private val processDefinitionRepository: ProcessDefinitionRepository
 ) : ProcessDefinitionApi {
 
   companion object : KLogging()
 
-  private val processDefinitions: MutableMap<String, TreeSet<ProcessDefinition>> = ConcurrentHashMap()
-
-
-  @Suppress("unused")
   @EventHandler
+  @Suppress("unused")
   open fun on(event: ProcessDefinitionRegisteredEvent) {
 
     logger.debug { "New process definition with id ${event.processDefinitionId} registered (${event.processName}, ${event.applicationName})." }
 
-    val entry = ProcessDefinition(
+    val entry = ProcessDefinitionDocument(
       processDefinitionId = event.processDefinitionId,
       processDefinitionKey = event.processDefinitionKey,
       processDefinitionVersion = event.processDefinitionVersion,
@@ -44,17 +40,27 @@ open class ProcessDefinitionService(
       startableFromTasklist = event.startableFromTasklist
     )
 
-    processDefinitions
-      .getOrPut(event.processDefinitionKey) { TreeSet(kotlin.Comparator { val1, val2 -> val1.processDefinitionVersion.compareTo(val2.processDefinitionVersion) }) }
-      .add(entry)
+    processDefinitionRepository.save(entry)
 
-    queryUpdateEmitter.emit(ProcessDefinitionsStartableByUserQuery::class.java, { query -> query.applyFilter(entry) }, entry)
+    queryUpdateEmitter.emit(ProcessDefinitionsStartableByUserQuery::class.java, { query -> query.applyFilter(entry.toProcessDefitinion()) }, entry)
   }
 
   @QueryHandler
-  override fun query(query: ProcessDefinitionsStartableByUserQuery): List<ProcessDefinition> =
-    processDefinitions
-      .values
-      .map { it.last() }
+  override fun query(query: ProcessDefinitionsStartableByUserQuery): List<ProcessDefinition> {
+    // This is the naive Kotlin way, not the Mongo way it should be. Please don't laugh.
+    // Get all definitions in all versions and group them by process
+    val processesByDefinition: Map<String, List<ProcessDefinitionDocument>> = processDefinitionRepository
+      .findAll()
+      .groupBy { processDefinition -> processDefinition.processDefinitionKey }
+
+    // Find the most current version of each process
+    val currentProcessDefinitions = processesByDefinition.map {
+      it.value.sortedBy { definition -> definition.processDefinitionVersion }.last()
+    }
+
+    // Apply filter
+    return currentProcessDefinitions
+      .map { it.toProcessDefitinion() }
       .filter { query.applyFilter(it) }
+  }
 }

@@ -4,6 +4,7 @@ import com.tngtech.jgiven.integration.spring.SpringRuleScenarioTest
 import io.holunda.camunda.taskpool.api.business.CorrelationMap
 import io.holunda.camunda.taskpool.api.task.*
 import io.holunda.camunda.taskpool.view.Task
+import io.holunda.camunda.taskpool.view.auth.User
 import io.holunda.camunda.taskpool.view.mongo.TaskpoolMongoTestApplication
 import org.camunda.bpm.engine.variable.VariableMap
 import org.camunda.bpm.engine.variable.Variables
@@ -127,6 +128,70 @@ class TaskPoolMongoServiceITest : SpringRuleScenarioTest<TaskPoolGivenStage<*>, 
 
     then()
       .task_has_candidate_users("some-id", setOf("gonzo"))
+  }
+
+
+  @Test
+  fun `task is visible only for assigned user`() {
+    given()
+      .no_task_exists()
+
+    `when`()
+      .task_created_event_is_received(TestTaskData(id = "some-id", assignee = "kermit", candidateUsers = setOf()).asTaskCreatedEngineEvent())
+      .and()
+      .task_created_event_is_received(TestTaskData(id = "some-id-2", assignee = "kermit", candidateUsers = setOf()).asTaskCreatedEngineEvent())
+      .and()
+      .task_created_event_is_received(TestTaskData(id = "some-other-id", assignee = "piggy", candidateUsers = setOf()).asTaskCreatedEngineEvent())
+      .and()
+      .task_created_event_is_received(TestTaskData(id = "some-other-id-2", assignee = "piggy", candidateUsers = setOf()).asTaskCreatedEngineEvent())
+
+    then()
+      .tasks_with_payload_are_visible_to(User("kermit", setOf()), "some-id", "some-id-2")
+      .and()
+      .tasks_with_payload_are_visible_to(User("piggy", setOf()), "some-other-id", "some-other-id-2")
+
+  }
+
+  @Test
+  fun `task is visible only for candidate user`() {
+    given()
+      .no_task_exists()
+
+    `when`()
+      .task_created_event_is_received(TestTaskData(id = "some-id", assignee = null, candidateUsers = setOf("kermit")).asTaskCreatedEngineEvent())
+      .and()
+      .task_created_event_is_received(TestTaskData(id = "some-id-2", assignee = null, candidateUsers = setOf("kermit")).asTaskCreatedEngineEvent())
+      .and()
+      .task_created_event_is_received(TestTaskData(id = "some-other-id", assignee = null, candidateUsers = setOf("piggy")).asTaskCreatedEngineEvent())
+      .and()
+      .task_created_event_is_received(TestTaskData(id = "some-other-id-2", assignee = null, candidateUsers = setOf("piggy")).asTaskCreatedEngineEvent())
+
+    then()
+      .tasks_with_payload_are_visible_to(User("kermit", setOf()), "some-id", "some-id-2")
+      .and()
+      .tasks_with_payload_are_visible_to(User("piggy", setOf()), "some-other-id", "some-other-id-2")
+
+  }
+
+  @Test
+  fun `task is visible only for candidate group`() {
+    given()
+      .no_task_exists()
+
+    `when`()
+      .task_created_event_is_received(TestTaskData(id = "some-id", assignee = null, candidateUsers = setOf(), candidateGroups = setOf("one")).asTaskCreatedEngineEvent())
+      .and()
+      .task_created_event_is_received(TestTaskData(id = "some-id-2", assignee = null, candidateUsers = setOf(), candidateGroups = setOf("one")).asTaskCreatedEngineEvent())
+      .and()
+      .task_created_event_is_received(TestTaskData(id = "some-other-id", assignee = null, candidateUsers = setOf(), candidateGroups = setOf("two")).asTaskCreatedEngineEvent())
+      .and()
+      .task_created_event_is_received(TestTaskData(id = "some-other-id-2", assignee = null, candidateUsers = setOf(), candidateGroups = setOf("two")).asTaskCreatedEngineEvent())
+
+    then()
+      .tasks_with_payload_are_visible_to(User("kermit", setOf("one")), "some-id", "some-id-2")
+      .and()
+      .tasks_with_payload_are_visible_to(User("piggy", setOf("two")), "some-other-id", "some-other-id-2")
+
   }
 
 }

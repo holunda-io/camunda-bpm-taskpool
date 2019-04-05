@@ -150,6 +150,13 @@ open class TaskPoolThenStage<SELF : TaskPoolThenStage<SELF>> : TaskPoolStage<SEL
     return self()
   }
 
+  @As("tasks with payload with ids \$taskIds are visible to \$user")
+  open fun tasks_with_payload_are_visible_to(user: User, vararg taskIds: String): SELF {
+    val taskResponse = testee.query(TasksWithDataEntriesForUserQuery(user = user, page = 1, size = 100))
+    assertThat(taskResponse.tasksWithDataEntries.map { it.task.id }).containsExactlyElementsOf(taskIds.asIterable())
+    return self()
+  }
+
   open fun task_has_candidate_groups(taskId: String, groupIds: Set<String>): SELF {
     assertThat(testee.query(TaskForIdQuery(taskId))?.candidateGroups).isEqualTo(groupIds)
     return self()
