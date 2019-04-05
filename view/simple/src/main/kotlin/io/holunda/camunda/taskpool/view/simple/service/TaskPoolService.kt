@@ -25,7 +25,7 @@ import java.util.concurrent.ConcurrentHashMap
 @ProcessingGroup(SimpleServiceViewProcessingGroup.PROCESSING_GROUP)
 open class TaskPoolService(
   private val queryUpdateEmitter: QueryUpdateEmitter
-) {
+) : TaskApi {
 
   companion object : KLogging()
 
@@ -36,26 +36,26 @@ open class TaskPoolService(
    * Retrieves a list of all user tasks for current user.
    */
   @QueryHandler
-  open fun query(query: TasksForUserQuery): List<Task> = tasks.values.filter { query.applyFilter(it) }
+  override fun query(query: TasksForUserQuery): List<Task> = tasks.values.filter { query.applyFilter(it) }
 
   /**
    * Retrieves a list of all data entries of given entry type (and optional id).
    */
   @QueryHandler
-  open fun query(query: DataEntryQuery): List<DataEntry> = dataEntries.values.filter { query.applyFilter(it) }
+  override fun query(query: DataEntryQuery): List<DataEntry> = dataEntries.values.filter { query.applyFilter(it) }
 
 
   /**
    * Retrieves a task for given task id.
    */
   @QueryHandler
-  open fun query(query: TaskForIdQuery): Task? = tasks.values.firstOrNull { query.applyFilter(it) }
+  override fun query(query: TaskForIdQuery): Task? = tasks.values.firstOrNull { query.applyFilter(it) }
 
   /**
    * Retrieves a task with data entries for given task id.
    */
   @QueryHandler
-  open fun query(query: TaskWithDataEntriesForIdQuery): TaskWithDataEntries? {
+  override fun query(query: TaskWithDataEntriesForIdQuery): TaskWithDataEntries? {
     val task = tasks.values.firstOrNull { query.applyFilter(TaskWithDataEntries(it)) }
     return if (task != null) {
       TaskWithDataEntries(task, this.dataEntries.values.toList())
@@ -68,7 +68,7 @@ open class TaskPoolService(
    * Retrieves a list of tasks with correlated data entries of given entry type (and optional id).
    */
   @QueryHandler
-  open fun query(query: TasksWithDataEntriesForUserQuery): TasksWithDataEntriesResponse {
+  override fun query(query: TasksWithDataEntriesForUserQuery): TasksWithDataEntriesResponse {
 
     val predicates = createPredicates(toCriteria(query.filters))
 
@@ -93,7 +93,7 @@ open class TaskPoolService(
    * Retrieves the count of tasks grouped by source application. Supports subscription queries.
    */
   @QueryHandler
-  open fun query(query: TaskCountByApplicationQuery): List<ApplicationWithTaskCount> =
+  override fun query(query: TaskCountByApplicationQuery): List<ApplicationWithTaskCount> =
     tasks.values.groupingBy { it.sourceReference.applicationName }.eachCount().map { ApplicationWithTaskCount(it.key, it.value) }
 
   fun slice(list: List<TaskWithDataEntries>, query: TasksWithDataEntriesForUserQuery): TasksWithDataEntriesResponse {
