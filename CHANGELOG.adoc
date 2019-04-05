@@ -1,11 +1,14 @@
 === 1.2.13: April 19, 2019
 * feat: improve mongo view (process definitions, tasks with data entries), see #153, #158, #159
 * feat: introduce view api interfaces
+
 === 1.2.10: March 02, 2019
 * chore: automate releases, see #155
+
 === 1.2.8: March 27, 2019
 * fix: remove application.yml from starter, see #151
 * refactor: remove tasklist react, see #157
+
 === 1.2.6: March 19, 2019
 * feat: implement collection of process definitions deployed in connected process engines. See #144.
 * feat: extend task-url-resolver to support resolution of start form URLs (and rename to form-url-resolver).
