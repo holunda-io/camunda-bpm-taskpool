@@ -4,6 +4,7 @@ import io.holunda.camunda.taskpool.api.task.ProcessDefinitionRegisteredEvent
 import io.holunda.camunda.taskpool.view.ProcessDefinition
 import io.holunda.camunda.taskpool.view.mongo.repository.ProcessDefinitionDocument
 import io.holunda.camunda.taskpool.view.mongo.repository.ProcessDefinitionRepository
+import io.holunda.camunda.taskpool.view.query.ProcessDefinitionApi
 import io.holunda.camunda.taskpool.view.query.ProcessDefinitionsStartableByUserQuery
 import mu.KLogging
 import org.axonframework.eventhandling.EventHandler
@@ -15,7 +16,7 @@ import org.springframework.stereotype.Component
 open class ProcessDefinitionMongoService(
   private val queryUpdateEmitter: QueryUpdateEmitter,
   private val processDefinitionRepository: ProcessDefinitionRepository
-) {
+) : ProcessDefinitionApi {
 
   companion object : KLogging()
 
@@ -45,8 +46,7 @@ open class ProcessDefinitionMongoService(
   }
 
   @QueryHandler
-  @Suppress("unused")
-  open fun query(query: ProcessDefinitionsStartableByUserQuery): List<ProcessDefinition> {
+  override fun query(query: ProcessDefinitionsStartableByUserQuery): List<ProcessDefinition> {
     // This is the naive Kotlin way, not the Mongo way it should be. Please don't laugh.
     // Get all definitions in all versions and group them by process
     val processesByDefinition: Map<String, List<ProcessDefinitionDocument>> = processDefinitionRepository

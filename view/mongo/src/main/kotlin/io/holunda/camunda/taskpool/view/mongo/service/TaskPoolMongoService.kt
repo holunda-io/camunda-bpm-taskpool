@@ -21,19 +21,18 @@ import org.axonframework.queryhandling.QueryHandler
 import org.axonframework.queryhandling.QueryUpdateEmitter
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
+import org.springframework.data.mongodb.core.MongoTemplate
 import org.springframework.data.mongodb.core.aggregation.Aggregation
 import org.springframework.data.mongodb.core.aggregation.AggregationResults
-import org.springframework.stereotype.Component
-import org.springframework.data.mongodb.core.MongoTemplate
 import org.springframework.data.mongodb.core.query.Criteria
 import org.springframework.data.mongodb.core.query.isEqualTo
+import org.springframework.stereotype.Component
 
 /**
  * Mongo-based projection.
  */
 @Component
 @ProcessingGroup(TaskPoolMongoService.PROCESSING_GROUP)
-@Suppress("UNUSED")
 open class TaskPoolMongoService(
   private val queryUpdateEmitter: QueryUpdateEmitter,
   private var taskRepository: TaskRepository,
@@ -41,7 +40,7 @@ open class TaskPoolMongoService(
   private val configuration: EventProcessingConfiguration,
   private val readRepo: TaskWithDataEntriesRepository,
   private val mongoTemplate: MongoTemplate
-) {
+) : TaskApi {
 
   companion object : KLogging() {
     const val PROCESSING_GROUP = "io.holunda.camunda.taskpool.view.mongo.service"
@@ -51,7 +50,7 @@ open class TaskPoolMongoService(
    * Retrieves a list of all user tasks for current user.
    */
   @QueryHandler
-  open fun query(query: TasksForUserQuery): List<Task> =
+  override fun query(query: TasksForUserQuery): List<Task> =
     taskRepository
       .findAllForUser(
         query.user.username,
@@ -63,7 +62,7 @@ open class TaskPoolMongoService(
    * Retrieves a list of all data entries of given entry type (and optional id).
    */
   @QueryHandler
-  open fun query(query: DataEntryQuery): List<DataEntry> {
+  override fun query(query: DataEntryQuery): List<DataEntry> {
     return if (query.entryId != null) {
       val dataEntry = dataEntryRepository.findByIdentity(query.identity()).orElse(null)?.dataEntry()
       if (dataEntry != null) {
@@ -80,13 +79,13 @@ open class TaskPoolMongoService(
    * Retrieves a task for given task id.
    */
   @QueryHandler
-  open fun query(query: TaskForIdQuery): Task? = taskRepository.findById(query.id).orElse(null)?.task()
+  override fun query(query: TaskForIdQuery): Task? = taskRepository.findById(query.id).orElse(null)?.task()
 
   /**
    * Retrieves a task with data entries for given task id.
    */
   @QueryHandler
-  open fun query(query: TaskWithDataEntriesForIdQuery): TaskWithDataEntries? {
+  override fun query(query: TaskWithDataEntriesForIdQuery): TaskWithDataEntries? {
     val task = taskRepository.findById(query.id).orElse(null)?.task()
     return if (task != null) {
       tasksWithDataEntries(task)
@@ -99,9 +98,10 @@ open class TaskPoolMongoService(
    * Retrieves a list of tasks with correlated data entries of given entry type (and optional id).
    */
   @QueryHandler
-  open fun query(query: TasksWithDataEntriesForUserQuery): TasksWithDataEntriesResponse {
+  override fun query(query: TasksWithDataEntriesForUserQuery): TasksWithDataEntriesResponse {
 
-    val read = this.readRepo.findAllFiltered(
+    val read = this.readRepo.findAllFilteredForUser(
+      user = query.user,
       criteria = toCriteria(query.filters),
       pageable = PageRequest.of(query.page, query.size, sort(query.sort))
     ).map { it.taskWithDataEntries() }
@@ -122,7 +122,7 @@ open class TaskPoolMongoService(
   }
 
   @QueryHandler
-  open fun query(query: TaskCountByApplicationQuery): List<ApplicationWithTaskCount> {
+  override fun query(query: TaskCountByApplicationQuery): List<ApplicationWithTaskCount> {
 
     val aggregations = mutableListOf(
       Aggregation.group("sourceReference.applicationName").count().`as`("count"),
@@ -136,24 +136,6 @@ open class TaskPoolMongoService(
     )
 
     return result.mappedResults
-  }
-
-  private fun query(applicationName: String): ApplicationWithTaskCount {
-
-    val aggregations = mutableListOf(
-
-      Aggregation.match(Criteria.where("sourceReference.applicationName").isEqualTo(applicationName)),
-      Aggregation.group("sourceReference.applicationName").count().`as`("count"),
-      Aggregation.project().and("_id").`as`("application").and("count").`as`("taskCount")
-    )
-
-    val result: ApplicationWithTaskCount = mongoTemplate.aggregate(
-      Aggregation.newAggregation(aggregations),
-      "tasks",
-      ApplicationWithTaskCount::class.java
-    ).firstOrNull() ?: ApplicationWithTaskCount(applicationName, 0)
-
-    return result
   }
 
   @EventHandler
@@ -258,6 +240,23 @@ open class TaskPoolMongoService(
       }
   }
 
+  private fun query(applicationName: String): ApplicationWithTaskCount {
+
+    val aggregations = mutableListOf(
+
+      Aggregation.match(Criteria.where("sourceReference.applicationName").isEqualTo(applicationName)),
+      Aggregation.group("sourceReference.applicationName").count().`as`("count"),
+      Aggregation.project().and("_id").`as`("application").and("count").`as`("taskCount")
+    )
+
+    val result: ApplicationWithTaskCount = mongoTemplate.aggregate(
+      Aggregation.newAggregation(aggregations),
+      "tasks",
+      ApplicationWithTaskCount::class.java
+    ).firstOrNull() ?: ApplicationWithTaskCount(applicationName, 0)
+
+    return result
+  }
 
   private fun updateTaskForUserQuery(taskId: String) = updateMapFilterQuery(
     taskRepository.findById(taskId).map { it.task() }.orElse(null), TasksForUserQuery::class.java)

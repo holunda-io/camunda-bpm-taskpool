@@ -1,5 +1,6 @@
 package io.holunda.camunda.taskpool.view.mongo.repository
 
+import io.holunda.camunda.taskpool.view.auth.User
 import io.holunda.camunda.taskpool.view.mongo.service.Criterion
 import io.holunda.camunda.taskpool.view.mongo.service.EQUALS
 import io.holunda.camunda.taskpool.view.mongo.service.GREATER
@@ -49,7 +50,7 @@ interface TaskWithDataEntriesRepository : TaskWithDataEntriesRepositoryExtension
 
 
 interface TaskWithDataEntriesRepositoryExtension {
-  fun findAllFiltered(criteria: List<Criterion>, pageable: Pageable? = null): List<TaskWithDataEntriesDocument>
+  fun findAllFilteredForUser(user: User, criteria: List<Criterion>, pageable: Pageable? = null): List<TaskWithDataEntriesDocument>
 }
 
 open class TaskWithDataEntriesRepositoryExtensionImpl(
@@ -60,7 +61,28 @@ open class TaskWithDataEntriesRepositoryExtensionImpl(
     val DEFAULT_SORT = Sort(Sort.Direction.DESC, TaskWithDataEntriesDocument::dueDate.name)
   }
 
-  override fun findAllFiltered(criteria: List<Criterion>, pageable: Pageable?): List<TaskWithDataEntriesDocument> {
+  /**
+  <pre>
+  db.tasks.aggregate([
+  { $unwind: "$dataEntriesRefs" },
+  { $lookup: {
+  from: "data-entries",
+  localField: "dataEntriesRefs",
+  foreignField: "_id",
+  as: "data_entries" } },
+  { $sort: { "dueDate": 1 }},
+  { $match: { $and: [
+  // { $or: [{ $or: [ { 'assignee' : "kermit" }, { 'candidateUsers' : "kermit" } ] }, { 'candidateGroups' : "other" } ] },
+  { $or: [{ $or: [ { 'assignee' : "kermit" }, { 'candidateUsers' : "kermit" } ] }, { 'candidateGroups' : "other" } ] }
+  // { $or: [ { 'businessKey': "3" } ] }
+  ]
+
+  }}
+  ])
+  </pre>
+
+   */
+  override fun findAllFilteredForUser(user: User, criteria: List<Criterion>, pageable: Pageable?): List<TaskWithDataEntriesDocument> {
 
     val sort = if (pageable != null) {
       pageable.getSortOr(DEFAULT_SORT)
@@ -84,14 +106,36 @@ open class TaskWithDataEntriesRepositoryExtensionImpl(
       }
     }.toTypedArray()
 
+    // { \$or: [{ \$or: [ { 'assignee' : ?0 }, { 'candidateUsers' : ?0 } ] }, { 'candidateGroups' : ?1} ] }
+    val tasksForUserCriteria = Criteria()
+      .orOperator(
+        Criteria()
+          .orOperator(
+            Criteria.where("assignee").isEqualTo(user.username),
+            Criteria.where("candidateUsers").isEqualTo(user.username)
+          ),
+        Criteria
+          .where("candidateGroups")
+          .isEqualTo(user.groups)
+      )
+
+    val filterCriteria = if (filterPropertyCriteria.isNotEmpty()) {
+      Criteria()
+        .andOperator(
+          tasksForUserCriteria,
+          Criteria()
+            .orOperator(*filterPropertyCriteria))
+    } else {
+      tasksForUserCriteria
+    }
+
+
     val aggregations = mutableListOf(
       Aggregation.lookup(DataEntryDocument.NAME, "dataEntriesRefs", "_id", "dataEntries"),
-      Aggregation.sort(sort)
-    ).apply {
-      if (filterPropertyCriteria.isNotEmpty()) {
-        this.add(Aggregation.match(Criteria().orOperator(*filterPropertyCriteria)))
-      }
-    }
+      Aggregation.sort(sort),
+      Aggregation.match(filterCriteria)
+    )
+
 
     val result: AggregationResults<TaskWithDataEntriesDocument> = mongoTemplate.aggregate(
       Aggregation.newAggregation(aggregations),
@@ -101,8 +145,8 @@ open class TaskWithDataEntriesRepositoryExtensionImpl(
 
     return result.mappedResults
   }
-
 }
+
 
 fun value(criterion: Criterion): Any =
   when (criterion.name) {
