@@ -5,7 +5,7 @@
   <parent>
     <groupId>io.holunda.taskpool</groupId>
     <artifactId>camunda-bpm-datapool-root</artifactId>
-    <version>1.2.14-SNAPSHOT</version>
+    <version>1.2.14</version>
   </parent>
 
   <artifactId>camunda-bpm-datapool-core</artifactId>
