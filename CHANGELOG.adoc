@@ -1,8 +1,11 @@
-=== 1.2.13: April 19, 2019
+=== 1.2.14: April 8, 2019
+* fix: mongo view now handles empty sort correctly, see #161
+
+=== 1.2.13: April 5, 2019
 * feat: improve mongo view (process definitions, tasks with data entries), see #153, #158, #159
 * feat: introduce view api interfaces
 
-=== 1.2.10: March 02, 2019
+=== 1.2.10: April 2, 2019
 * chore: automate releases, see #155
 
 === 1.2.8: March 27, 2019
