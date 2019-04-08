@@ -290,7 +290,7 @@ open class TaskPoolMongoService(
 
 
 internal fun sort(sort: String?): Sort =
-  if (sort != null) {
+  if (sort != null && sort.length > 1) {
     val attribute = sort.substring(1).replace("task.", "")
     when (sort.substring(0, 1)) {
       "+" -> Sort(Sort.Direction.ASC, attribute)
