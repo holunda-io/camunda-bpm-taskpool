@@ -22,29 +22,6 @@ import java.time.Instant
 import java.util.*
 
 
-/**
-
-db.tasks.aggregate([
-{
-$unwind: "$dataEntries"
-},
-{
-$lookup:
-{
-from: "data-entries",
-localField: "dataEntries",
-foreignField: "_id",
-as: "data_entries"
-}
-},
-{
-$match: { "data_entries": { $ne: [] } }
-}
-])
-
-
- */
-
 @Repository
 interface TaskWithDataEntriesRepository : TaskWithDataEntriesRepositoryExtension, MongoRepository<TaskWithDataEntriesDocument, String>
 
@@ -60,6 +37,7 @@ open class TaskWithDataEntriesRepositoryExtensionImpl(
   companion object : KLogging() {
     val DEFAULT_SORT = Sort(Sort.Direction.DESC, TaskWithDataEntriesDocument::dueDate.name)
   }
+
 
   /**
   <pre>
@@ -116,7 +94,7 @@ open class TaskWithDataEntriesRepositoryExtensionImpl(
           ),
         Criteria
           .where("candidateGroups")
-          .isEqualTo(user.groups)
+          .`in`(user.groups)
       )
 
     val filterCriteria = if (filterPropertyCriteria.isNotEmpty()) {
