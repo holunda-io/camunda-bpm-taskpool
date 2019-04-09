@@ -158,7 +158,7 @@ class TaskPoolMongoServiceITest : SpringRuleScenarioTest<TaskPoolGivenStage<*>, 
       .no_task_exists()
 
     `when`()
-      .task_created_event_is_received(TestTaskData(id = "some-id", assignee = null, candidateUsers = setOf("kermit")).asTaskCreatedEngineEvent())
+      .task_created_event_is_received(TestTaskData(id = "some-id", assignee = null, candidateUsers = setOf("kermit", "gonzo")).asTaskCreatedEngineEvent())
       .and()
       .task_created_event_is_received(TestTaskData(id = "some-id-2", assignee = null, candidateUsers = setOf("kermit")).asTaskCreatedEngineEvent())
       .and()
@@ -185,12 +185,12 @@ class TaskPoolMongoServiceITest : SpringRuleScenarioTest<TaskPoolGivenStage<*>, 
       .and()
       .task_created_event_is_received(TestTaskData(id = "some-other-id", assignee = null, candidateUsers = setOf(), candidateGroups = setOf("two")).asTaskCreatedEngineEvent())
       .and()
-      .task_created_event_is_received(TestTaskData(id = "some-other-id-2", assignee = null, candidateUsers = setOf(), candidateGroups = setOf("two")).asTaskCreatedEngineEvent())
+      .task_created_event_is_received(TestTaskData(id = "some-other-id-2", assignee = null, candidateUsers = setOf(), candidateGroups = setOf("two", "baz")).asTaskCreatedEngineEvent())
 
     then()
-      .tasks_with_payload_are_visible_to(User("kermit", setOf("one")), "some-id", "some-id-2")
+      .tasks_with_payload_are_visible_to(User("kermit", setOf("one", "bar")), "some-id", "some-id-2")
       .and()
-      .tasks_with_payload_are_visible_to(User("piggy", setOf("two")), "some-other-id", "some-other-id-2")
+      .tasks_with_payload_are_visible_to(User("piggy", setOf("two", "zet")), "some-other-id", "some-other-id-2")
 
   }
 

@@ -39,6 +39,27 @@ open class TaskWithDataEntriesRepositoryExtensionImpl(
   }
 
 
+  /**
+  <pre>
+  db.tasks.aggregate([
+  { $unwind: "$dataEntriesRefs" },
+  { $lookup: {
+  from: "data-entries",
+  localField: "dataEntriesRefs",
+  foreignField: "_id",
+  as: "data_entries" } },
+  { $sort: { "dueDate": 1 }},
+  { $match: { $and: [
+  // { $or: [{ $or: [ { 'assignee' : "kermit" }, { 'candidateUsers' : "kermit" } ] }, { 'candidateGroups' : "other" } ] },
+  { $or: [{ $or: [ { 'assignee' : "kermit" }, { 'candidateUsers' : "kermit" } ] }, { 'candidateGroups' : "other" } ] }
+  // { $or: [ { 'businessKey': "3" } ] }
+  ]
+
+  }}
+  ])
+  </pre>
+
+   */
   override fun findAllFilteredForUser(user: User, criteria: List<Criterion>, pageable: Pageable?): List<TaskWithDataEntriesDocument> {
 
     val sort = if (pageable != null) {
@@ -63,6 +84,7 @@ open class TaskWithDataEntriesRepositoryExtensionImpl(
       }
     }.toTypedArray()
 
+    // { \$or: [{ \$or: [ { 'assignee' : ?0 }, { 'candidateUsers' : ?0 } ] }, { 'candidateGroups' : ?1} ] }
     val tasksForUserCriteria = Criteria()
       .orOperator(
         Criteria()
@@ -72,7 +94,7 @@ open class TaskWithDataEntriesRepositoryExtensionImpl(
           ),
         Criteria
           .where("candidateGroups")
-          .isEqualTo(user.groups)
+          .`in`(user.groups)
       )
 
     val filterCriteria = if (filterPropertyCriteria.isNotEmpty()) {
