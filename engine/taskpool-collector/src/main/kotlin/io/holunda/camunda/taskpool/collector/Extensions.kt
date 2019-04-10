@@ -3,21 +3,16 @@ package io.holunda.camunda.taskpool.collector
 import io.holunda.camunda.taskpool.api.task.CaseReference
 import io.holunda.camunda.taskpool.api.task.ProcessReference
 import io.holunda.camunda.taskpool.api.task.SourceReference
-import io.holunda.camunda.taskpool.extractKey
-import io.holunda.camunda.taskpool.loadCaseName
-import io.holunda.camunda.taskpool.loadProcessName
-import org.camunda.bpm.engine.FormService
-import org.camunda.bpm.engine.RepositoryService
 import org.camunda.bpm.engine.delegate.DelegateTask
 
-fun DelegateTask.sourceReference(repositoryService: RepositoryService, applicationName: String): SourceReference =
+fun DelegateTask.sourceReference(applicationName: String): SourceReference =
   when {
     this.processDefinitionId != null -> ProcessReference(
       definitionId = this.processDefinitionId,
       instanceId = this.processInstanceId,
       executionId = this.executionId,
       definitionKey = this.processDefinitionKey(),
-      name = this.processName(repositoryService),
+      name = this.processName(),
       applicationName = applicationName,
       tenantId = this.tenantId
     )
@@ -26,7 +21,7 @@ fun DelegateTask.sourceReference(repositoryService: RepositoryService, applicati
       instanceId = this.caseInstanceId,
       executionId = this.caseExecutionId,
       definitionKey = this.caseDefinitionKey(),
-      name = this.caseName(repositoryService),
+      name = this.caseName(),
       applicationName = applicationName,
       tenantId = this.tenantId
     )
@@ -34,22 +29,33 @@ fun DelegateTask.sourceReference(repositoryService: RepositoryService, applicati
   }
 
 
-fun DelegateTask.processDefinitionKey(): String = extractKey(this.processDefinitionId)
 /**
  * Retrieves form key if found, or <code>null</code>.
  */
-fun DelegateTask.formKey(formService: FormService): String? {
+fun DelegateTask.formKey(): String? {
   val definitionId: String = when {
     processDefinitionId != null -> processDefinitionId
     caseDefinitionId != null -> caseDefinitionId
     else -> return null
   }
-  return formService.getTaskFormKey(definitionId, this.taskDefinitionKey)
+  return this.processEngine.formService.getTaskFormKey(definitionId, this.taskDefinitionKey)
 }
 
-fun DelegateTask.caseDefinitionKey(): String = extractKey(this.caseDefinitionId)
-fun DelegateTask.caseName(repositoryService: RepositoryService) = loadCaseName(this.caseDefinitionId, repositoryService)
-fun DelegateTask.processName(repositoryService: RepositoryService) = loadProcessName(this.processDefinitionId, repositoryService)
 
+fun DelegateTask.caseDefinitionKey(): String = caseDefinition().key
+fun DelegateTask.caseName(): String = caseDefinition().name
+fun DelegateTask.processDefinitionKey(): String = processDefinition().key
+fun DelegateTask.processName(): String = processDefinition().name
+
+
+fun DelegateTask.caseDefinition() = this.processEngine.repositoryService
+  .createCaseDefinitionQuery().caseDefinitionId(caseDefinitionId)
+  .singleResult()
+  ?: throw IllegalArgumentException("Case definition could not be resolved for id $caseDefinitionId")
+
+fun DelegateTask.processDefinition() = this.processEngine.repositoryService
+  .createProcessDefinitionQuery().processDefinitionId(processDefinitionId)
+  .singleResult()
+  ?: throw IllegalArgumentException("Process definition could not be resolved for id $processDefinitionId")
 
 
