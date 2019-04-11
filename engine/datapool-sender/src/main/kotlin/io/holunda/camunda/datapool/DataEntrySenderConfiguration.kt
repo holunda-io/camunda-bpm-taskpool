@@ -1,6 +1,5 @@
 package io.holunda.camunda.datapool
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import io.holunda.camunda.datapool.sender.simple.SimpleDataEntryCommandSender
 import io.holunda.camunda.taskpool.api.sender.DataEntryCommandSender
 import org.axonframework.commandhandling.gateway.CommandGateway
@@ -24,8 +23,8 @@ open class DataEntrySenderConfiguration {
 
   @Bean
   @ConditionalOnProperty(name = ["camunda.taskpool.dataentry.sender.type"], havingValue = "simple")
-  open fun initSimpleSender(gateway: CommandGateway, objectMapper: ObjectMapper): DataEntryCommandSender {
-    return SimpleDataEntryCommandSender(gateway, properties, objectMapper)
+  open fun initSimpleSender(gateway: CommandGateway): DataEntryCommandSender {
+    return SimpleDataEntryCommandSender(gateway, properties)
   }
 
 }

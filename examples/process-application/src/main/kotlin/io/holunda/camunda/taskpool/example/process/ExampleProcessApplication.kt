@@ -44,7 +44,8 @@ open class ExampleProcessApplication {
         ProcessApproveRequest.Elements.AMEND_REQUEST to
           listOf(
             ProcessApproveRequest.Variables.REQUEST_ID,
-            ProcessApproveRequest.Variables.COMMENT
+            ProcessApproveRequest.Variables.COMMENT,
+            ProcessApproveRequest.Variables.APPLICANT
           )
       ))
   )
@@ -61,6 +62,7 @@ open class ExampleProcessApplication {
           ProcessApproveRequest.Variables.ORIGINATOR to BusinessDataEntry.USER
         )
       ),
+
       // or globally
       mapOf(ProcessApproveRequest.Variables.REQUEST_ID to BusinessDataEntry.REQUEST)
     )
