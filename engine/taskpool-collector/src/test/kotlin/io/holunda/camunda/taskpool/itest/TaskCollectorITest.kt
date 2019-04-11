@@ -293,7 +293,7 @@ class TaskCollectorITest {
       priority = 50, // default by camunda if not set in explicit
       payload = Variables
         .putValue("key", Variables.stringValue("value"))
-        .putValue("object", MyStructure("name", "key", 1))
+        .putValue("object", mapOf(MyStructure::name.name to "name", MyStructure::key.name to "key", MyStructure::value.name to 1))
     )
 
     // we need to take into account that dispatching the accumulated commands is done asynchronously and therefore we might have to wait a little bit
