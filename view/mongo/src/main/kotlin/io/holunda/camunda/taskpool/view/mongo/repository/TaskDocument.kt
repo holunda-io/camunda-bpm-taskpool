@@ -66,6 +66,7 @@ data class CaseReferenceDocument(
   @Indexed
   override val definitionKey: String,
   override val name: String,
+  @Indexed
   override val applicationName: String,
   @Indexed
   override val tenantId: String? = null
@@ -92,6 +93,7 @@ data class ProcessReferenceDocument(
   @Indexed
   override val definitionKey: String,
   override val name: String,
+  @Indexed
   override val applicationName: String,
   @Indexed
   override val tenantId: String? = null
