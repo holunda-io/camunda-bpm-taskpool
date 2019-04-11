@@ -2,6 +2,7 @@ package io.holunda.camunda.taskpool.sender.accumulator
 
 import io.holunda.camunda.taskpool.api.business.WithCorrelations
 import io.holunda.camunda.taskpool.api.task.*
+import io.holunda.camunda.variable.serializer.serialize
 import kotlin.reflect.KClass
 
 
@@ -70,10 +71,11 @@ class ProjectingCommandAccumulator : CommandAccumulator {
     var result: T = it
     if (result is CreateTaskCommand && command is CreateTaskCommand) {
       result = result.copy(
-        payload = command.payload,
+        payload = serialize(command.payload),
         correlations = command.correlations
       ) as T
     }
     return result
   }
+
 }

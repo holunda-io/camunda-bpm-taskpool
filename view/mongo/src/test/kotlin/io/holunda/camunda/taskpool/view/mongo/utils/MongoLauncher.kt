@@ -24,7 +24,6 @@ object MongoLauncher {
     get() {
       try {
         val mongoSocket = SocketFactory.getDefault().createSocket(LOCALHOST, MONGO_DEFAULT_PORT)
-
         if (mongoSocket.isConnected) {
           mongoSocket.close()
           return true
@@ -32,7 +31,6 @@ object MongoLauncher {
       } catch (e: IOException) {
         return false
       }
-
       return false
     }
 
@@ -50,11 +48,10 @@ object MongoLauncher {
     val command = Command.MongoD
     val runtimeConfig = RuntimeConfigBuilder()
       .defaults(command)
-      .artifactStore(ArtifactStoreBuilder()
+      .artifactStore(ExtractedArtifactStoreBuilder()
         .defaults(command)
-        .download(DownloadConfigBuilder()
-          .defaultsForCommand(command))
-        .executableNaming { prefix, postfix -> prefix + "_axontest_" + counter.getAndIncrement() + "_" + postfix })
+        .download(DownloadConfigBuilder().defaultsForCommand(command).build())
+        .executableNaming { prefix, postfix -> prefix + "_mongo_taskview_" + counter.getAndIncrement() + "_" + postfix })
       .build()
 
     val runtime = MongodStarter.getInstance(runtimeConfig)

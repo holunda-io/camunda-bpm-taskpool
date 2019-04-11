@@ -5,7 +5,7 @@
 
   <groupId>io.holunda.taskpool</groupId>
   <artifactId>camunda-bpm-taskpool</artifactId>
-  <version>1.2.16</version>
+  <version>1.2.17</version>
   <packaging>pom</packaging>
 
   <name>${project.artifactId}</name>
@@ -28,8 +28,6 @@
     <camunda-ee>false</camunda-ee>
     <camunda.version>7.10.0</camunda.version>
     <camunda.version.ee>7.10.1-ee</camunda.version.ee>
-    <camunda-commons.version>1.5.1</camunda-commons.version>
-
 
     <springboot.version>2.1.2.RELEASE</springboot.version>
     <camunda-springboot.version>3.2.1</camunda-springboot.version>
@@ -89,6 +87,12 @@
         <artifactId>camunda-bpm-engine-client</artifactId>
         <version>${project.version}</version>
       </dependency>
+      <dependency>
+        <groupId>io.holunda.taskpool</groupId>
+        <artifactId>camunda-bpm-taskpool-variable-serializer</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
 
       <dependency>
         <groupId>io.holunda.taskpool</groupId>
@@ -137,15 +141,6 @@
         <version>${camunda-springboot.version}</version>
       </dependency>
       <dependency>
-        <groupId>org.camunda.commons</groupId>
-        <artifactId>camunda-commons-bom</artifactId>
-        <version>${camunda-commons.version}</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-
-
-      <dependency>
         <groupId>org.codehaus.groovy</groupId>
         <artifactId>groovy-all</artifactId>
         <version>2.4.5</version>
@@ -172,6 +167,12 @@
         <artifactId>jackson-datatype-jsr310</artifactId>
         <version>${jackson.version}</version>
       </dependency>
+      <dependency>
+        <groupId>com.fasterxml.jackson.datatype</groupId>
+        <artifactId>jackson-datatype-jdk8</artifactId>
+        <version>${jackson.version}</version>
+      </dependency>
+
 
       <!-- MapStruct -->
       <dependency>

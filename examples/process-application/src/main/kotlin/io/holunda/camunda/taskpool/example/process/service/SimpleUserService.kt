@@ -1,6 +1,8 @@
 package io.holunda.camunda.taskpool.example.process.service
 
 import io.holunda.camunda.taskpool.api.sender.DataEntryCommandSender
+import io.holunda.camunda.taskpool.example.process.process.ProcessApproveRequest
+import org.camunda.bpm.engine.variable.Variables
 import org.springframework.stereotype.Component
 
 @Component
@@ -19,10 +21,9 @@ class SimpleUserService(
 
   fun notify(username: String) {
     if (muppetUsers.contains(username)) {
-      sender.sendDataEntryCommand(entryType = BusinessDataEntry.USER, entryId = username, payload = mapOf("username" to username))
+      sender.sendDataEntryCommand(entryType = BusinessDataEntry.USER, entryId = username, payload = Variables.putValue("username", RichUserObject(username)))
     }
   }
 
-
-  data class RichUserObject(private val username: String)
+  data class RichUserObject(val username: String)
 }

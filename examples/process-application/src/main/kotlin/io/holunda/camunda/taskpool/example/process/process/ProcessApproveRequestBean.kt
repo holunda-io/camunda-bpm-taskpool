@@ -13,12 +13,13 @@ class ProcessApproveRequestBean(
   private val runtimeService: RuntimeService,
   private val taskService: TaskService,
   private val requestService: RequestService
-) {
+  ) {
 
   /**
    * Starts the process for a given request id.
    */
   fun startProcess(requestId: String, originator: String = "kermit"): String {
+
     runtimeService.startProcessInstanceByKey(ProcessApproveRequest.KEY,
       requestId,
       Variables.createVariables()

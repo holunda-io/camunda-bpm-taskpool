@@ -26,15 +26,16 @@ open class TaskPoolStage<SELF : TaskPoolStage<SELF>> : Stage<SELF>() {
   lateinit var testee: TaskPoolMongoService
 
   private var mongod: MongodProcess? = null
-  private var mongoExe: MongodExecutable? = null
+  private var mongoExecutable: MongodExecutable? = null
 
   @BeforeScenario
   fun initMongo() {
-    mongoExe = MongoLauncher.prepareExecutable()
-    mongod = mongoExe!!.start()
+    mongoExecutable = MongoLauncher.prepareExecutable()
+    mongod = mongoExecutable!!.start()
     if (mongod == null) {
       // we're using an existing mongo instance. Make sure it's clean
       val template = DefaultMongoTemplate.builder().mongoDatabase(MongoClient()).build()
+      template.trackingTokensCollection().drop()
       template.eventCollection().drop()
       template.snapshotCollection().drop()
     }
@@ -45,8 +46,8 @@ open class TaskPoolStage<SELF : TaskPoolStage<SELF>> : Stage<SELF>() {
     if (mongod != null) {
       mongod!!.stop()
     }
-    if (mongoExe != null) {
-      mongoExe!!.stop()
+    if (mongoExecutable != null) {
+      mongoExecutable!!.stop()
     }
   }
 
