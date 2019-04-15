@@ -46,9 +46,9 @@ yourself, please specify the switch `-Drelease.version=x.y.z`
 
 NOTE: This operation requires special permissions.
 
-Currently, CI support for deployment of artifacts to Maven Central is disabled and manual deployment 
-works as the only option. In order to execute the deployment you need to execute the following command
-on the `master` branch:
+Currently, CI support for deployment of artifacts to Maven Central is executed on Holisticon Jenkins and
+no manual intervention is required. If you still want to execute the the deployment from your local machine,
+you need to execute the following command on the `master` branch:
 
 [source,sh]
 ----
@@ -68,6 +68,3 @@ repository to enable it's sync with Maven Central.
 * https://www.phillip-kruger.com/post/continuous_integration_to_maven_central/ (primary)
 * https://docs.travis-ci.com/user/deployment
 * https://blog.travis-ci.com/2017-03-30-deploy-maven-travis-ci-packagecloud/
-
-
-      

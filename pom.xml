@@ -5,7 +5,7 @@
 
   <groupId>io.holunda.taskpool</groupId>
   <artifactId>camunda-bpm-taskpool</artifactId>
-  <version>1.2.18</version>
+  <version>1.2.19</version>
   <packaging>pom</packaging>
 
   <name>${project.artifactId}</name>
