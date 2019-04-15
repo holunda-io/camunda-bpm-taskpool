@@ -18,13 +18,19 @@ def isTagged() {
   }
 }
 
+def isStable() {
+  expression {
+    return currentBuild.result == "SUCCESS"
+  }
+}
+
 
 node {
 
   env.JAVA_HOME = tool 'jdk-8-oracle'
   env.PATH = "${env.JAVA_HOME}/bin:${env.PATH}"
   def err = null
-  def mvnOpts = "-V -U --batch-mode -T4"
+  def mvnOpts = "-V -U --batch-mode"
   currentBuild.result = "SUCCESS"
 
   timestamps {
@@ -37,7 +43,7 @@ node {
         }
 
         stage('Build') {
-            sh "./mvnw clean verify ${mvnOpts}"
+            sh "./mvnw clean verify -T4 ${mvnOpts}"
         }
 
         stage('I-Test') {
@@ -56,7 +62,7 @@ node {
             sh "curl -s https://codecov.io/bash | bash -s -"
         }
 
-        if (isMasterBranch()) {
+        if (isMasterBranch() && isStable()) {
           stage('Release') {
 
             if (isTagged()) {
@@ -74,7 +80,7 @@ node {
                   echo $GPG_SECRET_KEYS | base64 --decode | gpg --import --batch --yes
                   echo "Importing ownertrust"
                   echo $GPG_OWNERTRUST | base64 --decode | gpg --import-ownertrust --batch --yes
-                  ./mvnw deploy -Prelease -DskipNodeBuild=true -DskipTests=true -s $MAVEN_SETTINGS $mvnOpts
+                  ./mvnw deploy -Prelease -DskipNodeBuild=true -DskipTests=true -s $MAVEN_SETTINGS ${mvnOpts}
                 '''
                 }
               }
