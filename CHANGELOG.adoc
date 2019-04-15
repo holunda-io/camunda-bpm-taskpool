@@ -1,6 +1,7 @@
-=== 1.2.18: April 11, 2019
+=== 1.2.19: April 15, 2019
 * fix: variable serialization fails for complex types #163
 * feat: added mongodb indexes #165
+* chore: improve CI
 
 === 1.2.16: April 10, 2019
 * fix: correct extraction of process definition key, see #164
