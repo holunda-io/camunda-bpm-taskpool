@@ -798,10 +798,10 @@
           <configuration>
             <requires>
               <require>asciidoctor-diagram</require>
-              <backend>html5</backend>
-              <sourceDirectory>${project.basedir}/docs</sourceDirectory>
-              <outputDirectory>${project.build.directory}/docs/html5</outputDirectory>
             </requires>
+            <backend>html5</backend>
+            <sourceDirectory>${project.basedir}/docs</sourceDirectory>
+            <outputDirectory>${project.build.directory}/docs/html5</outputDirectory>
           </configuration>
           <executions>
             <execution>
