@@ -14,7 +14,6 @@
 
   <properties>
     <skipFrontend>true</skipFrontend>
-    <skipAsciidoctor>true</skipAsciidoctor>
 
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -797,9 +796,11 @@
             </dependency>
           </dependencies>
           <configuration>
-            <skip>${skipAsciidoctor}</skip>
             <requires>
               <require>asciidoctor-diagram</require>
+              <backend>html5</backend>
+              <sourceDirectory>${project.basedir}/docs</sourceDirectory>
+              <outputDirectory>${project.build.directory}/docs/html5</outputDirectory>
             </requires>
           </configuration>
           <executions>
@@ -809,11 +810,6 @@
               <goals>
                 <goal>process-asciidoc</goal>
               </goals>
-              <configuration>
-                <backend>html5</backend>
-                <sourceDirectory>${project.basedir}/docs</sourceDirectory>
-                <outputDirectory>${project.build.directory}/docs/html5</outputDirectory>
-              </configuration>
             </execution>
           </executions>
         </plugin>
@@ -825,10 +821,6 @@
       <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
-      </plugin>
-      <plugin>
-        <groupId>org.asciidoctor</groupId>
-        <artifactId>asciidoctor-maven-plugin</artifactId>
       </plugin>
       <plugin>
         <groupId>org.jetbrains.kotlin</groupId>
@@ -1007,6 +999,21 @@
           </dependency>
         </dependencies>
       </dependencyManagement>
+    </profile>
+
+    <profile>
+      <id>docs</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.asciidoctor</groupId>
+            <artifactId>asciidoctor-maven-plugin</artifactId>
+          </plugin>
+        </plugins>
+      </build>
     </profile>
 
   </profiles>
