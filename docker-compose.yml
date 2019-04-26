@@ -1,6 +1,16 @@
 version: "3.5"
 services:
 
+  h2db:
+    image: oscarfonts/h2
+    container_name: h2db
+    ports:
+      - 8082:81
+      - 9092:1521
+    volumes:
+      - ./.docker/mounts/h2-data:/opt/h2-data
+    networks:
+      - taskpool-net
 
   axonserver:
     image: axoniq/axonserver
@@ -27,6 +37,7 @@ services:
       - "/etc/mongo/mongod.conf"
       - "--wiredTigerCacheSizeGB"
       - "0.5"
+
 
 networks:
   taskpool-net:

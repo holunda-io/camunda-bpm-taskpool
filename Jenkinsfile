@@ -12,6 +12,18 @@ def isMasterBranch() {
   }
 }
 
+def isTagged() {
+  expression {
+    return !env.GIT_TAG?.isEmpty()
+  }
+}
+
+def isStable() {
+  expression {
+    return currentBuild.result == "SUCCESS"
+  }
+}
+
 
 node {
 
@@ -27,10 +39,11 @@ node {
         stage('Checkout project') {
             checkout scm
             sh "chmod 755 ./mvnw"
+            env.GIT_TAG = sh(returnStdout: true, script: "git tag --contains").trim()
         }
 
         stage('Build') {
-            sh "./mvnw clean verify ${mvnOpts}"
+            sh "./mvnw clean verify -T4 ${mvnOpts}"
         }
 
         stage('I-Test') {
@@ -49,11 +62,28 @@ node {
             sh "curl -s https://codecov.io/bash | bash -s -"
         }
 
-        if (isMasterBranch()) {
-          stage('Deploy') {
-            echo "Running a deploy"
-            if (buildingTag()) {
-              echo "Building a tag " + env.TAG_NAME
+        if (isMasterBranch() && isStable()) {
+          stage('Release') {
+
+            if (isTagged()) {
+              withCredentials([string(credentialsId: 'holunda-io-gpg-secret-keys', variable: 'GPG_SECRET_KEYS'),
+                               string(credentialsId: 'holunda-io-gpg-ownertrust', variable: 'GPG_OWNERTRUST'),
+                               string(credentialsId: 'holunda-io-gpg-passphrase', variable: 'GPG_PASSPHRASE'),
+                               string(credentialsId: 'holunda-io-gpg-keyname', variable: 'GPG_KEYNAME')]) {
+
+                // Sonatype mvn settings with credentials
+                configFileProvider([configFile(fileId: 'holunda-io-settings.xml', variable: 'MAVEN_SETTINGS')]) {
+
+                  echo "Releasing version ${env.GIT_TAG} to maven-central"
+                  sh '''
+                  echo "Importing secret key"
+                  echo $GPG_SECRET_KEYS | base64 --decode | gpg --import --batch --yes
+                  echo "Importing ownertrust"
+                  echo $GPG_OWNERTRUST | base64 --decode | gpg --import-ownertrust --batch --yes
+                  ./mvnw deploy -Prelease -DskipNodeBuild=true -DskipTests=true -s $MAVEN_SETTINGS ${mvnOpts}
+                '''
+                }
+              }
             }
           }
         }

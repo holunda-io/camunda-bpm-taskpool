@@ -21,7 +21,7 @@ open class TxAwareAccumulatingCommandSender(
   private val commands: ThreadLocal<MutableMap<String, MutableList<EngineTaskCommand>>> = ThreadLocal.withInitial { mutableMapOf<String, MutableList<EngineTaskCommand>>() }
 
   /**
-   * Sends an engine command.
+   * Sends an engine command.send
    */
   override fun send(command: EngineTaskCommand) {
 

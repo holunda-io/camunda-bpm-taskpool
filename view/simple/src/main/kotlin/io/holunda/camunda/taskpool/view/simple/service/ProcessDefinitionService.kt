@@ -2,6 +2,7 @@ package io.holunda.camunda.taskpool.view.simple.service
 
 import io.holunda.camunda.taskpool.api.task.ProcessDefinitionRegisteredEvent
 import io.holunda.camunda.taskpool.view.ProcessDefinition
+import io.holunda.camunda.taskpool.view.query.ProcessDefinitionApi
 import io.holunda.camunda.taskpool.view.query.ProcessDefinitionsStartableByUserQuery
 import mu.KLogging
 import org.axonframework.config.ProcessingGroup
@@ -16,7 +17,7 @@ import java.util.concurrent.ConcurrentHashMap
 @ProcessingGroup(SimpleServiceViewProcessingGroup.PROCESSING_GROUP)
 open class ProcessDefinitionService(
   private val queryUpdateEmitter: QueryUpdateEmitter
-) {
+) : ProcessDefinitionApi {
 
   companion object : KLogging()
 
@@ -51,7 +52,7 @@ open class ProcessDefinitionService(
   }
 
   @QueryHandler
-  open fun query(query: ProcessDefinitionsStartableByUserQuery): List<ProcessDefinition> =
+  override fun query(query: ProcessDefinitionsStartableByUserQuery): List<ProcessDefinition> =
     processDefinitions
       .values
       .map { it.last() }

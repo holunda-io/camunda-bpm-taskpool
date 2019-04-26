@@ -18,8 +18,6 @@ import org.springframework.stereotype.Component
  */
 @Component
 class TaskEventCollectorService(
-  private val repositoryService: RepositoryService,
-  private val formService: FormService,
   private val collectorProperties: TaskCollectorProperties
 ) {
 
@@ -48,10 +46,10 @@ class TaskEventCollectorService(
       name = task.name,
       owner = task.owner,
       priority = task.priority,
-      formKey = task.formKey(formService),
+      formKey = task.formKey(),
       taskDefinitionKey = task.taskDefinitionKey,
       businessKey = task.execution.businessKey,
-      sourceReference = task.sourceReference(repositoryService, collectorProperties.enricher.applicationName)
+      sourceReference = task.sourceReference(collectorProperties.enricher.applicationName)
     )
 
   /**

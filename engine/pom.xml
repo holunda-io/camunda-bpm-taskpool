@@ -5,7 +5,7 @@
   <parent>
     <groupId>io.holunda.taskpool</groupId>
     <artifactId>camunda-bpm-taskpool</artifactId>
-    <version>1.2.7-SNAPSHOT</version>
+    <version>1.2.20-SNAPSHOT</version>
   </parent>
 
   <artifactId>camunda-bpm-taskpool-engine-root</artifactId>
@@ -17,6 +17,7 @@
     <module>camunda-engine-client</module>
     <module>camunda-engine-plugin</module>
     <module>taskpool-engine-springboot-starter</module>
+    <module>variable-serializer</module>
   </modules>
 
   <dependencyManagement>

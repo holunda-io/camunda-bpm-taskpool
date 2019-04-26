@@ -37,11 +37,10 @@ object Web {
   const val STATIC_LOCATION = "classpath:/static/tasklist-angular/"
 }
 
-
 @Configuration
 open class TasklistSPAConfiguration : WebFluxConfigurer {
 
-  @Value("$STATIC_LOCATION/index.html")
+  @Value("${STATIC_LOCATION}index.html")
   private lateinit var indexHtml: Resource
 
   @Bean
@@ -52,6 +51,7 @@ open class TasklistSPAConfiguration : WebFluxConfigurer {
   }
 
   override fun addResourceHandlers(registry: ResourceHandlerRegistry) {
+
     /**
      * Deliver the platform SPA index for all frontend states.
      */
@@ -59,14 +59,17 @@ open class TasklistSPAConfiguration : WebFluxConfigurer {
       .addResourceHandler("${Web.BASE_PATH}/*.html")
       .addResourceLocations(STATIC_LOCATION)
       .setCacheControl(CacheControl.maxAge(1, TimeUnit.DAYS))
+
     registry
       .addResourceHandler(*STATIC_RESOURCES_LONG_CACHE)
       .addResourceLocations(STATIC_LOCATION)
       .setCacheControl(CacheControl.maxAge(365, TimeUnit.DAYS))
+
     registry
       .addResourceHandler(*STATIC_RESOURCES_SHORT_CACHE)
       .addResourceLocations(STATIC_LOCATION)
       .setCacheControl(CacheControl.maxAge(1, TimeUnit.HOURS))
+
   }
 
   override fun addCorsMappings(registry: CorsRegistry) {

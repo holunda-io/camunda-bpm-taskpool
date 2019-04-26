@@ -26,15 +26,16 @@ open class TaskPoolStage<SELF : TaskPoolStage<SELF>> : Stage<SELF>() {
   lateinit var testee: TaskPoolMongoService
 
   private var mongod: MongodProcess? = null
-  private var mongoExe: MongodExecutable? = null
+  private var mongoExecutable: MongodExecutable? = null
 
   @BeforeScenario
   fun initMongo() {
-    mongoExe = MongoLauncher.prepareExecutable()
-    mongod = mongoExe!!.start()
+    mongoExecutable = MongoLauncher.prepareExecutable()
+    mongod = mongoExecutable!!.start()
     if (mongod == null) {
       // we're using an existing mongo instance. Make sure it's clean
       val template = DefaultMongoTemplate.builder().mongoDatabase(MongoClient()).build()
+      template.trackingTokensCollection().drop()
       template.eventCollection().drop()
       template.snapshotCollection().drop()
     }
@@ -45,8 +46,8 @@ open class TaskPoolStage<SELF : TaskPoolStage<SELF>> : Stage<SELF>() {
     if (mongod != null) {
       mongod!!.stop()
     }
-    if (mongoExe != null) {
-      mongoExe!!.stop()
+    if (mongoExecutable != null) {
+      mongoExecutable!!.stop()
     }
   }
 
@@ -147,6 +148,13 @@ open class TaskPoolThenStage<SELF : TaskPoolThenStage<SELF>> : TaskPoolStage<SEL
   @As("task with id $ is assigned to $")
   open fun task_is_assigned_to(taskId: String, assignee: String?): SELF {
     assertThat(testee.query(TaskForIdQuery(taskId))?.assignee).isEqualTo(assignee)
+    return self()
+  }
+
+  @As("tasks with payload with ids \$taskIds are visible to \$user")
+  open fun tasks_with_payload_are_visible_to(user: User, vararg taskIds: String): SELF {
+    val taskResponse = testee.query(TasksWithDataEntriesForUserQuery(user = user, page = 1, size = 100))
+    assertThat(taskResponse.tasksWithDataEntries.map { it.task.id }).containsExactlyElementsOf(taskIds.asIterable())
     return self()
   }
 
