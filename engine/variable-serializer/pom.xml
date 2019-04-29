@@ -12,10 +12,6 @@
   <artifactId>camunda-bpm-taskpool-variable-serializer</artifactId>
   <name>engine/${project.artifactId}</name>
 
-  <properties>
-    <skipAsciidoctor>false</skipAsciidoctor>
-  </properties>
-
   <dependencies>
     <dependency>
       <groupId>org.camunda.commons</groupId>
