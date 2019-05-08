@@ -66,6 +66,7 @@ class SimpleDataEntryCommandSenderTest {
 
     assertThat(result[Pojo::key.name]).isEqualTo(pojo.key)
 
+    @Suppress("UNCHECKED_CAST")
     val children = result[Pojo::anotherKey.name] as List<Map<String, Any>>
     assertThat(children.size).isEqualTo(2)
     assertThat(children[0]).containsKey(Pojo2::keyZUZUZ.name)
@@ -90,12 +91,14 @@ class SimpleDataEntryCommandSenderTest {
     assertThat(result).containsKey("another-key")
     assertThat(result["key"]).isEqualTo(map["key"])
 
+    @Suppress("UNCHECKED_CAST")
     val expectedPojoMap = result["another-key"] as Map<String, Any>
     assertThat(expectedPojoMap).containsKey(Pojo::key.name)
     assertThat(expectedPojoMap).containsKey(Pojo::anotherKey.name)
 
     assertThat(expectedPojoMap[Pojo::key.name]).isEqualTo("key")
 
+    @Suppress("UNCHECKED_CAST")
     val elements = expectedPojoMap[Pojo::anotherKey.name] as List<Map<String, Any>>
     assertThat(elements).containsExactly(linkedMapOf(Pojo2::keyZUZUZ.name to "p2", Pojo2::children.name to listOf<String>()))
   }
