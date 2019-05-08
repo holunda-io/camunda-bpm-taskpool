@@ -14,6 +14,8 @@ export class StartComponent {
   requestId = '3';
   createAnotherRequest = false;
   environment: Environment = this.envProvider.none();
+  startSuccess = false;
+  startFailure = false;
 
   constructor(
     private client: RequestService,
@@ -25,14 +27,18 @@ export class StartComponent {
 
   start() {
     console.log('Starting new approval process');
+    this.startSuccess = false;
+    this.startFailure = false;
     this.client.start(this.requestId, 'kermit').subscribe(
       result => {
-        console.log('Sucessfully submitted');
+        console.log('Successfully submitted');
+        this.startSuccess = true;
         if (! this.createAnotherRequest) {
           this.tasklist();
         }
       }, error => {
         console.log('Error starting new process');
+        this.startFailure = true;
       }
     );
   }
