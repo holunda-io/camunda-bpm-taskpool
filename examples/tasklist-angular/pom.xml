@@ -161,6 +161,7 @@
         </plugins>
       </build>
     </profile>
+
     <profile>
       <id>npm-install</id>
       <activation>
@@ -181,7 +182,7 @@
                 </goals>
                 <phase>initialize</phase>
                 <configuration>
-                  <arguments>install</arguments>
+                  <arguments>install --verbose --no-optional</arguments>
                 </configuration>
               </execution>
               <execution>
@@ -199,6 +200,7 @@
         </plugins>
       </build>
     </profile>
+
     <profile>
       <id>npm-update</id>
       <activation>
@@ -218,6 +220,33 @@
                 </goals>
                 <configuration>
                   <arguments>update</arguments>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <profile>
+      <id>ng-serve</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
+      <build>
+        <defaultGoal>package</defaultGoal>
+        <plugins>
+          <plugin>
+            <groupId>com.github.eirslett</groupId>
+            <artifactId>frontend-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>ng-serve</id>
+                <goals>
+                  <goal>npm</goal>
+                </goals>
+                <configuration>
+                  <arguments>run start</arguments>
                 </configuration>
               </execution>
             </executions>
