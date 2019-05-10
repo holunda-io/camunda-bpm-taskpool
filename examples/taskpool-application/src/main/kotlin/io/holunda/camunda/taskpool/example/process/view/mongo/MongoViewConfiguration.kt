@@ -15,4 +15,4 @@ import org.springframework.context.annotation.Profile
     org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration::class,
     org.springframework.boot.autoconfigure.data.mongo.MongoReactiveDataAutoConfiguration::class
   ])
-open class MongoViewConfiguration
+class MongoViewConfiguration

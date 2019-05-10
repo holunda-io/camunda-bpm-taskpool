@@ -36,7 +36,7 @@ registerLocaleData(localeEn, 'en');
   providers: [
     TaskEventHelperService,
     TaskEventReactiveService,
-    { provide: BASE_PATH, useValue: '/taskpool-cockpit/rest' }
+    { provide: BASE_PATH, useValue: 'http://localhost:8083/taskpool-cockpit/rest' }
   ],
   bootstrap: [AppComponent]
 })

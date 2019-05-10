@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { UserProfile, TaskWithDataEntries, Task } from 'tasklist/models';
 import { TaskHelperService } from 'app/services/task.helper.service';
 import { FilterService } from 'app/services/filter.service';
-import { ProfileHelperService } from 'app/services/profile.helper.service';
+import {Profile, ProfileHelperService} from 'app/services/profile.helper.service';
 
 @Component({
   selector: 'app-tasklist',
@@ -12,11 +12,11 @@ import { ProfileHelperService } from 'app/services/profile.helper.service';
 export class TasklistComponent {
 
   tasks: Array<TaskWithDataEntries> = [];
-  userProfile: UserProfile;
   itemsPerPage: number;
   totalItems: any;
   page: number;
   currentDataTab = 'description';
+  currentProfile: Profile = this.profileHelper.noProfile;
 
   constructor(
     private taskHelper: TaskHelperService,
@@ -64,8 +64,8 @@ export class TasklistComponent {
     this.filterService.count.subscribe((count: number) => {
       this.totalItems = count;
     });
-    this.profileHelper.userProfile.subscribe((profile: UserProfile) => {
-      this.userProfile = profile;
+    this.profileHelper.currentProfile$.subscribe(userProfile => {
+      this.currentProfile = userProfile;
     });
   }
 }

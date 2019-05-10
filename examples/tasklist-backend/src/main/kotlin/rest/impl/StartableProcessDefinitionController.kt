@@ -12,8 +12,10 @@ import org.axonframework.messaging.responsetypes.ResponseTypes
 import org.axonframework.queryhandling.QueryGateway
 import org.springframework.http.ResponseEntity
 import org.springframework.http.ResponseEntity.ok
+import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import java.util.*
 
 
 @RestController
@@ -25,10 +27,10 @@ class StartableProcessDefinitionController(
   private val mapper: ProcessDefinitionMapper
 ) : ProcessesApi {
 
-  override fun getStartableProcesses(): ResponseEntity<List<ProcessDefinitionDto>> {
+  override fun getStartableProcesses(@RequestHeader(value="X-Current-User-ID", required=false) xCurrentUserID: Optional<String>): ResponseEntity<List<ProcessDefinitionDto>> {
 
-    val username = currentUserService.getCurrentUser()
-    val user = userService.getUser(username)
+    val userIdentifier = xCurrentUserID.orElseGet{ currentUserService.getCurrentUser() }
+    val user = userService.getUser(userIdentifier)
 
     val result: List<ProcessDefinition> = queryGateway
       .query(ProcessDefinitionsStartableByUserQuery(user = user), ResponseTypes.multipleInstancesOf(ProcessDefinition::class.java))

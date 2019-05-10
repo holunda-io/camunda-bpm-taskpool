@@ -21,7 +21,7 @@ import java.time.Instant
 @Suppress("unused")
 @Component
 @ProcessingGroup(PROCESSING_GROUP)
-open class TaskPoolCockpitService(
+class TaskPoolCockpitService(
   private val configuration: EventProcessingConfiguration,
   private val queryUpdateEmitter: QueryUpdateEmitter
 ) {
@@ -35,7 +35,7 @@ open class TaskPoolCockpitService(
   /**
    * Restore the projection.
    */
-  open fun restore() {
+  fun restore() {
     this.configuration
       .eventProcessorByProcessingGroup(TaskPoolCockpitService.PROCESSING_GROUP, TrackingEventProcessor::class.java)
       .ifPresent {
@@ -50,7 +50,7 @@ open class TaskPoolCockpitService(
    * Fill the projection.
    */
   @EventHandler
-  open fun on(event: TaskEvent, @Timestamp instant: Instant, metaData: MetaData) {
+  fun on(event: TaskEvent, @Timestamp instant: Instant, metaData: MetaData) {
     val withMetaData = TaskEventWithMetaData(event = event, instant = instant, metaData = metaData)
     logger.info { "COCKPIT-002: Received task event $withMetaData" }
     events.add(withMetaData)
@@ -61,7 +61,7 @@ open class TaskPoolCockpitService(
    * Retrieve events.
    */
   @QueryHandler
-  open fun getEventsAsList(query: QueryTaskEvents): List<TaskEventWithMetaData> {
+  fun getEventsAsList(query: QueryTaskEvents): List<TaskEventWithMetaData> {
     return events.filter { query.apply(it.event.id) }
   }
 
@@ -69,7 +69,7 @@ open class TaskPoolCockpitService(
   /**
    * Find task reference.
    */
-  open fun findTaskReference(taskId: String): TaskReference {
+  fun findTaskReference(taskId: String): TaskReference {
     val taskWithMetadata = events.find { it.event.id == taskId }
       ?: throw IllegalArgumentException("No task with id $taskId found")
     return TaskReference(taskWithMetadata.event.id, taskWithMetadata.event.taskDefinitionKey, taskWithMetadata.event.sourceReference)

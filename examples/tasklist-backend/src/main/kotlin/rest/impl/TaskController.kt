@@ -14,10 +14,7 @@ import org.axonframework.commandhandling.gateway.CommandGateway
 import org.axonframework.queryhandling.QueryGateway
 import org.camunda.bpm.engine.variable.Variables
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import java.time.OffsetDateTime
 import java.util.*
 import javax.validation.Valid
@@ -34,7 +31,7 @@ class TaskController(
 
   companion object : KLogging()
 
-  override fun claim(@PathVariable("id") id: String): ResponseEntity<Void> {
+  override fun claim(@PathVariable("id") id: String, @RequestHeader(value = "X-Current-User-ID", required = false) xCurrentUserID: Optional<String>): ResponseEntity<Void> {
 
     val task = getTask(id)
     val userIdentifier = currentUserService.getCurrentUser()
@@ -50,7 +47,7 @@ class TaskController(
     return ResponseEntity.noContent().build()
   }
 
-  override fun unclaim(@PathVariable("id") id: String): ResponseEntity<Void> {
+  override fun unclaim(@PathVariable("id") id: String, @RequestHeader(value = "X-Current-User-ID", required = false) xCurrentUserID: Optional<String>): ResponseEntity<Void> {
 
     val task = getTask(id)
 
@@ -63,10 +60,10 @@ class TaskController(
     return ResponseEntity.noContent().build()
   }
 
-  override fun complete(@PathVariable("id") id: String, @Valid @RequestBody @NotNull payload: PayloadDto): ResponseEntity<Void> {
+  override fun complete(@PathVariable("id") id: String, @RequestHeader(value = "X-Current-User-ID", required = false) xCurrentUserID: Optional<String>, @Valid @RequestBody @NotNull payload: PayloadDto): ResponseEntity<Void> {
 
     val task = getTask(id)
-    val userIdentifier = currentUserService.getCurrentUser()
+    val userIdentifier = xCurrentUserID.orElseGet{ currentUserService.getCurrentUser() }
     val user = userService.getUser(userIdentifier)
 
     send(CompleteInteractionTaskCommand(
@@ -81,7 +78,7 @@ class TaskController(
   }
 
 
-  override fun defer(@PathVariable("id") id: String, @Valid @RequestBody @NotNull followUpDate: OffsetDateTime): ResponseEntity<Void> {
+  override fun defer(@PathVariable("id") id: String, @RequestHeader(value = "X-Current-User-ID", required = false) xCurrentUserID: Optional<String>, @Valid @RequestBody @NotNull followUpDate: OffsetDateTime): ResponseEntity<Void> {
     val task = getTask(id)
 
     send(DeferInteractionTaskCommand(
@@ -94,7 +91,7 @@ class TaskController(
     return ResponseEntity.noContent().build()
   }
 
-  override fun undefer(@PathVariable("id") id: String): ResponseEntity<Void> {
+  override fun undefer(@PathVariable("id") id: String, @RequestHeader(value = "X-Current-User-ID", required = false) xCurrentUserID: Optional<String>): ResponseEntity<Void> {
     val task = getTask(id)
 
     send(UndeferInteractionTaskCommand(

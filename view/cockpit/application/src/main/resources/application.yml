@@ -9,7 +9,7 @@ spring:
       WRITE_DATES_AS_TIMESTAMPS: false
 
 logging.level.io.holunda.camunda.taskpool:
-  cockpit: WARN
+  cockpit: INFO
 
 
 
