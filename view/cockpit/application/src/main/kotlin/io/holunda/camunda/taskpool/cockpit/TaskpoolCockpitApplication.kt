@@ -15,4 +15,4 @@ fun main(args: Array<String>) {
  */
 @SpringBootApplication
 @EnableTaskPoolCockpit
-open class TaskpoolCockpitApplication
+class TaskpoolCockpitApplication

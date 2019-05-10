@@ -20,7 +20,7 @@ open class ProcessController : RequestApi {
 
   override fun start(
     @ApiParam("Request id") @PathVariable("id") id: String,
-    @ApiParam(value = "Originator", defaultValue = "kermit") @PathVariable("originator") originator: String
+    @ApiParam(value = "Originator") @PathVariable("originator") originator: String
   ): ResponseEntity<Void> {
     processApproveRequestBean.startProcess(id, originator)
     return noContent().build()

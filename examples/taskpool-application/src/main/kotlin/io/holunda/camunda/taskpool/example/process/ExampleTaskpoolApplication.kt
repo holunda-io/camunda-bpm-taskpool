@@ -25,4 +25,4 @@ fun main(args: Array<String>) {
 @EnableDataPool
 @EnableTasklist
 @EnablePropertyBasedFormUrlResolver
-open class ExampleTaskpoolApplication
+class ExampleTaskpoolApplication

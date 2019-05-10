@@ -38,13 +38,13 @@ object Web {
 }
 
 @Configuration
-open class TasklistSPAConfiguration : WebFluxConfigurer {
+class TasklistSPAConfiguration : WebFluxConfigurer {
 
   @Value("${STATIC_LOCATION}index.html")
   private lateinit var indexHtml: Resource
 
   @Bean
-  open fun tasklistSpaRouter() = router {
+  fun tasklistSpaRouter() = router {
     GET("/${Web.BASE_PATH}/") {
       ok().contentType(TEXT_HTML).syncBody(indexHtml)
     }

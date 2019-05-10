@@ -3,7 +3,7 @@
   <bpmn:collaboration id="Collaboration_0zzop8w">
     <bpmn:participant id="Participant_0sj47qc" name="Request Approval Process" processRef="process_approve_request" />
   </bpmn:collaboration>
-  <bpmn:process id="process_approve_request" name="Request Approval" isExecutable="true" camunda:candidateStarterGroups="muppetshow">
+  <bpmn:process id="process_approve_request" name="Request Approval" isExecutable="true" camunda:candidateStarterGroups="muppetshow, avengers">
     <bpmn:documentation>This is a wonderful process.</bpmn:documentation>
     <bpmn:startEvent id="start" camunda:formKey="start-approval">
       <bpmn:outgoing>SequenceFlow_1xw9ijb</bpmn:outgoing>
@@ -11,7 +11,7 @@
     <bpmn:endEvent id="end">
       <bpmn:incoming>SequenceFlow_1i7l22j</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:userTask id="user_approve_request" name="Approve Request" camunda:formKey="approve-request" camunda:candidateUsers="fozzy,gonzo" camunda:candidateGroups="muppetshow" camunda:dueDate="2019-06-26T09:55:00" camunda:followUpDate="2023-06-26T09:55:00" camunda:priority="23">
+    <bpmn:userTask id="user_approve_request" name="Approve Request" camunda:formKey="approve-request" camunda:candidateUsers="fozzy,gonzo" camunda:dueDate="2019-06-26T09:55:00" camunda:followUpDate="2023-06-26T09:55:00" camunda:priority="23">
       <bpmn:incoming>SequenceFlow_098sjp9</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0b2x6uf</bpmn:outgoing>
       <bpmn:property id="Property_0dmzyld" name="__targetRef_placeholder" />

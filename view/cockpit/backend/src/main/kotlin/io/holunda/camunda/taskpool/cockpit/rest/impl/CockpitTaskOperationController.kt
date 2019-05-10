@@ -16,7 +16,7 @@ import reactor.core.publisher.Mono
  */
 @RestController
 @RequestMapping(path = [Rest.PATH])
-open class CockpitTaskOperationController(
+class CockpitTaskOperationController(
   private val gateway: CommandGateway,
   private val cockpitService: TaskPoolCockpitService
 ) {
@@ -39,7 +39,7 @@ open class CockpitTaskOperationController(
   /**
    * Deletes a task.
    */
-  open fun delete(taskId: String) {
+  fun delete(taskId: String) {
     val taskReference = cockpitService.findTaskReference(taskId)
     val command = DeleteTaskCommand(
       id = taskReference.id,

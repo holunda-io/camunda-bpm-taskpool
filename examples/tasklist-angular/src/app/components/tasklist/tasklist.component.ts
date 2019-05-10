@@ -12,11 +12,12 @@ import { ProfileHelperService } from 'app/services/profile.helper.service';
 export class TasklistComponent {
 
   tasks: Array<TaskWithDataEntries> = [];
-  userProfile: UserProfile;
+  currentUserIdentifier: string;
   itemsPerPage: number;
   totalItems: any;
   page: number;
   currentDataTab = 'description';
+  currentUserProfile: UserProfile = this.profileHelper.noneProfile();
 
   constructor(
     private taskHelper: TaskHelperService,
@@ -64,8 +65,11 @@ export class TasklistComponent {
     this.filterService.count.subscribe((count: number) => {
       this.totalItems = count;
     });
-    this.profileHelper.userProfile.subscribe((profile: UserProfile) => {
-      this.userProfile = profile;
+    this.profileHelper.currentUserIdentifier$.subscribe((userIdentifier: string) => {
+      this.currentUserIdentifier = userIdentifier;
+    });
+    this.profileHelper.currentUserProfile$.subscribe(userProfile => {
+      this.currentUserProfile = userProfile;
     });
   }
 }

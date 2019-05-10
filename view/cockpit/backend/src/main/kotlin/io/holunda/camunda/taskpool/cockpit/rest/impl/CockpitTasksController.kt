@@ -39,7 +39,9 @@ class CockpitTasksController(
       ResponseTypes.instanceOf(TaskEventWithMetaData::class.java)
     )
 
-    return taskEvents.initialResult().flatMapMany { Flux.fromIterable(it) }
+    return taskEvents
+      .initialResult()
+      .flatMapMany { Flux.fromIterable(it) }
       .concatWith(taskEvents.updates())
       .map {
         mapper.dto(it)

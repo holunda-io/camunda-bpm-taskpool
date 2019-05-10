@@ -1,40 +1,45 @@
 import {Component} from '@angular/core';
-import { ProfileService } from 'tasklist/services';
-import { UserProfile } from 'tasklist/models';
-import { BehaviorSubject, Observable } from 'rxjs';
+import {UserProfile} from 'tasklist/models';
+import {BehaviorSubject} from 'rxjs';
+import {ProfileHelperService} from 'app/services/profile.helper.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: [ 'app.component.scss' ]
+  styleUrls: ['app.component.scss']
 })
 export class AppComponent {
 
-  private userProfile: BehaviorSubject<UserProfile> = new BehaviorSubject<UserProfile>({username: ''});
+  private currentUser: BehaviorSubject<User> = new BehaviorSubject<User>({fullName: ''});
+  private userIds = [];
 
-  constructor(private profileService: ProfileService) {
+  constructor(private profileHelperService: ProfileHelperService) {
     this.subscribe();
   }
 
   get user(): User {
-    const username = this.userProfile.getValue().username;
-    return {
-      username: username,
-      avatar: 'https://mdbootstrap.com/img/Photos/Avatars/avatar-13.jpg',
-      fullname: this.capitalize(username)
-    };
+    return this.currentUser.getValue();
+  }
+
+  setCurrentUser(userIdentifier: string) {
+    this.profileHelperService.setCurrentUser(userIdentifier);
   }
 
   private subscribe() {
-    this.profileService.getProfile().subscribe(
+    this.profileHelperService.currentUserProfile$.subscribe(
       (profile: UserProfile) => {
-        this.userProfile.next(profile);
-        console.log('Loaded user profile for user', profile.username);
+        const fullName = this.capitalize(profile.username);
+        this.currentUser.next({fullName: fullName});
+        console.log('Loaded user profile for user', fullName);
       },
       (error) => {
         console.log('Error loading user profile', error);
       }
     );
+
+    this.profileHelperService.allUserIds$.subscribe((userIds: Array<string>) => {
+      this.userIds = userIds;
+    });
   }
 
   private capitalize(value: string): string {
@@ -46,7 +51,5 @@ export class AppComponent {
 }
 
 export class User {
-  fullname: string;
-  avatar: string;
-  username: string;
+  fullName: string;
 }

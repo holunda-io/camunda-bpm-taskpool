@@ -29,7 +29,9 @@ export class StartComponent {
     console.log('Starting new approval process');
     this.startSuccess = false;
     this.startFailure = false;
-    this.client.start(this.requestId, 'kermit').subscribe(
+    // FIXME: smell, the userIdentifier of the originator should not be hard-coded here.
+    // read it out of local storage.
+    this.client.start(this.requestId, 'ironman').subscribe(
       result => {
         console.log('Successfully submitted');
         this.startSuccess = true;

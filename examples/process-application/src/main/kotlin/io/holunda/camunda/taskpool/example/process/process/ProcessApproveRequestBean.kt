@@ -137,6 +137,11 @@ class ProcessApproveRequestBean(
   }
 
   /**
+   * Retrieve the number of running instances.
+   */
+  fun countInstances() = getAllInstancesQuery().active().count()
+
+  /**
    * Retrieves all running instances.
    */
   private fun getAllInstancesQuery() =

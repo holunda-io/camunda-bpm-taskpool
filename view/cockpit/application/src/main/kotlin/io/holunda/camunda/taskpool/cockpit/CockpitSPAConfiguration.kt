@@ -46,7 +46,7 @@ open class CockpitSPAConfiguration : WebFluxConfigurer {
   private lateinit var indexHtml: Resource
 
   @Bean
-  open fun cokpitSpaRouter() = router {
+  fun cockpitSpaRouter() = router {
     GET("/$BASE_PATH/") {
       ok().contentType(MediaType.TEXT_HTML).syncBody(indexHtml)
     }
@@ -75,7 +75,8 @@ open class CockpitSPAConfiguration : WebFluxConfigurer {
 
   override fun addCorsMappings(registry: CorsRegistry) {
     // allow ng serve to access the backend
-    registry.addMapping(Rest.PATH + "/**")
+    registry
+      .addMapping(Rest.PATH + "/**")
       .allowedOrigins("http://localhost:4200")
       .allowedMethods(
         HttpMethod.GET.name,

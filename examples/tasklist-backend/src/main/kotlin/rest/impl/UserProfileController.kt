@@ -7,8 +7,10 @@ import io.holunda.camunda.taskpool.example.tasklist.rest.model.UserProfileDto
 import io.holunda.camunda.taskpool.view.auth.User
 import io.holunda.camunda.taskpool.view.auth.UserService
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import java.util.*
 
 @RestController
 @RequestMapping(Rest.REQUEST_PATH)
@@ -16,10 +18,13 @@ class UserProfileController(
   private val currentUserService: CurrentUserService,
   private val userService: UserService
 ) : ProfileApi {
-  override fun getProfile(): ResponseEntity<UserProfileDto> {
+  override fun getProfile(@RequestHeader(value = "X-Current-User-ID", required = false) xCurrentUserID: Optional<String>): ResponseEntity<UserProfileDto> {
+
+    val userIdentifier = xCurrentUserID.orElseGet{ currentUserService.getCurrentUser() }
     // retrieve the user
-    val user: User = userService.getUser(currentUserService.getCurrentUser())
+    val user: User = userService.getUser(userIdentifier)
 
     return ResponseEntity.ok(UserProfileDto().username(user.username))
   }
+
 }
