@@ -21,6 +21,7 @@ import { PageNotFoundComponent } from 'app/components/page-not-found/page-not-fo
 import { AppRoutingModule } from './app-routing.module';
 import { ProcessHelperService } from './services/process.helper.service';
 import { ProcesslistComponent } from './components/process-list/process-list.component';
+import { FooterComponent } from './footer/footer.component';
 
 
 registerLocaleData(localeFr, 'fr');
@@ -36,7 +37,8 @@ registerLocaleData(localeEn, 'en');
     TasklistComponent,
     ProcesslistComponent,
     ExternalUrlDirective,
-    PageNotFoundComponent
+    PageNotFoundComponent,
+    FooterComponent
   ],
   imports: [
     BrowserModule,
