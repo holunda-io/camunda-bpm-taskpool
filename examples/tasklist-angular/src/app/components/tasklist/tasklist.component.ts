@@ -5,7 +5,7 @@ import { FilterService } from 'app/services/filter.service';
 import {Profile, ProfileHelperService} from 'app/services/profile.helper.service';
 
 @Component({
-  selector: 'app-tasklist',
+  selector: 'tasks-tasklist',
   templateUrl: './tasklist.component.html',
   styleUrls: ['tasklist.component.scss']
 })

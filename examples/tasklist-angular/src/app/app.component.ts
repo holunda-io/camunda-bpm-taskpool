@@ -4,7 +4,7 @@ import {BehaviorSubject} from 'rxjs';
 import {Profile, ProfileHelperService} from 'app/services/profile.helper.service';
 
 @Component({
-  selector: 'app-root',
+  selector: 'tasks-root',
   templateUrl: './app.component.html',
   styleUrls: ['app.component.scss']
 })

@@ -3,7 +3,7 @@ import { ProcessDefinition } from 'tasklist/models';
 import { ProcessHelperService } from 'app/services/process.helper.service';
 
 @Component({
-  selector: 'app-process-list',
+  selector: 'tasks-process-list',
   templateUrl: './process-list.component.html',
   styleUrls: ['process-list.component.scss']
 })
