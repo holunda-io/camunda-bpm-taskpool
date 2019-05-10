@@ -3,23 +3,23 @@ import {ProcessService} from 'tasklist/services';
 import {ProcessDefinition, UserProfile} from 'tasklist/models';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {Subscription} from 'rxjs/internal/Subscription';
-import {ProfileHelperService} from 'app/services/profile.helper.service';
+import {Profile, ProfileHelperService} from 'app/services/profile.helper.service';
 
 
 @Injectable()
 export class ProcessHelperService implements OnDestroy {
 
   private processesSubject: BehaviorSubject<Array<ProcessDefinition>> = new BehaviorSubject<Array<ProcessDefinition>>([]);
-  private userSubscription: Subscription;
+  private profileSubscription: Subscription;
   private processSubscription: Subscription;
-  private currentUserIdentifier: string = this.profileHelperService.none();
+  private currentProfile: Profile = this.profileHelperService.noProfile;
 
   constructor(
     private processService: ProcessService,
     private profileHelperService: ProfileHelperService
   ) {
-    this.userSubscription = this.profileHelperService.currentUserIdentifier$.subscribe(user => {
-      this.currentUserIdentifier = user;
+    this.profileSubscription = this.profileHelperService.currentProfile$.subscribe(profile => {
+      this.currentProfile = profile;
       this.reload();
     });
   }
@@ -30,12 +30,12 @@ export class ProcessHelperService implements OnDestroy {
 
   reload(): void {
 
-    if (this.currentUserIdentifier === this.profileHelperService.none()) {
+    if (this.currentProfile === this.profileHelperService.noProfile) {
       // load only if a real user is set.
       return;
     }
 
-    this.processSubscription = this.processService.getStartableProcesses(this.currentUserIdentifier)
+    this.processSubscription = this.processService.getStartableProcesses(this.currentProfile.userIdentifier)
       .subscribe((response: Array<ProcessDefinition>) => {
       this.processesSubject.next(response);
     }, (error) => {
@@ -43,10 +43,9 @@ export class ProcessHelperService implements OnDestroy {
     });
   }
 
-
   ngOnDestroy() {
     this.processSubscription.unsubscribe();
-    this.userSubscription.unsubscribe();
+    this.profileSubscription.unsubscribe();
   }
 
 }

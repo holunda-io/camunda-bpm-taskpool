@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
 import {UserProfile} from 'tasklist/models';
 import {BehaviorSubject} from 'rxjs';
-import {ProfileHelperService} from 'app/services/profile.helper.service';
+import {Profile, ProfileHelperService} from 'app/services/profile.helper.service';
 
 @Component({
   selector: 'app-root',
@@ -10,15 +10,11 @@ import {ProfileHelperService} from 'app/services/profile.helper.service';
 })
 export class AppComponent {
 
-  private currentUser: BehaviorSubject<User> = new BehaviorSubject<User>({fullName: ''});
   private userIds = [];
+  private currentProfile: Profile = this.profileHelperService.noProfile;
 
   constructor(private profileHelperService: ProfileHelperService) {
     this.subscribe();
-  }
-
-  get user(): User {
-    return this.currentUser.getValue();
   }
 
   setCurrentUser(userIdentifier: string) {
@@ -26,11 +22,10 @@ export class AppComponent {
   }
 
   private subscribe() {
-    this.profileHelperService.currentUserProfile$.subscribe(
-      (profile: UserProfile) => {
-        const fullName = this.capitalize(profile.username);
-        this.currentUser.next({fullName: fullName});
-        console.log('Loaded user profile for user', fullName);
+    this.profileHelperService.currentProfile$.subscribe(
+      (profile: Profile) => {
+        this.currentProfile = profile;
+        console.log('Loaded user profile for user', this.currentProfile.username);
       },
       (error) => {
         console.log('Error loading user profile', error);
@@ -41,15 +36,5 @@ export class AppComponent {
       this.userIds = userIds;
     });
   }
-
-  private capitalize(value: string): string {
-    if (value == null) {
-      return null;
-    }
-    return value.charAt(0).toUpperCase() + value.substring(1, value.length);
-  }
 }
 
-export class User {
-  fullName: string;
-}

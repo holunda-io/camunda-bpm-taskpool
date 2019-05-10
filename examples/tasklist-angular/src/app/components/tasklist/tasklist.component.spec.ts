@@ -35,9 +35,8 @@ describe('Component: TasklistComponent', () => {
         FilterService,
         {
           provide: ProfileHelperService, useValue: {
-            currentUserProfile$: Observable.of([]),
-            currentUserIdentifier$: Observable.of([]),
-            noneProfile: () => ({username: ''})
+            currentProfile$: Observable.of([]),
+            noProfile: {username: '', userIdentifier: '', fullName: ''}
           }
         },
         {provide: TaskHelperService, useValue: {tasks: Observable.of([])}},

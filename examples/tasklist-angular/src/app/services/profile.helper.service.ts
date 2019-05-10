@@ -1,17 +1,9 @@
 import {Injectable} from '@angular/core';
 import {ProfileService} from 'tasklist/services';
-import {UserProfile} from 'tasklist/models';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 
 @Injectable()
 export class ProfileHelperService {
-
-  private noneUserIdentifier = 'NOT_A_USER_ID';
-  private noneUserProfile: UserProfile = {username: 'none'};
-
-  private currentUserIdentifier: BehaviorSubject<string> = new BehaviorSubject<string>(this.noneUserIdentifier);
-  private currentUserProfile: BehaviorSubject<UserProfile> = new BehaviorSubject<UserProfile>(this.noneUserProfile);
-  private userIds: BehaviorSubject<Array<String>> = new BehaviorSubject<Array<String>>([]);
 
   constructor(private profileService: ProfileService) {
 
@@ -24,29 +16,30 @@ export class ProfileHelperService {
     }, (error) => {
       console.log('Error loading users', error);
     });
-
-
   }
 
-  get currentUserIdentifier$() {
-    return this.currentUserIdentifier.asObservable();
-  }
-
-  get currentUserProfile$() {
-    return this.currentUserProfile.asObservable();
+  get currentProfile$() {
+    return this.currentProfile.asObservable();
   }
 
   get allUserIds$() {
     return this.userIds.asObservable();
   }
 
+  noProfile: Profile = {
+    userIdentifier: 'NO_ID',
+    username: 'none',
+    fullName: 'Unknown'
+  };
 
-  none(): string {
-    return this.noneUserIdentifier;
-  }
+  private currentProfile: BehaviorSubject<Profile> = new BehaviorSubject<Profile>(this.noProfile);
+  private userIds: BehaviorSubject<Array<String>> = new BehaviorSubject<Array<String>>([]);
 
-  noneProfile(): UserProfile {
-    return this.noneUserProfile;
+  private static capitalize(value: string): string {
+    if (value == null) {
+      return null;
+    }
+    return value.charAt(0).toUpperCase() + value.substring(1, value.length);
   }
 
   setCurrentUser(userIdentifier: string) {
@@ -56,12 +49,23 @@ export class ProfileHelperService {
   loadProfile(userIdentifier: string) {
     this.profileService.getProfile(userIdentifier).subscribe(
       (userProfile) => {
-        this.currentUserProfile.next(userProfile);
-        this.currentUserIdentifier.next(userIdentifier);
+        this.currentProfile.next({
+          userIdentifier: userIdentifier,
+          username: userProfile.username,
+          fullName: ProfileHelperService.capitalize(userProfile.username)
+        });
       },
       (error) => {
         console.log('Error loading user profile', error);
       }
     );
   }
+
 }
+
+export class Profile {
+  userIdentifier: string;
+  username: string;
+  fullName: string;
+}
+
