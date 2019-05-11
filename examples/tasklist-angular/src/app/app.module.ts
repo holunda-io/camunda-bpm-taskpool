@@ -22,6 +22,9 @@ import { AppRoutingModule } from './app-routing.module';
 import { ProcessHelperService } from './services/process.helper.service';
 import { ProcesslistComponent } from './components/process-list/process-list.component';
 import { FooterComponent } from './footer/footer.component';
+import { HeaderComponent } from './header/header.component';
+import { SearchComponent } from './search/search.component';
+import { UserSelectionComponent } from './user-selection/user-selection.component';
 
 
 registerLocaleData(localeFr, 'fr');
@@ -38,7 +41,10 @@ registerLocaleData(localeEn, 'en');
     ProcesslistComponent,
     ExternalUrlDirective,
     PageNotFoundComponent,
-    FooterComponent
+    FooterComponent,
+    HeaderComponent,
+    SearchComponent,
+    UserSelectionComponent
   ],
   imports: [
     BrowserModule,

@@ -1,0 +1,17 @@
+<div class="nav-item dropdown avatar" ngbDropdown>
+  <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" ngbDropdownToggle>
+    <!--
+    <img src="{{ user.avatar }}" class="rounded-circle z-depth-0" alt="avatar image" height="35">
+    -->
+    <i class="fa fa-user"></i>
+    {{ currentProfile.fullName }}
+  </a>
+  <ul class="dropdown-menu" ngbDropdownMenu>
+
+    <li *ngFor="let userIdentifier of userIds"><span class="dropdown-item" (click)="setCurrentUser(userIdentifier)">{{ userIdentifier }}</span></li>
+    <!--
+                      <li class="divider"></li>
+                      <li><a class="dropdown-item" href="#">Sign Out <span class="fa fa-sign-out pull-right"></span></a></li>
+    -->
+  </ul>
+</div>
