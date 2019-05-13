@@ -1,9 +1,10 @@
 import {Injectable, OnDestroy} from '@angular/core';
 import {ProcessService} from 'tasklist/services';
-import {ProcessDefinition, UserProfile} from 'tasklist/models';
+import {ProcessDefinition} from 'tasklist/models';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {Subscription} from 'rxjs/internal/Subscription';
-import {Profile, ProfileHelperService} from 'app/services/profile.helper.service';
+import {Profile} from 'app/services/profile.helper.service';
+import {UserStoreService} from "app/user/state/user.store-service";
 
 
 @Injectable()
@@ -12,13 +13,13 @@ export class ProcessHelperService implements OnDestroy {
   private processesSubject: BehaviorSubject<Array<ProcessDefinition>> = new BehaviorSubject<Array<ProcessDefinition>>([]);
   private profileSubscription: Subscription;
   private processSubscription: Subscription;
-  private currentProfile: Profile = this.profileHelperService.noProfile;
+  private currentProfile: Profile;
 
   constructor(
     private processService: ProcessService,
-    private profileHelperService: ProfileHelperService
+    private userStore: UserStoreService
   ) {
-    this.profileSubscription = this.profileHelperService.currentProfile$.subscribe(profile => {
+    this.profileSubscription = this.userStore.currentUserProfile$().subscribe(profile => {
       this.currentProfile = profile;
       this.reload();
     });
@@ -30,7 +31,7 @@ export class ProcessHelperService implements OnDestroy {
 
   reload(): void {
 
-    if (this.currentProfile === this.profileHelperService.noProfile) {
+    if (!this.currentProfile) {
       // load only if a real user is set.
       return;
     }

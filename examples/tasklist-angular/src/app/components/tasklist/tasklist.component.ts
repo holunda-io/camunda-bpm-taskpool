@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
-import { UserProfile, TaskWithDataEntries, Task } from 'tasklist/models';
-import { TaskHelperService } from 'app/services/task.helper.service';
-import { FilterService } from 'app/services/filter.service';
-import {Profile, ProfileHelperService} from 'app/services/profile.helper.service';
+import {Component} from '@angular/core';
+import {Task, TaskWithDataEntries} from 'tasklist/models';
+import {TaskHelperService} from 'app/services/task.helper.service';
+import {FilterService} from 'app/services/filter.service';
+import {UserStoreService} from "app/user/state/user.store-service";
+import {UserProfile} from "app/user/state/user.reducer";
 
 @Component({
   selector: 'tasks-tasklist',
@@ -16,12 +17,12 @@ export class TasklistComponent {
   totalItems: any;
   page: number;
   currentDataTab = 'description';
-  currentProfile: Profile = this.profileHelper.noProfile;
+  currentProfile: UserProfile;
 
   constructor(
     private taskHelper: TaskHelperService,
     private filterService: FilterService,
-    private profileHelper: ProfileHelperService,
+    private userStore: UserStoreService
   ) {
     this.subscribe();
     this.page = this.filterService.page + 1;
@@ -64,7 +65,7 @@ export class TasklistComponent {
     this.filterService.count.subscribe((count: number) => {
       this.totalItems = count;
     });
-    this.profileHelper.currentProfile$.subscribe(userProfile => {
+    this.userStore.currentUserProfile$().subscribe(userProfile => {
       this.currentProfile = userProfile;
     });
   }
