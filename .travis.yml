@@ -18,8 +18,8 @@ install: true
 # Verify
 #
 script:
-  - ./mvnw --settings .travis/settings.xml clean verify -T4 -U
-  - ./mvnw --settings .travis/settings.xml integration-test failsafe:verify -Pitest -DskipFrontend
+  - ./mvnw --settings .travis/settings.xml clean verify -T4 -U -B
+  - ./mvnw --settings .travis/settings.xml integration-test failsafe:verify -Pitest -DskipFrontend -B
 #
 # Coveralls
 #
