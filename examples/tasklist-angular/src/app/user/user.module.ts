@@ -6,7 +6,7 @@ import {StoreModule} from '@ngrx/store';
 import {userReducer} from './state/user.reducer';
 import {EffectsModule} from '@ngrx/effects';
 import {UserEffects} from './state/user.effects';
-import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [

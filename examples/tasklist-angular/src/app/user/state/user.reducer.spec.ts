@@ -1,9 +1,10 @@
-import {AvailableUsersLoadedAction, LoadAvailableUsersAction, UserProfileLoadedAction} from './user.actions';
+import {AvailableUsersLoadedAction, LoadAvailableUsersAction, SelectUserAction, UserProfileLoadedAction} from './user.actions';
 import {UserProfile, userReducer, UserState} from './user.reducer';
 
 describe('userReducer', () => {
 
   const initialState: UserState = {
+    currentUserId: null,
     currentUserProfile: {
       fullName: '',
       username: '',
@@ -49,5 +50,16 @@ describe('userReducer', () => {
 
     // then:
     expect(newState).toBe(initialState);
+  });
+
+  it('updates current userId', () => {
+    // given:
+    const action = new SelectUserAction('kermit');
+
+    // when:
+    const newState = userReducer(initialState, action);
+
+    // then:
+    expect(newState.currentUserId).toEqual('kermit');
   });
 });

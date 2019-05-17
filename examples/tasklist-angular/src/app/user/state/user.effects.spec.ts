@@ -9,13 +9,22 @@ import {
   SelectUserAction
 } from 'app/user/state/user.actions';
 import {UserProfile} from 'app/user/state/user.reducer';
+import {UserStoreService} from "app/user/state/user.store-service";
+import {createStoreServiceMock} from "@ngxp/store-service/testing";
 
 describe('UserEffects', () => {
 
-  const profileService: ProfileService = new ProfileService(null, null);
+  let profileService: ProfileService;
+  let userStore: UserStoreService;
+
+  beforeEach(() => {
+    profileService = new ProfileService(null, null);
+    // default user store to be overridden in test if needed.
+    userStore = createStoreServiceMock(UserStoreService);
+  });
 
   function effectsFor(action: Action): UserEffects {
-    return new UserEffects(profileService, new Actions(of(action)));
+    return new UserEffects(profileService, userStore, new Actions(of(action)));
   }
 
   it('should load available users', (done) => {
@@ -58,6 +67,20 @@ describe('UserEffects', () => {
     // when:
     effectsFor(action).loadUserProfile$.subscribe((newAction) => {
       expect(newAction.payload).toEqual(user);
+      done();
+    });
+  });
+
+  it('should load initial user profile', (done) => {
+    // given:
+    userStore = createStoreServiceMock(UserStoreService, {
+      userId$: 'kermit'
+    });
+    const spy = spyOn(userStore, 'selectUser').and.stub();
+
+    // when:
+    effectsFor(null).loadInitialUserProfile$.subscribe((newAction) => {
+      expect(spy).toHaveBeenCalledWith('kermit');
       done();
     });
   });

@@ -7,11 +7,13 @@ export interface UserProfile {
 }
 
 export interface UserState {
+  currentUserId: string;
   availableUserIds: string[];
   currentUserProfile: UserProfile;
 }
 
 const initialState: UserState = {
+  currentUserId: null,
   availableUserIds: [],
   currentUserProfile: {
     userIdentifier: '',
@@ -27,6 +29,12 @@ export function userReducer(state: UserState = initialState, action: UserActions
       return {
         ...state,
         availableUserIds: action.payload
+      };
+
+    case UserActionTypes.SelectUser:
+      return {
+        ...state,
+        currentUserId: action.payload
       };
 
     case UserActionTypes.UserProfileLoaded:
