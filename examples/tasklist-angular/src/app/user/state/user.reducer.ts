@@ -1,4 +1,4 @@
-import {UserActions, UserActionTypes} from "app/user/state/user.actions";
+import {UserActions, UserActionTypes} from './user.actions';
 
 export interface UserProfile {
   userIdentifier: string;
@@ -7,16 +7,16 @@ export interface UserProfile {
 }
 
 export interface UserState {
-  availableUserIds: string[],
-  currentUserProfile: UserProfile
+  availableUserIds: string[];
+  currentUserProfile: UserProfile;
 }
 
 const initialState: UserState = {
   availableUserIds: [],
   currentUserProfile: {
-    userIdentifier: "",
-    username: "",
-    fullName: ""
+    userIdentifier: '',
+    username: '',
+    fullName: ''
   }
 };
 

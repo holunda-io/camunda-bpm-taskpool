@@ -1,12 +1,11 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import 'rxjs/add/observable/of';
-import { ProcesslistComponent } from './process-list.component';
-import { Observable } from 'rxjs-compat';
-import { FormsModule } from '@angular/forms';
+import {ProcesslistComponent} from './process-list.component';
+import {FormsModule} from '@angular/forms';
 
-import { FilterService } from 'app/services/filter.service';
-import { ProcessHelperService } from 'app/services/process.helper.service';
+import {FilterService} from 'app/services/filter.service';
+import {ProcessHelperService} from 'app/services/process.helper.service';
+import {of} from 'rxjs';
 
 describe('Component: TasklistComponent', () => {
 
@@ -24,7 +23,7 @@ describe('Component: TasklistComponent', () => {
       ],
       providers: [
         FilterService,
-        { provide: ProcessHelperService, useValue: { processes: Observable.of([]) }}
+        {provide: ProcessHelperService, useValue: {processes: of([])}}
       ],
     }).compileComponents().then(() => {
       // create component and test fixture

@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
-import {UserStoreService} from "app/user/state/user.store-service";
-import {UserProfile} from "app/user/state/user.reducer";
-import {Observable} from "rxjs";
+import {UserStoreService} from '../state/user.store-service';
+import {UserProfile} from '../state/user.reducer';
+import {Observable} from 'rxjs';
 
 @Component({
   selector: 'tasks-user-selection',

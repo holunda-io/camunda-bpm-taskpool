@@ -1,7 +1,7 @@
-import {UserState} from "app/user/state/user.reducer";
+import {UserState} from 'app/user/state/user.reducer';
 
 interface StateWithUsers {
-  user: UserState
+  user: UserState;
 }
 
 export const availableUserIds = (state: StateWithUsers): string[] => state.user.availableUserIds;

@@ -2,8 +2,8 @@ import {Component} from '@angular/core';
 import {Task, TaskWithDataEntries} from 'tasklist/models';
 import {TaskHelperService} from 'app/services/task.helper.service';
 import {FilterService} from 'app/services/filter.service';
-import {UserStoreService} from "app/user/state/user.store-service";
-import {UserProfile} from "app/user/state/user.reducer";
+import {UserStoreService} from 'app/user/state/user.store-service';
+import {UserProfile} from 'app/user/state/user.reducer';
 
 @Component({
   selector: 'tasks-tasklist',

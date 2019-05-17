@@ -1,7 +1,7 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {HeaderComponent} from './header.component';
-import {NgbCollapseModule} from "@ng-bootstrap/ng-bootstrap";
+import {NgbCollapseModule} from '@ng-bootstrap/ng-bootstrap';
 
 describe('HeaderComponent', () => {
   let component: HeaderComponent;

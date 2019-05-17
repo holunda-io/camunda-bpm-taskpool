@@ -1,5 +1,5 @@
-import {AvailableUsersLoadedAction, LoadAvailableUsersAction, UserProfileLoadedAction} from "./user.actions";
-import {UserProfile, userReducer, UserState} from "./user.reducer";
+import {AvailableUsersLoadedAction, LoadAvailableUsersAction, UserProfileLoadedAction} from './user.actions';
+import {UserProfile, userReducer, UserState} from './user.reducer';
 
 describe('userReducer', () => {
 

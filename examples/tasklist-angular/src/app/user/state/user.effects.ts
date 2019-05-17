@@ -1,11 +1,17 @@
-import {Injectable} from "@angular/core";
-import {ProfileService} from "tasklist/services";
-import {Actions, Effect, ofType} from "@ngrx/effects";
-import {AvailableUsersLoadedAction, LoadUserProfileAction, SelectUserAction, UserActionTypes, UserProfileLoadedAction} from "./user.actions";
-import {flatMap, map} from "rxjs/operators";
-import {UserProfile as UserDto} from "tasklist/models";
-import {UserProfile} from "./user.reducer";
-import {TitleCasePipe} from "@angular/common";
+import {Injectable} from '@angular/core';
+import {ProfileService} from 'tasklist/services';
+import {Actions, Effect, ofType} from '@ngrx/effects';
+import {
+  AvailableUsersLoadedAction,
+  LoadUserProfileAction,
+  SelectUserAction,
+  UserActionTypes,
+  UserProfileLoadedAction
+} from './user.actions';
+import {flatMap, map} from 'rxjs/operators';
+import {UserProfile as UserDto} from 'tasklist/models';
+import {UserProfile} from './user.reducer';
+import {TitleCasePipe} from '@angular/common';
 
 @Injectable()
 export class UserEffects {
@@ -45,5 +51,5 @@ function mapFromDto(profile: UserDto, userId: string): UserProfile {
     userIdentifier: userId,
     username: profile.username,
     fullName: new TitleCasePipe().transform(profile.username)
-  }
+  };
 }

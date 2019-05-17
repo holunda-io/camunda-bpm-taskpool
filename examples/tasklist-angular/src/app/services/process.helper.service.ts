@@ -1,10 +1,10 @@
 import {Injectable, OnDestroy} from '@angular/core';
 import {ProcessService} from 'tasklist/services';
 import {ProcessDefinition} from 'tasklist/models';
-import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+import {BehaviorSubject} from 'rxjs';
 import {Subscription} from 'rxjs/internal/Subscription';
 import {Profile} from 'app/services/profile.helper.service';
-import {UserStoreService} from "app/user/state/user.store-service";
+import {UserStoreService} from 'app/user/state/user.store-service';
 
 
 @Injectable()

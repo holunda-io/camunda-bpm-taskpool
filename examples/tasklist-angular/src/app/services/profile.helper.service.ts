@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {ProfileService} from 'tasklist/services';
-import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+import {BehaviorSubject} from 'rxjs';
 
 @Injectable()
 export class ProfileHelperService {

@@ -24,9 +24,9 @@ import {ProcesslistComponent} from './components/process-list/process-list.compo
 import {FooterComponent} from './footer/footer.component';
 import {HeaderComponent} from './header/header.component';
 import {SearchComponent} from './search/search.component';
-import {UserModule} from "app/user/user.module";
-import {Store, StoreModule} from "@ngrx/store";
-import {EffectsModule} from "@ngrx/effects";
+import {UserModule} from 'app/user/user.module';
+import {StoreModule} from '@ngrx/store';
+import {EffectsModule} from '@ngrx/effects';
 
 
 registerLocaleData(localeFr, 'fr');

@@ -2,11 +2,11 @@ import {Injectable, OnDestroy} from '@angular/core';
 import {TaskService} from 'tasklist/services';
 import {Task, TaskWithDataEntries} from 'tasklist/models';
 import {StrictHttpResponse} from 'tasklist/strict-http-response';
-import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+import {BehaviorSubject} from 'rxjs';
 import {Field, FilterService} from './filter.service';
 import {Subscription} from 'rxjs';
-import {UserStoreService} from "app/user/state/user.store-service";
-import {UserProfile} from "app/user/state/user.reducer";
+import {UserStoreService} from 'app/user/state/user.store-service';
+import {UserProfile} from 'app/user/state/user.reducer';
 
 
 @Injectable()

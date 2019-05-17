@@ -1,14 +1,18 @@
-import {UserEffects} from "./user.effects";
-import {Action} from "@ngrx/store";
-import {of} from "rxjs";
-import {Actions} from "@ngrx/effects";
-import {ProfileService} from "tasklist/services";
-import {LoadAvailableUsersAction, LoadUserProfileAction, SelectUserAction} from "app/user/state/user.actions";
-import {UserProfile} from "app/user/state/user.reducer";
+import {UserEffects} from './user.effects';
+import {Action} from '@ngrx/store';
+import {of} from 'rxjs';
+import {Actions} from '@ngrx/effects';
+import {ProfileService} from 'tasklist/services';
+import {
+  LoadAvailableUsersAction,
+  LoadUserProfileAction,
+  SelectUserAction
+} from 'app/user/state/user.actions';
+import {UserProfile} from 'app/user/state/user.reducer';
 
 describe('UserEffects', () => {
 
-  let profileService: ProfileService = new ProfileService(null, null);
+  const profileService: ProfileService = new ProfileService(null, null);
 
   function effectsFor(action: Action): UserEffects {
     return new UserEffects(profileService, new Actions(of(action)));
@@ -51,7 +55,7 @@ describe('UserEffects', () => {
     const action = new LoadUserProfileAction(userId);
     spyOn(profileService, 'getProfile').and.returnValue(of(user));
 
-    //when:
+    // when:
     effectsFor(action).loadUserProfile$.subscribe((newAction) => {
       expect(newAction.payload).toEqual(user);
       done();

@@ -1,8 +1,8 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {UserSelectionComponent} from './user-selection.component';
-import {provideStoreServiceMock} from "@ngxp/store-service/testing";
-import {UserStoreService} from "app/user/state/user.store-service";
+import {provideStoreServiceMock} from '@ngxp/store-service/testing';
+import {UserStoreService} from 'app/user/state/user.store-service';
 
 describe('UserSelectionComponent', () => {
   let component: UserSelectionComponent;
@@ -14,9 +14,9 @@ describe('UserSelectionComponent', () => {
       providers: [
         provideStoreServiceMock(UserStoreService, {
           currentUserProfile$: {
-            userIdentifier: "",
-            username: "",
-            fullName: ""
+            userIdentifier: '',
+            username: '',
+            fullName: ''
           }
         })
       ]

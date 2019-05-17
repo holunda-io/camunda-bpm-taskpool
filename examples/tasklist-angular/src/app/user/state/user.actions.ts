@@ -1,12 +1,12 @@
 import {Action} from '@ngrx/store';
-import {UserProfile} from "./user.reducer";
+import {UserProfile} from './user.reducer';
 
 export enum UserActionTypes {
-  LoadAvailableUsers = "[User] Load available ids",
-  AvailableUsersLoaded = "[User] Available ids loaded",
-  SelectUser = "[User] Select user",
-  LoadUserProfile = "[User] Load profile",
-  UserProfileLoaded = "[User] Profile loaded",
+  LoadAvailableUsers = '[User] Load available ids',
+  AvailableUsersLoaded = '[User] Available ids loaded',
+  SelectUser = '[User] Select user',
+  LoadUserProfile = '[User] Load profile',
+  UserProfileLoaded = '[User] Profile loaded',
 }
 
 export class LoadAvailableUsersAction implements Action {
