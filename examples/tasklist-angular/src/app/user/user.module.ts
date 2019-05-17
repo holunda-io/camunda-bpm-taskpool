@@ -6,6 +6,7 @@ import {StoreModule} from '@ngrx/store';
 import {userReducer} from './state/user.reducer';
 import {EffectsModule} from '@ngrx/effects';
 import {UserEffects} from './state/user.effects';
+import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
 
 @NgModule({
   declarations: [
@@ -16,6 +17,7 @@ import {UserEffects} from './state/user.effects';
   ],
   imports: [
     CommonModule,
+    NgbModule,
     EffectsModule.forFeature([UserEffects]),
     StoreModule.forFeature('user', userReducer)
   ],

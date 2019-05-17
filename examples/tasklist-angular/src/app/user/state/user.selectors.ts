@@ -1,9 +1,18 @@
-import {UserState} from 'app/user/state/user.reducer';
+import {UserProfile, UserState} from 'app/user/state/user.reducer';
+import {createSelector} from "@ngrx/store";
 
 interface StateWithUsers {
   user: UserState;
 }
 
-export const availableUserIds = (state: StateWithUsers): string[] => state.user.availableUserIds;
+const selectFeature = (state: StateWithUsers) => state.user;
 
-export const currentUserProfile = (state: StateWithUsers) => state.user.currentUserProfile;
+export const availableUserIds = createSelector(
+  selectFeature,
+  (state: UserState): string[] => state.availableUserIds
+);
+
+export const currentUserProfile = createSelector(
+  selectFeature,
+  (state: UserState): UserProfile => state.currentUserProfile
+);

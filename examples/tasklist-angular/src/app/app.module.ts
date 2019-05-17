@@ -32,6 +32,18 @@ registerLocaleData(localeFr, 'fr');
 registerLocaleData(localeDe, 'de');
 registerLocaleData(localeEn, 'en');
 
+export function storeLogger(reducer) {
+  return (state, action: any): any => {
+    const result = reducer(state, action);
+    console.groupCollapsed(action.type);
+    console.log('prev state', state);
+    console.log('action', action);
+    console.log('next state', result);
+    console.groupEnd();
+
+    return result;
+  };
+}
 
 @NgModule({
   declarations: [
@@ -54,7 +66,9 @@ registerLocaleData(localeEn, 'en');
     NgbModule,
     ApiModule,
     UserModule,
-    StoreModule.forRoot({}),
+    StoreModule.forRoot({}, {
+      metaReducers: [storeLogger]
+    }),
     EffectsModule.forRoot([])
   ],
   providers: [

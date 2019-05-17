@@ -17,8 +17,10 @@ export class UserSelectionComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.currentProfile$ = this.userStore.currentUserProfile$();
+    this.userStore.loadAvailableUsers();
+
     this.userIds$ = this.userStore.availableUserIds$();
+    this.currentProfile$ = this.userStore.currentUserProfile$();
   }
 
   setCurrentUser(userIdentifier: string) {

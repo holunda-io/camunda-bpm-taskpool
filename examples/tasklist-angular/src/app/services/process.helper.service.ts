@@ -4,7 +4,7 @@ import {ProcessDefinition} from 'tasklist/models';
 import {BehaviorSubject} from 'rxjs';
 import {Subscription} from 'rxjs/internal/Subscription';
 import {UserStoreService} from 'app/user/state/user.store-service';
-import {UserProfile} from "app/user/state/user.reducer";
+import {UserProfile} from 'app/user/state/user.reducer';
 
 
 @Injectable()
