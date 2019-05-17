@@ -12,7 +12,6 @@ import {ApiModule} from 'tasklist/api.module';
 import {AppComponent} from 'app/app.component';
 import {TasklistComponent} from 'app/components/tasklist/tasklist.component';
 import {TaskHelperService} from 'app/services/task.helper.service';
-import {ProfileHelperService} from 'app/services/profile.helper.service';
 import {FieldNamePipe} from 'app/services/field-name.pipe';
 import {FilterService} from 'app/services/filter.service';
 import {SortableColumnComponent} from 'app/components/sorter/sortable-column.component';
@@ -60,7 +59,6 @@ registerLocaleData(localeEn, 'en');
   ],
   providers: [
     TaskHelperService,
-    ProfileHelperService,
     ProcessHelperService,
     FilterService
   ],

@@ -3,8 +3,8 @@ import {ProcessService} from 'tasklist/services';
 import {ProcessDefinition} from 'tasklist/models';
 import {BehaviorSubject} from 'rxjs';
 import {Subscription} from 'rxjs/internal/Subscription';
-import {Profile} from 'app/services/profile.helper.service';
 import {UserStoreService} from 'app/user/state/user.store-service';
+import {UserProfile} from "app/user/state/user.reducer";
 
 
 @Injectable()
@@ -13,7 +13,7 @@ export class ProcessHelperService implements OnDestroy {
   private processesSubject: BehaviorSubject<Array<ProcessDefinition>> = new BehaviorSubject<Array<ProcessDefinition>>([]);
   private profileSubscription: Subscription;
   private processSubscription: Subscription;
-  private currentProfile: Profile;
+  private currentProfile: UserProfile;
 
   constructor(
     private processService: ProcessService,
