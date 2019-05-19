@@ -1,7 +1,7 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import {ProcesslistComponent} from "app/process/process-list/process-list.component";
-import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {ProcesslistComponent} from 'app/process/process-list/process-list.component';
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [ProcesslistComponent],
@@ -13,4 +13,5 @@ import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
     ProcesslistComponent
   ]
 })
-export class ProcessModule { }
+export class ProcessModule {
+}

@@ -3,16 +3,12 @@ import {Action} from '@ngrx/store';
 import {of} from 'rxjs';
 import {Actions} from '@ngrx/effects';
 import {ProfileService} from 'tasklist/services';
-import {
-  LoadAvailableUsersAction,
-  LoadUserProfileAction,
-  SelectUserAction
-} from 'app/user/state/user.actions';
+import {LoadAvailableUsersAction, LoadUserProfileAction, SelectUserAction} from 'app/user/state/user.actions';
 import {UserProfile} from 'app/user/state/user.reducer';
-import {UserStoreService} from "app/user/state/user.store-service";
-import {createStoreServiceMock} from "@ngxp/store-service/testing";
+import {UserStoreService} from 'app/user/state/user.store-service';
+import {createStoreServiceMock} from '@ngxp/store-service/testing';
 
-describe('UserEffects', () => {
+describe('ProcessEffects', () => {
 
   let profileService: ProfileService;
   let userStore: UserStoreService;

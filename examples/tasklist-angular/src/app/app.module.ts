@@ -19,14 +19,13 @@ import {ExternalUrlDirective} from 'app/components/external-url.directive';
 import {PageNotFoundComponent} from 'app/components/page-not-found/page-not-found.component';
 import {AppRoutingModule} from './app-routing.module';
 import {ProcessHelperService} from './services/process.helper.service';
-import {ProcesslistComponent} from './process/process-list/process-list.component';
 import {FooterComponent} from './footer/footer.component';
 import {HeaderComponent} from './header/header.component';
 import {SearchComponent} from './search/search.component';
 import {UserModule} from 'app/user/user.module';
 import {StoreModule} from '@ngrx/store';
 import {EffectsModule} from '@ngrx/effects';
-import {ProcessModule} from "app/process/process.module";
+import {ProcessModule} from 'app/process/process.module';
 
 
 registerLocaleData(localeFr, 'fr');

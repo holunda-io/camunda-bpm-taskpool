@@ -1,4 +1,4 @@
-import {availableUserIds, currentUserId, currentUserProfile, StateWithUsers} from "app/user/state/user.selectors";
+import {availableUserIds, currentUserId, currentUserProfile, StateWithUsers} from 'app/user/state/user.selectors';
 
 describe('user selectors', () => {
   const state: StateWithUsers = {

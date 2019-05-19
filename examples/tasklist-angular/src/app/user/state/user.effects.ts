@@ -12,7 +12,7 @@ import {first, flatMap, map, tap} from 'rxjs/operators';
 import {UserProfile as UserDto} from 'tasklist/models';
 import {UserProfile} from './user.reducer';
 import {TitleCasePipe} from '@angular/common';
-import {UserStoreService} from "app/user/state/user.store-service";
+import {UserStoreService} from 'app/user/state/user.store-service';
 
 @Injectable()
 export class UserEffects {

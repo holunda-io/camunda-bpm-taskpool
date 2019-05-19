@@ -1,7 +1,7 @@
 import {AvailableUsersLoadedAction, LoadAvailableUsersAction, SelectUserAction, UserProfileLoadedAction} from './user.actions';
 import {UserProfile, userReducer, UserState} from './user.reducer';
 
-describe('userReducer', () => {
+describe('processReducer', () => {
 
   const initialState: UserState = {
     currentUserId: null,
