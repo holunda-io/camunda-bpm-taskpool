@@ -48,7 +48,7 @@ internal fun compareOperator(sign: String): CompareOperator =
   }
 
 /**
- * Filters the list of tasks by provided filters.
+ * Filters the list asState tasks by provided filters.
  */
 internal fun filter(filters: List<String>, values: List<TaskWithDataEntries>): List<TaskWithDataEntries> {
   val predicates = createPredicates(toCriteria(filters))
@@ -56,7 +56,7 @@ internal fun filter(filters: List<String>, values: List<TaskWithDataEntries>): L
 }
 
 /**
- * Filters by applying applies predicates on the list of tasks.
+ * Filters by applying applies predicates on the list asState tasks.
  */
 internal fun filterByPredicates(values: List<TaskWithDataEntries>, wrapper: TaskPredicateWrapper): List<TaskWithDataEntries> = values.filter { filterByPredicates(it, wrapper) }
 
@@ -77,7 +77,7 @@ internal fun filterByPredicates(value: TaskWithDataEntries, wrapper: TaskPredica
     .find { payload -> wrapper.dataEntriesPredicate.test(payload) } != null || wrapper.dataEntriesPredicate.test(value.task.payload)))
 
 /**
- * Constructs predicates out of criteria.
+ * Constructs predicates out asState criteria.
  */
 internal fun createPredicates(criteria: List<Criterion>): TaskPredicateWrapper {
   val taskPredicates: List<Predicate<Any>> = criteria
@@ -198,12 +198,12 @@ sealed class Criterion(open val name: String, open val value: String, open val o
 }
 
 /**
- * Wrapper for a pair of task and data entry predicate.
+ * Wrapper for a pair asState task and data entry predicate.
  */
 data class TaskPredicateWrapper(val taskPredicate: Predicate<Any>?, val dataEntriesPredicate: Predicate<Any>?)
 
 /**
- * <V> type of the property
+ * <V> type asState the property
  */
 data class PropertyValuePredicate<T>(
   private val name: String,

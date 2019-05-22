@@ -2,32 +2,23 @@ package io.holunda.camunda.taskpool.api.business
 
 import org.axonframework.modelling.command.TargetAggregateIdentifier
 import org.camunda.bpm.engine.variable.VariableMap
+import java.time.OffsetDateTime
+
 
 data class CreateOrUpdateDataEntryCommand(
-  override val entryType: EntryType,
-  override val entryId: EntryId,
-  override val correlations: CorrelationMap = newCorrelations(),
+  val dataEntry: DataEntry,
   @TargetAggregateIdentifier
-  val dataIdentity: String = dataIdentity(entryType = entryType, entryId = entryId),
-  val payload: VariableMap
-) : DataIdentity, WithCorrelations
+  val dataIdentity: String = dataIdentity(entryType = dataEntry.entryType, entryId = dataEntry.entryId)
+)
 
 data class CreateDataEntryCommand(
-  override val entryType: EntryType,
-  override val entryId: EntryId,
-  override val correlations: CorrelationMap = newCorrelations(),
+  val dataEntry: DataEntry,
   @TargetAggregateIdentifier
-  val dataIdentity: String = dataIdentity(entryType = entryType, entryId = entryId),
-
-  val payload: VariableMap
-) : DataIdentity, WithCorrelations
+  val dataIdentity: String = dataIdentity(entryType = dataEntry.entryType, entryId = dataEntry.entryId)
+)
 
 data class UpdateDataEntryCommand(
-  override val entryType: EntryType,
-  override val entryId: EntryId,
-  override val correlations: CorrelationMap = newCorrelations(),
+  val dataEntry: DataEntry,
   @TargetAggregateIdentifier
-  val dataIdentity: String = dataIdentity(entryType = entryType, entryId = entryId),
-
-  val payload: VariableMap
-) : DataIdentity, WithCorrelations
+  val dataIdentity: String = dataIdentity(entryType = dataEntry.entryType, entryId = dataEntry.entryId)
+)

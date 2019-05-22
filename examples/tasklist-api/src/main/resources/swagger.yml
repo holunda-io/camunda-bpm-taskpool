@@ -11,6 +11,8 @@ tags:
     description: User's propfile.
   - name: Process
     description: Operations on process definitions.
+  - name: Archive
+    description: Operation on business data entries.
 
 schemes:
   - http
@@ -278,6 +280,61 @@ paths:
         '404':
           description: Task not found.
 
+  '/bolist':
+    get:
+      tags:
+        - Archive
+      summary: Lists business objects.
+      produces:
+        - application/json
+      operationId: getBos
+      parameters:
+        - in: query
+          name: page
+          description: The page number to access (0 indexed, defaults to 0)
+          default: 0
+          type: integer
+        - in: query
+          name: size
+          description: The page size requested (defaults to 20)
+          default: 0
+          type: integer
+        - in: query
+          name: sort
+          description: A collection of sort directives in the format +prop1.
+          type: string
+          pattern: '^[-+]([\w]*)$'
+        - in: query
+          name: filter
+          description: One or multiple filter directives in the format prop1=value
+          type: array
+          items:
+            type: string
+          pattern: '^([\w]*)=([.]+)?$'
+          collectionFormat: multi
+          required: true
+          default: '[]'
+        - in: header
+          name: X-Current-User-ID
+          description: Specifies the id of current user.
+          type: string
+      responses:
+        '200':
+          description: Successful operation.
+          schema:
+            title: List of bos.
+            type: array
+            items:
+              $ref: '#/definitions/DataEntry'
+          headers:
+            X-ElementCount:
+              type: integer
+              description: Number of elements in total.
+        '401':
+          description: Not authenticated.
+        '403':
+          description: Not authorized.
+
 
 definitions:
   TaskWithDataEntries:
@@ -376,30 +433,74 @@ definitions:
         type: object
         additionalProperties:
           type: object
+      name:
+        type: string
+        description: Human-readable data entry name.
+      description:
+        type: string
+        description: Human-readable additional information.
+      type:
+        type: string
+        description: Human readable type.
+      formKey:
+        type: string
+        description: Form key of the form.
+      url:
+        type: string
+        description: URL to form.
+      applicationName:
+        type: string
+        description: Origin of the data entry.
+      state:
+        type: string
+        description: State of data entry.
+      stateType:
+        type: string
+        description: State type.
+        enum:
+          - PRELIMINARY
+          - IN_PROGRESS
+          - COMPLETED
+          - CANCELLED
+          - UNDEFINED
+    required:
+      - entryType
+      - entryId
+      - payload
+      - name
+      - type
+      - applicationName
 
   ProcessDefinition:
     type: object
     properties:
       definitionId:
         type: string
+        description: Process definition id.
       definitionKey:
         type: string
+        description: Process definition key.
       definitionVersion:
         type: string
+        description: Process definition version.
       applicationName:
         type: string
+        description: Origin of the process definition.
       processName:
         type: string
+        description: Process name.
       versionTag:
         type: string
+        description: Version Tag.
       description:
         type: string
+        description: Goal or description of the process.
       formKey:
         type: string
+        description: Form key of the start form.
       url:
         type: string
-      startable:
-        type: boolean
+        description: URL of the start form.
       candidateGroups:
         type: array
         description: Set of candidate groups represented by their group ids.
@@ -410,7 +511,6 @@ definitions:
         description: Set of candidate users represented by their user ids.
         items:
           type: string
-
 
   Payload:
     type: object
@@ -423,3 +523,5 @@ definitions:
       username:
         type: string
         description: username of currently logged-in user.
+
+

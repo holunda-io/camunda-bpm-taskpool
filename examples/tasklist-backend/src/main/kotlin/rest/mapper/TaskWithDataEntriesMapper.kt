@@ -35,7 +35,10 @@ abstract class TaskWithDataEntriesMapper {
   abstract fun dto(task: Task): TaskDto
 
   @Mappings(
-    Mapping(target = "payload", source = "dataEntry.payload")
+    Mapping(target = "payload", source = "dataEntry.payload"),
+    Mapping(target = "url", expression = "java(formUrlResolver.resolveUrl(dataEntry))"),
+    Mapping(target = "state", source = "dataEntry.state.state"),
+    Mapping(target = "stateType", source = "dataEntry.state.processingType")
   )
   @Throws(JsonProcessingException::class)
   abstract fun dto(dataEntry: DataEntry): DataEntryDto

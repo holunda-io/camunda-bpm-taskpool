@@ -5,7 +5,7 @@ import io.holunda.camunda.taskpool.view.ProcessDefinition
 import io.holunda.camunda.taskpool.view.mongo.repository.ProcessDefinitionDocument
 import io.holunda.camunda.taskpool.view.mongo.repository.ProcessDefinitionRepository
 import io.holunda.camunda.taskpool.view.query.ProcessDefinitionApi
-import io.holunda.camunda.taskpool.view.query.ProcessDefinitionsStartableByUserQuery
+import io.holunda.camunda.taskpool.view.query.process.ProcessDefinitionsStartableByUserQuery
 import mu.KLogging
 import org.axonframework.eventhandling.EventHandler
 import org.axonframework.queryhandling.QueryHandler
@@ -53,7 +53,7 @@ open class ProcessDefinitionMongoService(
       .findAll()
       .groupBy { processDefinition -> processDefinition.processDefinitionKey }
 
-    // Find the most current version of each process
+    // Find the most current version asState each process
     val currentProcessDefinitions = processesByDefinition.map {
       it.value.sortedBy { definition -> definition.processDefinitionVersion }.last()
     }

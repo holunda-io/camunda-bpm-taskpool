@@ -29,7 +29,7 @@
     </dependency>
     <dependency>
       <groupId>io.holunda.taskpool</groupId>
-      <artifactId>camunda-bpm-datapool-sender</artifactId>
+      <artifactId>camunda-bpm-datapool-collector</artifactId>
     </dependency>
     <dependency>
       <groupId>io.springfox</groupId>
@@ -149,7 +149,7 @@
           </execution>
 
           <!-- Enforce resource copy -->
-          <!-- This is a fix of Kotlin incremental Compiler bug -->
+          <!-- This is a fix asState Kotlin incremental Compiler bug -->
           <!-- See https://discuss.kotlinlang.org/t/kotlin-compiler-incremental-not-copying-resources/5640/5 -->
           <execution>
             <id>extra-copy-resources</id>
@@ -208,14 +208,6 @@
         <artifactId>kotlin-maven-plugin</artifactId>
         <groupId>org.jetbrains.kotlin</groupId>
         <version>${kotlin.version}</version>
-        <configuration>
-          <compilerPlugins>
-            <plugin>spring</plugin>
-            <plugin>jpa</plugin>
-            <plugin>no-arg</plugin>
-          </compilerPlugins>
-          <jvmTarget>${java.version}</jvmTarget>
-        </configuration>
         <executions>
           <execution>
             <id>kapt</id>
@@ -262,18 +254,6 @@
             </configuration>
           </execution>
         </executions>
-        <dependencies>
-          <dependency>
-            <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-maven-allopen</artifactId>
-            <version>${kotlin.version}</version>
-          </dependency>
-          <dependency>
-            <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-maven-noarg</artifactId>
-            <version>${kotlin.version}</version>
-          </dependency>
-        </dependencies>
       </plugin>
       <!-- java compiler -->
       <plugin>

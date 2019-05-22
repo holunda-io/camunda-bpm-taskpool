@@ -5,11 +5,14 @@ import io.holunda.camunda.taskpool.api.business.DataEntryUpdatedEvent
 import io.holunda.camunda.taskpool.api.business.DataIdentity
 import io.holunda.camunda.taskpool.api.business.dataIdentity
 import io.holunda.camunda.taskpool.api.task.*
-import io.holunda.camunda.taskpool.view.DataEntry
 import io.holunda.camunda.taskpool.view.Task
 import io.holunda.camunda.taskpool.view.TaskWithDataEntries
 import io.holunda.camunda.taskpool.view.mongo.repository.*
-import io.holunda.camunda.taskpool.view.query.*
+import io.holunda.camunda.taskpool.view.query.DataEntryApi
+import io.holunda.camunda.taskpool.view.query.FilterQuery
+import io.holunda.camunda.taskpool.view.query.TaskApi
+import io.holunda.camunda.taskpool.view.query.data.*
+import io.holunda.camunda.taskpool.view.query.task.*
 import io.holunda.camunda.taskpool.view.task
 import mu.KLogging
 import org.axonframework.config.EventProcessingConfiguration
@@ -33,46 +36,57 @@ import org.springframework.stereotype.Component
  */
 @Component
 @ProcessingGroup(TaskPoolMongoService.PROCESSING_GROUP)
-open class TaskPoolMongoService(
+class TaskPoolMongoService(
   private val queryUpdateEmitter: QueryUpdateEmitter,
   private var taskRepository: TaskRepository,
   private var dataEntryRepository: DataEntryRepository,
   private val configuration: EventProcessingConfiguration,
   private val readRepo: TaskWithDataEntriesRepository,
   private val mongoTemplate: MongoTemplate
-) : TaskApi {
+) : TaskApi, DataEntryApi {
 
   companion object : KLogging() {
     const val PROCESSING_GROUP = "io.holunda.camunda.taskpool.view.mongo.service"
+  }
+
+  override fun query(query: DataEntriesForUserQuery): DataEntriesQueryResult {
+    return DataEntriesQueryResult(dataEntryRepository
+      .findAllForUser(
+        username = query.user.username,
+        groupNames = query.user.groups
+      ).map { it.dataEntry() }
+    ).slice(query)
   }
 
   /**
    * Retrieves a list of all user tasks for current user.
    */
   @QueryHandler
-  override fun query(query: TasksForUserQuery): List<Task> =
-    taskRepository
-      .findAllForUser(
-        query.user.username,
-        query.user.groups
-      )
-      .map { it.task() }
+  override fun query(query: TasksForUserQuery): TaskQueryResult =
+    TaskQueryResult(
+      elements = taskRepository.findAllForUser(
+        username = query.user.username,
+        groupNames = query.user.groups
+      ).map { it.task() }
+    )
 
   /**
    * Retrieves a list of all data entries of given entry type (and optional id).
    */
   @QueryHandler
-  override fun query(query: DataEntryQuery): List<DataEntry> {
-    return if (query.entryId != null) {
-      val dataEntry = dataEntryRepository.findByIdentity(query.identity()).orElse(null)?.dataEntry()
-      if (dataEntry != null) {
-        listOf(dataEntry)
+  override fun query(query: DataEntryForIdentityQuery): DataEntriesQueryResult {
+    return DataEntriesQueryResult(
+      if (query.entryId != null) {
+        val dataEntry = dataEntryRepository.findByIdentity(query.identity()).orElse(null)?.dataEntry()
+        if (dataEntry != null) {
+          listOf(dataEntry)
+        } else {
+          listOf()
+        }
       } else {
-        listOf()
+        dataEntryRepository.findAllByEntryType(query.entryType).map { it.dataEntry() }
       }
-    } else {
-      dataEntryRepository.findAllByEntryType(query.entryType).map { it.dataEntry() }
-    }
+    )
   }
 
   /**
@@ -98,7 +112,7 @@ open class TaskPoolMongoService(
    * Retrieves a list of tasks with correlated data entries of given entry type (and optional id).
    */
   @QueryHandler
-  override fun query(query: TasksWithDataEntriesForUserQuery): TasksWithDataEntriesResponse {
+  override fun query(query: TasksWithDataEntriesForUserQuery): TasksWithDataEntriesQueryResult {
 
     val read = this.readRepo.findAllFilteredForUser(
       user = query.user,
@@ -107,18 +121,7 @@ open class TaskPoolMongoService(
     ).map { it.taskWithDataEntries() }
 
     // FIXME: replace by mongo paging
-    return slice(list = read, query = query)
-  }
-
-  @Deprecated("get rid of the slice, use paging of the query.")
-  fun slice(list: List<TaskWithDataEntries>, query: TasksWithDataEntriesForUserQuery): TasksWithDataEntriesResponse {
-    val totalCount = list.size
-    val offset = query.page * query.size
-    return if (totalCount > offset) {
-      TasksWithDataEntriesResponse(totalCount, list.slice(offset until Math.min(offset + query.size, totalCount)))
-    } else {
-      TasksWithDataEntriesResponse(totalCount, list)
-    }
+    return TasksWithDataEntriesQueryResult(read).slice(query = query)
   }
 
   @QueryHandler
@@ -139,7 +142,7 @@ open class TaskPoolMongoService(
   }
 
   @EventHandler
-  open fun on(event: TaskCreatedEngineEvent) {
+  fun on(event: TaskCreatedEngineEvent) {
     logger.debug { "Task created $event received" }
     taskRepository.save(task(event).taskDocument())
     updateTaskForUserQuery(event.id)
@@ -147,7 +150,7 @@ open class TaskPoolMongoService(
   }
 
   @EventHandler
-  open fun on(event: TaskAssignedEngineEvent) {
+  fun on(event: TaskAssignedEngineEvent) {
     logger.debug { "Task assigned $event received" }
     taskRepository.findById(event.id).ifPresent {
       taskRepository.save(task(event, it.task()).taskDocument())
@@ -156,7 +159,7 @@ open class TaskPoolMongoService(
   }
 
   @EventHandler
-  open fun on(event: TaskCompletedEngineEvent) {
+  fun on(event: TaskCompletedEngineEvent) {
     logger.debug { "Task completed $event received" }
     taskRepository.deleteById(event.id)
     updateTaskForUserQuery(event.id)
@@ -164,7 +167,7 @@ open class TaskPoolMongoService(
   }
 
   @EventHandler
-  open fun on(event: TaskDeletedEngineEvent) {
+  fun on(event: TaskDeletedEngineEvent) {
     logger.debug { "Task deleted $event received" }
     taskRepository.deleteById(event.id)
     updateTaskForUserQuery(event.id)
@@ -172,7 +175,7 @@ open class TaskPoolMongoService(
   }
 
   @EventHandler
-  open fun on(event: TaskAttributeUpdatedEngineEvent) {
+  fun on(event: TaskAttributeUpdatedEngineEvent) {
     logger.debug { "Task attributes updated $event received" }
     taskRepository.findById(event.id).ifPresent {
       taskRepository.save(task(event, it.task()).taskDocument())
@@ -181,7 +184,7 @@ open class TaskPoolMongoService(
   }
 
   @EventHandler
-  open fun on(event: TaskCandidateGroupChanged) {
+  fun on(event: TaskCandidateGroupChanged) {
     logger.debug { "Task candidate groups changed $event received" }
     taskRepository.findById(event.id).ifPresent {
       taskRepository.save(task(event, it.task()).taskDocument())
@@ -190,7 +193,7 @@ open class TaskPoolMongoService(
   }
 
   @EventHandler
-  open fun on(event: TaskCandidateUserChanged) {
+  fun on(event: TaskCandidateUserChanged) {
     logger.debug { "Task user groups changed $event received" }
     taskRepository.findById(event.id).ifPresent {
       taskRepository.save(task(event, it.task()).taskDocument())
@@ -199,33 +202,23 @@ open class TaskPoolMongoService(
   }
 
   @EventHandler
-  open fun on(event: DataEntryCreatedEvent) {
+  fun on(event: DataEntryCreatedEvent) {
     logger.debug { "Business data entry created $event" }
-    dataEntryRepository.save(
-      DataEntryDocument(
-        identity = dataIdentity(entryType = event.entryType, entryId = event.entryId),
-        entryType = event.entryType,
-        payload = event.payload
-      ))
-    updateDataEntryQuery(event)
+    dataEntryRepository.save(event.toDocument())
+    updateDataEntryQuery(QueryDataIdentity(entryType = event.entryType, entryId = event.entryId))
   }
 
   @EventHandler
-  open fun on(event: DataEntryUpdatedEvent) {
+  fun on(event: DataEntryUpdatedEvent) {
     logger.debug { "Business data entry updated $event" }
-    dataEntryRepository.save(
-      DataEntryDocument(
-        identity = dataIdentity(entryType = event.entryType, entryId = event.entryId),
-        entryType = event.entryType,
-        payload = event.payload
-      ))
-    updateDataEntryQuery(event)
+    dataEntryRepository.save(event.toDocument())
+    updateDataEntryQuery(QueryDataIdentity(entryType = event.entryType, entryId = event.entryId))
   }
 
   /**
    * Runs an event replay to fill the mongo task view with events.
    */
-  open fun restore() {
+  fun restore() {
 
     // not needed, will be called automatically, because of the global index stored in mongo DB.
     this.configuration
@@ -262,7 +255,7 @@ open class TaskPoolMongoService(
     taskRepository.findById(taskId).map { it.task() }.orElse(null), TasksForUserQuery::class.java)
 
   private fun updateDataEntryQuery(identity: DataIdentity) = updateMapFilterQuery(
-    dataEntryRepository.findByIdentity(identity).map { it.dataEntry() }.orElse(null), DataEntryQuery::class.java)
+    dataEntryRepository.findByIdentity(identity).map { it.dataEntry() }.orElse(null), DataEntryForIdentityQuery::class.java)
 
   private fun <T : Any, Q : FilterQuery<T>> updateMapFilterQuery(entry: T?, clazz: Class<Q>) {
     if (entry != null) {
@@ -291,7 +284,8 @@ open class TaskPoolMongoService(
 
 internal fun sort(sort: String?): Sort =
   if (sort != null && sort.length > 1) {
-    val attribute = sort.substring(1).replace("task.", "")
+    val attribute = sort.substring(1)
+      .replace("task.", "")
     when (sort.substring(0, 1)) {
       "+" -> Sort(Sort.Direction.ASC, attribute)
       "-" -> Sort(Sort.Direction.DESC, attribute)

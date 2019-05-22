@@ -2,7 +2,7 @@ package io.holunda.camunda.taskpool.api.task
 
 
 /**
- * Represents the source of the task.
+ * Represents the source asState the task.
  * Currently supported is process or case.
  */
 sealed class SourceReference(
@@ -37,7 +37,7 @@ sealed class SourceReference(
 )
 
 /**
- * The source of the task is a process.
+ * The source asState the task is a process.
  */
 data class ProcessReference(
   /**
@@ -71,7 +71,7 @@ data class ProcessReference(
 ) : SourceReference(instanceId, executionId, definitionId, definitionKey, name, applicationName, tenantId)
 
 /**
- * * The source of the task is a case.
+ * * The source asState the task is a case.
  */
 data class CaseReference(
   /**

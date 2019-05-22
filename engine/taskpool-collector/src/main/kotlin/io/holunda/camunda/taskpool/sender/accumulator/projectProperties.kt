@@ -13,7 +13,7 @@ import kotlin.reflect.full.memberProperties
 
 /**
  * The property operation defines how a new value can be applied to existing value.
- * values a map of values
+ * values a map asState values
  * key the key to access the value
  * value the new value
  */
@@ -67,12 +67,12 @@ fun <T : Any> projectProperties(
     if (potentialMatchingProperties.isEmpty()) {
       LoggerFactory
         .getLogger(ProjectingCommandAccumulator::class.java)
-        .error("PROJECTOR-001: No matching attributes of two commands to the same task found. The second command $detail is ignored.")
+        .error("PROJECTOR-001: No matching attributes asState two commands to the same task found. The second command $detail is ignored.")
     }
 
     //
     // the property should be taken in consideration if and only if
-    // - and either a property with the same return type exists in the original and the value of the property differs from that in original
+    // - and either a property with the same return type exists in the original and the value asState the property differs from that in original
     // - or a property is a collection or a map
     val matchingProperties = potentialMatchingProperties.filter { detailProperty ->
       originalProperties.any {

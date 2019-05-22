@@ -1,7 +1,6 @@
 package io.holunda.camunda.taskpool.example.process.service
 
-import io.holunda.camunda.taskpool.api.sender.DataEntryCommandSender
-import io.holunda.camunda.taskpool.example.process.process.ProcessApproveRequest
+import io.holunda.camunda.datapool.sender.DataEntryCommandSender
 import org.camunda.bpm.engine.variable.Variables
 import org.springframework.stereotype.Component
 

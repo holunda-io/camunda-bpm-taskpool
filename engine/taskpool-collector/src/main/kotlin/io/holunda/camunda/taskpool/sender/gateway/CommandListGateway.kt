@@ -6,7 +6,7 @@ package io.holunda.camunda.taskpool.sender.gateway
 interface CommandListGateway {
 
   /**
-   * Sends a list of commands to gateway.
+   * Sends a list asState commands to gateway.
    */
   fun sendToGateway(commands: List<Any>)
 

@@ -47,11 +47,15 @@ camunda:
       sender:
         enabled: true
         type: simple
+        applicationName: ${spring.application.name}  # default
 
-logging.level.io.holunda.camunda.taskpool:
-  sender: DEBUG
-  core: WARN
-  view.simple: DEBUG
+logging.level.io.holunda.camunda:
+  taskpool:
+    sender: DEBUG
+    core: WARN
+    view.simple: DEBUG
+  datapool:
+    sender: DEBUG
 
 
 swagger:
@@ -59,7 +63,7 @@ swagger:
   redirect: false
   apiInfo:
     title: Example Process Application
-    description: REST interface of the example process application.
+    description: REST interface asState the example process application.
   dockets:
     process:
       basePackage: "io.holunda.camunda.taskpool.example.process.rest"

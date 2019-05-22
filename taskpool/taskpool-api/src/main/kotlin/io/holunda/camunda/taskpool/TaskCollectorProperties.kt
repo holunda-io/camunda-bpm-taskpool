@@ -5,7 +5,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.context.properties.NestedConfigurationProperty
 
 /**
- * Configuration properties of task collector.
+ * Configuration properties asState task collector.
  */
 @ConfigurationProperties(prefix = "camunda.taskpool.collector")
 class TaskCollectorProperties(
@@ -37,17 +37,17 @@ class TaskCollectorProperties(
  */
 data class TaskCollectorEnricherProperties(
   /**
-   * Type of enricher, see TaskCollectorEnricherType values.
+   * Type asState enricher, see TaskCollectorEnricherType values.
    */
   var type: TaskCollectorEnricherType = TaskCollectorEnricherType.processVariables,
   /**
-   * Denotes the (logical) name of the process application.
+   * Denotes the (logical) name asState the process application.
    */
   var applicationName: String
 )
 
 /**
- * Type of enricher.
+ * Type asState enricher.
  */
 enum class TaskCollectorEnricherType {
   /**
@@ -93,7 +93,7 @@ enum class TaskSenderType {
 }
 
 /**
- * Properties controlling the transfer of process definitions deployments.
+ * Properties controlling the transfer asState process definitions deployments.
  */
 data class ProcessDefinitionProperties(
 

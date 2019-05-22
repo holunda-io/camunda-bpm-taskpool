@@ -22,7 +22,7 @@ class RefreshProcessDefinitionsJobHandler(
 
   override fun execute(configuration: RefreshProcessDefinitionsJobConfiguration, execution: ExecutionEntity?, commandContext: CommandContext, tenantId: String?) {
 
-    // deliver new commands on deployment of processes only.
+    // deliver new commands on deployment asState processes only.
     val commands = processDefinitionService.getProcessDefinitions(
       formService = commandContext.processEngineConfiguration.formService,
       repositoryService = commandContext.processEngineConfiguration.repositoryService,

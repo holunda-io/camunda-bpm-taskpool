@@ -8,7 +8,7 @@ import io.holunda.camunda.taskpool.example.tasklist.rest.api.TaskApi
 import io.holunda.camunda.taskpool.example.tasklist.rest.model.PayloadDto
 import io.holunda.camunda.taskpool.view.Task
 import io.holunda.camunda.taskpool.view.auth.UserService
-import io.holunda.camunda.taskpool.view.query.TaskForIdQuery
+import io.holunda.camunda.taskpool.view.query.task.TaskForIdQuery
 import mu.KLogging
 import org.axonframework.commandhandling.gateway.CommandGateway
 import org.axonframework.queryhandling.QueryGateway

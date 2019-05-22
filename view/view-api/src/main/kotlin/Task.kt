@@ -2,6 +2,7 @@ package io.holunda.camunda.taskpool.view
 
 import io.holunda.camunda.taskpool.api.business.*
 import io.holunda.camunda.taskpool.api.task.*
+import io.holunda.camunda.taskpool.api.task.WithPayload
 import org.camunda.bpm.engine.variable.VariableMap
 import org.camunda.bpm.engine.variable.Variables
 import java.util.*

@@ -1,7 +1,7 @@
 package io.holunda.camunda.taskpool.view
 
 /**
- * Facility to resolve URLs of forms.
+ * Facility to resolve URLs asState forms.
  */
 interface FormUrlResolver {
   /**
@@ -12,4 +12,9 @@ interface FormUrlResolver {
    * Creates a complete URL to call the start forms.
    */
   fun resolveUrl(processDefinition: ProcessDefinition): String
+
+  /**
+   * Creates a complete
+   */
+  fun resolveUrl(dataEntry: DataEntry): String
 }

@@ -3,7 +3,6 @@ services:
 
   h2db:
     image: oscarfonts/h2
-    container_name: h2db
     ports:
       - 8082:81
       - 9092:1521
@@ -14,7 +13,6 @@ services:
 
   axonserver:
     image: axoniq/axonserver
-    container_name: axonserver
     ports:
       - 8024:8024
       - 8124:8124
@@ -25,7 +23,6 @@ services:
 
   mongodb:
     image: mongo
-    container_name: mongodb
     ports:
       - 27017:27017
     volumes:

@@ -15,18 +15,28 @@ class TaskWithDataEntriesTest {
   private val dataEntry1 = DataEntry(
     entryType = "EntryType1",
     entryId = UUID.randomUUID().toString(),
-    payload = Variables.putValue("foo", "bar")
+    payload = Variables.putValue("foo", "bar"),
+    type = "myType",
+    applicationName = "name",
+    name = "myName"
   )
 
-  private val dataEntry2 =  DataEntry(
+  private val dataEntry2 = DataEntry(
     entryType = "EntryType2",
     entryId = UUID.randomUUID().toString(),
-    payload = Variables.putValue("zee", "other")
+    payload = Variables.putValue("zee", "other"),
+    type = "myType",
+    applicationName = "name",
+    name = "myName"
+
   )
-  private val dataEntry3 =  DataEntry(
+  private val dataEntry3 = DataEntry(
     entryType = "EntryType3",
     entryId = UUID.randomUUID().toString(),
-    payload = Variables.putValue("unused", "unused")
+    payload = Variables.putValue("unused", "unused"),
+    type = "myType",
+    applicationName = "name",
+    name = "myName"
   )
 
   private val dataEntryList = listOf(dataEntry1, dataEntry2)
@@ -65,7 +75,7 @@ class TaskWithDataEntriesTest {
     val task1 = createTask(id = "1", correlations = correlationMap(dataEntry1))
     val task2 = createTask(id = "2", correlations = correlationMap(dataEntry2))
 
-    val list = TaskWithDataEntries.correlate(listOf(task1,task2), dataEntry1)
+    val list = TaskWithDataEntries.correlate(listOf(task1, task2), dataEntry1)
 
     assertThat(list).hasSize(1)
     assertThat(list.get(0).task).isEqualTo(task1)

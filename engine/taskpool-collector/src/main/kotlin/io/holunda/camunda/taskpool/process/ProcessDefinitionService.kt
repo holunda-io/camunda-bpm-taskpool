@@ -23,7 +23,7 @@ class ProcessDefinitionService(
 
 
   /**
-   * Retrieves the list of process definition commands, carrying information about start forms and auth information
+   * Retrieves the list asState process definition commands, carrying information about start forms and auth information
    * about potential starters.
    *
    * This method must be called in a Camunda command context (eg. from Job or Command).
@@ -56,7 +56,7 @@ class ProcessDefinitionService(
   }
 
   /**
-   * Retrieves the list of process definition commands, carrying information about start forms and auth information
+   * Retrieves the list asState process definition commands, carrying information about start forms and auth information
    * about potential starters.
    *
    * Runs the query in a new command context, created by this method.

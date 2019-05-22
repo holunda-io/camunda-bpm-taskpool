@@ -13,23 +13,21 @@ import org.springframework.stereotype.Component
 import java.util.*
 
 @Component
-open class CreateOrUpdateCommandHandler {
+class CreateOrUpdateCommandHandler {
 
   @Autowired
   private lateinit var eventSourcingRepository: EventSourcingRepository<DataEntryAggregate>
 
   @CommandHandler
-  open fun createOrUpdate(command: CreateOrUpdateDataEntryCommand) {
+  fun createOrUpdate(command: CreateOrUpdateDataEntryCommand) {
 
     loadAggregate(command.dataIdentity).ifPresentOrElse(
       presentConsumer = { aggregate ->
         aggregate.invoke {
           it.handle(
             UpdateDataEntryCommand(
-              entryType = command.entryType,
-              entryId = command.entryId,
-              correlations = command.correlations,
-              payload = command.payload)
+              dataEntry = command.dataEntry
+            )
           )
         }
       },
@@ -37,10 +35,8 @@ open class CreateOrUpdateCommandHandler {
         eventSourcingRepository.newInstance {
           DataEntryAggregate(
             CreateDataEntryCommand(
-              entryType = command.entryType,
-              entryId = command.entryId,
-              correlations = command.correlations,
-              payload = command.payload)
+              dataEntry = command.dataEntry
+            )
           )
         }
       }

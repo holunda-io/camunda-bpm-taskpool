@@ -1,22 +1,13 @@
 package io.holunda.camunda.taskpool.view.simple.service
 
 import com.tngtech.jgiven.Stage
-import com.tngtech.jgiven.annotation.As
-import com.tngtech.jgiven.annotation.BeforeScenario
-import com.tngtech.jgiven.annotation.ExpectedScenarioState
-import com.tngtech.jgiven.annotation.ProvidedScenarioState
-import com.tngtech.jgiven.annotation.ScenarioState
+import com.tngtech.jgiven.annotation.*
 import io.holunda.camunda.taskpool.api.task.*
 import io.holunda.camunda.taskpool.view.Task
 import io.holunda.camunda.taskpool.view.TaskWithDataEntries
 import io.holunda.camunda.taskpool.view.auth.User
-import io.holunda.camunda.taskpool.view.query.ApplicationWithTaskCount
-import io.holunda.camunda.taskpool.view.query.TaskCountByApplicationQuery
-import io.holunda.camunda.taskpool.view.query.TaskForIdQuery
-import io.holunda.camunda.taskpool.view.query.TasksWithDataEntriesForUserQuery
+import io.holunda.camunda.taskpool.view.query.task.*
 import org.assertj.core.api.Assertions.assertThat
-import org.assertj.core.api.Assertions.entry
-import org.axonframework.config.EventProcessingConfiguration
 import org.axonframework.queryhandling.QueryUpdateEmitter
 import org.camunda.bpm.engine.variable.VariableMap
 import org.mockito.Mockito
@@ -103,9 +94,9 @@ open class TaskPoolWhenStage<SELF : TaskPoolWhenStage<SELF>> : TaskPoolStage<SEL
 
   private fun query(page: Int, size: Int) = TasksWithDataEntriesForUserQuery(User("kermit", setOf()), page, size)
 
-  @As("Page $ is queried with a page size of $")
+  @As("Page $ is queried with a page size asState $")
   open fun tasks_queried(page: Int, size: Int): SELF {
-    queriedTasks.addAll(testee.slice(tasks, query(page, size)).tasksWithDataEntries)
+    queriedTasks.addAll(TasksWithDataEntriesQueryResult(tasks).slice(query(page, size)).elements)
     return self()
   }
 

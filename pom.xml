@@ -73,11 +73,6 @@
       </dependency>
       <dependency>
         <groupId>io.holunda.taskpool</groupId>
-        <artifactId>camunda-bpm-taskpool-sender</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>io.holunda.taskpool</groupId>
         <artifactId>camunda-bpm-engine-plugin</artifactId>
         <version>${project.version}</version>
       </dependency>
@@ -100,15 +95,14 @@
       </dependency>
       <dependency>
         <groupId>io.holunda.taskpool</groupId>
-        <artifactId>camunda-bpm-datapool-core</artifactId>
+        <artifactId>camunda-bpm-datapool-collector</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>io.holunda.taskpool</groupId>
-        <artifactId>camunda-bpm-datapool-sender</artifactId>
+        <artifactId>camunda-bpm-datapool-core</artifactId>
         <version>${project.version}</version>
       </dependency>
-
       <dependency>
         <groupId>io.holunda.taskpool</groupId>
         <artifactId>camunda-bpm-taskpool-view-api</artifactId>
@@ -620,7 +614,13 @@
               <plugin>spring</plugin>
               <plugin>jpa</plugin>
               <plugin>no-arg</plugin>
+              <plugin>all-open</plugin>
             </compilerPlugins>
+            <pluginOptions>
+              <option>all-open:annotation=org.axonframework.eventhandling.EventHandler</option>
+              <option>all-open:annotation=org.axonframework.queryhandling.QueryHandler</option>
+              <option>all-open:annotation=com.tngtech.jgiven.integration.spring.JGivenStage</option>
+            </pluginOptions>
             <jvmTarget>${java.version}</jvmTarget>
           </configuration>
           <executions>

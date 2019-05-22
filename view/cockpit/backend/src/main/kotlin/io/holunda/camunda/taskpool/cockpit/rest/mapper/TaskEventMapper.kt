@@ -45,7 +45,7 @@ abstract class TaskEventMapper {
       is TaskCandidateGroupChanged -> dto(withMetadata.event, withMetadata.instant)
       is TaskCandidateUserChanged -> dto(withMetadata.event, withMetadata.instant)
 
-      else -> throw IllegalArgumentException("Unexpected type of $withMetadata: ${withMetadata.javaClass}")
+      else -> throw IllegalArgumentException("Unexpected type asState $withMetadata: ${withMetadata.javaClass}")
     }
 
 

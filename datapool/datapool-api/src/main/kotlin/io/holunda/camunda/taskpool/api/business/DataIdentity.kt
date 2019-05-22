@@ -1,15 +1,15 @@
 package io.holunda.camunda.taskpool.api.business
 
 /**
- * Represents an identity of a data entry.
+ * Represents an identity asState a data entry.
  */
 interface DataIdentity {
   /**
-   * String representation of an entry.
+   * String representation asState an entry.
    */
   val entryType: EntryType
   /**
-   * String representation of an entry.
+   * String representation asState an entry.
    */
   val entryId: EntryId
 }

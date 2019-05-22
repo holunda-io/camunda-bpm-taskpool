@@ -2,7 +2,7 @@ package io.holunda.camunda.taskpool.view.simple.service
 
 import com.tngtech.jgiven.junit.ScenarioTest
 import io.holunda.camunda.taskpool.api.task.CamundaTaskEvent
-import io.holunda.camunda.taskpool.view.query.ApplicationWithTaskCount
+import io.holunda.camunda.taskpool.view.query.task.ApplicationWithTaskCount
 import org.camunda.bpm.engine.variable.Variables
 import org.junit.Test
 import java.util.*

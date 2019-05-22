@@ -1,5 +1,6 @@
 package io.holunda.camunda.taskpool.example.process.process
 
+import io.holunda.camunda.taskpool.api.business.ProcessingType
 import io.holunda.camunda.taskpool.example.process.service.Request
 import io.holunda.camunda.taskpool.example.process.service.RequestService
 import org.camunda.bpm.engine.RuntimeService
@@ -13,7 +14,7 @@ class ProcessApproveRequestBean(
   private val runtimeService: RuntimeService,
   private val taskService: TaskService,
   private val requestService: RequestService
-  ) {
+) {
 
   /**
    * Starts the process for a given request id.
@@ -34,7 +35,7 @@ class ProcessApproveRequestBean(
    */
   fun approveProcess(processInstanceId: String, decision: String, comment: String?) {
     if (!ProcessApproveRequest.Values.APPROVE_DECISION.contains(decision.toUpperCase())) {
-      throw IllegalArgumentException("Only one of APPROVE, RETURN, REJECT is supported.")
+      throw IllegalArgumentException("Only one asState APPROVE, RETURN, REJECT is supported.")
     }
 
     val task = taskService
@@ -42,7 +43,6 @@ class ProcessApproveRequestBean(
       .processInstanceBusinessKey(processInstanceId)
       .taskDefinitionKey(ProcessApproveRequest.Elements.APPROVE_REQUEST)
       .singleResult()
-
     taskService.claim(task.id, "gonzo")
 
     taskService.complete(task.id,
@@ -59,7 +59,7 @@ class ProcessApproveRequestBean(
   fun amendProcess(id: String, action: String, comment: String?) {
 
     if (!ProcessApproveRequest.Values.AMEND_ACTION.contains(action.toUpperCase())) {
-      throw IllegalArgumentException("Only one of CANCEL, RESUBMIT is supported.")
+      throw IllegalArgumentException("Only one asState CANCEL, RESUBMIT is supported.")
     }
 
     val task = taskService.createTaskQuery()
@@ -78,7 +78,7 @@ class ProcessApproveRequestBean(
    */
   fun approveTask(taskId: String, decision: String, comment: String?) {
     if (!ProcessApproveRequest.Values.APPROVE_DECISION.contains(decision.toUpperCase())) {
-      throw IllegalArgumentException("Only one of APPROVE, RETURN, REJECT is supported.")
+      throw IllegalArgumentException("Only one asState APPROVE, RETURN, REJECT is supported.")
     }
 
     val task = taskService
@@ -86,12 +86,30 @@ class ProcessApproveRequestBean(
       .taskId(taskId)
       .taskDefinitionKey(ProcessApproveRequest.Elements.APPROVE_REQUEST)
       .singleResult() ?: throw NoSuchElementException("Task with id $taskId not found.")
+    val requestId = runtimeService.getVariable(task.executionId, ProcessApproveRequest.Variables.REQUEST_ID) as String
     taskService.complete(task.id,
       Variables
         .createVariables()
         .putValue(ProcessApproveRequest.Variables.APPROVE_DECISION, Variables.stringValue(decision.toUpperCase()))
         .putValue(ProcessApproveRequest.Variables.COMMENT, Variables.stringValue(comment))
     )
+
+    val stateWithLog: Pair<String, String> = when (decision) {
+      "APPROVE" -> "Approved" to "Request approved."
+      "REJECT" -> "Rejected" to "Request rejected."
+      "RETURN" -> "Returned" to "Request returned to originator."
+      else -> "" to ""
+    }
+
+
+    requestService.changeRequestState(
+      id = requestId,
+      state = ProcessingType.IN_PROGRESS.asState(stateWithLog.first),
+      username = null, // FIXME
+      log = stateWithLog.second,
+      logNotes = comment
+    )
+
   }
 
   /**
@@ -99,7 +117,7 @@ class ProcessApproveRequestBean(
    */
   fun amendTask(taskId: String, action: String, request: Request, comment: String?) {
     if (!ProcessApproveRequest.Values.AMEND_ACTION.contains(action.toUpperCase())) {
-      throw IllegalArgumentException("Only one of CANCEL, RESUBMIT is supported.")
+      throw IllegalArgumentException("Only one asState CANCEL, RESUBMIT is supported.")
     }
 
     val task = taskService
@@ -110,7 +128,7 @@ class ProcessApproveRequestBean(
 
     if (action == "RESUBMIT") {
       if (requestService.checkRequest(request.id)) {
-        requestService.updateRequest(request.id, request)
+        requestService.updateRequest(id = request.id, request = request, username = null)
       } else {
         throw IllegalArgumentException("Request with id ${request.id} was not found.")
       }
@@ -137,7 +155,7 @@ class ProcessApproveRequestBean(
   }
 
   /**
-   * Retrieve the number of running instances.
+   * Retrieve the number asState running instances.
    */
   fun countInstances() = getAllInstancesQuery().active().count()
 

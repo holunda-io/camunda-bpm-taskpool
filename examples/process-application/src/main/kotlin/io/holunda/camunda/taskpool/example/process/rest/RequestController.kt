@@ -1,6 +1,5 @@
 package io.holunda.camunda.taskpool.example.process.rest
 
-import io.holunda.camunda.taskpool.example.process.process.ProcessApproveRequestBean
 import io.holunda.camunda.taskpool.example.process.service.Request
 import io.holunda.camunda.taskpool.example.process.service.RequestService
 import io.holunda.camunda.taskpool.example.process.service.createDummyRequest
@@ -15,12 +14,11 @@ import java.util.*
 @RestController
 @RequestMapping(path = [Rest.REST_PREFIX])
 class RequestController(
-  private val requestService: RequestService,
-  private val processApproveRequestBean: ProcessApproveRequestBean
+  private val requestService: RequestService
 ) {
 
   @ApiOperation("Submits a new request.")
-  @PostMapping("/request")
+  @PostMapping("/request/")
   fun submitRequest(): ResponseEntity<String> {
     val requestId = "AR-${UUID.randomUUID()}"
     requestService.addRequest(createDummyRequest(requestId))

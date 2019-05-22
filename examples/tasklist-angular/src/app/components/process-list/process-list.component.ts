@@ -19,7 +19,7 @@ export class ProcesslistComponent {
 
   subscribe() {
     this.processHelper.processes.subscribe((processes: Array<ProcessDefinition>) => {
-      this.processes = processes.filter((process: ProcessDefinition) => process.startable);
+      this.processes = processes;
     });
   }
 

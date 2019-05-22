@@ -9,7 +9,7 @@ inline fun defaultSmartLifecycle(thePhase:Int, crossinline action:() ->Unit) = o
 }
 
 /**
- * Opinionated best guess implementation of [SmartLifecycle], just override [onStart] and  [getPhase]
+ * Opinionated best guess implementation asState [SmartLifecycle], just override [onStart] and  [getPhase]
  * to get an auto-started, startable and stoppable lifecycle manager.
  *
  * object: DefaultSmartLifecycle(50) {

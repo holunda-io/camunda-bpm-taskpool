@@ -34,7 +34,7 @@ paths:
     get:
       tags:
       - Task Event
-      summary: Lists of all task events.
+      summary: Lists asState all task events.
       produces:
       - application/json
       operationId: getTaskEvents
@@ -43,14 +43,14 @@ paths:
         '200':
           description: Successful operation.
           schema:
-            title: List of tasks.
+            title: List asState tasks.
             type: array
             items:
               $ref: '#/definitions/TaskEvent'
           headers:
             X-ElementCount:
               type: integer
-              description: Number of elements in total.
+              description: Number asState elements in total.
 
 definitions:
   TaskEvent:
@@ -59,13 +59,13 @@ definitions:
     properties:
       id:
         type: string
-        description: Id of the task.
+        description: Id asState the task.
       eventType:
         type: string
         description: Event type.
       created:
         type: string
-        description: Time of event creation.
+        description: Time asState event creation.
         format: date-time
       task:
         $ref: '#/definitions/Task'
@@ -77,13 +77,13 @@ definitions:
     properties:
       id:
         type: string
-        description: Id of the user task.
+        description: Id asState the user task.
       formKey:
         type: string
-        description: Form key of the task (as defined in the process model).
+        description: Form key asState the task (as defined in the process model).
       processName:
         type: string
-        description: Name of the process.
+        description: Name asState the process.
       taskDefinitionKey:
         type: string
         description: Task definition key from BPMN.
@@ -102,34 +102,34 @@ definitions:
         description: Action to execute.
       description:
         type: string
-        description: Description of the user task.
+        description: Description asState the user task.
       candidateGroups:
         type: array
-        description: Set of candidate groups represented by their group ids.
+        description: Set asState candidate groups represented by their group ids.
         items:
           type: string
       candidateUsers:
         type: array
-        description: Set of candidate users represented by their user ids.
+        description: Set asState candidate users represented by their user ids.
         items:
           type: string
       assignee:
         type: string
-        description: User name of assigned user.
+        description: User name asState assigned user.
       createTime:
         type: string
-        description: Creation date and time of the task.
+        description: Creation date and time asState the task.
         format: date-time
       dueDate:
         type: string
-        description: Due date and time of the task.
+        description: Due date and time asState the task.
         format: date-time
       businessKey:
         type: string
-        description: Business Key of the process.
+        description: Business Key asState the process.
       priority:
         type: integer
-        description: Priority of the task.
+        description: Priority asState the task.
       payload:
         type: object
         additionalProperties:

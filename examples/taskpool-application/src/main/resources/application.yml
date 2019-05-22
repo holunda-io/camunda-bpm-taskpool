@@ -29,11 +29,11 @@ swagger:
   redirect: false
   apiInfo:
     title: Example Taskpool Application
-    description: Rest interface of the example taskpool application.
+    description: Rest interface asState the example taskpool application.
   dockets:
     tasklist:
       basePackage: "io.holunda.camunda.taskpool.example.tasklist"
       path: "/**"
       apiInfo:
         title: Tasklist Application
-        description: Rest interface of the task list.
+        description: Rest interface asState the task list.

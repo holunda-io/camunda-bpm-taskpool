@@ -1,8 +1,6 @@
 package io.holunda.camunda.taskpool.view.mongo.repository
 
-import io.holunda.camunda.taskpool.api.business.DATA_IDENTITY_SEPARATOR
-import io.holunda.camunda.taskpool.api.business.EntryId
-import io.holunda.camunda.taskpool.api.business.dataIdentity
+import io.holunda.camunda.taskpool.api.business.*
 import io.holunda.camunda.taskpool.api.task.CaseReference
 import io.holunda.camunda.taskpool.api.task.ProcessReference
 import io.holunda.camunda.taskpool.api.task.SourceReference
@@ -62,7 +60,7 @@ fun TaskDocument.task() = Task(
 )
 
 /**
- * Create source reference out of reference document.
+ * Create source reference out asState reference document.
  */
 fun sourceReference(reference: ReferenceDocument): SourceReference =
   when (reference) {
@@ -87,7 +85,7 @@ fun sourceReference(reference: ReferenceDocument): SourceReference =
   }
 
 /**
- * Constructs a data entry out of Data Entry Document.
+ * Constructs a data entry out asState Data Entry Document.
  */
 fun DataEntryDocument.dataEntry() =
   if (identity.contains(DATA_IDENTITY_SEPARATOR)) {
@@ -95,12 +93,50 @@ fun DataEntryDocument.dataEntry() =
       io.holunda.camunda.taskpool.view.DataEntry(
         entryType = this[0],
         entryId = this[1],
-        payload = org.camunda.bpm.engine.variable.Variables.fromMap(payload)
+        payload = Variables.fromMap(payload),
+        correlations = Variables.fromMap(correlations),
+        name = name,
+        description = description,
+        type = type,
+        authorizedUsers = authorizedUsers,
+        authorizedGroups = authorizedGroups,
+        applicationName = applicationName
       )
     }
   } else {
     throw IllegalArgumentException("Identity could not be split into entry type and id, because it doesn't contain the '$DATA_IDENTITY_SEPARATOR'. Value was $identity")
   }
+
+
+fun DataEntryCreatedEvent.toDocument() =  DataEntryDocument(
+  identity = dataIdentity(entryType = this.entryType, entryId = this.entryId),
+  entryType = this.entryType,
+  payload = this.payload,
+  correlations = this.correlations,
+  name = this.name,
+  description = this.description,
+  type = this.type,
+  authorizedUsers = authorizedUsers,
+  authorizedGroups = this.authorizedGroups,
+  applicationName = this.applicationName,
+  state = this.state.state,
+  statusType = this.state.processingType.name
+)
+
+fun DataEntryUpdatedEvent.toDocument() =  DataEntryDocument(
+  identity = dataIdentity(entryType = this.entryType, entryId = this.entryId),
+  entryType = this.entryType,
+  payload = this.payload,
+  correlations = this.correlations,
+  name = this.name,
+  description = this.description,
+  type = this.type,
+  authorizedUsers = authorizedUsers,
+  authorizedGroups = this.authorizedGroups,
+  applicationName = this.applicationName,
+  state = this.state.state,
+  statusType = this.state.processingType.name
+)
 
 
 /**

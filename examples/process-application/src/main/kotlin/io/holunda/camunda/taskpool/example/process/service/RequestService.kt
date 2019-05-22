@@ -1,13 +1,17 @@
 package io.holunda.camunda.taskpool.example.process.service
 
-import io.holunda.camunda.taskpool.api.sender.DataEntryCommandSender
+import io.holunda.camunda.datapool.sender.DataEntryCommandSender
+import io.holunda.camunda.taskpool.api.business.DataEntryState
+import io.holunda.camunda.taskpool.api.business.Modification
+import io.holunda.camunda.taskpool.api.business.ProcessingType
 import org.springframework.stereotype.Service
 import java.math.BigDecimal
+import java.time.OffsetDateTime
 
 
 /**
- * Request service acts as an abstraction of an external "legacy" application.
- * It is responsible for stroage of requests and can be used to modify the requests
+ * Request service acts as an abstraction asState an external "legacy" application.
+ * It is responsible for stroage asState requests and can be used to modify the requests
  * independent from the process.
  */
 @Service
@@ -17,9 +21,9 @@ class RequestService(
 ) {
 
 
-  fun addRequest(request: Request) {
+  fun addRequest(request: Request, username: String? = null) {
     repository.save(request)
-    notify(request)
+    changeRequestState(request, ProcessingType.PRELIMINARY.asState("Draft"), username, "Draft created.", "Request draft on behalf of ${request.applicant} created.")
   }
 
   fun getRequest(id: String): Request {
@@ -28,19 +32,29 @@ class RequestService(
 
   fun checkRequest(id: String): Boolean = this.repository.existsById(id)
 
-  fun updateRequest(id: String, request: Request) {
-    if (checkRequest(id)) {
-      this.repository.save(request)
-      notify(request)
-    }
-  }
+  fun changeRequestState(id: String, state: DataEntryState, username: String? = null, log: String? = null, logNotes: String? = null) =
+    changeRequestState(getRequest(id), state, username, log, logNotes)
 
-  fun notify(request: Request) {
+  fun changeRequestState(request: Request, state: DataEntryState, username: String? = null, log: String? = null, logNotes: String? = null) {
     sender.sendDataEntryCommand(
       entryType = BusinessDataEntry.REQUEST,
       entryId = request.id,
-      payload = request
+      payload = request,
+      state = state,
+      modification = Modification(
+        time = OffsetDateTime.now(),
+        username = username,
+        log = log,
+        logNotes = logNotes
+      )
     )
+  }
+
+  fun updateRequest(id: String, request: Request, username: String? = null) {
+    if (checkRequest(id)) {
+      this.repository.save(request)
+      changeRequestState(request, ProcessingType.IN_PROGRESS.asState("Amended"), username, "Request amended.")
+    }
   }
 
   fun getAllRequests(): List<Request> {

@@ -1,5 +1,6 @@
 package io.holunda.camunda.taskpool.urlresolver
 
+import io.holunda.camunda.taskpool.api.business.EntryType
 import org.springframework.boot.context.properties.ConfigurationProperties
 
 @ConfigurationProperties(prefix = "camunda.taskpool.form-url-resolver")
@@ -7,6 +8,7 @@ data class FormUrlResolverProperties(
   var defaultTaskTemplate: String = "",
   var defaultApplicationTemplate: String = "",
   var defaultProcessTemplate: String = "",
+  var defaultBoTemplate: String = "",
 
   var applications: Map<String, Application> = mutableMapOf()
 
@@ -23,6 +25,10 @@ data class FormUrlResolverProperties(
     return application.processes.getOrDefault(processDefinitionKey, defaultProcessTemplate)
   }
 
+  fun getBoTemplate(applicationName: String, entryType: EntryType): String {
+    val application = applications[applicationName] ?: return defaultBoTemplate
+    return application.bos.getOrDefault(entryType, defaultBoTemplate)
+  }
 
   fun getApplicationTemplate(applicationName: String): String {
     val application = applications[applicationName] ?: return defaultApplicationTemplate
@@ -30,10 +36,10 @@ data class FormUrlResolverProperties(
     return application.url ?: defaultApplicationTemplate
   }
 
-
   data class Application(
     var url: String? = null,
     var tasks: Map<String, String> = mutableMapOf(),
-    var processes: Map<String, String> = mutableMapOf()
+    var processes: Map<String, String> = mutableMapOf(),
+    var bos: Map<String, String> = mutableMapOf()
   )
 }

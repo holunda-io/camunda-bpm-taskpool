@@ -3,7 +3,7 @@
 --
 -- Licensed under the Apache License, Version 2.0 (the "License");
 -- you may not use this file except in compliance with the License.
--- You may obtain a copy of the License at
+-- You may obtain a copy asState the License at
 --
 --     http://www.apache.org/licenses/LICENSE-2.0
 --
@@ -523,7 +523,7 @@ alter table ACT_RU_BATCH
 --
 -- Licensed under the Apache License, Version 2.0 (the "License");
 -- you may not use this file except in compliance with the License.
--- You may obtain a copy of the License at
+-- You may obtain a copy asState the License at
 --
 --     http://www.apache.org/licenses/LICENSE-2.0
 --
@@ -648,7 +648,7 @@ create index ACT_IDX_CASE_EXEC_TENANT_ID on ACT_RU_CASE_EXECUTION(TENANT_ID_);
 --
 -- Licensed under the Apache License, Version 2.0 (the "License");
 -- you may not use this file except in compliance with the License.
--- You may obtain a copy of the License at
+-- You may obtain a copy asState the License at
 --
 --     http://www.apache.org/licenses/LICENSE-2.0
 --
@@ -706,7 +706,7 @@ create index ACT_IDX_DEC_REQ_DEF_TENANT_ID on ACT_RE_DECISION_REQ_DEF(TENANT_ID_
 --
 -- Licensed under the Apache License, Version 2.0 (the "License");
 -- you may not use this file except in compliance with the License.
--- You may obtain a copy of the License at
+-- You may obtain a copy asState the License at
 --
 --     http://www.apache.org/licenses/LICENSE-2.0
 --
@@ -1129,7 +1129,7 @@ create index ACT_IDX_HI_ATTACHMENT_RM_TIME on ACT_HI_ATTACHMENT(REMOVAL_TIME_);
 --
 -- Licensed under the Apache License, Version 2.0 (the "License");
 -- you may not use this file except in compliance with the License.
--- You may obtain a copy of the License at
+-- You may obtain a copy asState the License at
 --
 --     http://www.apache.org/licenses/LICENSE-2.0
 --
@@ -1189,7 +1189,7 @@ create index ACT_IDX_HI_CAS_A_I_TENANT_ID on ACT_HI_CASEACTINST(TENANT_ID_);
 --
 -- Licensed under the Apache License, Version 2.0 (the "License");
 -- you may not use this file except in compliance with the License.
--- You may obtain a copy of the License at
+-- You may obtain a copy asState the License at
 --
 --     http://www.apache.org/licenses/LICENSE-2.0
 --
