@@ -66,18 +66,4 @@ describe('ProcessEffects', () => {
       done();
     });
   });
-
-  it('should load initial user profile', (done) => {
-    // given:
-    userStore = createStoreServiceMock(UserStoreService, {
-      userId$: 'kermit'
-    });
-    const spy = spyOn(userStore, 'selectUser').and.stub();
-
-    // when:
-    effectsFor(null).loadInitialUserProfile$.subscribe((newAction) => {
-      expect(spy).toHaveBeenCalledWith('kermit');
-      done();
-    });
-  });
 });

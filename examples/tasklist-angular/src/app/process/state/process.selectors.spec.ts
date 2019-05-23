@@ -4,8 +4,8 @@ describe('user selectors', () => {
   const state: StateWithProcesses = {
     process: {
       startableProcesses: [
-        {key: 'foo'},
-        {key: 'bar'}
+        {name: 'foo', description: '', url: ''},
+        {name: 'bar', description: '', url: ''}
       ]
     }
   };
