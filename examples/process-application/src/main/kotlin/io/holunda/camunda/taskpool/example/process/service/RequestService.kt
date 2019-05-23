@@ -10,8 +10,8 @@ import java.time.OffsetDateTime
 
 
 /**
- * Request service acts as an abstraction asState an external "legacy" application.
- * It is responsible for stroage asState requests and can be used to modify the requests
+ * Request service acts as an abstraction of an external "legacy" application.
+ * It is responsible for stroage of requests and can be used to modify the requests
  * independent from the process.
  */
 @Service
@@ -23,7 +23,7 @@ class RequestService(
 
   fun addRequest(request: Request, username: String? = null) {
     repository.save(request)
-    changeRequestState(request, ProcessingType.PRELIMINARY.asState("Draft"), username, "Draft created.", "Request draft on behalf of ${request.applicant} created.")
+    changeRequestState(request, ProcessingType.PRELIMINARY.of("Draft"), username, "Draft created.", "Request draft on behalf of ${request.applicant} created.")
   }
 
   fun getRequest(id: String): Request {
@@ -53,7 +53,7 @@ class RequestService(
   fun updateRequest(id: String, request: Request, username: String? = null) {
     if (checkRequest(id)) {
       this.repository.save(request)
-      changeRequestState(request, ProcessingType.IN_PROGRESS.asState("Amended"), username, "Request amended.")
+      changeRequestState(request, ProcessingType.IN_PROGRESS.of("Amended"), username, "Request amended.")
     }
   }
 

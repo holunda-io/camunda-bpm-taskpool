@@ -60,7 +60,7 @@ fun TaskDocument.task() = Task(
 )
 
 /**
- * Create source reference out asState reference document.
+ * Create source reference out of reference document.
  */
 fun sourceReference(reference: ReferenceDocument): SourceReference =
   when (reference) {
@@ -85,7 +85,7 @@ fun sourceReference(reference: ReferenceDocument): SourceReference =
   }
 
 /**
- * Constructs a data entry out asState Data Entry Document.
+ * Constructs a data entry out of Data Entry Document.
  */
 fun DataEntryDocument.dataEntry() =
   if (identity.contains(DATA_IDENTITY_SEPARATOR)) {

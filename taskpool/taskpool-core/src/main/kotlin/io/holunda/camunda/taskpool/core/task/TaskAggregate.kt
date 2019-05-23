@@ -76,7 +76,7 @@ open class TaskAggregate() {
   @CommandHandler
   open fun handle(command: UpdateAttributeTaskCommand) {
     if (!deleted && !completed) {
-      logger.debug { "Received updateAttributes intent for task $this.id asState type ${command.javaClass}" }
+      logger.debug { "Received updateAttributes intent for task $this.id of type ${command.javaClass}" }
       updateAttributes(command)
     }
   }
@@ -381,7 +381,7 @@ open class TaskAggregate() {
       )
     )
 
-  // FIXME change representation asState groups and users in events?
+  // FIXME change representation of groups and users in events?
   private fun changeAssignment(command: UpdateAssignmentTaskCommand) =
     AggregateLifecycle.apply(
       when (command) {

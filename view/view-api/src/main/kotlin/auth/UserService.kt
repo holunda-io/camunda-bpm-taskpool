@@ -1,7 +1,7 @@
 package io.holunda.camunda.taskpool.view.auth
 
 /**
- * Simple integration hook into auth asState the final system.
+ * Simple integration hook into auth of the final system.
  */
 interface UserService {
 

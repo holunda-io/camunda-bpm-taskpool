@@ -63,7 +63,7 @@ swagger:
   redirect: false
   apiInfo:
     title: Example Process Application
-    description: REST interface asState the example process application.
+    description: REST interface of the example process application.
   dockets:
     process:
       basePackage: "io.holunda.camunda.taskpool.example.process.rest"

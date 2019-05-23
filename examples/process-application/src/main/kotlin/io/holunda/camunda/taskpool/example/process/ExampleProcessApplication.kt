@@ -6,6 +6,7 @@ import io.holunda.camunda.datapool.projector.dataEntrySupplier
 import io.holunda.camunda.taskpool.EnableTaskpoolEngineSupport
 import io.holunda.camunda.taskpool.api.business.DataEntry
 import io.holunda.camunda.taskpool.api.business.EntryId
+import io.holunda.camunda.taskpool.api.business.Modification
 import io.holunda.camunda.taskpool.enricher.*
 import io.holunda.camunda.taskpool.example.process.process.ProcessApproveRequest
 import io.holunda.camunda.taskpool.example.process.service.BusinessDataEntry
@@ -19,6 +20,7 @@ import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.context.annotation.Bean
 import org.springframework.stereotype.Component
+import java.time.OffsetDateTime
 import java.util.function.BiFunction
 
 
@@ -78,7 +80,8 @@ class ExampleProcessApplication {
   )
 
   @Bean
-  fun requestProjection(properties: DataEntrySenderProperties): DataEntryProjectionSupplier = dataEntrySupplier(entryType = Request::javaClass.name,
+  fun requestProjection(properties: DataEntrySenderProperties): DataEntryProjectionSupplier
+    = dataEntrySupplier(entryType = Request::javaClass.name,
     projectionFunction = BiFunction { id, payload ->
       DataEntry(
         entryType = Request::javaClass.name,
@@ -86,7 +89,8 @@ class ExampleProcessApplication {
         applicationName = properties.applicationName,
         payload = serialize(payload),
         type = "Approval Request",
-        name = "AR $id"
+        name = "AR $id",
+        modification = Modification(OffsetDateTime.now())
       )
     })
 

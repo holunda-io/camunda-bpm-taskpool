@@ -14,7 +14,7 @@ interface DataEntryCommandSender {
     entryType: EntryType,
     entryId: EntryId,
     payload: Any,
-    state: DataEntryState = ProcessingType.UNDEFINED.asState(),
+    state: DataEntryState = ProcessingType.UNDEFINED.of(),
     modification: Modification = Modification.now(),
     correlations: CorrelationMap = newCorrelations()
   )

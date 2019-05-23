@@ -53,7 +53,7 @@ open class ProcessDefinitionMongoService(
       .findAll()
       .groupBy { processDefinition -> processDefinition.processDefinitionKey }
 
-    // Find the most current version asState each process
+    // Find the most current version of each process
     val currentProcessDefinitions = processesByDefinition.map {
       it.value.sortedBy { definition -> definition.processDefinitionVersion }.last()
     }

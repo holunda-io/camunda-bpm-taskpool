@@ -2,7 +2,7 @@ package org.camunda.bpm.extension.mockito.process
 
 import org.camunda.bpm.engine.runtime.ProcessInstance
 
-// FIXME, remove as soon as #68 asState camunda-bpm-mockito has been released (probably in version 4.0.1)
+// FIXME, remove as soon as #68 of camunda-bpm-mockito has been released (probably in version 4.0.1)
 class ProcessInstanceFake(
   private val id: String,
   private val businessKey: String,

@@ -4,7 +4,7 @@ import org.springframework.context.annotation.Import
 
 /**
  * Put this annotation on your process application configuration to enable
- * defaults asState task pool engine components.
+ * defaults of task pool engine components.
  */
 @MustBeDocumented
 @Import(TaskpoolEngineSupportConfiguration::class)

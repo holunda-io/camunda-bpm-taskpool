@@ -66,7 +66,7 @@ class AxonCommandListGatewayTest {
     // send the commands
     wrapper.sendToGateway(listOf(createTaskCommand, assignTaskCommand))
 
-    // and verify that (only) the first asState the two was sent
+    // and verify that (only) the first of the two was sent
     verify(commandGateway).send(eq(createTaskCommand), any() as? CommandCallback<CreateTaskCommand, *>)
     verifyNoMoreInteractions(commandGateway)
 

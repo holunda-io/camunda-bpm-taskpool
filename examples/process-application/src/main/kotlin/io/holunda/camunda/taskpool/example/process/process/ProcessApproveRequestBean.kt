@@ -35,7 +35,7 @@ class ProcessApproveRequestBean(
    */
   fun approveProcess(processInstanceId: String, decision: String, comment: String?) {
     if (!ProcessApproveRequest.Values.APPROVE_DECISION.contains(decision.toUpperCase())) {
-      throw IllegalArgumentException("Only one asState APPROVE, RETURN, REJECT is supported.")
+      throw IllegalArgumentException("Only one of APPROVE, RETURN, REJECT is supported.")
     }
 
     val task = taskService
@@ -59,7 +59,7 @@ class ProcessApproveRequestBean(
   fun amendProcess(id: String, action: String, comment: String?) {
 
     if (!ProcessApproveRequest.Values.AMEND_ACTION.contains(action.toUpperCase())) {
-      throw IllegalArgumentException("Only one asState CANCEL, RESUBMIT is supported.")
+      throw IllegalArgumentException("Only one of CANCEL, RESUBMIT is supported.")
     }
 
     val task = taskService.createTaskQuery()
@@ -78,7 +78,7 @@ class ProcessApproveRequestBean(
    */
   fun approveTask(taskId: String, decision: String, comment: String?) {
     if (!ProcessApproveRequest.Values.APPROVE_DECISION.contains(decision.toUpperCase())) {
-      throw IllegalArgumentException("Only one asState APPROVE, RETURN, REJECT is supported.")
+      throw IllegalArgumentException("Only one of APPROVE, RETURN, REJECT is supported.")
     }
 
     val task = taskService
@@ -104,7 +104,7 @@ class ProcessApproveRequestBean(
 
     requestService.changeRequestState(
       id = requestId,
-      state = ProcessingType.IN_PROGRESS.asState(stateWithLog.first),
+      state = ProcessingType.IN_PROGRESS.of(stateWithLog.first),
       username = null, // FIXME
       log = stateWithLog.second,
       logNotes = comment
@@ -117,7 +117,7 @@ class ProcessApproveRequestBean(
    */
   fun amendTask(taskId: String, action: String, request: Request, comment: String?) {
     if (!ProcessApproveRequest.Values.AMEND_ACTION.contains(action.toUpperCase())) {
-      throw IllegalArgumentException("Only one asState CANCEL, RESUBMIT is supported.")
+      throw IllegalArgumentException("Only one of CANCEL, RESUBMIT is supported.")
     }
 
     val task = taskService
@@ -155,7 +155,7 @@ class ProcessApproveRequestBean(
   }
 
   /**
-   * Retrieve the number asState running instances.
+   * Retrieve the number of running instances.
    */
   fun countInstances() = getAllInstancesQuery().active().count()
 

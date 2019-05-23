@@ -43,19 +43,19 @@ data class DataEntryCreatedEvent(
    */
   val description: String? = null,
   /**
-   * State asState data entry.
+   * State of data entry.
    */
-  val state: DataEntryState = ProcessingType.UNDEFINED.asState(""),
+  val state: DataEntryState = ProcessingType.UNDEFINED.of(""),
   /**
    * Modification information.
    */
   val createModification: Modification = Modification.now(),
   /**
-   * List asState authorized users.
+   * List of authorized users.
    */
   val authorizedUsers: List<String> = listOf(),
   /**
-   * List asState authorized groups.
+   * List of authorized groups.
    */
   val authorizedGroups: List<String> = listOf(),
   /**
@@ -102,19 +102,19 @@ data class DataEntryUpdatedEvent(
    */
   val description: String? = null,
   /**
-   * State asState data entry.
+   * State of data entry.
    */
-  val state: DataEntryState = ProcessingType.UNDEFINED.asState(""),
+  val state: DataEntryState = ProcessingType.UNDEFINED.of(""),
   /**
    * Modification information.
    */
   val updateModification: Modification = Modification.now(),
   /**
-   * List asState authorized users.
+   * List of authorized users.
    */
   val authorizedUsers: List<String> = listOf(),
   /**
-   * List asState authorized groups.
+   * List of authorized groups.
    */
   val authorizedGroups: List<String> = listOf(),
   /**

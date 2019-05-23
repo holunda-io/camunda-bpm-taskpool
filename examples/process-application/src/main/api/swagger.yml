@@ -39,7 +39,7 @@ paths:
         - in: path
           name: originator
           type: string
-          description: User id asState the process starter.
+          description: User id of the process starter.
           required: true
       operationId: start
       responses:
@@ -69,7 +69,7 @@ paths:
     post:
       tags:
         - Approve Request
-      summary: Receives form data for the completion asState the task approve request with specified id.
+      summary: Receives form data for the completion of the task approve request with specified id.
       consumes:
         - application/json
       parameters:
@@ -111,7 +111,7 @@ paths:
     post:
       tags:
         - Amend Request
-      summary: Receives form data for the completion asState the task amend request with specified id.
+      summary: Receives form data for the completion of the task amend request with specified id.
       consumes:
         - application/json
       parameters:
@@ -136,34 +136,34 @@ definitions:
     properties:
       id:
         type: string
-        description: Id asState the user task.
+        description: Id of the user task.
       name:
         type: string
         description: Action to execute.
       description:
         type: string
-        description: Description asState the user task.
+        description: Description of the user task.
       formKey:
         type: string
-        description: Form key asState the task (as defined in the process model).
+        description: Form key of the task (as defined in the process model).
       assignee:
         type: string
-        description: User name asState assigned user.
+        description: User name of assigned user.
       createTime:
         type: string
-        description: Creation date and time asState the task.
+        description: Creation date and time of the task.
         format: date-time
       dueDate:
         type: string
-        description: Due date and time asState the task.
+        description: Due date and time of the task.
         format: date-time
       followUpDate:
         type: string
-        description: Follow-up date and time asState the task.
+        description: Follow-up date and time of the task.
         format: date-time
       priority:
         type: integer
-        description: Priority asState the task.
+        description: Priority of the task.
 
     required:
     - id
@@ -212,7 +212,7 @@ definitions:
         $ref: '#/definitions/ApprovalRequest'
       comment:
         type: string
-        description: Comment asState the approver.
+        description: Comment of the approver.
     required:
       - task
       - approvalRequest
@@ -222,7 +222,7 @@ definitions:
     properties:
       decision:
         type: string
-        description: One asState 'APPROVE', 'REJECT' or 'RETURN' denoting the decition asState the approver.
+        description: One of 'APPROVE', 'REJECT' or 'RETURN' denoting the decition of the approver.
       comment:
         type: string
         description: Optional comment.
@@ -234,7 +234,7 @@ definitions:
     properties:
       action:
         type: string
-        description: One asState 'CANCEL' or 'RESUBMIT' actions reflecting the decision asState the originator, how to proceed with the request.
+        description: One of 'CANCEL' or 'RESUBMIT' actions reflecting the decision of the originator, how to proceed with the request.
       approvalRequest:
         $ref: '#/definitions/ApprovalRequest'
         description: Optional changed approval request.
@@ -249,7 +249,7 @@ definitions:
     properties:
       applicationName:
         type: string
-        description: Name asState this process application.
+        description: Name of this process application.
       tasklistUrl:
         type: string
-        description: URL asState the tasklist.
+        description: URL of the tasklist.

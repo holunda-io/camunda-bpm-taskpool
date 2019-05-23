@@ -25,7 +25,7 @@ class ProcessController(
     @ApiParam(value = "Originator") @PathVariable("originator") originator: String
   ): ResponseEntity<Void> {
     processApproveRequestBean.startProcess(id, originator)
-    requestService.changeRequestState(id, ProcessingType.IN_PROGRESS.asState("Submitted"), originator, "New approval request submitted.")
+    requestService.changeRequestState(id, ProcessingType.IN_PROGRESS.of("Submitted"), originator, "New approval request submitted.")
     return noContent().build()
   }
 
@@ -42,7 +42,7 @@ class ProcessController(
   @PostMapping("/request/{id}/action/{action}")
   fun amend(
     @ApiParam("Request id") @PathVariable("id") id: String,
-    @ApiParam("Decision asState the originator", allowableValues = "CANCEL, RESUBMIT", required = true) @PathVariable("action") action: String,
+    @ApiParam("Decision of the originator", allowableValues = "CANCEL, RESUBMIT", required = true) @PathVariable("action") action: String,
     @ApiParam("Comment") @RequestBody comment: String?
   ) {
     processApproveRequestBean.amendProcess(id, action, comment)

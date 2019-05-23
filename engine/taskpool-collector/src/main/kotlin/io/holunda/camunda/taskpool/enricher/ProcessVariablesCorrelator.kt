@@ -16,7 +16,7 @@ class ProcessVariablesCorrelator(vararg correlations: ProcessVariableCorrelation
 
     // handle global correlations
     processCorrelations.globalCorrelations.forEach{
-      // get string representation asState the variable, if found and store it under the entry type
+      // get string representation of the variable, if found and store it under the entry type
       if (variables.containsKey(it.key)) {
         result.addCorrelation(it.value, variables.getValue(it.key).toString())
       }
@@ -26,7 +26,7 @@ class ProcessVariablesCorrelator(vararg correlations: ProcessVariableCorrelation
     val taskCorrelations = processCorrelations.correlations[taskDefinitionKey] ?: emptyMap()
     taskCorrelations.entries.forEach {
 
-      // get string representation asState the variable, if found and store it under the entry type
+      // get string representation of the variable, if found and store it under the entry type
       if (variables.containsKey(it.key)) {
         result.addCorrelation(it.value, variables.getValue(it.key).toString())
       }

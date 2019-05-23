@@ -10,7 +10,7 @@ import org.junit.Test
 import java.util.*
 
 /**
- * Checks assignment engine commands and eventing asState it.
+ * Checks assignment engine commands and eventing of it.
  */
 class TaskAssignmentChangeTest {
 

@@ -13,7 +13,7 @@ data class DataEntry(
    */
   override val entryType: EntryType,
   /**
-   * Id of entry asState this type.
+   * Id of entry of this type.
    */
   override val entryId: EntryId,
   /**
@@ -43,7 +43,7 @@ data class DataEntry(
   /**
    * State of data entry.
    */
-  val state: DataEntryState = ProcessingType.UNDEFINED.asState(""),
+  val state: DataEntryState = ProcessingType.UNDEFINED.of(""),
   /**
    * List of authorized users.
    */

@@ -132,7 +132,7 @@
           </execution>
 
           <!--
-          Enforce resource copy. This is a fix asState Kotlin incremental Compiler bug. See
+          Enforce resource copy. This is a fix of Kotlin incremental Compiler bug. See
           https://discuss.kotlinlang.org/t/kotlin-compiler-incremental-not-copying-resources/5640/5
           -->
           <execution>

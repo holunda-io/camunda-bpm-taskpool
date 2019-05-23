@@ -90,7 +90,7 @@ class TaskEventCollectorService(
 
   /**
    * Fires update command.
-   * The following attributes asState the update event are skipped:
+   * The following attributes of the update event are skipped:
    * <ul>
    *     <li>parentTaskId</li>
    * </ul>

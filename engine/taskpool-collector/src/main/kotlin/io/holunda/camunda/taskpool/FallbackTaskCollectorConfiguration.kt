@@ -50,7 +50,7 @@ open class FallbackTasklistUrlResolverConfiguration {
   @ConditionalOnBean(TaskCollectorProperties::class)
   open fun propertyBasedTasklistUrlResolver(properties: TaskCollectorProperties): TasklistUrlResolver {
     return if (properties.tasklistUrl == null) {
-      throw IllegalStateException("Either set camunda.taskpool.collector.tasklist-url property or provide own implementation asState TasklistUrlResolver")
+      throw IllegalStateException("Either set camunda.taskpool.collector.tasklist-url property or provide own implementation of TasklistUrlResolver")
     } else {
       object : TasklistUrlResolver {
         override fun getTasklistUrl(): String = properties.tasklistUrl!!

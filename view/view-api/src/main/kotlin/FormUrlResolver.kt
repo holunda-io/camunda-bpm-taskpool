@@ -1,7 +1,7 @@
 package io.holunda.camunda.taskpool.view
 
 /**
- * Facility to resolve URLs asState forms.
+ * Facility to resolve URLs of forms.
  */
 interface FormUrlResolver {
   /**

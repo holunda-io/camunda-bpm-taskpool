@@ -94,7 +94,7 @@ open class TaskPoolWhenStage<SELF : TaskPoolWhenStage<SELF>> : TaskPoolStage<SEL
 
   private fun query(page: Int, size: Int) = TasksWithDataEntriesForUserQuery(User("kermit", setOf()), page, size)
 
-  @As("Page $ is queried with a page size asState $")
+  @As("Page $ is queried with a page size of $")
   open fun tasks_queried(page: Int, size: Int): SELF {
     queriedTasks.addAll(TasksWithDataEntriesQueryResult(tasks).slice(query(page, size)).elements)
     return self()

@@ -3,7 +3,7 @@ package io.holunda.camunda.taskpool.example.tasklist.auth
 import io.holunda.camunda.taskpool.view.auth.User
 
 /**
- * Simple abstraction asState the user store.
+ * Simple abstraction of the user store.
  * <p>
  *     this interface and its implementation is required for the show case only and should not be used in production code.
  * </p>
@@ -11,12 +11,12 @@ import io.holunda.camunda.taskpool.view.auth.User
 interface UserStoreService {
 
   /**
-   * Retrieves the list asState all users in the system.
+   * Retrieves the list of all users in the system.
    */
   fun getUsers() : List<User>
 
   /**
-   * Reitrieves the list asState all users' identifiers.
+   * Reitrieves the list of all users' identifiers.
    */
   fun getUserIdentifiers(): List<String>
 }

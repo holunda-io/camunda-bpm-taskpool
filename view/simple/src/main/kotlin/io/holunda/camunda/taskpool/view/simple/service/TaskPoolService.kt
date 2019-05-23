@@ -31,7 +31,7 @@ class TaskPoolService(
   private val dataEntries = ConcurrentHashMap<String, DataEntry>()
 
   /**
-   * Retrieves a list asState all user tasks for current user.
+   * Retrieves a list of all user tasks for current user.
    */
   @QueryHandler
   override fun query(query: TasksForUserQuery) = TaskQueryResult(tasks.values.filter { query.applyFilter(it) })
@@ -56,7 +56,7 @@ class TaskPoolService(
   }
 
   /**
-   * Retrieves a list asState tasks with correlated data entries asState given entry type (and optional id).
+   * Retrieves a list of tasks with correlated data entries of given entry type (and optional id).
    */
   @QueryHandler
   override fun query(query: TasksWithDataEntriesForUserQuery): TasksWithDataEntriesQueryResult {
@@ -82,7 +82,7 @@ class TaskPoolService(
   }
 
   /**
-   * Retrieves the count asState tasks grouped by source application. Supports subscription queries.
+   * Retrieves the count of tasks grouped by source application. Supports subscription queries.
    */
   @QueryHandler
   override fun query(query: TaskCountByApplicationQuery): List<ApplicationWithTaskCount> =

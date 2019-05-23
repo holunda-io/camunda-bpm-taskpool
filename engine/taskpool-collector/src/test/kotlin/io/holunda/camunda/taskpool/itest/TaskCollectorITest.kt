@@ -34,7 +34,7 @@ import java.util.concurrent.TimeUnit
 
 
 /**
- * This ITests simulates work asState Camunda collector including variable enrichment.
+ * This ITests simulates work of Camunda collector including variable enrichment.
  */
 @RunWith(SpringRunner::class)
 @SpringBootTest(classes = [TaskCollectorTestApplication::class], webEnvironment = SpringBootTest.WebEnvironment.NONE)
@@ -264,7 +264,7 @@ class TaskCollectorITest {
           .putValue("object", MyStructure("name", "key", 1))
       )
 
-    // wait for async continuation: we must not trigger the execution asState the job explicitly but instead await its execution
+    // wait for async continuation: we must not trigger the execution of the job explicitly but instead await its execution
     assertThat(instance).isNotNull
     assertThat(instance).isStarted
     await().untilAsserted { assertThat(job(instance)).isNull() }

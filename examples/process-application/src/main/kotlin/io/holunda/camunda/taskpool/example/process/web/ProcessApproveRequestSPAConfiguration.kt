@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit
 
 
 /**
- * Configuration asState the base URL for th content delivered by this module.
+ * Configuration of the base URL for th content delivered by this module.
  */
 object Web {
 

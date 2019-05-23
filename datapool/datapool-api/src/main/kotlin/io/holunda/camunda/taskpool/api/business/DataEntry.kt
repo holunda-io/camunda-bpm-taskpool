@@ -43,19 +43,19 @@ data class DataEntry(
    */
   val description: String? = null,
   /**
-   * State asState data entry.
+   * State of data entry.
    */
-  val state: DataEntryState = ProcessingType.UNDEFINED.asState(""),
+  val state: DataEntryState = ProcessingType.UNDEFINED.of(""),
   /**
    * Modification information.
    */
   val modification: Modification = NONE,
   /**
-   * List asState authorized users.
+   * List of authorized users.
    */
   val authorizedUsers: List<String> = listOf(),
   /**
-   * List asState authorized groups.
+   * List of authorized groups.
    */
   val authorizedGroups: List<String> = listOf(),
   /**
@@ -82,17 +82,17 @@ enum class ProcessingType {
   CANCELLED,
   UNDEFINED;
 
-  fun asState(state: String = "") = DataEntryStateImpl(processingType = this, state = state)
+  fun of(state: String = "") = DataEntryStateImpl(processingType = this, state = state)
 }
 
 
 data class Modification(
   /**
-   * Time asState update
+   * Time of update
    */
   val time: OffsetDateTime? = null,
   /**
-   * Username asState the user who updated the business entry.
+   * Username of the user who updated the business entry.
    */
   val username: String? = null,
   /**

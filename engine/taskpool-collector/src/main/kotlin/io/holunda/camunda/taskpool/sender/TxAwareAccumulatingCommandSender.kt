@@ -9,7 +9,7 @@ import org.springframework.transaction.support.TransactionSynchronizationAdapter
 import org.springframework.transaction.support.TransactionSynchronizationManager
 
 /**
- * Collects commands asState one transaction, accumulates them to one command and sends it after TX commit.
+ * Collects commands of one transaction, accumulates them to one command and sends it after TX commit.
  */
 open class TxAwareAccumulatingCommandSender(
   private val commandListGateway: CommandListGateway,

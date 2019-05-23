@@ -29,7 +29,7 @@ class ProjectingCommandAccumulator : CommandAccumulator {
     original = command,
     details = details,
     /**
-     * Configuration to change default behavior asState replacing the property.
+     * Configuration to change default behavior of replacing the property.
      * For delta-commands (add/delete candidate groups/users), the lists has to be adjusted
      */
     propertyOperationConfig = mutableMapOf<KClass<out Any>, PropertyOperation>().apply {

@@ -9,9 +9,9 @@ import io.holunda.camunda.taskpool.view.query.PageableSortableQuery
  * Query for tasks with correlated data entries for given user.
  * @param user user able to see the tasks.
  * @param page current page.
- * @param size number asState entries on every page.
- * @param sort property name asState the {@link TaskWithDataEntries} to sort.
- * @param filters list asState filters
+ * @param size number of entries on every page.
+ * @param sort property name of the {@link TaskWithDataEntries} to sort.
+ * @param filters list of filters
  */
 data class TasksWithDataEntriesForUserQuery(
   val user: User,
