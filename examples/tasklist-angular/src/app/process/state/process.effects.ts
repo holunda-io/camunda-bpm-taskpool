@@ -2,10 +2,11 @@ import {Injectable} from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {UserStoreService} from 'app/user/state/user.store-service';
 import {ProcessService} from 'tasklist/services';
-import {ProcessActionTypes, StartableProcessDefinitionsLoaded} from 'app/process/state/process.actions';
+import {LoadStartableProcessDefinitions, ProcessActionTypes, StartableProcessDefinitionsLoaded} from 'app/process/state/process.actions';
 import {flatMap, map, withLatestFrom} from 'rxjs/operators';
 import {ProcessDefinition as ProcessDto} from 'tasklist/models';
 import {ProcessDefinition} from 'app/process/state/process.reducer';
+import {UserActionTypes} from 'app/user/state/user.actions';
 
 @Injectable()
 export class ProcessEffects {
@@ -15,6 +16,12 @@ export class ProcessEffects {
     private userStore: UserStoreService,
     private actions$: Actions) {
   }
+
+  @Effect()
+  loadProcessesOnUserSelect = this.actions$.pipe(
+    ofType(UserActionTypes.SelectUser),
+    map(() => new LoadStartableProcessDefinitions())
+  );
 
   @Effect()
   loadStartableProcesses$ = this.actions$.pipe(
@@ -28,6 +35,10 @@ export class ProcessEffects {
 
 function mapFromDto(processDtos: ProcessDto[]): ProcessDefinition[] {
   return processDtos.map(dto => {
-    return {key: dto.definitionKey}
+    return {
+      name: dto.processName,
+      url: dto.url,
+      description: dto.description
+    }
   })
 }

@@ -10,8 +10,8 @@ describe('processReducer', () => {
   it('updates available users', () => {
     // given:
     const procDefs: ProcessDefinition[] = [
-      {key: 'foo'},
-      {key: 'bar'}
+      {name: 'foo', description: '', url: ''},
+      {name: 'bar', description: '', url: ''}
     ];
     const action = new StartableProcessDefinitionsLoaded(procDefs);
 

@@ -4,8 +4,8 @@ import {ProcesslistComponent} from './process-list.component';
 import {FormsModule} from '@angular/forms';
 
 import {FilterService} from 'app/services/filter.service';
-import {ProcessHelperService} from 'app/services/process.helper.service';
-import {of} from 'rxjs';
+import {provideStoreServiceMock} from '@ngxp/store-service/testing';
+import {ProcessStoreService} from 'app/process/state/process.store-service';
 
 describe('Component: TasklistComponent', () => {
 
@@ -23,7 +23,7 @@ describe('Component: TasklistComponent', () => {
       ],
       providers: [
         FilterService,
-        {provide: ProcessHelperService, useValue: {processes: of([])}}
+        provideStoreServiceMock(ProcessStoreService)
       ],
     }).compileComponents().then(() => {
       // create component and test fixture

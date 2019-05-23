@@ -1,26 +1,23 @@
-import { Component } from '@angular/core';
-import { ProcessDefinition } from 'tasklist/models';
-import { ProcessHelperService } from 'app/services/process.helper.service';
+import {Component, OnInit} from '@angular/core';
+import {ProcessStoreService} from 'app/process/state/process.store-service';
+import {ProcessDefinition} from 'app/process/state/process.reducer';
+import {Observable} from 'rxjs';
 
 @Component({
   selector: 'tasks-process-list',
   templateUrl: './process-list.component.html',
   styleUrls: ['process-list.component.scss']
 })
-export class ProcesslistComponent {
+export class ProcesslistComponent implements OnInit {
 
-  processes: Array<ProcessDefinition> = [];
+  processes$: Observable<ProcessDefinition[]>;
 
   constructor(
-    private processHelper: ProcessHelperService
+    private processStore: ProcessStoreService
   ) {
-    this.subscribe();
   }
 
-  subscribe() {
-    this.processHelper.processes.subscribe((processes: Array<ProcessDefinition>) => {
-      this.processes = processes.filter((process: ProcessDefinition) => process.startable);
-    });
+  ngOnInit() {
+    this.processes$ = this.processStore.startableProcesses$();
   }
-
 }

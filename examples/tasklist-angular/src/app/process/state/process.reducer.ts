@@ -1,7 +1,9 @@
 import {ProcessActions, ProcessActionTypes} from './process.actions';
 
 export interface ProcessDefinition {
-  key: string
+  name: string,
+  description: string,
+  url: string
 }
 
 export interface ProcessState {

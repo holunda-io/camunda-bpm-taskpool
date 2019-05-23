@@ -8,7 +8,7 @@ import {
   UserActionTypes,
   UserProfileLoadedAction
 } from './user.actions';
-import {first, flatMap, map, tap} from 'rxjs/operators';
+import {flatMap, map} from 'rxjs/operators';
 import {UserProfile as UserDto} from 'tasklist/models';
 import {UserProfile} from './user.reducer';
 import {TitleCasePipe} from '@angular/common';
@@ -45,13 +45,6 @@ export class UserEffects {
       map((profile) => mapFromDto(profile, userId))
     )),
     map((profile) => new UserProfileLoadedAction(profile)),
-  );
-
-  // Must be defined below selectUser$ and following effects.
-  @Effect({dispatch: false})
-  loadInitialUserProfile$ = this.userStore.userId$().pipe(
-    first(),
-    tap((userId) => this.userStore.selectUser(userId))
   );
 }
 

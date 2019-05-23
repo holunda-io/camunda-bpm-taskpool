@@ -8,7 +8,6 @@ import {TaskHelperService} from 'app/services/task.helper.service';
 import {FieldNamePipe} from 'app/services/field-name.pipe';
 import {FilterService} from 'app/services/filter.service';
 import {SortableColumnComponent} from 'app/components/sorter/sortable-column.component';
-import {ProcessHelperService} from 'app/services/process.helper.service';
 import {provideStoreServiceMock} from '@ngxp/store-service/testing';
 import {UserStoreService} from 'app/user/state/user.store-service';
 import {of} from 'rxjs';
@@ -37,7 +36,6 @@ describe('Component: TasklistComponent', () => {
           currentUserProfile$: {username: '', userIdentifier: '', fullName: ''}
         }),
         {provide: TaskHelperService, useValue: {tasks: of([])}},
-        {provide: ProcessHelperService, useValue: {processes: of([])}}
       ],
     }).compileComponents().then(() => {
       // create component and test fixture

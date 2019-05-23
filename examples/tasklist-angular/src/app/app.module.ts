@@ -18,7 +18,6 @@ import {SortableColumnComponent} from 'app/components/sorter/sortable-column.com
 import {ExternalUrlDirective} from 'app/components/external-url.directive';
 import {PageNotFoundComponent} from 'app/components/page-not-found/page-not-found.component';
 import {AppRoutingModule} from './app-routing.module';
-import {ProcessHelperService} from './services/process.helper.service';
 import {FooterComponent} from './footer/footer.component';
 import {HeaderComponent} from './header/header.component';
 import {SearchComponent} from './search/search.component';
@@ -73,7 +72,6 @@ export function storeLogger(reducer) {
   ],
   providers: [
     TaskHelperService,
-    ProcessHelperService,
     FilterService
   ],
   bootstrap: [AppComponent]

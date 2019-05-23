@@ -9,7 +9,7 @@ import {LoadStartableProcessDefinitions} from './process.actions';
 export class ProcessStoreService extends StoreService<ProcessState> {
 
   @Select(startableProcesses)
-  startableProcesses: () => Observable<ProcessDefinition[]>;
+  startableProcesses$: () => Observable<ProcessDefinition[]>;
 
   @Dispatch(LoadStartableProcessDefinitions)
   loadStartableProcessDefinitions: () => void;

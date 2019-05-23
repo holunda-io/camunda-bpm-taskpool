@@ -27,16 +27,16 @@ describe('ProcessEffects', () => {
     // given:
     const action = new LoadStartableProcessDefinitions();
     const procDtos = [
-      {definitionKey: 'foo'},
-      {definitionKey: 'bar'}
+      {processName: 'foo', description: '', url: ''},
+      {processName: 'bar', description: '', url: ''}
     ];
     const serviceSpy = spyOn(processService, 'getStartableProcesses').and.returnValue(of(procDtos));
 
     // when:
     effectsFor(action).loadStartableProcesses$.subscribe((newAction) => {
       expect(newAction.payload).toEqual([
-        {key: 'foo'},
-        {key: 'bar'}
+        {name: 'foo', description: '', url: ''},
+        {name: 'bar', description: '', url: ''}
       ]);
       done();
     });
