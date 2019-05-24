@@ -1,4 +1,4 @@
-import  {Action} from '@ngrx/store';
+import {Action} from '@ngrx/store';
 import {ProcessDefinition} from 'app/process/state/process.reducer';
 
 export enum ProcessActionTypes {

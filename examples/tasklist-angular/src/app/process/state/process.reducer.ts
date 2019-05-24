@@ -1,13 +1,13 @@
 import {ProcessActions, ProcessActionTypes} from './process.actions';
 
 export interface ProcessDefinition {
-  name: string,
-  description: string,
-  url: string
+  name: string;
+  description: string;
+  url: string;
 }
 
 export interface ProcessState {
-  startableProcesses: ProcessDefinition[]
+  startableProcesses: ProcessDefinition[];
 }
 
 const initialState: ProcessState = {

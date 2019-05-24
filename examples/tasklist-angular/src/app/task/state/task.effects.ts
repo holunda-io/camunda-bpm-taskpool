@@ -18,9 +18,9 @@ export class TaskEffects {
   loadTasks$ = this.actions$.pipe(
     ofType(TaskActionTypes.LoadTasks),
     withLatestFrom(this.userStore.userId$()),
-    filter(([_,userId]) => !!userId),
-    flatMap(([_,userId]) => {
-      console.log('test')
+    filter(([_, userId]) => !!userId),
+    flatMap(([_, userId]) => {
+      console.log('test');
       return this.taskService.getTasks({
         filter: [],
         page: 0,
@@ -30,8 +30,8 @@ export class TaskEffects {
       });
     }),
     map(tasks => {
-      console.log('foo')
+      console.log('foo');
       return new TasksLoadedAction(tasks);
     })
-  )
+  );
 }

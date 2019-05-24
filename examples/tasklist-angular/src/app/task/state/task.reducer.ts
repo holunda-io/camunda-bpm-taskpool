@@ -3,9 +3,9 @@ import {Field} from 'app/services/filter.service';
 import {TaskWithDataEntries} from 'tasklist/models';
 
 export interface TaskState {
-  sortingColumn: Field,
-  taskCount: number,
-  tasks: TaskWithDataEntries[]
+  sortingColumn: Field;
+  taskCount: number;
+  tasks: TaskWithDataEntries[];
 }
 
 const initialState: TaskState = {
