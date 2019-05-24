@@ -1,22 +1,22 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Task, TaskWithDataEntries} from 'tasklist/models';
 import {TaskHelperService} from 'app/services/task.helper.service';
-import {FilterService} from 'app/services/filter.service';
 import {UserStoreService} from 'app/user/state/user.store-service';
 import {UserProfile} from 'app/user/state/user.reducer';
 import {TaskStoreService} from 'app/task/state/task.store-service';
 import {Observable} from 'rxjs';
+import {itemsPerPage} from 'app/task/state/task.selectors';
 
 @Component({
   selector: 'tasks-tasklist',
   templateUrl: './tasklist.component.html',
   styleUrls: ['tasklist.component.scss']
 })
-export class TasklistComponent {
+export class TasklistComponent implements OnInit {
 
   itemsPerPage: number;
-  totalItems: any;
-  page: number;
+  totalItems: Observable<number>;
+  page: Observable<number>;
   currentDataTab = 'description';
   currentProfile: UserProfile;
   tasks: Observable<TaskWithDataEntries[]>;
@@ -24,13 +24,16 @@ export class TasklistComponent {
   constructor(
     private taskStore: TaskStoreService,
     private taskHelper: TaskHelperService,
-    private filterService: FilterService,
     private userStore: UserStoreService
   ) {
     this.subscribe();
-    this.page = this.filterService.page + 1;
-    this.itemsPerPage = this.filterService.itemsPerPage;
     this.tasks = this.taskStore.tasks();
+  }
+
+  ngOnInit(): void {
+    this.totalItems = this.taskStore.taskCount$();
+    this.itemsPerPage = itemsPerPage;
+    this.page = this.taskStore.selectedPage$();
   }
 
   claim($event, task: Task) {
@@ -46,10 +49,7 @@ export class TasklistComponent {
   }
 
   loadPage(page: number) {
-    if (this.page - 1 !== this.filterService.page) {
-      this.filterService.page = this.page - 1;
-      this.taskHelper.reload();
-    }
+    this.taskStore.selectPage(page);
   }
 
   toFieldSet(payload: any) {
@@ -62,9 +62,6 @@ export class TasklistComponent {
   }
 
   subscribe() {
-    this.filterService.count.subscribe((count: number) => {
-      this.totalItems = count;
-    });
     this.userStore.currentUserProfile$().subscribe(userProfile => {
       this.currentProfile = userProfile;
     });

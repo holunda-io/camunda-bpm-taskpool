@@ -1,9 +1,9 @@
 import {Injectable} from '@angular/core';
 import {Dispatch, Select, StoreService} from '@ngxp/store-service';
-import {ClaimTaskAction, LoadTasksAction, UnclaimTaskAction} from './task.actions';
-import {TaskState} from 'app/task/state/task.reducer';
+import {ClaimTaskAction, LoadTasksAction, SelectPageAction, UnclaimTaskAction, UpdateSortingColumnAction} from './task.actions';
+import {Field, TaskState} from 'app/task/state/task.reducer';
 import {Task, TaskWithDataEntries} from 'tasklist/models';
-import {getTasks} from 'app/task/state/task.selectors';
+import {getCount, getSelectedPage, getSortingColumn, getTasks} from 'app/task/state/task.selectors';
 import {Observable} from 'rxjs';
 
 @Injectable()
@@ -11,6 +11,12 @@ export class TaskStoreService extends StoreService<TaskState> {
 
   @Dispatch(LoadTasksAction)
   loadTasks: () => void;
+
+  @Dispatch(UpdateSortingColumnAction)
+  updateSortingColumn: (field: Field) => void;
+
+  @Dispatch(SelectPageAction)
+  selectPage: (page: number) => void;
 
   @Dispatch(ClaimTaskAction)
   claimTask: (task: Task) => void;
@@ -20,4 +26,13 @@ export class TaskStoreService extends StoreService<TaskState> {
 
   @Select(getTasks)
   tasks: () => Observable<TaskWithDataEntries[]>;
+
+  @Select(getSortingColumn)
+  sortingColumn$: () => Observable<Field>;
+
+  @Select(getCount)
+  taskCount$: () => Observable<number>;
+
+  @Select(getSelectedPage)
+  selectedPage$: () => Observable<number>;
 }

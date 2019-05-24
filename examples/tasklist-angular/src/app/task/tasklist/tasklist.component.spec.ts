@@ -5,13 +5,13 @@ import {NgbPagination, NgbRadioGroup} from '@ng-bootstrap/ng-bootstrap';
 import {FormsModule} from '@angular/forms';
 
 import {TaskHelperService} from 'app/services/task.helper.service';
-import {FilterService} from 'app/services/filter.service';
 import {SortableColumnComponent} from 'app/task/sorter/sortable-column.component';
 import {provideStoreServiceMock} from '@ngxp/store-service/testing';
 import {UserStoreService} from 'app/user/state/user.store-service';
 import {of} from 'rxjs';
 import {FieldNamePipe} from 'app/task/field-name.pipe';
 import {TaskStoreService} from 'app/task/state/task.store-service';
+import {SortDirection} from 'app/task/state/task.reducer';
 
 describe('Component: TasklistComponent', () => {
 
@@ -32,9 +32,9 @@ describe('Component: TasklistComponent', () => {
         SortableColumnComponent
       ],
       providers: [
-        FilterService,
         provideStoreServiceMock(TaskStoreService, {
-          tasks: []
+          tasks: [],
+          sortingColumn$: {fieldName: 'task.dueDate', direction: SortDirection.DESC }
         }),
         provideStoreServiceMock(UserStoreService, {
           currentUserProfile$: {username: '', userIdentifier: '', fullName: ''}

@@ -103,9 +103,9 @@
       </div>
       <div class="card-footer bg-transparent">
         <ngb-pagination class="d-flex justify-content-center pagination-sm"
-          [collectionSize]="totalItems"
+          [collectionSize]="(totalItems | async)"
           [pageSize]="itemsPerPage"
-          [(page)]="page"
+          [page]="(page | async)"
           [maxSize]="7"
           [rotate]="false"
           (pageChange)="loadPage($event)"></ngb-pagination>

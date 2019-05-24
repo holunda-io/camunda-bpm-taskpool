@@ -2,8 +2,6 @@ import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {ProcesslistComponent} from './process-list.component';
 import {FormsModule} from '@angular/forms';
-
-import {FilterService} from 'app/services/filter.service';
 import {provideStoreServiceMock} from '@ngxp/store-service/testing';
 import {ProcessStoreService} from 'app/process/state/process.store-service';
 
@@ -22,7 +20,6 @@ describe('Component: TasklistComponent', () => {
         ProcesslistComponent
       ],
       providers: [
-        FilterService,
         provideStoreServiceMock(ProcessStoreService)
       ],
     }).compileComponents().then(() => {

@@ -1,6 +1,7 @@
-import {Component, Input, OnInit, HostListener, OnDestroy} from '@angular/core';
-import {FilterService, Field, SortDirection} from 'app/services/filter.service';
-import { Subscription } from 'rxjs';
+import {Component, HostListener, Input, OnDestroy, OnInit} from '@angular/core';
+import {Subscription} from 'rxjs';
+import {TaskStoreService} from 'app/task/state/task.store-service';
+import {Field, SortDirection} from 'app/task/state/task.reducer';
 
 @Component({
   selector: '[sortable-column]',
@@ -19,17 +20,16 @@ export class SortableColumnComponent implements OnInit, OnDestroy {
 
   @HostListener('click')
   toggle() {
-    this.direction = this.direction === SortDirection.ASC ? SortDirection.DESC : SortDirection.ASC;
-    this.filterService.columnSorted({ fieldName: this.fieldName, direction: this.direction });
+    const newDirection = this.direction === SortDirection.ASC ? SortDirection.DESC : SortDirection.ASC;
+    this.taskStore.updateSortingColumn({ fieldName: this.fieldName, direction: newDirection });
   }
 
-  constructor(private filterService: FilterService) {
-
+  constructor(private taskStore: TaskStoreService) {
   }
 
   ngOnInit() {
     // reset the field, if other is used as sorter
-    this.columnSortedSubscription = this.filterService.columnSorted$.subscribe( (fieldEvent: Field) => {
+    this.columnSortedSubscription =  this.taskStore.sortingColumn$().subscribe( (fieldEvent: Field) => {
       if (fieldEvent && this.fieldName !== fieldEvent.fieldName) {
         this.direction = undefined;
       } else {

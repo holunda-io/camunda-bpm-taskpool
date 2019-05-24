@@ -1,12 +1,10 @@
 import {Injectable, OnDestroy} from '@angular/core';
 import {TaskService} from 'tasklist/services';
 import {Task, TaskWithDataEntries} from 'tasklist/models';
-import {StrictHttpResponse} from 'tasklist/strict-http-response';
-import {BehaviorSubject} from 'rxjs';
-import {Field, FilterService} from './filter.service';
-import {Subscription} from 'rxjs';
+import {BehaviorSubject, Subscription} from 'rxjs';
 import {UserStoreService} from 'app/user/state/user.store-service';
 import {UserProfile} from 'app/user/state/user.reducer';
+import {TaskStoreService} from 'app/task/state/task.store-service';
 
 
 @Injectable()
@@ -20,16 +18,12 @@ export class TaskHelperService implements OnDestroy {
 
   constructor(
     private taskService: TaskService,
-    private filterService: FilterService,
+    private taskStore: TaskStoreService,
     private userStore: UserStoreService
   ) {
 
     this.currentProfileSubscription = this.userStore.currentUserProfile$().subscribe(profile => {
       this.currentProfile = profile;
-    });
-
-    this.sortSubscription = this.filterService.columnSorted$.subscribe((fieldEvent: Field) => {
-      //this.reload();
     });
   }
 
@@ -78,18 +72,5 @@ export class TaskHelperService implements OnDestroy {
     if (this.taskSubscription) {
       this.taskSubscription.unsubscribe();
     }
-    this.taskSubscription = this.taskService.getTasksResponse({
-      filter: this.filterService.filter,
-      page: this.filterService.page,
-      size: this.filterService.itemsPerPage,
-      sort: this.filterService.getSort(),
-      XCurrentUserID: this.currentProfile.userIdentifier
-    }).subscribe((response: StrictHttpResponse<Array<TaskWithDataEntries>>) => {
-      this.tasksSubject.next(response.body);
-      this.filterService.countUpdate(Number(response.headers.get('X-ElementCount')));
-    }, (error) => {
-      console.log('Error loading tasks', error);
-    });
-
   }
 }

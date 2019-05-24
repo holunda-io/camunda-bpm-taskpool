@@ -4,6 +4,7 @@ describe('task selectors', () => {
   const state: StateWithTasks = {
     task: {
       sortingColumn: null,
+      page: 0,
       taskCount: 0,
       tasks: []
     }
