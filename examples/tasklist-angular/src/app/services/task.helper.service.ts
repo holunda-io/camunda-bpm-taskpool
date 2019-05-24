@@ -2,10 +2,11 @@ import {Injectable, OnDestroy} from '@angular/core';
 import {TaskService} from 'tasklist/services';
 import {Task, TaskWithDataEntries} from 'tasklist/models';
 import {StrictHttpResponse} from 'tasklist/strict-http-response';
-import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+import {BehaviorSubject} from 'rxjs';
 import {Field, FilterService} from './filter.service';
 import {Subscription} from 'rxjs';
-import {Profile, ProfileHelperService} from 'app/services/profile.helper.service';
+import {UserStoreService} from 'app/user/state/user.store-service';
+import {UserProfile} from 'app/user/state/user.reducer';
 
 
 @Injectable()
@@ -15,15 +16,15 @@ export class TaskHelperService implements OnDestroy {
   private sortSubscription: Subscription;
   private currentProfileSubscription: Subscription;
   private taskSubscription: Subscription;
-  private currentProfile: Profile = this.profileHelperService.noProfile;
+  private currentProfile: UserProfile;
 
   constructor(
     private taskService: TaskService,
     private filterService: FilterService,
-    private profileHelperService: ProfileHelperService
+    private userStore: UserStoreService
   ) {
 
-    this.currentProfileSubscription = this.profileHelperService.currentProfile$.subscribe(profile => {
+    this.currentProfileSubscription = this.userStore.currentUserProfile$().subscribe(profile => {
       this.currentProfile = profile;
       this.reload();
     });
@@ -57,6 +58,9 @@ export class TaskHelperService implements OnDestroy {
   }
 
   unclaim(task: Task): void {
+    if (!this.currentProfile) {
+      return;
+    }
     console.log('Un-claiming task', task.id);
     this.taskService.unclaim({id: task.id, XCurrentUserID: this.currentProfile.userIdentifier}).subscribe(
       (response) => {
@@ -71,7 +75,7 @@ export class TaskHelperService implements OnDestroy {
 
   reload(): void {
 
-    if (this.currentProfile === this.profileHelperService.noProfile) {
+    if (!this.currentProfile) {
       // load only if a real user is set.
       return;
     }

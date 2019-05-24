@@ -1,62 +1,18 @@
 <div class="container-fluid">
-  <div class="row">
-    <div class="col-lg-12">
-      <nav class="navbar navbar-expand-md navbar-light">
-        <a class="navbar-brand" href="#">
-          <h1><img src="assets/holunda-io-logo.png" title="Tasks">Tasks</h1>
-        </a>
-        <button class="navbar-toggler hidden-sm-up" type="button" (click)="isNavbarCollapsed = !isNavbarCollapsed" data-target="#navbarsDefault" aria-controls="navbarsDefault" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div [ngbCollapse]="isNavbarCollapsed" class="collapse navbar-collapse" id="navbarsDefault">
-            <ul class="navbar-nav">
-              <li class="nav-item dropdown" ngbDropdown>
-                <a class="nav-link dropdown-toggle" href="#" ngbDropdownToggle>New ...</a>
-                <app-process-list></app-process-list>
-              </li>
-            </ul>
-            <ul class="navbar-nav ml-auto">
-              <li class="nav-item">
-                <form class="form-inline">
-                    <input class="form-control form-control-sm mr-sm-2 mb-0" type="text" placeholder="Search" aria-label="Search">
-                    <button class="form-control btn btn-sm btn-outline-secondary" type="submit">Search</button>
-                </form>
-              </li>
+  <tasks-header>
 
-              <li class="nav-item dropdown avatar" ngbDropdown>
-                <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" ngbDropdownToggle>
-                  <!--
-                  <img src="{{ user.avatar }}" class="rounded-circle z-depth-0" alt="avatar image" height="35">
-                  -->
-                  <i class="fa fa-user"></i>
-                  {{ currentProfile.fullName }}
-                </a>
-                <ul class="dropdown-menu" ngbDropdownMenu>
-
-                  <li *ngFor="let userIdentifier of userIds"><span class="dropdown-item" (click)="setCurrentUser(userIdentifier)">{{ userIdentifier }}</span></li>
-<!--
-                  <li class="divider"></li>
-                  <li><a class="dropdown-item" href="#">Sign Out <span class="fa fa-sign-out pull-right"></span></a></li>
--->
-                </ul>
-              </li>
-            </ul>
-
-        </div>
-      </nav>
+    <div class="navbar-nav">
+      <tasks-process-list></tasks-process-list>
     </div>
-  </div>
+
+    <div class="flex-spacer"></div>
+
+    <div class="navbar-nav">
+      <tasks-search></tasks-search>
+      <tasks-user-selection></tasks-user-selection>
+    </div>
+  </tasks-header>
   <p>A list of tasks gathered by Camunda BPM Taskpool.</p>
-  <app-tasklist></app-tasklist>
-  <div class="row">
-    <div class="col-lg-12">
-        <footer class="page-footer">
-            <nav class="navbar navbar-dark bg-dark mt-5 fixed-bottom">
-                <div class="navbar-expand m-auto navbar-text">
-                  Made with <i class="fa fa-heart"></i> by <a href="https://github.com/holunda-io">holunda.io</a>
-                </div>
-            </nav>
-        </footer>
-    </div>
-  </div>
+  <tasks-tasklist></tasks-tasklist>
+  <tasks-footer></tasks-footer>
 </div>

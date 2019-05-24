@@ -1,17 +1,16 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import 'rxjs/add/observable/of';
 import {TasklistComponent} from './tasklist.component';
-import {Observable} from 'rxjs-compat';
 import {NgbPagination, NgbRadioGroup} from '@ng-bootstrap/ng-bootstrap';
 import {FormsModule} from '@angular/forms';
 
 import {TaskHelperService} from 'app/services/task.helper.service';
 import {FieldNamePipe} from 'app/services/field-name.pipe';
 import {FilterService} from 'app/services/filter.service';
-import {ProfileHelperService} from 'app/services/profile.helper.service';
 import {SortableColumnComponent} from 'app/components/sorter/sortable-column.component';
-import {ProcessHelperService} from 'app/services/process.helper.service';
+import {provideStoreServiceMock} from '@ngxp/store-service/testing';
+import {UserStoreService} from 'app/user/state/user.store-service';
+import {of} from 'rxjs';
 
 describe('Component: TasklistComponent', () => {
 
@@ -33,14 +32,10 @@ describe('Component: TasklistComponent', () => {
       ],
       providers: [
         FilterService,
-        {
-          provide: ProfileHelperService, useValue: {
-            currentProfile$: Observable.of([]),
-            noProfile: {username: '', userIdentifier: '', fullName: ''}
-          }
-        },
-        {provide: TaskHelperService, useValue: {tasks: Observable.of([])}},
-        {provide: ProcessHelperService, useValue: {processes: Observable.of([])}}
+        provideStoreServiceMock(UserStoreService, {
+          currentUserProfile$: {username: '', userIdentifier: '', fullName: ''}
+        }),
+        {provide: TaskHelperService, useValue: {tasks: of([])}},
       ],
     }).compileComponents().then(() => {
       // create component and test fixture
