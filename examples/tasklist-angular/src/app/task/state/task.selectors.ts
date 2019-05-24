@@ -1,23 +1,14 @@
-import {UserProfile, UserState} from 'app/user/state/user.reducer';
 import {createSelector} from '@ngrx/store';
+import {TaskState} from 'app/task/state/task.reducer';
+import {TaskWithDataEntries} from 'tasklist/models/task-with-data-entries';
 
-export interface StateWithUsers {
-  user: UserState;
+export interface StateWithTasks {
+  task: TaskState;
 }
 
-const selectFeature = (state: StateWithUsers) => state.user;
+const selectFeature = (state: StateWithTasks) => state.task;
 
-export const availableUserIds = createSelector(
+export const getTasks = createSelector(
   selectFeature,
-  (state: UserState): string[] => state.availableUserIds
-);
-
-export const currentUserId = createSelector(
-  selectFeature,
-  (state: UserState): string => state.currentUserId
-);
-
-export const currentUserProfile = createSelector(
-  selectFeature,
-  (state: UserState): UserProfile => state.currentUserProfile
+  (state: TaskState): TaskWithDataEntries[] => state.tasks
 );

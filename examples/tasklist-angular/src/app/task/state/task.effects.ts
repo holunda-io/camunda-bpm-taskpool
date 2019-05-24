@@ -2,8 +2,10 @@ import {Injectable} from '@angular/core';
 import {TaskService} from 'tasklist/services';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {UserStoreService} from 'app/user/state/user.store-service';
-import {TaskActionTypes, TasksLoadedAction} from 'app/task/state/task.actions';
-import {filter, flatMap, map, withLatestFrom} from 'rxjs/operators';
+import {LoadTasksAction, TaskActionTypes, TasksLoadedAction} from 'app/task/state/task.actions';
+import {catchError, filter, flatMap, map, withLatestFrom} from 'rxjs/operators';
+import {SelectUserAction, UserActionTypes} from 'app/user/state/user.actions';
+import {of} from 'rxjs';
 
 @Injectable()
 export class TaskEffects {
@@ -15,23 +17,28 @@ export class TaskEffects {
   }
 
   @Effect()
+  loadTasksOnUserSelect$ = this.actions$.pipe(
+    ofType<SelectUserAction>(UserActionTypes.SelectUser),
+    filter((action) => !!action.payload),
+    map(() => new LoadTasksAction())
+  );
+
+  @Effect()
   loadTasks$ = this.actions$.pipe(
     ofType(TaskActionTypes.LoadTasks),
     withLatestFrom(this.userStore.userId$()),
-    filter(([_,userId]) => !!userId),
-    flatMap(([_,userId]) => {
-      console.log('test')
-      return this.taskService.getTasks({
-        filter: [],
+    flatMap(([_,userId]) =>
+      this.taskService.getTasks({
+        filter: [''],
         page: 0,
         size: 10,
         sort: '',
         XCurrentUserID: userId
-      });
-    }),
-    map(tasks => {
-      console.log('foo')
-      return new TasksLoadedAction(tasks);
+      })),
+    map(tasks => new TasksLoadedAction(tasks)),
+    catchError(err => {
+      console.log('Error loading tasks:', err);
+      return of();
     })
   )
 }

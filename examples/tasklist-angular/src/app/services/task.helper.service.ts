@@ -26,11 +26,10 @@ export class TaskHelperService implements OnDestroy {
 
     this.currentProfileSubscription = this.userStore.currentUserProfile$().subscribe(profile => {
       this.currentProfile = profile;
-      this.reload();
     });
 
     this.sortSubscription = this.filterService.columnSorted$.subscribe((fieldEvent: Field) => {
-      this.reload();
+      //this.reload();
     });
   }
 
@@ -38,10 +37,6 @@ export class TaskHelperService implements OnDestroy {
     this.sortSubscription.unsubscribe();
     this.currentProfileSubscription.unsubscribe();
     this.currentProfileSubscription.unsubscribe();
-  }
-
-  get tasks() {
-    return this.tasksSubject.asObservable();
   }
 
   claim(task: Task): void {

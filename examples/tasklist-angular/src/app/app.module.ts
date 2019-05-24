@@ -10,11 +10,8 @@ import localeEn from '@angular/common/locales/en';
 
 import {ApiModule} from 'tasklist/api.module';
 import {AppComponent} from 'app/app.component';
-import {TasklistComponent} from 'app/components/tasklist/tasklist.component';
 import {TaskHelperService} from 'app/services/task.helper.service';
-import {FieldNamePipe} from 'app/services/field-name.pipe';
 import {FilterService} from 'app/services/filter.service';
-import {SortableColumnComponent} from 'app/components/sorter/sortable-column.component';
 import {ExternalUrlDirective} from 'app/components/external-url.directive';
 import {PageNotFoundComponent} from 'app/components/page-not-found/page-not-found.component';
 import {AppRoutingModule} from './app-routing.module';
@@ -25,6 +22,7 @@ import {UserModule} from 'app/user/user.module';
 import {StoreModule} from '@ngrx/store';
 import {EffectsModule} from '@ngrx/effects';
 import {ProcessModule} from 'app/process/process.module';
+import {TaskModule} from 'app/task/task.module';
 
 
 registerLocaleData(localeFr, 'fr');
@@ -47,9 +45,6 @@ export function storeLogger(reducer) {
 @NgModule({
   declarations: [
     AppComponent,
-    FieldNamePipe,
-    SortableColumnComponent,
-    TasklistComponent,
     ExternalUrlDirective,
     PageNotFoundComponent,
     FooterComponent,
@@ -65,6 +60,7 @@ export function storeLogger(reducer) {
     ApiModule,
     UserModule,
     ProcessModule,
+    TaskModule,
     StoreModule.forRoot({}, {
       metaReducers: [storeLogger]
     }),

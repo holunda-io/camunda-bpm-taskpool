@@ -6,8 +6,9 @@ import {TaskService} from 'tasklist/services';
 import {UserStoreService} from 'app/user/state/user.store-service';
 import {createStoreServiceMock} from '@ngxp/store-service/testing';
 import {LoadTasksAction, TasksLoadedAction} from 'app/task/state/task.actions';
+import {SelectUserAction} from 'app/user/state/user.actions';
 
-describe('ProcessEffects', () => {
+describe('TaskEffects', () => {
 
   let taskService: TaskService;
   let userStore: UserStoreService;
@@ -22,6 +23,17 @@ describe('ProcessEffects', () => {
   function effectsFor(action: Action): TaskEffects {
     return new TaskEffects(taskService, userStore, new Actions(of(action)));
   }
+
+  it('should trigger loading tasks on user select', (done) => {
+    // given:
+    const action = new SelectUserAction('kermit');
+
+    // when:
+    effectsFor(action).loadTasksOnUserSelect$.subscribe((newAction) => {
+      expect(newAction).toEqual(new LoadTasksAction());
+      done();
+    });
+  });
 
   it('should load tasks', (done) => {
     // given:

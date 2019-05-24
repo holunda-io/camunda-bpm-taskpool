@@ -25,10 +25,6 @@ export class UserStoreService extends StoreService<UserState> {
   selectUser: (string) => void;
 
   loadInitialUser(): void {
-    this.userId$().pipe(first()).subscribe(id => {
-      console.log('ID: ', id);
-      this.selectUser(id);
-    });
-
+    this.userId$().pipe(first()).subscribe(id => this.selectUser(id));
   }
 }
