@@ -1,11 +1,11 @@
 <div class="nav-item dropdown avatar" ngbDropdown>
-  <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" ngbDropdownToggle>
+  <div class="nav-link dropdown-toggle" ngbDropdownToggle>
     <!--
     <img src="{{ user.avatar }}" class="rounded-circle z-depth-0" alt="avatar image" height="35">
     -->
     <i class="fa fa-user"></i>
     {{ (currentProfile$ | async).fullName }}
-  </a>
+  </div>
   <ul class="dropdown-menu" ngbDropdownMenu>
 
     <li *ngFor="let userIdentifier of (userIds$ | async)"><span class="dropdown-item" (click)="setCurrentUser(userIdentifier)">{{ userIdentifier }}</span></li>

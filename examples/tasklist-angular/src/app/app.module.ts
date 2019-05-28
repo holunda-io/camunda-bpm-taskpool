@@ -12,7 +12,6 @@ import {ApiModule} from 'tasklist/api.module';
 import {AppComponent} from 'app/app.component';
 import {TasklistComponent} from 'app/components/tasklist/tasklist.component';
 import {TaskHelperService} from 'app/services/task.helper.service';
-import {FieldNamePipe} from 'app/services/field-name.pipe';
 import {FilterService} from 'app/services/filter.service';
 import {SortableColumnComponent} from 'app/components/sorter/sortable-column.component';
 import {ExternalUrlDirective} from 'app/components/external-url.directive';
@@ -25,6 +24,8 @@ import {UserModule} from 'app/user/user.module';
 import {StoreModule} from '@ngrx/store';
 import {EffectsModule} from '@ngrx/effects';
 import {ProcessModule} from 'app/process/process.module';
+import {DataEntryModule} from 'app/dataentry/dataentry.module';
+import {ServiceModule} from 'app/services/service.module';
 
 
 registerLocaleData(localeFr, 'fr');
@@ -47,7 +48,6 @@ export function storeLogger(reducer) {
 @NgModule({
   declarations: [
     AppComponent,
-    FieldNamePipe,
     SortableColumnComponent,
     TasklistComponent,
     ExternalUrlDirective,
@@ -60,11 +60,13 @@ export function storeLogger(reducer) {
     BrowserModule,
     BrowserAnimationsModule,
     FormsModule,
+    ServiceModule,
     AppRoutingModule,
     NgbModule,
     ApiModule,
     UserModule,
     ProcessModule,
+    DataEntryModule,
     StoreModule.forRoot({}, {
       metaReducers: [storeLogger]
     }),

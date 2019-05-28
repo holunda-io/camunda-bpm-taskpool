@@ -2,7 +2,16 @@
   <tasks-header>
 
     <div class="navbar-nav">
-      <tasks-process-list></tasks-process-list>
+      <div class="nav-item" routerLinkActive="active">
+        <a class="nav-link" routerLink="/tasks">Tasklist</a>
+      </div>
+      <div class="nav-item" routerLinkActive="active">
+        <a class="nav-link" routerLink="/archive">Archive</a>
+      </div>
+      <div class="nav-item dropdown" ngbDropdown>
+        <div class="nav-link dropdown-toggle" ngbDropdownToggle>New ...</div>
+        <tasks-process-list></tasks-process-list>
+      </div>
     </div>
 
     <div class="flex-spacer"></div>
@@ -12,7 +21,6 @@
       <tasks-user-selection></tasks-user-selection>
     </div>
   </tasks-header>
-  <p>A list of tasks gathered by Camunda BPM Taskpool.</p>
-  <tasks-tasklist></tasks-tasklist>
+  <router-outlet></router-outlet>
   <tasks-footer></tasks-footer>
 </div>

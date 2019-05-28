@@ -1,12 +1,9 @@
-<div class="nav-item dropdown" ngbDropdown>
-  <a class="nav-link dropdown-toggle" href="#" ngbDropdownToggle>New ...</a>
-  <div class="dropdown-menu" ngbDropdownMenu>
-    <a *ngFor="let process of (processes$ | async)"
-       class="dropdown-item"
-       data-toggle="tooltip"
-       data-placement="bottom"
-       title="{{ process.description }}"
-       href="{{ process.url }}"
-    >{{ process.name }}</a>
-  </div>
+<div class="dropdown-menu" ngbDropdownMenu>
+  <a *ngFor="let process of (processes$ | async)"
+     class="dropdown-item"
+     data-toggle="tooltip"
+     data-placement="bottom"
+     title="{{ process.description }}"
+     href="{{ process.url }}"
+  >{{ process.name }}</a>
 </div>
