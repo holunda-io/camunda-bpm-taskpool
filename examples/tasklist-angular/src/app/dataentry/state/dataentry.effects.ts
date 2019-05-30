@@ -7,6 +7,7 @@ import {flatMap, map, withLatestFrom} from 'rxjs/operators';
 import {DataEntry as DataEntryDto} from 'tasklist/models';
 import {DataEntry} from 'app/dataentry/state/dataentry.reducer';
 import {UserActionTypes} from 'app/user/state/user.actions';
+import {StrictHttpResponse} from 'tasklist/strict-http-response';
 
 @Injectable()
 export class DataentryEffects {
@@ -28,9 +29,6 @@ export class DataentryEffects {
     ofType(DataEntryActionTypes.LoadDataEntries),
     withLatestFrom(this.userStore.userId$()),
     flatMap(([_, userId]) => this.archiveService.getBosResponse({
-      page: 0,
-      size: 100,
-      sort: '',
       filter: [''],
       XCurrentUserID: userId
     })),
@@ -39,8 +37,8 @@ export class DataentryEffects {
   );
 }
 
-function mapFromDto(dataEntryDtos: DataEntryDto[]): DataEntry[] {
-  return dataEntryDtos.map(dto => {
+function mapFromDto(dataEntryDtos: StrictHttpResponse<DataEntryDto[]>): DataEntry[] {
+  return dataEntryDtos.body.map(dto => {
     return {
       name: dto.name,
       url: dto.url,

@@ -35,7 +35,7 @@ export class DataentryListComponent implements OnInit {
   }
 
   reload() {
-    console.log('Reload')
+    console.log('Reload');
   }
 
   loadPage() {

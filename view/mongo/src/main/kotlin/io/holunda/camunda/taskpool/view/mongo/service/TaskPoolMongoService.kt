@@ -49,6 +49,7 @@ class TaskPoolMongoService(
     const val PROCESSING_GROUP = "io.holunda.camunda.taskpool.view.mongo.service"
   }
 
+  @QueryHandler
   override fun query(query: DataEntriesForUserQuery): DataEntriesQueryResult {
     return DataEntriesQueryResult(dataEntryRepository
       .findAllForUser(
