@@ -19,10 +19,10 @@ export class TaskStoreService extends StoreService<TaskState> {
   selectPage: (page: number) => void;
 
   @Dispatch(ClaimTaskAction)
-  claimTask: (task: Task) => void;
+  claim: (task: Task) => void;
 
   @Dispatch(UnclaimTaskAction)
-  unclaimTask: (task: Task) => void;
+  unclaim: (task: Task) => void;
 
   @Select(getTasks)
   tasks: () => Observable<TaskWithDataEntries[]>;

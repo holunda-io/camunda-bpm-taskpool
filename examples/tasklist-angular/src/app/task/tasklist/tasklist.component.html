@@ -84,13 +84,13 @@
                 <button type="button" name="claim"
                   class="btn btn-outline-secondary btn-sm"
                   (click)="claim($event, taskWithEntryData.task)"
-                  title="{{ currentProfile.username }}">claim</button>&nbsp;
+                  title="{{ (currentProfile$ | async).username }}">claim</button>&nbsp;
               </span>
-              <span *ngIf="taskWithEntryData.task.assignee == currentProfile.username" class="pull-right">
+              <span *ngIf="taskWithEntryData.task.assignee == (currentProfile$ | async).username" class="pull-right">
                 <button type="button" name="unclaim"
                   class="btn btn-outline-secondary btn-sm"
                   (click)="unclaim($event, taskWithEntryData.task)"
-                  title="{{ currentProfile.username }}">unclaim</button>&nbsp;
+                  title="{{ (currentProfile$ | async).username }}">unclaim</button>&nbsp;
               </span>
 
             </td>

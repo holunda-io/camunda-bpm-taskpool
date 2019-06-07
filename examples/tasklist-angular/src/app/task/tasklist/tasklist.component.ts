@@ -1,6 +1,5 @@
 import {Component, OnInit} from '@angular/core';
 import {Task, TaskWithDataEntries} from 'tasklist/models';
-import {TaskHelperService} from 'app/services/task.helper.service';
 import {UserStoreService} from 'app/user/state/user.store-service';
 import {UserProfile} from 'app/user/state/user.reducer';
 import {TaskStoreService} from 'app/task/state/task.store-service';
@@ -18,30 +17,28 @@ export class TasklistComponent implements OnInit {
   totalItems: Observable<number>;
   page: Observable<number>;
   currentDataTab = 'description';
-  currentProfile: UserProfile;
+  currentProfile$: Observable<UserProfile>;
   tasks: Observable<TaskWithDataEntries[]>;
 
   constructor(
     private taskStore: TaskStoreService,
-    private taskHelper: TaskHelperService,
     private userStore: UserStoreService
-  ) {
-    this.subscribe();
-    this.tasks = this.taskStore.tasks();
-  }
+  ) {}
 
   ngOnInit(): void {
     this.totalItems = this.taskStore.taskCount$();
     this.itemsPerPage = itemsPerPage;
     this.page = this.taskStore.selectedPage$();
+    this.tasks = this.taskStore.tasks();
+    this.currentProfile$ = this.userStore.currentUserProfile$();
   }
 
   claim($event, task: Task) {
-    this.taskHelper.claim(task);
+    this.taskStore.claim(task);
   }
 
   unclaim($event, task: Task) {
-    this.taskHelper.unclaim(task);
+    this.taskStore.unclaim(task);
   }
 
   reload() {
@@ -53,17 +50,7 @@ export class TasklistComponent implements OnInit {
   }
 
   toFieldSet(payload: any) {
-    const payloadProps = Object.keys(payload);
-    const result = [];
-    for (const prop of payloadProps) {
-      result.push({ name: prop, value: payload[prop] });
-    }
-    return result;
-  }
-
-  subscribe() {
-    this.userStore.currentUserProfile$().subscribe(userProfile => {
-      this.currentProfile = userProfile;
-    });
+    return Object.keys(payload)
+      .map(prop => {return {name: prop, value: payload[prop]}});
   }
 }

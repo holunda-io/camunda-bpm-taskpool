@@ -10,7 +10,6 @@ import localeEn from '@angular/common/locales/en';
 
 import {ApiModule} from 'tasklist/api.module';
 import {AppComponent} from 'app/app.component';
-import {TaskHelperService} from 'app/services/task.helper.service';
 import {ExternalUrlDirective} from 'app/components/external-url.directive';
 import {PageNotFoundComponent} from 'app/components/page-not-found/page-not-found.component';
 import {AppRoutingModule} from './app-routing.module';
@@ -64,9 +63,6 @@ export function storeLogger(reducer) {
       metaReducers: [storeLogger]
     }),
     EffectsModule.forRoot([])
-  ],
-  providers: [
-    TaskHelperService,
   ],
   bootstrap: [AppComponent]
 })
