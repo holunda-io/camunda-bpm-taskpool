@@ -21,24 +21,14 @@ import {StoreModule} from '@ngrx/store';
 import {EffectsModule} from '@ngrx/effects';
 import {ProcessModule} from 'app/process/process.module';
 import {TaskModule} from 'app/task/task.module';
+import {metaReducers} from 'app/meta-reducers';
+import {environment} from 'environments/environment';
 
 
 registerLocaleData(localeFr, 'fr');
 registerLocaleData(localeDe, 'de');
 registerLocaleData(localeEn, 'en');
 
-export function storeLogger(reducer) {
-  return (state, action: any): any => {
-    const result = reducer(state, action);
-    console.groupCollapsed(action.type);
-    console.log('prev state', state);
-    console.log('action', action);
-    console.log('next state', result);
-    console.groupEnd();
-
-    return result;
-  };
-}
 
 @NgModule({
   declarations: [
@@ -60,7 +50,7 @@ export function storeLogger(reducer) {
     ProcessModule,
     TaskModule,
     StoreModule.forRoot({}, {
-      metaReducers: [storeLogger]
+      metaReducers: metaReducers(environment)
     }),
     EffectsModule.forRoot([])
   ],
