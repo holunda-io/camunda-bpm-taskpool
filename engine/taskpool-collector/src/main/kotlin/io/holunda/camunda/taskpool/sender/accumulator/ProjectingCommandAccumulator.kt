@@ -21,6 +21,8 @@ class ProjectingCommandAccumulator : CommandAccumulator {
     } else {
       // otherwise just return the empty or singleton list
       taskCommands
+    }.map {
+      handlePayloadAndCorrelations(it)
     }
 
 
@@ -66,9 +68,14 @@ class ProjectingCommandAccumulator : CommandAccumulator {
       WithPayload::payload.name,
       WithCorrelations::correlations.name
     )
-  ).let {
+  )
+
+  /**
+   * Handle payload and correlations and serailize usgin provided object mapper (e.g. to JSON)
+   */
+  fun <T : WithTaskId> handlePayloadAndCorrelations(command: T): T {
     // handle payload and correlations
-    var result: T = it
+    var result: T = command
     if (result is CreateTaskCommand && command is CreateTaskCommand) {
       result = result.copy(
         payload = serialize(command.payload),
@@ -76,6 +83,6 @@ class ProjectingCommandAccumulator : CommandAccumulator {
       ) as T
     }
     return result
-  }
 
+  }
 }
