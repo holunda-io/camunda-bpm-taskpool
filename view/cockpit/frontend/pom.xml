@@ -6,7 +6,7 @@
   <parent>
     <groupId>io.holunda.taskpool</groupId>
     <artifactId>camunda-bpm-taskpool-cockpit</artifactId>
-    <version>1.2.19</version>
+    <version>1.2.20</version>
   </parent>
 
   <artifactId>camunda-bpm-taskpool-cockpit-frontend</artifactId>
@@ -195,7 +195,7 @@
                 </goals>
                 <phase>initialize</phase>
                 <configuration>
-                  <arguments>install --no-optional</arguments>
+                  <arguments>install --no-optional --verbose</arguments>
                 </configuration>
               </execution>
               <execution>
@@ -213,6 +213,7 @@
         </plugins>
       </build>
     </profile>
+
     <profile>
       <id>npm-update</id>
       <activation>
@@ -238,6 +239,34 @@
         </plugins>
       </build>
     </profile>
+
+    <profile>
+      <id>ng-serve</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
+      <build>
+        <defaultGoal>package</defaultGoal>
+        <plugins>
+          <plugin>
+            <groupId>com.github.eirslett</groupId>
+            <artifactId>frontend-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>ng-serve</id>
+                <goals>
+                  <goal>npm</goal>
+                </goals>
+                <configuration>
+                  <arguments>run start</arguments>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
   </profiles>
 
 </project>

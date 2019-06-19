@@ -7,4 +7,4 @@ import org.springframework.context.annotation.Profile
 @Configuration
 @Profile("!mongo")
 @EnableTaskPoolSimpleView
-open class SimpleViewConfiguration
+class SimpleViewConfiguration

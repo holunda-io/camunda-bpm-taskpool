@@ -5,22 +5,31 @@ built as a SpringBoot process application and shows a simple approval process.
 
 == Preparations 
 
+=== System Requirements
+
+- JDK 8
+- Docker
+- Docker Compose
+
 Before you begin, please build the entire project with `mvn clean install` from the command line. 
 
-Before starting the application, please start the Axon Server. The easiest way to do so is to run:
+You will need some backing services (Axon Server, H2, MongoDB) and you can easily start them locally
+by using the provided `docker-compose.yml` file.
+
+The easiest way to do so is to run:
 
 ----
-docker run -d --name my-axon-server -p 8024:8024 -p 8124:8124 axoniq/axonserver
+docker-compose up
 ----
  
 To verify it is running, open your browser http://localhost:8024/[http://localhost:8024/].
 
-The demo application consists of several Maven modules. In order to start the example, you will need to start only three
-of them:
- 
-- h2 (external database)
-- process-application (example application)
-- taskpool-application
+The demo application consists of several Maven modules. In order to start the example, you will need to start only two
+of them in the following order:
+
+1. taskpool-application
+2. process-application (example application)
+
  
 The modules can be started by running
 
@@ -28,7 +37,14 @@ The modules can be started by running
 mvn spring-boot:run
 ----
  
-from command line in the corresponding directories. 
+from command line in the corresponding directories or by just running the following code from command line
+in the top-level directory:
+
+----
+java -jar examples/taskpool-application/target/*.jar
+java -jar examples/process-application/target/*.jar
+----
+
 
 Since the process application includes Camunda BPM engine, you can use the standard Camunda webapps by navigating to [http://localhost:8080/](http://localhost:8080/).
 The default user and password are `admin / admin `. 
@@ -87,8 +103,9 @@ If you want to explore the API, simply open http://localhost:8081/swagger-ui.htm
 
 == Storyboard
 
-- To start the approval process for a given request open your browser and navigate to the process starter at:
-http://localhost:8080/example-process-approval/start[http://localhost:8080/example-process-approval/start]
+- To start the approval process for a given request open your browser and navigate to the tasklist:
+http://localhost:8081/tasklist/[http://localhost:8081/tasklist/]. Open the menu (Start new...) in the
+top-left corner and select 'Approval Request'. You should see the start form for the example approval process.
 
 - Enter the request id 1 and click _Start_. The start form will disappear and redirect to the tasklist where the
 new approval request process created one task with the name _Approve Request_.

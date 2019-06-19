@@ -13,7 +13,6 @@ import org.axonframework.messaging.responsetypes.ResponseTypes
 import org.axonframework.queryhandling.QueryGateway
 import org.axonframework.queryhandling.SubscriptionQueryResult
 import org.springframework.http.MediaType
-import org.springframework.http.server.reactive.ServerHttpResponse
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
@@ -27,7 +26,7 @@ import java.util.*
  */
 @RestController
 @RequestMapping(Rest.REACTIVE_PATH)
-open class ReactiveTasksController(
+class ReactiveTasksController(
   private val currentUserService: CurrentUserService,
   private val userService: UserService,
   private val queryGateway: QueryGateway,
@@ -36,13 +35,12 @@ open class ReactiveTasksController(
 
   companion object : KLogging()
 
-  @GetMapping(path = ["/tasks"], produces = [MediaType.TEXT_EVENT_STREAM_VALUE])
+  @GetMapping(path = ["/tasks"], produces = [MediaType.TEXT_EVENT_STREAM_VALUE, MediaType.APPLICATION_JSON_VALUE])
   fun getTasks(
     @RequestParam(value = "filter") filters: List<String>,
     @RequestParam(value = "page") page: Optional<Int>,
     @RequestParam(value = "size") size: Optional<Int>,
-    @RequestParam(value = "sort") sort: Optional<String>,
-    response: ServerHttpResponse
+    @RequestParam(value = "sort") sort: Optional<String>
   ): Flux<TaskWithDataEntriesDto> {
 
     val username = currentUserService.getCurrentUser()

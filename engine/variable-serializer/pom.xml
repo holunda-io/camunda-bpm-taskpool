@@ -6,15 +6,11 @@
   <parent>
     <groupId>io.holunda.taskpool</groupId>
     <artifactId>camunda-bpm-taskpool-engine-root</artifactId>
-    <version>1.2.19</version>
+    <version>1.2.20</version>
   </parent>
 
   <artifactId>camunda-bpm-taskpool-variable-serializer</artifactId>
   <name>engine/${project.artifactId}</name>
-
-  <properties>
-    <skipAsciidoctor>false</skipAsciidoctor>
-  </properties>
 
   <dependencies>
     <dependency>

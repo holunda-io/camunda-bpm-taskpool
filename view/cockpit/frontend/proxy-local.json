@@ -1,18 +1,18 @@
 {
-  "/taskpool-cockpit/rest": {
-    "target": "http://localhost:8083",
-    "secure": false,
-    "logLevel": "debug",
-    "pathRewrite": {
-      "^/taskpool-cockpit/rest": "/taskpool-cockpit/rest"
-    }
-  },
   "/taskpool-cockpit": {
     "target": "http://localhost:4200",
     "secure": false,
     "logLevel": "error",
     "pathRewrite": {
       "^/taskpool-cockpit": "/"
+    }
+  },
+  "/DISABLED PATH/taskpool-cockpit/rest": {
+    "target": "http://localhost:8083",
+    "secure": false,
+    "logLevel": "debug",
+    "pathRewrite": {
+      "^/taskpool-cockpit/rest": "/taskpool-cockpit/rest"
     }
   }
 }

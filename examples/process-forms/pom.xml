@@ -6,7 +6,7 @@
   <parent>
     <groupId>io.holunda.taskpool</groupId>
     <artifactId>camunda-bpm-taskpool-examples-root</artifactId>
-    <version>1.2.19</version>
+    <version>1.2.20</version>
   </parent>
 
   <artifactId>camunda-bpm-taskpool-example-process-forms</artifactId>
@@ -178,6 +178,7 @@
         </plugins>
       </build>
     </profile>
+
     <profile>
       <id>npm-install</id>
       <activation>
@@ -198,7 +199,7 @@
                 </goals>
                 <phase>initialize</phase>
                 <configuration>
-                  <arguments>install</arguments>
+                  <arguments>install --verbose --no-optional</arguments>
                 </configuration>
               </execution>
               <execution>
@@ -216,6 +217,7 @@
         </plugins>
       </build>
     </profile>
+
     <profile>
       <id>npm-update</id>
       <activation>
@@ -234,6 +236,33 @@
                 </goals>
                 <configuration>
                   <arguments>update</arguments>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <profile>
+      <id>ng-serve</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
+      <build>
+        <defaultGoal>package</defaultGoal>
+        <plugins>
+          <plugin>
+            <groupId>com.github.eirslett</groupId>
+            <artifactId>frontend-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>ng-serve</id>
+                <goals>
+                  <goal>npm</goal>
+                </goals>
+                <configuration>
+                  <arguments>run start</arguments>
                 </configuration>
               </execution>
             </executions>

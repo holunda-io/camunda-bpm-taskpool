@@ -24,12 +24,33 @@ paths:
       produces:
         - application/json
       operationId: getProfile
+      parameters:
+        - in: header
+          name: X-Current-User-ID
+          description: Specifies the id of current user.
+          type: string
       responses:
-        200:
+        '200':
           description: Successful operation.
           schema:
             title: User profile.
             $ref: '#/definitions/UserProfile'
+  '/users':
+    get:
+      tags:
+        - Profile
+      summary: Retrieves the list of all user ids in the system as a help for login fake.
+      produces:
+        - application/json
+      operationId: getUsers
+      responses:
+        '200':
+          description: Successful operation.
+          schema:
+            title: List of user ids.
+            type: array
+            items:
+              type: string
   '/processes':
     get:
       tags:
@@ -38,6 +59,11 @@ paths:
       produces:
         - application/json
       operationId: getStartableProcesses
+      parameters:
+        - in: header
+          name: X-Current-User-ID
+          description: Specifies the id of current user.
+          type: string
       responses:
         '200':
           description: Successful operation.
@@ -89,6 +115,10 @@ paths:
           collectionFormat: multi
           required: true
           default: '[]'
+        - in: header
+          name: X-Current-User-ID
+          description: Specifies the id of current user.
+          type: string
       responses:
         '200':
           description: Successful operation.
@@ -118,6 +148,10 @@ paths:
           type: string
           description: Task id.
           required: true
+        - in: header
+          name: X-Current-User-ID
+          description: Specifies the id of current user.
+          type: string
       responses:
         '204':
           description: Sucessful operation.
@@ -140,6 +174,10 @@ paths:
           type: string
           description: Task id.
           required: true
+        - in: header
+          name: X-Current-User-ID
+          description: Specifies the id of current user.
+          type: string
       responses:
         '204':
           description: Sucessful operation.
@@ -162,6 +200,10 @@ paths:
           type: string
           description: Task id.
           required: true
+        - in: header
+          name: X-Current-User-ID
+          description: Specifies the id of current user.
+          type: string
         - in: body
           name: followUpDate
           description: A date until the task is deferred.
@@ -190,6 +232,10 @@ paths:
           type: string
           description: Task id.
           required: true
+        - in: header
+          name: X-Current-User-ID
+          description: Specifies the id of current user.
+          type: string
       responses:
         '204':
           description: Sucessful operation.
@@ -213,6 +259,10 @@ paths:
           type: string
           description: Task id.
           required: true
+        - in: header
+          name: X-Current-User-ID
+          description: Specifies the id of current user.
+          type: string
         - in: body
           name: payload
           description: Payload to be added to the process instance on task completion.
