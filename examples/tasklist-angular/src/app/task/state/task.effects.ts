@@ -41,7 +41,7 @@ export class TaskEffects {
   loadTasks$ = this.actions$.pipe(
     ofType(TaskActionTypes.LoadTasks),
     withLatestFrom(this.userStore.userId$()),
-    flatMap(([_,userId]) =>
+    flatMap(([_, userId]) =>
       this.taskService.getTasksResponse({
         filter: [''],
         page: 0,
@@ -64,8 +64,8 @@ export class TaskEffects {
     ofType<SelectPageAction>(TaskActionTypes.SelectPage),
     map(action => action.payload),
     withLatestFrom(this.taskStore.selectedPage$()),
-    filter(([newPage,currentPage]) => newPage !== currentPage),
-    map(([newPage,_]) => new PageSelectedAction(newPage))
+    filter(([newPage, currentPage]) => newPage !== currentPage),
+    map(([newPage, _]) => new PageSelectedAction(newPage))
   );
 
   @Effect()
@@ -76,7 +76,7 @@ export class TaskEffects {
     flatMap(([task, userId]) => this.taskService.claim({id: task.id, XCurrentUserID: userId})),
     map(() => new TaskClaimedAction()),
     catchError(err => {
-      console.log("Error while claiming task", err);
+      console.log('Error while claiming task', err);
       return of();
     })
   );
@@ -89,7 +89,7 @@ export class TaskEffects {
     flatMap(([task, userId]) => this.taskService.unclaim({id: task.id, XCurrentUserID: userId})),
     map(() => new TaskUnclaimedAction()),
     catchError(err => {
-      console.log("Error while unclaiming task", err);
+      console.log('Error while unclaiming task', err);
       return of();
     })
   );

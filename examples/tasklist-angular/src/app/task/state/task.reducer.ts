@@ -12,10 +12,10 @@ export interface Field {
 }
 
 export interface TaskState {
-  sortingColumn: Field,
-  page: number,
-  taskCount: number,
-  tasks: TaskWithDataEntries[]
+  sortingColumn: Field;
+  page: number;
+  taskCount: number;
+  tasks: TaskWithDataEntries[];
 }
 
 const initialState: TaskState = {

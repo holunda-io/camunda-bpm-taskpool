@@ -33,7 +33,7 @@ export const getFilterParams = createSelector(
       page: state.page,
       size: itemsPerPage,
       sort: state.sortingColumn ? state.sortingColumn.direction + state.sortingColumn.fieldName : undefined,
-    }
+    };
   }
 );
 

@@ -23,8 +23,8 @@ export class LoadTasksAction implements Action {
 }
 
 export interface PaginatedTasks {
-  tasks: TaskWithDataEntries[],
-  totalCount: number
+  tasks: TaskWithDataEntries[];
+  totalCount: number;
 }
 
 export class TasksLoadedAction implements Action {

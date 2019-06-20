@@ -51,6 +51,6 @@ export class TasklistComponent implements OnInit {
 
   toFieldSet(payload: any) {
     return Object.keys(payload)
-      .map(prop => {return {name: prop, value: payload[prop]}});
+      .map(prop => ({name: prop, value: payload[prop]}));
   }
 }

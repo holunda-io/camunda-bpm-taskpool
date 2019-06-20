@@ -18,7 +18,12 @@ function storeLogger(reducer) {
 function storePersist<T, V extends Action>(): MetaReducer<T, V> {
   return localStorageSync({
     keys: [
-      'user'
+      {
+        'user': [
+          'currentUserId',
+          'currentUserProfile'
+        ]
+      }
     ],
     rehydrate: true
   });

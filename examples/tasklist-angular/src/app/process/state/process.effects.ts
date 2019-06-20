@@ -39,6 +39,6 @@ function mapFromDto(processDtos: ProcessDto[]): ProcessDefinition[] {
       name: dto.processName,
       url: dto.url,
       description: dto.description
-    }
-  })
+    };
+  });
 }
