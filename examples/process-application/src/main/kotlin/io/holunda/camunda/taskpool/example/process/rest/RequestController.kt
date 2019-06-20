@@ -2,7 +2,6 @@ package io.holunda.camunda.taskpool.example.process.rest
 
 import io.holunda.camunda.taskpool.example.process.service.Request
 import io.holunda.camunda.taskpool.example.process.service.RequestService
-import io.holunda.camunda.taskpool.example.process.service.SimpleUserService
 import io.holunda.camunda.taskpool.example.process.service.createDummyRequest
 import io.holunda.camunda.taskpool.view.auth.UserService
 import io.swagger.annotations.Api

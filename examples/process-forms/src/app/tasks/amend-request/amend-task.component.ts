@@ -15,6 +15,7 @@ import { Environment } from 'process/model/environment';
 export class AmendTaskComponent {
 
   task: Task = this.emptyTask();
+  userId: string;
   environment: Environment = this.envProvider.none();
   comment = '';
   submitData: TaskAmendRequestSubmitData = {
@@ -28,9 +29,9 @@ export class AmendTaskComponent {
     private router: Router,
     route: ActivatedRoute
   ) {
-    const userId = 'irnoman'; // FIXME
+    this.userId = route.snapshot.queryParams['userId'];
     const taskId: string = route.snapshot.paramMap.get('taskId');
-    this.client.loadTaskAmendRequestFormData(taskId, userId).subscribe(
+    this.client.loadTaskAmendRequestFormData(taskId, this.userId).subscribe(
       formData => {
         this.task = formData.task;
         this.comment = formData.comment;
@@ -43,9 +44,8 @@ export class AmendTaskComponent {
   }
 
   complete() {
-    const userId = 'irnoman'; // FIXME
     console.log('Decision for', this.task.id, 'is', this.submitData.action);
-    this.client.submitTaskAmendRequestSubmitData(this.task.id, userId, this.submitData).subscribe(
+    this.client.submitTaskAmendRequestSubmitData(this.task.id, this.userId, this.submitData).subscribe(
       result => {
         console.log('Sucessfully submitted');
         this.router.navigate(['/externalRedirect', { externalUrl: this.environment.tasklistUrl }], {

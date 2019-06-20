@@ -3,7 +3,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { of } from 'rxjs-compat/observable/of';
 import { StartComponent } from './start.component';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import { EnvironmentHelperService } from 'app/services/environment.helper.service';
 import { RequestService } from 'process/api/request.service';
 
@@ -40,6 +40,12 @@ describe('Component: TasklistComponent', () => {
         StartComponent
       ],
       providers: [
+        { provide: ActivatedRoute, useValue: {
+            snapshot: {
+              queryParams: { 'userId': 'some-id'}
+            }
+          },
+        },
         { provide: Router, useValue: jasmine.createSpyObj('Router', { 'navigate': {} }) },
         { provide: RequestService, useValue: requestServiceSpy },
         { provide: EnvironmentHelperService, useValue: envSpy }

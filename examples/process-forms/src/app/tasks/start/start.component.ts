@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { RequestService } from 'process/api/request.service';
 import { EnvironmentHelperService } from 'app/services/environment.helper.service';
-import { Router } from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import { Environment } from 'process/model/environment';
 
 @Component({
@@ -16,22 +16,25 @@ export class StartComponent {
   environment: Environment = this.envProvider.none();
   startSuccess = false;
   startFailure = false;
+  userId: string;
 
   constructor(
     private client: RequestService,
     private envProvider: EnvironmentHelperService,
-    private router: Router
+    private router: Router,
+    route: ActivatedRoute
   ) {
+    this.userId = route.snapshot.queryParams['userId'];
     this.envProvider.env().subscribe(e => this.environment = e);
   }
 
   start() {
-    console.log('Starting new approval process');
+    console.log('Starting new approval process with' + this.userId);
     this.startSuccess = false;
     this.startFailure = false;
-    // FIXME: smell, the userIdentifier of the originator should not be hard-coded here.
+
     // read it out of local storage.
-    this.client.start(this.requestId, 'ironman').subscribe(
+    this.client.start(this.requestId, this.userId).subscribe(
       result => {
         console.log('Successfully submitted');
         this.startSuccess = true;

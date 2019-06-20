@@ -9,18 +9,17 @@ import java.math.BigDecimal
 
 @Configuration
 class RequestPrinter(
-  private val requestService: RequestService,
-  private val currentUserService: SimpleUserService
+  private val requestService: RequestService
 ) {
 
   companion object : KLogging()
 
   //
   val testRequests = listOf(
-    Request(id = "1", subject = "Salary increase", applicant = "hulk", amount = BigDecimal.valueOf(1000),  currency = "GBP"),
-    Request(id = "2", subject = "Advanced training", applicant = "hulk", amount = BigDecimal.valueOf(500),  currency = "EUR"),
-    Request(id = "3", subject = "Sabbatical", applicant = "ironman", amount = BigDecimal.valueOf(0),  currency = "USD"),
-    Request(id = "4", subject = "Holiday trip", applicant = "inronman", amount = BigDecimal.valueOf(83.12), currency =  "USD")
+    Request(id = "1", subject = "Salary increase", applicant = "hulk", amount = BigDecimal.valueOf(1000), currency = "GBP"),
+    Request(id = "2", subject = "Advanced training", applicant = "hulk", amount = BigDecimal.valueOf(500), currency = "EUR"),
+    Request(id = "3", subject = "Sabbatical", applicant = "ironman", amount = BigDecimal.valueOf(0), currency = "USD"),
+    Request(id = "4", subject = "Holiday trip", applicant = "ironman", amount = BigDecimal.valueOf(83.12), currency = "USD")
   )
 
 
@@ -32,7 +31,7 @@ class RequestPrinter(
       if (requests.isEmpty()) {
         testRequests.forEach {
           logger.info("Adding request $it")
-          requestService.addRequest(it, currentUserService.getAllUsers()[0])
+          requestService.addRequest(it, it.applicant)
         }
       }
     }

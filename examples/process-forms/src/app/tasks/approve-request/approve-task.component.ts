@@ -16,6 +16,7 @@ export class ApproveTaskComponent {
 
   task: Task = this.emptyTask();
   environment: Environment;
+  userId: string;
   approvalRequest: ApprovalRequest = this.emptyApprovalRequest();
   submitData: TaskApproveRequestSubmitData = {
     decision: ''
@@ -28,10 +29,9 @@ export class ApproveTaskComponent {
     private envProvider: EnvironmentHelperService
   ) {
     const taskId: string = route.snapshot.paramMap.get('taskId');
+    this.userId = route.snapshot.queryParams['userId'];
 
-    const userId = 'irnoman'; // FIXME
-
-    this.client.loadTaskApproveRequestFormData(taskId, userId).subscribe(
+    this.client.loadTaskApproveRequestFormData(taskId, this.userId).subscribe(
       formData => {
         this.task = formData.task;
         this.approvalRequest = formData.approvalRequest;
@@ -46,9 +46,8 @@ export class ApproveTaskComponent {
   }
 
   complete() {
-    const userId = 'irnoman'; // FIXME
     console.log('Decision for', this.task.id, 'is', this.submitData.decision);
-    this.client.submitTaskApproveRequestSubmitData(this.task.id, userId, this.submitData).subscribe(
+    this.client.submitTaskApproveRequestSubmitData(this.task.id, this.userId, this.submitData).subscribe(
       result => {
         console.log('Sucessfully submitted');
         this.router.navigate(['/externalRedirect', { externalUrl: this.environment.tasklistUrl }], {
