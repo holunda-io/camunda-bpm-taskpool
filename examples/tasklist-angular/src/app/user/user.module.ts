@@ -1,5 +1,5 @@
 import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
+import {CommonModule, KeyValuePipe} from '@angular/common';
 import {UserSelectionComponent} from './user-selection/user-selection.component';
 import {UserStoreService} from './state/user.store-service';
 import {StoreModule} from '@ngrx/store';

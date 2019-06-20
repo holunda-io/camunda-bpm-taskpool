@@ -10,19 +10,19 @@ describe('processReducer', () => {
       username: '',
       userIdentifier: ''
     },
-    availableUserIds: []
+    availableUsers: {}
   };
 
   it('updates available users', () => {
     // given:
-    const availableIds = ['foo', 'bar'];
+    const availableIds = {'1': 'foo', '2': 'bar'};
     const action = new AvailableUsersLoadedAction(availableIds);
 
     // when:
     const newState = userReducer(initialState, action);
 
     // then:
-    expect(newState.availableUserIds).toBe(availableIds);
+    expect(newState.availableUsers).toBe(availableIds);
   });
 
   it('updates current user', () => {

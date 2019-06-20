@@ -23,5 +23,5 @@ class SimpleUserService : UserService, UserStoreService {
 
   override fun getUsers(): List<User> = muppetUsers.values.toList()
 
-  override fun getUserIdentifiers(): List<String> = muppetUsers.keys.toList()
+  override fun getUserIdentifiers(): Map<String, String> = muppetUsers.map { (key, value) -> key to value.username }.toMap()
 }

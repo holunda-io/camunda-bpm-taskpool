@@ -1,4 +1,4 @@
-import {availableUserIds, currentUserId, currentUserProfile, StateWithUsers} from 'app/user/state/user.selectors';
+import {availableUsers, currentUserId, currentUserProfile, StateWithUsers} from 'app/user/state/user.selectors';
 
 describe('user selectors', () => {
   const state: StateWithUsers = {
@@ -9,7 +9,7 @@ describe('user selectors', () => {
         userIdentifier: 'kermit',
         username: 'kermit'
       },
-      availableUserIds: ['kermit', 'piggy']
+      availableUsers: {'1': 'kermit', '2': 'piggy'}
     }
   };
 
@@ -31,9 +31,9 @@ describe('user selectors', () => {
 
   it('should select available users', () => {
     // when:
-    const availableUsers = availableUserIds(state);
+    const availableUsersResult = availableUsers(state);
 
     // then:
-    expect(availableUsers).toBe(state.user.availableUserIds);
+    expect(availableUsersResult).toBe(state.user.availableUsers);
   });
 });

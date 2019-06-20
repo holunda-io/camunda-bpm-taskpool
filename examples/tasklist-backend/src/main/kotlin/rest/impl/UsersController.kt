@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping(Rest.REQUEST_PATH)
 class UsersController(private val userStoreService: UserStoreService) : UsersApi {
 
-  override fun getUsers(): ResponseEntity<List<String>> {
+  override fun getUsers(): ResponseEntity<Map<String, String>> {
     return ok(userStoreService.getUserIdentifiers())
   }
 }

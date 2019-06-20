@@ -16,7 +16,7 @@ interface UserStoreService {
   fun getUsers() : List<User>
 
   /**
-   * Reitrieves the list of all users' identifiers.
+   * Retrieves the list of all users' identifiers.
    */
-  fun getUserIdentifiers(): List<String>
+  fun getUserIdentifiers(): Map<String, String>
 }

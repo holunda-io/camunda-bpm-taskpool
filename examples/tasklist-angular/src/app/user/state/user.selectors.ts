@@ -7,9 +7,9 @@ export interface StateWithUsers {
 
 const selectFeature = (state: StateWithUsers) => state.user;
 
-export const availableUserIds = createSelector(
+export const availableUsers = createSelector(
   selectFeature,
-  (state: UserState): string[] => state.availableUserIds
+  (state: UserState): {[key: string]: string} => state.availableUsers
 );
 
 export const currentUserId = createSelector(

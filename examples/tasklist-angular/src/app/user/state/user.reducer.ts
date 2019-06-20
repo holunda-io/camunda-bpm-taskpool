@@ -8,13 +8,13 @@ export interface UserProfile {
 
 export interface UserState {
   currentUserId: string;
-  availableUserIds: string[];
+  availableUsers: {[key: string]: string};
   currentUserProfile: UserProfile;
 }
 
 const initialState: UserState = {
   currentUserId: null,
-  availableUserIds: [],
+  availableUsers: {},
   currentUserProfile: {
     userIdentifier: '',
     username: '',
@@ -28,7 +28,7 @@ export function userReducer(state: UserState = initialState, action: UserActions
     case UserActionTypes.AvailableUsersLoaded:
       return {
         ...state,
-        availableUserIds: action.payload
+        availableUsers: action.payload
       };
 
     case UserActionTypes.SelectUser:

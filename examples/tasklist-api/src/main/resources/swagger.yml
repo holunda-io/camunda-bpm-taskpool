@@ -50,8 +50,8 @@ paths:
           description: Successful operation.
           schema:
             title: List of user ids.
-            type: array
-            items:
+            type: object
+            additionalProperties:
               type: string
   '/processes':
     get:

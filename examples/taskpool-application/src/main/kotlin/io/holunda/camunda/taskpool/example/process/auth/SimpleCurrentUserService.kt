@@ -32,7 +32,7 @@ class SimpleCurrentUserService(private val userStoreService: UserStoreService) :
   @Autowired
   private lateinit var currentUserStore: CurrentUserStore
 
-  override fun getCurrentUser(): String = currentUserStore.username ?: userStoreService.getUserIdentifiers().first()
+  override fun getCurrentUser(): String = currentUserStore.username ?: throw IllegalArgumentException("No current user set")
 }
 
 

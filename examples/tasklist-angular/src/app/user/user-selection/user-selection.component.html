@@ -8,7 +8,7 @@
   </div>
   <ul class="dropdown-menu" ngbDropdownMenu>
 
-    <li *ngFor="let userIdentifier of (userIds$ | async)"><span class="dropdown-item" (click)="setCurrentUser(userIdentifier)">{{ userIdentifier }}</span></li>
+    <li *ngFor="let user of (availableUsers$ | async | keyvalue)"><span class="dropdown-item" (click)="setCurrentUser(user.key)">{{ user.value }}</span></li>
     <!--
                       <li class="divider"></li>
                       <li><a class="dropdown-item" href="#">Sign Out <span class="fa fa-sign-out pull-right"></span></a></li>
