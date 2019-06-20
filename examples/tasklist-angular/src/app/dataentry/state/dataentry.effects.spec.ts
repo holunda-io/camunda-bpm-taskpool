@@ -5,7 +5,7 @@ import {Actions} from '@ngrx/effects';
 import {ArchiveService} from 'tasklist/services';
 import {UserStoreService} from 'app/user/state/user.store-service';
 import {createStoreServiceMock} from '@ngxp/store-service/testing';
-import {LoadDataEntries} from 'app/dataentry/state/dataentry.actions';
+import {DataEntriesLoaded, LoadDataEntries} from 'app/dataentry/state/dataentry.actions';
 import {DataEntry} from 'app/dataentry/state/dataentry.reducer';
 
 describe('DataEntryEffects', () => {
@@ -31,14 +31,14 @@ describe('DataEntryEffects', () => {
       {name: 'foo', description: '', url: '', type: 'type', payload: {}},
       {name: 'bar', description: '', url: '', type: 'type2', payload: {}}
     ];
-    const serviceSpy = spyOn(archiveService, 'getBos').and.returnValue(of(dataEntriesDtos));
+    const serviceSpy = spyOn(archiveService, 'getBosResponse').and.returnValue(of({body: dataEntriesDtos, headers: {}}));
 
     // when:
     effectsFor(action).loadDataEntries$.subscribe((newAction) => {
-      expect(newAction.dataEntries).toEqual([
+      expect(newAction).toEqual(new DataEntriesLoaded([
         {name: 'foo', description: '', url: '', type: 'type', payload: {}},
         {name: 'bar', description: '', url: '', type: 'type2', payload: {}}
-      ]);
+      ]));
       done();
     });
   });

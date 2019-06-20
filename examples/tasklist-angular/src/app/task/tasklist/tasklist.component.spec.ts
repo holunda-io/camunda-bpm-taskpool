@@ -6,9 +6,9 @@ import {FormsModule} from '@angular/forms';
 import {SortableColumnComponent} from 'app/task/sorter/sortable-column.component';
 import {provideStoreServiceMock} from '@ngxp/store-service/testing';
 import {UserStoreService} from 'app/user/state/user.store-service';
-import {FieldNamePipe} from 'app/task/field-name.pipe';
 import {TaskStoreService} from 'app/task/state/task.store-service';
 import {SortDirection} from 'app/task/state/task.reducer';
+import {SharedModule} from 'app/shared/shared.module';
 
 describe('Component: TasklistComponent', () => {
 
@@ -19,13 +19,13 @@ describe('Component: TasklistComponent', () => {
 
     TestBed.configureTestingModule({
       imports: [
-        FormsModule
+        FormsModule,
+        SharedModule,
       ],
       declarations: [
         TasklistComponent,
         NgbPagination,
         NgbRadioGroup,
-        FieldNamePipe,
         SortableColumnComponent
       ],
       providers: [
