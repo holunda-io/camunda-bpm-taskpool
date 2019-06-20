@@ -10,7 +10,7 @@ import {first} from 'rxjs/operators';
 export class UserStoreService extends StoreService<UserState> {
 
   @Select(availableUsers)
-  availableUsers$: () => Observable<{[key: string] :string}>;
+  availableUsers$: () => Observable<{[key: string]: string}>;
 
   @Select(currentUserId)
   userId$: () => Observable<string>;

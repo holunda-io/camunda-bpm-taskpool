@@ -1,4 +1,4 @@
-package io.holunda.camunda.taskpool.example.tasklist.auth
+package io.holunda.camunda.taskpool.example.users
 
 import io.holunda.camunda.taskpool.view.auth.User
 

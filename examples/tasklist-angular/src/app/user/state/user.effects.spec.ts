@@ -26,7 +26,7 @@ describe('UserEffects', () => {
   it('should load available users', (done) => {
     // given:
     const action = new LoadAvailableUsersAction();
-    const usersList = ['foo', 'bar'];
+    const usersList = {'1': 'foo', '2': 'bar'};
     const serviceSpy = spyOn(profileService, 'getUsers').and.returnValue(of(usersList));
 
     // when:

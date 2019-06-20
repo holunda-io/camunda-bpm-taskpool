@@ -1,7 +1,7 @@
 package io.holunda.camunda.taskpool.example.process.auth
 
 import io.holunda.camunda.taskpool.example.tasklist.auth.CurrentUserService
-import io.holunda.camunda.taskpool.example.tasklist.auth.UserStoreService
+import io.holunda.camunda.taskpool.example.users.UserStoreService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration

@@ -10,7 +10,7 @@ import {Observable} from 'rxjs';
 })
 export class UserSelectionComponent implements OnInit {
 
-  private availableUsers$: Observable<{[key: string] :string}>;
+  private availableUsers$: Observable<{[key: string]: string}>;
   private currentProfile$: Observable<UserProfile>;
 
   constructor(private userStore: UserStoreService) {

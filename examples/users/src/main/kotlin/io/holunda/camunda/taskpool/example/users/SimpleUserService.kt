@@ -1,6 +1,5 @@
-package io.holunda.camunda.taskpool.example.process.service
+package io.holunda.camunda.taskpool.example.users
 
-import io.holunda.camunda.taskpool.example.tasklist.auth.UserStoreService
 import io.holunda.camunda.taskpool.view.auth.User
 import io.holunda.camunda.taskpool.view.auth.UserService
 import org.springframework.stereotype.Component

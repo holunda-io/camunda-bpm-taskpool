@@ -1,8 +1,8 @@
 package io.holunda.camunda.taskpool.example.tasklist.rest.impl
 
-import io.holunda.camunda.taskpool.example.tasklist.auth.UserStoreService
 import io.holunda.camunda.taskpool.example.tasklist.rest.Rest
 import io.holunda.camunda.taskpool.example.tasklist.rest.api.UsersApi
+import io.holunda.camunda.taskpool.example.users.UserStoreService
 import org.springframework.http.ResponseEntity
 import org.springframework.http.ResponseEntity.ok
 import org.springframework.web.bind.annotation.RequestMapping
