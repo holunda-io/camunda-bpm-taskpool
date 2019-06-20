@@ -14,6 +14,8 @@ import io.holunda.camunda.taskpool.example.process.service.Request
 import io.holunda.camunda.taskpool.example.process.service.SimpleUserService
 import io.holunda.camunda.variable.serializer.serialize
 import mu.KLogging
+import org.camunda.bpm.engine.variable.VariableMap
+import org.camunda.bpm.engine.variable.Variables
 import org.camunda.bpm.spring.boot.starter.annotation.EnableProcessApplication
 import org.springframework.boot.ApplicationRunner
 import org.springframework.boot.SpringApplication
@@ -81,16 +83,15 @@ class ExampleProcessApplication {
 
   @Bean
   fun requestProjection(properties: DataEntrySenderProperties): DataEntryProjectionSupplier
-    = dataEntrySupplier(entryType = Request::javaClass.name,
+    = dataEntrySupplier(entryType = BusinessDataEntry.REQUEST,
     projectionFunction = BiFunction { id, payload ->
       DataEntry(
-        entryType = Request::javaClass.name,
+        entryType = BusinessDataEntry.REQUEST,
         entryId = id,
         applicationName = properties.applicationName,
         payload = serialize(payload),
         type = "Approval Request",
-        name = "AR $id",
-        modification = Modification(OffsetDateTime.now())
+        name = "AR $id"
       )
     })
 
@@ -108,16 +109,16 @@ class ExampleProcessApplication {
 
 @Component
 class UserProjectionSupplier(private val properties: DataEntrySenderProperties) : DataEntryProjectionSupplier {
-  override val entryType = SimpleUserService.RichUserObject::javaClass.name
+  override val entryType = BusinessDataEntry.USER
   override fun get(): BiFunction<EntryId, Any, DataEntry> = BiFunction { id, payload ->
-    payload as SimpleUserService.RichUserObject
+    val user: SimpleUserService.RichUserObject = (payload as VariableMap).getValue("username") as SimpleUserService.RichUserObject
     DataEntry(
       entryType = this.entryType,
       entryId = id,
       applicationName = properties.applicationName,
       payload = serialize(payload),
       type = "User",
-      name = payload.username
+      name = user.username
     )
   }
 }

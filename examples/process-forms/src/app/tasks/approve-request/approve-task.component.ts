@@ -29,7 +29,9 @@ export class ApproveTaskComponent {
   ) {
     const taskId: string = route.snapshot.paramMap.get('taskId');
 
-    this.client.loadTaskApproveRequestFormData(taskId).subscribe(
+    const userId = 'irnoman'; // FIXME
+
+    this.client.loadTaskApproveRequestFormData(taskId, userId).subscribe(
       formData => {
         this.task = formData.task;
         this.approvalRequest = formData.approvalRequest;
@@ -44,8 +46,9 @@ export class ApproveTaskComponent {
   }
 
   complete() {
+    const userId = 'irnoman'; // FIXME
     console.log('Decision for', this.task.id, 'is', this.submitData.decision);
-    this.client.submitTaskApproveRequestSubmitData(this.task.id, this.submitData).subscribe(
+    this.client.submitTaskApproveRequestSubmitData(this.task.id, userId, this.submitData).subscribe(
       result => {
         console.log('Sucessfully submitted');
         this.router.navigate(['/externalRedirect', { externalUrl: this.environment.tasklistUrl }], {

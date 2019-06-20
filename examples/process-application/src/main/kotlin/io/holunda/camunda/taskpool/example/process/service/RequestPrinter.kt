@@ -17,10 +17,10 @@ class RequestPrinter(
 
   //
   val testRequests = listOf(
-    Request("1", "Salary increase", "hulk", BigDecimal.valueOf(1000), "GBP"),
-    Request("2", "Advanced training", "hulk", BigDecimal.valueOf(500), "EUR"),
-    Request("3", "Sabbatical", "ironman", BigDecimal.valueOf(0), "USD"),
-    Request("4", "Holiday trip", "inronman", BigDecimal.valueOf(83.12), "USD")
+    Request(id = "1", subject = "Salary increase", applicant = "hulk", amount = BigDecimal.valueOf(1000),  currency = "GBP"),
+    Request(id = "2", subject = "Advanced training", applicant = "hulk", amount = BigDecimal.valueOf(500),  currency = "EUR"),
+    Request(id = "3", subject = "Sabbatical", applicant = "ironman", amount = BigDecimal.valueOf(0),  currency = "USD"),
+    Request(id = "4", subject = "Holiday trip", applicant = "inronman", amount = BigDecimal.valueOf(83.12), currency =  "USD")
   )
 
 

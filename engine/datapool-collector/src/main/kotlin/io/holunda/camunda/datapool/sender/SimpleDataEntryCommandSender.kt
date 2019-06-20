@@ -9,6 +9,7 @@ import org.axonframework.commandhandling.gateway.CommandGateway
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
+// FIXME: reason about the API and refactor it...
 class SimpleDataEntryCommandSender(
   private val gateway: CommandGateway,
   private val properties: DataEntrySenderProperties,
@@ -36,9 +37,42 @@ class SimpleDataEntryCommandSender(
         type = entryType,
         applicationName = properties.applicationName,
         state = state,
-        modification = modification)
+        modification = modification,
+        authorizedUsers = if (modification.username != null) listOf(modification.username!!) else listOf())
     )
     this.sendDataEntryCommand(command = command)
+  }
+
+  override fun sendDataEntryCommand(
+    entryType: EntryType,
+    entryId: EntryId,
+    payload: Any,
+    name: String,
+    description: String,
+    type: String,
+    state: DataEntryState,
+    modification: Modification,
+    correlations: CorrelationMap,
+    authorizedUsers: List<String>,
+    authorizedGroups: List<String>)
+  {
+    val command = CreateOrUpdateDataEntryCommand(
+      DataEntry(
+        entryType = entryType,
+        entryId = entryId,
+        payload = serialize(payload),
+        correlations = correlations,
+        name = name,
+        type = type,
+        description = description,
+        authorizedUsers = authorizedUsers,
+        authorizedGroups = authorizedGroups,
+        applicationName = properties.applicationName,
+        state = state,
+        modification = modification
+    ))
+    this.sendDataEntryCommand(command = command)
+
   }
 
   override fun sendDataEntryCommand(command: CreateOrUpdateDataEntryCommand) {

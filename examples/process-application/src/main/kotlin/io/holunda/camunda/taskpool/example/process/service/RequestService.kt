@@ -21,9 +21,13 @@ class RequestService(
 ) {
 
 
-  fun addRequest(request: Request, username: String? = null) {
+  fun addRequest(request: Request, username: String) {
     repository.save(request)
-    changeRequestState(request, ProcessingType.PRELIMINARY.of("Draft"), username, "Draft created.", "Request draft on behalf of ${request.applicant} created.")
+    changeRequestState(request = request,
+      state = ProcessingType.PRELIMINARY.of("Draft"),
+      username = username,
+      log = "Draft created.",
+      logNotes = "Request draft on behalf of ${request.applicant} created.")
   }
 
   fun getRequest(id: String): Request {
@@ -32,34 +36,40 @@ class RequestService(
 
   fun checkRequest(id: String): Boolean = this.repository.existsById(id)
 
-  fun changeRequestState(id: String, state: DataEntryState, username: String? = null, log: String? = null, logNotes: String? = null) =
+  fun changeRequestState(id: String, state: DataEntryState, username: String, log: String? = null, logNotes: String? = null) =
     changeRequestState(getRequest(id), state, username, log, logNotes)
 
-  fun changeRequestState(request: Request, state: DataEntryState, username: String? = null, log: String? = null, logNotes: String? = null) {
-    sender.sendDataEntryCommand(
-      entryType = BusinessDataEntry.REQUEST,
-      entryId = request.id,
-      payload = request,
-      state = state,
-      modification = Modification(
-        time = OffsetDateTime.now(),
-        username = username,
-        log = log,
-        logNotes = logNotes
-      )
-    )
-  }
-
-  fun updateRequest(id: String, request: Request, username: String? = null) {
+  fun updateRequest(id: String, request: Request, username: String) {
     if (checkRequest(id)) {
       this.repository.save(request)
-      changeRequestState(request, ProcessingType.IN_PROGRESS.of("Amended"), username, "Request amended.")
+      changeRequestState(request, ProcessingType.IN_PROGRESS.of("Amended"), "Request amended.")
     }
   }
 
   fun getAllRequests(): List<Request> {
     return this.repository.findAll()
   }
+
+  private fun changeRequestState(request: Request, state: DataEntryState, username: String, log: String? = null, logNotes: String? = null) {
+    sender.sendDataEntryCommand(
+      entryType = BusinessDataEntry.REQUEST,
+      entryId = request.id,
+      payload = request,
+      state = state,
+      name = "AR {request.id}",
+      description = request.subject,
+      type = "Approval Request",
+      modification = Modification(
+        time = OffsetDateTime.now(),
+        username = username,
+        log = log,
+        logNotes = logNotes
+      ),
+      authorizedUsers = listOf(username, request.applicant),
+      authorizedGroups = listOf()
+    )
+  }
+
 }
 
 fun createDummyRequest(id: String) = Request(

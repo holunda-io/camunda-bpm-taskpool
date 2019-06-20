@@ -19,6 +19,23 @@ interface DataEntryCommandSender {
     correlations: CorrelationMap = newCorrelations()
   )
 
+  /**
+   * Sends command about data entry creation or update.
+   */
+  fun sendDataEntryCommand(
+    entryType: EntryType,
+    entryId: EntryId,
+    payload: Any,
+    name: String,
+    description: String,
+    type: String,
+    state: DataEntryState = ProcessingType.UNDEFINED.of(),
+    modification: Modification = Modification.now(),
+    correlations: CorrelationMap = newCorrelations(),
+    authorizedUsers: List<String> = listOf(),
+    authorizedGroups: List<String> = listOf()
+  )
+
 
   /**
    * Sends a data entry command.

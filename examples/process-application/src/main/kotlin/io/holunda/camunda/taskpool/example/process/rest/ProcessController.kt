@@ -22,8 +22,11 @@ class ProcessController(
 
   override fun start(
     @ApiParam("Request id") @PathVariable("id") id: String,
-    @ApiParam(value = "Originator") @PathVariable("originator") originator: String
+    @ApiParam(value = "Specifies the id of current user." ,required=true) @RequestHeader(value="X-Current-User-ID", required=true) xCurrentUserID: String
   ): ResponseEntity<Void> {
+
+    val originator = "kermit" // FIXME, resolve currentUserId
+
     processApproveRequestBean.startProcess(id, originator)
     requestService.changeRequestState(id, ProcessingType.IN_PROGRESS.of("Submitted"), originator, "New approval request submitted.")
     return noContent().build()
@@ -34,8 +37,11 @@ class ProcessController(
   fun approve(
     @ApiParam("Request id") @PathVariable("id") id: String,
     @ApiParam("Decision of the approver", allowableValues = "APPROVE, REJECT, RETURN", required = true) @PathVariable("decision") decision: String,
+    @ApiParam(value = "Specifies the id of current user." ,required=true) @RequestHeader(value="X-Current-User-ID", required=true) xCurrentUserID: String,
     @ApiParam("Comment") @RequestBody comment: String?) {
-    processApproveRequestBean.approveProcess(id, decision, comment)
+
+    val username = "kermit" // FIXME
+    processApproveRequestBean.approveProcess(id, decision, username, comment)
   }
 
   @ApiOperation("Performs amendProcess request task.")
@@ -43,9 +49,11 @@ class ProcessController(
   fun amend(
     @ApiParam("Request id") @PathVariable("id") id: String,
     @ApiParam("Decision of the originator", allowableValues = "CANCEL, RESUBMIT", required = true) @PathVariable("action") action: String,
+    @ApiParam(value = "Specifies the id of current user." ,required=true) @RequestHeader(value="X-Current-User-ID", required=true) xCurrentUserID: String,
     @ApiParam("Comment") @RequestBody comment: String?
   ) {
-    processApproveRequestBean.amendProcess(id, action, comment)
+    val username = "kermit" // FIXME
+    processApproveRequestBean.amendProcess(id, action, username, comment)
   }
 
   @ApiOperation("Deletes all process instances.")

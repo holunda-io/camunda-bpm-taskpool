@@ -19,7 +19,7 @@ class ProcessApproveRequestBean(
   /**
    * Starts the process for a given request id.
    */
-  fun startProcess(requestId: String, originator: String = "kermit"): String {
+  fun startProcess(requestId: String, originator: String): String {
 
     runtimeService.startProcessInstanceByKey(ProcessApproveRequest.KEY,
       requestId,
@@ -33,7 +33,7 @@ class ProcessApproveRequestBean(
   /**
    * Completes the approval process if located in approve request task.
    */
-  fun approveProcess(processInstanceId: String, decision: String, comment: String?) {
+  fun approveProcess(processInstanceId: String, decision: String, username: String, comment: String?) {
     if (!ProcessApproveRequest.Values.APPROVE_DECISION.contains(decision.toUpperCase())) {
       throw IllegalArgumentException("Only one of APPROVE, RETURN, REJECT is supported.")
     }
@@ -43,7 +43,7 @@ class ProcessApproveRequestBean(
       .processInstanceBusinessKey(processInstanceId)
       .taskDefinitionKey(ProcessApproveRequest.Elements.APPROVE_REQUEST)
       .singleResult()
-    taskService.claim(task.id, "gonzo")
+    taskService.claim(task.id, username)
 
     taskService.complete(task.id,
       Variables
@@ -56,7 +56,7 @@ class ProcessApproveRequestBean(
   /**
    * Completes the approval process if located in amend request task.
    */
-  fun amendProcess(id: String, action: String, comment: String?) {
+  fun amendProcess(id: String, action: String, username: String, comment: String?) {
 
     if (!ProcessApproveRequest.Values.AMEND_ACTION.contains(action.toUpperCase())) {
       throw IllegalArgumentException("Only one of CANCEL, RESUBMIT is supported.")
@@ -67,6 +67,8 @@ class ProcessApproveRequestBean(
       .taskDefinitionKey(ProcessApproveRequest.Elements.AMEND_REQUEST)
       .singleResult()
 
+    taskService.claim(task.id, username)
+
     taskService.complete(task.id, Variables.createVariables()
       .putValue(ProcessApproveRequest.Variables.AMEND_ACTION, Variables.stringValue(action.toUpperCase()))
       .putValue(ProcessApproveRequest.Variables.COMMENT, Variables.stringValue(comment))
@@ -76,7 +78,7 @@ class ProcessApproveRequestBean(
   /**
    * Completes the approve request task with given id, decision and optional comment.
    */
-  fun approveTask(taskId: String, decision: String, comment: String?) {
+  fun approveTask(taskId: String, decision: String, username: String, comment: String?) {
     if (!ProcessApproveRequest.Values.APPROVE_DECISION.contains(decision.toUpperCase())) {
       throw IllegalArgumentException("Only one of APPROVE, RETURN, REJECT is supported.")
     }
@@ -87,6 +89,9 @@ class ProcessApproveRequestBean(
       .taskDefinitionKey(ProcessApproveRequest.Elements.APPROVE_REQUEST)
       .singleResult() ?: throw NoSuchElementException("Task with id $taskId not found.")
     val requestId = runtimeService.getVariable(task.executionId, ProcessApproveRequest.Variables.REQUEST_ID) as String
+
+    taskService.claim(task.id, username)
+
     taskService.complete(task.id,
       Variables
         .createVariables()
@@ -105,7 +110,7 @@ class ProcessApproveRequestBean(
     requestService.changeRequestState(
       id = requestId,
       state = ProcessingType.IN_PROGRESS.of(stateWithLog.first),
-      username = null, // FIXME
+      username = username,
       log = stateWithLog.second,
       logNotes = comment
     )
@@ -115,7 +120,7 @@ class ProcessApproveRequestBean(
   /**
    * Completes the amend request task with given id, action and optional comment.
    */
-  fun amendTask(taskId: String, action: String, request: Request, comment: String?) {
+  fun amendTask(taskId: String, action: String, request: Request, username: String, comment: String?) {
     if (!ProcessApproveRequest.Values.AMEND_ACTION.contains(action.toUpperCase())) {
       throw IllegalArgumentException("Only one of CANCEL, RESUBMIT is supported.")
     }
@@ -126,9 +131,11 @@ class ProcessApproveRequestBean(
       .taskDefinitionKey(ProcessApproveRequest.Elements.AMEND_REQUEST)
       .singleResult() ?: throw NoSuchElementException("Task with id $taskId not found.")
 
+    taskService.claim(task.id, username)
+
     if (action == "RESUBMIT") {
       if (requestService.checkRequest(request.id)) {
-        requestService.updateRequest(id = request.id, request = request, username = null)
+        requestService.updateRequest(id = request.id, request = request, username = username)
       } else {
         throw IllegalArgumentException("Request with id ${request.id} was not found.")
       }
