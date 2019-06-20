@@ -1,10 +1,14 @@
 import {Action} from '@ngrx/store';
 import {TaskWithDataEntries} from 'tasklist/models/task-with-data-entries';
 import {Task} from 'tasklist/models/task';
+import {Field} from 'app/task/state/task.reducer';
 
 export enum TaskActionTypes {
   LoadTasks = '[Task] Load tasks',
   TasksLoaded = '[Task] Tasks loaded',
+  UpdateSortingColumn = '[Task] Update sorting column',
+  SelectPage = '[Task] Select page',
+  PageSelected = '[Task] Page Selected',
   ClaimTask = '[Task] Claim task',
   TaskClaimed = '[Task] Task claimed',
   UnclaimTask = '[Task] Unclaim task',
@@ -18,10 +22,36 @@ export class LoadTasksAction implements Action {
   }
 }
 
+export interface PaginatedTasks {
+  tasks: TaskWithDataEntries[];
+  totalCount: number;
+}
+
 export class TasksLoadedAction implements Action {
   readonly type = TaskActionTypes.TasksLoaded;
 
-  constructor(public payload: TaskWithDataEntries[]) {
+  constructor(public payload: PaginatedTasks) {
+  }
+}
+
+export class UpdateSortingColumnAction implements Action {
+  readonly type = TaskActionTypes.UpdateSortingColumn;
+
+  constructor(public payload: Field) {
+  }
+}
+
+export class SelectPageAction implements Action {
+  readonly type = TaskActionTypes.SelectPage;
+
+  constructor(public payload: number) {
+  }
+}
+
+export class PageSelectedAction implements Action {
+  readonly type = TaskActionTypes.PageSelected;
+
+  constructor(public payload: number) {
   }
 }
 
@@ -47,4 +77,11 @@ export class TaskUnclaimedAction implements Action {
 
 export type TaskActions =
   | LoadTasksAction
-  | TasksLoadedAction;
+  | TasksLoadedAction
+  | UpdateSortingColumnAction
+  | SelectPageAction
+  | PageSelectedAction
+  | ClaimTaskAction
+  | TaskClaimedAction
+  | UnclaimTaskAction
+  | TaskUnclaimedAction;

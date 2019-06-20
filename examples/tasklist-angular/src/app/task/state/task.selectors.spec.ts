@@ -1,39 +1,20 @@
-import {availableUserIds, currentUserId, currentUserProfile, StateWithUsers} from 'app/user/state/user.selectors';
+import {getTasks, StateWithTasks} from 'app/task/state/task.selectors';
 
-describe('user selectors', () => {
-  const state: StateWithUsers = {
-    user: {
-      currentUserId: 'kermit',
-      currentUserProfile: {
-        fullName: 'Kermit',
-        userIdentifier: 'kermit',
-        username: 'kermit'
-      },
-      availableUserIds: ['kermit', 'piggy']
+describe('task selectors', () => {
+  const state: StateWithTasks = {
+    task: {
+      sortingColumn: null,
+      page: 0,
+      taskCount: 0,
+      tasks: []
     }
   };
 
   it('should select current userId', () => {
     // when:
-    const userId = currentUserId(state);
+    const tasks = getTasks(state);
 
     // then:
-    expect(userId).toBe(state.user.currentUserId);
-  });
-
-  it('should select current userProfile', () => {
-    // when:
-    const userProfile = currentUserProfile(state);
-
-    // then:
-    expect(userProfile).toBe(state.user.currentUserProfile);
-  });
-
-  it('should select available users', () => {
-    // when:
-    const availableUsers = availableUserIds(state);
-
-    // then:
-    expect(availableUsers).toBe(state.user.availableUserIds);
+    expect(tasks).toBe(state.task.tasks);
   });
 });

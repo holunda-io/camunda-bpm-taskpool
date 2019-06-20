@@ -7,20 +7,26 @@ import {UserModule} from 'app/user/user.module';
 
 import {DataentryEffects} from 'app/dataentry/state/dataentry.effects';
 import {DataentryStoreService} from 'app/dataentry/state/dataentry.store-service';
-import {ServiceModule} from 'app/services/service.module';
+import {SharedModule} from 'app/shared/shared.module';
+import {DataentryListComponent} from 'app/dataentry/dataentry-list/dataentry-list.component';
+import {FormsModule} from '@angular/forms';
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
-
+    DataentryListComponent
+  ],
+  exports: [
+    DataentryListComponent
   ],
   imports: [
     CommonModule,
+    FormsModule,
     EffectsModule.forFeature([DataentryEffects]),
-    StoreModule.forFeature('dataentry', dataentryReducer),
-    ServiceModule,
+    StoreModule.forFeature('archive', dataentryReducer),
+    SharedModule,
     UserModule,
-  ],
-  exports: [
+    NgbModule
   ],
   providers: [
     DataentryStoreService,

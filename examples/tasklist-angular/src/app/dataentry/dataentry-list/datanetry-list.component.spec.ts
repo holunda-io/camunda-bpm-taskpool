@@ -1,6 +1,6 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import {DataentryListComponent} from 'src/app/components/dataentry-list/dataentry-list.component';
+import {DataentryListComponent} from 'app/dataentry/dataentry-list/dataentry-list.component';
 import {FormsModule} from '@angular/forms';
 
 import {FilterService} from 'app/services/filter.service';

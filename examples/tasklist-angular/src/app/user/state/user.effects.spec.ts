@@ -8,7 +8,7 @@ import {UserProfile} from 'app/user/state/user.reducer';
 import {UserStoreService} from 'app/user/state/user.store-service';
 import {createStoreServiceMock} from '@ngxp/store-service/testing';
 
-describe('ProcessEffects', () => {
+describe('UserEffects', () => {
 
   let profileService: ProfileService;
   let userStore: UserStoreService;

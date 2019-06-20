@@ -10,73 +10,56 @@ import localeEn from '@angular/common/locales/en';
 
 import {ApiModule} from 'tasklist/api.module';
 import {AppComponent} from 'app/app.component';
-import {TasklistComponent} from 'app/components/tasklist/tasklist.component';
-import {TaskHelperService} from 'app/services/task.helper.service';
-import {FilterService} from 'app/services/filter.service';
-import {SortableColumnComponent} from 'app/components/sorter/sortable-column.component';
 import {ExternalUrlDirective} from 'app/components/external-url.directive';
 import {PageNotFoundComponent} from 'app/components/page-not-found/page-not-found.component';
 import {AppRoutingModule} from './app-routing.module';
 import {FooterComponent} from './footer/footer.component';
 import {HeaderComponent} from './header/header.component';
 import {SearchComponent} from './search/search.component';
-import {DataentryListComponent} from 'app/components/dataentry-list/dataentry-list.component';
+
 import {UserModule} from 'app/user/user.module';
 import {StoreModule} from '@ngrx/store';
 import {EffectsModule} from '@ngrx/effects';
 import {ProcessModule} from 'app/process/process.module';
+import {SharedModule} from 'app/shared/shared.module';
 import {DataEntryModule} from 'app/dataentry/dataentry.module';
-import {ServiceModule} from 'app/services/service.module';
+import {TaskModule} from 'app/task/task.module';
+import {metaReducers} from 'app/meta-reducers';
+import {environment} from 'environments/environment';
 
 
 registerLocaleData(localeFr, 'fr');
 registerLocaleData(localeDe, 'de');
 registerLocaleData(localeEn, 'en');
 
-export function storeLogger(reducer) {
-  return (state, action: any): any => {
-    const result = reducer(state, action);
-    console.groupCollapsed(action.type);
-    console.log('prev state', state);
-    console.log('action', action);
-    console.log('next state', result);
-    console.groupEnd();
-
-    return result;
-  };
-}
 
 @NgModule({
   declarations: [
     AppComponent,
-    SortableColumnComponent,
-    TasklistComponent,
     ExternalUrlDirective,
     PageNotFoundComponent,
     FooterComponent,
     HeaderComponent,
-    SearchComponent,
-    DataentryListComponent
+    SearchComponent
   ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     FormsModule,
-    ServiceModule,
     AppRoutingModule,
     NgbModule,
+    StoreModule.forRoot({}, {
+      metaReducers: metaReducers(environment)
+    }),
+    EffectsModule.forRoot([]),
+    // generated
     ApiModule,
+    // own
     UserModule,
     ProcessModule,
     DataEntryModule,
-    StoreModule.forRoot({}, {
-      metaReducers: [storeLogger]
-    }),
-    EffectsModule.forRoot([])
-  ],
-  providers: [
-    TaskHelperService,
-    FilterService
+    TaskModule,
+    SharedModule
   ],
   bootstrap: [AppComponent]
 })

@@ -1,23 +1,43 @@
-import {UserProfile, UserState} from 'app/user/state/user.reducer';
 import {createSelector} from '@ngrx/store';
+import {Field, TaskState} from 'app/task/state/task.reducer';
+import {TaskWithDataEntries} from 'tasklist/models/task-with-data-entries';
 
-export interface StateWithUsers {
-  user: UserState;
+export interface StateWithTasks {
+  task: TaskState;
 }
 
-const selectFeature = (state: StateWithUsers) => state.user;
+const selectFeature = (state: StateWithTasks) => state.task;
 
-export const availableUserIds = createSelector(
+export const getTasks = createSelector(
   selectFeature,
-  (state: UserState): string[] => state.availableUserIds
+  (state: TaskState): TaskWithDataEntries[] => state.tasks
 );
 
-export const currentUserId = createSelector(
+export const getSortingColumn = createSelector(
   selectFeature,
-  (state: UserState): string => state.currentUserId
+  (state: TaskState): Field => state.sortingColumn
 );
 
-export const currentUserProfile = createSelector(
+export const getCount = createSelector(
   selectFeature,
-  (state: UserState): UserProfile => state.currentUserProfile
+  (state: TaskState): number => state.taskCount
+);
+
+export const itemsPerPage = 7;
+
+export const getFilterParams = createSelector(
+  selectFeature,
+  (state: TaskState): any => {
+    return {
+      filter: [''],
+      page: state.page,
+      size: itemsPerPage,
+      sort: state.sortingColumn ? state.sortingColumn.direction + state.sortingColumn.fieldName : undefined,
+    };
+  }
+);
+
+export const getSelectedPage = createSelector(
+  selectFeature,
+  state => state.page
 );

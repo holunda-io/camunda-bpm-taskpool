@@ -3,11 +3,12 @@ import {Actions, Effect, ofType} from '@ngrx/effects';
 import {UserStoreService} from 'app/user/state/user.store-service';
 import {ArchiveService} from 'tasklist/services';
 import {DataEntriesLoaded, DataEntryActionTypes, LoadDataEntries} from 'app/dataentry/state/dataentry.actions';
-import {flatMap, map, withLatestFrom} from 'rxjs/operators';
+import {catchError, filter, flatMap, map, withLatestFrom} from 'rxjs/operators';
 import {DataEntry as DataEntryDto} from 'tasklist/models';
 import {DataEntry} from 'app/dataentry/state/dataentry.reducer';
-import {UserActionTypes} from 'app/user/state/user.actions';
+import {SelectUserAction, UserActionTypes} from 'app/user/state/user.actions';
 import {StrictHttpResponse} from 'tasklist/strict-http-response';
+import {of} from 'rxjs';
 
 @Injectable()
 export class DataentryEffects {
@@ -20,7 +21,8 @@ export class DataentryEffects {
 
   @Effect()
   loadDataEntriesOnUserSelect = this.actions$.pipe(
-    ofType(UserActionTypes.SelectUser),
+    ofType<SelectUserAction>(UserActionTypes.SelectUser),
+    filter((action) => !!action.payload),
     map(() => new LoadDataEntries())
   );
 
@@ -33,7 +35,11 @@ export class DataentryEffects {
       XCurrentUserID: userId
     })),
     map(dataEntriesDtos => mapFromDto(dataEntriesDtos)),
-    map(dataEntries => new DataEntriesLoaded(dataEntries))
+    map(dataEntries => new DataEntriesLoaded(dataEntries)),
+    catchError(err => {
+      console.log('Error loading data entries:', err);
+      return of();
+    })
   );
 }
 

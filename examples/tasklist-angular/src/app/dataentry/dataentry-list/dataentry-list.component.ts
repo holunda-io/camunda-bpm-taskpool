@@ -2,6 +2,8 @@ import {Component, OnInit} from '@angular/core';
 import {DataentryStoreService} from 'app/dataentry/state/dataentry.store-service';
 import {Observable} from 'rxjs';
 import {DataEntry} from 'app/dataentry/state/dataentry.reducer';
+import {UserStoreService} from 'app/user/state/user.store-service';
+import {UserProfile} from 'app/user/state/user.reducer';
 
 @Component({
   selector: 'data-entry-list',
@@ -11,19 +13,20 @@ import {DataEntry} from 'app/dataentry/state/dataentry.reducer';
 export class DataentryListComponent implements OnInit {
 
   dataEntries$: Observable<DataEntry[]>;
+  currentProfile$: Observable<UserProfile>;
   currentDataTab = 'description';
   itemsPerPage: number;
   totalItems: any;
   page: number;
 
   constructor(
-    private dataEntryStore: DataentryStoreService
-  ) {
-    this.dataEntries$ = this.dataEntryStore.dataEntries$();
-  }
+    private dataEntryStore: DataentryStoreService,
+    private userStore: UserStoreService
+  ) {  }
 
   ngOnInit() {
-
+    this.dataEntries$ = this.dataEntryStore.dataEntries$();
+    this.currentProfile$ = this.userStore.currentUserProfile$();
   }
 
   toFieldSet(payload: any) {

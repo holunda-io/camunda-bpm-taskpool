@@ -1,8 +1,8 @@
 import { NgModule, InjectionToken } from '@angular/core';
 import { RouterModule, Routes, ActivatedRouteSnapshot } from '@angular/router';
 import { PageNotFoundComponent } from 'app/components/page-not-found/page-not-found.component';
-import {TasklistComponent} from 'app/components/tasklist/tasklist.component';
-import {DataentryListComponent} from 'app/components/dataentry-list/dataentry-list.component';
+import {TasklistComponent} from 'app/task/tasklist/tasklist.component';
+import {DataentryListComponent} from 'app/dataentry/dataentry-list/dataentry-list.component';
 
 const externalUrlProvider = new InjectionToken('externalUrlRedirectResolver');
 const deactivateGuard = new InjectionToken('deactivateGuard');
