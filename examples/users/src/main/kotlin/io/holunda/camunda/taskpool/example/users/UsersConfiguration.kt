@@ -5,4 +5,4 @@ import org.springframework.context.annotation.Configuration
 
 @Configuration
 @ComponentScan
-open class UsersConfiguration
+class UsersConfiguration

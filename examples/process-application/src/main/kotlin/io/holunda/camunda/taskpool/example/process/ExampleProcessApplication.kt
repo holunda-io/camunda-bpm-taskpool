@@ -12,6 +12,7 @@ import io.holunda.camunda.taskpool.example.process.process.ProcessApproveRequest
 import io.holunda.camunda.taskpool.example.process.service.BusinessDataEntry
 import io.holunda.camunda.taskpool.example.process.service.Request
 import io.holunda.camunda.taskpool.example.process.service.SimpleUserService
+import io.holunda.camunda.taskpool.example.users.EnableExampleUsers
 import io.holunda.camunda.variable.serializer.serialize
 import mu.KLogging
 import org.camunda.bpm.engine.variable.VariableMap
@@ -33,6 +34,7 @@ fun main(args: Array<String>) {
 @SpringBootApplication
 @EnableProcessApplication
 @EnableTaskpoolEngineSupport
+@EnableExampleUsers
 class ExampleProcessApplication {
 
   companion object : KLogging()
@@ -81,6 +83,8 @@ class ExampleProcessApplication {
     )
   )
 
+  /*
+  Alternative example
   @Bean
   fun requestProjection(properties: DataEntrySenderProperties): DataEntryProjectionSupplier
     = dataEntrySupplier(entryType = BusinessDataEntry.REQUEST,
@@ -94,7 +98,7 @@ class ExampleProcessApplication {
         name = "AR $id"
       )
     })
-
+  */
 
   @Bean
   fun registerUsers(simpleUserService: SimpleUserService): ApplicationRunner {

@@ -56,7 +56,7 @@ class RequestService(
       entryId = request.id,
       payload = request,
       state = state,
-      name = "AR {request.id}",
+      name = "AR ${request.id}",
       description = request.subject,
       type = "Approval Request",
       modification = Modification(

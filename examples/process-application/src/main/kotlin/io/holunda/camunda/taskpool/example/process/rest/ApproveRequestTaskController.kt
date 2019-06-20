@@ -4,6 +4,7 @@ import io.holunda.camunda.taskpool.example.process.process.ProcessApproveRequest
 import io.holunda.camunda.taskpool.example.process.rest.api.ApproveRequestApi
 import io.holunda.camunda.taskpool.example.process.rest.model.TaskApproveRequestFormDataDto
 import io.holunda.camunda.taskpool.example.process.rest.model.TaskApproveRequestSubmitDataDto
+import io.holunda.camunda.taskpool.view.auth.UserService
 import io.swagger.annotations.ApiParam
 import mu.KLogging
 import org.springframework.http.ResponseEntity
@@ -17,7 +18,8 @@ import javax.validation.Valid
 @Controller
 @RequestMapping(path = [Rest.REST_PREFIX])
 class ApproveRequestTaskController(
-  private val processApproveRequestBean: ProcessApproveRequestBean
+  private val processApproveRequestBean: ProcessApproveRequestBean,
+  private val userService: UserService
 ) : ApproveRequestApi {
 
   companion object : KLogging()
@@ -37,7 +39,7 @@ class ApproveRequestTaskController(
     @ApiParam(value = "Payload to be added to the process instance on task completion.") @Valid @RequestBody payload: TaskApproveRequestSubmitDataDto
   ): ResponseEntity<Void> {
 
-    val username = "kermit" // FIXME, resolve id.
+    val username = userService.getUser(xCurrentUserID).username
 
     logger.debug { "Submitting data for task $id, $payload" }
     processApproveRequestBean.approveTask(id, payload.decision, username, payload.comment)

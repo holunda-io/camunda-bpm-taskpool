@@ -4,6 +4,7 @@ import io.holunda.camunda.taskpool.example.process.service.Request
 import io.holunda.camunda.taskpool.example.process.service.RequestService
 import io.holunda.camunda.taskpool.example.process.service.SimpleUserService
 import io.holunda.camunda.taskpool.example.process.service.createDummyRequest
+import io.holunda.camunda.taskpool.view.auth.UserService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiParam
@@ -15,14 +16,17 @@ import java.util.*
 @RestController
 @RequestMapping(path = [Rest.REST_PREFIX])
 class RequestController(
-  private val requestService: RequestService
+  private val requestService: RequestService,
+  private val userService: UserService
 ) {
 
   @ApiOperation("Submits a new request.")
   @PostMapping("/request/")
-  fun submitRequest(): ResponseEntity<String> {
+  fun submitRequest(
+    @ApiParam(value = "Specifies the id of current user.", required = true) @RequestHeader(value = "X-Current-User-ID", required = true) xCurrentUserID: String
+  ): ResponseEntity<String> {
     val requestId = "AR-${UUID.randomUUID()}"
-    val username = "kermit" // FIXME!
+    val username = userService.getUser(xCurrentUserID).username
     requestService.addRequest(createDummyRequest(requestId), username)
     return ResponseEntity.ok(requestId)
   }
@@ -44,8 +48,11 @@ class RequestController(
 
   @ApiOperation("Updates a request by id.")
   @PostMapping("/request/{id}")
-  fun updateRequestById(@ApiParam("id") @PathVariable("id") id: String, @RequestBody request: Request): ResponseEntity<Void> {
-    val username = "kermit" // FIXME
+  fun updateRequestById(
+    @ApiParam("id") @PathVariable("id") id: String,
+    @ApiParam(value = "Specifies the id of current user.", required = true) @RequestHeader(value = "X-Current-User-ID", required = true) xCurrentUserID: String,
+    @RequestBody request: Request): ResponseEntity<Void> {
+    val username = userService.getUser(xCurrentUserID).username
     return if (requestService.checkRequest(id)) {
       requestService.updateRequest(id, request, username)
       ResponseEntity.noContent().build()

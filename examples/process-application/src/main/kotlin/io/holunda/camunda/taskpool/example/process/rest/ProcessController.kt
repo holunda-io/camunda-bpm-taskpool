@@ -4,6 +4,7 @@ import io.holunda.camunda.taskpool.api.business.ProcessingType
 import io.holunda.camunda.taskpool.example.process.process.ProcessApproveRequestBean
 import io.holunda.camunda.taskpool.example.process.rest.api.RequestApi
 import io.holunda.camunda.taskpool.example.process.service.RequestService
+import io.holunda.camunda.taskpool.view.auth.UserService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiParam
@@ -16,7 +17,8 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping(path = [Rest.REST_PREFIX])
 class ProcessController(
   private val processApproveRequestBean: ProcessApproveRequestBean,
-  private val requestService: RequestService
+  private val requestService: RequestService,
+  private val userService: UserService
 ) : RequestApi {
 
 
@@ -25,10 +27,10 @@ class ProcessController(
     @ApiParam(value = "Specifies the id of current user." ,required=true) @RequestHeader(value="X-Current-User-ID", required=true) xCurrentUserID: String
   ): ResponseEntity<Void> {
 
-    val originator = "kermit" // FIXME, resolve currentUserId
+    val username = userService.getUser(xCurrentUserID).username
 
-    processApproveRequestBean.startProcess(id, originator)
-    requestService.changeRequestState(id, ProcessingType.IN_PROGRESS.of("Submitted"), originator, "New approval request submitted.")
+    processApproveRequestBean.startProcess(id, username)
+    requestService.changeRequestState(id, ProcessingType.IN_PROGRESS.of("Submitted"), username, "New approval request submitted.")
     return noContent().build()
   }
 
@@ -40,7 +42,7 @@ class ProcessController(
     @ApiParam(value = "Specifies the id of current user." ,required=true) @RequestHeader(value="X-Current-User-ID", required=true) xCurrentUserID: String,
     @ApiParam("Comment") @RequestBody comment: String?) {
 
-    val username = "kermit" // FIXME
+    val username = userService.getUser(xCurrentUserID).username
     processApproveRequestBean.approveProcess(id, decision, username, comment)
   }
 
@@ -52,7 +54,7 @@ class ProcessController(
     @ApiParam(value = "Specifies the id of current user." ,required=true) @RequestHeader(value="X-Current-User-ID", required=true) xCurrentUserID: String,
     @ApiParam("Comment") @RequestBody comment: String?
   ) {
-    val username = "kermit" // FIXME
+    val username = userService.getUser(xCurrentUserID).username
     processApproveRequestBean.amendProcess(id, action, username, comment)
   }
 
