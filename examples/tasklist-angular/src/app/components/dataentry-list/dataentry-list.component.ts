@@ -5,7 +5,8 @@ import {DataEntry} from 'app/dataentry/state/dataentry.reducer';
 
 @Component({
   selector: 'data-entry-list',
-  templateUrl: './dataentry-list.component.html'
+  templateUrl: './dataentry-list.component.html',
+  styleUrls: ['dataentry-list.component.scss']
 })
 export class DataentryListComponent implements OnInit {
 

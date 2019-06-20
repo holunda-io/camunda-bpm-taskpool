@@ -20,6 +20,7 @@ import {AppRoutingModule} from './app-routing.module';
 import {FooterComponent} from './footer/footer.component';
 import {HeaderComponent} from './header/header.component';
 import {SearchComponent} from './search/search.component';
+import {DataentryListComponent} from 'app/components/dataentry-list/dataentry-list.component';
 import {UserModule} from 'app/user/user.module';
 import {StoreModule} from '@ngrx/store';
 import {EffectsModule} from '@ngrx/effects';
@@ -55,6 +56,7 @@ export function storeLogger(reducer) {
     FooterComponent,
     HeaderComponent,
     SearchComponent,
+    DataentryListComponent
   ],
   imports: [
     BrowserModule,
