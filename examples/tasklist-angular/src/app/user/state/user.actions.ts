@@ -19,7 +19,7 @@ export class LoadAvailableUsersAction implements Action {
 export class AvailableUsersLoadedAction implements Action {
   readonly type = UserActionTypes.AvailableUsersLoaded;
 
-  constructor(public payload: string[]) {
+  constructor(public payload: {[key: string]: string}) {
   }
 }
 

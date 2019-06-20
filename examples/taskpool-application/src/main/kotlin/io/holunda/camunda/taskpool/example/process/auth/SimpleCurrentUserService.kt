@@ -1,7 +1,7 @@
 package io.holunda.camunda.taskpool.example.process.auth
 
 import io.holunda.camunda.taskpool.example.tasklist.auth.CurrentUserService
-import io.holunda.camunda.taskpool.example.tasklist.auth.UserStoreService
+import io.holunda.camunda.taskpool.example.users.UserStoreService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -32,7 +32,7 @@ class SimpleCurrentUserService(private val userStoreService: UserStoreService) :
   @Autowired
   private lateinit var currentUserStore: CurrentUserStore
 
-  override fun getCurrentUser(): String = currentUserStore.username ?: userStoreService.getUserIdentifiers().first()
+  override fun getCurrentUser(): String = currentUserStore.username ?: throw IllegalArgumentException("No current user set")
 }
 
 

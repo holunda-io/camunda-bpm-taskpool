@@ -1,4 +1,4 @@
-package io.holunda.camunda.taskpool.example.tasklist.auth
+package io.holunda.camunda.taskpool.example.users
 
 import io.holunda.camunda.taskpool.view.auth.User
 
@@ -16,7 +16,7 @@ interface UserStoreService {
   fun getUsers() : List<User>
 
   /**
-   * Reitrieves the list of all users' identifiers.
+   * Retrieves the list of all users' identifiers.
    */
-  fun getUserIdentifiers(): List<String>
+  fun getUserIdentifiers(): Map<String, String>
 }

@@ -10,7 +10,7 @@ import {Observable} from 'rxjs';
 })
 export class UserSelectionComponent implements OnInit {
 
-  private userIds$: Observable<string[]>;
+  private availableUsers$: Observable<{[key: string]: string}>;
   private currentProfile$: Observable<UserProfile>;
 
   constructor(private userStore: UserStoreService) {
@@ -19,7 +19,7 @@ export class UserSelectionComponent implements OnInit {
   ngOnInit(): void {
     this.userStore.loadAvailableUsers();
 
-    this.userIds$ = this.userStore.availableUserIds$();
+    this.availableUsers$ = this.userStore.availableUsers$();
     this.currentProfile$ = this.userStore.currentUserProfile$();
   }
 

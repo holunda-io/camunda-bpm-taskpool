@@ -23,6 +23,7 @@
     <module>process-application</module>
     <module>taskpool-application</module>
     <module>property-taskurl-resolver</module>
+    <module>users</module>
   </modules>
 
   <profiles>
