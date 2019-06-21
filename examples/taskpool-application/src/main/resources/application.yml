@@ -8,14 +8,14 @@ spring:
 camunda:
   taskpool:
     form-url-resolver:
-      defaultTaskTemplate: "tasks/${formKey}/id/${id}"
-      defaultProcessTemplate: "${processDefinitionKey}/${formKey}"
-      defaultApplicationTemplate: "http://localhost:8080/${applicationName}"
+      defaultTaskTemplate:  "/tasks/${formKey}/${id}?userId=%userId%"
+      defaultProcessTemplate: "/${formKey}?userId=%userId%"
+      defaultApplicationTemplate: "http://localhost:${server.port}/${applicationName}"
       applications:
         example-process-approval:
           url: "http://localhost:8080/example-process-approval"
           processes:
-            process_approve_request: "start"
+            process_approve_request: "start?userId=%userId%"
 
 
 logging.level.io.holunda.camunda.taskpool:

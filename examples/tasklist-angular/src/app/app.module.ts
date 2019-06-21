@@ -10,7 +10,6 @@ import localeEn from '@angular/common/locales/en';
 
 import {ApiModule} from 'tasklist/api.module';
 import {AppComponent} from 'app/app.component';
-import {ExternalUrlDirective} from 'app/components/external-url.directive';
 import {PageNotFoundComponent} from 'app/components/page-not-found/page-not-found.component';
 import {AppRoutingModule} from './app-routing.module';
 import {FooterComponent} from './footer/footer.component';
@@ -36,7 +35,6 @@ registerLocaleData(localeEn, 'en');
 @NgModule({
   declarations: [
     AppComponent,
-    ExternalUrlDirective,
     PageNotFoundComponent,
     FooterComponent,
     HeaderComponent,

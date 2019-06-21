@@ -8,6 +8,7 @@ import {StoreModule} from '@ngrx/store';
 import {EffectsModule} from '@ngrx/effects';
 import {ProcessEffects} from 'app/process/state/process.effects';
 import {UserModule} from 'app/user/user.module';
+import {SharedModule} from 'app/shared/shared.module';
 
 @NgModule({
   declarations: [ProcesslistComponent],
@@ -16,7 +17,8 @@ import {UserModule} from 'app/user/user.module';
     NgbModule,
     EffectsModule.forFeature([ProcessEffects]),
     StoreModule.forFeature('process', processReducer),
-    UserModule
+    UserModule,
+    SharedModule
   ],
   exports: [
     ProcesslistComponent

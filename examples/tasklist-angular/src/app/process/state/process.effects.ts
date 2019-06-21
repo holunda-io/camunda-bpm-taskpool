@@ -3,10 +3,10 @@ import {Actions, Effect, ofType} from '@ngrx/effects';
 import {UserStoreService} from 'app/user/state/user.store-service';
 import {ProcessService} from 'tasklist/services';
 import {LoadStartableProcessDefinitions, ProcessActionTypes, StartableProcessDefinitionsLoaded} from 'app/process/state/process.actions';
-import {flatMap, map, withLatestFrom} from 'rxjs/operators';
+import {filter, flatMap, map, withLatestFrom} from 'rxjs/operators';
 import {ProcessDefinition as ProcessDto} from 'tasklist/models';
 import {ProcessDefinition} from 'app/process/state/process.reducer';
-import {UserActionTypes} from 'app/user/state/user.actions';
+import {SelectUserAction, UserActionTypes} from 'app/user/state/user.actions';
 
 @Injectable()
 export class ProcessEffects {
@@ -19,7 +19,8 @@ export class ProcessEffects {
 
   @Effect()
   loadProcessesOnUserSelect = this.actions$.pipe(
-    ofType(UserActionTypes.SelectUser),
+    ofType<SelectUserAction>(UserActionTypes.SelectUser),
+    filter(action => !!action.payload),
     map(() => new LoadStartableProcessDefinitions())
   );
 
