@@ -8,7 +8,7 @@ import {
   UserActionTypes,
   UserProfileLoadedAction
 } from './user.actions';
-import {flatMap, map} from 'rxjs/operators';
+import {filter, flatMap, map, withLatestFrom} from 'rxjs/operators';
 import {UserProfile as UserDto} from 'tasklist/models';
 import {UserProfile} from './user.reducer';
 import {TitleCasePipe} from '@angular/common';
@@ -31,9 +31,19 @@ export class UserEffects {
   );
 
   @Effect()
+  loadInitialUser$ = this.actions$.pipe(
+    ofType<AvailableUsersLoadedAction>(UserActionTypes.AvailableUsersLoaded),
+    withLatestFrom(this.userStore.userId$()),
+    filter(([_, userId]) => !userId),
+    map(([action, _]) => action.payload),
+    map((users) => new SelectUserAction(Object.keys(users)[0]))
+  );
+
+  @Effect()
   selectUser$ = this.actions$.pipe(
     ofType(UserActionTypes.SelectUser),
     map((action: SelectUserAction) => action.payload),
+    filter(userId => !!userId),
     map(userId => new LoadUserProfileAction(userId))
   );
 
