@@ -1,0 +1,33 @@
+<form [formGroup]="approvalForm" novalidate>
+  <div class="row payload">
+    <div class="col-lg-12"><h5>Approval Request</h5></div>
+
+    <div class="col-lg-4"><label>Applicant:</label></div>
+    <div class="col-lg-8">
+      <input type="text" formControlName="applicant" name="applicant" [(ngModel)]="approvalRequest.applicant" />
+    </div>
+
+    <div class="col-lg-4"><label>Subject:</label></div>
+    <div class="col-lg-8">
+      <input type="text" formControlName="subject" name="subject" [(ngModel)]="approvalRequest.subject" />
+    </div>
+
+    <div class="col-lg-4"><label>Amount (Currency):</label></div>
+    <div class="col-lg-8">
+      <input type="text" formControlName="amount" name="amount" [(ngModel)]="approvalRequest.amount" />&nbsp;
+      <input type="text" formControlName="currency" name="currency" [(ngModel)]="approvalRequest.currency" />
+    </div>
+  </div>
+  <div class="row payload">
+    <div class="col-lg-12 description">
+      <h5>Predefined templates</h5>
+      <div class="buttons">
+        <button class="btn btn-outline-secondary" type="button" (click)="sabbatical()">Sabbatical</button>
+        <button class="btn btn-outline-secondary" type="button" (click)="advancedTraining()">Advanced Training
+        </button>
+        <button class="btn btn-outline-secondary" type="button" (click)="businessTrip()">Business Trip</button>
+        <button class="btn btn-outline-secondary" type="button" (click)="reset()">Reset</button>
+      </div>
+    </div>
+  </div>
+</form>

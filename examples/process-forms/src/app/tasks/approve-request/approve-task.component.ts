@@ -14,10 +14,10 @@ import { Environment } from 'process/model/environment';
 })
 export class ApproveTaskComponent {
 
-  task: Task = this.emptyTask();
+  task: Task = ApproveTaskComponent.emptyTask();
   environment: Environment;
   userId: string;
-  approvalRequest: ApprovalRequest = this.emptyApprovalRequest();
+  approvalRequest: ApprovalRequest = ApproveTaskComponent.emptyApprovalRequest();
   submitData: TaskApproveRequestSubmitData = {
     decision: ''
   };
@@ -63,7 +63,7 @@ export class ApproveTaskComponent {
     window.close();
   }
 
-  emptyTask(): Task {
+  private static emptyTask(): Task {
     return {
       id: 'undefined',
       createTime: null,
@@ -73,12 +73,13 @@ export class ApproveTaskComponent {
     };
   }
 
-  emptyApprovalRequest(): ApprovalRequest {
+  private static emptyApprovalRequest(): ApprovalRequest {
     return {
       applicant: '',
       amount: '',
       id: 'undefined',
-      subject: ''
+      subject: '',
+      currency: 'EUR'
     };
   }
 }

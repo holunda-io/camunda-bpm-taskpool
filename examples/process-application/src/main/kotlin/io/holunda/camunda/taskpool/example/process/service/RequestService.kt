@@ -7,6 +7,8 @@ import io.holunda.camunda.taskpool.api.business.ProcessingType
 import org.springframework.stereotype.Service
 import java.math.BigDecimal
 import java.time.OffsetDateTime
+import java.util.*
+import kotlin.NoSuchElementException
 
 
 /**
@@ -20,14 +22,14 @@ class RequestService(
   private val repository: RequestRepository
 ) {
 
-
-  fun addRequest(request: Request, username: String) {
-    repository.save(request)
+  fun addRequest(request: Request, username: String): String {
+    val saved = repository.save(request)
     changeRequestState(request = request,
       state = ProcessingType.PRELIMINARY.of("Draft"),
       username = username,
       log = "Draft created.",
       logNotes = "Request draft on behalf of ${request.applicant} created.")
+    return saved.id
   }
 
   fun getRequest(id: String): Request {
@@ -72,7 +74,7 @@ class RequestService(
 
 }
 
-fun createDummyRequest(id: String) = Request(
+fun createDummyRequest(id: String = UUID.randomUUID().toString()) = Request(
   id = id,
   subject = "Salary increase",
   amount = BigDecimal(10000),

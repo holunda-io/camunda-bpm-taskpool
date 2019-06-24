@@ -1,5 +1,6 @@
 package io.holunda.camunda.taskpool.example.process.rest
 
+import io.holunda.camunda.taskpool.example.process.rest.model.ApprovalRequestDraftDto
 import io.holunda.camunda.taskpool.example.process.rest.model.ApprovalRequestDto
 import io.holunda.camunda.taskpool.example.process.rest.model.TaskDto
 import io.holunda.camunda.taskpool.example.process.service.Request
@@ -8,6 +9,7 @@ import org.springframework.context.annotation.Configuration
 import java.math.BigDecimal
 import java.time.OffsetDateTime
 import java.time.ZoneId
+import java.util.*
 
 class Rest {
 
@@ -48,10 +50,20 @@ fun taskDto(task: Task): TaskDto = TaskDto()
   }
 
 /**
- * Converts the DTO back to approval request.
+ * Converts the DTO to approval request.
  */
 fun request(dto: ApprovalRequestDto) = Request(
   id = dto.id,
+  amount = BigDecimal(dto.amount),
+  currency = dto.currency,
+  applicant = dto.applicant,
+  subject = dto.subject
+)
+
+/**
+ * Converts the draft DTO to approval request.
+ */
+fun draft(dto: ApprovalRequestDraftDto) = Request(
   amount = BigDecimal(dto.amount),
   currency = dto.currency,
   applicant = dto.applicant,

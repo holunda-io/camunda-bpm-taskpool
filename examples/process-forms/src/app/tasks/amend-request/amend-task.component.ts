@@ -14,13 +14,13 @@ import { Environment } from 'process/model/environment';
 })
 export class AmendTaskComponent {
 
-  task: Task = this.emptyTask();
+  task: Task = AmendTaskComponent.emptyTask();
   userId: string;
   environment: Environment = this.envProvider.none();
   comment = '';
   submitData: TaskAmendRequestSubmitData = {
     action: '',
-    approvalRequest: this.emptyApprovalRequest()
+    approvalRequest: AmendTaskComponent.emptyApprovalRequest()
   };
 
   constructor(
@@ -57,7 +57,7 @@ export class AmendTaskComponent {
     );
   }
 
-  emptyTask(): Task {
+  private static emptyTask(): Task {
     return {
       id: 'undefined',
       createTime: null,
@@ -67,10 +67,11 @@ export class AmendTaskComponent {
     };
   }
 
-  emptyApprovalRequest(): ApprovalRequest {
+  private static emptyApprovalRequest(): ApprovalRequest {
     return {
       applicant: '',
       amount: '',
+      currency: 'USD',
       id: 'undefined',
       subject: ''
     };

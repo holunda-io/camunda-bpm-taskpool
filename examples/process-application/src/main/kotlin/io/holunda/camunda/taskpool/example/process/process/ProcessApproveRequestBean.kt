@@ -27,6 +27,7 @@ class ProcessApproveRequestBean(
         .putValue(ProcessApproveRequest.Variables.REQUEST_ID, requestId)
         .putValue(ProcessApproveRequest.Variables.ORIGINATOR, originator)
     )
+    requestService.changeRequestState(requestId, ProcessingType.IN_PROGRESS.of("Submitted"), originator, "New approval request submitted.")
     return requestId
   }
 
