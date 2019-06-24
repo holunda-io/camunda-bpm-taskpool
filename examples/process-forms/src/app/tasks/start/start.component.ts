@@ -53,7 +53,7 @@ export class StartComponent {
   }
 
   validate($event) {
-    this.valid = $event.valid
+    this.valid = $event.valid;
   }
 
 

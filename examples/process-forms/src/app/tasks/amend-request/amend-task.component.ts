@@ -14,15 +14,6 @@ import { Environment } from 'process/model/environment';
 })
 export class AmendTaskComponent {
 
-  task: Task = AmendTaskComponent.emptyTask();
-  userId: string;
-  environment: Environment = this.envProvider.none();
-  comment = '';
-  submitData: TaskAmendRequestSubmitData = {
-    action: '',
-    approvalRequest: AmendTaskComponent.emptyApprovalRequest()
-  };
-
   constructor(
     private client: AmendRequestService,
     private envProvider: EnvironmentHelperService,
@@ -43,19 +34,14 @@ export class AmendTaskComponent {
     this.envProvider.env().subscribe(e => this.environment = e);
   }
 
-  complete() {
-    console.log('Decision for', this.task.id, 'is', this.submitData.action);
-    this.client.submitTaskAmendRequestSubmitData(this.task.id, this.userId, this.submitData).subscribe(
-      result => {
-        console.log('Sucessfully submitted');
-        this.router.navigate(['/externalRedirect', { externalUrl: this.environment.tasklistUrl }], {
-          skipLocationChange: true,
-        });
-      }, error => {
-        console.log('Error submitting amend request task with id', this.task.id);
-      }
-    );
-  }
+  task: Task = AmendTaskComponent.emptyTask();
+  userId: string;
+  environment: Environment = this.envProvider.none();
+  comment = '';
+  submitData: TaskAmendRequestSubmitData = {
+    action: '',
+    approvalRequest: AmendTaskComponent.emptyApprovalRequest()
+  };
 
   private static emptyTask(): Task {
     return {
@@ -75,5 +61,19 @@ export class AmendTaskComponent {
       id: 'undefined',
       subject: ''
     };
+  }
+
+  complete() {
+    console.log('Decision for', this.task.id, 'is', this.submitData.action);
+    this.client.submitTaskAmendRequestSubmitData(this.task.id, this.userId, this.submitData).subscribe(
+      result => {
+        console.log('Sucessfully submitted');
+        this.router.navigate(['/externalRedirect', { externalUrl: this.environment.tasklistUrl }], {
+          skipLocationChange: true,
+        });
+      }, error => {
+        console.log('Error submitting amend request task with id', this.task.id);
+      }
+    );
   }
 }
