@@ -4,8 +4,8 @@ describe('user selectors', () => {
   const state: StateWithDataEntries = {
     archive: {
       dataEntries: [
-        {name: 'foo', description: '', url: '', type: '', payload: {}},
-        {name: 'bar', description: '', url: '', type: '', payload: {}}
+        {name: 'foo', description: '', url: '', type: 'type', payload: {}, state: 'MY STATE', stateType: '', protocol: []},
+        {name: 'bar', description: '', url: '', type: 'type2', payload: {}, state: 'MY STATE2', stateType: '', protocol: []}
       ]
     }
   };

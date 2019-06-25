@@ -463,6 +463,25 @@ definitions:
           - COMPLETED
           - CANCELLED
           - UNDEFINED
+      protocol:
+        type: array
+        description: Protocol entries for this business object.
+        items:
+          type: object
+          properties:
+            timestamp:
+              type: string
+              format: date-time
+              description: Timestamp of protocol entry.
+            user:
+              type: string
+              description: Username of the user.
+            log:
+              type: string
+              description: Log message.
+            logDetails:
+              type: string
+              description: Log details.
     required:
       - entryType
       - entryId

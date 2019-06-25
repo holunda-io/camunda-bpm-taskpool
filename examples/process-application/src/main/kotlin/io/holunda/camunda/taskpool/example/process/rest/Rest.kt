@@ -16,7 +16,6 @@ class Rest {
   companion object {
     const val REST_PREFIX = "/example-process-approval/rest"
   }
-
 }
 
 /**

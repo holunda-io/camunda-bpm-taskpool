@@ -28,16 +28,16 @@ describe('DataEntryEffects', () => {
     // given:
     const action = new LoadDataEntries();
     const dataEntriesDtos: Array<DataEntry> = [
-      {name: 'foo', description: '', url: '', type: 'type', payload: {}},
-      {name: 'bar', description: '', url: '', type: 'type2', payload: {}}
+      {name: 'foo', description: '', url: '', type: 'type', payload: {}, state: 'MY STATE', stateType: '', protocol: []},
+      {name: 'bar', description: '', url: '', type: 'type2', payload: {}, state: 'MY STATE2', stateType: '', protocol: []}
     ];
     const serviceSpy = spyOn(archiveService, 'getBosResponse').and.returnValue(of({body: dataEntriesDtos, headers: {}}));
 
     // when:
     effectsFor(action).loadDataEntries$.subscribe((newAction) => {
       expect(newAction).toEqual(new DataEntriesLoaded([
-        {name: 'foo', description: '', url: '', type: 'type', payload: {}},
-        {name: 'bar', description: '', url: '', type: 'type2', payload: {}}
+        {name: 'foo', description: '', url: '', type: 'type', payload: {}, state: 'MY STATE', stateType: '', protocol: []},
+        {name: 'bar', description: '', url: '', type: 'type2', payload: {}, state: 'MY STATE2', stateType: '', protocol: []}
       ]));
       done();
     });

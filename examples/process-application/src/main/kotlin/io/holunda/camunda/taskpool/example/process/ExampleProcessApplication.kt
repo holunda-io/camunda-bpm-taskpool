@@ -1,25 +1,15 @@
 package io.holunda.camunda.taskpool.example.process
 
-import io.holunda.camunda.datapool.DataEntrySenderProperties
-import io.holunda.camunda.datapool.projector.DataEntryProjectionSupplier
 import io.holunda.camunda.taskpool.EnableTaskpoolEngineSupport
-import io.holunda.camunda.taskpool.api.business.DataEntry
-import io.holunda.camunda.taskpool.api.business.EntryId
 import io.holunda.camunda.taskpool.enricher.*
 import io.holunda.camunda.taskpool.example.process.process.ProcessApproveRequest
 import io.holunda.camunda.taskpool.example.process.service.BusinessDataEntry
-import io.holunda.camunda.taskpool.example.process.service.UserNotificationService
 import io.holunda.camunda.taskpool.example.users.EnableExampleUsers
-import io.holunda.camunda.variable.serializer.serialize
 import mu.KLogging
-import org.camunda.bpm.engine.variable.VariableMap
 import org.camunda.bpm.spring.boot.starter.annotation.EnableProcessApplication
-import org.springframework.boot.ApplicationRunner
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.context.annotation.Bean
-import org.springframework.stereotype.Component
-import java.util.function.BiFunction
 
 
 fun main(args: Array<String>) {
@@ -95,28 +85,4 @@ class ExampleProcessApplication {
     })
   */
 
-  @Bean
-  fun registerUsers(userNotificationService: UserNotificationService): ApplicationRunner {
-    return ApplicationRunner {
-      userNotificationService.publishAll()
-    }
-  }
 }
-
-@Component
-class UserProjectionSupplier(private val properties: DataEntrySenderProperties) : DataEntryProjectionSupplier {
-  override val entryType = BusinessDataEntry.USER
-  override fun get(): BiFunction<EntryId, Any, DataEntry> = BiFunction { id, payload ->
-    val userNotification: UserNotificationService.RichUserObject = (payload as VariableMap).getValue("user") as UserNotificationService.RichUserObject
-    DataEntry(
-      entryType = this.entryType,
-      entryId = id,
-      applicationName = properties.applicationName,
-      payload = serialize(payload),
-      type = "User",
-      name = userNotification.username
-    )
-  }
-}
-
-

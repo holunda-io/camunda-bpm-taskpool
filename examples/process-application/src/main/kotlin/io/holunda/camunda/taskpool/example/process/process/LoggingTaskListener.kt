@@ -6,12 +6,12 @@ import org.springframework.context.event.EventListener
 import org.springframework.stereotype.Component
 
 @Component
-open class LoggingTaskListener {
+class LoggingTaskListener {
 
   companion object : KLogging()
 
   @EventListener(condition = "#task.eventName.equals('create')")
-  open fun logTaskCreation(task: DelegateTask) {
+  fun logTaskCreation(task: DelegateTask) {
     logger.debug { "Created task ${task.id} of type ${task.taskDefinitionKey}" }
   }
 

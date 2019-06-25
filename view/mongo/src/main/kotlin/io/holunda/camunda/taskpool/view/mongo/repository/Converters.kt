@@ -100,15 +100,28 @@ fun DataEntryDocument.dataEntry() =
         type = type,
         authorizedUsers = authorizedUsers,
         authorizedGroups = authorizedGroups,
-        applicationName = applicationName
+        applicationName = applicationName,
+        state = mapState(state, statusType)
       )
     }
   } else {
     throw IllegalArgumentException("Identity could not be split into entry type and id, because it doesn't contain the '$DATA_IDENTITY_SEPARATOR'. Value was $identity")
   }
 
+fun mapState(state: String?, statusType: String?): DataEntryState = if (state != null) {
+  when (statusType) {
+    "PRELIMINARY" -> ProcessingType.PRELIMINARY.of(state)
+    "IN_PROGRESS" -> ProcessingType.IN_PROGRESS.of(state)
+    "COMPLETED" -> ProcessingType.COMPLETED.of(state)
+    "CANCELLED" -> ProcessingType.CANCELLED.of(state)
+    else -> ProcessingType.UNDEFINED.of(state)
+  }
+} else {
+  ProcessingType.UNDEFINED.of("")
+}
 
-fun DataEntryCreatedEvent.toDocument() =  DataEntryDocument(
+
+fun DataEntryCreatedEvent.toDocument() = DataEntryDocument(
   identity = dataIdentity(entryType = this.entryType, entryId = this.entryId),
   entryType = this.entryType,
   payload = this.payload,
@@ -123,7 +136,7 @@ fun DataEntryCreatedEvent.toDocument() =  DataEntryDocument(
   statusType = this.state.processingType.name
 )
 
-fun DataEntryUpdatedEvent.toDocument() =  DataEntryDocument(
+fun DataEntryUpdatedEvent.toDocument() = DataEntryDocument(
   identity = dataIdentity(entryType = this.entryType, entryId = this.entryId),
   entryType = this.entryType,
   payload = this.payload,

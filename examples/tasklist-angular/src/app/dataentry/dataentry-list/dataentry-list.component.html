@@ -6,18 +6,21 @@
         <table class="table">
           <thead class="thead-light">
           <tr>
-            <th class="align-top" sortable-column="task.process">Type</th>
-            <th class="align-top" sortable-column="task.name">Name</th>
-            <th class="w-50">
+            <th class="align-top" sortable-column="dataentry.type">Type</th>
+            <th class="align-top" sortable-column="dataentry.statusType">Status</th>
+            <th class="align-top" sortable-column="dataentry.name">Name</th>
+            <th class="w-50 align-top">
               Details
               <div class="btn-group btn-group-toggle btn-group-sm pull-right" ngbRadioGroup name="dataTab" [(ngModel)]="currentDataTab">
                 <label ngbButtonLabel class="btn-outline-secondary btn-sm">
                   <input ngbButton type="radio" [value]="'description'">Description</label>
                 <label ngbButtonLabel class="btn-outline-secondary btn-sm">
                   <input ngbButton type="radio" [value]="'data'">Data</label>
+                <label ngbButtonLabel class="btn-outline-secondary btn-sm">
+                  <input ngbButton type="radio" [value]="'protocol'">Audit</label>
+
               </div>
             </th>
-            <th class="align-top" sortable-column="task.createTime">Created</th>
             <th colspan="2" class="align-top">
               Actions
               <div class="pull-right">
@@ -31,6 +34,7 @@
           <tbody>
           <tr *ngFor="let dataEntry of (dataEntries$ | async) index as i">
             <td class="nowrap">{{ dataEntry.type }}</td>
+            <td class="nowrap">{{ dataEntry.stateType }}<span *ngIf="dataEntry.state"> | {{ dataEntry.state }}</span></td>
             <td class="nowrap"><a appExternalUrl [href]="dataEntry.url">{{ dataEntry.name }}</a></td>
             <td>
               <div *ngIf="currentDataTab === 'description'">
@@ -49,8 +53,10 @@
                   </ul>
                 </div>
               </div>
+              <div *ngIf="currentDataTab === 'protocol'">
+
+              </div>
             </td>
-            <td></td>
             <td>
             </td>
           </tr>

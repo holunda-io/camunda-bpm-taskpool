@@ -1,7 +1,9 @@
 package io.holunda.camunda.taskpool.example.tasklist.rest.mapper
 
 import com.fasterxml.jackson.core.JsonProcessingException
+import io.holunda.camunda.taskpool.api.business.Modification
 import io.holunda.camunda.taskpool.example.tasklist.rest.model.DataEntryDto
+import io.holunda.camunda.taskpool.example.tasklist.rest.model.DataEntryProtocolDto
 import io.holunda.camunda.taskpool.example.tasklist.rest.model.TaskDto
 import io.holunda.camunda.taskpool.example.tasklist.rest.model.TaskWithDataEntriesDto
 import io.holunda.camunda.taskpool.view.DataEntry
@@ -38,10 +40,30 @@ abstract class TaskWithDataEntriesMapper {
     Mapping(target = "payload", source = "dataEntry.payload"),
     Mapping(target = "url", expression = "java(formUrlResolver.resolveUrl(dataEntry))"),
     Mapping(target = "state", source = "dataEntry.state.state"),
-    Mapping(target = "stateType", source = "dataEntry.state.processingType")
+    Mapping(target = "stateType", source = "dataEntry.state.processingType"),
+    Mapping(target = "protocol", source="protocol")
+  )
+  @Throws(JsonProcessingException::class)
+  abstract fun dto(dataEntry: DataEntry, protocol: List<Modification>): DataEntryDto
+
+  @Mappings(
+    Mapping(target = "payload", source = "dataEntry.payload"),
+    Mapping(target = "url", expression = "java(formUrlResolver.resolveUrl(dataEntry))"),
+    Mapping(target = "state", source = "dataEntry.state.state"),
+    Mapping(target = "stateType", source = "dataEntry.state.processingType"),
+    Mapping(target = "protocol", expression="java(java.util.Collections.emptyList())")
   )
   @Throws(JsonProcessingException::class)
   abstract fun dto(dataEntry: DataEntry): DataEntryDto
+
+  @Mappings(
+    Mapping(target = "timestamp", source = "time"),
+    Mapping(target = "user", source = "username"),
+    Mapping(target = "log", source = "log"),
+    Mapping(target = "logDetails", source = "logNotes")
+  )
+  @Throws(JsonProcessingException::class)
+  abstract fun dto(modification: Modification): DataEntryProtocolDto
 
   @Mappings(
     Mapping(target = "task", source = "task"),
