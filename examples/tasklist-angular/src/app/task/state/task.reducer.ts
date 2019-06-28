@@ -41,6 +41,12 @@ export function taskReducer(state: TaskState = initialState, action: TaskActions
         page: action.payload
       };
 
+    case TaskActionTypes.UpdateSortingColumn:
+      return {
+        ...state,
+        sortingColumn: action.payload
+      };
+
     default:
       return state;
   }
