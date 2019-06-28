@@ -1,6 +1,7 @@
 package io.holunda.camunda.taskpool.example.process.process
 
 import io.holunda.camunda.taskpool.api.business.ProcessingType
+import io.holunda.camunda.taskpool.example.process.process.ProcessApproveRequest.Values.RESUBMIT
 import io.holunda.camunda.taskpool.example.process.service.Request
 import io.holunda.camunda.taskpool.example.process.service.RequestService
 import org.camunda.bpm.engine.RuntimeService
@@ -99,23 +100,6 @@ class ProcessApproveRequestBean(
         .putValue(ProcessApproveRequest.Variables.APPROVE_DECISION, Variables.stringValue(decision.toUpperCase()))
         .putValue(ProcessApproveRequest.Variables.COMMENT, Variables.stringValue(comment))
     )
-
-    val stateWithLog: Pair<String, String> = when (decision) {
-      "APPROVE" -> "Approved" to "Request approved."
-      "REJECT" -> "Rejected" to "Request rejected."
-      "RETURN" -> "Returned" to "Request returned to originator."
-      else -> "" to ""
-    }
-
-
-    requestService.changeRequestState(
-      id = requestId,
-      state = ProcessingType.IN_PROGRESS.of(stateWithLog.first),
-      username = username,
-      log = stateWithLog.second,
-      logNotes = comment
-    )
-
   }
 
   /**
@@ -134,7 +118,7 @@ class ProcessApproveRequestBean(
 
     taskService.claim(task.id, username)
 
-    if (action == "RESUBMIT") {
+    if (action == RESUBMIT) {
       if (requestService.checkRequest(request.id)) {
         requestService.updateRequest(id = request.id, request = request, username = username)
       } else {

@@ -34,8 +34,15 @@ object ProcessApproveRequest {
   }
 
   object Values {
-    val APPROVE_DECISION = arrayOf("APPROVE", "REJECT", "RETURN")
-    val AMEND_ACTION = arrayOf("CANCEL", "RESUBMIT")
+
+    const val APPROVE = "APPROVE"
+    const val REJECT = "REJECT"
+    const val RETURN = "RETURN"
+    const val CANCEL = "CANCEL"
+    const val RESUBMIT = "RESUBMIT"
+
+    val APPROVE_DECISION = arrayOf(APPROVE, REJECT, RETURN)
+    val AMEND_ACTION = arrayOf(CANCEL, RESUBMIT)
   }
 }
 
