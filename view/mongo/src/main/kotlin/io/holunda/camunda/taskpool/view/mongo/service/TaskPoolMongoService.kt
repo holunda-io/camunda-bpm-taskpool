@@ -110,17 +110,6 @@ open class TaskPoolMongoService(
     return slice(list = read, query = query)
   }
 
-  @Deprecated("get rid of the slice, use paging of the query.")
-  fun slice(list: List<TaskWithDataEntries>, query: TasksWithDataEntriesForUserQuery): TasksWithDataEntriesResponse {
-    val totalCount = list.size
-    val offset = query.page * query.size
-    return if (totalCount > offset) {
-      TasksWithDataEntriesResponse(totalCount, list.slice(offset until Math.min(offset + query.size, totalCount)))
-    } else {
-      TasksWithDataEntriesResponse(totalCount, list)
-    }
-  }
-
   @QueryHandler
   override fun query(query: TaskCountByApplicationQuery): List<ApplicationWithTaskCount> {
 
@@ -136,6 +125,17 @@ open class TaskPoolMongoService(
     )
 
     return result.mappedResults
+  }
+
+  @Deprecated("get rid of the slice, use paging of the query.")
+  fun slice(list: List<TaskWithDataEntries>, query: TasksWithDataEntriesForUserQuery): TasksWithDataEntriesResponse {
+    val totalCount = list.size
+    val offset = query.page * query.size
+    return if (totalCount > offset) {
+      TasksWithDataEntriesResponse(totalCount, list.slice(offset until Math.min(offset + query.size, totalCount)))
+    } else {
+      TasksWithDataEntriesResponse(totalCount, list)
+    }
   }
 
   @EventHandler
@@ -249,20 +249,29 @@ open class TaskPoolMongoService(
       Aggregation.project().and("_id").`as`("application").and("count").`as`("taskCount")
     )
 
-    val result: ApplicationWithTaskCount = mongoTemplate.aggregate(
+    return mongoTemplate.aggregate(
       Aggregation.newAggregation(aggregations),
       "tasks",
       ApplicationWithTaskCount::class.java
     ).firstOrNull() ?: ApplicationWithTaskCount(applicationName, 0)
-
-    return result
   }
 
-  private fun updateTaskForUserQuery(taskId: String) = updateMapFilterQuery(
-    taskRepository.findById(taskId).map { it.task() }.orElse(null), TasksForUserQuery::class.java)
+  private fun updateTaskForUserQuery(taskId: String) {
+    val task = taskRepository.findById(taskId)
+    updateMapFilterQuery(task.map { it.task() }.orElse(null), TasksForUserQuery::class.java)
+    updateMapFilterQuery(task.map { tasksWithDataEntries(it) }.orElse(null), TasksWithDataEntriesForUserQuery::class.java)
+    updateMapFilterQuery(task.map { tasksWithDataEntries(it) }.orElse(null), TaskWithDataEntriesForIdQuery::class.java)
 
-  private fun updateDataEntryQuery(identity: DataIdentity) = updateMapFilterQuery(
-    dataEntryRepository.findByIdentity(identity).map { it.dataEntry() }.orElse(null), DataEntryQuery::class.java)
+  }
+  private fun updateDataEntryQuery(identity: DataIdentity) {
+    updateMapFilterQuery(dataEntryRepository.findByIdentity(identity).map { it.dataEntry() }.orElse(null), DataEntryQuery::class.java)
+  }
+
+  private fun updateTaskCountByApplicationQuery(applicationName: String) {
+    queryUpdateEmitter.emit(TaskCountByApplicationQuery::class.java,
+      { true },
+      query(applicationName))
+  }
 
   private fun <T : Any, Q : FilterQuery<T>> updateMapFilterQuery(entry: T?, clazz: Class<Q>) {
     if (entry != null) {
@@ -280,11 +289,6 @@ open class TaskPoolMongoService(
   private fun tasksWithDataEntries(taskDocument: TaskDocument) =
     tasksWithDataEntries(taskDocument.task())
 
-  private fun updateTaskCountByApplicationQuery(applicationName: String) {
-    queryUpdateEmitter.emit(TaskCountByApplicationQuery::class.java,
-      { true },
-      query(applicationName))
-  }
 
 }
 
