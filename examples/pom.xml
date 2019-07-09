@@ -17,7 +17,6 @@
   </properties>
 
   <modules>
-    <module>h2</module>
     <module>tasklist-api</module>
     <module>tasklist-backend</module>
     <module>process-application</module>
