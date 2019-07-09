@@ -142,6 +142,7 @@ class TaskPoolMongoService(
     return result.mappedResults
   }
 
+  @Suppress("unused")
   @EventHandler
   fun on(event: TaskCreatedEngineEvent) {
     logger.debug { "Task created $event received" }
@@ -150,6 +151,7 @@ class TaskPoolMongoService(
     updateTaskCountByApplicationQuery(event.sourceReference.applicationName)
   }
 
+  @Suppress("unused")
   @EventHandler
   fun on(event: TaskAssignedEngineEvent) {
     logger.debug { "Task assigned $event received" }
@@ -159,6 +161,7 @@ class TaskPoolMongoService(
     }
   }
 
+  @Suppress("unused")
   @EventHandler
   fun on(event: TaskCompletedEngineEvent) {
     logger.debug { "Task completed $event received" }
@@ -167,6 +170,7 @@ class TaskPoolMongoService(
     updateTaskCountByApplicationQuery(event.sourceReference.applicationName)
   }
 
+  @Suppress("unused")
   @EventHandler
   fun on(event: TaskDeletedEngineEvent) {
     logger.debug { "Task deleted $event received" }
@@ -175,6 +179,7 @@ class TaskPoolMongoService(
     updateTaskCountByApplicationQuery(event.sourceReference.applicationName)
   }
 
+  @Suppress("unused")
   @EventHandler
   fun on(event: TaskAttributeUpdatedEngineEvent) {
     logger.debug { "Task attributes updated $event received" }
@@ -184,6 +189,7 @@ class TaskPoolMongoService(
     }
   }
 
+  @Suppress("unused")
   @EventHandler
   fun on(event: TaskCandidateGroupChanged) {
     logger.debug { "Task candidate groups changed $event received" }
@@ -193,6 +199,7 @@ class TaskPoolMongoService(
     }
   }
 
+  @Suppress("unused")
   @EventHandler
   fun on(event: TaskCandidateUserChanged) {
     logger.debug { "Task user groups changed $event received" }
@@ -202,6 +209,7 @@ class TaskPoolMongoService(
     }
   }
 
+  @Suppress("unused")
   @EventHandler
   fun on(event: DataEntryCreatedEvent) {
     logger.debug { "Business data entry created $event" }
@@ -209,6 +217,7 @@ class TaskPoolMongoService(
     updateDataEntryQuery(QueryDataIdentity(entryType = event.entryType, entryId = event.entryId))
   }
 
+  @Suppress("unused")
   @EventHandler
   fun on(event: DataEntryUpdatedEvent) {
     logger.debug { "Business data entry updated $event" }
@@ -256,11 +265,16 @@ class TaskPoolMongoService(
     val task = taskRepository.findById(taskId)
     updateMapFilterQuery(task.map { it.task() }.orElse(null), TasksForUserQuery::class.java)
     updateMapFilterQuery(task.map { tasksWithDataEntries(it) }.orElse(null), TasksWithDataEntriesForUserQuery::class.java)
-    updateMapFilterQuery(task.map { tasksWithDataEntries(it) }.orElse(null), TaskWithDataEntriesForIdQuery::class.java)
   }
 
   private fun updateDataEntryQuery(identity: DataIdentity) = updateMapFilterQuery(
-    dataEntryRepository.findByIdentity(identity).map { it.dataEntry() }.orElse(null), DataEntryForIdentityQuery::class.java)
+    dataEntryRepository.findByIdentity(identity).map { it.dataEntry() }.orElse(null), DataEntriesForUserQuery::class.java)
+
+  private fun updateTaskCountByApplicationQuery(applicationName: String) {
+    queryUpdateEmitter.emit(TaskCountByApplicationQuery::class.java,
+      { true },
+      query(applicationName))
+  }
 
   private fun <T : Any, Q : FilterQuery<T>> updateMapFilterQuery(entry: T?, clazz: Class<Q>) {
     if (entry != null) {
@@ -277,13 +291,6 @@ class TaskPoolMongoService(
 
   private fun tasksWithDataEntries(taskDocument: TaskDocument) =
     tasksWithDataEntries(taskDocument.task())
-
-  private fun updateTaskCountByApplicationQuery(applicationName: String) {
-    queryUpdateEmitter.emit(TaskCountByApplicationQuery::class.java,
-      { true },
-      query(applicationName))
-  }
-
 }
 
 

@@ -56,6 +56,6 @@ class DataEntryService(
   override fun query(query: DataEntriesForUserQuery) = DataEntriesQueryResult(dataEntries.values.filter { query.applyFilter(it) }).slice(query)
 
 
-  private fun updateDataEntryQuery(identity: String) = queryUpdateEmitter.updateMapFilterQuery(dataEntries, identity, DataEntryForIdentityQuery::class.java)
+  private fun updateDataEntryQuery(identity: String) = queryUpdateEmitter.updateMapFilterQuery(dataEntries, identity, DataEntriesForUserQuery::class.java)
 
 }

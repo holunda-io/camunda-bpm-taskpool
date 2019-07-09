@@ -88,6 +88,7 @@ class TaskPoolService(
   override fun query(query: TaskCountByApplicationQuery): List<ApplicationWithTaskCount> =
     tasks.values.groupingBy { it.sourceReference.applicationName }.eachCount().map { ApplicationWithTaskCount(it.key, it.value) }
 
+  @Suppress("unused")
   @EventHandler
   fun on(event: TaskCreatedEngineEvent) {
     logger.debug { "Task created $event received" }
@@ -97,6 +98,7 @@ class TaskPoolService(
     updateTaskCountByApplicationQuery(task.sourceReference.applicationName)
   }
 
+  @Suppress("unused")
   @EventHandler
   fun on(event: TaskAssignedEngineEvent) {
     logger.debug { "Task assigned $event received" }
@@ -127,6 +129,7 @@ class TaskPoolService(
     applicationName?.let { updateTaskCountByApplicationQuery(it) }
   }
 
+  @Suppress("unused")
   @EventHandler
   fun on(event: TaskAttributeUpdatedEngineEvent) {
     logger.debug { "Task attributes updated $event received" }
@@ -137,6 +140,7 @@ class TaskPoolService(
     }
   }
 
+  @Suppress("unused")
   @EventHandler
   fun on(event: TaskCandidateGroupChanged) {
     logger.debug { "Task candidate groups changed $event received" }
@@ -147,6 +151,7 @@ class TaskPoolService(
     }
   }
 
+  @Suppress("unused")
   @EventHandler
   fun on(event: TaskCandidateUserChanged) {
     logger.debug { "Task user groups changed $event received" }
@@ -172,7 +177,6 @@ class TaskPoolService(
     dataEntries[dataIdentity(entryType = event.entryType, entryId = event.entryId)] = event.toDataEntry()
     // FIXME: update task query. see https://github.com/holunda-io/camunda-bpm-taskpool/issues/141
   }
-
 
   private fun updateTaskForUserQuery(taskId: String) {
     queryUpdateEmitter.updateMapFilterQuery(tasks, taskId, TasksForUserQuery::class.java)

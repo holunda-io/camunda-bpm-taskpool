@@ -50,8 +50,8 @@ open class TaskWithDataEntriesRepositoryExtensionImpl(
   as: "data_entries" } },
   { $sort: { "dueDate": 1 }},
   { $match: { $and: [
-  // { $or: [{ $or: [ { 'assignee' : "kermit" }, { 'candidateUsers' : "kermit" } ] }, { 'candidateGroups' : "other" } ] },
-  { $or: [{ $or: [ { 'assignee' : "kermit" }, { 'candidateUsers' : "kermit" } ] }, { 'candidateGroups' : "other" } ] }
+  // { $or: [{ $or: [ { 'assignee' : "kermit" }, { 'candidateUsers' : "kermit" } ] }, { 'candidateGroups' : { $in ["other"] } } ] },
+  { $or: [{ $or: [ { 'assignee' : "kermit" }, { 'candidateUsers' : "kermit" } ] }, { 'candidateGroups' : { $in ["other"] } } ] }
   // { $or: [ { 'businessKey': "3" } ] }
   ]
 
