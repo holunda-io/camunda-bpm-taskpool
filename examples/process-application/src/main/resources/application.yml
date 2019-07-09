@@ -47,13 +47,6 @@ camunda:
         enabled: true
         type: simple
 
-<<<<<<< Updated upstream
-logging.level.io.holunda.camunda.taskpool:
-  sender: DEBUG
-  core: WARN
-  view.simple: DEBUG
-
-=======
 logging.level:
   io.holunda.camunda:
     taskpool:
@@ -63,7 +56,6 @@ logging.level:
     datapool:
       sender: DEBUG
   org.hibernate.engine.jdbc.env.internal.LobCreatorBuilderImpl: ERROR
->>>>>>> Stashed changes
 
 swagger:
   enabled: true
