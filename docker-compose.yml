@@ -1,18 +1,29 @@
 version: "3.5"
 services:
 
-  h2db:
-    image: oscarfonts/h2
-    ports:
-      - 8082:81
-      - 9092:1521
+  postgres:
+    image: postgres:9
+    container_name: postgres
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=s3cr3T!
     volumes:
-      - ./.docker/mounts/h2-data:/opt/h2-data
+      - ./.docker/postgresql-init/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - 5432:5432
     networks:
       - taskpool-net
 
+  adminer:
+    image: adminer
+    container_name: adminer
+    restart: always
+    ports:
+      - 8089:8089
+
   axonserver:
     image: axoniq/axonserver
+    container_name: axonserver
     ports:
       - 8024:8024
       - 8124:8124
@@ -23,6 +34,7 @@ services:
 
   mongodb:
     image: mongo
+    container_name: mongodb
     ports:
       - 27017:27017
     volumes:

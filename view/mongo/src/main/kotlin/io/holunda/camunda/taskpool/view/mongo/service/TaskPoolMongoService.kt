@@ -252,8 +252,12 @@ class TaskPoolMongoService(
     return result
   }
 
-  private fun updateTaskForUserQuery(taskId: String) = updateMapFilterQuery(
-    taskRepository.findById(taskId).map { it.task() }.orElse(null), TasksForUserQuery::class.java)
+  private fun updateTaskForUserQuery(taskId: String) {
+    val task = taskRepository.findById(taskId)
+    updateMapFilterQuery(task.map { it.task() }.orElse(null), TasksForUserQuery::class.java)
+    updateMapFilterQuery(task.map { tasksWithDataEntries(it) }.orElse(null), TasksWithDataEntriesForUserQuery::class.java)
+    updateMapFilterQuery(task.map { tasksWithDataEntries(it) }.orElse(null), TaskWithDataEntriesForIdQuery::class.java)
+  }
 
   private fun updateDataEntryQuery(identity: DataIdentity) = updateMapFilterQuery(
     dataEntryRepository.findByIdentity(identity).map { it.dataEntry() }.orElse(null), DataEntryForIdentityQuery::class.java)

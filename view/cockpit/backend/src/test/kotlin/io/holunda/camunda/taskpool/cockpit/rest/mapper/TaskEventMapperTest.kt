@@ -8,7 +8,6 @@ import org.axonframework.messaging.MetaData
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mockito.spy
-import org.mockito.Mockito.verify
 import java.time.Instant
 
 class TaskEventMapperTest {
@@ -24,13 +23,11 @@ class TaskEventMapperTest {
   fun `should map the instant`() {
     taskEventMapper = spy(TaskEventMapperImpl::class.java)
 
-    var now = Instant.now()
-    var withMetada: TaskEventWithMetaData
-
-    var event = TaskCreatedEngineEvent(
+    val now = Instant.now()
+    val event = TaskCreatedEngineEvent(
       id = "4711",
       sourceReference = ProcessReference("i1", "e1", "d1", "d", "n", "a", null),
-      taskDefinitionKey = "");
+      taskDefinitionKey = "")
 
     val dto = taskEventMapper.dto(TaskEventWithMetaData(event, now, MetaData.emptyInstance()))
     assertThat(dto.created.toInstant()).isEqualTo(now)

@@ -5,10 +5,9 @@ spring:
   application:
     name: example-process-approval
   datasource:
-    url: jdbc:h2:tcp://localhost:9092/mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
-    username: sa
-    password:
-    driver-class-name: org.h2.Driver
+    url: jdbc:postgresql://localhost:5432/process
+    username: process_user
+    password: S3Cr3T!
   jpa:
     generate-ddl: false
     hibernate.ddl-auto: validate
@@ -27,7 +26,7 @@ camunda:
     id-generator: strong
     database:
       schema-update: false
-      type: h2
+      type: postgres
     webapp:
       index-redirect-enabled: false
   taskpool:
@@ -53,14 +52,15 @@ camunda:
       defaultApplicationTemplate: "http://localhost:${server.port}/${applicatioName}"
       defaultProcessTemplate: "/${formKey}?userId=%userId%"
 
-logging.level.io.holunda.camunda:
-  taskpool:
-    sender: DEBUG
-    core: WARN
-    view.simple: DEBUG
-  datapool:
-    sender: DEBUG
-
+logging.level:
+  io.holunda.camunda:
+    taskpool:
+      sender: DEBUG
+      core: WARN
+      view.simple: DEBUG
+    datapool:
+      sender: DEBUG
+  org.hibernate.engine.jdbc.env.internal.LobCreatorBuilderImpl: ERROR
 
 swagger:
   enabled: true
