@@ -3,6 +3,7 @@ services:
 
   postgres:
     image: postgres:9
+    container_name: postgres
     environment:
       - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=s3cr3T!
@@ -15,6 +16,7 @@ services:
 
   adminer:
     image: adminer
+    container_name: adminer
     restart: always
     ports:
       - 8089:8089
