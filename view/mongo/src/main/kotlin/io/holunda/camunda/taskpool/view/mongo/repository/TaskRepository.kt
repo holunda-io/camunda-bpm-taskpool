@@ -12,7 +12,6 @@ import org.springframework.stereotype.Repository
 @Repository
 interface TaskRepository : MongoRepository<TaskDocument, String> {
 
-  @Query("{ \$or: [{ \$or: [ { 'assignee' : ?0 }, { 'candidateUsers' : ?0 } ] }, { 'candidateGroups' : ?1} ] }")
+  @Query("{ \$or: [{ 'assignee': ?0 }, { 'candidateUsers': ?0 }, { 'candidateGroups': { \$in: ?1} } ] }")
   fun findAllForUser(@Param("username") username: String, @Param("groupNames") groupNames: Set<String>): List<TaskDocument>
 }
-

@@ -42,7 +42,6 @@ open class TaskWithDataEntriesRepositoryExtensionImpl(
   /**
   <pre>
   db.tasks.aggregate([
-  { $unwind: "$dataEntriesRefs" },
   { $lookup: {
   from: "data-entries",
   localField: "dataEntriesRefs",
@@ -50,8 +49,8 @@ open class TaskWithDataEntriesRepositoryExtensionImpl(
   as: "data_entries" } },
   { $sort: { "dueDate": 1 }},
   { $match: { $and: [
-  // { $or: [{ $or: [ { 'assignee' : "kermit" }, { 'candidateUsers' : "kermit" } ] }, { 'candidateGroups' : "other" } ] },
-  { $or: [{ $or: [ { 'assignee' : "kermit" }, { 'candidateUsers' : "kermit" } ] }, { 'candidateGroups' : "other" } ] }
+  // { $or: [ { 'assignee' : "kermit" }, { 'candidateUsers' : "kermit" }, { 'candidateGroups' : { $in: [ "other" ] } } ] },
+  { $or: [ { 'assignee' : "kermit" }, { 'candidateUsers' : "kermit" }, { 'candidateGroups' : { $in: [ "other" ] } } ] }
   // { $or: [ { 'businessKey': "3" } ] }
   ]
 
@@ -84,17 +83,12 @@ open class TaskWithDataEntriesRepositoryExtensionImpl(
       }
     }.toTypedArray()
 
-    // { \$or: [{ \$or: [ { 'assignee' : ?0 }, { 'candidateUsers' : ?0 } ] }, { 'candidateGroups' : ?1} ] }
+    // { $or: [{ 'assignee': ?0 }, { 'candidateUsers': ?0 }, { 'candidateGroups': { $in: ?1} } ] }
     val tasksForUserCriteria = Criteria()
       .orOperator(
-        Criteria()
-          .orOperator(
-            Criteria.where("assignee").isEqualTo(user.username),
-            Criteria.where("candidateUsers").isEqualTo(user.username)
-          ),
-        Criteria
-          .where("candidateGroups")
-          .`in`(user.groups)
+        Criteria.where("assignee").isEqualTo(user.username),
+        Criteria.where("candidateUsers").isEqualTo(user.username),
+        Criteria.where("candidateGroups").`in`(user.groups)
       )
 
     val filterCriteria = if (filterPropertyCriteria.isNotEmpty()) {
