@@ -20,6 +20,8 @@ services:
     restart: always
     ports:
       - 8089:8089
+    networks:
+      - taskpool-net
 
   axonserver:
     image: axoniq/axonserver
@@ -28,7 +30,7 @@ services:
       - 8024:8024
       - 8124:8124
     volumes:
-      - ./.docker/mounts/axon-data:/opt/axonserver/data
+      - axonserver-data:/opt/axonserver/data
     networks:
       - taskpool-net
 
@@ -38,7 +40,7 @@ services:
     ports:
       - 27017:27017
     volumes:
-      - ./.docker/mounts/mongo-data:/data/db
+      - mongo-data:/data/db
       - ./.docker/mongodb-conf:/etc/mongo
       - ./.docker/mongodb-init:/docker-entrypoint-initdb.d/
     command:
@@ -46,8 +48,16 @@ services:
       - "/etc/mongo/mongod.conf"
       - "--wiredTigerCacheSizeGB"
       - "0.5"
-
+    networks:
+      - taskpool-net
 
 networks:
   taskpool-net:
     name: taskpool
+
+volumes:
+  axonserver-data:
+    external: true
+  mongo-data:
+    external: true
+

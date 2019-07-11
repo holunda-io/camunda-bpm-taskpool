@@ -90,7 +90,9 @@ class ProcessApproveRequestBean(
       .taskId(taskId)
       .taskDefinitionKey(ProcessApproveRequest.Elements.APPROVE_REQUEST)
       .singleResult() ?: throw NoSuchElementException("Task with id $taskId not found.")
+
     val requestId = runtimeService.getVariable(task.executionId, ProcessApproveRequest.Variables.REQUEST_ID) as String
+    requestService.changeRequestState(id = requestId, username = username, state = ProcessingType.IN_PROGRESS.of(decision.toUpperCase()), log = "Approval decision was $decision.", logNotes = comment)
 
     taskService.claim(task.id, username)
 

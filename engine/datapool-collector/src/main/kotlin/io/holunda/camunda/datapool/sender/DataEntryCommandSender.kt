@@ -32,8 +32,7 @@ interface DataEntryCommandSender {
     state: DataEntryState = ProcessingType.UNDEFINED.of(),
     modification: Modification = Modification.now(),
     correlations: CorrelationMap = newCorrelations(),
-    authorizedUsers: List<String> = listOf(),
-    authorizedGroups: List<String> = listOf()
+    authorizations: List<AuthorizationChange> = listOf()
   )
 
 

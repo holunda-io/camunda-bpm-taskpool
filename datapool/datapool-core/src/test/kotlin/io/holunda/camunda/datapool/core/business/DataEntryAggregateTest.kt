@@ -39,8 +39,7 @@ class DataEntryAggregateTest {
         payload = command.dataEntry.payload,
         correlations = command.dataEntry.correlations,
         createModification = command.dataEntry.modification,
-        authorizedUsers = command.dataEntry.authorizedUsers,
-        authorizedGroups = command.dataEntry.authorizedGroups,
+        authorizations = command.dataEntry.authorizations,
         formKey = command.dataEntry.formKey
       ))
   }
@@ -72,8 +71,7 @@ class DataEntryAggregateTest {
           payload = command.dataEntry.payload,
           correlations = command.dataEntry.correlations,
           createModification = command.dataEntry.modification,
-          authorizedUsers = command.dataEntry.authorizedUsers,
-          authorizedGroups = command.dataEntry.authorizedGroups,
+          authorizations = command.dataEntry.authorizations,
           formKey = command.dataEntry.formKey
           )
         )
@@ -89,8 +87,7 @@ class DataEntryAggregateTest {
         payload = command.dataEntry.payload,
         correlations = command.dataEntry.correlations,
         updateModification = command.dataEntry.modification,
-        authorizedUsers = command.dataEntry.authorizedUsers,
-        authorizedGroups = command.dataEntry.authorizedGroups,
+        authorizations = command.dataEntry.authorizations,
         formKey = command.dataEntry.formKey
       ))
 

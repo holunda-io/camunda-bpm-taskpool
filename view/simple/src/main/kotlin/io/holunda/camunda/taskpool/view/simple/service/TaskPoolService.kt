@@ -2,7 +2,7 @@ package io.holunda.camunda.taskpool.view.simple.service
 
 import io.holunda.camunda.taskpool.api.business.DataEntryCreatedEvent
 import io.holunda.camunda.taskpool.api.business.DataEntryUpdatedEvent
-import io.holunda.camunda.taskpool.api.business.dataIdentity
+import io.holunda.camunda.taskpool.api.business.dataIdentityString
 import io.holunda.camunda.taskpool.api.task.*
 import io.holunda.camunda.taskpool.view.*
 import io.holunda.camunda.taskpool.view.query.TaskApi
@@ -166,7 +166,8 @@ class TaskPoolService(
   @EventHandler
   fun on(event: DataEntryCreatedEvent) {
     logger.debug { "Business data entry created $event" }
-    dataEntries[dataIdentity(entryType = event.entryType, entryId = event.entryId)] = event.toDataEntry()
+    val entryId = dataIdentityString(entryType = event.entryType, entryId = event.entryId)
+    dataEntries[entryId] = event.toDataEntry()
     // FIXME: update task query. see https://github.com/holunda-io/camunda-bpm-taskpool/issues/141
   }
 
@@ -174,7 +175,8 @@ class TaskPoolService(
   @EventHandler
   fun on(event: DataEntryUpdatedEvent) {
     logger.debug { "Business data entry updated $event" }
-    dataEntries[dataIdentity(entryType = event.entryType, entryId = event.entryId)] = event.toDataEntry()
+    val entryId = dataIdentityString(entryType = event.entryType, entryId = event.entryId)
+    dataEntries[entryId] = event.toDataEntry(dataEntries[entryId])
     // FIXME: update task query. see https://github.com/holunda-io/camunda-bpm-taskpool/issues/141
   }
 

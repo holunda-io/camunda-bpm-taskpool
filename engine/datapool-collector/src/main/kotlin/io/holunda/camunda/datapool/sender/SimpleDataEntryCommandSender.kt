@@ -4,6 +4,7 @@ import io.holunda.camunda.datapool.DataEntrySenderProperties
 import io.holunda.camunda.datapool.projector.DataEntryProjectionSupplier
 import io.holunda.camunda.datapool.projector.DataEntryProjector
 import io.holunda.camunda.taskpool.api.business.*
+import io.holunda.camunda.taskpool.api.business.AuthorizationChange.Companion.addUser
 import io.holunda.camunda.variable.serializer.serialize
 import org.axonframework.commandhandling.gateway.CommandGateway
 import org.slf4j.Logger
@@ -38,7 +39,7 @@ class SimpleDataEntryCommandSender(
         applicationName = properties.applicationName,
         state = state,
         modification = modification,
-        authorizedUsers = if (modification.username != null) listOf(modification.username!!) else listOf())
+        authorizations = if (modification.username != null) listOf(addUser(modification.username!!)) else listOf())
     )
     this.sendDataEntryCommand(command = command)
   }
@@ -53,9 +54,7 @@ class SimpleDataEntryCommandSender(
     state: DataEntryState,
     modification: Modification,
     correlations: CorrelationMap,
-    authorizedUsers: List<String>,
-    authorizedGroups: List<String>)
-  {
+    authorizations: List<AuthorizationChange>) {
     val command = CreateOrUpdateDataEntryCommand(
       DataEntry(
         entryType = entryType,
@@ -65,12 +64,11 @@ class SimpleDataEntryCommandSender(
         name = name,
         type = type,
         description = description,
-        authorizedUsers = authorizedUsers,
-        authorizedGroups = authorizedGroups,
+        authorizations = authorizations,
         applicationName = properties.applicationName,
         state = state,
         modification = modification
-    ))
+      ))
     this.sendDataEntryCommand(command = command)
 
   }

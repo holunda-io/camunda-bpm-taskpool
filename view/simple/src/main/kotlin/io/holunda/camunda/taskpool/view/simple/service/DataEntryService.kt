@@ -1,14 +1,13 @@
 package io.holunda.camunda.taskpool.view.simple.service
 
-import io.holunda.camunda.taskpool.api.business.DataEntryCreatedEvent
-import io.holunda.camunda.taskpool.api.business.DataEntryUpdatedEvent
-import io.holunda.camunda.taskpool.api.business.dataIdentity
+import io.holunda.camunda.taskpool.api.business.*
+import io.holunda.camunda.taskpool.api.business.AuthorizationChange.Companion.applyGroupAuthorization
+import io.holunda.camunda.taskpool.api.business.AuthorizationChange.Companion.applyUserAuthorization
 import io.holunda.camunda.taskpool.view.DataEntry
 import io.holunda.camunda.taskpool.view.query.DataEntryApi
 import io.holunda.camunda.taskpool.view.query.data.DataEntriesForUserQuery
-import io.holunda.camunda.taskpool.view.query.data.DataEntryForIdentityQuery
 import io.holunda.camunda.taskpool.view.query.data.DataEntriesQueryResult
-import io.holunda.camunda.taskpool.view.toDataEntry
+import io.holunda.camunda.taskpool.view.query.data.DataEntryForIdentityQuery
 import mu.KLogging
 import org.axonframework.config.ProcessingGroup
 import org.axonframework.eventhandling.EventHandler
@@ -31,16 +30,19 @@ class DataEntryService(
   @EventHandler
   fun on(event: DataEntryCreatedEvent) {
     logger.debug { "Business data entry created $event" }
-    dataEntries[dataIdentity(entryType = event.entryType, entryId = event.entryId)] = event.toDataEntry()
-    updateDataEntryQuery(dataIdentity(entryType = event.entryType, entryId = event.entryId))
+    val entryId = dataIdentityString(entryType = event.entryType, entryId = event.entryId)
+    dataEntries[entryId] = event.toDataEntry()
+
+    updateDataEntryQuery(entryId)
   }
 
   @Suppress("unused")
   @EventHandler
   fun on(event: DataEntryUpdatedEvent) {
     logger.debug { "Business data entry updated $event" }
-    dataEntries[dataIdentity(entryType = event.entryType, entryId = event.entryId)] = event.toDataEntry()
-    updateDataEntryQuery(dataIdentity(entryType = event.entryType, entryId = event.entryId))
+    val entryId = dataIdentityString(entryType = event.entryType, entryId = event.entryId)
+    dataEntries[entryId] = event.toDataEntry(dataEntries[entryId])
+    updateDataEntryQuery(entryId)
   }
 
   /**
@@ -59,3 +61,51 @@ class DataEntryService(
   private fun updateDataEntryQuery(identity: String) = queryUpdateEmitter.updateMapFilterQuery(dataEntries, identity, DataEntriesForUserQuery::class.java)
 
 }
+
+
+fun DataEntryUpdatedEvent.toDataEntry(oldEntry: DataEntry?) = if (oldEntry == null) {
+  DataEntry(
+    entryType = this.entryType,
+    entryId = this.entryId,
+    payload = this.payload,
+    correlations = this.correlations,
+    name = this.name,
+    applicationName = this.applicationName,
+    type = this.type,
+    description = this.description,
+    state = this.state,
+    formKey = this.formKey,
+    authorizedUsers = applyUserAuthorization(listOf(), this.authorizations),
+    authorizedGroups = applyGroupAuthorization(listOf(), this.authorizations)
+  )
+} else {
+  oldEntry.copy(
+    payload = this.payload,
+    correlations = this.correlations,
+    name = this.name,
+    applicationName = this.applicationName,
+    type = this.type,
+    description = this.description,
+    state = this.state,
+    formKey = this.formKey,
+    authorizedUsers = applyUserAuthorization(oldEntry.authorizedUsers, this.authorizations),
+    authorizedGroups = applyGroupAuthorization(oldEntry.authorizedGroups, this.authorizations)
+  )
+}
+
+fun DataEntryCreatedEvent.toDataEntry() = DataEntry(
+  entryType = this.entryType,
+  entryId = this.entryId,
+  payload = this.payload,
+  correlations = this.correlations,
+  name = this.name,
+  applicationName = this.applicationName,
+  type = this.type,
+  description = this.description,
+  state = this.state,
+  formKey = this.formKey,
+  authorizedUsers = applyUserAuthorization(listOf(), this.authorizations),
+  authorizedGroups = applyGroupAuthorization(listOf(), this.authorizations)
+)
+
+

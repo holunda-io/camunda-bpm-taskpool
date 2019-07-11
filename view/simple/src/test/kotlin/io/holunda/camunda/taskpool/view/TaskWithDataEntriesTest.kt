@@ -2,7 +2,7 @@ package io.holunda.camunda.taskpool.view
 
 import io.holunda.camunda.taskpool.api.business.CorrelationMap
 import io.holunda.camunda.taskpool.api.business.addCorrelation
-import io.holunda.camunda.taskpool.api.business.dataIdentity
+import io.holunda.camunda.taskpool.api.business.dataIdentityString
 import io.holunda.camunda.taskpool.api.business.newCorrelations
 import io.holunda.camunda.taskpool.api.task.ProcessReference
 import org.assertj.core.api.Assertions.assertThat
@@ -49,7 +49,7 @@ class TaskWithDataEntriesTest {
 
     // add all to the data entries and provide correlations
     dataEntryList.forEach {
-      dataEntries[dataIdentity(entryType = it.entryType, entryId = it.entryId)] = it
+      dataEntries[dataIdentityString(entryType = it.entryType, entryId = it.entryId)] = it
       correlationMap.addCorrelation(entryType = it.entryType, entryId = it.entryId)
     }
 

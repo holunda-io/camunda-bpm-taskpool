@@ -16,16 +16,16 @@ data class DataEntryDocument(
   val identity: String,
   @Indexed
   val entryType: String,
-  val payload: Map<String, Any>,
-  val correlations: Map<String, Any>,
+  val payload: Map<String, Any> = mapOf(),
+  val correlations: Map<String, Any> = mapOf(),
   val type: String,
   val name: String,
   val applicationName: String,
   val description: String?,
   val state: String?,
   val statusType: String?,
-  val authorizedUsers: List<String>,
-  val authorizedGroups: List<String>
+  val authorizedUsers: List<String> = listOf(),
+  val authorizedGroups: List<String> = listOf()
 ) {
   companion object {
       const val NAME = "data-entries"

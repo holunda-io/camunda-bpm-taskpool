@@ -1,9 +1,9 @@
 package io.holunda.camunda.taskpool.example.process.process
 
 import io.holunda.camunda.datapool.sender.DataEntryCommandSender
+import io.holunda.camunda.taskpool.api.business.AuthorizationChange.Companion.addUser
 import io.holunda.camunda.taskpool.api.business.DataEntryState
 import io.holunda.camunda.taskpool.api.business.Modification
-import io.holunda.camunda.taskpool.api.business.ProcessingType
 import io.holunda.camunda.taskpool.api.business.ProcessingType.*
 import io.holunda.camunda.taskpool.collector.TaskEventCollectorService
 import io.holunda.camunda.taskpool.example.process.process.ProcessApproveRequest.Values.APPROVE
@@ -76,8 +76,7 @@ class RequestStatusListener(
         log = log,
         logNotes = logNotes
       ),
-      authorizedUsers = listOf(task.assignee, request.applicant),
-      authorizedGroups = listOf()
+      authorizations = listOf(addUser(task.assignee), addUser(request.applicant))
     )
   }
 }

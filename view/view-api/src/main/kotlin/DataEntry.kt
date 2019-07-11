@@ -63,37 +63,6 @@ data class DataEntry(
 
 ) : DataIdentity {
   val identity by lazy {
-    dataIdentity(entryType, entryId)
+    dataIdentityString(entryType, entryId)
   }
 }
-
-
-fun DataEntryUpdatedEvent.toDataEntry() = DataEntry(
-  entryType = this.entryType,
-  entryId = this.entryId,
-  payload = this.payload,
-  correlations = this.correlations,
-  name = this.name,
-  applicationName = this.applicationName,
-  type = this.type,
-  description = this.description,
-  authorizedUsers = this.authorizedUsers,
-  authorizedGroups = this.authorizedGroups,
-  state = this.state,
-  formKey = this.formKey
-)
-
-fun DataEntryCreatedEvent.toDataEntry() = DataEntry(
-  entryType = this.entryType,
-  entryId = this.entryId,
-  payload = this.payload,
-  correlations = this.correlations,
-  name = this.name,
-  applicationName = this.applicationName,
-  type = this.type,
-  description = this.description,
-  authorizedUsers = this.authorizedUsers,
-  authorizedGroups = this.authorizedGroups,
-  state = this.state,
-  formKey = this.formKey
-)

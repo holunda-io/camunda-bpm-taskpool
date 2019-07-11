@@ -3,7 +3,7 @@ package io.holunda.camunda.taskpool.view.mongo.service
 import io.holunda.camunda.taskpool.api.business.DataEntryCreatedEvent
 import io.holunda.camunda.taskpool.api.business.DataEntryUpdatedEvent
 import io.holunda.camunda.taskpool.api.business.DataIdentity
-import io.holunda.camunda.taskpool.api.business.dataIdentity
+import io.holunda.camunda.taskpool.api.business.dataIdentityString
 import io.holunda.camunda.taskpool.api.task.*
 import io.holunda.camunda.taskpool.view.Task
 import io.holunda.camunda.taskpool.view.TaskWithDataEntries
@@ -29,6 +29,7 @@ import org.springframework.data.mongodb.core.aggregation.Aggregation
 import org.springframework.data.mongodb.core.aggregation.AggregationResults
 import org.springframework.data.mongodb.core.query.Criteria
 import org.springframework.data.mongodb.core.query.isEqualTo
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Component
 
 /**
@@ -221,7 +222,8 @@ class TaskPoolMongoService(
   @EventHandler
   fun on(event: DataEntryUpdatedEvent) {
     logger.debug { "Business data entry updated $event" }
-    dataEntryRepository.save(event.toDocument())
+    val oldEntry: DataEntryDocument? = dataEntryRepository.findByIdOrNull(dataIdentityString(entryType = event.entryType, entryId = event.entryId))
+    dataEntryRepository.save(event.toDocument(oldEntry))
     updateDataEntryQuery(QueryDataIdentity(entryType = event.entryType, entryId = event.entryId))
   }
 
@@ -286,7 +288,7 @@ class TaskPoolMongoService(
     TaskWithDataEntries(
       task = task,
       dataEntries = this.dataEntryRepository.findAllById(
-        task.correlations.map { dataIdentity(entryType = it.key, entryId = it.value.toString()) }).map { it.dataEntry() }
+        task.correlations.map { dataIdentityString(entryType = it.key, entryId = it.value.toString()) }).map { it.dataEntry() }
     )
 
   private fun tasksWithDataEntries(taskDocument: TaskDocument) =

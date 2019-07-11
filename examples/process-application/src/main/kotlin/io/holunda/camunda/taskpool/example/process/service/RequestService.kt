@@ -1,6 +1,7 @@
 package io.holunda.camunda.taskpool.example.process.service
 
 import io.holunda.camunda.datapool.sender.DataEntryCommandSender
+import io.holunda.camunda.taskpool.api.business.AuthorizationChange.Companion.addUser
 import io.holunda.camunda.taskpool.api.business.DataEntryState
 import io.holunda.camunda.taskpool.api.business.Modification
 import io.holunda.camunda.taskpool.api.business.ProcessingType
@@ -24,11 +25,23 @@ class RequestService(
 
   fun addRequest(request: Request, username: String): String {
     val saved = repository.save(request)
-    changeRequestState(request = request,
+    sender.sendDataEntryCommand(
+      entryType = BusinessDataEntry.REQUEST,
+      entryId = request.id,
+      payload = request,
       state = ProcessingType.PRELIMINARY.of("Draft"),
-      username = username,
-      log = "Draft created.",
-      logNotes = "Request draft on behalf of ${request.applicant} created.")
+      name = "AR ${request.id}",
+      description = request.subject,
+      type = "Approval Request",
+      modification = Modification(
+        time = OffsetDateTime.now(),
+        username = username,
+        log = "Draft created.",
+        logNotes = "Request draft on behalf of ${request.applicant} created."
+      ),
+      authorizations = listOf(addUser(username), addUser(request.applicant))
+    )
+
     return saved.id
   }
 
@@ -38,8 +51,6 @@ class RequestService(
 
   fun checkRequest(id: String): Boolean = this.repository.existsById(id)
 
-  fun changeRequestState(id: String, state: DataEntryState, username: String, log: String? = null, logNotes: String? = null) =
-    changeRequestState(getRequest(id), state, username, log, logNotes)
 
   fun updateRequest(id: String, request: Request, username: String) {
     if (checkRequest(id)) {
@@ -51,6 +62,9 @@ class RequestService(
   fun getAllRequests(): List<Request> {
     return this.repository.findAll()
   }
+
+  fun changeRequestState(id: String, state: DataEntryState, username: String, log: String? = null, logNotes: String? = null) =
+    changeRequestState(getRequest(id), state, username, log, logNotes)
 
   private fun changeRequestState(request: Request, state: DataEntryState, username: String, log: String? = null, logNotes: String? = null) {
     sender.sendDataEntryCommand(
@@ -67,8 +81,7 @@ class RequestService(
         log = log,
         logNotes = logNotes
       ),
-      authorizedUsers = listOf(username, request.applicant),
-      authorizedGroups = listOf()
+      authorizations = listOf(addUser(username))
     )
   }
 

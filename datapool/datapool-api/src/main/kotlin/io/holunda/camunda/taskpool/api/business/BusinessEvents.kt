@@ -53,11 +53,7 @@ data class DataEntryCreatedEvent(
   /**
    * List of authorized users.
    */
-  val authorizedUsers: List<String> = listOf(),
-  /**
-   * List of authorized groups.
-   */
-  val authorizedGroups: List<String> = listOf(),
+  val authorizations: List<AuthorizationChange> = listOf(),
   /**
    * Form key.
    */
@@ -110,13 +106,9 @@ data class DataEntryUpdatedEvent(
    */
   val updateModification: Modification = Modification.now(),
   /**
-   * List of authorized users.
+   * List of authorizations.
    */
-  val authorizedUsers: List<String> = listOf(),
-  /**
-   * List of authorized groups.
-   */
-  val authorizedGroups: List<String> = listOf(),
+  val authorizations: List<AuthorizationChange> = listOf(),
   /**
    * Form key.
    */

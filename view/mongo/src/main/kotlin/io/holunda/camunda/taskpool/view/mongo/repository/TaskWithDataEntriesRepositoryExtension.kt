@@ -90,7 +90,7 @@ open class TaskWithDataEntriesRepositoryExtensionImpl(
         Criteria()
           .orOperator(
             Criteria.where("assignee").isEqualTo(user.username),
-            Criteria.where("candidateUsers").isEqualTo(user.username)
+            Criteria.where("candidateUsers").`in`(user.username)
           ),
         Criteria
           .where("candidateGroups")

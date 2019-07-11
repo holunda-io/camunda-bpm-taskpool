@@ -26,8 +26,7 @@ class DataEntryAggregate() {
       payload = command.dataEntry.payload,
       correlations = command.dataEntry.correlations,
       createModification = command.dataEntry.modification,
-      authorizedUsers = command.dataEntry.authorizedUsers,
-      authorizedGroups = command.dataEntry.authorizedGroups,
+      authorizations = command.dataEntry.authorizations,
       formKey = command.dataEntry.formKey
     ))
   }
@@ -45,15 +44,14 @@ class DataEntryAggregate() {
       payload = command.dataEntry.payload,
       correlations = command.dataEntry.correlations,
       updateModification = command.dataEntry.modification,
-      authorizedUsers = command.dataEntry.authorizedUsers,
-      authorizedGroups = command.dataEntry.authorizedGroups,
+      authorizations = command.dataEntry.authorizations,
       formKey = command.dataEntry.formKey
     ))
   }
 
   @EventSourcingHandler
   fun on(event: DataEntryCreatedEvent) {
-    this.dataIdentity = dataIdentity(entryType = event.entryType, entryId = event.entryId)
+    this.dataIdentity = dataIdentityString(entryType = event.entryType, entryId = event.entryId)
   }
 
 }

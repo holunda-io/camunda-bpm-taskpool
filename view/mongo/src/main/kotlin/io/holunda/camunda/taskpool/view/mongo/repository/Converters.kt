@@ -21,7 +21,7 @@ fun Task.taskDocument() = TaskDocument(
   payload = this.payload.toMutableMap(),
   // FIXME: remove
   correlations = this.correlations.toMutableMap(),
-  dataEntriesRefs = this.correlations.map { dataIdentity(entryType = it.key, entryId = it.value as EntryId) }.toSet(),
+  dataEntriesRefs = this.correlations.map { dataIdentityString(entryType = it.key, entryId = it.value as EntryId) }.toSet(),
   businessKey = this.businessKey,
   name = this.name,
   description = this.description,
@@ -120,36 +120,51 @@ fun mapState(state: String?, statusType: String?): DataEntryState = if (state !=
   ProcessingType.UNDEFINED.of("")
 }
 
-
 fun DataEntryCreatedEvent.toDocument() = DataEntryDocument(
-  identity = dataIdentity(entryType = this.entryType, entryId = this.entryId),
+  identity = dataIdentityString(entryType = this.entryType, entryId = this.entryId),
   entryType = this.entryType,
   payload = this.payload,
   correlations = this.correlations,
   name = this.name,
   description = this.description,
   type = this.type,
-  authorizedUsers = authorizedUsers,
-  authorizedGroups = this.authorizedGroups,
+  authorizedUsers = AuthorizationChange.applyUserAuthorization(listOf(), this.authorizations),
+  authorizedGroups = AuthorizationChange.applyGroupAuthorization(listOf(), this.authorizations),
   applicationName = this.applicationName,
   state = this.state.state,
   statusType = this.state.processingType.name
 )
 
-fun DataEntryUpdatedEvent.toDocument() = DataEntryDocument(
-  identity = dataIdentity(entryType = this.entryType, entryId = this.entryId),
-  entryType = this.entryType,
-  payload = this.payload,
-  correlations = this.correlations,
-  name = this.name,
-  description = this.description,
-  type = this.type,
-  authorizedUsers = authorizedUsers,
-  authorizedGroups = this.authorizedGroups,
-  applicationName = this.applicationName,
-  state = this.state.state,
-  statusType = this.state.processingType.name
-)
+fun DataEntryUpdatedEvent.toDocument(oldDocument: DataEntryDocument?) = if (oldDocument != null) {
+  oldDocument.copy(
+    entryType = this.entryType,
+    payload = this.payload,
+    correlations = this.correlations,
+    name = this.name,
+    description = this.description,
+    type = this.type,
+    authorizedUsers = AuthorizationChange.applyUserAuthorization(oldDocument.authorizedUsers, this.authorizations),
+    authorizedGroups = AuthorizationChange.applyGroupAuthorization(oldDocument.authorizedGroups, this.authorizations),
+    applicationName = this.applicationName,
+    state = this.state.state,
+    statusType = this.state.processingType.name
+  )
+} else {
+  DataEntryDocument(
+    identity = dataIdentityString(entryType = this.entryType, entryId = this.entryId),
+    entryType = this.entryType,
+    payload = this.payload,
+    correlations = this.correlations,
+    name = this.name,
+    description = this.description,
+    type = this.type,
+    authorizedUsers = AuthorizationChange.applyUserAuthorization(listOf(), this.authorizations),
+    authorizedGroups = AuthorizationChange.applyGroupAuthorization(listOf(), this.authorizations),
+    applicationName = this.applicationName,
+    state = this.state.state,
+    statusType = this.state.processingType.name
+  )
+}
 
 
 /**
