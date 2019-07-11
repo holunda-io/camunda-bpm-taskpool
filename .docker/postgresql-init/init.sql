@@ -1,0 +1,3 @@
+CREATE DATABASE process;
+CREATE USER process_user WITH PASSWORD 'S3Cr3T!';
+GRANT ALL PRIVILEGES ON DATABASE process to process_user;
