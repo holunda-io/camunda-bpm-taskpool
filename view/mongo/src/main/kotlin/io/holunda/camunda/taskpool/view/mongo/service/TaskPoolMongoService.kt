@@ -26,6 +26,7 @@ import org.springframework.data.mongodb.core.aggregation.Aggregation
 import org.springframework.data.mongodb.core.aggregation.AggregationResults
 import org.springframework.data.mongodb.core.query.Criteria
 import org.springframework.data.mongodb.core.query.isEqualTo
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Component
 
 /**
@@ -64,7 +65,7 @@ open class TaskPoolMongoService(
   @QueryHandler
   override fun query(query: DataEntryQuery): List<DataEntry> {
     return if (query.entryId != null) {
-      val dataEntry = dataEntryRepository.findByIdentity(query.identity()).orElse(null)?.dataEntry()
+      val dataEntry = dataEntryRepository.findByIdentity(query.identity())?.dataEntry()
       if (dataEntry != null) {
         listOf(dataEntry)
       } else {
@@ -79,14 +80,14 @@ open class TaskPoolMongoService(
    * Retrieves a task for given task id.
    */
   @QueryHandler
-  override fun query(query: TaskForIdQuery): Task? = taskRepository.findById(query.id).orElse(null)?.task()
+  override fun query(query: TaskForIdQuery): Task? = taskRepository.findByIdOrNull(query.id)?.task()
 
   /**
    * Retrieves a task with data entries for given task id.
    */
   @QueryHandler
   override fun query(query: TaskWithDataEntriesForIdQuery): TaskWithDataEntries? {
-    val task = taskRepository.findById(query.id).orElse(null)?.task()
+    val task = taskRepository.findByIdOrNull(query.id)?.task()
     return if (task != null) {
       tasksWithDataEntries(task)
     } else {
@@ -257,14 +258,14 @@ open class TaskPoolMongoService(
   }
 
   private fun updateTaskForUserQuery(taskId: String) {
-    val task = taskRepository.findById(taskId)
-    updateMapFilterQuery(task.map { it.task() }.orElse(null), TasksForUserQuery::class.java)
-    updateMapFilterQuery(task.map { tasksWithDataEntries(it) }.orElse(null), TasksWithDataEntriesForUserQuery::class.java)
-    updateMapFilterQuery(task.map { tasksWithDataEntries(it) }.orElse(null), TaskWithDataEntriesForIdQuery::class.java)
+    val task = taskRepository.findByIdOrNull(taskId)
+    updateMapFilterQuery(task?.task(), TasksForUserQuery::class.java)
+    updateMapFilterQuery(task?.let { tasksWithDataEntries(it) }, TasksWithDataEntriesForUserQuery::class.java)
+    updateMapFilterQuery(task?.let { tasksWithDataEntries(it) }, TaskWithDataEntriesForIdQuery::class.java)
 
   }
   private fun updateDataEntryQuery(identity: DataIdentity) {
-    updateMapFilterQuery(dataEntryRepository.findByIdentity(identity).map { it.dataEntry() }.orElse(null), DataEntryQuery::class.java)
+    updateMapFilterQuery(dataEntryRepository.findByIdentity(identity)?.dataEntry(), DataEntryQuery::class.java)
   }
 
   private fun updateTaskCountByApplicationQuery(applicationName: String) {

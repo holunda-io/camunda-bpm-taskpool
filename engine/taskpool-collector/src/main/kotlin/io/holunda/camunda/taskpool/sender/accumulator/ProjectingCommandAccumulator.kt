@@ -21,9 +21,7 @@ class ProjectingCommandAccumulator : CommandAccumulator {
     } else {
       // otherwise just return the empty or singleton list
       taskCommands
-    }.map {
-      handlePayloadAndCorrelations(it)
-    }
+    }.map (::handlePayloadAndCorrelations)
 
 
   @Suppress("UNCHECKED_CAST")
@@ -60,7 +58,7 @@ class ProjectingCommandAccumulator : CommandAccumulator {
         }
       }
     },
-    ignoredProperties = listOf<String>(
+    ignoredProperties = listOf(
       WithTaskId::id.name,
       CamundaTaskEvent::eventName.name,
       EngineTaskCommand::order.name,
@@ -71,18 +69,13 @@ class ProjectingCommandAccumulator : CommandAccumulator {
   )
 
   /**
-   * Handle payload and correlations and serailize usgin provided object mapper (e.g. to JSON)
+   * Handle payload and correlations and serialize using provided object mapper (e.g. to JSON)
    */
-  fun <T : WithTaskId> handlePayloadAndCorrelations(command: T): T {
+  @Suppress("UNCHECKED_CAST")
+  fun <T : WithTaskId> handlePayloadAndCorrelations(command: T): T =
     // handle payload and correlations
-    var result: T = command
-    if (result is CreateTaskCommand && command is CreateTaskCommand) {
-      result = result.copy(
-        payload = serialize(command.payload),
-        correlations = command.correlations
-      ) as T
-    }
-    return result
-
-  }
+    if (command is CreateTaskCommand)
+      command.copy(payload = serialize(command.payload)) as T
+    else
+      command
 }
