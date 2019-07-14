@@ -4,6 +4,7 @@ import io.holunda.camunda.taskpool.api.business.*
 import org.camunda.bpm.engine.variable.VariableMap
 import org.camunda.bpm.engine.variable.Variables
 import java.time.OffsetDateTime
+import java.util.*
 
 /**
  * Data entry projection.
@@ -73,7 +74,7 @@ data class DataEntry(
  * Represents a protocol entry.
  */
 data class ProtocolEntry(
-  val time: OffsetDateTime,
+  val time: Date,
   val state: DataEntryState,
   val username: String?,
   val logMessage: String?,
@@ -82,7 +83,7 @@ data class ProtocolEntry(
 
 fun addModification(modifications: List<ProtocolEntry>, modification: Modification, state: DataEntryState) =
   modifications.plus(ProtocolEntry(
-    time = modification.time,
+    time = Date.from(modification.time.toInstant()),
     username = modification.username,
     logMessage = modification.log,
     logDetails = modification.logNotes,

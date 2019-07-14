@@ -133,7 +133,7 @@ sealed class AuthorizationChange {
       mutable.addAll(usersToAdd)
       mutable.removeAll(usersToRemove)
 
-      return mutable.toList()
+      return mutable.toSet().toList()
     }
 
     @JvmStatic
@@ -145,7 +145,7 @@ sealed class AuthorizationChange {
       mutable.addAll(groupsToAdd)
       mutable.removeAll(groupsToRemove)
 
-      return mutable.toList()
+      return mutable.toSet().toList()
     }
 
   }

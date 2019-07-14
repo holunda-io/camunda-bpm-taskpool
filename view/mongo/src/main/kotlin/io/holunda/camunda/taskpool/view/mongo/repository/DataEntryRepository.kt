@@ -19,8 +19,7 @@ interface DataEntryRepository : MongoRepository<DataEntryDocument, String> {
   fun findByIdentity(identity: DataIdentity): DataEntryDocument? = findByIdOrNull(dataIdentityString(entryId = identity.entryId, entryType = identity.entryType))
   fun findAllByEntryType(entryType: EntryType): List<DataEntryDocument>
 
-  // FIXME: add in clause
-  @Query("{ \$or: [ { 'authorizedUsers' : ?0 }, { 'authorizedGroups' : ?1} ] }")
+  @Query("{ \$or: [ { 'authorizedUsers' : ?0 }, { 'authorizedGroups' : { \$in: ?1 } } ] }")
   fun findAllForUser(@Param("username") username: String, @Param("groupNames") groupNames: Set<String>): List<DataEntryDocument>
 
 }

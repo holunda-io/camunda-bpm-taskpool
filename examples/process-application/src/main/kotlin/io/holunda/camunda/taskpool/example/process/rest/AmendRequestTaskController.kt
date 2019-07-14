@@ -42,7 +42,7 @@ class AmendRequestTaskController(
 
     val username = userService.getUser(xCurrentUserID).username
 
-    processApproveRequestBean.amendTask(id, payload.action, request(payload.approvalRequest), username, payload.comment)
+    processApproveRequestBean.amendTask(taskId = id, action = payload.action, request = request(payload.approvalRequest), username = username, comment = payload.comment)
     return ResponseEntity.noContent().build()
   }
 }

@@ -17,7 +17,7 @@ export interface ProtocolEntry {
   timestamp?: string;
   user?: string;
   state?: string;
-  processingType?: string;
+  stateType?: string;
   log?: string;
   logDetails?: string;
 }

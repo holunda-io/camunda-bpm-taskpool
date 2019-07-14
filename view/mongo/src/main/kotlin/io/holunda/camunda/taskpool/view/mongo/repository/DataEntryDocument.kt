@@ -6,6 +6,7 @@ import org.springframework.data.annotation.TypeAlias
 import org.springframework.data.mongodb.core.index.Indexed
 import org.springframework.data.mongodb.core.mapping.Document
 import java.time.OffsetDateTime
+import java.util.*
 
 /**
  * Represents a business data entry as Mongo Document.
@@ -35,7 +36,7 @@ data class DataEntryDocument(
 }
 
 data class ProtocolElement(
-  val time: OffsetDateTime,
+  val time: Date,
   val statusType: String,
   val state: String?,
   val username: String?,

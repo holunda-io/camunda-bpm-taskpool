@@ -4,10 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException
 import io.holunda.camunda.taskpool.api.business.DataEntryState
 import io.holunda.camunda.taskpool.api.business.Modification
 import io.holunda.camunda.taskpool.example.tasklist.rest.model.*
-import io.holunda.camunda.taskpool.view.DataEntry
-import io.holunda.camunda.taskpool.view.Task
-import io.holunda.camunda.taskpool.view.FormUrlResolver
-import io.holunda.camunda.taskpool.view.TaskWithDataEntries
+import io.holunda.camunda.taskpool.view.*
 import org.mapstruct.Mapper
 import org.mapstruct.Mapping
 import org.mapstruct.Mappings
@@ -39,29 +36,19 @@ abstract class TaskWithDataEntriesMapper {
     Mapping(target = "url", expression = "java(formUrlResolver.resolveUrl(dataEntry))"),
     Mapping(target = "currentState", source = "dataEntry.state.state"),
     Mapping(target = "currentStateType", source = "dataEntry.state.processingType"),
-    Mapping(target = "protocol", expression="java(protocol.stream().map(entry -> dto(entry, dataEntry.getState())).collect(java.util.stream.Collectors.toList()))")
-  )
-  abstract fun dto(dataEntry: DataEntry, protocol: List<Modification>): DataEntryDto
-
-  @Mappings(
-    Mapping(target = "payload", source = "dataEntry.payload"),
-    Mapping(target = "url", expression = "java(formUrlResolver.resolveUrl(dataEntry))"),
-    Mapping(target = "currentState", source = "dataEntry.state.state"),
-    Mapping(target = "currentStateType", source = "dataEntry.state.processingType"),
-    Mapping(target = "protocol", expression="java(java.util.Collections.emptyList())")
+    Mapping(target = "protocol", source="dataEntry.protocol")
   )
   abstract fun dto(dataEntry: DataEntry): DataEntryDto
 
-
   @Mappings(
-    Mapping(target = "timestamp", source = "modification.time"),
-    Mapping(target = "user", source = "modification.username"),
-    Mapping(target = "state", source = "state.state"),
-    Mapping(target = "stateType", source = "state.processingType"),
-    Mapping(target = "log", source = "modification.log"),
-    Mapping(target = "logDetails", source = "modification.logNotes")
+    Mapping(target = "timestamp", source = "entry.time"),
+    Mapping(target = "user", source = "entry.username"),
+    Mapping(target = "state", source = "entry.state.state"),
+    Mapping(target = "stateType", source = "entry.state.processingType"),
+    Mapping(target = "log", source = "entry.logMessage"),
+    Mapping(target = "logDetails", source = "entry.logDetails")
   )
-  abstract fun dto(modification: Modification, state: DataEntryState): ProtocolEntryDto
+  abstract fun dto(entry: ProtocolEntry): ProtocolEntryDto
 
   @Mappings(
     Mapping(target = "task", source = "task"),

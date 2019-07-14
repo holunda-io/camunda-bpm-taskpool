@@ -54,6 +54,7 @@ class ArchiveController(
 
     return ResponseEntity.ok()
       .headers(responseHeaders)
+
       .body(result.elements.map { mapper.dto(it) })
   }
 }
