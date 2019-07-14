@@ -10,8 +10,8 @@ describe('processReducer', () => {
   it('updates available users', () => {
     // given:
     const dataEntries: DataEntry[] = [
-      {name: 'foo', description: '', url: '', type: 'type', payload: {}, state: 'MY STATE', stateType: '', protocol: []},
-      {name: 'bar', description: '', url: '', type: 'type2', payload: {}, state: 'MY STATE2', stateType: '', protocol: []}
+      {name: 'foo', description: '', url: '', type: 'type', payload: {}, currentState: 'MY STATE', currentStateType: '', protocol: []},
+      {name: 'bar', description: '', url: '', type: 'type2', payload: {}, currentState: 'MY STATE2', currentStateType: '', protocol: []}
     ];
     const action = new DataEntriesLoaded(dataEntries);
 

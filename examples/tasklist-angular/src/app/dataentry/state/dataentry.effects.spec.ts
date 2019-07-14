@@ -28,16 +28,16 @@ describe('DataEntryEffects', () => {
     // given:
     const action = new LoadDataEntries();
     const dataEntriesDtos: Array<DataEntry> = [
-      {name: 'foo', description: '', url: '', type: 'type', payload: {}, state: 'MY STATE', stateType: '', protocol: []},
-      {name: 'bar', description: '', url: '', type: 'type2', payload: {}, state: 'MY STATE2', stateType: '', protocol: []}
+      {name: 'foo', description: '', url: '', type: 'type', payload: {}, currentState: 'MY STATE', currentStateType: '', protocol: []},
+      {name: 'bar', description: '', url: '', type: 'type2', payload: {}, currentState: 'MY STATE2', currentStateType: '', protocol: []}
     ];
     const serviceSpy = spyOn(archiveService, 'getBosResponse').and.returnValue(of({body: dataEntriesDtos, headers: {}}));
 
     // when:
     effectsFor(action).loadDataEntries$.subscribe((newAction) => {
       expect(newAction).toEqual(new DataEntriesLoaded([
-        {name: 'foo', description: '', url: '', type: 'type', payload: {}, state: 'MY STATE', stateType: '', protocol: []},
-        {name: 'bar', description: '', url: '', type: 'type2', payload: {}, state: 'MY STATE2', stateType: '', protocol: []}
+        {name: 'foo', description: '', url: '', type: 'type', payload: {}, currentState: 'MY STATE', currentStateType: '', protocol: []},
+        {name: 'bar', description: '', url: '', type: 'type2', payload: {}, currentState: 'MY STATE2', currentStateType: '', protocol: []}
       ]));
       done();
     });

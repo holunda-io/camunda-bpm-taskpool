@@ -451,10 +451,10 @@ definitions:
       applicationName:
         type: string
         description: Origin of the data entry.
-      state:
+      currentState:
         type: string
         description: State of data entry.
-      stateType:
+      currentStateType:
         type: string
         description: State type.
         enum:
@@ -465,23 +465,9 @@ definitions:
           - UNDEFINED
       protocol:
         type: array
-        description: Protocol entries for this business object.
         items:
-          type: object
-          properties:
-            timestamp:
-              type: string
-              format: date-time
-              description: Timestamp of protocol entry.
-            user:
-              type: string
-              description: Username of the user.
-            log:
-              type: string
-              description: Log message.
-            logDetails:
-              type: string
-              description: Log details.
+          $ref: '#/definitions/ProtocolEntry'
+        description: Protocol entries for this business object.
     required:
       - entryType
       - entryId
@@ -489,6 +475,40 @@ definitions:
       - name
       - type
       - applicationName
+      - protocol
+
+  ProtocolEntry:
+    type: object
+    properties:
+      timestamp:
+        type: string
+        format: date-time
+        description: Timestamp of protocol entry.
+      state:
+        type: string
+        description: State at the time of the protocol entry.
+      stateType:
+        type: string
+        description: Processing state at the time of the protocol entry.
+        enum:
+          - PRELIMINARY
+          - IN_PROGRESS
+          - COMPLETED
+          - CANCELLED
+          - UNDEFINED
+      user:
+        type: string
+        description: Username of the user.
+      log:
+        type: string
+        description: Log message.
+      logDetails:
+        type: string
+        description: Log details.
+    required:
+      - timestamp
+      - state
+      - stateType
 
   ProcessDefinition:
     type: object

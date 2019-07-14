@@ -44,7 +44,7 @@
                 <div class="data-block">
                   <i class="fa fa-archive" aria-hidden="true"></i><i>&nbsp;Payload</i>
                   <ul class="list-group list-group-flush fieldlist">
-                    <li class="list-group-item" *ngFor="let payloadEntry of toFieldSet(dataEntry.payload) index as j">
+                    <li class="list-group-item" *ngFor="let payloadEntry of toFieldSet(dataEntry.payload)">
                       <div class="row">
                         <div class="col-lg-3">{{ payloadEntry.name | fieldName }}:</div>
                         <div class="col-lg-9">{{ payloadEntry.value }}</div>
@@ -54,7 +54,18 @@
                 </div>
               </div>
               <div *ngIf="currentDataTab === 'protocol'">
-
+                <ul class="list-group list-group-flush fieldlist">
+                  <li class="lit-group-item" *ngFor="let protocolEntry of dataEntry.protocol">
+                    <div class="row">
+                      <div class="col-lg-2">{{ protocolEntry.timestamp | date }}</div>
+                      <div class="col-lg-2">{{ protocolEntry.user }}</div>
+                      <div class="col-lg-2">{{ protocolEntry.state }}</div>
+                      <div class="col-lg-2">{{ protocolEntry.processingType }}</div>
+                      <div class="col-lg-2">{{ protocolEntry.log }}</div>
+                      <div class="col-lg-2">{{ protocolEntry.logDetails }}</div>
+                    </div>
+                  </li>
+                </ul>
               </div>
             </td>
             <td>

@@ -1,11 +1,9 @@
 package io.holunda.camunda.taskpool.example.tasklist.rest.mapper
 
 import com.fasterxml.jackson.core.JsonProcessingException
+import io.holunda.camunda.taskpool.api.business.DataEntryState
 import io.holunda.camunda.taskpool.api.business.Modification
-import io.holunda.camunda.taskpool.example.tasklist.rest.model.DataEntryDto
-import io.holunda.camunda.taskpool.example.tasklist.rest.model.DataEntryProtocolDto
-import io.holunda.camunda.taskpool.example.tasklist.rest.model.TaskDto
-import io.holunda.camunda.taskpool.example.tasklist.rest.model.TaskWithDataEntriesDto
+import io.holunda.camunda.taskpool.example.tasklist.rest.model.*
 import io.holunda.camunda.taskpool.view.DataEntry
 import io.holunda.camunda.taskpool.view.Task
 import io.holunda.camunda.taskpool.view.FormUrlResolver
@@ -39,31 +37,31 @@ abstract class TaskWithDataEntriesMapper {
   @Mappings(
     Mapping(target = "payload", source = "dataEntry.payload"),
     Mapping(target = "url", expression = "java(formUrlResolver.resolveUrl(dataEntry))"),
-    Mapping(target = "state", source = "dataEntry.state.state"),
-    Mapping(target = "stateType", source = "dataEntry.state.processingType"),
-    Mapping(target = "protocol", source="protocol")
+    Mapping(target = "currentState", source = "dataEntry.state.state"),
+    Mapping(target = "currentStateType", source = "dataEntry.state.processingType"),
+    Mapping(target = "protocol", expression="java(protocol.stream().map(entry -> dto(entry, dataEntry.getState())).collect(java.util.stream.Collectors.toList()))")
   )
-  @Throws(JsonProcessingException::class)
   abstract fun dto(dataEntry: DataEntry, protocol: List<Modification>): DataEntryDto
 
   @Mappings(
     Mapping(target = "payload", source = "dataEntry.payload"),
     Mapping(target = "url", expression = "java(formUrlResolver.resolveUrl(dataEntry))"),
-    Mapping(target = "state", source = "dataEntry.state.state"),
-    Mapping(target = "stateType", source = "dataEntry.state.processingType"),
+    Mapping(target = "currentState", source = "dataEntry.state.state"),
+    Mapping(target = "currentStateType", source = "dataEntry.state.processingType"),
     Mapping(target = "protocol", expression="java(java.util.Collections.emptyList())")
   )
-  @Throws(JsonProcessingException::class)
   abstract fun dto(dataEntry: DataEntry): DataEntryDto
 
+
   @Mappings(
-    Mapping(target = "timestamp", source = "time"),
-    Mapping(target = "user", source = "username"),
-    Mapping(target = "log", source = "log"),
-    Mapping(target = "logDetails", source = "logNotes")
+    Mapping(target = "timestamp", source = "modification.time"),
+    Mapping(target = "user", source = "modification.username"),
+    Mapping(target = "state", source = "state.state"),
+    Mapping(target = "stateType", source = "state.processingType"),
+    Mapping(target = "log", source = "modification.log"),
+    Mapping(target = "logDetails", source = "modification.logNotes")
   )
-  @Throws(JsonProcessingException::class)
-  abstract fun dto(modification: Modification): DataEntryProtocolDto
+  abstract fun dto(modification: Modification, state: DataEntryState): ProtocolEntryDto
 
   @Mappings(
     Mapping(target = "task", source = "task"),

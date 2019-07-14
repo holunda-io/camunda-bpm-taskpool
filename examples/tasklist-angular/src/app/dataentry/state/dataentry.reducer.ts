@@ -8,14 +8,16 @@ export interface DataEntry {
   type: string;
   payload: {};
   url: string;
-  state: string;
-  stateType: string;
+  currentState: string;
+  currentStateType: string;
   protocol: ProtocolEntry[];
 }
 
 export interface ProtocolEntry {
   timestamp?: string;
   user?: string;
+  state?: string;
+  processingType?: string;
   log?: string;
   logDetails?: string;
 }

@@ -51,8 +51,8 @@ function mapFromDto(dataEntryDtos: StrictHttpResponse<DataEntryDto[]>): DataEntr
       description: dto.description,
       type: dto.type,
       payload: dto.payload,
-      state: dto.state,
-      stateType: dto.stateType,
+      currentState: dto.currentState,
+      currentStateType: dto.currentStateType,
       protocol: dto.protocol
     };
   });
