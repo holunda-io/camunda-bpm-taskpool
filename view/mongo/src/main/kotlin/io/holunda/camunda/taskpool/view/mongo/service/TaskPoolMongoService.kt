@@ -50,6 +50,9 @@ class TaskPoolMongoService(
     const val PROCESSING_GROUP = "io.holunda.camunda.taskpool.view.mongo.service"
   }
 
+  /**
+   * Retrieves a list of all user tasks for current user.
+   */
   @QueryHandler
   override fun query(query: DataEntriesForUserQuery): DataEntriesQueryResult {
     return DataEntriesQueryResult(dataEntryRepository
@@ -79,7 +82,7 @@ class TaskPoolMongoService(
   override fun query(query: DataEntryForIdentityQuery): DataEntriesQueryResult {
     return DataEntriesQueryResult(
       if (query.entryId != null) {
-        val dataEntry = dataEntryRepository.findByIdentity(query.identity()).orElse(null)?.dataEntry()
+        val dataEntry = dataEntryRepository.findByIdentity(query.identity())?.dataEntry()
         if (dataEntry != null) {
           listOf(dataEntry)
         } else {
@@ -95,14 +98,14 @@ class TaskPoolMongoService(
    * Retrieves a task for given task id.
    */
   @QueryHandler
-  override fun query(query: TaskForIdQuery): Task? = taskRepository.findById(query.id).orElse(null)?.task()
+  override fun query(query: TaskForIdQuery): Task? = taskRepository.findByIdOrNull(query.id)?.task()
 
   /**
    * Retrieves a task with data entries for given task id.
    */
   @QueryHandler
   override fun query(query: TaskWithDataEntriesForIdQuery): TaskWithDataEntries? {
-    val task = taskRepository.findById(query.id).orElse(null)?.task()
+    val task = taskRepository.findByIdOrNull(query.id)?.task()
     return if (task != null) {
       tasksWithDataEntries(task)
     } else {
@@ -229,12 +232,12 @@ class TaskPoolMongoService(
 
   /**
    * Runs an event replay to fill the mongo task view with events.
+   * Just kept as example. Not needed, will be called automatically, because of the global index stored in mongo DB.
    */
-  fun restore() {
-
-    // not needed, will be called automatically, because of the global index stored in mongo DB.
+  @Suppress("UNUSED")
+  fun restore() =
     this.configuration
-      .eventProcessorByProcessingGroup<EventProcessor>(TaskPoolMongoService.PROCESSING_GROUP)
+      .eventProcessorByProcessingGroup<EventProcessor>(PROCESSING_GROUP)
       .ifPresent {
         if (it is TrackingEventProcessor) {
           logger.info { "VIEW-MONGO-002: Starting mongo view event replay." }
@@ -243,34 +246,29 @@ class TaskPoolMongoService(
           it.start()
         }
       }
-  }
 
   private fun query(applicationName: String): ApplicationWithTaskCount {
-
     val aggregations = mutableListOf(
 
       Aggregation.match(Criteria.where("sourceReference.applicationName").isEqualTo(applicationName)),
       Aggregation.group("sourceReference.applicationName").count().`as`("count"),
       Aggregation.project().and("_id").`as`("application").and("count").`as`("taskCount")
     )
-
-    val result: ApplicationWithTaskCount = mongoTemplate.aggregate(
+    return mongoTemplate.aggregate(
       Aggregation.newAggregation(aggregations),
       "tasks",
       ApplicationWithTaskCount::class.java
     ).firstOrNull() ?: ApplicationWithTaskCount(applicationName, 0)
-
-    return result
   }
 
   private fun updateTaskForUserQuery(taskId: String) {
-    val task = taskRepository.findById(taskId)
-    updateMapFilterQuery(task.map { it.task() }.orElse(null), TasksForUserQuery::class.java)
-    updateMapFilterQuery(task.map { tasksWithDataEntries(it) }.orElse(null), TasksWithDataEntriesForUserQuery::class.java)
+    val task = taskRepository.findByIdOrNull(taskId)
+    updateMapFilterQuery(task?.task(), TasksForUserQuery::class.java)
+    updateMapFilterQuery(task?.let { tasksWithDataEntries(it) }, TasksWithDataEntriesForUserQuery::class.java)
   }
 
   private fun updateDataEntryQuery(identity: DataIdentity) = updateMapFilterQuery(
-    dataEntryRepository.findByIdentity(identity).map { it.dataEntry() }.orElse(null), DataEntriesForUserQuery::class.java)
+    dataEntryRepository.findByIdentity(identity)?.dataEntry(), DataEntriesForUserQuery::class.java)
 
   private fun updateTaskCountByApplicationQuery(applicationName: String) {
     queryUpdateEmitter.emit(TaskCountByApplicationQuery::class.java,

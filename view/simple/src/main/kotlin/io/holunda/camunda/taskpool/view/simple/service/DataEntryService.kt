@@ -1,9 +1,12 @@
 package io.holunda.camunda.taskpool.view.simple.service
 
-import io.holunda.camunda.taskpool.api.business.*
 import io.holunda.camunda.taskpool.api.business.AuthorizationChange.Companion.applyGroupAuthorization
 import io.holunda.camunda.taskpool.api.business.AuthorizationChange.Companion.applyUserAuthorization
+import io.holunda.camunda.taskpool.api.business.DataEntryCreatedEvent
+import io.holunda.camunda.taskpool.api.business.DataEntryUpdatedEvent
+import io.holunda.camunda.taskpool.api.business.dataIdentityString
 import io.holunda.camunda.taskpool.view.DataEntry
+import io.holunda.camunda.taskpool.view.addModification
 import io.holunda.camunda.taskpool.view.query.DataEntryApi
 import io.holunda.camunda.taskpool.view.query.data.DataEntriesForUserQuery
 import io.holunda.camunda.taskpool.view.query.data.DataEntriesQueryResult
@@ -76,7 +79,8 @@ fun DataEntryUpdatedEvent.toDataEntry(oldEntry: DataEntry?) = if (oldEntry == nu
     state = this.state,
     formKey = this.formKey,
     authorizedUsers = applyUserAuthorization(listOf(), this.authorizations),
-    authorizedGroups = applyGroupAuthorization(listOf(), this.authorizations)
+    authorizedGroups = applyGroupAuthorization(listOf(), this.authorizations),
+    protocol = addModification(listOf(), this.updateModification, this.state)
   )
 } else {
   oldEntry.copy(
@@ -89,7 +93,8 @@ fun DataEntryUpdatedEvent.toDataEntry(oldEntry: DataEntry?) = if (oldEntry == nu
     state = this.state,
     formKey = this.formKey,
     authorizedUsers = applyUserAuthorization(oldEntry.authorizedUsers, this.authorizations),
-    authorizedGroups = applyGroupAuthorization(oldEntry.authorizedGroups, this.authorizations)
+    authorizedGroups = applyGroupAuthorization(oldEntry.authorizedGroups, this.authorizations),
+    protocol = addModification(oldEntry.protocol, this.updateModification, this.state)
   )
 }
 
@@ -105,7 +110,11 @@ fun DataEntryCreatedEvent.toDataEntry() = DataEntry(
   state = this.state,
   formKey = this.formKey,
   authorizedUsers = applyUserAuthorization(listOf(), this.authorizations),
-  authorizedGroups = applyGroupAuthorization(listOf(), this.authorizations)
+  authorizedGroups = applyGroupAuthorization(listOf(), this.authorizations),
+  protocol = addModification(listOf(), this.createModification, this.state)
 )
+
+
+
 
 

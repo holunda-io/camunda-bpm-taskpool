@@ -5,6 +5,7 @@ import org.springframework.data.annotation.Id
 import org.springframework.data.annotation.TypeAlias
 import org.springframework.data.mongodb.core.index.Indexed
 import org.springframework.data.mongodb.core.mapping.Document
+import java.time.OffsetDateTime
 
 /**
  * Represents a business data entry as Mongo Document.
@@ -25,9 +26,19 @@ data class DataEntryDocument(
   val state: String?,
   val statusType: String?,
   val authorizedUsers: List<String> = listOf(),
-  val authorizedGroups: List<String> = listOf()
+  val authorizedGroups: List<String> = listOf(),
+  val protocol: List<ProtocolElement> = listOf()
 ) {
   companion object {
       const val NAME = "data-entries"
   }
 }
+
+data class ProtocolElement(
+  val time: OffsetDateTime,
+  val statusType: String,
+  val state: String?,
+  val username: String?,
+  val logMessage: String?,
+  val logDetails: String?
+)

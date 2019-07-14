@@ -3,9 +3,10 @@ package io.holunda.camunda.taskpool.view
 import io.holunda.camunda.taskpool.api.business.*
 import org.camunda.bpm.engine.variable.VariableMap
 import org.camunda.bpm.engine.variable.Variables
+import java.time.OffsetDateTime
 
 /**
- * Data entry.
+ * Data entry projection.
  */
 data class DataEntry(
   /**
@@ -41,7 +42,7 @@ data class DataEntry(
    */
   val description: String? = null,
   /**
-   * State of data entry.
+   * Current state of data entry.
    */
   val state: DataEntryState = ProcessingType.UNDEFINED.of(""),
   /**
@@ -55,14 +56,35 @@ data class DataEntry(
   /**
    * Form key.
    */
-  val formKey: String? = null
+  val formKey: String? = null,
 
-  /** FIXME
+  /**
    * Protocol of changes.
    */
+  val protocol: List<ProtocolEntry> = listOf()
 
 ) : DataIdentity {
   val identity by lazy {
     dataIdentityString(entryType, entryId)
   }
 }
+
+/**
+ * Represents a protocol entry.
+ */
+data class ProtocolEntry(
+  val time: OffsetDateTime,
+  val state: DataEntryState,
+  val username: String?,
+  val logMessage: String?,
+  val logDetails: String?
+)
+
+fun addModification(modifications: List<ProtocolEntry>, modification: Modification, state: DataEntryState) =
+  modifications.plus(ProtocolEntry(
+    time = modification.time,
+    username = modification.username,
+    logMessage = modification.log,
+    logDetails = modification.logNotes,
+    state = state
+  ))

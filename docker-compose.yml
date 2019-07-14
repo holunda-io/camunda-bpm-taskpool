@@ -1,6 +1,18 @@
 version: "3.5"
-services:
 
+networks:
+  taskpool-net:
+    name: taskpool
+
+volumes:
+  postgres-data:
+    external: true
+  axonserver-data:
+    external: true
+  mongo-data:
+    external: true
+
+services:
   postgres:
     image: postgres:9
     container_name: postgres
@@ -9,6 +21,7 @@ services:
       - POSTGRES_PASSWORD=s3cr3T!
     volumes:
       - ./.docker/postgresql-init/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - postgres-data:/var/lib/postgresql/data
     ports:
       - 5432:5432
     networks:
@@ -51,13 +64,4 @@ services:
     networks:
       - taskpool-net
 
-networks:
-  taskpool-net:
-    name: taskpool
-
-volumes:
-  axonserver-data:
-    external: true
-  mongo-data:
-    external: true
 

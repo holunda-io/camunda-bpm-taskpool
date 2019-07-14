@@ -15,7 +15,7 @@ import java.util.concurrent.ConcurrentHashMap
 
 @Component
 @ProcessingGroup(SimpleServiceViewProcessingGroup.PROCESSING_GROUP)
-open class ProcessDefinitionService(
+class ProcessDefinitionService(
   private val queryUpdateEmitter: QueryUpdateEmitter
 ) : ProcessDefinitionApi {
 
@@ -26,7 +26,7 @@ open class ProcessDefinitionService(
 
   @Suppress("unused")
   @EventHandler
-  open fun on(event: ProcessDefinitionRegisteredEvent) {
+  fun on(event: ProcessDefinitionRegisteredEvent) {
 
     logger.debug { "New process definition with id ${event.processDefinitionId} registered (${event.processName}, ${event.applicationName})." }
 

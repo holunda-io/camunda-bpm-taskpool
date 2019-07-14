@@ -13,7 +13,7 @@ import org.axonframework.queryhandling.QueryUpdateEmitter
 import org.springframework.stereotype.Component
 
 @Component
-open class ProcessDefinitionMongoService(
+class ProcessDefinitionMongoService(
   private val queryUpdateEmitter: QueryUpdateEmitter,
   private val processDefinitionRepository: ProcessDefinitionRepository
 ) : ProcessDefinitionApi {
@@ -22,7 +22,7 @@ open class ProcessDefinitionMongoService(
 
   @EventHandler
   @Suppress("unused")
-  open fun on(event: ProcessDefinitionRegisteredEvent) {
+  fun on(event: ProcessDefinitionRegisteredEvent) {
 
     logger.debug { "New process definition with id ${event.processDefinitionId} registered (${event.processName}, ${event.applicationName})." }
 

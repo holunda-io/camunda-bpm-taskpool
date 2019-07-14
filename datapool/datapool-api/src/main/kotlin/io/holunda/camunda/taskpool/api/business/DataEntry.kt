@@ -86,7 +86,7 @@ data class Modification(
   /**
    * Time of update
    */
-  val time: OffsetDateTime? = null,
+  val time: OffsetDateTime = OffsetDateTime.now(),
   /**
    * Username of the user who updated the business entry.
    */
