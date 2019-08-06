@@ -51,6 +51,7 @@
     <module>datapool</module>
     <module>view</module>
     <module>examples</module>
+    <module>doc</module>
   </modules>
 
   <dependencyManagement>

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>io.holunda.taskpool</groupId>
+    <artifactId>camunda-bpm-taskpool</artifactId>
+    <version>1.2.22-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>camunda-bpm-taskpool-doc</artifactId>
+
+  <properties>
+    <orchid.version>0.17.1</orchid.version>
+  </properties>
+
+
+  <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>io.github.javaeden.orchid</groupId>
+          <artifactId>orchid-maven-plugin</artifactId>
+          <version>${orchid.version}</version>
+
+          <!-- 1. Include all official Orchid plugins and themes -->
+          <dependencies>
+            <dependency>
+              <groupId>io.github.javaeden.orchid</groupId>
+              <artifactId>OrchidCore</artifactId>
+              <version>${orchid.version}</version>
+            </dependency>
+            <dependency>
+              <groupId>io.github.javaeden.orchid</groupId>
+              <artifactId>OrchidBsDoc</artifactId>
+              <version>${orchid.version}</version>
+            </dependency>
+            <!--
+            <dependency>
+              <groupId>io.github.javaeden.orchid</groupId>
+              <artifactId>OrchidPages</artifactId>
+              <version>${orchid.version}</version>
+            </dependency>
+            -->
+            <dependency>
+              <groupId>io.github.javaeden.orchid</groupId>
+              <artifactId>OrchidAsciidoc</artifactId>
+              <version>${orchid.version}</version>
+            </dependency>
+          </dependencies>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+    <plugins>
+      <plugin>
+        <groupId>io.github.javaeden.orchid</groupId>
+        <artifactId>orchid-maven-plugin</artifactId>
+        <configuration>
+          <theme>BsDoc</theme>
+          <baseUrl>http://localhost:9090</baseUrl>
+          <version>${project.version}</version>
+          <githubToken>MyToken</githubToken>
+        </configuration>
+      </plugin>
+    </plugins>
+
+  </build>
+
+  <!-- 2. Get Orchid from Jcenter, Bintray, and Jitpack -->
+  <pluginRepositories>
+    <pluginRepository>
+      <id>jcenter</id>
+      <name>bintray-plugins</name>
+      <url>http://jcenter.bintray.com</url>
+    </pluginRepository>
+  </pluginRepositories>
+
+</project>
