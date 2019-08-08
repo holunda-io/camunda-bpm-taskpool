@@ -16,26 +16,42 @@ class DataEntryAggregate() {
   @CommandHandler
   constructor(command: CreateDataEntryCommand) : this() {
     AggregateLifecycle.apply(DataEntryCreatedEvent(
-      entryId = command.entryId,
-      entryType = command.entryType,
-      payload = command.payload,
-      correlations = command.correlations
+      entryId = command.dataEntry.entryId,
+      entryType = command.dataEntry.entryType,
+      name = command.dataEntry.name,
+      type = command.dataEntry.type,
+      applicationName = command.dataEntry.applicationName,
+      state = command.dataEntry.state,
+      description = command.dataEntry.description,
+      payload = command.dataEntry.payload,
+      correlations = command.dataEntry.correlations,
+      createModification = command.dataEntry.modification,
+      authorizations = command.dataEntry.authorizations,
+      formKey = command.dataEntry.formKey
     ))
   }
 
   @CommandHandler
   fun handle(command: UpdateDataEntryCommand) {
     AggregateLifecycle.apply(DataEntryUpdatedEvent(
-      entryId = command.entryId,
-      entryType = command.entryType,
-      payload = command.payload,
-      correlations = command.correlations
+      entryId = command.dataEntry.entryId,
+      entryType = command.dataEntry.entryType,
+      name = command.dataEntry.name,
+      type = command.dataEntry.type,
+      applicationName = command.dataEntry.applicationName,
+      state = command.dataEntry.state,
+      description = command.dataEntry.description,
+      payload = command.dataEntry.payload,
+      correlations = command.dataEntry.correlations,
+      updateModification = command.dataEntry.modification,
+      authorizations = command.dataEntry.authorizations,
+      formKey = command.dataEntry.formKey
     ))
   }
 
   @EventSourcingHandler
   fun on(event: DataEntryCreatedEvent) {
-    this.dataIdentity = dataIdentity(entryType = event.entryType, entryId = event.entryId)
+    this.dataIdentity = dataIdentityString(entryType = event.entryType, entryId = event.entryId)
   }
 
 }

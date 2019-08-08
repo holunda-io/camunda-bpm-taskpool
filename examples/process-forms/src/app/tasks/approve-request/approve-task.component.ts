@@ -14,13 +14,6 @@ import { Environment } from 'process/model/environment';
 })
 export class ApproveTaskComponent {
 
-  task: Task = this.emptyTask();
-  environment: Environment;
-  approvalRequest: ApprovalRequest = this.emptyApprovalRequest();
-  submitData: TaskApproveRequestSubmitData = {
-    decision: ''
-  };
-
   constructor(
     private client: ApproveRequestService,
     route: ActivatedRoute,
@@ -28,8 +21,9 @@ export class ApproveTaskComponent {
     private envProvider: EnvironmentHelperService
   ) {
     const taskId: string = route.snapshot.paramMap.get('taskId');
+    this.userId = route.snapshot.queryParams['userId'];
 
-    this.client.loadTaskApproveRequestFormData(taskId).subscribe(
+    this.client.loadTaskApproveRequestFormData(taskId, this.userId).subscribe(
       formData => {
         this.task = formData.task;
         this.approvalRequest = formData.approvalRequest;
@@ -43,9 +37,37 @@ export class ApproveTaskComponent {
     });
   }
 
+  task: Task = ApproveTaskComponent.emptyTask();
+  environment: Environment;
+  userId: string;
+  approvalRequest: ApprovalRequest = ApproveTaskComponent.emptyApprovalRequest();
+  submitData: TaskApproveRequestSubmitData = {
+    decision: ''
+  };
+
+  private static emptyTask(): Task {
+    return {
+      id: 'undefined',
+      createTime: null,
+      dueDate: null,
+      name: 'undefined',
+      description: 'undefined'
+    };
+  }
+
+  private static emptyApprovalRequest(): ApprovalRequest {
+    return {
+      applicant: '',
+      amount: '',
+      id: 'undefined',
+      subject: '',
+      currency: 'EUR'
+    };
+  }
+
   complete() {
     console.log('Decision for', this.task.id, 'is', this.submitData.decision);
-    this.client.submitTaskApproveRequestSubmitData(this.task.id, this.submitData).subscribe(
+    this.client.submitTaskApproveRequestSubmitData(this.task.id, this.userId, this.submitData).subscribe(
       result => {
         console.log('Sucessfully submitted');
         this.router.navigate(['/externalRedirect', { externalUrl: this.environment.tasklistUrl }], {
@@ -59,24 +81,5 @@ export class ApproveTaskComponent {
 
   cancel() {
     window.close();
-  }
-
-  emptyTask(): Task {
-    return {
-      id: 'undefined',
-      createTime: null,
-      dueDate: null,
-      name: 'undefined',
-      description: 'undefined'
-    };
-  }
-
-  emptyApprovalRequest(): ApprovalRequest {
-    return {
-      applicant: '',
-      amount: '',
-      id: 'undefined',
-      subject: ''
-    };
   }
 }

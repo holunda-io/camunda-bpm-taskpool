@@ -1,0 +1,17 @@
+<div class="nav-item dropdown avatar" ngbDropdown>
+  <div class="nav-link dropdown-toggle" ngbDropdownToggle>
+    <!--
+    <img src="{{ user.avatar }}" class="rounded-circle z-depth-0" alt="avatar image" height="35">
+    -->
+    <i class="fa fa-user"></i>
+    {{ (currentProfile$ | async).fullName }}
+  </div>
+  <ul class="dropdown-menu" ngbDropdownMenu>
+
+    <li *ngFor="let user of (availableUsers$ | async | keyvalue)"><span class="dropdown-item" (click)="setCurrentUser(user.key)">{{ user.value }}</span></li>
+    <!--
+                      <li class="divider"></li>
+                      <li><a class="dropdown-item" href="#">Sign Out <span class="fa fa-sign-out pull-right"></span></a></li>
+    -->
+  </ul>
+</div>

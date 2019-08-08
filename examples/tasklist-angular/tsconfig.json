@@ -5,7 +5,7 @@
     "outDir": "./dist/out-tsc",
     "sourceMap": true,
     "declaration": false,
-    "module": "es2015",
+    "module": "es6",
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
@@ -22,12 +22,7 @@
       "*": [
         "src/*",
         "src-gen/*"
-      ],
-      // This path is for npm linked frontend-components accessibility
-      "rxjs": ["node_modules/rxjs"],
-      "rxjs/*": ["node_modules/rxjs/*"],
-      "@angular": [".././node_modules/@angular"],
-      "@angular/*": ["node_modules/@angular/*"]
+      ]
     }
   }
 }

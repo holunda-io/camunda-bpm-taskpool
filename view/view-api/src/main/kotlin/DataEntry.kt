@@ -1,13 +1,13 @@
 package io.holunda.camunda.taskpool.view
 
-import io.holunda.camunda.taskpool.api.business.DataIdentity
-import io.holunda.camunda.taskpool.api.business.EntryId
-import io.holunda.camunda.taskpool.api.business.EntryType
-import io.holunda.camunda.taskpool.api.business.dataIdentity
+import io.holunda.camunda.taskpool.api.business.*
 import org.camunda.bpm.engine.variable.VariableMap
+import org.camunda.bpm.engine.variable.Variables
+import java.time.OffsetDateTime
+import java.util.*
 
 /**
- * Data entry.
+ * Data entry projection.
  */
 data class DataEntry(
   /**
@@ -19,11 +19,73 @@ data class DataEntry(
    */
   override val entryId: EntryId,
   /**
+   * Type e.g. "purchase order"
+   */
+  val type: String,
+  /**
+   * Application name (origin)
+   */
+  val applicationName: String,
+  /**
+   * Human readable identifier or name, e.g. "BANF-4711 - TV for meeting room"
+   */
+  val name: String,
+  /**
+   * Correlations.
+   */
+  val correlations: CorrelationMap = newCorrelations(),
+  /**
    * Payload.
    */
-  val payload: VariableMap
+  val payload: VariableMap = Variables.createVariables(),
+  /**
+   * Human readable description, e.g. "TV in meeting room Hamburg is broken and a new one should be installed."
+   */
+  val description: String? = null,
+  /**
+   * Current state of data entry.
+   */
+  val state: DataEntryState = ProcessingType.UNDEFINED.of(""),
+  /**
+   * List of authorized users.
+   */
+  val authorizedUsers: List<String> = listOf(),
+  /**
+   * List of authorized groups.
+   */
+  val authorizedGroups: List<String> = listOf(),
+  /**
+   * Form key.
+   */
+  val formKey: String? = null,
+
+  /**
+   * Protocol of changes.
+   */
+  val protocol: List<ProtocolEntry> = listOf()
+
 ) : DataIdentity {
   val identity by lazy {
-    dataIdentity(entryType, entryId)
+    dataIdentityString(entryType, entryId)
   }
 }
+
+/**
+ * Represents a protocol entry.
+ */
+data class ProtocolEntry(
+  val time: Date,
+  val state: DataEntryState,
+  val username: String?,
+  val logMessage: String?,
+  val logDetails: String?
+)
+
+fun addModification(modifications: List<ProtocolEntry>, modification: Modification, state: DataEntryState) =
+  modifications.plus(ProtocolEntry(
+    time = Date.from(modification.time.toInstant()),
+    username = modification.username,
+    logMessage = modification.log,
+    logDetails = modification.logNotes,
+    state = state
+  ))

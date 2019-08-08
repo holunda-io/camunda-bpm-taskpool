@@ -28,17 +28,17 @@ class FilterTest {
   // no match: task.name, task.assignee, dataAttr2
   // match: dataEntries[0].payload -> dataAttr1
   private val task3 = TaskWithDataEntries(Task("id", ref, "key", name = "foo", assignee = "gonzo", priority = 80), listOf(
-    DataEntry("type", "4711", Variables.createVariables().putValue("dataAttr1", "another")
+    DataEntry(entryType = "type", entryId = "4711", type = "type", applicationName = "app1", name = "name", payload = Variables.createVariables().putValue("dataAttr1", "another")
     )))
   // no match: task.name, task.assignee, dataAttr2
   // match: dataEntries[0].payload -> dataAttr1
   private val task4 = TaskWithDataEntries(Task("id", ref, "key", name = "foo", assignee = "gonzo", priority = 78), listOf(
-    DataEntry("type", "4711", Variables.createVariables().putValue("dataAttr1", "value"))
+    DataEntry(entryType = "type", entryId = "4711", type = "type", applicationName = "app1", name = "name", payload = Variables.createVariables().putValue("dataAttr1", "value"))
   ))
   // no match: task.name, task.assignee, dataAttr1
   // match: dataEntries[0].payload -> dataAttr2
   private val task5 = TaskWithDataEntries(Task("id", ref, "key", name = "foo", assignee = "gonzo", priority = 80), listOf(
-    DataEntry("type", "4711", Variables.createVariables().putValue("dataAttr2", "another").putValue("name", "myName"))
+    DataEntry(entryType = "type", entryId = "4711", type = "type", applicationName = "app1", name = "name", payload = Variables.createVariables().putValue("dataAttr2", "another").putValue("name", "myName"))
   ))
   // no match: task.name, task.assignee, dataAttr1
   // match: task.payload -> dataAttr2

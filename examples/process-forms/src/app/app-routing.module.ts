@@ -14,11 +14,11 @@ const routes: Routes = [
     component: StartComponent,
   },
   {
-    path: 'tasks/amend-request/id/:taskId',
+    path: 'tasks/amend-request/:taskId',
     component: AmendTaskComponent,
   },
   {
-    path: 'tasks/approve-request/id/:taskId',
+    path: 'tasks/approve-request/:taskId',
     component: ApproveTaskComponent,
   },
   {

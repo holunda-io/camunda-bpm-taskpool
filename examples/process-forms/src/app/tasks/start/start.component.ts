@@ -1,41 +1,48 @@
-import { Component } from '@angular/core';
-import { RequestService } from 'process/api/request.service';
-import { EnvironmentHelperService } from 'app/services/environment.helper.service';
-import { Router } from '@angular/router';
-import { Environment } from 'process/model/environment';
+import {Component} from '@angular/core';
+import {RequestService} from 'process/api/request.service';
+import {EnvironmentHelperService} from 'app/services/environment.helper.service';
+import {ActivatedRoute, Router} from '@angular/router';
+import {Environment} from 'process/model/environment';
+import * as ApprovalRequestDraftSamples from 'app/data/approval-request-draft';
+
 
 @Component({
   selector: 'app-start',
   templateUrl: './start.component.html',
-  styleUrls: [ '../tasks.component.scss' ]
+  styleUrls: ['../tasks.component.scss']
 })
 export class StartComponent {
 
-  requestId = '3';
+  approvalRequestDraft = ApprovalRequestDraftSamples.empty;
+
   createAnotherRequest = false;
   environment: Environment = this.envProvider.none();
   startSuccess = false;
   startFailure = false;
+  userId: string;
+  valid = true;
 
   constructor(
     private client: RequestService,
     private envProvider: EnvironmentHelperService,
-    private router: Router
+    private router: Router,
+    route: ActivatedRoute
   ) {
+    this.userId = route.snapshot.queryParams['userId'];
     this.envProvider.env().subscribe(e => this.environment = e);
   }
 
   start() {
-    console.log('Starting new approval process');
+    console.log('Starting new approval process by' + this.userId);
     this.startSuccess = false;
     this.startFailure = false;
-    // FIXME: smell, the userIdentifier of the originator should not be hard-coded here.
+
     // read it out of local storage.
-    this.client.start(this.requestId, 'ironman').subscribe(
+    this.client.startNewApproval(this.userId, this.approvalRequestDraft).subscribe(
       result => {
         console.log('Successfully submitted');
         this.startSuccess = true;
-        if (! this.createAnotherRequest) {
+        if (!this.createAnotherRequest) {
           this.tasklist();
         }
       }, error => {
@@ -45,11 +52,15 @@ export class StartComponent {
     );
   }
 
+  validate($event) {
+    this.valid = $event.valid;
+  }
+
+
   tasklist() {
-    this.router.navigate(['/externalRedirect', { externalUrl: this.environment.tasklistUrl }], {
+    this.router.navigate(['/externalRedirect', {externalUrl: this.environment.tasklistUrl}], {
       skipLocationChange: true,
     });
   }
-
 
 }

@@ -1,6 +1,7 @@
 package io.holunda.camunda.taskpool.example.tasklist.rest.mapper
 
 import io.holunda.camunda.taskpool.api.task.ProcessReference
+import io.holunda.camunda.taskpool.view.DataEntry
 import io.holunda.camunda.taskpool.view.FormUrlResolver
 import io.holunda.camunda.taskpool.view.ProcessDefinition
 import io.holunda.camunda.taskpool.view.Task
@@ -12,9 +13,9 @@ import org.springframework.test.util.ReflectionTestUtils
 
 class TaskWithDataEntriesMapperTest {
 
-  private val formUrlResolver = object : FormUrlResolver {
-    override fun resolveUrl(task: Task) =
-      "http://localhost:8080/test/forms/the-task/id/1"
+  private val formUrlResolver = object:FormUrlResolver {
+    override fun resolveUrl(dataEntry: DataEntry) = "http://localhost:8080/test/forms/bo/id/1"
+    override fun resolveUrl(task: Task) = "http://localhost:8080/test/forms/the-task/id/1"
     override fun resolveUrl(processDefinition: ProcessDefinition) = "http://localhost:8080/test/start"
   }
 
@@ -48,6 +49,25 @@ class TaskWithDataEntriesMapperTest {
     assertThat(dto.url).isEqualTo("http://localhost:8080/test/forms/the-task/id/1")
     assertThat(dto.formKey).isEqualTo("the-task")
     assertThat(dto.processName).isEqualTo(sourceReference.name)
+  }
+
+  @Test
+  fun `resolves url for given bo`() {
+    val bo = DataEntry(
+      entryId = "1",
+      entryType = "bo",
+      applicationName = "my-app",
+      formKey = "the-bo",
+      type ="BO",
+      name = "BO 1"
+    )
+
+    val dto = mapper.dto(bo)
+
+    assertThat(dto.url).isEqualTo("http://localhost:8080/test/forms/bo/id/1")
+    assertThat(dto.formKey).isEqualTo("the-bo")
+    assertThat(dto.applicationName).isEqualTo("my-app")
 
   }
+
 }

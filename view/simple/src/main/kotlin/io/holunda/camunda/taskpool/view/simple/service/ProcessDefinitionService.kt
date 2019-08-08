@@ -3,7 +3,7 @@ package io.holunda.camunda.taskpool.view.simple.service
 import io.holunda.camunda.taskpool.api.task.ProcessDefinitionRegisteredEvent
 import io.holunda.camunda.taskpool.view.ProcessDefinition
 import io.holunda.camunda.taskpool.view.query.ProcessDefinitionApi
-import io.holunda.camunda.taskpool.view.query.ProcessDefinitionsStartableByUserQuery
+import io.holunda.camunda.taskpool.view.query.process.ProcessDefinitionsStartableByUserQuery
 import mu.KLogging
 import org.axonframework.config.ProcessingGroup
 import org.axonframework.eventhandling.EventHandler
@@ -15,7 +15,7 @@ import java.util.concurrent.ConcurrentHashMap
 
 @Component
 @ProcessingGroup(SimpleServiceViewProcessingGroup.PROCESSING_GROUP)
-open class ProcessDefinitionService(
+class ProcessDefinitionService(
   private val queryUpdateEmitter: QueryUpdateEmitter
 ) : ProcessDefinitionApi {
 
@@ -26,7 +26,7 @@ open class ProcessDefinitionService(
 
   @Suppress("unused")
   @EventHandler
-  open fun on(event: ProcessDefinitionRegisteredEvent) {
+  fun on(event: ProcessDefinitionRegisteredEvent) {
 
     logger.debug { "New process definition with id ${event.processDefinitionId} registered (${event.processName}, ${event.applicationName})." }
 

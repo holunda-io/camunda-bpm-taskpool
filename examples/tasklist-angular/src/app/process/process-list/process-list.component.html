@@ -1,0 +1,10 @@
+<div class="dropdown-menu" ngbDropdownMenu>
+  <a *ngFor="let process of (processes$ | async)"
+     appExternalUrl
+     class="dropdown-item"
+     data-toggle="tooltip"
+     data-placement="bottom"
+     title="{{ process.description }}"
+     [href]="process.url"
+  >{{ process.name }}</a>
+</div>

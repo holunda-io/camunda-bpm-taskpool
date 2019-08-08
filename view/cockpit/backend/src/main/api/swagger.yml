@@ -96,7 +96,6 @@ definitions:
       tenantId:
         type: string
         description: Tenant Id.
-
       name:
         type: string
         description: Action to execute.
@@ -117,6 +116,10 @@ definitions:
         type: string
         description: User name of assigned user.
       createTime:
+        type: string
+        description: Creation date and time of the task.
+        format: date-time
+      followUpDate:
         type: string
         description: Creation date and time of the task.
         format: date-time

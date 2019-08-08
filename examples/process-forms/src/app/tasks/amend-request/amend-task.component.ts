@@ -14,22 +14,15 @@ import { Environment } from 'process/model/environment';
 })
 export class AmendTaskComponent {
 
-  task: Task = this.emptyTask();
-  environment: Environment = this.envProvider.none();
-  comment = '';
-  submitData: TaskAmendRequestSubmitData = {
-    action: '',
-    approvalRequest: this.emptyApprovalRequest()
-  };
-
   constructor(
     private client: AmendRequestService,
     private envProvider: EnvironmentHelperService,
     private router: Router,
     route: ActivatedRoute
   ) {
+    this.userId = route.snapshot.queryParams['userId'];
     const taskId: string = route.snapshot.paramMap.get('taskId');
-    this.client.loadTaskAmendRequestFormData(taskId).subscribe(
+    this.client.loadTaskAmendRequestFormData(taskId, this.userId).subscribe(
       formData => {
         this.task = formData.task;
         this.comment = formData.comment;
@@ -41,21 +34,16 @@ export class AmendTaskComponent {
     this.envProvider.env().subscribe(e => this.environment = e);
   }
 
-  complete() {
-    console.log('Decision for', this.task.id, 'is', this.submitData.action);
-    this.client.submitTaskAmendRequestSubmitData(this.task.id, this.submitData).subscribe(
-      result => {
-        console.log('Sucessfully submitted');
-        this.router.navigate(['/externalRedirect', { externalUrl: this.environment.tasklistUrl }], {
-          skipLocationChange: true,
-        });
-      }, error => {
-        console.log('Error submitting amend request task with id', this.task.id);
-      }
-    );
-  }
+  task: Task = AmendTaskComponent.emptyTask();
+  userId: string;
+  environment: Environment = this.envProvider.none();
+  comment = '';
+  submitData: TaskAmendRequestSubmitData = {
+    action: '',
+    approvalRequest: AmendTaskComponent.emptyApprovalRequest()
+  };
 
-  emptyTask(): Task {
+  private static emptyTask(): Task {
     return {
       id: 'undefined',
       createTime: null,
@@ -65,12 +53,27 @@ export class AmendTaskComponent {
     };
   }
 
-  emptyApprovalRequest(): ApprovalRequest {
+  private static emptyApprovalRequest(): ApprovalRequest {
     return {
       applicant: '',
       amount: '',
+      currency: 'USD',
       id: 'undefined',
       subject: ''
     };
+  }
+
+  complete() {
+    console.log('Decision for', this.task.id, 'is', this.submitData.action);
+    this.client.submitTaskAmendRequestSubmitData(this.task.id, this.userId, this.submitData).subscribe(
+      result => {
+        console.log('Sucessfully submitted');
+        this.router.navigate(['/externalRedirect', { externalUrl: this.environment.tasklistUrl }], {
+          skipLocationChange: true,
+        });
+      }, error => {
+        console.log('Error submitting amend request task with id', this.task.id);
+      }
+    );
   }
 }

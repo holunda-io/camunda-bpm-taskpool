@@ -11,9 +11,11 @@ import io.holunda.camunda.taskpool.view.Task
 import io.holunda.camunda.taskpool.view.TaskWithDataEntries
 import io.holunda.camunda.taskpool.view.auth.User
 import io.holunda.camunda.taskpool.view.mongo.utils.MongoLauncher
-import io.holunda.camunda.taskpool.view.query.TaskForIdQuery
-import io.holunda.camunda.taskpool.view.query.TasksForUserQuery
-import io.holunda.camunda.taskpool.view.query.TasksWithDataEntriesForUserQuery
+import io.holunda.camunda.taskpool.view.query.QueryResult
+import io.holunda.camunda.taskpool.view.query.task.TaskForIdQuery
+import io.holunda.camunda.taskpool.view.query.task.TasksForUserQuery
+import io.holunda.camunda.taskpool.view.query.task.TasksWithDataEntriesForUserQuery
+import io.holunda.camunda.taskpool.view.query.task.TasksWithDataEntriesQueryResult
 import org.assertj.core.api.Assertions.assertThat
 import org.axonframework.extensions.mongo.DefaultMongoTemplate
 import org.camunda.bpm.engine.variable.VariableMap
@@ -79,7 +81,7 @@ open class TaskPoolStage<SELF : TaskPoolStage<SELF>> : Stage<SELF>() {
 }
 
 @JGivenStage
-open class TaskPoolGivenStage<SELF : TaskPoolGivenStage<SELF>> : TaskPoolStage<SELF>() {
+class TaskPoolGivenStage<SELF : TaskPoolGivenStage<SELF>> : TaskPoolStage<SELF>() {
 
   @ProvidedScenarioState(resolution = ScenarioState.Resolution.NAME)
   private lateinit var tasks: List<TaskWithDataEntries>
@@ -87,13 +89,13 @@ open class TaskPoolGivenStage<SELF : TaskPoolGivenStage<SELF>> : TaskPoolStage<S
   private val procRef = ProcessReference("instance1", "exec1", "def1", "def-key", "proce1", "app")
   private fun task(i: Int) = TaskWithDataEntries(Task(id = "id$i", sourceReference = procRef, taskDefinitionKey = "task-key-$i", businessKey = "BUS-$i"))
 
-  open fun no_task_exists(): SELF {
+  fun no_task_exists(): SELF {
     tasks = listOf()
     return self()
   }
 
   @As("$ tasks exist")
-  open fun tasks_exist(numTasks: Int): SELF {
+  fun tasks_exist(numTasks: Int): SELF {
     tasks = (0 until numTasks).map { task(it) }
     return self()
   }
@@ -101,7 +103,7 @@ open class TaskPoolGivenStage<SELF : TaskPoolGivenStage<SELF>> : TaskPoolStage<S
 }
 
 @JGivenStage
-open class TaskPoolWhenStage<SELF : TaskPoolWhenStage<SELF>> : TaskPoolStage<SELF>() {
+class TaskPoolWhenStage<SELF : TaskPoolWhenStage<SELF>> : TaskPoolStage<SELF>() {
 
   @ExpectedScenarioState(resolution = ScenarioState.Resolution.NAME, required = true)
   private lateinit var tasks: List<TaskWithDataEntries>
@@ -113,14 +115,14 @@ open class TaskPoolWhenStage<SELF : TaskPoolWhenStage<SELF>> : TaskPoolStage<SEL
 
   @As("Page $ is queried with a page size of $")
   open fun tasks_queried(page: Int, size: Int): SELF {
-    queriedTasks.addAll(testee.slice(tasks, query(page, size)).tasksWithDataEntries)
+    queriedTasks.addAll(TasksWithDataEntriesQueryResult(tasks).slice(query(page, size)).elements)
     return self()
   }
 
 }
 
 @JGivenStage
-open class TaskPoolThenStage<SELF : TaskPoolThenStage<SELF>> : TaskPoolStage<SELF>() {
+class TaskPoolThenStage<SELF : TaskPoolThenStage<SELF>> : TaskPoolStage<SELF>() {
 
   @ExpectedScenarioState(resolution = ScenarioState.Resolution.NAME, required = true)
   private lateinit var tasks: List<TaskWithDataEntries>
@@ -129,62 +131,62 @@ open class TaskPoolThenStage<SELF : TaskPoolThenStage<SELF>> : TaskPoolStage<SEL
   private lateinit var queriedTasks: List<TaskWithDataEntries>
 
   @As("$ tasks are returned")
-  open fun num_tasks_are_returned(numTasks: Int): SELF {
+  fun num_tasks_are_returned(numTasks: Int): SELF {
     assertThat(queriedTasks.size).isEqualTo(numTasks)
     return self()
   }
 
   @As("all tasks are returned once")
-  open fun all_tasks_are_returned(): SELF {
+  fun all_tasks_are_returned(): SELF {
     assertThat(queriedTasks).isEqualTo(tasks)
     return self()
   }
 
-  open fun task_is_created(task: Task): SELF {
+  fun task_is_created(task: Task): SELF {
     assertThat(testee.query(TaskForIdQuery(task.id))).isEqualTo(task)
     return self()
   }
 
   @As("task with id $ is assigned to $")
-  open fun task_is_assigned_to(taskId: String, assignee: String?): SELF {
+  fun task_is_assigned_to(taskId: String, assignee: String?): SELF {
     assertThat(testee.query(TaskForIdQuery(taskId))?.assignee).isEqualTo(assignee)
     return self()
   }
 
   @As("tasks with payload with ids \$taskIds are visible to \$user")
-  open fun tasks_with_payload_are_visible_to(user: User, vararg taskIds: String): SELF {
+  fun tasks_with_payload_are_visible_to(user: User, vararg taskIds: String): SELF {
     val taskResponse = testee.query(TasksWithDataEntriesForUserQuery(user = user, page = 1, size = 100))
-    assertThat(taskResponse.tasksWithDataEntries.map { it.task.id }).containsExactlyElementsOf(taskIds.asIterable())
+    assertThat(taskResponse.elements.map { it.task.id }).containsExactlyElementsOf(taskIds.asIterable())
     return self()
   }
 
-  open fun task_has_candidate_groups(taskId: String, groupIds: Set<String>): SELF {
+  fun task_has_candidate_groups(taskId: String, groupIds: Set<String>): SELF {
     assertThat(testee.query(TaskForIdQuery(taskId))?.candidateGroups).isEqualTo(groupIds)
     return self()
   }
 
-  open fun task_has_candidate_users(taskId: String, groupIds: Set<String>): SELF {
+  fun task_has_candidate_users(taskId: String, groupIds: Set<String>): SELF {
     assertThat(testee.query(TaskForIdQuery(taskId))?.candidateUsers).isEqualTo(groupIds)
     return self()
   }
 
-  open fun task_payload_matches(taskId: String, payload: VariableMap): SELF {
+  fun task_payload_matches(taskId: String, payload: VariableMap): SELF {
     assertThat(testee.query(TaskForIdQuery(taskId))?.payload).isEqualTo(payload)
     return self()
   }
 
-  open fun task_correlations_match(taskId: String, correlations: VariableMap): SELF {
+  fun task_correlations_match(taskId: String, correlations: VariableMap): SELF {
     assertThat(testee.query(TaskForIdQuery(taskId))?.correlations).isEqualTo(correlations)
     return self()
   }
 
   fun tasks_visible_to_assignee_or_candidate_user(username: String, expectedTasks: List<Task>): SELF {
-    assertThat(testee.query(TasksForUserQuery(User(username = username, groups = emptySet())))).containsExactlyElementsOf(expectedTasks)
+    assertThat(testee.query(TasksForUserQuery(User(username = username, groups = emptySet()))).elements).containsExactlyElementsOf(expectedTasks)
     return self()
   }
 
   fun tasks_visible_to_candidate_group(groupName: String, expectedTasks: List<Task>): SELF {
-    assertThat(testee.query(TasksForUserQuery(User(username = "<unmet>", groups = setOf(groupName))))).containsExactlyElementsOf(expectedTasks)
+    assertThat(testee.query(TasksForUserQuery(User(username = "<unmet>", groups = setOf(groupName)))).elements).containsExactlyElementsOf(expectedTasks)
     return self()
   }
 

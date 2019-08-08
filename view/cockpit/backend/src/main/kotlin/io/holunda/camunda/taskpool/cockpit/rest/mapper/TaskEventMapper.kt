@@ -22,9 +22,6 @@ import javax.validation.Valid
 )
 abstract class TaskEventMapper {
 
-  /**
-   * Create a DTO.
-   */
   fun dto(withMetadata: TaskEventWithMetaData) =
     when (withMetadata.event) {
 
@@ -49,9 +46,6 @@ abstract class TaskEventMapper {
     }
 
 
-  /**
-   * Create a DTO.
-   */
   @Mappings(
     Mapping(target = "task.id", source = "task.id"),
     Mapping(target = "task.formKey", source = "task.formKey"),
@@ -71,6 +65,7 @@ abstract class TaskEventMapper {
     Mapping(target = "task.businessKey", source = "task.businessKey"),
     Mapping(target = "task.priority", source = "task.priority"),
     Mapping(target = "task.payload", source = "task.payload"),
+    Mapping(target = "task.followUpDate", source = "task.followUpDate"),
 
     Mapping(target = "id", source = "task.id"),
     Mapping(target = "eventType", source = "task.eventType"),
@@ -78,9 +73,6 @@ abstract class TaskEventMapper {
   )
   abstract fun dto(task: TaskCreatedEngineEvent, instant: Instant?): TaskEventDto
 
-  /**
-   * Create a DTO.
-   */
   @Mappings(
     Mapping(target = "task.id", source = "task.id"),
     Mapping(target = "task.formKey", source = "task.formKey"),
@@ -100,6 +92,7 @@ abstract class TaskEventMapper {
     Mapping(target = "task.businessKey", source = "task.businessKey"),
     Mapping(target = "task.priority", source = "task.priority"),
     Mapping(target = "task.payload", source = "task.payload"),
+    Mapping(target = "task.followUpDate", source = "task.followUpDate"),
 
     Mapping(target = "id", source = "task.id"),
     Mapping(target = "eventType", source = "task.eventType"),
@@ -129,6 +122,7 @@ abstract class TaskEventMapper {
     Mapping(target = "task.businessKey", source = "task.businessKey"),
     Mapping(target = "task.priority", source = "task.priority"),
     Mapping(target = "task.payload", source = "task.payload"),
+    Mapping(target = "task.followUpDate", source = "task.followUpDate"),
 
     Mapping(target = "id", source = "task.id"),
     Mapping(target = "eventType", source = "task.eventType"),
@@ -158,6 +152,7 @@ abstract class TaskEventMapper {
     Mapping(target = "task.businessKey", ignore = true),
     Mapping(target = "task.priority", source = "task.priority"),
     Mapping(target = "task.payload", ignore = true),
+    Mapping(target = "task.followUpDate", source = "task.followUpDate"),
 
     Mapping(target = "id", source = "task.id"),
     Mapping(target = "eventType", source = "task.eventType"),
@@ -187,6 +182,7 @@ abstract class TaskEventMapper {
     Mapping(target = "task.businessKey", source = "task.businessKey"),
     Mapping(target = "task.priority", source = "task.priority"),
     Mapping(target = "task.payload", source = "task.payload"),
+    Mapping(target = "task.followUpDate", source = "task.followUpDate"),
 
     Mapping(target = "id", source = "task.id"),
     Mapping(target = "eventType", source = "task.eventType"),
@@ -194,9 +190,6 @@ abstract class TaskEventMapper {
   )
   abstract fun dto(task: TaskCompletedEngineEvent, instant: Instant?): TaskEventDto
 
-  /**
-   * Create a DTO.
-   */
   @Mappings(
     Mapping(target = "task.id", source = "task.id"),
     Mapping(target = "task.formKey", ignore = true),
@@ -216,6 +209,7 @@ abstract class TaskEventMapper {
     Mapping(target = "task.businessKey", ignore = true),
     Mapping(target = "task.priority", ignore = true),
     Mapping(target = "task.payload", ignore = true),
+    Mapping(target = "task.followUpDate", ignore = true),
 
     Mapping(target = "id", source = "task.id"),
     Mapping(target = "eventType", source = "task.eventType"),
@@ -223,9 +217,6 @@ abstract class TaskEventMapper {
   )
   abstract fun dto(task: TaskClaimedEvent, instant: Instant?): TaskEventDto
 
-  /**
-   * Create a DTO.
-   */
   @Mappings(
     Mapping(target = "task.id", source = "task.id"),
     Mapping(target = "task.formKey", ignore = true),
@@ -245,6 +236,7 @@ abstract class TaskEventMapper {
     Mapping(target = "task.businessKey", ignore = true),
     Mapping(target = "task.priority", ignore = true),
     Mapping(target = "task.payload", ignore = true),
+    Mapping(target = "task.followUpDate", ignore = true),
 
     Mapping(target = "id", source = "task.id"),
     Mapping(target = "eventType", source = "task.eventType"),
@@ -252,10 +244,6 @@ abstract class TaskEventMapper {
   )
   abstract fun dto(task: TaskUnclaimedEvent, instant: Instant?): TaskEventDto
 
-  /**
-   * Create a DTO.
-   */
-  // TODO: add follow-up date
   @Mappings(
     Mapping(target = "task.id", source = "task.id"),
     Mapping(target = "task.formKey", ignore = true),
@@ -275,6 +263,7 @@ abstract class TaskEventMapper {
     Mapping(target = "task.businessKey", ignore = true),
     Mapping(target = "task.priority", ignore = true),
     Mapping(target = "task.payload", ignore = true),
+    Mapping(target = "task.followUpDate", ignore = true),
 
     Mapping(target = "id", source = "task.id"),
     Mapping(target = "eventType", source = "task.eventType"),
@@ -282,10 +271,6 @@ abstract class TaskEventMapper {
   )
   abstract fun dto(task: TaskUndeferredEvent, instant: Instant?): TaskEventDto
 
-  /**
-   * Create a DTO.
-   */
-  // TODO: add follow-up date
   @Mappings(
     Mapping(target = "task.id", source = "task.id"),
     Mapping(target = "task.formKey", ignore = true),
@@ -305,6 +290,7 @@ abstract class TaskEventMapper {
     Mapping(target = "task.businessKey", ignore = true),
     Mapping(target = "task.priority", ignore = true),
     Mapping(target = "task.payload", ignore = true),
+    Mapping(target = "task.followUpDate", source = "task.followUpDate"),
 
     Mapping(target = "id", source = "task.id"),
     Mapping(target = "eventType", source = "task.eventType"),
@@ -312,9 +298,6 @@ abstract class TaskEventMapper {
   )
   abstract fun dto(task: TaskDeferredEvent, instant: Instant?): TaskEventDto
 
-  /**
-   * Create a DTO.
-   */
   @Mappings(
     Mapping(target = "task.id", source = "task.id"),
     Mapping(target = "task.taskDefinitionKey", source = "task.taskDefinitionKey"),
@@ -341,9 +324,6 @@ abstract class TaskEventMapper {
   )
   abstract fun dto(task: TaskToBeCompletedEvent, instant: Instant?): TaskEventDto
 
-  /**
-   * Create a DTO.
-   */
   @Mappings(
     Mapping(target = "task.id", source = "task.id"),
     Mapping(target = "task.formKey", ignore = true),
@@ -370,9 +350,6 @@ abstract class TaskEventMapper {
   )
   abstract fun dto(task: TaskCandidateGroupChanged, instant: Instant?): TaskEventDto
 
-  /**
-   * Create a DTO.
-   */
   @Mappings(
     Mapping(target = "task.id", source = "task.id"),
     Mapping(target = "task.formKey", ignore = true),

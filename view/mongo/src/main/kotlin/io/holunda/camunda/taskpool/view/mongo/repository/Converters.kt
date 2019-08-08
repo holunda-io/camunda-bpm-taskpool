@@ -1,14 +1,15 @@
 package io.holunda.camunda.taskpool.view.mongo.repository
 
-import io.holunda.camunda.taskpool.api.business.DATA_IDENTITY_SEPARATOR
-import io.holunda.camunda.taskpool.api.business.EntryId
-import io.holunda.camunda.taskpool.api.business.dataIdentity
+import io.holunda.camunda.taskpool.api.business.*
 import io.holunda.camunda.taskpool.api.task.CaseReference
 import io.holunda.camunda.taskpool.api.task.ProcessReference
 import io.holunda.camunda.taskpool.api.task.SourceReference
+import io.holunda.camunda.taskpool.view.ProtocolEntry
 import io.holunda.camunda.taskpool.view.Task
 import io.holunda.camunda.taskpool.view.TaskWithDataEntries
+import io.holunda.camunda.taskpool.view.addModification
 import org.camunda.bpm.engine.variable.Variables
+import java.util.*
 
 /**
  * Create a task document from task.
@@ -21,9 +22,9 @@ fun Task.taskDocument() = TaskDocument(
   },
   taskDefinitionKey = this.taskDefinitionKey,
   payload = this.payload.toMutableMap(),
-  // FIXME: remove
+  // FIXME: maybe remove?
   correlations = this.correlations.toMutableMap(),
-  dataEntriesRefs = this.correlations.map { dataIdentity(entryType = it.key, entryId = it.value as EntryId) }.toSet(),
+  dataEntriesRefs = this.correlations.map { dataIdentityString(entryType = it.key, entryId = it.value as EntryId) }.toSet(),
   businessKey = this.businessKey,
   name = this.name,
   description = this.description,
@@ -95,12 +96,82 @@ fun DataEntryDocument.dataEntry() =
       io.holunda.camunda.taskpool.view.DataEntry(
         entryType = this[0],
         entryId = this[1],
-        payload = org.camunda.bpm.engine.variable.Variables.fromMap(payload)
+        payload = Variables.fromMap(payload),
+        correlations = Variables.fromMap(correlations),
+        name = name,
+        description = description,
+        type = type,
+        authorizedUsers = authorizedUsers,
+        authorizedGroups = authorizedGroups,
+        applicationName = applicationName,
+        state = mapState(state, statusType),
+        protocol = protocol.map { it.toProtocol() }
       )
     }
   } else {
     throw IllegalArgumentException("Identity could not be split into entry type and id, because it doesn't contain the '$DATA_IDENTITY_SEPARATOR'. Value was $identity")
   }
+
+fun mapState(state: String?, statusType: String?): DataEntryState = if (state != null) {
+  when (statusType) {
+    "PRELIMINARY" -> ProcessingType.PRELIMINARY.of(state)
+    "IN_PROGRESS" -> ProcessingType.IN_PROGRESS.of(state)
+    "COMPLETED" -> ProcessingType.COMPLETED.of(state)
+    "CANCELLED" -> ProcessingType.CANCELLED.of(state)
+    else -> ProcessingType.UNDEFINED.of(state)
+  }
+} else {
+  ProcessingType.UNDEFINED.of("")
+}
+
+fun DataEntryCreatedEvent.toDocument() = DataEntryDocument(
+  identity = dataIdentityString(entryType = this.entryType, entryId = this.entryId),
+  entryType = this.entryType,
+  payload = this.payload,
+  correlations = this.correlations,
+  name = this.name,
+  description = this.description,
+  type = this.type,
+  authorizedUsers = AuthorizationChange.applyUserAuthorization(listOf(), this.authorizations),
+  authorizedGroups = AuthorizationChange.applyGroupAuthorization(listOf(), this.authorizations),
+  protocol = addModification(listOf(), this.createModification, this.state).map { it.toProtocolElement()},
+  applicationName = this.applicationName,
+  state = this.state.state,
+  statusType = this.state.processingType.name
+)
+
+fun DataEntryUpdatedEvent.toDocument(oldDocument: DataEntryDocument?) = if (oldDocument != null) {
+  oldDocument.copy(
+    entryType = this.entryType,
+    payload = this.payload,
+    correlations = this.correlations,
+    name = this.name,
+    description = this.description,
+    type = this.type,
+    authorizedUsers = AuthorizationChange.applyUserAuthorization(oldDocument.authorizedUsers, this.authorizations),
+    authorizedGroups = AuthorizationChange.applyGroupAuthorization(oldDocument.authorizedGroups, this.authorizations),
+    protocol = addModification(oldDocument.protocol.map{ it.toProtocol() }, this.updateModification, this.state).map { it.toProtocolElement()},
+    applicationName = this.applicationName,
+    state = this.state.state,
+    statusType = this.state.processingType.name
+  )
+} else {
+  DataEntryDocument(
+    identity = dataIdentityString(entryType = this.entryType, entryId = this.entryId),
+    entryType = this.entryType,
+    payload = this.payload,
+    correlations = this.correlations,
+    name = this.name,
+    description = this.description,
+    type = this.type,
+    authorizedUsers = AuthorizationChange.applyUserAuthorization(listOf(), this.authorizations),
+    authorizedGroups = AuthorizationChange.applyGroupAuthorization(listOf(), this.authorizations),
+    protocol = addModification(listOf(), this.updateModification, this.state).map { it.toProtocolElement()},
+    applicationName = this.applicationName,
+    state = this.state.state,
+    statusType = this.state.processingType.name
+  )
+}
 
 
 /**
@@ -126,4 +197,21 @@ fun TaskWithDataEntriesDocument.taskWithDataEntries() = TaskWithDataEntries(
     followUpDate = this.followUpDate
   ),
   dataEntries = this.dataEntries.map { it.dataEntry() }
+)
+
+fun ProtocolEntry.toProtocolElement() = ProtocolElement(
+  time = this.time,
+  statusType = this.state.processingType.name,
+  state = this.state.state,
+  username = this.username,
+  logMessage = this.logMessage,
+  logDetails = this.logDetails
+)
+
+fun ProtocolElement.toProtocol() = ProtocolEntry(
+  time = this.time,
+  state = DataEntryStateImpl(processingType = ProcessingType.valueOf(this.statusType), state = this.state ?: ""),
+  username = this.username,
+  logMessage = this.logMessage,
+  logDetails = this.logDetails
 )

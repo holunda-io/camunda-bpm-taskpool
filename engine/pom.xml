@@ -13,7 +13,7 @@
   
   <modules>
     <module>taskpool-collector</module>
-    <module>datapool-sender</module>
+    <module>datapool-collector</module>
     <module>camunda-engine-client</module>
     <module>camunda-engine-plugin</module>
     <module>taskpool-engine-springboot-starter</module>

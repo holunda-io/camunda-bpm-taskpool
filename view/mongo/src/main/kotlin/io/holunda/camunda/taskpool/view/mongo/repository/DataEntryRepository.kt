@@ -2,9 +2,11 @@ package io.holunda.camunda.taskpool.view.mongo.repository
 
 import io.holunda.camunda.taskpool.api.business.DataIdentity
 import io.holunda.camunda.taskpool.api.business.EntryType
-import io.holunda.camunda.taskpool.api.business.dataIdentity
+import io.holunda.camunda.taskpool.api.business.dataIdentityString
 import org.springframework.data.mongodb.repository.MongoRepository
 import org.springframework.data.repository.findByIdOrNull
+import org.springframework.data.mongodb.repository.Query
+import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Repository
 import java.util.*
 
@@ -14,7 +16,10 @@ import java.util.*
 @Repository
 interface DataEntryRepository : MongoRepository<DataEntryDocument, String> {
 
-  fun findByIdentity(identity: DataIdentity): DataEntryDocument? = findByIdOrNull(dataIdentity(entryId = identity.entryId, entryType = identity.entryType))
+  fun findByIdentity(identity: DataIdentity): DataEntryDocument? = findByIdOrNull(dataIdentityString(entryId = identity.entryId, entryType = identity.entryType))
   fun findAllByEntryType(entryType: EntryType): List<DataEntryDocument>
+
+  @Query("{ \$or: [ { 'authorizedUsers' : ?0 }, { 'authorizedGroups' : { \$in: ?1 } } ] }")
+  fun findAllForUser(@Param("username") username: String, @Param("groupNames") groupNames: Set<String>): List<DataEntryDocument>
 
 }

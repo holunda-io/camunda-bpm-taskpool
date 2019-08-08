@@ -46,6 +46,11 @@ camunda:
       sender:
         enabled: true
         type: simple
+        applicationName: ${spring.application.name}  # default
+    form-url-resolver:
+      defaultTaskTemplate:  "/tasks/${formKey}/${id}?userId=%userId%"
+      defaultApplicationTemplate: "http://localhost:${server.port}/${applicatioName}"
+      defaultProcessTemplate: "/${formKey}?userId=%userId%"
 
 logging.level:
   io.holunda.camunda:
