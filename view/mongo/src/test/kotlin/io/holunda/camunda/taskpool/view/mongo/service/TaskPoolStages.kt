@@ -11,7 +11,6 @@ import io.holunda.camunda.taskpool.view.Task
 import io.holunda.camunda.taskpool.view.TaskWithDataEntries
 import io.holunda.camunda.taskpool.view.auth.User
 import io.holunda.camunda.taskpool.view.mongo.utils.MongoLauncher
-import io.holunda.camunda.taskpool.view.query.QueryResult
 import io.holunda.camunda.taskpool.view.query.task.TaskForIdQuery
 import io.holunda.camunda.taskpool.view.query.task.TasksForUserQuery
 import io.holunda.camunda.taskpool.view.query.task.TasksWithDataEntriesForUserQuery
@@ -143,50 +142,50 @@ class TaskPoolThenStage<SELF : TaskPoolThenStage<SELF>> : TaskPoolStage<SELF>() 
   }
 
   fun task_is_created(task: Task): SELF {
-    assertThat(testee.query(TaskForIdQuery(task.id))).isEqualTo(task)
+    assertThat(testee.query(TaskForIdQuery(task.id)).join()).isEqualTo(task)
     return self()
   }
 
   @As("task with id $ is assigned to $")
   fun task_is_assigned_to(taskId: String, assignee: String?): SELF {
-    assertThat(testee.query(TaskForIdQuery(taskId))?.assignee).isEqualTo(assignee)
+    assertThat(testee.query(TaskForIdQuery(taskId)).join()?.assignee).isEqualTo(assignee)
     return self()
   }
 
   @As("tasks with payload with ids \$taskIds are visible to \$user")
   fun tasks_with_payload_are_visible_to(user: User, vararg taskIds: String): SELF {
-    val taskResponse = testee.query(TasksWithDataEntriesForUserQuery(user = user, page = 1, size = 100))
+    val taskResponse = testee.query(TasksWithDataEntriesForUserQuery(user = user, page = 1, size = 100)).join()
     assertThat(taskResponse.elements.map { it.task.id }).containsExactlyElementsOf(taskIds.asIterable())
     return self()
   }
 
   fun task_has_candidate_groups(taskId: String, groupIds: Set<String>): SELF {
-    assertThat(testee.query(TaskForIdQuery(taskId))?.candidateGroups).isEqualTo(groupIds)
+    assertThat(testee.query(TaskForIdQuery(taskId)).join()?.candidateGroups).isEqualTo(groupIds)
     return self()
   }
 
   fun task_has_candidate_users(taskId: String, groupIds: Set<String>): SELF {
-    assertThat(testee.query(TaskForIdQuery(taskId))?.candidateUsers).isEqualTo(groupIds)
+    assertThat(testee.query(TaskForIdQuery(taskId)).join()?.candidateUsers).isEqualTo(groupIds)
     return self()
   }
 
   fun task_payload_matches(taskId: String, payload: VariableMap): SELF {
-    assertThat(testee.query(TaskForIdQuery(taskId))?.payload).isEqualTo(payload)
+    assertThat(testee.query(TaskForIdQuery(taskId)).join()?.payload).isEqualTo(payload)
     return self()
   }
 
   fun task_correlations_match(taskId: String, correlations: VariableMap): SELF {
-    assertThat(testee.query(TaskForIdQuery(taskId))?.correlations).isEqualTo(correlations)
+    assertThat(testee.query(TaskForIdQuery(taskId)).join()?.correlations).isEqualTo(correlations)
     return self()
   }
 
   fun tasks_visible_to_assignee_or_candidate_user(username: String, expectedTasks: List<Task>): SELF {
-    assertThat(testee.query(TasksForUserQuery(User(username = username, groups = emptySet()))).elements).containsExactlyElementsOf(expectedTasks)
+    assertThat(testee.query(TasksForUserQuery(User(username = username, groups = emptySet()))).join().elements).containsExactlyElementsOf(expectedTasks)
     return self()
   }
 
   fun tasks_visible_to_candidate_group(groupName: String, expectedTasks: List<Task>): SELF {
-    assertThat(testee.query(TasksForUserQuery(User(username = "<unmet>", groups = setOf(groupName)))).elements).containsExactlyElementsOf(expectedTasks)
+    assertThat(testee.query(TasksForUserQuery(User(username = "<unmet>", groups = setOf(groupName)))).join().elements).containsExactlyElementsOf(expectedTasks)
     return self()
   }
 

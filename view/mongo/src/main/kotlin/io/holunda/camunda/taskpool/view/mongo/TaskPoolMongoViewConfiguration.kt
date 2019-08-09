@@ -21,12 +21,12 @@ import org.springframework.data.mongodb.core.convert.DefaultMongoTypeMapper
 import org.springframework.data.mongodb.core.convert.DefaultMongoTypeMapper.DEFAULT_TYPE_KEY
 import org.springframework.data.mongodb.core.convert.MappingMongoConverter
 import org.springframework.data.mongodb.core.mapping.MongoMappingContext
-import org.springframework.data.mongodb.repository.config.EnableMongoRepositories
+import org.springframework.data.mongodb.repository.config.EnableReactiveMongoRepositories
 import javax.annotation.PostConstruct
 
 @Configuration
 @ComponentScan
-@EnableMongoRepositories
+@EnableReactiveMongoRepositories
 open class TaskPoolMongoViewConfiguration {
 
   companion object : KLogging()

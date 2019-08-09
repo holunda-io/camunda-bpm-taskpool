@@ -12,7 +12,7 @@ val OPERATORS = Regex("[$EQUALS$LESS$GREATER]")
 /**
  * Forms criteria from string filters.
  */
-internal fun toCriteria(filters: List<String>) = filters.map { toCriterion(it) }.filter { it !is Criterion.EmptyCriterion }
+fun toCriteria(filters: List<String>) = filters.map { toCriterion(it) }.filter { it !is Criterion.EmptyCriterion }
 
 /**
  * Forms a single criteria from string filter.
@@ -31,7 +31,7 @@ internal fun toCriterion(filter: String): Criterion {
     filter.contains(LESS) -> filter.split(LESS).plus(LESS)
     else -> listOf()
   }
-  require(segments.size == 3 && !segments[0].isBlank() && !segments[0].isBlank()) { "Failed to create criteria from $filter." }
+  require(segments.size == 3 && !segments[0].isBlank() && !segments[1].isBlank()) { "Failed to create criteria from $filter." }
 
   return if (isTaskAttribute(segments[0])) {
     Criterion.TaskCriterion(name = segments[0].substring(TASK_PREFIX.length), value = segments[1], operator = segments[2])

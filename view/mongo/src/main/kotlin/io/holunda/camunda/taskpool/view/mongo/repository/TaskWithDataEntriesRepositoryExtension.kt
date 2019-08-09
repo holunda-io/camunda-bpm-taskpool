@@ -10,28 +10,28 @@ import org.springframework.data.annotation.Id
 import org.springframework.data.annotation.TypeAlias
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
-import org.springframework.data.mongodb.core.MongoTemplate
+import org.springframework.data.mongodb.core.ReactiveMongoTemplate
 import org.springframework.data.mongodb.core.aggregation.Aggregation
-import org.springframework.data.mongodb.core.aggregation.AggregationResults
 import org.springframework.data.mongodb.core.mapping.Document
 import org.springframework.data.mongodb.core.query.Criteria
 import org.springframework.data.mongodb.core.query.isEqualTo
-import org.springframework.data.mongodb.repository.MongoRepository
+import org.springframework.data.mongodb.repository.ReactiveMongoRepository
 import org.springframework.stereotype.Repository
+import reactor.core.publisher.Flux
 import java.time.Instant
 import java.util.*
 
 
 @Repository
-interface TaskWithDataEntriesRepository : TaskWithDataEntriesRepositoryExtension, MongoRepository<TaskWithDataEntriesDocument, String>
+interface TaskWithDataEntriesRepository : TaskWithDataEntriesRepositoryExtension, ReactiveMongoRepository<TaskWithDataEntriesDocument, String>
 
 
 interface TaskWithDataEntriesRepositoryExtension {
-  fun findAllFilteredForUser(user: User, criteria: List<Criterion>, pageable: Pageable? = null): List<TaskWithDataEntriesDocument>
+  fun findAllFilteredForUser(user: User, criteria: List<Criterion>, pageable: Pageable? = null): Flux<TaskWithDataEntriesDocument>
 }
 
 open class TaskWithDataEntriesRepositoryExtensionImpl(
-  private val mongoTemplate: MongoTemplate
+  private val mongoTemplate: ReactiveMongoTemplate
 ) : TaskWithDataEntriesRepositoryExtension {
 
   companion object : KLogging() {
@@ -59,13 +59,9 @@ open class TaskWithDataEntriesRepositoryExtensionImpl(
   </pre>
 
    */
-  override fun findAllFilteredForUser(user: User, criteria: List<Criterion>, pageable: Pageable?): List<TaskWithDataEntriesDocument> {
+  override fun findAllFilteredForUser(user: User, criteria: List<Criterion>, pageable: Pageable?): Flux<TaskWithDataEntriesDocument> {
 
-    val sort = if (pageable != null) {
-      pageable.getSortOr(DEFAULT_SORT)
-    } else {
-      DEFAULT_SORT
-    }
+    val sort = pageable?.getSortOr(DEFAULT_SORT) ?: DEFAULT_SORT
 
     val filterPropertyCriteria = criteria.map {
       Criteria.where(
@@ -109,13 +105,11 @@ open class TaskWithDataEntriesRepositoryExtensionImpl(
     )
 
 
-    val result: AggregationResults<TaskWithDataEntriesDocument> = mongoTemplate.aggregate(
+    return mongoTemplate.aggregate(
       Aggregation.newAggregation(aggregations),
       "tasks",
       TaskWithDataEntriesDocument::class.java
     )
-
-    return result.mappedResults
   }
 }
 
