@@ -2,6 +2,7 @@ package io.holunda.camunda.taskpool.view.mongo.repository
 
 import io.holunda.camunda.taskpool.view.query.task.ApplicationWithTaskCount
 import mu.KLogging
+import org.springframework.data.domain.Pageable
 import org.springframework.data.mongodb.core.ChangeStreamEvent
 import org.springframework.data.mongodb.core.ChangeStreamOptions
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate
@@ -23,7 +24,7 @@ import reactor.core.publisher.Mono
 interface TaskRepository : ReactiveMongoRepository<TaskDocument, String>, TaskCountByApplicationRepositoryExtension {
   // Note: the query for _deleted not equal to true_ looks weird, but effectively means _null or false_ so it also captures old documents where _deleted_ is not set at all
   @Query("{ 'deleted': {\$ne: true}, \$or: [{ 'assignee': ?0 }, { 'candidateUsers': ?0 }, { 'candidateGroups': { \$in: ?1} } ] }")
-  fun findAllForUser(@Param("username") username: String, @Param("groupNames") groupNames: Set<String>): Flux<TaskDocument>
+  fun findAllForUser(@Param("username") username: String, @Param("groupNames") groupNames: Set<String>, pageable: Pageable? = null): Flux<TaskDocument>
 
   @Query("{ '_id': ?0, 'deleted': {\$ne: true} }")
   fun findNotDeletedById(id: String): Mono<TaskDocument>
