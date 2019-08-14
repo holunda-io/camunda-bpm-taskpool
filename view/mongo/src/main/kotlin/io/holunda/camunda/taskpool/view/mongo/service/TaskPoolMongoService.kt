@@ -7,6 +7,8 @@ import io.holunda.camunda.taskpool.api.business.dataIdentityString
 import io.holunda.camunda.taskpool.api.task.*
 import io.holunda.camunda.taskpool.view.Task
 import io.holunda.camunda.taskpool.view.TaskWithDataEntries
+import io.holunda.camunda.taskpool.view.mongo.ChangeTrackingMode
+import io.holunda.camunda.taskpool.view.mongo.TaskPoolMongoViewProperties
 import io.holunda.camunda.taskpool.view.mongo.repository.*
 import io.holunda.camunda.taskpool.view.query.FilterQuery
 import io.holunda.camunda.taskpool.view.query.ReactiveDataEntryApi
@@ -25,17 +27,16 @@ import org.axonframework.eventhandling.EventProcessor
 import org.axonframework.eventhandling.TrackingEventProcessor
 import org.axonframework.queryhandling.QueryHandler
 import org.axonframework.queryhandling.QueryUpdateEmitter
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
-import org.springframework.data.mongodb.core.ReactiveMongoTemplate
-import org.springframework.data.mongodb.core.aggregation.Aggregation
-import org.springframework.data.mongodb.core.query.Criteria
-import org.springframework.data.mongodb.core.query.isEqualTo
 import org.springframework.stereotype.Component
+import reactor.core.Disposable
 import reactor.core.publisher.Mono
 import reactor.core.publisher.switchIfEmpty
-import reactor.core.publisher.toMono
 import java.util.concurrent.CompletableFuture
+import javax.annotation.PostConstruct
+import javax.annotation.PreDestroy
 
 /**
  * Mongo-based projection.
@@ -43,16 +44,43 @@ import java.util.concurrent.CompletableFuture
 @Component
 @ProcessingGroup(TaskPoolMongoService.PROCESSING_GROUP)
 class TaskPoolMongoService(
+  private val properties: TaskPoolMongoViewProperties,
+  private val taskRepository: TaskRepository,
+  private val dataEntryRepository: DataEntryRepository,
+  private val taskWithDataEntriesRepository: TaskWithDataEntriesRepository,
+  @Autowired(required = false)
+  private val taskChangeTracker: TaskChangeTracker?,
   private val queryUpdateEmitter: QueryUpdateEmitter,
-  private var taskRepository: TaskRepository,
-  private var dataEntryRepository: DataEntryRepository,
-  private val configuration: EventProcessingConfiguration,
-  private val readRepo: TaskWithDataEntriesRepository,
-  private val mongoTemplate: ReactiveMongoTemplate
+  private val configuration: EventProcessingConfiguration
 ) : ReactiveTaskApi, ReactiveDataEntryApi {
 
   companion object : KLogging() {
     const val PROCESSING_GROUP = "io.holunda.camunda.taskpool.view.mongo.service"
+  }
+
+  private var taskCountByApplicationSubscription: Disposable? = null
+  private var taskUpdateSubscription: Disposable? = null
+  private var taskWithDataEntriesUpdateSubscription: Disposable? = null
+
+  @PostConstruct
+  fun trackChanges() {
+    if (properties.changeTrackingMode == ChangeTrackingMode.CHANGE_STREAM) {
+      taskCountByApplicationSubscription = taskChangeTracker!!.trackTaskCountsByApplication()
+        .subscribe { queryUpdateEmitter.emit(TaskCountByApplicationQuery::class.java, { true }, it) }
+      taskUpdateSubscription = taskChangeTracker.trackTaskUpdates()
+        .subscribe { queryUpdateEmitter.emit(TasksForUserQuery::class.java, { query -> query.applyFilter(it) }, it) }
+      taskWithDataEntriesUpdateSubscription = taskChangeTracker.trackTaskWithDataEntriesUpdates()
+        .subscribe { queryUpdateEmitter.emit(TasksWithDataEntriesForUserQuery::class.java, { query -> query.applyFilter(it) }, it) }
+    }
+  }
+
+  @PreDestroy
+  fun stopTracking() {
+    if (properties.changeTrackingMode == ChangeTrackingMode.CHANGE_STREAM) {
+      taskCountByApplicationSubscription?.dispose()
+      taskUpdateSubscription?.dispose()
+      taskWithDataEntriesUpdateSubscription?.dispose()
+    }
   }
 
   /**
@@ -104,21 +132,21 @@ class TaskPoolMongoService(
    */
   @QueryHandler
   override fun query(query: TaskForIdQuery): CompletableFuture<Task?> =
-    taskRepository.findById(query.id).map { it.task() }.toFuture()
+    taskRepository.findNotDeletedById(query.id).map { it.task() }.toFuture()
 
   /**
    * Retrieves a task with data entries for given task id.
    */
   @QueryHandler
   override fun query(query: TaskWithDataEntriesForIdQuery): CompletableFuture<TaskWithDataEntries?> =
-    taskRepository.findById(query.id).flatMap { tasksWithDataEntries(it.task()) }.toFuture()
+    taskRepository.findNotDeletedById(query.id).flatMap { tasksWithDataEntries(it.task()) }.toFuture()
 
   /**
    * Retrieves a list of tasks with correlated data entries of given entry type (and optional id).
    */
   @QueryHandler
   override fun query(query: TasksWithDataEntriesForUserQuery): CompletableFuture<TasksWithDataEntriesQueryResult> =
-    this.readRepo.findAllFilteredForUser(
+    this.taskWithDataEntriesRepository.findAllFilteredForUser(
       user = query.user,
       criteria = toCriteria(query.filters),
       pageable = PageRequest.of(query.page, query.size, sort(query.sort))
@@ -130,23 +158,16 @@ class TaskPoolMongoService(
 
   @QueryHandler
   override fun query(query: TaskCountByApplicationQuery): CompletableFuture<List<ApplicationWithTaskCount>> =
-    mongoTemplate.aggregate(
-      Aggregation.newAggregation(
-        Aggregation.group("sourceReference.applicationName").count().`as`("count"),
-        Aggregation.project().and("_id").`as`("application").and("count").`as`("taskCount")
-      ),
-      "tasks",
-      ApplicationWithTaskCount::class.java
-    ).collectList()
-      .toFuture()
+    taskRepository.findTaskCountsByApplication().collectList().toFuture()
 
   @Suppress("unused")
   @EventHandler
   fun on(event: TaskCreatedEngineEvent) {
     logger.debug { "Task created $event received" }
-    taskRepository.save(task(event).taskDocument())
-      .flatMap { updateTaskForUserQuery(event.id) }
-      .flatMap { updateTaskCountByApplicationQuery(event.sourceReference.applicationName) }
+    val task = task(event)
+    taskRepository.save(task.taskDocument())
+      .then(updateTaskForUserQuery(task)
+        .and(updateTaskCountByApplicationQuery(task.sourceReference.applicationName)))
       .block()
   }
 
@@ -154,9 +175,12 @@ class TaskPoolMongoService(
   @EventHandler
   fun on(event: TaskAssignedEngineEvent) {
     logger.debug { "Task assigned $event received" }
-    taskRepository.findById(event.id)
-      .flatMap { taskRepository.save(task(event, it.task()).taskDocument()) }
-      .flatMap { updateTaskForUserQuery(event.id) }
+    taskRepository.findNotDeletedById(event.id)
+      .flatMap {
+        val resultingTask = task(event, it.task())
+        taskRepository.save(resultingTask.taskDocument())
+          .and(updateTaskForUserQuery(resultingTask))
+      }
       .block()
   }
 
@@ -164,19 +188,28 @@ class TaskPoolMongoService(
   @EventHandler
   fun on(event: TaskCompletedEngineEvent) {
     logger.debug { "Task completed $event received" }
-    taskRepository.deleteById(event.id)
-      .flatMap { updateTaskForUserQuery(event.id) }
-      .flatMap { updateTaskCountByApplicationQuery(event.sourceReference.applicationName) }
-      .block()
+    deleteTask(event.id, event.sourceReference.applicationName)
   }
 
   @Suppress("unused")
   @EventHandler
   fun on(event: TaskDeletedEngineEvent) {
     logger.debug { "Task deleted $event received" }
-    taskRepository.deleteById(event.id)
-      .flatMap { updateTaskForUserQuery(event.id) }
-      .flatMap { updateTaskCountByApplicationQuery(event.sourceReference.applicationName) }
+    deleteTask(event.id, event.sourceReference.applicationName)
+  }
+
+  private fun deleteTask(id: String, applicationName: String) {
+    taskRepository.findNotDeletedById(id)
+      .map { it.copy(deleted = true) }
+      .flatMap { taskDocument ->
+        if (properties.changeTrackingMode == ChangeTrackingMode.CHANGE_STREAM) {
+          taskRepository.save(taskDocument)
+        } else {
+          taskRepository.delete(taskDocument)
+            .then(updateTaskForUserQuery(taskDocument.task())
+              .and(updateTaskCountByApplicationQuery(applicationName)))
+        }
+      }
       .block()
   }
 
@@ -184,9 +217,12 @@ class TaskPoolMongoService(
   @EventHandler
   fun on(event: TaskAttributeUpdatedEngineEvent) {
     logger.debug { "Task attributes updated $event received" }
-    taskRepository.findById(event.id)
-      .flatMap { taskRepository.save(task(event, it.task()).taskDocument()) }
-      .flatMap { updateTaskForUserQuery(event.id) }
+    taskRepository.findNotDeletedById(event.id)
+      .flatMap {
+        val resultingTask = task(event, it.task())
+        taskRepository.save(resultingTask.taskDocument())
+          .and(updateTaskForUserQuery(resultingTask))
+      }
       .block()
   }
 
@@ -194,9 +230,12 @@ class TaskPoolMongoService(
   @EventHandler
   fun on(event: TaskCandidateGroupChanged) {
     logger.debug { "Task candidate groups changed $event received" }
-    taskRepository.findById(event.id)
-      .flatMap { taskRepository.save(task(event, it.task()).taskDocument()) }
-      .flatMap { updateTaskForUserQuery(event.id) }
+    taskRepository.findNotDeletedById(event.id)
+      .flatMap {
+        val resultingTask = task(event, it.task())
+        taskRepository.save(resultingTask.taskDocument())
+          .and(updateTaskForUserQuery(resultingTask))
+      }
       .block()
   }
 
@@ -204,9 +243,12 @@ class TaskPoolMongoService(
   @EventHandler
   fun on(event: TaskCandidateUserChanged) {
     logger.debug { "Task user groups changed $event received" }
-    taskRepository.findById(event.id)
-      .flatMap { taskRepository.save(task(event, it.task()).taskDocument()) }
-      .flatMap { updateTaskForUserQuery(event.id) }
+    taskRepository.findNotDeletedById(event.id)
+      .flatMap {
+        val resultingTask = task(event, it.task())
+        taskRepository.save(resultingTask.taskDocument())
+          .and(updateTaskForUserQuery(resultingTask))
+      }
       .block()
   }
 
@@ -215,7 +257,7 @@ class TaskPoolMongoService(
   fun on(event: DataEntryCreatedEvent) {
     logger.debug { "Business data entry created $event" }
     dataEntryRepository.save(event.toDocument())
-      .flatMap { updateDataEntryQuery(QueryDataIdentity(entryType = event.entryType, entryId = event.entryId)) }
+      .then(updateDataEntryQuery(QueryDataIdentity(entryType = event.entryType, entryId = event.entryId)))
       .block()
   }
 
@@ -227,7 +269,7 @@ class TaskPoolMongoService(
       .map { oldEntry -> event.toDocument(oldEntry) }
       .switchIfEmpty { Mono.just(event.toDocument(null)) }
       .flatMap { dataEntryRepository.save(it) }
-      .flatMap { updateDataEntryQuery(QueryDataIdentity(entryType = event.entryType, entryId = event.entryId)) }
+      .then(updateDataEntryQuery(QueryDataIdentity(entryType = event.entryType, entryId = event.entryId)))
       .block()
   }
 
@@ -248,38 +290,29 @@ class TaskPoolMongoService(
         }
       }
 
-  private fun querySingleApplicationWithTaskCount(applicationName: String): Mono<ApplicationWithTaskCount> =
-    mongoTemplate.aggregate(
-      Aggregation.newAggregation(
-        Aggregation.match(Criteria.where("sourceReference.applicationName").isEqualTo(applicationName)),
-        Aggregation.group("sourceReference.applicationName").count().`as`("count"),
-        Aggregation.project().and("_id").`as`("application").and("count").`as`("taskCount")
-      ),
-      "tasks",
-      ApplicationWithTaskCount::class.java
-    ).toMono()
-      .defaultIfEmpty(ApplicationWithTaskCount(applicationName, 0))
+  private inline fun ifChangeTrackingByEventHandler(block: () -> Mono<Void>): Mono<Void> =
+    if (properties.changeTrackingMode == ChangeTrackingMode.EVENT_HANDLER) block() else Mono.empty()
 
-  private fun updateTaskForUserQuery(taskId: String): Mono<out Any> {
-    return taskRepository.findById(taskId)
-      .doOnNext { task -> updateMapFilterQuery(task.task(), TasksForUserQuery::class.java) }
-      .flatMap { task ->
-        tasksWithDataEntries(task)
-          .doOnNext { updateMapFilterQuery(it, TasksWithDataEntriesForUserQuery::class.java) }
-      }
+  private fun updateTaskForUserQuery(task: Task): Mono<Void> = ifChangeTrackingByEventHandler {
+    updateMapFilterQuery(task, TasksForUserQuery::class.java)
+    tasksWithDataEntries(task)
+      .doOnNext { updateMapFilterQuery(it, TasksWithDataEntriesForUserQuery::class.java) }
+      .then()
   }
 
-  private fun updateDataEntryQuery(identity: DataIdentity): Mono<out Any> {
-    return dataEntryRepository.findByIdentity(identity)
+  private fun updateDataEntryQuery(identity: DataIdentity): Mono<Void> = ifChangeTrackingByEventHandler {
+    dataEntryRepository.findByIdentity(identity)
       .map { it.dataEntry() }
       .doOnNext { dataEntry ->
         updateMapFilterQuery(dataEntry, DataEntriesForUserQuery::class.java)
       }
+      .then()
   }
 
-  private fun updateTaskCountByApplicationQuery(applicationName: String): Mono<out Any> {
-    return querySingleApplicationWithTaskCount(applicationName)
+  private fun updateTaskCountByApplicationQuery(applicationName: String): Mono<Void> = ifChangeTrackingByEventHandler {
+    taskRepository.findTaskCountForApplication(applicationName)
       .doOnNext { queryUpdateEmitter.emit(TaskCountByApplicationQuery::class.java, { true }, it) }
+      .then()
   }
 
   private fun <T : Any, Q : FilterQuery<T>> updateMapFilterQuery(entry: T?, clazz: Class<Q>) {

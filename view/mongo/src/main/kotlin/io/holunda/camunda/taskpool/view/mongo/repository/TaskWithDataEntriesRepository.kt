@@ -49,6 +49,7 @@ open class TaskWithDataEntriesRepositoryExtensionImpl(
   as: "data_entries" } },
   { $sort: { "dueDate": 1 }},
   { $match: { $and: [
+  'deleted': { $ne: true },
   // { $or: [ { 'assignee' : "kermit" }, { 'candidateUsers' : "kermit" }, { 'candidateGroups' : { $in: [ "other" ] } } ] },
   { $or: [ { 'assignee' : "kermit" }, { 'candidateUsers' : "kermit" }, { 'candidateGroups' : { $in: [ "other" ] } } ] }
   // { $or: [ { 'businessKey': "3" } ] }
@@ -90,6 +91,8 @@ open class TaskWithDataEntriesRepositoryExtensionImpl(
     val filterCriteria = if (filterPropertyCriteria.isNotEmpty()) {
       Criteria()
         .andOperator(
+          // Note: the query for _deleted not equal to true_ looks weird, but effectively means _null or false_ so it also captures old documents where _deleted_ is not set at all
+          Criteria.where("deleted").ne(true),
           tasksForUserCriteria,
           Criteria()
             .orOperator(*filterPropertyCriteria))

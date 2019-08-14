@@ -9,7 +9,6 @@ import io.holunda.camunda.taskpool.view.Task
 import io.holunda.camunda.taskpool.view.TaskWithDataEntries
 import io.holunda.camunda.taskpool.view.addModification
 import org.camunda.bpm.engine.variable.Variables
-import java.util.*
 
 /**
  * Create a task document from task.
@@ -59,7 +58,8 @@ fun TaskDocument.task() = Task(
   assignee = this.assignee,
   owner = this.owner,
   dueDate = this.dueDate,
-  followUpDate = this.followUpDate
+  followUpDate = this.followUpDate,
+  deleted = this.deleted
 )
 
 /**

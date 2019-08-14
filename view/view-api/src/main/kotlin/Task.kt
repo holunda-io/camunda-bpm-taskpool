@@ -27,7 +27,8 @@ data class Task(
   val assignee: String? = null,
   val owner: String? = null,
   val dueDate: Date? = null,
-  val followUpDate: Date? = null
+  val followUpDate: Date? = null,
+  val deleted: Boolean = false
 ) : TaskIdentity, WithPayload, WithCorrelations {
 
   val correlationIdentities by lazy {

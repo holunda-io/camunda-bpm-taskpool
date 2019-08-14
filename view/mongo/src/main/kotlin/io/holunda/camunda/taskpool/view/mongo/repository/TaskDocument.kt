@@ -38,7 +38,8 @@ data class TaskDocument(
   @Indexed
   val dueDate: Date? = null,
   @Indexed
-  val followUpDate: Date? = null
+  val followUpDate: Date? = null,
+  val deleted: Boolean = false
 )
 
 sealed class ReferenceDocument {
