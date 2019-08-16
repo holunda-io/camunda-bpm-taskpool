@@ -46,6 +46,7 @@ class TaskChangeTracker(
           }
         }
       }
+      .share()
 
     // Truly delete documents that have been marked deleted
     trulyDeleteChangeStreamSubscription = changeStream
