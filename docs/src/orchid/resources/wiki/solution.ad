@@ -1,0 +1,15 @@
+---
+title: Solution
+---
+
+== Solution Idea
+
+The solution is implementing the Command Query Responsibility Segregation (CQRS) pattern, by collecting the
+tasks from the process engines and creating a read-optimized projection with tasks and correlated business
+data events. In doing so, `camunda-bpm-taskpool` provides several independent components (see below) which can
+be deployed in different scenarios (see below). The library is implemented using Kotlin programming language and relies on SpringBoot
+as execution environment. It makes a massive use of Axon Framework as a basis of the CQRS implementation.
+
+The following diagram depicts the overall architecture.
+
+image::../../assets/media/architecture-collector.png["Architectural white box"]

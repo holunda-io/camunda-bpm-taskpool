@@ -1,0 +1,11 @@
+*  Camunda Engine Taskpool Support SpringBoot Starter (starter to be included in the process application)
+*  Camunda Engine Eventing Plugin (moved to Camunda SpringBoot Starter)
+*  Camunda Engine Interaction Client
+*  link:/taskpool/taskpool-collector/docs/collector.adoc[Taskpool Collector]
+*  Datapool Sender
+*  Taskpool Core
+*  Datapool Core
+*  Simple View
+*  Mongo View
+*  Taskpool Cockpit
+*  Tasklist (example)

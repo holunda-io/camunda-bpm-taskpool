@@ -1,0 +1,79 @@
+site:
+  about:
+    siteName: Camunda BPM Taskpool
+    siteDescription: A component for pooling Camunda BPM user tasks with business data for high performance queries.
+
+theme:
+  primaryColor: '#DE0000'
+  social:
+    twitter: 'holisticon'
+    github: 'holunda-io/camunda-bpm-taskpool'
+  menu:
+    - type: 'submenu'
+      title: 'Introduction'
+      menu:
+        - type: 'wiki'
+    - type: 'submenu'
+      title: 'User Guide'
+      menu:
+        - type: 'page'
+          itemId: 'Components'
+    - type: 'submenu'
+      title: 'Developer Guide'
+      menu:
+        - type: 'page'
+          itemId: 'Contributing'
+        - type: 'page'
+          itemId: 'Release'
+
+allPages:
+  components:
+    - type: pageContent
+      order: 10
+
+    - type: prism
+      githubTheme: 'darcula'
+      languages:
+        - 'yaml'
+        - 'java'
+        - 'groovy'
+        - 'markdown'
+      plugins:
+        - 'line-numbers'
+        - 'line-highlight'
+        - 'toolbar'
+        - 'show-language'
+        - 'copy-to-clipboard'
+
+
+changelog:
+  includeMinorVersions: true
+  includeReleaseNotes: true
+
+wiki:
+  defaultConfig:
+    createPdf: true
+
+kotlindoc:
+  sourceDirs:
+    - './../../../../datapool/datapool-api/src/main/kotlin'
+    - './../../../../datapool/datapool-core/src/main/kotlin'
+    - './../../../../engine/camunda-engine-client/src/main/kotlin'
+    - './../../../../engine/camunda-engine-plugin/src/main/kotlin'
+    - './../../../../engine/datapool-collector/src/main/kotlin'
+    - './../../../../engine/taskpool-collector/src/main/kotlin'
+    - './../../../../engine/taskpool-engine-springboot-starter/src/main/kotlin'
+    - './../../../../engine/variable-serializer/src/main/kotlin'
+    - './../../../../taskpool/taskpool-api/src/main/kotlin'
+    - './../../../../taskpool/taskpool-core/src/main/kotlin'
+    - './../../../../view/view-api/src/main/kotlin'
+    - './../../../../view/simple/src/main/kotlin'
+    - './../../../../view/mongo/src/main/kotlin'
+
+
+services:
+  publications:
+    stages:
+      - type: 'githubPages'
+        username: 'zambrovski'
+        repo: 'holunda-io/camunda-bpm-taskpool'

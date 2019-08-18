@@ -30,15 +30,3 @@
 
 === 1.2.10: April 2, 2019
 * chore: automate releases, see #155
-
-=== 1.2.8: March 27, 2019
-* fix: remove application.yml from starter, see #151
-* refactor: remove tasklist react, see #157
-
-=== 1.2.6: March 19, 2019
-* feat: implement collection of process definitions deployed in connected process engines. See #144.
-* feat: extend task-url-resolver to support resolution of start form URLs (and rename to form-url-resolver).
-* feat: integrate start form for example process. See #142.
-* feat: implement reactive controller for tasks, see #21.
-* chore: switch to Camunda BPM SpringBoot Starter 3.2.1. See #143.
-* docs: rewrite the storyboard for the example process.

@@ -1,4 +1,6 @@
-= Release Management
+---
+title: 'Release'
+---
 
 Release management has been set-up for use of Sonatype Nexus (= Maven Central)
 
