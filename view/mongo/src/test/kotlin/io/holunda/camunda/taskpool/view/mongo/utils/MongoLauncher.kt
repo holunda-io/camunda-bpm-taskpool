@@ -18,6 +18,8 @@ import javax.net.SocketFactory
 /**
  * Mongo Launcher... See https://github.com/AxonFramework/extension-mongo/blob/master/mongo/src/test/java/org/axonframework/extensions/mongo/utils/MongoLauncher.java
  * @author Allard Buijze
+ * @author Simon Zambrovski
+ * @author Lars Bilger
  */
 object MongoLauncher {
 
@@ -73,6 +75,9 @@ object MongoLauncher {
     private var mongod: MongodProcess? = null
     private var mongoExecutable: MongodExecutable? = null
 
+    /**
+     * Inits server.
+     */
     fun init() {
       if (isMongoRunning) {
         // There was already an existing mongo instance that we are reusing. Clear it in case there is any leftover data from a previous test run
@@ -98,10 +103,16 @@ object MongoLauncher {
       }
     }
 
+    /**
+     * Clear client and db.
+     */
     fun clear() {
       MongoClient(LOCALHOST, MONGO_DEFAULT_PORT).use { it.dropDatabase(databaseName) }
     }
 
+    /**
+     * Stops server.
+     */
     fun stop() {
       mongod?.stop()
       mongoExecutable?.stop()

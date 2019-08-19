@@ -40,6 +40,7 @@ open class TaskWithDataEntriesRepositoryExtensionImpl(
 
 
   /**
+   * Retrieves a list of tasks for user matching provided critera.
   <pre>
   db.tasks.aggregate([
   { $lookup: {
@@ -58,7 +59,6 @@ open class TaskWithDataEntriesRepositoryExtensionImpl(
   }}
   ])
   </pre>
-
    */
   override fun findAllFilteredForUser(user: User, criteria: List<Criterion>, pageable: Pageable?): Flux<TaskWithDataEntriesDocument> {
 

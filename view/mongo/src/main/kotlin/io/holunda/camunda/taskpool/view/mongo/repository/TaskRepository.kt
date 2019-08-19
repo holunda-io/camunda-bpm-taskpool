@@ -66,9 +66,7 @@ open class TaskCountByApplicationRepositoryExtensionImpl(
   private val mongoTemplate: ReactiveMongoTemplate
 ) : TaskCountByApplicationRepositoryExtension {
 
-  companion object : KLogging() {
-
-  }
+  companion object : KLogging()
 
   override fun findTaskCountsByApplication(): Flux<ApplicationWithTaskCount> =
     mongoTemplate.aggregate(
