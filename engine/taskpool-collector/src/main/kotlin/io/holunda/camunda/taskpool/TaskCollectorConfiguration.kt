@@ -21,7 +21,7 @@ import javax.annotation.PostConstruct
 @Configuration
 @ComponentScan
 @EnableConfigurationProperties(TaskCollectorProperties::class)
-open class TaskCollectorConfiguration(
+class TaskCollectorConfiguration(
   private val properties: TaskCollectorProperties,
   private val runtimeService: RuntimeService,
   private val filter: ProcessVariablesFilter,
@@ -34,7 +34,7 @@ open class TaskCollectorConfiguration(
    * Create accumulator.
    */
   @Bean
-  open fun commandAccumulator(): CommandAccumulator = ProjectingCommandAccumulator()
+  fun commandAccumulator(): CommandAccumulator = ProjectingCommandAccumulator()
 
 
   /**
@@ -42,7 +42,7 @@ open class TaskCollectorConfiguration(
    */
   @Bean
   @ConditionalOnExpression("'\${camunda.taskpool.collector.enricher.type}' != 'custom'")
-  open fun processVariablesEnricher(): VariablesEnricher =
+  fun processVariablesEnricher(): VariablesEnricher =
     when (properties.enricher.type) {
       TaskCollectorEnricherType.processVariables -> ProcessVariablesTaskCommandEnricher(runtimeService, filter, correlator)
       TaskCollectorEnricherType.no -> EmptyTaskCommandEnricher()
@@ -54,15 +54,15 @@ open class TaskCollectorConfiguration(
    */
   @Bean
   @ConditionalOnExpression("'\${camunda.taskpool.collector.sender.type}' != 'custom'")
-  open fun txCommandSender(commandListGateway: CommandListGateway, accumulator: CommandAccumulator): CommandSender =
+  fun txCommandSender(commandListGateway: CommandListGateway, accumulator: CommandAccumulator): CommandSender =
     when (properties.sender.type) {
-      TaskSenderType.tx -> TxAwareAccumulatingCommandSender(commandListGateway, accumulator)
+      TaskSenderType.tx -> TxAwareAccumulatingCommandSender(commandListGateway, accumulator, properties.sender.sendWithinTransaction)
       else -> throw IllegalStateException("Could not initialize sender, used ${properties.sender.type} type.")
     }
 
 
   @PostConstruct
-  open fun printSenderConfiguration() {
+  fun printSenderConfiguration() {
     if (properties.sender.enabled) {
       logger.info("SENDER-001: Camunda Taskpool commands will be distributed over command bus.")
     } else {
@@ -71,7 +71,7 @@ open class TaskCollectorConfiguration(
   }
 
   @PostConstruct
-  open fun printEnricherConfiguration() {
+  fun printEnricherConfiguration() {
     when (properties.enricher.type) {
       TaskCollectorEnricherType.processVariables -> logger.info("ENRICHER-001: Camunda Taskpool commands will be enriched with process variables.")
       TaskCollectorEnricherType.no -> logger.info("ENRICHER-002: Camunda Taskpool commands will not be enriched.")
