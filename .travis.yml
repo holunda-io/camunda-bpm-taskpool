@@ -11,7 +11,7 @@ cache:
 before_install:
   - chmod +x mvnw
 #  - sudo apt-get install jq
-  - curl https://github.com/codacy/codacy-coverage-reporter/releases/download/6.0.2/codacy-coverage-reporter-linux-6.0.2 -o codacy-coverage-reporter-assembly.jar
+  - curl https://github.com/codacy/codacy-coverage-reporter/releases/download/6.0.2/codacy-coverage-reporter-6.0.2-assembly.jar -o codacy-coverage-reporter-assembly.jar
 #
 # Skip installation
 #
