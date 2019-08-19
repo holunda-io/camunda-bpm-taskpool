@@ -8,7 +8,7 @@ import org.springframework.data.mongodb.core.index.Indexed
 import org.springframework.data.mongodb.core.mapping.Document
 import java.util.*
 
-@Document(collection = "tasks")
+@Document(collection = TaskDocument.COLLECTION)
 @TypeAlias("task")
 data class TaskDocument(
   @Id
@@ -40,8 +40,11 @@ data class TaskDocument(
   @Indexed
   val followUpDate: Date? = null,
   val deleted: Boolean = false
-)
-
+) {
+  companion object {
+    const val COLLECTION = "tasks"
+  }
+}
 sealed class ReferenceDocument {
   companion object {
     const val CASE = "case"

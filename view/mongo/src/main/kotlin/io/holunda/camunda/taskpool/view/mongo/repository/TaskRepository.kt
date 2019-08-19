@@ -23,26 +23,52 @@ import reactor.core.publisher.Mono
  */
 @Repository
 interface TaskRepository : ReactiveMongoRepository<TaskDocument, String>, TaskCountByApplicationRepositoryExtension {
+
+  /**
+   * Retrieves all tasks for user.
+   */
   // Note: the query for _deleted not equal to true_ looks weird, but effectively means _null or false_ so it also captures old documents where _deleted_ is not set at all
   @Query("{ 'deleted': {\$ne: true}, \$or: [{ 'assignee': ?0 }, { 'candidateUsers': ?0 }, { 'candidateGroups': { \$in: ?1} } ] }")
   fun findAllForUser(@Param("username") username: String, @Param("groupNames") groupNames: Set<String>, pageable: Pageable? = null): Flux<TaskDocument>
 
+  /**
+   * Retrieves a not deleted with given task.
+   */
   @Query("{ '_id': ?0, 'deleted': {\$ne: true} }")
   fun findNotDeletedById(id: String): Mono<TaskDocument>
 }
 
+/**
+ * Counts tasks.
+ */
 interface TaskCountByApplicationRepositoryExtension {
+  /**
+   * Retrieves counts grouped by application names.
+   */
   fun findTaskCountsByApplication(): Flux<ApplicationWithTaskCount>
+
+  /**
+   * Retrieves a count of tasks for given application.
+   */
   fun findTaskCountForApplication(applicationName: String): Mono<ApplicationWithTaskCount>
+
+  /**
+   * Retrieves a task updates flux.
+   */
   fun getTaskUpdates(resumeToken: BsonValue? = null): Flux<ChangeStreamEvent<TaskDocument>>
 }
 
+/**
+ * Implementation of the repository extension.
+ */
 @Suppress("unused")
 open class TaskCountByApplicationRepositoryExtensionImpl(
   private val mongoTemplate: ReactiveMongoTemplate
 ) : TaskCountByApplicationRepositoryExtension {
 
-  companion object : KLogging()
+  companion object : KLogging() {
+
+  }
 
   override fun findTaskCountsByApplication(): Flux<ApplicationWithTaskCount> =
     mongoTemplate.aggregate(
@@ -50,7 +76,7 @@ open class TaskCountByApplicationRepositoryExtensionImpl(
         notDeleted,
         *countGroupedByApplicationName
       ),
-      "tasks",
+      TaskDocument.COLLECTION,
       ApplicationWithTaskCount::class.java
     )
 
@@ -61,14 +87,14 @@ open class TaskCountByApplicationRepositoryExtensionImpl(
         matchApplicationName(applicationName),
         *countGroupedByApplicationName
       ),
-      "tasks",
+      TaskDocument.COLLECTION,
       ApplicationWithTaskCount::class.java
     )
       .singleOrEmpty()
       .defaultIfEmpty(ApplicationWithTaskCount(applicationName, 0))
 
   override fun getTaskUpdates(resumeToken: BsonValue?): Flux<ChangeStreamEvent<TaskDocument>> =
-    mongoTemplate.changeStream("tasks", changeStreamOptions(resumeToken), TaskDocument::class.java)
+    mongoTemplate.changeStream(TaskDocument.COLLECTION, changeStreamOptions(resumeToken), TaskDocument::class.java)
 
   private fun changeStreamOptions(resumeToken: BsonValue?): ChangeStreamOptions {
     val builder = ChangeStreamOptions.builder()

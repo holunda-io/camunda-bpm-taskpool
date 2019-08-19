@@ -62,6 +62,9 @@ class TaskPoolMongoService(
   private var taskUpdateSubscription: Disposable? = null
   private var taskWithDataEntriesUpdateSubscription: Disposable? = null
 
+  /**
+   * Register for change stream.
+   */
   @PostConstruct
   fun trackChanges() {
     if (properties.changeTrackingMode == ChangeTrackingMode.CHANGE_STREAM) {
@@ -74,6 +77,9 @@ class TaskPoolMongoService(
     }
   }
 
+  /**
+   * Unregister for change stream.
+   */
   @PreDestroy
   fun stopTracking() {
     if (properties.changeTrackingMode == ChangeTrackingMode.CHANGE_STREAM) {

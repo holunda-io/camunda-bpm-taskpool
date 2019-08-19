@@ -110,7 +110,7 @@ open class TaskWithDataEntriesRepositoryExtensionImpl(
 
     return mongoTemplate.aggregate(
       Aggregation.newAggregation(aggregations),
-      "tasks",
+      TaskDocument.COLLECTION,
       TaskWithDataEntriesDocument::class.java
     )
   }
@@ -125,7 +125,7 @@ fun value(criterion: Criterion): Any =
   }
 
 
-@Document(collection = "tasks")
+@Document(collection = TaskDocument.COLLECTION)
 @TypeAlias("task")
 data class TaskWithDataEntriesDocument(
   @Id

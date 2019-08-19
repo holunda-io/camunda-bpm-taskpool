@@ -74,15 +74,24 @@ class TaskChangeTracker(
     trulyDeleteChangeStreamSubscription.dispose()
   }
 
+  /**
+   * Adopt changes to task count by application stream.
+   */
   fun trackTaskCountsByApplication(): Flux<ApplicationWithTaskCount> = changeStream
     .flatMap { event ->
       val applicationName = event.body.sourceReference.applicationName
       taskRepository.findTaskCountForApplication(applicationName)
     }
 
+  /**
+   * Adopt changes to task update stream.
+   */
   fun trackTaskUpdates(): Flux<Task> = changeStream
     .map { event -> event.body.task() }
 
+  /**
+   * Adopt changes to task with data entries update stream.
+   */
   fun trackTaskWithDataEntriesUpdates(): Flux<TaskWithDataEntries> = changeStream
     .flatMap { event ->
       val task = event.body.task()
