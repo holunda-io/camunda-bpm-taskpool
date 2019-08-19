@@ -10,6 +10,8 @@ cache:
 #
 before_install:
   - chmod +x mvnw
+  - sudo apt-get install jq
+  - curl $(curl https://api.github.com/repos/codacy/codacy-coverage-reporter/releases/latest | jq -r '.assets | map({content_type, browser_download_url} | select(.content_type | contains("application/x-java-archive"))) | .[0].browser_download_url') -o codacy-coverage-reporter-assembly.jar
 #
 # Skip installation
 #
@@ -25,6 +27,20 @@ script:
 #
 after_success:
 - bash <(curl -s https://codecov.io/bash)
+- java -jar ~/codacy-coverage-reporter-assembly.jar report -l Kotlin -r datapool-api/target/site/jacoco-ut/jacoco.xml --partial
+- java -jar ~/codacy-coverage-reporter-assembly.jar report -l Kotlin -r datapool-core/target/site/jacoco-ut/jacoco.xml --partial
+- java -jar ~/codacy-coverage-reporter-assembly.jar report -l Kotlin -r engine/camunda-engine-client/target/site/jacoco-ut/jacoco.xml --partial
+- java -jar ~/codacy-coverage-reporter-assembly.jar report -l Kotlin -r engine/camunda-engine-plugin/target/site/jacoco-ut/jacoco.xml --partial
+- java -jar ~/codacy-coverage-reporter-assembly.jar report -l Kotlin -r engine/datapool-collector/target/site/jacoco-ut/jacoco.xml --partial
+- java -jar ~/codacy-coverage-reporter-assembly.jar report -l Kotlin -r engine/taskpool-collector/target/site/jacoco-ut/jacoco.xml --partial
+- java -jar ~/codacy-coverage-reporter-assembly.jar report -l Kotlin -r engine/taskpool-engine-springboot-starter/target/site/jacoco-ut/jacoco.xml --partial
+- java -jar ~/codacy-coverage-reporter-assembly.jar report -l Kotlin -r engine/variable-serializer/target/site/jacoco-ut/jacoco.xml --partial
+- java -jar ~/codacy-coverage-reporter-assembly.jar report -l Kotlin -r taskpool/taskpool-api/target/site/jacoco-ut/jacoco.xml --partial
+- java -jar ~/codacy-coverage-reporter-assembly.jar report -l Kotlin -r taskpool/taskpool-core/target/site/jacoco-ut/jacoco.xml --partial
+- java -jar ~/codacy-coverage-reporter-assembly.jar report -l Kotlin -r view/mongo/target/site/jacoco-ut/jacoco.xml --partial
+- java -jar ~/codacy-coverage-reporter-assembly.jar report -l Kotlin -r view/simple/target/site/jacoco-ut/jacoco.xml --partial
+- java -jar ~/codacy-coverage-reporter-assembly.jar report -l Kotlin -r view/view-api/target/site/jacoco-ut/jacoco.xml --partial
+- java -jar ~/codacy-coverage-reporter-assembly.jar final
 
 #
 # Notify slack channel
