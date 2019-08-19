@@ -68,7 +68,10 @@ class TaskPoolMongoService(
   @PostConstruct
   fun trackChanges() {
     if (properties.changeTrackingMode == ChangeTrackingMode.CHANGE_STREAM) {
-      taskCountByApplicationSubscription = taskChangeTracker!!.trackTaskCountsByApplication()
+
+      requireNotNull(taskChangeTracker) { "Task change tracker must not be null if tracking mode is set to ${ChangeTrackingMode.CHANGE_STREAM}" }
+
+      taskCountByApplicationSubscription = taskChangeTracker.trackTaskCountsByApplication()
         .subscribe { queryUpdateEmitter.emit(TaskCountByApplicationQuery::class.java, { true }, it) }
       taskUpdateSubscription = taskChangeTracker.trackTaskUpdates()
         .subscribe { queryUpdateEmitter.emit(TasksForUserQuery::class.java, { query -> query.applyFilter(it) }, it) }
@@ -162,6 +165,9 @@ class TaskPoolMongoService(
       .map { TasksWithDataEntriesQueryResult(it).slice(query = query) }
       .toFuture()
 
+  /**
+   * Retrieves a task count for application.
+   */
   @QueryHandler
   override fun query(query: TaskCountByApplicationQuery): CompletableFuture<List<ApplicationWithTaskCount>> =
     taskRepository.findTaskCountsByApplication().collectList().toFuture()

@@ -35,8 +35,11 @@ class TaskChangeTracker(
   private lateinit var changeStream: Flux<ChangeStreamEvent<TaskDocument>>
   private lateinit var trulyDeleteChangeStreamSubscription: Disposable
 
+  /**
+   * Create subscription.
+   */
   @PostConstruct
-  fun subscribeTaskCountForApplication() {
+  fun createSubscription() {
     var lastSeenResumeToken: BsonValue? = null
     changeStream = Mono.fromSupplier { taskRepository.getTaskUpdates(lastSeenResumeToken) }
       .flatMapMany(identity())
@@ -69,6 +72,9 @@ class TaskChangeTracker(
       .subscribe()
   }
 
+  /**
+   * Clear subscription.
+   */
   @PreDestroy
   fun clearSubscription() {
     trulyDeleteChangeStreamSubscription.dispose()

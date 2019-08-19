@@ -22,11 +22,20 @@ import java.time.Instant
 import java.util.*
 
 
+/**
+ * Reactive mongo repository for tasks with data entries.
+ */
 @Repository
 interface TaskWithDataEntriesRepository : TaskWithDataEntriesRepositoryExtension, ReactiveMongoRepository<TaskWithDataEntriesDocument, String>
 
-
+/**
+ * Repository extension.
+ */
 interface TaskWithDataEntriesRepositoryExtension {
+
+  /**
+   * Find all tasks with data entries matching specified filter.
+   */
   fun findAllFilteredForUser(user: User, criteria: List<Criterion>, pageable: Pageable? = null): Flux<TaskWithDataEntriesDocument>
 }
 
@@ -42,22 +51,21 @@ open class TaskWithDataEntriesRepositoryExtensionImpl(
   /**
    * Retrieves a list of tasks for user matching provided critera.
   <pre>
-  db.tasks.aggregate([
-  { $lookup: {
-  from: "data-entries",
-  localField: "dataEntriesRefs",
-  foreignField: "_id",
-  as: "data_entries" } },
-  { $sort: { "dueDate": 1 }},
-  { $match: { $and: [
-  'deleted': { $ne: true },
-  // { $or: [ { 'assignee' : "kermit" }, { 'candidateUsers' : "kermit" }, { 'candidateGroups' : { $in: [ "other" ] } } ] },
-  { $or: [ { 'assignee' : "kermit" }, { 'candidateUsers' : "kermit" }, { 'candidateGroups' : { $in: [ "other" ] } } ] }
-  // { $or: [ { 'businessKey': "3" } ] }
-  ]
-
-  }}
-  ])
+    db.tasks.aggregate([
+    { $lookup: {
+    from: "data-entries",
+    localField: "dataEntriesRefs",
+    foreignField: "_id",
+    as: "data_entries" } },
+    { $sort: { "dueDate": 1 }},
+    { $match: { $and: [
+    'deleted': { $ne: true },
+    // { $or: [ { 'assignee' : "kermit" }, { 'candidateUsers' : "kermit" }, { 'candidateGroups' : { $in: [ "other" ] } } ] },
+    { $or: [ { 'assignee' : "kermit" }, { 'candidateUsers' : "kermit" }, { 'candidateGroups' : { $in: [ "other" ] } } ] }
+    /Tas/ { $or: [ { 'businessKey': "3" } ] }
+    ]
+    }}
+    ])
   </pre>
    */
   override fun findAllFilteredForUser(user: User, criteria: List<Criterion>, pageable: Pageable?): Flux<TaskWithDataEntriesDocument> {
