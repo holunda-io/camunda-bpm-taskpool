@@ -1,6 +1,9 @@
+#
+# see https://github.com/arturbosch/detekt/blob/master/detekt-cli/src/main/resources/default-detekt-config.yml
+#
 comments:
   active: true
-  excludes: "**/test/**,**/*Test.kt,**/*ITest.kt"
+  excludes: "**/test/**,**/*Test.kt,**/*ITest.kt,**/example/**"
   CommentOverPrivateFunction:
     active: false
   CommentOverPrivateProperty:
@@ -16,3 +19,8 @@ comments:
     searchInInnerInterface: true
   UndocumentedPublicFunction:
     active: true
+
+performance:
+  active: true
+  SpreadOperator:
+    active: false
