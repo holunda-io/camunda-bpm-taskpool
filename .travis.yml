@@ -10,8 +10,8 @@ cache:
 #
 before_install:
   - chmod +x mvnw
-  - sudo apt-get install jq
-  - curl $(curl https://api.github.com/repos/codacy/codacy-coverage-reporter/releases/latest | jq -r '.assets | map({content_type, browser_download_url} | select(.content_type | contains("application/x-java-archive"))) | .[0].browser_download_url') -o codacy-coverage-reporter-assembly.jar
+#  - sudo apt-get install jq
+  - curl https://github.com/codacy/codacy-coverage-reporter/releases/download/6.0.2/codacy-coverage-reporter-linux-6.0.2 -o codacy-coverage-reporter-assembly.jar
 #
 # Skip installation
 #
