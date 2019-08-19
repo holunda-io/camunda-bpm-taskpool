@@ -7,11 +7,15 @@ import io.holunda.camunda.taskpool.view.TaskWithDataEntries
 import io.holunda.camunda.taskpool.view.mongo.repository.*
 import io.holunda.camunda.taskpool.view.query.task.ApplicationWithTaskCount
 import mu.KLogging
+import org.bson.BsonValue
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.data.mongodb.core.ChangeStreamEvent
 import org.springframework.stereotype.Component
 import reactor.core.Disposable
 import reactor.core.publisher.Flux
+import reactor.core.publisher.Mono
+import java.time.Duration
+import java.util.function.Function.identity
 import javax.annotation.PostConstruct
 import javax.annotation.PreDestroy
 
@@ -33,7 +37,13 @@ class TaskChangeTracker(
 
   @PostConstruct
   fun subscribeTaskCountForApplication() {
-    changeStream = taskRepository.getTaskUpdates()
+    var lastSeenResumeToken: BsonValue? = null
+    changeStream = Mono.fromSupplier { taskRepository.getTaskUpdates(lastSeenResumeToken) }
+      .flatMapMany(identity())
+      .doOnNext { event ->
+        val resumeToken = event.resumeToken
+        if (resumeToken != null) lastSeenResumeToken = resumeToken
+      }
       .filter { event ->
         when (event.operationType) {
           OperationType.INSERT, OperationType.UPDATE, OperationType.REPLACE -> {
@@ -46,6 +56,7 @@ class TaskChangeTracker(
           }
         }
       }
+      .retryBackoff(Long.MAX_VALUE, Duration.ofMillis(100), Duration.ofSeconds(10))
       .share()
 
     // Truly delete documents that have been marked deleted

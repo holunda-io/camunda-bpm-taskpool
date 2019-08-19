@@ -2,6 +2,7 @@ package io.holunda.camunda.taskpool.view.mongo.repository
 
 import io.holunda.camunda.taskpool.view.query.task.ApplicationWithTaskCount
 import mu.KLogging
+import org.bson.BsonValue
 import org.springframework.data.domain.Pageable
 import org.springframework.data.mongodb.core.ChangeStreamEvent
 import org.springframework.data.mongodb.core.ChangeStreamOptions
@@ -33,7 +34,7 @@ interface TaskRepository : ReactiveMongoRepository<TaskDocument, String>, TaskCo
 interface TaskCountByApplicationRepositoryExtension {
   fun findTaskCountsByApplication(): Flux<ApplicationWithTaskCount>
   fun findTaskCountForApplication(applicationName: String): Mono<ApplicationWithTaskCount>
-  fun getTaskUpdates(): Flux<ChangeStreamEvent<TaskDocument>>
+  fun getTaskUpdates(resumeToken: BsonValue? = null): Flux<ChangeStreamEvent<TaskDocument>>
 }
 
 @Suppress("unused")
@@ -66,8 +67,16 @@ open class TaskCountByApplicationRepositoryExtensionImpl(
       .singleOrEmpty()
       .defaultIfEmpty(ApplicationWithTaskCount(applicationName, 0))
 
-  override fun getTaskUpdates(): Flux<ChangeStreamEvent<TaskDocument>> =
-    mongoTemplate.changeStream("tasks", ChangeStreamOptions.empty(), TaskDocument::class.java)
+  override fun getTaskUpdates(resumeToken: BsonValue?): Flux<ChangeStreamEvent<TaskDocument>> =
+    mongoTemplate.changeStream("tasks", changeStreamOptions(resumeToken), TaskDocument::class.java)
+
+  private fun changeStreamOptions(resumeToken: BsonValue?): ChangeStreamOptions {
+    val builder = ChangeStreamOptions.builder()
+    if (resumeToken != null) {
+      builder.resumeToken(resumeToken)
+    }
+    return builder.build()
+  }
 
   private fun matchApplicationName(applicationName: String) =
     Aggregation.match(Criteria.where("sourceReference.applicationName").isEqualTo(applicationName))
