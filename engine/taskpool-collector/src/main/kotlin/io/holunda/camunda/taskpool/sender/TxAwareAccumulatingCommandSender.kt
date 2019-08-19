@@ -44,6 +44,7 @@ open class TxAwareAccumulatingCommandSender(
             send()
           }
         }
+
         /**
          * Execute send if flag is set to send outside the TX.
          */
@@ -67,9 +68,6 @@ open class TxAwareAccumulatingCommandSender(
     }
   }
 
-  /**
-   * Send commands on commit only.
-   */
   private fun send() {
     // iterate over messages and send them
     commands.get().forEach { (taskId: String, taskCommands: MutableList<EngineTaskCommand>) ->
