@@ -1,6 +1,6 @@
 comments:
   active: true
-  excludes: "**/test/**,**/*.Test.kt"
+  excludes: "**/test/**,**/*Test.kt,**/*ITest.kt"
   CommentOverPrivateFunction:
     active: false
   CommentOverPrivateProperty:
