@@ -4,55 +4,6 @@ site:
     siteDescription: A component for pooling Camunda BPM user tasks with business data for high performance queries.
     avatar: 'assets/media/favicon.png'
 
-theme:
-  useSidebarSearch: true
-  primaryColor: '#B10000'
-
-  trianglifyOptions:
-    x_colors: ['#000', '#B10000', '#000']
-  extraCss:
-    - 'assets/css/asciidoc-admonitionblock.scss'
-  social:
-    twitter: 'holisticon'
-    github: 'holunda-io/camunda-bpm-taskpool'
-    other:
-      - link: 'https://www.holunda.io/camunda-bpm-taskpool/'
-        label: 'Home'
-        icon: 'fas fa-home'
-  menu:
-    - type: 'page'
-      itemId: 'Quick Start'
-      title: 'Quick Start'
-
-    - type: 'submenu'
-      title: 'Introduction'
-      menu:
-      - type: 'wiki'
-        section: 'introduction'
-
-    - type: 'submenu'
-      title: 'User Guide'
-      menu:
-        - type: 'wiki'
-          section: 'user-guide'
-
-    - type: 'submenu'
-      title: 'Developer Guide'
-      menu:
-        - type: 'wiki'
-          section: 'developer-guide'
-
-    - type: 'submenu'
-      title: 'Explore'
-      menu:
-      - type: 'page'
-        title: 'Changelog'
-        itemId: 'Changelog'
-      - type: 'page'
-        title: 'License'
-        itemId: 'License'
-
-
 allPages:
   components:
     - type: 'pageContent'

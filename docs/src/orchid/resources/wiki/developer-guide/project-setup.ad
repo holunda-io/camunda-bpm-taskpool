@@ -74,12 +74,28 @@ NOTE: The existing scripts must not be replaced or changed, but new additional s
 
 ==== Documentation
 
-We are using Orchid for generation of a static site doc. For creation of documentation, please run:
+We are using Orchid for generation of a static site documentation and rely on AsciiDoc as much as possible.
+
+TIP: If you want to develop your docs in 'live' mode, run `./mvnw -f docs -Pdocs-serve` and access
+the http://localhost:8080/ from your browser.
+
+For creation of documentation, please run:
 
 [source,bash]
 ----
-./mvnw -Pdocs
+./mvnw -f docs orchid:build
 ----
+
+WARNING: This operation requires special permissions. You need to replace `GITHUB_TOKEN` by the token of
+the github pages repository, allowing to publish the pages.
+
+In order to publish documentation to github pages, please run from command line
+
+[source,bash]
+----
+./mvnw -f docs -Pdeploy-docs -DgithubToken=GITHUB_TOKEN
+----
+
 
 === Local Start
 

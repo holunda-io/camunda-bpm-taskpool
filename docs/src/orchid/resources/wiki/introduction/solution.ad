@@ -12,4 +12,4 @@ as execution environment. It makes a massive use of Axon Framework as a basis of
 
 The following diagram depicts the overall architecture.
 
-image::../../assets/media/architecture-collector.png["Architectural white box"]
+image::{{baseUrl('assets/media/architecture-collector.png')}}["Architectural white box"]

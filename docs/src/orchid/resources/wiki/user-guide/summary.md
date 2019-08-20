@@ -4,18 +4,22 @@ title: User Guide
 
 ---
 ## Taskpool Components
-{% set directoryBase = 'components' %}
-* [Overview]({{ directoryBase }}/index.ad)
-  * [Camunda Engine Taskpool Support SpringBoot Starter]({{ directoryBase }}/engine-starter.ad)
-  * [Camunda Engine Eventing Plugin]({{ directoryBase }}/engine-eventing-plugin.ad)
-  * [Camunda Engine Interaction Client]({{ directoryBase }}/engine-interaction-client.ad)
-  * [Taskpool Collector]({{ directoryBase }}/engine-taskpool-collector.ad)
-  * [Datapool Collector]({{ directoryBase }}/engine-datapool-collector.ad)
-  * [Taskpool Core]({{ directoryBase }}/core-taskpool.ad)
-  * [Datapool Core]({{ directoryBase }}/core-datapool.ad)
-  * [Simple View]({{ directoryBase }}/view-simple.ad)
-  * [Mongo View]({{ directoryBase }}/view-mongo.ad)
-  * [Taskpool Cockpit]({{ directoryBase }}/view-cockpit.ad)
+
+* [Overview](components/index.ad)
+* Engine Components 
+  * [Camunda Engine Taskpool Support SpringBoot Starter](components/engine-starter.ad)
+  * [Camunda Engine Eventing Plugin](components/engine-eventing-plugin.ad)
+  * [Camunda Engine Interaction Client](components/engine-interaction-client.ad)
+  * [Taskpool Collector](components/engine-taskpool-collector.ad)
+  * [Datapool Collector](components/engine-datapool-collector.ad)
+* Core Components
+  * [Taskpool Core](components/core-taskpool.ad)
+  * [Datapool Core](components/core-datapool.ad)
+* View Components
+  * [Simple View](components/view-simple.ad)
+  * [Mongo View](components/view-mongo.ad)
+  * [Taskpool Cockpit](components/view-cockpit.ad)
+
 
 ## Taskpool Examples
 * [Examples](examples.ad)

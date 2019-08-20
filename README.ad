@@ -11,9 +11,9 @@ image::https://api.codacy.com/project/badge/Grade/653136bd5cad48c8a9f2621ee304ff
 | // openhub
 image::https://www.openhub.net/p/camunda-bpm-taskpool/widgets/project_thin_badge.gif[caption="Project Stats", link=https://www.openhub.net/p/camunda-bpm-taskpool]
 | // license
-image::https://img.shields.io/badge/License-Apache%202.0-blue.svg[link="http://holunda.io/camunda-bpm-taskpool/license"]
+image::https://img.shields.io/badge/License-Apache%202.0-blue.svg[link="https://www.holunda.io/camunda-bpm-taskpool/license"]
 | // changelog
-image::https://img.shields.io/badge/CHANGES----blue.svg[link="http://holunda.io/camunda-bpm-taskpool/changelog"]
+image::https://img.shields.io/badge/CHANGES----blue.svg[link="https://www.holunda.io/camunda-bpm-taskpool/changelog"]
 |===
 
 == Introduction
@@ -40,23 +40,23 @@ used in the integration layer between the Camunda BPM engine and the task list a
 
 == Quick Start
 
-If you just want to start using the library, please consult our link:http://holunda.io/camunda-bpm-taskpool/quick-start[Quick Start]
+If you just want to start using the library, please consult our link:https://www.holunda.io/camunda-bpm-taskpool/quick-start[Quick Start]
 guide.
 
 == User Guide
 
 If you have any questions regarding configuration of individual components of Camunda BPM Taskpool please
-have a look to our primary documentation - the link:http://holunda.io/camunda-bpm-taskpool/user-guide[User Guide].
+have a look to our primary documentation - the link:https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide[User Guide].
 
 == Working Example
 
-See our link:http://holunda.io/camunda-bpm-taskpool/user-guide/examples[Sample Process Application] including a simple task list
+See our link:https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/examples[Sample Process Application] including a simple task list
 implementation for demonstration purposes.
 
 == License
 
-This library is developed under link:http://holunda.io/camunda-bpm-taskpool/license[Apache License 2].
+This library is developed under link:https://www.holunda.io/camunda-bpm-taskpool/license[Apache License 2].
 
 == Contribution
 
-If you want to contribute to this project, feel free to do so. Start with link:http://holunda.io/camunda-bpm-taskpool/contribution[Contributing guide].
+If you want to contribute to this project, feel free to do so. Start with link:http://holunda.io/camunda-bpm-taskpool/wiki/developer-guide/contribution[Contributing guide].

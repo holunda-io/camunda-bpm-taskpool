@@ -5,13 +5,14 @@
   <parent>
     <groupId>io.holunda.taskpool</groupId>
     <artifactId>camunda-bpm-taskpool</artifactId>
-    <version>1.2.22-SNAPSHOT</version>
+    <version>2.0.1-SNAPSHOT</version>
   </parent>
 
   <artifactId>camunda-bpm-taskpool-docs</artifactId>
 
   <properties>
     <orchid.version>0.17.2</orchid.version>
+    <baseUrl>http://localhost:8080/</baseUrl>
   </properties>
 
 
@@ -96,7 +97,7 @@
         <configuration>
           <theme>BsDoc</theme>
           <githubToken>${githubToken}</githubToken>
-          <baseUrl>http://localhost:8080</baseUrl>
+          <baseUrl>${baseUrl}</baseUrl>
           <version>${project.version}</version>
         </configuration>
       </plugin>
@@ -111,4 +112,28 @@
     </pluginRepository>
   </pluginRepositories>
 
+
+  <profiles>
+    <profile>
+      <id>deploy-docs</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
+      <properties>
+        <baseUrl>https://www.holunda.io/camunda-bpm-taskpool/</baseUrl>
+      </properties>
+      <build>
+        <defaultGoal>orchid:deploy</defaultGoal>
+      </build>
+    </profile>
+    <profile>
+      <id>serve-docs</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
+      <build>
+        <defaultGoal>orchid:serve</defaultGoal>
+      </build>
+    </profile>
+  </profiles>
 </project>

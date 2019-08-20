@@ -26,7 +26,7 @@ This scenario supports:
 
 The following diagram depicts the distribution of the components and the messaging.
 
-image::../../assets/media/deployment-axon-server.png["Deployment of taskpool with axon server"]
+image::{{baseUrl('assets/media/deployment-axon-server.png')}}["Deployment of taskpool with axon server"]
 
 === Scenario without Axon Server
 
@@ -42,4 +42,4 @@ This scenario supports:
 
 The following diagram depicts the distribution of the components and the messaging.
 
-image::../../assets/media/deployment-messaging.png["Deployment of taskpool with other messaging"]
+image::{{baseUrl('assets/media/deployment-messaging.png')}}["Deployment of taskpool with other messaging"]
