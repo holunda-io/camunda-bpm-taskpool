@@ -10,28 +10,37 @@ import org.springframework.data.annotation.Id
 import org.springframework.data.annotation.TypeAlias
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
-import org.springframework.data.mongodb.core.MongoTemplate
+import org.springframework.data.mongodb.core.ReactiveMongoTemplate
 import org.springframework.data.mongodb.core.aggregation.Aggregation
-import org.springframework.data.mongodb.core.aggregation.AggregationResults
 import org.springframework.data.mongodb.core.mapping.Document
 import org.springframework.data.mongodb.core.query.Criteria
 import org.springframework.data.mongodb.core.query.isEqualTo
-import org.springframework.data.mongodb.repository.MongoRepository
+import org.springframework.data.mongodb.repository.ReactiveMongoRepository
 import org.springframework.stereotype.Repository
+import reactor.core.publisher.Flux
 import java.time.Instant
 import java.util.*
 
 
+/**
+ * Reactive mongo repository for tasks with data entries.
+ */
 @Repository
-interface TaskWithDataEntriesRepository : TaskWithDataEntriesRepositoryExtension, MongoRepository<TaskWithDataEntriesDocument, String>
+interface TaskWithDataEntriesRepository : TaskWithDataEntriesRepositoryExtension, ReactiveMongoRepository<TaskWithDataEntriesDocument, String>
 
-
+/**
+ * Repository extension.
+ */
 interface TaskWithDataEntriesRepositoryExtension {
-  fun findAllFilteredForUser(user: User, criteria: List<Criterion>, pageable: Pageable? = null): List<TaskWithDataEntriesDocument>
+
+  /**
+   * Find all tasks with data entries matching specified filter.
+   */
+  fun findAllFilteredForUser(user: User, criteria: List<Criterion>, pageable: Pageable? = null): Flux<TaskWithDataEntriesDocument>
 }
 
 open class TaskWithDataEntriesRepositoryExtensionImpl(
-  private val mongoTemplate: MongoTemplate
+  private val mongoTemplate: ReactiveMongoTemplate
 ) : TaskWithDataEntriesRepositoryExtension {
 
   companion object : KLogging() {
@@ -40,32 +49,28 @@ open class TaskWithDataEntriesRepositoryExtensionImpl(
 
 
   /**
+   * Retrieves a list of tasks for user matching provided critera.
   <pre>
-  db.tasks.aggregate([
-  { $lookup: {
-  from: "data-entries",
-  localField: "dataEntriesRefs",
-  foreignField: "_id",
-  as: "data_entries" } },
-  { $sort: { "dueDate": 1 }},
-  { $match: { $and: [
-  // { $or: [ { 'assignee' : "kermit" }, { 'candidateUsers' : "kermit" }, { 'candidateGroups' : { $in: [ "other" ] } } ] },
-  { $or: [ { 'assignee' : "kermit" }, { 'candidateUsers' : "kermit" }, { 'candidateGroups' : { $in: [ "other" ] } } ] }
-  // { $or: [ { 'businessKey': "3" } ] }
-  ]
-
-  }}
-  ])
+    db.tasks.aggregate([
+    { $lookup: {
+    from: "data-entries",
+    localField: "dataEntriesRefs",
+    foreignField: "_id",
+    as: "data_entries" } },
+    { $sort: { "dueDate": 1 }},
+    { $match: { $and: [
+    'deleted': { $ne: true },
+    // { $or: [ { 'assignee' : "kermit" }, { 'candidateUsers' : "kermit" }, { 'candidateGroups' : { $in: [ "other" ] } } ] },
+    { $or: [ { 'assignee' : "kermit" }, { 'candidateUsers' : "kermit" }, { 'candidateGroups' : { $in: [ "other" ] } } ] }
+    /Tas/ { $or: [ { 'businessKey': "3" } ] }
+    ]
+    }}
+    ])
   </pre>
-
    */
-  override fun findAllFilteredForUser(user: User, criteria: List<Criterion>, pageable: Pageable?): List<TaskWithDataEntriesDocument> {
+  override fun findAllFilteredForUser(user: User, criteria: List<Criterion>, pageable: Pageable?): Flux<TaskWithDataEntriesDocument> {
 
-    val sort = if (pageable != null) {
-      pageable.getSortOr(DEFAULT_SORT)
-    } else {
-      DEFAULT_SORT
-    }
+    val sort = pageable?.getSortOr(DEFAULT_SORT) ?: DEFAULT_SORT
 
     val filterPropertyCriteria = criteria.map {
       Criteria.where(
@@ -94,6 +99,8 @@ open class TaskWithDataEntriesRepositoryExtensionImpl(
     val filterCriteria = if (filterPropertyCriteria.isNotEmpty()) {
       Criteria()
         .andOperator(
+          // Note: the query for _deleted not equal to true_ looks weird, but effectively means _null or false_ so it also captures old documents where _deleted_ is not set at all
+          Criteria.where("deleted").ne(true),
           tasksForUserCriteria,
           Criteria()
             .orOperator(*filterPropertyCriteria))
@@ -109,13 +116,11 @@ open class TaskWithDataEntriesRepositoryExtensionImpl(
     )
 
 
-    val result: AggregationResults<TaskWithDataEntriesDocument> = mongoTemplate.aggregate(
+    return mongoTemplate.aggregate(
       Aggregation.newAggregation(aggregations),
-      "tasks",
+      TaskDocument.COLLECTION,
       TaskWithDataEntriesDocument::class.java
     )
-
-    return result.mappedResults
   }
 }
 
@@ -128,7 +133,7 @@ fun value(criterion: Criterion): Any =
   }
 
 
-@Document(collection = "tasks")
+@Document(collection = TaskDocument.COLLECTION)
 @TypeAlias("task")
 data class TaskWithDataEntriesDocument(
   @Id

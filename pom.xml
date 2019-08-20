@@ -483,7 +483,6 @@
                 </excludes>
               </configuration>
             </execution>
-
           </executions>
         </plugin>
 
@@ -838,7 +837,6 @@
     </pluginManagement>
 
     <plugins>
-
       <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
@@ -852,7 +850,6 @@
         <artifactId>frontend-maven-plugin</artifactId>
       </plugin>
     </plugins>
-
   </build>
 
   <profiles>

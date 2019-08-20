@@ -4,19 +4,20 @@ import io.holunda.camunda.taskpool.api.task.ProcessDefinitionRegisteredEvent
 import io.holunda.camunda.taskpool.view.ProcessDefinition
 import io.holunda.camunda.taskpool.view.mongo.repository.ProcessDefinitionDocument
 import io.holunda.camunda.taskpool.view.mongo.repository.ProcessDefinitionRepository
-import io.holunda.camunda.taskpool.view.query.ProcessDefinitionApi
+import io.holunda.camunda.taskpool.view.query.ReactiveProcessDefinitionApi
 import io.holunda.camunda.taskpool.view.query.process.ProcessDefinitionsStartableByUserQuery
 import mu.KLogging
 import org.axonframework.eventhandling.EventHandler
 import org.axonframework.queryhandling.QueryHandler
 import org.axonframework.queryhandling.QueryUpdateEmitter
 import org.springframework.stereotype.Component
+import java.util.concurrent.CompletableFuture
 
 @Component
 class ProcessDefinitionMongoService(
   private val queryUpdateEmitter: QueryUpdateEmitter,
   private val processDefinitionRepository: ProcessDefinitionRepository
-) : ProcessDefinitionApi {
+) : ReactiveProcessDefinitionApi {
 
   companion object : KLogging()
 
@@ -41,26 +42,30 @@ class ProcessDefinitionMongoService(
     )
 
     processDefinitionRepository.save(entry)
-
-    queryUpdateEmitter.emit(ProcessDefinitionsStartableByUserQuery::class.java, { query -> query.applyFilter(entry.toProcessDefitinion()) }, entry)
+      .doOnNext { queryUpdateEmitter.emit(ProcessDefinitionsStartableByUserQuery::class.java, { query -> query.applyFilter(entry.toProcessDefitinion()) }, entry) }
+      .block()
   }
 
   @QueryHandler
-  override fun query(query: ProcessDefinitionsStartableByUserQuery): List<ProcessDefinition> {
+  override fun query(query: ProcessDefinitionsStartableByUserQuery): CompletableFuture<List<ProcessDefinition>> {
     // This is the naive Kotlin way, not the Mongo way it should be. Please don't laugh.
     // Get all definitions in all versions and group them by process
-    val processesByDefinition: Map<String, List<ProcessDefinitionDocument>> = processDefinitionRepository
+    return processDefinitionRepository
       .findAll()
-      .groupBy { processDefinition -> processDefinition.processDefinitionKey }
+      .collectList()
+      .map { it.groupBy { processDefinition -> processDefinition.processDefinitionKey } }
+      .map { processesByDefinition ->
+        // Find the most current version of each process
+        val currentProcessDefinitions = processesByDefinition.map {
+          it.value.maxBy { definition -> definition.processDefinitionVersion }!!
+        }
 
-    // Find the most current version of each process
-    val currentProcessDefinitions = processesByDefinition.map {
-      it.value.sortedBy { definition -> definition.processDefinitionVersion }.last()
-    }
+        // Apply filter
+        currentProcessDefinitions
+          .map { it.toProcessDefitinion() }
+          .filter { query.applyFilter(it) }
+      }
+      .toFuture()
 
-    // Apply filter
-    return currentProcessDefinitions
-      .map { it.toProcessDefitinion() }
-      .filter { query.applyFilter(it) }
   }
 }
