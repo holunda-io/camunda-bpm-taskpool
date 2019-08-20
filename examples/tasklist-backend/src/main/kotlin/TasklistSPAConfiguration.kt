@@ -45,9 +45,11 @@ class TasklistSPAConfiguration : WebFluxConfigurer {
 
   @Bean
   fun tasklistSpaRouter() = router {
-    GET("/${Web.BASE_PATH}/") {
-      ok().contentType(TEXT_HTML).syncBody(indexHtml)
-    }
+
+    GET("/${Web.BASE_PATH}/") { ok().contentType(TEXT_HTML).syncBody(indexHtml) }
+    GET("/${Web.BASE_PATH}/index.html") { ok().contentType(TEXT_HTML).syncBody(indexHtml) }
+    GET("/${Web.BASE_PATH}/tasks") { ok().contentType(TEXT_HTML).syncBody(indexHtml) }
+    GET("/${Web.BASE_PATH}/archive") { ok().contentType(TEXT_HTML).syncBody(indexHtml) }
   }
 
   override fun addResourceHandlers(registry: ResourceHandlerRegistry) {
@@ -55,11 +57,16 @@ class TasklistSPAConfiguration : WebFluxConfigurer {
     /**
      * Deliver the platform SPA index for all frontend states.
      */
-    registry
-      .addResourceHandler("${Web.BASE_PATH}/*.html")
+    /*registry
+      .addResourceHandler(
+        "${Web.BASE_PATH}/index.html",
+        "${Web.BASE_PATH}/",
+        "${Web.BASE_PATH}/tasks/",
+        "${Web.BASE_PATH}/archive/"
+      )
       .addResourceLocations(STATIC_LOCATION)
-      .setCacheControl(CacheControl.maxAge(1, TimeUnit.DAYS))
-
+      // .setCacheControl(CacheControl.maxAge(1, TimeUnit.DAYS))
+    */
     registry
       .addResourceHandler(*STATIC_RESOURCES_LONG_CACHE)
       .addResourceLocations(STATIC_LOCATION)
@@ -70,6 +77,10 @@ class TasklistSPAConfiguration : WebFluxConfigurer {
       .addResourceLocations(STATIC_LOCATION)
       .setCacheControl(CacheControl.maxAge(1, TimeUnit.HOURS))
 
+  }
+
+  override fun configurePathMatching(configurer: PathMatchConfigurer) {
+    configurer.setUseTrailingSlashMatch(true)
   }
 
   override fun addCorsMappings(registry: CorsRegistry) {
@@ -86,7 +97,4 @@ class TasklistSPAConfiguration : WebFluxConfigurer {
         HttpMethod.PUT.name)
   }
 
-  override fun configurePathMatching(configurer: PathMatchConfigurer) {
-    configurer.setUseTrailingSlashMatch(true)
-  }
 }

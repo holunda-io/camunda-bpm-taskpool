@@ -24,7 +24,6 @@ abstract class ProcessDefinitionMapper {
     Mapping(target = "processName", source = "processName"),
     Mapping(target = "description", source = "processDescription"),
     Mapping(target = "formKey", source = "formKey"),
-    Mapping(target = "startable", source = "startableFromTasklist"),
     Mapping(target = "candidateUsers", source = "candidateStarterUsers"),
     Mapping(target = "candidateGroups", source = "candidateStarterGroups"),
     Mapping(target = "url", expression = "java(formUrlResolver.resolveUrl(processDefinition))")

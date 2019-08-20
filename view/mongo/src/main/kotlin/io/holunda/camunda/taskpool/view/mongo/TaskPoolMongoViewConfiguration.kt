@@ -11,6 +11,7 @@ import org.axonframework.extensions.mongo.MongoTemplate
 import org.axonframework.extensions.mongo.eventsourcing.tokenstore.MongoTokenStore
 import org.axonframework.serialization.xml.XStreamSerializer
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
@@ -21,13 +22,14 @@ import org.springframework.data.mongodb.core.convert.DefaultMongoTypeMapper
 import org.springframework.data.mongodb.core.convert.DefaultMongoTypeMapper.DEFAULT_TYPE_KEY
 import org.springframework.data.mongodb.core.convert.MappingMongoConverter
 import org.springframework.data.mongodb.core.mapping.MongoMappingContext
-import org.springframework.data.mongodb.repository.config.EnableMongoRepositories
+import org.springframework.data.mongodb.repository.config.EnableReactiveMongoRepositories
 import javax.annotation.PostConstruct
 
 @Configuration
 @ComponentScan
-@EnableMongoRepositories
-open class TaskPoolMongoViewConfiguration {
+@EnableReactiveMongoRepositories
+@EnableConfigurationProperties(TaskPoolMongoViewProperties::class)
+class TaskPoolMongoViewConfiguration {
 
   companion object : KLogging()
 

@@ -12,4 +12,9 @@ interface FormUrlResolver {
    * Creates a complete URL to call the start forms.
    */
   fun resolveUrl(processDefinition: ProcessDefinition): String
+
+  /**
+   * Creates a complete
+   */
+  fun resolveUrl(dataEntry: DataEntry): String
 }

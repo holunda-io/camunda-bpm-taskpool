@@ -75,7 +75,13 @@ data class TaskSenderProperties(
   /**
    * Sender type, defaults to <code>tx</code>
    */
-  var type: TaskSenderType = TaskSenderType.tx
+  var type: TaskSenderType = TaskSenderType.tx,
+  /**
+   * This flag controls if the tasks are sent within an open transaction (value true, before commit)
+   * or not (value false, default, after commit). This setting is required if you move the command bus
+   * and the command handling on the engine side.
+   */
+  var sendWithinTransaction: Boolean = false
 )
 
 /**
@@ -102,5 +108,4 @@ data class ProcessDefinitionProperties(
    */
   var enabled: Boolean = false
 )
-
 

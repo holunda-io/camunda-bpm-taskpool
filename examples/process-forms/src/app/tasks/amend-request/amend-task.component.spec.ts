@@ -49,6 +49,7 @@ describe('Component: ApproveTaskComponent', () => {
         { provide: ActivatedRoute, useValue: {
             snapshot: {
               paramMap: {get: () => taskId},
+              queryParams: { 'userId': 'some-id'}
             }
           },
         },

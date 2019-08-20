@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { registerLocaleData } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import localeFr from '@angular/common/locales/fr';
 import localeDe from '@angular/common/locales/de';
 import localeEn from '@angular/common/locales/en';
@@ -17,6 +17,7 @@ import { AmendTaskComponent } from 'app/tasks/amend-request/amend-task.component
 import { ExternalUrlDirective } from 'app/components/external-url.directive';
 import { EnvironmentHelperService } from 'app/services/environment.helper.service';
 import { StartComponent } from 'app/tasks/start/start.component';
+import {RequestComponent} from 'app/components/request/request.component';
 
 
 registerLocaleData(localeFr, 'fr');
@@ -31,13 +32,15 @@ registerLocaleData(localeEn, 'en');
     PageNotFoundComponent,
     ApproveTaskComponent,
     AmendTaskComponent,
-    ExternalUrlDirective
+    ExternalUrlDirective,
+    RequestComponent
   ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     FormsModule,
     NgbModule,
+    ReactiveFormsModule,
     // generated server API
     ApiModule,
     // routing

@@ -4,10 +4,9 @@ import io.holunda.camunda.taskpool.EnableTaskpoolEngineSupport
 import io.holunda.camunda.taskpool.enricher.*
 import io.holunda.camunda.taskpool.example.process.process.ProcessApproveRequest
 import io.holunda.camunda.taskpool.example.process.service.BusinessDataEntry
-import io.holunda.camunda.taskpool.example.process.service.SimpleUserService
+import io.holunda.camunda.taskpool.example.users.EnableExampleUsers
 import mu.KLogging
 import org.camunda.bpm.spring.boot.starter.annotation.EnableProcessApplication
-import org.springframework.boot.ApplicationRunner
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.context.annotation.Bean
@@ -20,12 +19,13 @@ fun main(args: Array<String>) {
 @SpringBootApplication
 @EnableProcessApplication
 @EnableTaskpoolEngineSupport
-open class ExampleProcessApplication {
+@EnableExampleUsers
+class ExampleProcessApplication {
 
   companion object : KLogging()
 
   @Bean
-  open fun processVariablesFilter(): ProcessVariablesFilter = ProcessVariablesFilter(
+  fun processVariablesFilter(): ProcessVariablesFilter = ProcessVariablesFilter(
 
     // define a applyFilter for every process
     ProcessVariableFilter(
@@ -51,7 +51,7 @@ open class ExampleProcessApplication {
   )
 
   @Bean
-  open fun processVariablesCorrelator(): ProcessVariablesCorrelator = ProcessVariablesCorrelator(
+  fun processVariablesCorrelator(): ProcessVariablesCorrelator = ProcessVariablesCorrelator(
 
     // define correlation for every process
     ProcessVariableCorrelation(ProcessApproveRequest.KEY,
@@ -68,16 +68,21 @@ open class ExampleProcessApplication {
     )
   )
 
+  /*
+  Alternative example
   @Bean
-  open fun registerUsers(simpleUserService: SimpleUserService): ApplicationRunner {
-    return ApplicationRunner {
-      val users = simpleUserService.getAllUsers()
-      users.forEach {
-        simpleUserService.notify(it)
-      }
-    }
-  }
+  fun requestProjection(properties: DataEntrySenderProperties): DataEntryProjectionSupplier
+    = dataEntrySupplier(entryType = BusinessDataEntry.REQUEST,
+    projectionFunction = BiFunction { id, payload ->
+      DataEntry(
+        entryType = BusinessDataEntry.REQUEST,
+        entryId = id,
+        applicationName = properties.applicationName,
+        payload = serialize(payload),
+        type = "Approval Request",
+        name = "AR $id"
+      )
+    })
+  */
 
 }
-
-

@@ -6,8 +6,8 @@ import io.holunda.camunda.taskpool.example.tasklist.rest.api.TasksApi
 import io.holunda.camunda.taskpool.example.tasklist.rest.mapper.TaskWithDataEntriesMapper
 import io.holunda.camunda.taskpool.example.tasklist.rest.model.TaskWithDataEntriesDto
 import io.holunda.camunda.taskpool.view.auth.UserService
-import io.holunda.camunda.taskpool.view.query.TasksWithDataEntriesForUserQuery
-import io.holunda.camunda.taskpool.view.query.TasksWithDataEntriesResponse
+import io.holunda.camunda.taskpool.view.query.task.TasksWithDataEntriesForUserQuery
+import io.holunda.camunda.taskpool.view.query.task.TasksWithDataEntriesQueryResult
 import mu.KLogging
 import org.axonframework.messaging.responsetypes.ResponseTypes
 import org.axonframework.queryhandling.QueryGateway
@@ -42,25 +42,27 @@ class TasksController(
     @RequestHeader(value = "X-Current-User-ID", required = false) xCurrentUserID: Optional<String>
   ): ResponseEntity<List<TaskWithDataEntriesDto>> {
 
-    val userIdentifier = xCurrentUserID.orElseGet{ currentUserService.getCurrentUser() }
+    val userIdentifier = xCurrentUserID.orElseGet { currentUserService.getCurrentUser() }
     val user = userService.getUser(userIdentifier)
 
-    val result: TasksWithDataEntriesResponse = queryGateway
+    @Suppress("UNCHECKED_CAST")
+    val result: TasksWithDataEntriesQueryResult = queryGateway
       .query(TasksWithDataEntriesForUserQuery(
         user = user,
-        page = page.orElse(0),
+        page = page.orElse(1),
         size = size.orElse(Int.MAX_VALUE),
         sort = sort.orElseGet { "" },
         filters = filters
-      ), ResponseTypes.instanceOf(TasksWithDataEntriesResponse::class.java))
+      ), ResponseTypes.instanceOf(TasksWithDataEntriesQueryResult::class.java))
       .join()
 
+
     val responseHeaders = HttpHeaders().apply {
-      this[HEADER_ELEMENT_COUNT] = result.elementCount.toString()
+      this[HEADER_ELEMENT_COUNT] = result.totalElementCount.toString()
     }
 
     return ok()
       .headers(responseHeaders)
-      .body(result.tasksWithDataEntries.map { mapper.dto(it) })
+      .body(result.elements.map { mapper.dto(it) })
   }
 }

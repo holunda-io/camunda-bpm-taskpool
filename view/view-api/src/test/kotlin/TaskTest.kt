@@ -13,10 +13,10 @@ class TaskTest {
 
   @Test
   fun `get correlationIdentities`() {
-    val dataEntry1 = DataEntry("A", "1", Variables.putValue("x", "y"))
-    val dataEntry2 = DataEntry("A", "1", Variables.putValue("x", "y"))
+    val dataEntry1 = DataEntry(entryType = "A", entryId = "1", payload = Variables.putValue("x", "y"), name = "A1", type = "A", applicationName = "y")
+    val dataEntry2 = DataEntry(entryType = "A", entryId = "1", payload = Variables.putValue("x", "y"), name = "A1", type = "A", applicationName = "y")
 
-    val task = createTask("0", correlationMap(dataEntry1,dataEntry2))
+    val task = createTask("0", correlationMap(dataEntry1, dataEntry2))
 
     assertThat(task.correlationIdentities).containsOnly("A#1")
   }

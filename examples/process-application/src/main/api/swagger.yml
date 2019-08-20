@@ -23,11 +23,35 @@ paths:
         200:
           schema:
             $ref: '#/definitions/Environment'
-  '/request/{id}/start/{originator}':
+  '/request':
     post:
       tags:
         - Request
-      summary: Starts approaval process.
+      summary: Create a new approval request draft and starts approval process.
+      produces:
+        - application/json
+      parameters:
+        - in: header
+          name: X-Current-User-ID
+          description: Specifies the id of current user.
+          type: string
+          required: true
+        - in: body
+          name: request
+          description: Request to be approved.
+          required: true
+          schema:
+            $ref: '#/definitions/ApprovalRequestDraft'
+      operationId: startNewApproval
+      responses:
+        201:
+          description: Sucessful operation.
+
+  '/request/{id}/start':
+    post:
+      tags:
+        - Request
+      summary: Starts approaval process for a request draft with specified id.
       produces:
         - application/json
       parameters:
@@ -36,15 +60,17 @@ paths:
           type: string
           description: Approval request id.
           required: true
-        - in: path
-          name: originator
+        - in: header
+          name: X-Current-User-ID
+          description: Specifies the id of current user.
           type: string
-          description: User id of the process starter.
           required: true
-      operationId: start
+      operationId: approveDraft
       responses:
-        200:
+        201:
           description: Sucessful operation.
+        400:
+          description: Error starting approval process, probably wrong id.
 
   '/approve-request/id/{id}':
     get:
@@ -58,6 +84,11 @@ paths:
           name: id
           type: string
           description: Task id.
+          required: true
+        - in: header
+          name: X-Current-User-ID
+          description: Specifies the id of current user.
+          type: string
           required: true
       operationId: loadTaskApproveRequestFormData
       responses:
@@ -77,6 +108,11 @@ paths:
           name: id
           type: string
           description: Task id.
+          required: true
+        - in: header
+          name: X-Current-User-ID
+          description: Specifies the id of current user.
+          type: string
           required: true
         - in: body
           name: payload
@@ -101,6 +137,11 @@ paths:
           type: string
           description: Task id.
           required: true
+        - in: header
+          name: X-Current-User-ID
+          description: Specifies the id of current user.
+          type: string
+          required: true
       operationId: loadTaskAmendRequestFormData
       responses:
         200:
@@ -119,6 +160,11 @@ paths:
           name: id
           type: string
           description: Task id.
+          required: true
+        - in: header
+          name: X-Current-User-ID
+          description: Specifies the id of current user.
+          type: string
           required: true
         - in: body
           name: payload
@@ -164,7 +210,6 @@ definitions:
       priority:
         type: integer
         description: Priority of the task.
-
     required:
     - id
     - name
@@ -173,7 +218,7 @@ definitions:
     - dueDate
     - businessKey
 
-  ApprovalRequest:
+  ApprovalRequestDraft:
     type: object
     properties:
       amount:
@@ -181,16 +226,36 @@ definitions:
         format: int
       currency:
         type: string
+      subject:
+        type: string
+      applicant:
+        type: string
+    required:
+      - applicant
+      - subject
+      - amount
+      - currency
+
+  ApprovalRequest:
+    type: object
+    properties:
       id:
         type: string
       subject:
         type: string
       applicant:
         type: string
+      amount:
+        type: string
+        format: int
+      currency:
+        type: string
     required:
       - id
       - applicant
       - subject
+      - amount
+      - currency
 
   TaskApproveRequestFormData:
     type: object

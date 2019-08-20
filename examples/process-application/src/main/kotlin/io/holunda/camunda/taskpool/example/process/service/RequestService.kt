@@ -1,8 +1,15 @@
 package io.holunda.camunda.taskpool.example.process.service
 
-import io.holunda.camunda.taskpool.api.sender.DataEntryCommandSender
+import io.holunda.camunda.datapool.sender.DataEntryCommandSender
+import io.holunda.camunda.taskpool.api.business.AuthorizationChange.Companion.addUser
+import io.holunda.camunda.taskpool.api.business.DataEntryState
+import io.holunda.camunda.taskpool.api.business.Modification
+import io.holunda.camunda.taskpool.api.business.ProcessingType
 import org.springframework.stereotype.Service
 import java.math.BigDecimal
+import java.time.OffsetDateTime
+import java.util.*
+import kotlin.NoSuchElementException
 
 
 /**
@@ -16,10 +23,26 @@ class RequestService(
   private val repository: RequestRepository
 ) {
 
+  fun addRequest(request: Request, username: String): String {
+    val saved = repository.save(request)
+    sender.sendDataEntryCommand(
+      entryType = BusinessDataEntry.REQUEST,
+      entryId = request.id,
+      payload = request,
+      state = ProcessingType.PRELIMINARY.of("Draft"),
+      name = "AR ${request.id}",
+      description = request.subject,
+      type = "Approval Request",
+      modification = Modification(
+        time = OffsetDateTime.now(),
+        username = username,
+        log = "Draft created.",
+        logNotes = "Request draft on behalf of ${request.applicant} created."
+      ),
+      authorizations = listOf(addUser(username), addUser(request.applicant))
+    )
 
-  fun addRequest(request: Request) {
-    repository.save(request)
-    notify(request)
+    return saved.id
   }
 
   fun getRequest(id: String): Request {
@@ -28,27 +51,43 @@ class RequestService(
 
   fun checkRequest(id: String): Boolean = this.repository.existsById(id)
 
-  fun updateRequest(id: String, request: Request) {
+
+  fun updateRequest(id: String, request: Request, username: String) {
     if (checkRequest(id)) {
       this.repository.save(request)
-      notify(request)
+      changeRequestState(request, ProcessingType.IN_PROGRESS.of("Amended"), "Request amended.")
     }
-  }
-
-  fun notify(request: Request) {
-    sender.sendDataEntryCommand(
-      entryType = BusinessDataEntry.REQUEST,
-      entryId = request.id,
-      payload = request
-    )
   }
 
   fun getAllRequests(): List<Request> {
     return this.repository.findAll()
   }
+
+  fun changeRequestState(id: String, state: DataEntryState, username: String, log: String? = null, logNotes: String? = null) =
+    changeRequestState(getRequest(id), state, username, log, logNotes)
+
+  private fun changeRequestState(request: Request, state: DataEntryState, username: String, log: String? = null, logNotes: String? = null) {
+    sender.sendDataEntryCommand(
+      entryType = BusinessDataEntry.REQUEST,
+      entryId = request.id,
+      payload = request,
+      state = state,
+      name = "AR ${request.id}",
+      description = request.subject,
+      type = "Approval Request",
+      modification = Modification(
+        time = OffsetDateTime.now(),
+        username = username,
+        log = log,
+        logNotes = logNotes
+      ),
+      authorizations = listOf(addUser(username))
+    )
+  }
+
 }
 
-fun createDummyRequest(id: String) = Request(
+fun createDummyRequest(id: String = UUID.randomUUID().toString()) = Request(
   id = id,
   subject = "Salary increase",
   amount = BigDecimal(10000),

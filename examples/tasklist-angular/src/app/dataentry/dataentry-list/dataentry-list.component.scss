@@ -1,0 +1,32 @@
+td.nowrap {
+  white-space: nowrap;
+}
+
+.card-body {
+  padding: 0
+}
+
+.data-block {
+  padding-bottom: 0.5em;
+}
+
+.fieldlist {
+  padding-left: 2em;
+}
+
+.fieldlist .list-group-item {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+ul.protocol {
+  list-style-type: none;
+}
+
+.protocol .col-lg-1, .protocol .col-lg-2, .protocol .col-lg-3,
+.protocol .col-lg-4, .protocol .col-lg-5, .protocol .col-lg-6,
+.protocol .col-lg-7, .protocol .col-lg-8, .protocol .col-lg-9,
+.protocol .col-lg-10, .protocol .col-lg-11, .protocol .col-lg-12 {
+  padding-left: 0;
+  padding-right: 0;
+}

@@ -5,7 +5,7 @@
   <parent>
     <groupId>io.holunda.taskpool</groupId>
     <artifactId>camunda-bpm-taskpool-examples-root</artifactId>
-    <version>1.2.21</version>
+    <version>2.0.0</version>
   </parent>
 
   <artifactId>camunda-bpm-taskpool-example-tasklist-backend</artifactId>
@@ -32,6 +32,12 @@
       <artifactId>camunda-bpm-taskpool-view-api</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>io.holunda.taskpool</groupId>
+      <artifactId>camunda-bpm-taskpool-example-users</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-webflux</artifactId>
