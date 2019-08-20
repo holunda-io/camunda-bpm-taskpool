@@ -65,7 +65,7 @@ class TaskChangeTracker(
     // Truly delete documents that have been marked deleted
     trulyDeleteChangeStreamSubscription = changeStream
       .filter { event -> event.body?.deleted == true }
-      .flatMap { event ->
+      .concatMap { event ->
         taskRepository.deleteById(event.body.id)
           .doOnSuccess { logger.trace { "Deleted task ${event.body.id} from database." } }
       }
@@ -84,10 +84,10 @@ class TaskChangeTracker(
    * Adopt changes to task count by application stream.
    */
   fun trackTaskCountsByApplication(): Flux<ApplicationWithTaskCount> = changeStream
-    .flatMap { event ->
-      val applicationName = event.body.sourceReference.applicationName
-      taskRepository.findTaskCountForApplication(applicationName)
-    }
+    .window(Duration.ofSeconds(1))
+    .concatMap { it.reduce(setOf<String>()) { applicationNames, event -> applicationNames + event.body.sourceReference.applicationName } }
+    .concatMap { Flux.fromIterable(it) }
+    .concatMap { taskRepository.findTaskCountForApplication(it) }
 
   /**
    * Adopt changes to task update stream.
@@ -99,7 +99,7 @@ class TaskChangeTracker(
    * Adopt changes to task with data entries update stream.
    */
   fun trackTaskWithDataEntriesUpdates(): Flux<TaskWithDataEntries> = changeStream
-    .flatMap { event ->
+    .concatMap { event ->
       val task = event.body.task()
       this.dataEntryRepository.findAllById(task.correlations.map { dataIdentityString(entryType = it.key, entryId = it.value.toString()) })
         .map { it.dataEntry() }

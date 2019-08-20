@@ -66,18 +66,18 @@ open class TaskPoolStage<SELF : TaskPoolStage<SELF>> : Stage<SELF>() {
     return self()
   }
 
-  open fun time_passes_until_query_update_is_emitted(): SELF {
+  open fun time_passes_until_query_update_is_emitted(queryType: Class<out Any> = Object::class.java): SELF {
     try {
-      Awaitility.await().atMost(1, TimeUnit.SECONDS).until {
-        captureEmittedQueryUpdates()
+      Awaitility.await().atMost(2, TimeUnit.SECONDS).until {
+        captureEmittedQueryUpdates().any { queryType.isAssignableFrom(it.queryType) }
       }
     } catch (e: ConditionTimeoutException) {
-      logger.warn { "Query update was not emitted within 1 second" }
+      logger.warn { "Query update was not emitted within 2 seconds" }
     }
     return self()
   }
 
-  protected fun captureEmittedQueryUpdates(): Boolean {
+  protected fun captureEmittedQueryUpdates(): List<QueryUpdate<Any>> {
     val queryTypeCaptor = argumentCaptor<Class<Any>>()
     val predicateCaptor = argumentCaptor<Predicate<Any>>()
     val updateCaptor = argumentCaptor<Any>()
@@ -91,7 +91,7 @@ open class TaskPoolStage<SELF : TaskPoolStage<SELF>> : Stage<SELF>() {
       }
 
     emittedQueryUpdates += foundUpdates
-    return foundUpdates.isNotEmpty()
+    return foundUpdates
   }
 
   data class QueryUpdate<E>(val queryType: Class<E>, val predicate: Predicate<E>, val update: Any)
