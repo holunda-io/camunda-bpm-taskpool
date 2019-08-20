@@ -1,0 +1,17 @@
+---
+version: 1.2.19
+---
+
+== New Features
+
+* added mongodb indexes #165
+
+== Bug fixes
+
+* variable serialization fails for complex types #163
+
+== Chore
+
+* improve CI using Jenkins
+
+

@@ -8,5 +8,8 @@ version: 1.2.6
 * feat: extend task-url-resolver to support resolution of start form URLs (and rename to form-url-resolver).
 * feat: integrate start form for example process. See #142.
 * feat: implement reactive controller for tasks, see #21.
-* chore: switch to Camunda BPM SpringBoot Starter 3.2.1. See #143.
-* docs: rewrite the storyboard for the example process.
+* switch to Camunda BPM SpringBoot Starter 3.2.1. See #143.
+
+== Docs
+
+* rewrite the storyboard for the example process.

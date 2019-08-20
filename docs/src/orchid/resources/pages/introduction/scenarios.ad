@@ -1,6 +1,10 @@
 ---
+
 title: Scenarios
+
 ---
+
+== Deployment Scenarios
 
 Depending on your requirements and infrastructure available several deployment scenarios of the components is possible.
 
@@ -8,7 +12,7 @@ One of the challenging issues for distribution and connecting microservices is a
 message exchange patterns (MEPs) for a CQRS system. Because of different semantics of commands, events and queries and additional
 requirements of event-sourced persistence a special implementation of command bus, event bus and event store are required.
 
-== Axon Server Scenario
+=== Axon Server Scenario
 
 Axon Server provides such implementation leading to a distributed command and event-bus and a central event store. It is easy
 to use, easy to configure and easy to run. If you need a HA setup, you will need the enterprise license of Axon Server. Essentially,
@@ -24,7 +28,7 @@ The following diagram depicts the distribution of the components and the messagi
 
 image::../../assets/media/deployment-axon-server.png["Deployment of taskpool with axon server"]
 
-== Scenario without Axon Server
+=== Scenario without Axon Server
 
 If you already have another messaging at place, like Kafka or RabbitMQ, you might skip the usage of Axon Server. In doing so,
 you will be responsible for distribution of events and will need to surrender some features.
@@ -34,7 +38,7 @@ This scenario supports:
 -  distributed task pool / data pool
 -  view must be persistent
 -  direct communication between tasklist / engines required (addressing, routing)
--  concurrent access to engines might become a problem (no unit of work gurantees)
+-  concurrent access to engines might become a problem (no unit of work guarantees)
 
 The following diagram depicts the distribution of the components and the messaging.
 

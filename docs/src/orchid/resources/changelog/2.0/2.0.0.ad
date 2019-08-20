@@ -1,0 +1,31 @@
+---
+version: 2.0.0
+---
+
+== New Features
+
+* implement business data view aka archive view, #175
+* implement data change protocol aka audit log
+* switch for sending task commands inside a TX (before, after)
+* implement reactive mongo projection based on change stream
+* provide user selection in example task list
+* pass user selection to process application in example task list
+* change data handling in examples
+
+== Refactoring
+
+* improve projection implementation #141
+* switch to NgRx in task list, #57
+
+
+== Chore
+
+* provide configuration file for detekt / codacy
+* switch docs to orchid
+* publish docs to github pages
+
+
+
+
+
+

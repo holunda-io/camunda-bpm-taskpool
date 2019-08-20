@@ -1,3 +1,11 @@
+---
+
+title: Camunda BPM Taskpool Components
+
+---
+
+== Components
+
 *  Camunda Engine Taskpool Support SpringBoot Starter (starter to be included in the process application)
 *  Camunda Engine Eventing Plugin (moved to Camunda SpringBoot Starter)
 *  Camunda Engine Interaction Client

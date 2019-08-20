@@ -5,26 +5,19 @@ site:
 
 theme:
   primaryColor: '#DE0000'
+  extraCss:
+    - 'assets/css/asciidoc-admonitionblock.scss'
   social:
     twitter: 'holisticon'
     github: 'holunda-io/camunda-bpm-taskpool'
   menu:
     - type: 'submenu'
-      title: 'Introduction'
-      menu:
-        - type: 'wiki'
-    - type: 'submenu'
-      title: 'User Guide'
-      menu:
-        - type: 'page'
-          itemId: 'Components'
-    - type: 'submenu'
+      title: 'User Manual'
+      itemId: 'Introduction'
+
+    - type: 'page'
       title: 'Developer Guide'
-      menu:
-        - type: 'page'
-          itemId: 'Contributing'
-        - type: 'page'
-          itemId: 'Release'
+      pageId: 'developer-guide'
 
 allPages:
   components:
@@ -36,7 +29,7 @@ allPages:
       languages:
         - 'yaml'
         - 'java'
-        - 'groovy'
+        - 'kotlin'
         - 'markdown'
       plugins:
         - 'line-numbers'

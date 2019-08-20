@@ -16,6 +16,7 @@
 
 
   <build>
+    <defaultGoal>orchid:build</defaultGoal>
     <pluginManagement>
       <plugins>
         <plugin>
