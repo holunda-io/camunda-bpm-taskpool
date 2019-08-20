@@ -2,8 +2,10 @@ site:
   about:
     siteName: Camunda BPM Taskpool
     siteDescription: A component for pooling Camunda BPM user tasks with business data for high performance queries.
+    avatar: 'assets/media/holunda.png'
 
 theme:
+  useSidebarSearch: true
   primaryColor: '#DE0000'
   extraCss:
     - 'assets/css/asciidoc-admonitionblock.scss'
@@ -11,20 +13,22 @@ theme:
     twitter: 'holisticon'
     github: 'holunda-io/camunda-bpm-taskpool'
   menu:
+    - type: 'page'
+      itemId: 'quick-start'
+      title: 'Quick Start'
+
+    - type: 'wikiSections'
+
     - type: 'submenu'
       title: 'User Manual'
       itemId: 'Introduction'
 
-    - type: 'page'
-      title: 'Developer Guide'
-      pageId: 'developer-guide'
 
 allPages:
   components:
-    - type: pageContent
+    - type: 'pageContent'
       order: 10
-
-    - type: prism
+    - type: 'prism'
       githubTheme: 'darcula'
       languages:
         - 'yaml'

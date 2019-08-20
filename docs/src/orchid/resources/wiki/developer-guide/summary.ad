@@ -1,0 +1,14 @@
+---
+
+title: Developer Guide
+pageId: 'developer-guide'
+
+---
+
+== {{ page.title }}
+
+include::contribution.ad[leveloffset=1]
+
+include::project-setup.ad[leveloffset=1]
+
+
