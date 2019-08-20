@@ -3,7 +3,7 @@
 #
 comments:
   active: true
-  excludes: "examples/**,**/test/**,**/example/**"
+  excludes: "examples/**,**/test/**,**/example/**,**/*Test.kt"
   CommentOverPrivateFunction:
     active: false
   CommentOverPrivateProperty:
