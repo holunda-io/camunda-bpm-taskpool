@@ -18,10 +18,15 @@ theme:
       title: 'Quick Start'
 
     - type: 'wikiSections'
-
     - type: 'submenu'
-      title: 'User Manual'
-      itemId: 'Introduction'
+      title: 'Explore'
+      menu:
+      - type: 'page'
+        title: 'Changelog'
+        itemId: 'changelog'
+      - type: 'page'
+        title: 'License'
+        itemId: 'license'
 
 
 allPages:
@@ -41,28 +46,6 @@ allPages:
         - 'toolbar'
         - 'show-language'
         - 'copy-to-clipboard'
-
-
-
-wiki:
-  defaultConfig:
-    createPdf: true
-
-kotlindoc:
-  sourceDirs:
-    - './../../../../datapool/datapool-api/src/main/kotlin'
-    - './../../../../datapool/datapool-core/src/main/kotlin'
-    - './../../../../engine/camunda-engine-client/src/main/kotlin'
-    - './../../../../engine/camunda-engine-plugin/src/main/kotlin'
-    - './../../../../engine/datapool-collector/src/main/kotlin'
-    - './../../../../engine/taskpool-collector/src/main/kotlin'
-    - './../../../../engine/taskpool-engine-springboot-starter/src/main/kotlin'
-    - './../../../../engine/variable-serializer/src/main/kotlin'
-    - './../../../../taskpool/taskpool-api/src/main/kotlin'
-    - './../../../../taskpool/taskpool-core/src/main/kotlin'
-    - './../../../../view/view-api/src/main/kotlin'
-    - './../../../../view/simple/src/main/kotlin'
-    - './../../../../view/mongo/src/main/kotlin'
 
 
 services:

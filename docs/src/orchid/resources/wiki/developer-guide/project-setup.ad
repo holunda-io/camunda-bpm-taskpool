@@ -163,7 +163,8 @@ You can build a release with:
 
 [source,sh]
 ----
-./mvnw -B gitflow:release-start gitflow:release-finish
+./mvnw gitflow:release-start
+./mvnw gitflow:release-finish
 ----
 
 

@@ -1,11 +1,14 @@
 sections:
   'introduction':
     title: 'Introduction'
+    order: 100
   'developer-guide':
     title: 'Developer Guide'
+    order: 200
 
 wikiPages:
   layout: geopattern2
+
 'introduction':
   menu:
     - type: 'separator'
@@ -18,7 +21,7 @@ wikiPages:
       title: 'Introduction'
       order: 1000
     - type: 'wiki'
-      section: 'introduction-manual'
+      section: 'introduction'
       order: 1010
 'developer-guide':
   menu:
@@ -28,3 +31,6 @@ wikiPages:
     - type: 'pageIds'
       order: 110
       structure: nested
+
+defaultConfig:
+  createPdf: true

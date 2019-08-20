@@ -1,6 +1,4 @@
 ---
-title: 'Changelog'
-pageId: 'changelog'
 components:
   - type: changelog
 ---

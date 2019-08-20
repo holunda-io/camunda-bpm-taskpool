@@ -5,5 +5,5 @@ title: Quck Start
 
 ---
 
-== {{ page.title }}
+## {{ page.title }}
 
