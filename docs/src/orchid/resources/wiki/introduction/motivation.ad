@@ -1,12 +1,10 @@
 ---
-
 title: Motivation
-
 ---
 
 == Motivation
 
-In the last five years, we built custom task lists for different customers about six times.
+In the last five years, we built custom Camunda task lists for different customers about six times.
 Most of them were built based on Single Page Application (SPA) technologies, but some were
 using server-side rendered views. It turned out that some of the issues occurred every time during the implementation.
 
@@ -18,6 +16,8 @@ These were:
 * high-performance re-ordering (sorting) of user tasks
 * high-performance retrieving a list of tasks from several process engines
 * repetitive queries with same result
+* creating an archive view for business data items handled during the process execution
+* creating an audit log of changes performed on business data items
 
 Many of those issues have to do with the fact that data on single task is written only few times, but is read many times (depending on the user count).
 For systems with a big amount of users this becomes a serious performance issue if not addressed. One of the possible solutions to most of those issues listed above
@@ -25,4 +25,5 @@ is to create a special component, which has a read-optimized representation of t
 from the `TaskService` by the costs of loosing the strong consistency (and working with eventual-consistent task list), but allows for serving a high amount
 of queries without any performance impact to the process engine itself.
 
-The goal of this project is to provide such component as a library, to be used in the integration layer between the Camunda BPM engine and the task list application.
+The goal of this project is to provide such component as a library, to be used in the integration
+layer between the Camunda BPM engine and the task list application.

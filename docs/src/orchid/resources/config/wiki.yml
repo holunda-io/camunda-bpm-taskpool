@@ -1,15 +1,19 @@
 sections:
-  'introduction':
-    title: 'Introduction'
+  introduction:
+    title: Introduction
+    key: Introduction
     order: 100
-  'developer-guide':
-    title: 'Developer Guide'
+  user-guide:
+    title: User Guide
+    key: User Guide
     order: 200
 
-wikiPages:
-  layout: geopattern2
+  developer-guide:
+    title: Developer Guide
+    key: Developer Guide
+    order: 300
 
-'introduction':
+introduction:
   menu:
     - type: 'separator'
       title: 'In This Page'
@@ -17,13 +21,15 @@ wikiPages:
     - type: 'pageIds'
       order: 110
       structure: nested
+
     - type: 'separator'
       title: 'Introduction'
       order: 1000
+
     - type: 'wiki'
       section: 'introduction'
       order: 1010
-'developer-guide':
+developer-guide:
   menu:
     - type: 'separator'
       title: 'In This Page'
@@ -31,6 +37,18 @@ wikiPages:
     - type: 'pageIds'
       order: 110
       structure: nested
+
+user-guide:
+  menu:
+    - type: 'separator'
+      title: 'In This Page'
+      order: 100
+    - type: 'pageIds'
+      order: 110
+      structure: nested
+
+wikiPages:
+  layout: geopattern2
 
 defaultConfig:
   createPdf: true

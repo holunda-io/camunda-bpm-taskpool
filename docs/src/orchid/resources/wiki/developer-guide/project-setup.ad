@@ -167,12 +167,8 @@ You can build a release with:
 ./mvnw gitflow:release-finish
 ----
 
-
 This will update the versions in the `pom.xml` s accordingly and push the release tag to the `master` branch
 and update the `develop` branch for the new development version.
-
-By default, this command will bump the _revision_ digit in the version. If you want to specify the version
-yourself, please specify the switch `-Drelease.version=x.y.z`
 
 ==== Trigger a deploy
 
@@ -190,7 +186,7 @@ following command on the `master` branch:
 ./mvnw clean deploy -B -DskipTests -Prelease
 ----
 
-==== Release to public
+==== Release to public repositories
 
 WARNING: This operation requires special permissions.
 

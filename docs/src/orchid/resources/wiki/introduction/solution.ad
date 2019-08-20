@@ -1,10 +1,8 @@
 ---
-
-title: Solution
-
+title: Solution Idea
 ---
 
-== Solution Idea
+== {{ page.title }}
 
 The solution is implementing the Command Query Responsibility Segregation (CQRS) pattern, by collecting the
 tasks from the process engines and creating a read-optimized projection with tasks and correlated business

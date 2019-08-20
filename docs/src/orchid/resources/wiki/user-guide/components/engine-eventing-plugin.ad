@@ -1,0 +1,20 @@
+---
+title: Camunda Engine Eventing Plugin
+pageId: engine-eventing-plugin
+---
+
+== {{ page.title }}
+
+[NOTE]
+Starting from Camunda BPM SpringBoot version 3.3.0, the functionality of the eventing plugin
+has been contributed to the Camunda BPM SpringBoot and the component is not required anymore.
+
+=== Purpose
+
+The purpose of this component is to emit all changes happening in Camunda process engine as Spring events.
+In doing so, it registers execution listeners, task listeners and history event listener by providing a
+special Camunda Engine Core plugin and executes the delegation to the {{ anchor('Taskpool Collector') }} and
+{{ anchor('Datapool Collector') }}
+
+
+=== Configuration options

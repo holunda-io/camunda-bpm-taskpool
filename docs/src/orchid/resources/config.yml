@@ -2,11 +2,13 @@ site:
   about:
     siteName: Camunda BPM Taskpool
     siteDescription: A component for pooling Camunda BPM user tasks with business data for high performance queries.
-    avatar: 'assets/media/holunda.png'
+    avatar: 'assets/media/favicon.png'
 
 theme:
   useSidebarSearch: true
   primaryColor: '#DE0000'
+#  trianglifyOptions:
+#    x_colors: ['#000', '#2a623d', '#000']
   extraCss:
     - 'assets/css/asciidoc-admonitionblock.scss'
   social:
@@ -17,7 +19,24 @@ theme:
       itemId: 'Quick Start'
       title: 'Quick Start'
 
-    - type: 'wikiSections'
+    - type: 'submenu'
+      title: 'Introduction'
+      menu:
+      - type: 'wiki'
+        section: 'introduction'
+
+    - type: 'submenu'
+      title: 'User Guide'
+      menu:
+        - type: 'wiki'
+          section: 'user-guide'
+
+    - type: 'submenu'
+      title: 'Developer Guide'
+      menu:
+        - type: 'wiki'
+          section: 'developer-guide'
+
     - type: 'submenu'
       title: 'Explore'
       menu:

@@ -1,5 +1,3 @@
-= Camunda BPM Taskpool
-
 [cols="a,a,a,a,a,a,a"]
 |===
 | // travis
@@ -13,28 +11,52 @@ image::https://api.codacy.com/project/badge/Grade/653136bd5cad48c8a9f2621ee304ff
 | // openhub
 image::https://www.openhub.net/p/camunda-bpm-taskpool/widgets/project_thin_badge.gif[caption="Project Stats", link=https://www.openhub.net/p/camunda-bpm-taskpool]
 | // license
-image::https://img.shields.io/badge/License-Apache%202.0-blue.svg[link="./LICENSE"]
+image::https://img.shields.io/badge/License-Apache%202.0-blue.svg[link="http://holunda.io/camunda-bpm-taskpool/license"]
 | // changelog
-image::https://img.shields.io/badge/CHANGES----blue.svg[link="./CHANGELOG.adoc"]
+image::https://img.shields.io/badge/CHANGES----blue.svg[link="http://holunda.io/camunda-bpm-taskpool/changelog"]
 |===
+
+== Introduction
+
+
+In the last five years, we built custom Camunda task lists for different customers several times.
+Most of them were built based on Single Page Application (SPA) technologies, but some were
+using server-side rendered views. It turned out that some of the issues occurred every time during the implementation.
+
+These were:
+
+* coping with performance issues if big amount of tasks is available
+* creating high-performance custom queries for pre-loading process variables for tasks
+* creating high-performance custom queries to pre-load business data associated with the process instance
+* high-performance retrieving a list of tasks from several process engines
+* repetitive queries with same result
+* creating an archive view for business data items handled during the process execution
+* creating an audit log of changes performed on business data items
+
+We decided to stop repetitive work and release an open-source library which build a foundation for
+solving these problems. The goal of this project is to provide such component as a library, to be
+used in the integration layer between the Camunda BPM engine and the task list application.
 
 
 == Quick Start
 
-
+If you just want to start using the library, please consult our link:http://holunda.io/camunda-bpm-taskpool/quick-start[Quick Start]
+guide.
 
 == User Guide
 
-
+If you have any questions regarding configuration of individual components of Camunda BPM Taskpool please
+have a look to our primary documentation - the link:http://holunda.io/camunda-bpm-taskpool/user-guide[User Guide].
 
 == Working Example
 
-See our link:examples[Sample Process Application] including a simple tasklist implementation for demonstration purposes.
+See our link:http://holunda.io/camunda-bpm-taskpool/user-guide/examples[Sample Process Application] including a simple task list
+implementation for demonstration purposes.
 
 == License
 
-This library is developed under Apache License 2. See link:./LICENSE[license text] for more details.
+This library is developed under link:http://holunda.io/camunda-bpm-taskpool/license[Apache License 2].
 
 == Contribution
 
-If you want to contribute to this project, feel free to do so. Start with link:[Contributing guide].
+If you want to contribute to this project, feel free to do so. Start with link:http://holunda.io/camunda-bpm-taskpool/contribution[Contributing guide].

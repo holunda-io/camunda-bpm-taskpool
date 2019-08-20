@@ -1,7 +1,6 @@
 ---
 
 title: Developer Guide
-pageId: 'developer-guide'
 
 ---
 

@@ -1,10 +1,10 @@
 ---
 
-title: Scenarios
+title: Taskpool Usage Scenarios
 
 ---
 
-== Deployment Scenarios
+== Usage Scenarios
 
 Depending on your requirements and infrastructure available several deployment scenarios of the components is possible.
 
@@ -22,7 +22,7 @@ This scenario supports:
 
 -  central task pool / data pool
 -  view must not have a persistent storage (can be replayed)
--  no direct communication between tasklist and engine is required (routed via command bus)
+-  no direct communication between task list and engine is required (routed via command bus)
 
 The following diagram depicts the distribution of the components and the messaging.
 
@@ -37,7 +37,7 @@ This scenario supports:
 
 -  distributed task pool / data pool
 -  view must be persistent
--  direct communication between tasklist / engines required (addressing, routing)
+-  direct communication between task list / engines required (addressing, routing)
 -  concurrent access to engines might become a problem (no unit of work guarantees)
 
 The following diagram depicts the distribution of the components and the messaging.
