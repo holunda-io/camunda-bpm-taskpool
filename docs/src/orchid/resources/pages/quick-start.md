@@ -1,7 +1,7 @@
 ---
 
+title: Quick Start
 pageId: 'quick-start'
-title: Quck Start
 
 ---
 

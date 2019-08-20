@@ -14,7 +14,7 @@ theme:
     github: 'holunda-io/camunda-bpm-taskpool'
   menu:
     - type: 'page'
-      itemId: 'quick-start'
+      itemId: 'Quick Start'
       title: 'Quick Start'
 
     - type: 'wikiSections'
@@ -23,10 +23,10 @@ theme:
       menu:
       - type: 'page'
         title: 'Changelog'
-        itemId: 'changelog'
+        itemId: 'Changelog'
       - type: 'page'
         title: 'License'
-        itemId: 'license'
+        itemId: 'License'
 
 
 allPages:
