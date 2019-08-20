@@ -1,9 +1,10 @@
-=== 2.0.0: August 8, 2019
+=== 2.0.0: August 30, 2019
 * feat: provide user selection in tasklist
 * feat: pass user selection to process application
 * feat: change data handling in examples
 * feat: implement business data view aka archive view, #175
 * feat: implement data change protocol aka audit log
+* feat: implement reactive mongo view based on reactive mongo change stream
 * refactor: improve projection implementation #141
 * refactor: switch to NgRx in tasklist, #57
 
