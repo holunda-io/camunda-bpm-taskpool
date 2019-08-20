@@ -1,0 +1,30 @@
+sections:
+  'introduction':
+    title: 'Introduction'
+  'developer-guide':
+    title: 'Developer Guide'
+
+wikiPages:
+  layout: geopattern2
+'introduction':
+  menu:
+    - type: 'separator'
+      title: 'In This Page'
+      order: 100
+    - type: 'pageIds'
+      order: 110
+      structure: nested
+    - type: 'separator'
+      title: 'Introduction'
+      order: 1000
+    - type: 'wiki'
+      section: 'introduction-manual'
+      order: 1010
+'developer-guide':
+  menu:
+    - type: 'separator'
+      title: 'In This Page'
+      order: 100
+    - type: 'pageIds'
+      order: 110
+      structure: nested

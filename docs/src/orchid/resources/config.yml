@@ -43,9 +43,6 @@ allPages:
         - 'copy-to-clipboard'
 
 
-changelog:
-  includeMinorVersions: true
-  includeReleaseNotes: true
 
 wiki:
   defaultConfig:

@@ -13,11 +13,13 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
  */
 open class TxAwareAccumulatingCommandSender(
   private val commandListGateway: CommandListGateway,
-  private val commandAccumulator: CommandAccumulator
+  private val commandAccumulator: CommandAccumulator,
+  private val sendTasksWithinTransaction: Boolean
 ) : CommandSender {
   private val logger: Logger = LoggerFactory.getLogger(CommandSender::class.java)
 
   private val registered: ThreadLocal<Boolean> = ThreadLocal.withInitial { false }
+  @Suppress("RemoveExplicitTypeArguments")
   private val commands: ThreadLocal<MutableMap<String, MutableList<EngineTaskCommand>>> = ThreadLocal.withInitial { mutableMapOf<String, MutableList<EngineTaskCommand>>() }
 
   /**
@@ -33,19 +35,22 @@ open class TxAwareAccumulatingCommandSender(
       // send the result
 
       TransactionSynchronizationManager.registerSynchronization(object : TransactionSynchronizationAdapter() {
+
         /**
-         * Send commands on commit only.
+         * Execute send if flag is set to send inside the TX.
+         */
+        override fun beforeCommit(readOnly: Boolean) {
+          if (sendTasksWithinTransaction) {
+            send()
+          }
+        }
+
+        /**
+         * Execute send if flag is set to send outside the TX.
          */
         override fun afterCommit() {
-          // iterate over messages and send them
-          commands.get().forEach { (taskId: String, taskCommands: MutableList<EngineTaskCommand>) ->
-            val accumulatorName = commandAccumulator::class.simpleName
-            logger.debug("SENDER-005: Handling ${taskCommands.size} commands for task $taskId using command accumulator $accumulatorName")
-
-            val commands = commandAccumulator.invoke(taskCommands)
-
-            // handle messages for every task
-            commandListGateway.sendToGateway(commands)
+          if (!sendTasksWithinTransaction) {
+            send()
           }
         }
 
@@ -61,6 +66,19 @@ open class TxAwareAccumulatingCommandSender(
       // mark as registered
       registered.set(true)
     }
-
   }
+
+  private fun send() {
+    // iterate over messages and send them
+    commands.get().forEach { (taskId: String, taskCommands: MutableList<EngineTaskCommand>) ->
+      val accumulatorName = commandAccumulator::class.simpleName
+      logger.debug("SENDER-005: Handling ${taskCommands.size} commands for task $taskId using command accumulator $accumulatorName")
+
+      val commands = commandAccumulator.invoke(taskCommands)
+
+      // handle messages for every task
+      commandListGateway.sendToGateway(commands)
+    }
+  }
+
 }
