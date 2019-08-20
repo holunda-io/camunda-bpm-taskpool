@@ -16,5 +16,3 @@ pageId: core-taskpool
 
 
 === Description
-
-include::../../../../../../../engine/taskpool-collector/docs/collector.ad[]

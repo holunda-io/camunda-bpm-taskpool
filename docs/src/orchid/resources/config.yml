@@ -6,14 +6,19 @@ site:
 
 theme:
   useSidebarSearch: true
-  primaryColor: '#DE0000'
-#  trianglifyOptions:
-#    x_colors: ['#000', '#2a623d', '#000']
+  primaryColor: '#B10000'
+
+  trianglifyOptions:
+    x_colors: ['#000', '#B10000', '#000']
   extraCss:
     - 'assets/css/asciidoc-admonitionblock.scss'
   social:
     twitter: 'holisticon'
     github: 'holunda-io/camunda-bpm-taskpool'
+    other:
+      - link: 'https://www.holunda.io/camunda-bpm-taskpool/'
+        label: 'Home'
+        icon: 'fas fa-home'
   menu:
     - type: 'page'
       itemId: 'Quick Start'

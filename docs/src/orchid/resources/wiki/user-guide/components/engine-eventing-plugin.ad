@@ -1,20 +1,36 @@
 ---
+
 title: Camunda Engine Eventing Plugin
 pageId: engine-eventing-plugin
+
 ---
 
 == {{ page.title }}
 
-[NOTE]
-Starting from Camunda BPM SpringBoot version 3.3.0, the functionality of the eventing plugin
+NOTE: Starting from Camunda BPM SpringBoot version 3.3.0, the functionality of the eventing plugin
 has been contributed to the Camunda BPM SpringBoot and the component is not required anymore.
 
 === Purpose
 
 The purpose of this component is to emit all changes happening in Camunda process engine as Spring events.
 In doing so, it registers execution listeners, task listeners and history event listener by providing a
-special Camunda Engine Core plugin and executes the delegation to the {{ anchor('Taskpool Collector') }} and
-{{ anchor('Datapool Collector') }}
-
+special Camunda Engine Core plugin and executes the delegation to the 'Taskpool Collector' and
+'Datapool Collector'.
 
 === Configuration options
+
+The eventing plugin is controlled by the properties prefixed by `camunda.taskpool.engine-eventing`.
+To enable eventing (`false` by default). by setting `camunda.taskpool.engine-eventing.enabled` property.
+The three boolean properties `camunda.taskpool.engine-eventing.task-eventing`, `camunda.taskpool.engine-eventing.execution-eventing`
+and `camunda.taskpool.engine-eventing.historic-eventing` (all enabled by default) control the three
+types of listeners enabled by the plugin.
+
+TIP: Taskpool requires at least Task Listener and History eventing to operate properly.
+
+In addition to the eventing, the process application MUST run with enabled history.
+
+TIP: We recommend to run in _Full History Mode_ in order to get all events from Camunda BPM engine.
+
+
+
+
