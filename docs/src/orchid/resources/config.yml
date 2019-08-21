@@ -13,6 +13,7 @@ allPages:
       languages:
         - 'yaml'
         - 'java'
+        - 'json'
         - 'kotlin'
         - 'markdown'
       plugins:
