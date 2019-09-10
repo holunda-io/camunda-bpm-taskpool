@@ -79,12 +79,14 @@ Then activate the taskpool collector by providing the annotation on any Spring C
 ----
 
 @Configuration
-@EnableTaskCollector
-class MyTaskCollectorConfiguration {
+@EnableDataEntryCollector
+class MyDataCollectorConfiguration {
 
 }
 
 ----
+
+
 
 === Event collection
 

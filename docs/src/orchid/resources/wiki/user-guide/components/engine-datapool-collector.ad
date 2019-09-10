@@ -7,7 +7,41 @@ pageId: engine-datapool-collector
 
 
 === Purpose
+Datapool collector is a component usually deployed as a part of the process application (but not necessary) that
+is responsible for collecting the Business Data Events fired by the application in order to allow for creation of
+a business data projection. In doing so, it collects and transmits it to Datapool Core.
+
+=== Features
+ * Provides an API to submit arbitrary changes of business entities
+ * Provides an API to track changes (aka. Audit Log)
+ * Authorization on business entries
+ * Transmission of business entries commands
+
+=== Usage and configuration
+
+[source,xml]
+
+----
+
+    <dependency>
+      <groupId>io.holunda.taskpool</groupId>
+      <artifactId>camunda-bpm-datapool-collector</artifactId>
+      <version>${camunda-taskpool.version}</version>
+    </dependency>
+
+----
+
+Then activate the datapool collector by providing the annotation on any Spring Configuration:
+
+[source,java]
+----
+
+@Configuration
+@EnableDataEntryCollector
+class MyDataEntryCollectorConfiguration {
+
+}
+
+----
 
 
-
-=== Configuration options

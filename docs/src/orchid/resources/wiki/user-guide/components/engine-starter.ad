@@ -30,3 +30,16 @@ public class MyApplication {
 ----
 <1> Annotation to enable the engine support.
 
+The `@EnableTaskpoolEngineSupport` annotation has the same effect as the following block of annotations:
+
+[source, java]
+----
+@EnableCamundaSpringEventing
+@EnableCamundaEngineClient
+@EnableTaskCollector
+@EnableDataEntryCollector
+public class MyApplication {
+  //...
+}
+----
+
