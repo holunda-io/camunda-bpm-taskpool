@@ -13,4 +13,4 @@ import org.springframework.context.annotation.Configuration
 @EnableTaskCollector
 @EnableDataEntryCollector
 @Configuration
-open class TaskpoolEngineSupportConfiguration
+class TaskpoolEngineSupportConfiguration

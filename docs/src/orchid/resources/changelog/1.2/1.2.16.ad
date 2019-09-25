@@ -1,0 +1,8 @@
+---
+version: 1.2.16
+---
+
+== Bug fixes
+
+* correct extraction of process definition key, see #164
+

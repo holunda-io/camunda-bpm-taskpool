@@ -1,19 +1,25 @@
-= Taskpool Collector
+---
+title: Taskpool Collector
+pageId: engine-datapool-collector
+---
 
-== Rationale
+== {{ page.title }}
 
-Taskpool collector is a component usually deployed as a part of the process application
+
+=== Purpose
+
+Taskpool Collector is a component usually deployed as a part of the process application
 (aside with Camunda BPM Engine) that is responsible for collecting Spring events fired by
-the `camunda-eventing-engine-plugin` and creating the corresponding commands for the taskpool.
-In doing so, it collects and enriches data and transmits it to taskpool core.
+the Camunda Engine Eventing Plugin and creating the corresponding commands for the taskpool.
+In doing so, it collects and enriches data and transmits it to Taskpool Core.
 
 In the following description, we use the term _event_ and _command_. Event denotes a data entity
 received from Camunda BPM Engine (from delegate event listener or from history event listener)
-which is passed over to the task collector using internal Spring eventing mechanism. The task collector
+which is passed over to the Task Collector using internal Spring eventing mechanism. The Task Collector
 converts the series of such events into an Taskpool Engine Command - an entity carrying an intent
 of change inside of the taskpool core.
 
-== Features
+=== Features
 
 - Collection of task events and history events
 - Creation of corresponding task engine commands
@@ -22,7 +28,7 @@ of change inside of the taskpool core.
 - Transmission of task engine commands
 - Provision of properties for process application
 
-== Architecture
+=== Architecture
 
 [ditaa]
 ----
@@ -48,20 +54,23 @@ The Taskpool Collector consists of several components:
 
 - Event collector receives Spring Events from `camunda-eventing-engine-plugin` and forms commands
 - Enricher performs the command enrichment with payload and data correlation
-- Comman sender is responsible for accumulating commands and sending them to command gateway
+- Command sender is responsible for accumulating commands and sending them to Command Gateway
 
 
-== Usage and configuration
+=== Usage and configuration
 
 In order to enable collector component, include the Maven dependency to your process application:
 
 [source,xml]
+
 ----
+
 <dependency>
   <groupId>io.holunda.taskpool<groupId>
   <artifactId>camunda-bpm-taskpool-collector</artifactId>
   <version>${camunda-taskpool.version}</version>
 <dependency>
+
 ----
 
 Then activate the taskpool collector by providing the annotation on any Spring Configuration:
@@ -70,12 +79,14 @@ Then activate the taskpool collector by providing the annotation on any Spring C
 ----
 
 @Configuration
-@EnableTaskCollector
-class TaskCollectorConfigriation {
+@EnableDataEntryCollector
+class MyDataCollectorConfiguration {
 
 }
 
 ----
+
+
 
 === Event collection
 
@@ -86,7 +97,7 @@ Taskpool collector registers Spring Event Listener to the following events, fire
 ** assign
 ** delete
 ** complete
-* `HistoryEvent`events:
+* `HistoryEvent` events:
 ** HistoricTaskInstanceEvent
 ** HistoricIdentityLinkLogEvent
 
@@ -99,13 +110,13 @@ by the `camunda.taskpool.collector.enricher.type` property:
 
 * `no`: No enrichment takes place
 * `process-variables`: Enrichment with process variables
-* `custom`: user provides the implementation
+* `custom`: User provides own implementation
 
 ==== Process variable enrichment
 
 In particular cases, the task related data is not sufficient for the information required in task list or
 other user-related components. The information may be available as process variables and need to be attached
-to the task in the taskpool. This is where process variable task enricher can be used. For this purpose,
+to the task in the taskpool. This is where _Process Variable Task Enricher_ can be used. For this purpose,
 set the property `camunda.taskpool.collector.enricher.type` to `process-variables` and the enricher will
 put all process variables into the task payload (defaults to a empty `EXCLUDE` filter).
 
@@ -120,20 +131,60 @@ A `ProcessVariableFilter` can be of the following type:
 * `PROCESS_INCLUDE`: process-level include filter, denoting a list of variables to be added for all tasks.
 * `PROCESS_EXCLUDE`: process-level exclude filter, denoting a list of variables to be ignored for all tasks.
 
+Here is an example, how the process variable filter can configure the enrichment:
+
+[source,java]
+----
+  @Configuration
+  public class MyTaskCollectorConfiguration {
+
+    @Bean
+    public ProcessVariablesFilter myProcessVariablesFilter() {
+
+      return new ProcessVariablesFilter(
+        // define a applyFilter for every process
+        new ProcessVariableFilter[]{
+          // for every process definition
+          new ProcessVariableFilter(
+            ProcessApproveRequest.KEY,
+            // filter type
+            FilterType.INCLUDE,
+            ImmutableMap.<String, List<String>>builder()
+              // define a applyFilter for every task
+              .put(ProcessApproveRequest.Elements.APPROVE_REQUEST, Lists.newArrayList(
+                ProcessApproveRequest.Variables.REQUEST_ID,
+                ProcessApproveRequest.Variables.ORIGINATOR)
+              )
+              // and again
+              .put(ProcessApproveRequest.Elements.AMEND_REQUEST, Lists.newArrayList(
+                ProcessApproveRequest.Variables.REQUEST_ID,
+                ProcessApproveRequest.Variables.COMMENT,
+                ProcessApproveRequest.Variables.APPLICANT)
+              ).build(),
+            Collections.emptyList()
+          )
+        }, Collections.emptyMap()
+      );
+    }
+
+  }
+----
+
 TIP: If you want to implement a custom enrichment, please provide your own implementation of the interface `VariablesEnricher`
 (register a Spring Component of the type) and set the property `camunda.taskpool.collector.enricher.type` to `custom`.
 
-=== Data correlation
 
-Apart from task payload attached by the enricher, the so-called correlation with data entries can
+=== Data Correlation
+
+Apart from task payload attached by the enricher, the so-called _Correlation_ with data entries can
 be configured. The idea is to attach one or several references (that is `entryType` and `entryId`) to
 business data entry(ies) to a task. In a view projection this correlations can be resolved and the
-information from business events can be shown together with task information.
+information from business data events can be shown together with task information.
 
 The correlation to data events can be configured by providing a `ProcessVariablesCorrelator`. Here is
 an example how this can be done:
 
-[source, java]
+[source, kotlin]
 ----
 @Bean
 open fun processVariablesCorrelator() = ProcessVariablesCorrelator(
@@ -155,7 +206,7 @@ open fun processVariablesCorrelator() = ProcessVariablesCorrelator(
 The process variable correlator holds a list of process variable correlations - one for every process
 definition key. Every `ProcessVariableCorrelation` configures global (that is for every task) or task correlation
 (for particular task definition key) by providing a correlation map. A correlation map is keyed by the
-process variable name and holds business data entry type as value.
+Camunda Process Variable Name and holds business data Entry Type as value.
 
 Here is an example. Imagine the process instance is storing the id of an approval request in a process variable called
 `varRequestId`. The system responsible for storing approval requests fires data entry events supplying the
@@ -188,18 +239,13 @@ and the process reaches the task `task_approve_request`, the task will get the f
 ]
 ----
 
-
 === Command transmission
 
 In order to control sending of commands to command gateway, the command sender activation property
-`camunda.taskpool.sender.enabled` (default is `true`) is available. If disabled, the command sender
+`camunda.taskpool.collector.sender.enabled` (default is `true`) is available. If disabled, the command sender
 will log any command instead of sending it to the command gateway.
 
-The Spring event listeners receiving events from the Camunda Engine plugin are called before the engine commits the transaction.
-Since all processing inside collector and enricher is performed synchronous, the sender must waits until transaction to
-be successfully committed before sending any commands to the command gateway. Otherwise, on any error
-the transaction would be rolled back and the command would create an inconsistency between the taskpool and the engine.
-
+In addition you can control by the property `camunda.taskpool.collector.sender.type` if you want to use the default command sender or provide your own implementation.
 The default provided command sender (type: `tx`) is collects all task commands during one transaction, group them by task id
 and accumulates by creating one command reflecting the intent of the task operation. It uses Axon Command Bus (encapsulated
 by the `AxonCommandListGateway`.
@@ -207,4 +253,15 @@ by the `AxonCommandListGateway`.
 TIP: If you want to implement a custom command sending, please provide your own implementation of the interface `CommandSender`
 (register a Spring Component of the type) and set the property `camunda.taskpool.collector.sender.type` to `custom`.
 
+The Spring event listeners receiving events from the Camunda Engine plugin are called before the engine commits the transaction.
+Since all processing inside collector and enricher is performed synchronous, the sender must waits until transaction to
+be successfully committed before sending any commands to the Command Gateway. Otherwise, on any error
+the transaction would be rolled back and the command would create an inconsistency between the taskpool and the engine.
+
+Depending on your deployment scenario, you may want to control the exact point in time when the commands are send to Command Bus.
+The property `camunda.taskpool.collector.sender.send-within-transaction` is designed to influence this. If set to `true`, the commands
+are sent _before_ the process engine transaction is committed, otherwise commands are sent _after_ the process engine transaction is committed.
+
+WARNING: Never send commands over remote messaging before the transaction is committed, since you may produce unexpected results if Camunda fails
+to commit the transaction.
 
