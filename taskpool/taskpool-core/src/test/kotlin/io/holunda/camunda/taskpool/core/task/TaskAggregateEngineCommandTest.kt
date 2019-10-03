@@ -33,7 +33,7 @@ class TaskAggregateEngineCommandTest {
   }
 
   @Test
-  fun `should create task`() {
+  fun `should not create task using aggregates`() {
     fixture
       .givenNoPriorActivity()
       .`when`(
@@ -57,26 +57,7 @@ class TaskAggregateEngineCommandTest {
           payload = Variables.createVariables().putValueTyped("key", stringValue("value")),
           correlations = newCorrelations().addCorrelation("Request", "business123")
         ))
-      .expectEvents(
-        TaskCreatedEngineEvent(
-          id = "4711",
-          name = "Foo",
-          createTime = now,
-          owner = "kermit",
-          taskDefinitionKey = "foo",
-          formKey = "some",
-          businessKey = "business123",
-          sourceReference = processReference,
-          candidateUsers = setOf("kermit", "gonzo"),
-          candidateGroups = setOf("muppets"),
-          assignee = "kermit",
-          priority = 51,
-          followUpDate = now2,
-          dueDate = now,
-          description = "Funky task",
-          payload = Variables.createVariables().putValueTyped("key", stringValue("value")),
-          correlations = newCorrelations().addCorrelation("Request", "business123")
-        ))
+      .expectNoEvents()
   }
 
   @Test

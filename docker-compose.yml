@@ -27,15 +27,6 @@ services:
     networks:
       - taskpool-net
 
-  adminer:
-    image: adminer
-    container_name: adminer
-    restart: always
-    ports:
-      - 8089:8089
-    networks:
-      - taskpool-net
-
   axonserver:
     image: axoniq/axonserver
     container_name: axonserver

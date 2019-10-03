@@ -19,7 +19,6 @@ import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit4.SpringRunner
 
-
 /**
  * This ITests simulates work of Camunda process definition collector.
  */
@@ -34,10 +33,10 @@ class ProcessDefinitionServiceITest {
   }
 
   @get: Rule
-  val expectedException = ExpectedException.none()
+  private val expectedException = ExpectedException.none()
 
   @MockBean
-  lateinit var commandGateway: AxonCommandListGateway
+  private lateinit var commandGateway: AxonCommandListGateway
 
   @Autowired
   private lateinit var configuration: ProcessEngineConfigurationImpl

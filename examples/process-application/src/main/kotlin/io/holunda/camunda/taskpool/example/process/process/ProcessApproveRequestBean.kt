@@ -92,7 +92,13 @@ class ProcessApproveRequestBean(
       .singleResult() ?: throw NoSuchElementException("Task with id $taskId not found.")
 
     val requestId = runtimeService.getVariable(task.executionId, ProcessApproveRequest.Variables.REQUEST_ID) as String
-    requestService.changeRequestState(id = requestId, username = username, state = ProcessingType.IN_PROGRESS.of(decision.toUpperCase()), log = "Approval decision was $decision.", logNotes = comment)
+    requestService.changeRequestState(
+      id = requestId,
+      username = username,
+      state = ProcessingType.IN_PROGRESS.of("Decided"),
+      log = "Approval decision was $decision.",
+      logNotes = comment
+    )
 
     taskService.claim(task.id, username)
 
@@ -118,7 +124,9 @@ class ProcessApproveRequestBean(
       .taskDefinitionKey(ProcessApproveRequest.Elements.AMEND_REQUEST)
       .singleResult() ?: throw NoSuchElementException("Task with id $taskId not found.")
 
-    taskService.claim(task.id, username)
+    if (task.assignee != null) {
+      taskService.claim(task.id, username)
+    }
 
     if (action == RESUBMIT) {
       if (requestService.checkRequest(request.id)) {

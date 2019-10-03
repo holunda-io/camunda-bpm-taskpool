@@ -11,15 +11,17 @@ import org.axonframework.spring.stereotype.Aggregate
 import org.camunda.bpm.engine.variable.VariableMap
 import java.util.*
 
-
+/**
+ * Main representation of the tasks available in the system.
+ */
 @Aggregate
-open class TaskAggregate() {
+class TaskAggregate() {
 
   companion object : KLogging()
 
   @AggregateIdentifier
-
   private lateinit var id: String
+
   private lateinit var sourceReference: SourceReference
   private lateinit var taskDefinitionKey: String
   private var formKey: String? = null
@@ -43,15 +45,21 @@ open class TaskAggregate() {
   private var deleted = false
   private var completed = false
 
-
-  @CommandHandler
-  constructor(command: CreateTaskCommand) : this() {
+  /**
+   * This handler triggers on a duplication of creation and
+   * is invoked manually on aggregate creation and is therefor
+   * not annotated with {@link CommandHandler}
+   */
+  fun handle(command: CreateTaskCommand) {
     logger.debug { "Created new aggregate for task ${command.id}" }
     create(command)
   }
 
+  /**
+   * User assignment handler.
+   */
   @CommandHandler
-  open fun handle(command: AssignTaskCommand) {
+  fun handle(command: AssignTaskCommand) {
     if (!deleted && !completed) {
       if (assignee != command.assignee) {
         assign(command)
@@ -59,30 +67,42 @@ open class TaskAggregate() {
     }
   }
 
+  /**
+   * Task completion handler.
+   */
   @CommandHandler
-  open fun handle(command: CompleteTaskCommand) {
+  fun handle(command: CompleteTaskCommand) {
     if (!deleted && !completed) {
       complete()
     }
   }
 
+  /**
+   * Task deletion handler.
+   */
   @CommandHandler
-  open fun handle(command: DeleteTaskCommand) {
+  fun handle(command: DeleteTaskCommand) {
     if (!deleted && !completed) {
       delete(command)
     }
   }
 
+  /**
+   * Handles task attribute update.
+   */
   @CommandHandler
-  open fun handle(command: UpdateAttributeTaskCommand) {
+  fun handle(command: UpdateAttributeTaskCommand) {
     if (!deleted && !completed) {
       logger.debug { "Received updateAttributes intent for task $this.id of type ${command.javaClass}" }
       updateAttributes(command)
     }
   }
 
+  /**
+   * Handles intent to claim the task (sent by the user).
+   */
   @CommandHandler
-  open fun handle(command: ClaimInteractionTaskCommand) {
+  fun handle(command: ClaimInteractionTaskCommand) {
     if (!deleted && !completed) {
       if (command.assignee != assignee) {
         // task is assigned to a different user, un-claim it first
@@ -94,15 +114,21 @@ open class TaskAggregate() {
     }
   }
 
+  /**
+   * Handles intent to un-claim the task (sent by the user).
+   */
   @CommandHandler
-  open fun handle(command: UnclaimInteractionTaskCommand) {
+  fun handle(command: UnclaimInteractionTaskCommand) {
     if (!deleted && !completed && assignee != null) {
       unclaim()
     }
   }
 
+  /**
+   * Handles intent to complete the task (sent by the user).
+   */
   @CommandHandler
-  open fun handle(command: CompleteInteractionTaskCommand) {
+  fun handle(command: CompleteInteractionTaskCommand) {
     if (!deleted && !completed) {
 
       if (command.assignee != null) {
@@ -114,26 +140,29 @@ open class TaskAggregate() {
             // task is assigned, but to a different user, un-claim it first.
             unclaim()
           }
-
           // Smart cast is not possible here, because it is a public API declared in a different module.
           claim(command.assignee!!)
         }
-
       }
-
       markToBeCompleted(command)
     }
   }
 
+  /**
+   * Handles intent to defer the task (sent by the user).
+   */
   @CommandHandler
-  open fun handle(command: DeferInteractionTaskCommand) {
+  fun handle(command: DeferInteractionTaskCommand) {
     if (!deleted && !completed) {
       defer(command)
     }
   }
 
+  /**
+   * Handles intent to undefer the task (sent by the user).
+   */
   @CommandHandler
-  open fun handle(command: UndeferInteractionTaskCommand) {
+  fun handle(command: UndeferInteractionTaskCommand) {
     if (!deleted && !completed) {
       undefer()
     }
@@ -143,7 +172,7 @@ open class TaskAggregate() {
    * Add candidate group.
    */
   @CommandHandler
-  open fun handle(command: AddCandidateGroupsCommand) {
+  fun handle(command: AddCandidateGroupsCommand) {
     if (!deleted && !completed) {
       changeAssignment(command)
     }
@@ -153,7 +182,7 @@ open class TaskAggregate() {
    * Delete candidate group.
    */
   @CommandHandler
-  open fun handle(command: DeleteCandidateGroupsCommand) {
+  fun handle(command: DeleteCandidateGroupsCommand) {
     if (!deleted && !completed) {
       changeAssignment(command)
     }
@@ -163,7 +192,7 @@ open class TaskAggregate() {
    * Add candidate user.
    */
   @CommandHandler
-  open fun handle(command: AddCandidateUsersCommand) {
+  fun handle(command: AddCandidateUsersCommand) {
     if (!deleted && !completed) {
       changeAssignment(command)
     }
@@ -173,7 +202,7 @@ open class TaskAggregate() {
    * Delete candidate user.
    */
   @CommandHandler
-  open fun handle(command: DeleteCandidateUsersCommand) {
+  fun handle(command: DeleteCandidateUsersCommand) {
     if (!deleted && !completed) {
       changeAssignment(command)
     }
@@ -181,7 +210,7 @@ open class TaskAggregate() {
 
 
   @EventSourcingHandler
-  open fun on(event: TaskCreatedEngineEvent) {
+  fun on(event: TaskCreatedEngineEvent) {
     this.id = event.id
     this.sourceReference = event.sourceReference
     this.taskDefinitionKey = event.taskDefinitionKey
@@ -205,23 +234,22 @@ open class TaskAggregate() {
   }
 
   @EventSourcingHandler
-  open fun on(event: TaskAssignedEngineEvent) {
+  fun on(event: TaskAssignedEngineEvent) {
     this.assignee = event.assignee
     logger.debug { "Assigned task $this.id to $assignee" }
   }
 
   @EventSourcingHandler
-  open fun on(event: TaskCompletedEngineEvent) {
+  fun on(event: TaskCompletedEngineEvent) {
     this.completed = true
     logger.debug { "Completed task $this.id by $assignee" }
   }
 
   @EventSourcingHandler
-  open fun on(event: TaskDeletedEngineEvent) {
+  fun on(event: TaskDeletedEngineEvent) {
     this.deleted = true
     logger.debug { "Deleted task $this.id with reason ${event.deleteReason}" }
   }
-
 
   private fun assign(command: AssignTaskCommand) =
     AggregateLifecycle.apply(

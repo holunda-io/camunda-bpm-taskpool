@@ -55,7 +55,7 @@ class RequestService(
   fun updateRequest(id: String, request: Request, username: String) {
     if (checkRequest(id)) {
       this.repository.save(request)
-      changeRequestState(request, ProcessingType.IN_PROGRESS.of("Amended"), "Request amended.")
+      changeRequestState(request, ProcessingType.IN_PROGRESS.of(state = "Amended"), username = username, log = "Request amended.")
     }
   }
 
