@@ -33,7 +33,7 @@ class ProcessDefinitionServiceITest {
   }
 
   @get: Rule
-  private val expectedException = ExpectedException.none()
+  val expectedException: ExpectedException = ExpectedException.none()
 
   @MockBean
   private lateinit var commandGateway: AxonCommandListGateway
