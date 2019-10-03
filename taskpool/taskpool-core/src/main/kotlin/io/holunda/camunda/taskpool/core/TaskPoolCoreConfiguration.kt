@@ -10,10 +10,10 @@ import org.springframework.context.annotation.Configuration
 
 @Configuration
 @ComponentScan
-open class TaskPoolCoreConfiguration {
+class TaskPoolCoreConfiguration {
 
   @Bean
-  open fun taskAggregateRepository(eventStore: EventStore): EventSourcingRepository<TaskAggregate> {
+  fun taskAggregateRepository(eventStore: EventStore): EventSourcingRepository<TaskAggregate> {
     return EventSourcingRepository
       .builder(TaskAggregate::class.java)
       .eventStore(eventStore)
