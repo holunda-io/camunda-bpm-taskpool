@@ -27,7 +27,7 @@
     <dependency>
       <groupId>org.axonframework.extensions.mongo</groupId>
       <artifactId>axon-mongo</artifactId>
-      <version>4.0.1</version>
+      <version>${axon.version}</version>
     </dependency>
 
     <dependency>
