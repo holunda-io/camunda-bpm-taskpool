@@ -6,7 +6,7 @@
   <parent>
     <groupId>io.holunda.taskpool</groupId>
     <artifactId>camunda-bpm-taskpool-cockpit</artifactId>
-    <version>2.0.2</version>
+    <version>2.0.3-SNAPSHOT</version>
   </parent>
 
   <artifactId>camunda-bpm-taskpool-cockpit-frontend</artifactId>
