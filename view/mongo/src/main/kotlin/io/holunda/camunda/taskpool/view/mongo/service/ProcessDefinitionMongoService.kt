@@ -13,6 +13,9 @@ import org.axonframework.queryhandling.QueryUpdateEmitter
 import org.springframework.stereotype.Component
 import java.util.concurrent.CompletableFuture
 
+/**
+ * Mongo proces sdefinition projection.
+ */
 @Component
 class ProcessDefinitionMongoService(
   private val queryUpdateEmitter: QueryUpdateEmitter,
