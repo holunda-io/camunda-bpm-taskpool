@@ -38,7 +38,7 @@
     <kotlin-logging.version>1.6.22</kotlin-logging.version>
     <mockito.version>2.18.3</mockito.version>
     <version.camunda.spin>1.5.1</version.camunda.spin>
-    <jackson.version>2.9.9</jackson.version>
+    <jackson.version>2.9.10</jackson.version>
     <org.mapstruct.version>1.2.0.Final</org.mapstruct.version>
     <assertj.version>3.9.0</assertj.version>
     <camunda-bpm-assert.version>2.1</camunda-bpm-assert.version>
