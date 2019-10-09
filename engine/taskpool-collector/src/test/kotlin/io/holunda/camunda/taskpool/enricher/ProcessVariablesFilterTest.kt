@@ -19,12 +19,12 @@ class ProcessVariablesFilterTest {
 
   @Test
   fun `should filter for task`() {
-    val filter: ProcessVariablesFilter = ProcessVariablesFilter(
-      ProcessVariableFilter("process7411", FilterType.INCLUDE, mapOf(
+    val filter = ProcessVariablesFilter(
+      TaskVariableFilter("process7411", FilterType.INCLUDE, mapOf(
         "task1" to listOf("business_var1", "business_var2"),
         "task2" to listOf("business_var3", "business_var2")
       )),
-      ProcessVariableFilter("process7412", FilterType.EXCLUDE, mapOf(
+      TaskVariableFilter("process7412", FilterType.EXCLUDE, mapOf(
         "task3" to listOf("business_var51", "business_var42"),
         "task1" to listOf("business_var12", "business_var32")
       ))
@@ -37,10 +37,10 @@ class ProcessVariablesFilterTest {
   }
 
   @Test
-  fun `should filter globally`() {
-    val filter: ProcessVariablesFilter = ProcessVariablesFilter(
-      ProcessVariableFilter("process7411", FilterType.PROCESS_INCLUDE, emptyMap(), listOf("business_var1", "business_var2")),
-      ProcessVariableFilter("process7412", FilterType.PROCESS_EXCLUDE, emptyMap(), listOf("business_var51", "business_var42", "business_var32", "business_var12"))
+  fun `should filter for specific process`() {
+    val filter = ProcessVariablesFilter(
+      ProcessVariableFilter("process7411", FilterType.INCLUDE, listOf("business_var1", "business_var2")),
+      ProcessVariableFilter("process7412", FilterType.EXCLUDE, listOf("business_var51", "business_var42", "business_var32", "business_var12"))
     )
 
     // only 1, 2
@@ -50,4 +50,17 @@ class ProcessVariablesFilterTest {
     assertThat(filter.filterVariables("process7412", "task88", variables)).containsOnlyKeys("business_var1", "business_var2", "business_var3", "business_var4")
   }
 
+  @Test
+  fun `should filter for all processes`() {
+    val filter = ProcessVariablesFilter(
+      ProcessVariableFilter(FilterType.INCLUDE, listOf("business_var1", "business_var2")),
+      ProcessVariableFilter("process7412", FilterType.INCLUDE, listOf("business_var1", "business_var3", "business_var4"))
+    )
+
+    // process without dedicated filter -> use common filter -> include only 1, 2
+    assertThat(filter.filterVariables("process7411", "task77", variables)).containsOnlyKeys("business_var1", "business_var2")
+
+    // process with dedicated filter -> include only 1, 3, 4
+    assertThat(filter.filterVariables("process7412", "task88", variables)).containsOnlyKeys("business_var1", "business_var3", "business_var4")
+  }
 }
