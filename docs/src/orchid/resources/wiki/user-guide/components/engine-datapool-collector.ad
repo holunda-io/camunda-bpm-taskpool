@@ -71,6 +71,7 @@ For Data Entry Command Sender (as a part of `Datapool Collector`) please provide
 [source, kotlin]
 ----
   @Bean
+  @Primary
   fun dataEntryCommandSuccessHandler() = object: DataEntryCommandResultHandler {
     override fun apply(commandMessage: Any, commandResultMessage: CommandResultMessage<out Any?>) {
       // do something here
@@ -79,6 +80,7 @@ For Data Entry Command Sender (as a part of `Datapool Collector`) please provide
   }
 
   @Bean
+  @Primary
   fun dataEntryCommandErrorHandler() = object: DataEntryCommandResultHandler {
     override fun apply(commandMessage: Any, commandResultMessage: CommandResultMessage<out Any?>) {
       // do something here

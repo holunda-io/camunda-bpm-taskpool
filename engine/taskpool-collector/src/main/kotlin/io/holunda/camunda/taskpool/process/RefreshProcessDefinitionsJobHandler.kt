@@ -19,14 +19,11 @@ import org.springframework.stereotype.Component
  * </p>
  */
 @Component
-class RefreshProcessDefinitionsJobHandler() : JobHandler<RefreshProcessDefinitionsJobConfiguration> {
-
-  @Autowired
-  private lateinit var processDefinitionService: ProcessDefinitionService
-  @Autowired
+class RefreshProcessDefinitionsJobHandler(
+  private val processDefinitionService: ProcessDefinitionService,
   @Lazy
-  private lateinit var gateway: CommandListGateway
-
+  private val gateway: CommandListGateway
+) : JobHandler<RefreshProcessDefinitionsJobConfiguration> {
 
   companion object {
     const val TYPE = "RefreshProcessDefinitionsJobHandler"

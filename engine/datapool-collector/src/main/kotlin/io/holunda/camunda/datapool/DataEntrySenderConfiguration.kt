@@ -27,14 +27,12 @@ class DataEntrySenderConfiguration {
    * Default handler.
    */
   @Bean
-  @ConditionalOnMissingBean
   fun loggingDataEntryCommandSuccessHandler(): DataEntryCommandSuccessHandler = LoggingCommandSuccessHandler(LoggerFactory.getLogger(DataEntryCommandSender::class.java))
 
   /**
    * Default handler.
    */
   @Bean
-  @ConditionalOnMissingBean
   fun loggingDataEntryCommandErrorHandler(): DataEntryCommandErrorHandler = LoggingCommandErrorHandler(LoggerFactory.getLogger(DataEntryCommandSender::class.java))
 
   /**

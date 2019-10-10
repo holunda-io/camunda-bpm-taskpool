@@ -10,7 +10,6 @@ import org.camunda.bpm.engine.RuntimeService
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.ComponentScan
@@ -87,15 +86,12 @@ class TaskCollectorConfiguration(
    * Default logging handler.
    */
   @Bean
-  @ConditionalOnMissingBean
   fun loggingTaskCommandSuccessHandler(): TaskCommandSuccessHandler = LoggingTaskCommandSuccessHandler(LoggerFactory.getLogger(CommandSender::class.java))
 
   /**
    * Default logging handler.
    */
   @Bean
-  @ConditionalOnMissingBean
   fun loggingTaskCommandErrorHandler(): TaskCommandErrorHandler = LoggingTaskCommandErrorHandler(LoggerFactory.getLogger(CommandSender::class.java))
-
 }
 
