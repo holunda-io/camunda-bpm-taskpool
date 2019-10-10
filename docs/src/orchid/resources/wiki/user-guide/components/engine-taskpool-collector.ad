@@ -265,3 +265,32 @@ are sent _before_ the process engine transaction is committed, otherwise command
 WARNING: Never send commands over remote messaging before the transaction is committed, since you may produce unexpected results if Camunda fails
 to commit the transaction.
 
+==== Handling command transmission
+
+The commands sent via gateway (e.g. `AxonCommandListGateway`) are received by Command Handlers. The latter may accept or reject commands, depending
+on the state of the aggregate and other components. The `AxonCommandListGateway` is informed about the command outcome. By default, it will log the outcome
+to console (success is logged in `DEBUG` log level, errors are using `ERROR` log level).
+
+In some situations it is required to take care of command outcome. A prominent example is to include a metric for command dispatching errors into monitoring. For doing so,
+it is possible to provide own handlers for success and error command outcome.
+
+For the Task Command Sender (as a part of `Taskpool Collector`) please provide a Spring Bean implementing the `io.holunda.camunda.taskpool.sender.gateway.TaskCommandResultHandler`
+interface and named `taskCommandErrorHandler` and `taskCommandSuccessHandler` accordingly.
+
+
+[source, kotlin]
+----
+  @Bean
+  fun taskCommandErrorHandler(): TaskCommandResultHandler = object : LoggingTaskCommandErrorHandler(logger) {
+    override fun invoke(commandMessage: Any, commandResultMessage: CommandResultMessage<out Any?>) {
+      logger.info { "<--------- CUSTOM ERROR HANDLER REPORT --------->" }
+      super.invoke(commandMessage, commandResultMessage)
+      logger.info { "<------------------- END ----------------------->" }
+    }
+  }
+
+----
+
+
+
+

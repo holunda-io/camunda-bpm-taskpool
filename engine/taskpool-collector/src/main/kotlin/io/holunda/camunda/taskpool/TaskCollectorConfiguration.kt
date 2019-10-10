@@ -5,8 +5,7 @@ import io.holunda.camunda.taskpool.sender.CommandSender
 import io.holunda.camunda.taskpool.sender.TxAwareAccumulatingCommandSender
 import io.holunda.camunda.taskpool.sender.accumulator.CommandAccumulator
 import io.holunda.camunda.taskpool.sender.accumulator.ProjectingCommandAccumulator
-import io.holunda.camunda.taskpool.sender.gateway.CommandListGateway
-import io.holunda.camunda.taskpool.urlresolver.TasklistUrlResolver
+import io.holunda.camunda.taskpool.sender.gateway.*
 import org.camunda.bpm.engine.RuntimeService
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -18,6 +17,9 @@ import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
 import javax.annotation.PostConstruct
 
+/**
+ * Configuration of task collect.
+ */
 @Configuration
 @ComponentScan
 @EnableConfigurationProperties(TaskCollectorProperties::class)
@@ -60,7 +62,9 @@ class TaskCollectorConfiguration(
       else -> throw IllegalStateException("Could not initialize sender, used ${properties.sender.type} type.")
     }
 
-
+  /**
+   * Prints sender config.
+   */
   @PostConstruct
   fun printSenderConfiguration() {
     if (properties.sender.enabled) {
@@ -70,6 +74,9 @@ class TaskCollectorConfiguration(
     }
   }
 
+  /**
+   * Prints enricher config.
+   */
   @PostConstruct
   fun printEnricherConfiguration() {
     when (properties.enricher.type) {
@@ -78,5 +85,20 @@ class TaskCollectorConfiguration(
       else -> logger.info("ENRICHER-003: Camunda Taskpool commands will not be enriched by a custom enricher.")
     }
   }
+
+  /**
+   * Default logging handler.
+   */
+  @Bean
+  @ConditionalOnMissingBean
+  fun loggingTaskCommandSuccessHandler(): TaskCommandSuccessHandler = LoggingTaskCommandSuccessHandler(LoggerFactory.getLogger(CommandSender::class.java))
+
+  /**
+   * Default logging handler.
+   */
+  @Bean
+  @ConditionalOnMissingBean
+  fun loggingTaskCommandErrorHandler(): TaskCommandErrorHandler = LoggingTaskCommandErrorHandler(LoggerFactory.getLogger(CommandSender::class.java))
+
 }
 

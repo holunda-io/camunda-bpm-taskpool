@@ -1,0 +1,18 @@
+---
+version: 2.0.4
+---
+
+== Features
+
+* Allow for configuration of own command dispatch success and error handlers for `Taskpool Collector` and `Datapool Collector`.
+  For more information, please refer to User Guide. (#196)
+* Support for global (process agnostic) variable filters used during enrichment ( #198)
+
+== Bugfix
+
+* Enable re-creation of tasks (e.g. in populate command), #194
+* Changed bean name in simple projection to avoid name conflict, #189
+
+== Chore
+
+* upgrade to Jackson due to security reasons, #183
