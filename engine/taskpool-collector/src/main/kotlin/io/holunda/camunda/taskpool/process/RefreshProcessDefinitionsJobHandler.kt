@@ -10,6 +10,9 @@ import org.camunda.bpm.engine.impl.persistence.entity.JobEntity
 import org.camunda.bpm.engine.impl.persistence.entity.MessageEntity
 import org.springframework.stereotype.Component
 
+/**
+ * Sends out commands containing information about deployed process definitions.
+ */
 @Component
 class RefreshProcessDefinitionsJobHandler(
   private val processDefinitionService: ProcessDefinitionService,
@@ -39,6 +42,9 @@ class RefreshProcessDefinitionsJobHandler(
   override fun getType(): String = TYPE
 }
 
+/**
+ * Command to inform about new process definition.
+ */
 data class RefreshProcessDefinitionsJobCommand(val processDefinitionKey: String) : Command<String> {
   override fun execute(commandContext: CommandContext): String {
     val message = MessageEntity()
@@ -51,6 +57,9 @@ data class RefreshProcessDefinitionsJobCommand(val processDefinitionKey: String)
   }
 }
 
+/**
+ * Storage of job configuration.
+ */
 data class RefreshProcessDefinitionsJobConfiguration(val processDefinitionKey: String) : JobHandlerConfiguration {
   override fun toCanonicalString(): String = processDefinitionKey
 }

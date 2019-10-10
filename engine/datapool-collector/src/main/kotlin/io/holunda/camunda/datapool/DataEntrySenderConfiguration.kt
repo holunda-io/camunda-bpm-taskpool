@@ -13,7 +13,7 @@ import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
 
 /**
- * Configuration enabled by the property
+ * Configuration sender configuration.
  */
 @ComponentScan
 @Configuration
@@ -22,6 +22,20 @@ class DataEntrySenderConfiguration {
 
   @Autowired
   lateinit var properties: DataEntrySenderProperties
+
+  /**
+   * Default handler.
+   */
+  @Bean
+  @ConditionalOnMissingBean
+  fun loggingDataEntryCommandSuccessHandler(): DataEntryCommandSuccessHandler = LoggingCommandSuccessHandler(LoggerFactory.getLogger(DataEntryCommandSender::class.java))
+
+  /**
+   * Default handler.
+   */
+  @Bean
+  @ConditionalOnMissingBean
+  fun loggingDataEntryCommandErrorHandler(): DataEntryCommandErrorHandler = LoggingCommandErrorHandler(LoggerFactory.getLogger(DataEntryCommandSender::class.java))
 
   /**
    * Default configuration of the simple sender.
