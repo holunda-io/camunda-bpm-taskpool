@@ -24,10 +24,7 @@ import javax.annotation.PostConstruct
 @ComponentScan
 @EnableConfigurationProperties(TaskCollectorProperties::class)
 class TaskCollectorConfiguration(
-  private val properties: TaskCollectorProperties,
-  private val runtimeService: RuntimeService,
-  private val filter: ProcessVariablesFilter,
-  private val correlator: ProcessVariablesCorrelator
+  private val properties: TaskCollectorProperties
 ) {
 
   private val logger: Logger = LoggerFactory.getLogger(TaskCollectorConfiguration::class.java)
@@ -44,7 +41,7 @@ class TaskCollectorConfiguration(
    */
   @Bean
   @ConditionalOnExpression("'\${camunda.taskpool.collector.enricher.type}' != 'custom'")
-  fun processVariablesEnricher(): VariablesEnricher =
+  fun processVariablesEnricher(runtimeService: RuntimeService, filter: ProcessVariablesFilter, correlator: ProcessVariablesCorrelator): VariablesEnricher =
     when (properties.enricher.type) {
       TaskCollectorEnricherType.processVariables -> ProcessVariablesTaskCommandEnricher(runtimeService, filter, correlator)
       TaskCollectorEnricherType.no -> EmptyTaskCommandEnricher()

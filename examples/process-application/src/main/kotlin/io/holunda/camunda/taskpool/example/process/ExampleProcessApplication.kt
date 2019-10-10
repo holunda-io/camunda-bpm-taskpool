@@ -97,23 +97,24 @@ class ExampleProcessApplication {
     })
   */
 
-  /*
+
   @Bean
   @Primary
   fun myTaskCommandErrorHandler(): TaskCommandErrorHandler = object : LoggingTaskCommandErrorHandler(logger) {
     override fun apply(commandMessage: Any, commandResultMessage: CommandResultMessage<out Any?>) {
-      logger.info { "<--------- CUSTOM ERROR HANDLER REPORT --------->" }
+      logger.error { "<--------- CUSTOM ERROR HANDLER REPORT --------->" }
       super.apply(commandMessage, commandResultMessage)
-      logger.info { "<------------------- END ----------------------->" }
+      logger.error { "<------------------- END ----------------------->" }
     }
   }
 
+  /*
   @Bean
   @Primary
   fun myDataEntryCommandSuccessHandler() = object : DataEntryCommandSuccessHandler {
     override fun apply(commandMessage: Any, commandResultMessage: CommandResultMessage<out Any?>) {
       // do something here
-      logger.info { "Success" }
+      logger.trace { "Success" }
     }
   }
 
@@ -122,9 +123,9 @@ class ExampleProcessApplication {
   fun myDataEntryCommandErrorHandler() = object : DataEntryCommandErrorHandler {
     override fun apply(commandMessage: Any, commandResultMessage: CommandResultMessage<out Any?>) {
       // do something here
-      logger.error { "Error" }
+      logger.error { "Error sending a command: ${commandResultMessage.exceptionResult()}." }
     }
   }
-
   */
+
 }

@@ -8,16 +8,25 @@ import org.camunda.bpm.engine.impl.jobexecutor.JobHandlerConfiguration
 import org.camunda.bpm.engine.impl.persistence.entity.ExecutionEntity
 import org.camunda.bpm.engine.impl.persistence.entity.JobEntity
 import org.camunda.bpm.engine.impl.persistence.entity.MessageEntity
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.context.annotation.Lazy
 import org.springframework.stereotype.Component
 
 /**
  * Sends out commands containing information about deployed process definitions.
+ * <p>This bean is instantiated by Camunda and is intentionally using LAZY field injection,
+ * in order to avoid dependency cycles.
+ * </p>
  */
 @Component
-class RefreshProcessDefinitionsJobHandler(
-  private val processDefinitionService: ProcessDefinitionService,
-  private val gateway: CommandListGateway
-) : JobHandler<RefreshProcessDefinitionsJobConfiguration> {
+class RefreshProcessDefinitionsJobHandler() : JobHandler<RefreshProcessDefinitionsJobConfiguration> {
+
+  @Autowired
+  private lateinit var processDefinitionService: ProcessDefinitionService
+  @Autowired
+  @Lazy
+  private lateinit var gateway: CommandListGateway
+
 
   companion object {
     const val TYPE = "RefreshProcessDefinitionsJobHandler"
