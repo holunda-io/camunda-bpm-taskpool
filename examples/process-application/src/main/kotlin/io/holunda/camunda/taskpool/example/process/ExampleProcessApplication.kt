@@ -1,13 +1,7 @@
 package io.holunda.camunda.taskpool.example.process
 
-import io.holunda.camunda.datapool.sender.DataEntryCommandErrorHandler
-import io.holunda.camunda.datapool.sender.DataEntryCommandSuccessHandler
 import io.holunda.camunda.taskpool.EnableTaskpoolEngineSupport
-import io.holunda.camunda.taskpool.enricher.FilterType
-import io.holunda.camunda.taskpool.enricher.ProcessVariableCorrelation
-import io.holunda.camunda.taskpool.enricher.ProcessVariablesCorrelator
-import io.holunda.camunda.taskpool.enricher.ProcessVariablesFilter
-import io.holunda.camunda.taskpool.enricher.TaskVariableFilter
+import io.holunda.camunda.taskpool.enricher.*
 import io.holunda.camunda.taskpool.example.process.process.ProcessApproveRequest
 import io.holunda.camunda.taskpool.example.process.service.BusinessDataEntry
 import io.holunda.camunda.taskpool.example.users.EnableExampleUsers
@@ -16,12 +10,10 @@ import io.holunda.camunda.taskpool.sender.gateway.TaskCommandErrorHandler
 import mu.KLogging
 import org.axonframework.commandhandling.CommandResultMessage
 import org.camunda.bpm.spring.boot.starter.annotation.EnableProcessApplication
-import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Primary
-import org.springframework.core.annotation.Order
 
 
 fun main(args: Array<String>) {
