@@ -16,7 +16,7 @@ class ProcessVariablesFilter(
 
   fun filterVariables(processDefinitionKey: ProcessDefinitionKey, taskDefinitionKey: TaskDefinitionKey, variables: VariableMap): VariableMap {
     val variableFilter = processSpecificFilters[processDefinitionKey] ?: commonFilter ?: return variables
-    return variables.filterKeys { variableFilter.filter(processDefinitionKey, taskDefinitionKey, it) }
+    return variables.filterKeys { variableFilter.filter(taskDefinitionKey, it) }
   }
 }
 
@@ -33,10 +33,8 @@ data class ProcessVariableFilter(
 
   constructor(filterType: FilterType, processVariables: List<VariableName>): this(null, filterType, processVariables)
 
-  override fun filter(processDefinitionKey: ProcessDefinitionKey, taskDefinitionKey: TaskDefinitionKey, variableName: VariableName): Boolean {
-    // this filter applies if it has either no process definition key, or the same process definition key as that process to which the given variable belongs
-    return if (this.processDefinitionKey != null && processDefinitionKey != this.processDefinitionKey) true
-      else (filterType == FilterType.INCLUDE) == processVariables.contains(variableName)
+  override fun filter(taskDefinitionKey: TaskDefinitionKey, variableName: VariableName): Boolean {
+    return (filterType == FilterType.INCLUDE) == processVariables.contains(variableName)
   }
 
 }
@@ -51,10 +49,7 @@ data class TaskVariableFilter(
   val taskVariables: Map<TaskDefinitionKey, List<VariableName>> = emptyMap()
 ): VariableFilter {
 
-  override fun filter(processDefinitionKey: ProcessDefinitionKey, taskDefinitionKey: TaskDefinitionKey, variableName: VariableName): Boolean {
-    if (processDefinitionKey != this.processDefinitionKey) {
-      return true
-    }
+  override fun filter(taskDefinitionKey: TaskDefinitionKey, variableName: VariableName): Boolean {
     val taskFilter = taskVariables[taskDefinitionKey] ?: return true
     return (filterType == FilterType.INCLUDE) == taskFilter.contains(variableName)
   }
@@ -70,11 +65,10 @@ interface VariableFilter {
 
   /**
    * Returns whether or not the process variable with the given name shall be contained in the payload of the given task.
-   * @param processDefinitionKey the key of process to which the task belongs
    * @param taskDefinitionKey the key of the task to be enriched
    * @param variableName the name of the process variable
    */
-  fun filter(processDefinitionKey: ProcessDefinitionKey, taskDefinitionKey: TaskDefinitionKey, variableName: VariableName): Boolean
+  fun filter(taskDefinitionKey: TaskDefinitionKey, variableName: VariableName): Boolean
 
 }
 

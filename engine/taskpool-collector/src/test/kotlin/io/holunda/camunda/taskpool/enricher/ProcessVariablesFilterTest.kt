@@ -30,10 +30,21 @@ class ProcessVariablesFilterTest {
       ))
     )
 
+    // verify filter for task1 of process7411
     assertThat(filter.filterVariables("process7411", "task1", variables)).containsOnlyKeys("business_var1", "business_var2")
+    // verify filter for task2 of process7411
     assertThat(filter.filterVariables("process7411", "task2", variables)).containsOnlyKeys("business_var3", "business_var2")
+    // verify that no filter is applied for task3 of process7411
+    assertThat(filter.filterVariables("process7411", "task3", variables))
+      .containsOnlyKeys("business_var1", "business_var2", "business_var3", "business_var4", "business_var12", "business_var32", "business_var42", "business_var51")
+
+    // verify filter for task3 of process7412
     assertThat(filter.filterVariables("process7412", "task3", variables)).containsOnlyKeys("business_var1", "business_var2", "business_var3", "business_var4", "business_var12", "business_var32")
+    // verify filter for task1 of process7412
     assertThat(filter.filterVariables("process7412", "task1", variables)).containsOnlyKeys("business_var1", "business_var2", "business_var3", "business_var4", "business_var51", "business_var42")
+    // verify that no filter is applied for task2 of process7412
+    assertThat(filter.filterVariables("process7412", "task2", variables))
+      .containsOnlyKeys("business_var1", "business_var2", "business_var3", "business_var4", "business_var12", "business_var32", "business_var42", "business_var51")
   }
 
   @Test
@@ -43,11 +54,15 @@ class ProcessVariablesFilterTest {
       ProcessVariableFilter("process7412", FilterType.EXCLUDE, listOf("business_var51", "business_var42", "business_var32", "business_var12"))
     )
 
-    // only 1, 2
+    // for process7411: only 1, 2
     assertThat(filter.filterVariables("process7411", "task77", variables)).containsOnlyKeys("business_var1", "business_var2")
 
-    // not 12, 32, 42, 52 -> 1, 2, 3, 4
+    // for process7412: not 12, 32, 42, 52 -> 1, 2, 3, 4
     assertThat(filter.filterVariables("process7412", "task88", variables)).containsOnlyKeys("business_var1", "business_var2", "business_var3", "business_var4")
+
+    // for process7413: all variables
+    assertThat(filter.filterVariables("process7413", "task88", variables))
+      .containsOnlyKeys("business_var1", "business_var2", "business_var3", "business_var4", "business_var12", "business_var32", "business_var42", "business_var51")
   }
 
   @Test
