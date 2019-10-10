@@ -65,14 +65,14 @@ to console (success is logged in `DEBUG` log level, errors are using `ERROR` log
 In some situations it is required to take care of command outcome. A prominent example is to include a metric for command dispatching errors into monitoring. For doing so,
 it is possible to provide own handlers for success and error command outcome.
 
-For Data Entry Command Sender (as a part of `Datapool Collector`) please provide a Spring Bean implementing the `io.holunda.camunda.datapool.sender.DataEntryCommandResultHandler`
-interface and named `dataEntryCommandErrorHandler` and `dataEntryCommandSuccessHandler` accordingly.
+For Data Entry Command Sender (as a part of `Datapool Collector`) please provide a Spring Bean implementing the `io.holunda.camunda.datapool.sender.DataEntryCommandSuccessHandler`
+ and `io.holunda.camunda.datapool.sender.DataEntryCommandSuccessHandler` accordingly.
 
 [source, kotlin]
 ----
   @Bean
   fun dataEntryCommandSuccessHandler() = object: DataEntryCommandResultHandler {
-    override fun invoke(commandMessage: Any, commandResultMessage: CommandResultMessage<out Any?>) {
+    override fun apply(commandMessage: Any, commandResultMessage: CommandResultMessage<out Any?>) {
       // do something here
       logger.info { "Success" }
     }
@@ -80,7 +80,7 @@ interface and named `dataEntryCommandErrorHandler` and `dataEntryCommandSuccessH
 
   @Bean
   fun dataEntryCommandErrorHandler() = object: DataEntryCommandResultHandler {
-    override fun invoke(commandMessage: Any, commandResultMessage: CommandResultMessage<out Any?>) {
+    override fun apply(commandMessage: Any, commandResultMessage: CommandResultMessage<out Any?>) {
       // do something here
       logger.error { "Error" }
     }

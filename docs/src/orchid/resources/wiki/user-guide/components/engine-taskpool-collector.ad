@@ -274,17 +274,17 @@ to console (success is logged in `DEBUG` log level, errors are using `ERROR` log
 In some situations it is required to take care of command outcome. A prominent example is to include a metric for command dispatching errors into monitoring. For doing so,
 it is possible to provide own handlers for success and error command outcome.
 
-For the Task Command Sender (as a part of `Taskpool Collector`) please provide a Spring Bean implementing the `io.holunda.camunda.taskpool.sender.gateway.TaskCommandResultHandler`
-interface and named `taskCommandErrorHandler` and `taskCommandSuccessHandler` accordingly.
+For the Task Command Sender (as a part of `Taskpool Collector`) please provide a Spring Bean implementing the `io.holunda.camunda.taskpool.sender.gateway.TaskCommandSuccessHandler`
+and `io.holunda.camunda.taskpool.sender.gateway.TaskCommandErrorHandler` accordingly.
 
 
 [source, kotlin]
 ----
   @Bean
-  fun taskCommandErrorHandler(): TaskCommandResultHandler = object : LoggingTaskCommandErrorHandler(logger) {
-    override fun invoke(commandMessage: Any, commandResultMessage: CommandResultMessage<out Any?>) {
+  fun taskCommandErrorHandler(): TaskCommandSuccessHandler = object : LoggingTaskCommandErrorHandler(logger) {
+    override fun apply(commandMessage: Any, commandResultMessage: CommandResultMessage<out Any?>) {
       logger.info { "<--------- CUSTOM ERROR HANDLER REPORT --------->" }
-      super.invoke(commandMessage, commandResultMessage)
+      super.apply(commandMessage, commandResultMessage)
       logger.info { "<------------------- END ----------------------->" }
     }
   }
