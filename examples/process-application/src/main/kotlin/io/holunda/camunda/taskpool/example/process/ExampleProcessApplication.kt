@@ -3,7 +3,11 @@ package io.holunda.camunda.taskpool.example.process
 import io.holunda.camunda.datapool.sender.DataEntryCommandErrorHandler
 import io.holunda.camunda.datapool.sender.DataEntryCommandSuccessHandler
 import io.holunda.camunda.taskpool.EnableTaskpoolEngineSupport
-import io.holunda.camunda.taskpool.enricher.*
+import io.holunda.camunda.taskpool.enricher.FilterType
+import io.holunda.camunda.taskpool.enricher.ProcessVariableCorrelation
+import io.holunda.camunda.taskpool.enricher.ProcessVariablesCorrelator
+import io.holunda.camunda.taskpool.enricher.ProcessVariablesFilter
+import io.holunda.camunda.taskpool.enricher.TaskVariableFilter
 import io.holunda.camunda.taskpool.example.process.process.ProcessApproveRequest
 import io.holunda.camunda.taskpool.example.process.service.BusinessDataEntry
 import io.holunda.camunda.taskpool.example.users.EnableExampleUsers
@@ -35,13 +39,13 @@ class ExampleProcessApplication {
   @Bean
   fun processVariablesFilter(): ProcessVariablesFilter = ProcessVariablesFilter(
 
-    // define a applyFilter for every process
-    ProcessVariableFilter(
+    // define a variable filter for every process
+    TaskVariableFilter(
       ProcessApproveRequest.KEY,
       FilterType.INCLUDE,
       mapOf(
 
-        // define a applyFilter for every task
+        // define a variable filter for every task
         ProcessApproveRequest.Elements.APPROVE_REQUEST to
           listOf(
             ProcessApproveRequest.Variables.REQUEST_ID,
