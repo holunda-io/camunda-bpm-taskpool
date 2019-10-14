@@ -291,7 +291,7 @@ and `io.holunda.camunda.taskpool.sender.gateway.TaskCommandErrorHandler` accordi
 ----
   @Bean
   @Primary
-  fun taskCommandErrorHandler(): TaskCommandSuccessHandler = object : LoggingTaskCommandErrorHandler(logger) {
+  fun taskCommandErrorHandler(): TaskCommandErrorHandler = object : LoggingTaskCommandErrorHandler(logger) {
     override fun apply(commandMessage: Any, commandResultMessage: CommandResultMessage<out Any?>) {
       logger.info { "<--------- CUSTOM ERROR HANDLER REPORT --------->" }
       super.apply(commandMessage, commandResultMessage)
