@@ -10,7 +10,7 @@
   </parent>
 
   <artifactId>camunda-bpm-taskpool-property-taskurl-resolver</artifactId>
-  <name>engine/${artifactId}</name>
+  <name>engine/${project.artifactId}</name>
 
   <dependencies>
     <dependency>

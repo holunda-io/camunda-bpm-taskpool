@@ -24,7 +24,7 @@ import java.util.*
 @RunWith(SpringRunner::class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("itest")
-open class CamundaEventingITest {
+class CamundaEventingITest {
 
   companion object : KLogging()
 

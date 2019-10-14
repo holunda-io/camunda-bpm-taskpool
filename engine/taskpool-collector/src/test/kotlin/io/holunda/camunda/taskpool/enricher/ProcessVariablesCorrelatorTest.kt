@@ -4,7 +4,7 @@ import org.camunda.bpm.engine.variable.Variables
 import org.camunda.bpm.model.xml.test.assertions.ModelAssertions.assertThat
 import org.junit.Test
 
-class ProcessVaraiblesCorrelatorTest {
+class ProcessVariablesCorrelatorTest {
 
   private val variables = Variables.createVariables()
     .putValueTyped("business_var1", Variables.stringValue("1"))
