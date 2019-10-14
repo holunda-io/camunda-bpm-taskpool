@@ -13,9 +13,12 @@ import org.springframework.stereotype.Component
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 
+/**
+ * Simple projection for process definitions.
+ */
 @Component
 @ProcessingGroup(SimpleServiceViewProcessingGroup.PROCESSING_GROUP)
-class ProcessDefinitionService(
+class ProcessDefinitionSimpleService(
   private val queryUpdateEmitter: QueryUpdateEmitter
 ) : ProcessDefinitionApi {
 

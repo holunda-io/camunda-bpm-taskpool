@@ -1,0 +1,14 @@
+---
+version: 2.0.4
+---
+
+== Features
+
+* Allow for configuration of own command dispatch success and error handlers for `Taskpool Collector` and `Datapool Collector`.
+  For more information, please refer to User Guide sections "Handling command transmission". (#196)
+* Support for global (process agnostic) variable filters used during enrichment. (#198)
+
+== Bugfix
+
+== Docs
+* More description of usage scenario without the Axon Server. (#199)
