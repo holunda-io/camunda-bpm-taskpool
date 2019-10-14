@@ -16,7 +16,7 @@ interface CommandListGateway {
 }
 
 /**
- * Handler for command results.
+ * Handler for command errors.
  */
 interface TaskCommandErrorHandler : BiFunction<Any, CommandResultMessage<out Any?>, Unit>
 
