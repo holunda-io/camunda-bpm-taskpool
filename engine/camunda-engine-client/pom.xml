@@ -8,7 +8,7 @@
   </parent>
 
   <artifactId>camunda-bpm-engine-client</artifactId>
-  <name>engine/${artifactId}</name>
+  <name>engine/${project.artifactId}</name>
 
   <dependencies>
     <dependency>

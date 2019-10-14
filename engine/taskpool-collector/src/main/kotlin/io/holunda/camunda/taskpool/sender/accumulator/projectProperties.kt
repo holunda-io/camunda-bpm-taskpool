@@ -96,11 +96,11 @@ fun <T : Any> projectProperties(
 
 fun <T> jacksonMapper(): Mapper<T> = {
   jacksonObjectMapper()
-    .registerModule(simpleModule)
+    .registerModule(variableMapModule)
     .apply {
       addMixIn(SourceReference::class.java, KotlinTypeInfo::class.java)
     }
-    .convertValue(it, object : TypeReference<Map<String, Any?>>() {})
+    .convertValue(it, object : TypeReference<MutableMap<String, Any?>>() {})
 }
 
 fun <T> jacksonUnmapper(clazz: Class<T>): Unmapper<T> = {
@@ -108,11 +108,11 @@ fun <T> jacksonUnmapper(clazz: Class<T>): Unmapper<T> = {
     .apply {
       addMixIn(SourceReference::class.java, KotlinTypeInfo::class.java)
     }
-    .registerModule(simpleModule)
+    .registerModule(variableMapModule)
     .convertValue(it, clazz)
 }
 
-val simpleModule = SimpleModule()
+val variableMapModule = SimpleModule()
   .apply {
     addAbstractTypeMapping(VariableMap::class.java, VariableMapImpl::class.java)
   }

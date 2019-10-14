@@ -51,7 +51,7 @@ class DeserializersTest {
     // show written JSON
     println(mapper.writeValueAsString(sourceReference))
 
-    val map: Map<String, Any> = mapper.convertValue(sourceReference, object : TypeReference<Map<String, Any?>>() {})
+    val map: Map<String, Any> = mapper.convertValue(sourceReference, object : TypeReference<Map<String, Any>>() {})
     val converted = mapper.convertValue(map, ProcessReference::class.java)
 
     assertThat(converted).isEqualTo(sourceReference)
@@ -77,12 +77,12 @@ class DeserializersTest {
     // show written JSON
     println(mapper.writeValueAsString(original))
 
-    val variablesMap: Map<String, Any> = mapper.convertValue(variables, object : TypeReference<Map<String, Any?>>() {})
+    val variablesMap: Map<String, Any> = mapper.convertValue(variables, object : TypeReference<Map<String, Any>>() {})
     val variablesConverted = mapper.convertValue(variablesMap, VariableMap::class.java)
     assertThat(variablesConverted).isEqualTo(variablesMap)
 
 
-    val objectMap: Map<String, Any> = mapper.convertValue(original, object : TypeReference<Map<String, Any?>>() {})
+    val objectMap: Map<String, Any> = mapper.convertValue(original, object : TypeReference<Map<String, Any>>() {})
     val objectConverted = mapper.convertValue(objectMap, MyStructure::class.java)
     assertThat(objectConverted).isEqualTo(original)
 

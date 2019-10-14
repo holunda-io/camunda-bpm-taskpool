@@ -21,7 +21,7 @@ class ProjectingCommandAccumulator : CommandAccumulator {
     } else {
       // otherwise just return the empty or singleton list
       taskCommands
-    }.map (::handlePayloadAndCorrelations)
+    }.map(::handlePayloadAndCorrelations)
 
 
   @Suppress("UNCHECKED_CAST")
@@ -36,25 +36,29 @@ class ProjectingCommandAccumulator : CommandAccumulator {
       // a delete command should remove one element from candidate user
       put(DeleteCandidateUsersCommand::class) { map, key, value ->
         if (key == DeleteCandidateUsersCommand::candidateUsers.name) {
-          (map[DeleteCandidateUsersCommand::candidateUsers.name] as MutableCollection<String>).removeAll(value as Collection<String>)
+          val candidateUsers = (map[key] as Collection<String>).minus(value as Collection<String>)
+          map[key] = candidateUsers
         }
       }
       // a delete command should remove one element from candidate group
       put(DeleteCandidateGroupsCommand::class) { map, key, value ->
         if (key == DeleteCandidateGroupsCommand::candidateGroups.name) {
-          (map[DeleteCandidateGroupsCommand::candidateGroups.name] as MutableCollection<String>).removeAll(value as Collection<String>)
+          val candidateGroups = (map[key] as Collection<String>).minus(value as Collection<String>)
+          map[key] = candidateGroups
         }
       }
       // add command should add one element to candidate user
       put(AddCandidateUsersCommand::class) { map, key, value ->
         if (key == AddCandidateUsersCommand::candidateUsers.name) {
-          (map[AddCandidateUsersCommand::candidateUsers.name] as MutableCollection<String>).addAll(value as Collection<String>)
+          val candidateUsers = (map[key] as Collection<String>).plus(value as Collection<String>)
+          map[key] = candidateUsers
         }
       }
       // add command should add one element to candidate group
       put(AddCandidateGroupsCommand::class) { map, key, value ->
         if (key == AddCandidateGroupsCommand::candidateGroups.name) {
-          (map[AddCandidateGroupsCommand::candidateGroups.name] as MutableCollection<String>).addAll(value as Collection<String>)
+          val candidateGroups = (map[key] as Collection<String>).plus(value as Collection<String>)
+          map[key] = candidateGroups
         }
       }
     },
