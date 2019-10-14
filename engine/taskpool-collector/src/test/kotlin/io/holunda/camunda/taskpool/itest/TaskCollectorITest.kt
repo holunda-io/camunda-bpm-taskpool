@@ -10,9 +10,7 @@ import org.camunda.bpm.engine.RuntimeService
 import org.camunda.bpm.engine.TaskService
 import org.camunda.bpm.engine.delegate.DelegateTask
 import org.camunda.bpm.engine.delegate.TaskListener
-import org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareAssertions.assertThat
-import org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.job
-import org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.task
+import org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.*
 import org.camunda.bpm.engine.variable.Variables
 import org.camunda.bpm.model.bpmn.Bpmn
 import org.camunda.bpm.model.xml.instance.ModelElementInstance
@@ -37,7 +35,7 @@ import java.util.concurrent.TimeUnit
  * This ITests simulates work of Camunda collector including variable enrichment.
  */
 @RunWith(SpringRunner::class)
-@SpringBootTest(classes = [TaskCollectorTestApplication::class], webEnvironment = SpringBootTest.WebEnvironment.NONE)
+@SpringBootTest(classes = [TaskCollectorTestApplication::class], webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @ActiveProfiles("collector-itest")
 @DirtiesContext
 class TaskCollectorITest {
@@ -80,6 +78,7 @@ class TaskCollectorITest {
         businessKey,
         Variables.putValue("key", "value")
       )
+
     assertThat(instance).isNotNull
     assertThat(instance).isStarted
     assertThat(instance).isWaitingAt(taskDefinitionKey)

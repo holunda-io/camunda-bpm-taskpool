@@ -1,0 +1,22 @@
+---
+version: 2.0.4
+---
+
+== Features
+
+* Allow for configuration of own command dispatch success and error handlers for `Taskpool Collector` and `Datapool Collector`.
+  For more information, please refer to User Guide sections "Handling command transmission". (#196)
+* Support for global (process agnostic) variable filters used during enrichment. (#198)
+
+== Dependencies
+
+* Update dependencies to support: (#179)
+  * Spring-Boot 2.1.6.RELEASE
+  * Camunda BPM 7.11.4-ee / 7.11 CE
+  * Camunda BPM Spring-Boot Starter 3.3.4
+  * Axon Framework 4.2
+  * Kotlin 1.3.50
+  * Jackson 2.10 (fixes CVEs)
+
+== Docs
+* More description of usage scenario without the Axon Server. (#199)

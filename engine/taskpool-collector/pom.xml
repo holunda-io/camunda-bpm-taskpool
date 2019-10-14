@@ -6,7 +6,7 @@
   <parent>
     <groupId>io.holunda.taskpool</groupId>
     <artifactId>camunda-bpm-taskpool-engine-root</artifactId>
-    <version>2.0.3</version>
+    <version>2.0.4</version>
   </parent>
 
   <artifactId>camunda-bpm-taskpool-collector</artifactId>
@@ -58,7 +58,7 @@
       <artifactId>spring-tx</artifactId>
       <version>5.0.7.RELEASE</version>
     </dependency>
-    
+
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
@@ -94,7 +94,7 @@
     </dependency>
 
     <dependency>
-      <groupId>io.holunda.testing</groupId>
+      <groupId>org.camunda.bpm.assert</groupId>
       <artifactId>camunda-bpm-assert</artifactId>
     </dependency>
     <dependency>

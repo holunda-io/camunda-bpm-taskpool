@@ -1,6 +1,8 @@
 package io.holunda.camunda.datapool.sender
 
 import io.holunda.camunda.taskpool.api.business.*
+import org.axonframework.commandhandling.CommandResultMessage
+import java.util.function.BiFunction
 
 /**
  * Sends data entry commands.
@@ -41,3 +43,12 @@ interface DataEntryCommandSender {
    */
   fun sendDataEntryCommand(command: CreateOrUpdateDataEntryCommand)
 }
+
+/**
+ * Success handler for commands.
+ */
+interface DataEntryCommandSuccessHandler: BiFunction<Any, CommandResultMessage<out Any?>, Unit>
+/**
+ * Error handler for commands.
+ */
+interface DataEntryCommandErrorHandler: BiFunction<Any, CommandResultMessage<out Any?>, Unit>

@@ -25,49 +25,39 @@ class SimpleDataEntryCommandSenderTest {
   @Test
   fun `should transform simple pojo to map`() {
 
-    data class Pojo(
-      val key: String,
-      val anotherKey: Int
-    )
-
-    val pojo = Pojo(key = "value", anotherKey = 4711)
+    val pojo = Pojo3(key = "value", anotherKey = 4711)
 
     val result = serialize(pojo)
 
-    assertThat(result[Pojo::key.name]).isEqualTo(pojo.key)
-    assertThat(result[Pojo::anotherKey.name]).isEqualTo(pojo.anotherKey)
+    assertThat(result[Pojo3::key.name]).isEqualTo(pojo.key)
+    assertThat(result[Pojo3::anotherKey.name]).isEqualTo(pojo.anotherKey)
   }
 
   @Test
   fun `should transform pojo with lists to map`() {
 
-    data class Pojo(
-      val key: String,
-      val anotherKey: List<Int>
-    )
-
-    val pojo = Pojo(key = "value", anotherKey = listOf(4711, 4712))
+    val pojo = Pojo4(key = "value", anotherKey = listOf(4711, 4712))
 
     val result = serialize(pojo)
 
-    assertThat(result[Pojo::key.name]).isEqualTo(pojo.key)
-    assertThat(result[Pojo::anotherKey.name] as List<*>).containsOnlyElementsOf(pojo.anotherKey)
+    assertThat(result[Pojo4::key.name]).isEqualTo(pojo.key)
+    assertThat(result[Pojo4::anotherKey.name] as List<*>).containsOnlyElementsOf(pojo.anotherKey)
   }
 
   @Test
   fun `should transform complex pojo to map of maps`() {
 
-    val pojo21 = Pojo2(keyZUZUZ = "pojo2", children = listOf(Pojo(key = "value1", anotherKey = listOf())))
-    val pojo22 = Pojo2(keyZUZUZ = "pojo3", children = listOf(Pojo(key = "value2", anotherKey = listOf())))
+    val pojo21 = Pojo2(keyZUZUZ = "pojo2", children = listOf(Pojo1(key = "value1", anotherKey = listOf())))
+    val pojo22 = Pojo2(keyZUZUZ = "pojo3", children = listOf(Pojo1(key = "value2", anotherKey = listOf())))
 
-    val pojo = Pojo(key = "value", anotherKey = listOf(pojo21, pojo22))
+    val pojo = Pojo1(key = "value", anotherKey = listOf(pojo21, pojo22))
 
     val result = serialize(pojo)
 
-    assertThat(result[Pojo::key.name]).isEqualTo(pojo.key)
+    assertThat(result[Pojo1::key.name]).isEqualTo(pojo.key)
 
     @Suppress("UNCHECKED_CAST")
-    val children = result[Pojo::anotherKey.name] as List<Map<String, Any>>
+    val children = result[Pojo1::anotherKey.name] as List<Map<String, Any>>
     assertThat(children.size).isEqualTo(2)
     assertThat(children[0]).containsKey(Pojo2::keyZUZUZ.name)
     assertThat(children[0]).containsKey(Pojo2::children.name)
@@ -83,7 +73,7 @@ class SimpleDataEntryCommandSenderTest {
     val map = Variables
       .createVariables()
       .putValue("key", "value")
-      .putValue("another-key", Pojo(key = "key", anotherKey = listOf(Pojo2(keyZUZUZ = "p2", children = listOf()))))
+      .putValue("another-key", Pojo1(key = "key", anotherKey = listOf(Pojo2(keyZUZUZ = "p2", children = listOf()))))
 
     val result = serialize(map)
 
@@ -93,24 +83,33 @@ class SimpleDataEntryCommandSenderTest {
 
     @Suppress("UNCHECKED_CAST")
     val expectedPojoMap = result["another-key"] as Map<String, Any>
-    assertThat(expectedPojoMap).containsKey(Pojo::key.name)
-    assertThat(expectedPojoMap).containsKey(Pojo::anotherKey.name)
+    assertThat(expectedPojoMap).containsKey(Pojo1::key.name)
+    assertThat(expectedPojoMap).containsKey(Pojo1::anotherKey.name)
 
-    assertThat(expectedPojoMap[Pojo::key.name]).isEqualTo("key")
+    assertThat(expectedPojoMap[Pojo1::key.name]).isEqualTo("key")
 
     @Suppress("UNCHECKED_CAST")
-    val elements = expectedPojoMap[Pojo::anotherKey.name] as List<Map<String, Any>>
+    val elements = expectedPojoMap[Pojo1::anotherKey.name] as List<Map<String, Any>>
     assertThat(elements).containsExactly(linkedMapOf(Pojo2::keyZUZUZ.name to "p2", Pojo2::children.name to listOf<String>()))
   }
 }
 
-data class Pojo(
+data class Pojo1(
   val key: String,
   val anotherKey: List<Pojo2>
 )
 
 data class Pojo2(
   val keyZUZUZ: String,
-  var children: List<Pojo> = listOf()
+  var children: List<Pojo1> = listOf()
 )
 
+data class Pojo3(
+  val key: String,
+  val anotherKey: Int
+)
+
+data class Pojo4(
+  val key: String,
+  val anotherKey: List<Int>
+)

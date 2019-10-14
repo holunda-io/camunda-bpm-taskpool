@@ -118,18 +118,23 @@ In particular cases, the task related data is not sufficient for the information
 other user-related components. The information may be available as process variables and need to be attached
 to the task in the taskpool. This is where _Process Variable Task Enricher_ can be used. For this purpose,
 set the property `camunda.taskpool.collector.enricher.type` to `process-variables` and the enricher will
-put all process variables into the task payload (defaults to a empty `EXCLUDE` filter).
+put all process variables into the task payload (defaults to an empty `EXCLUDE` filter).
 
 You can control what variables will be put into task command payload by providing the Process Variables Filter.
-The `ProcessVariablesFilter` is a Spring bean holding a list individual `ProcessVariableFilter` - one per
-process definition key.
+The `ProcessVariablesFilter` is a Spring bean holding a list of individual `VariableFilter` - at most one per
+process definition key and optionally one without process definition key (a global filter).
 
-A `ProcessVariableFilter` can be of the following type:
+A `VariableFilter` can be of the following type:
 
-* `INCLUDE`: task-level include filter, denoting a list of variables to be added for task.
-* `EXCLUDE`: task-level exclude filter, denoting a list of variables to be ignored. All other variables are included.
-* `PROCESS_INCLUDE`: process-level include filter, denoting a list of variables to be added for all tasks.
-* `PROCESS_EXCLUDE`: process-level exclude filter, denoting a list of variables to be ignored for all tasks.
+* `TaskVariableFilter`:
+** `INCLUDE`: task-level include filter, denoting a list of variables to be added for the task.
+** `EXCLUDE`: task-level exclude filter, denoting a list of variables to be ignored. All other variables are included.
+* `ProcessVariableFilter` with process definition key:
+** `INCLUDE`: process-level include filter, denoting a list of variables to be added for all tasks of the process.
+** `EXCLUDE`: process-level exclude filter, denoting a list of variables to be ignored for all tasks of the process.
+* `ProcessVariableFilter` _without_ process definition key:
+** `INCLUDE`: global include filter, denoting a list of variables to be added for all tasks of all processes for which no dedicated `ProcessVariableFilter` is defined.
+** `EXCLUDE`: global exclude filter, denoting a list of variables to be ignored for all tasks of all processes for which no dedicated `ProcessVariableFilter` is defined.
 
 Here is an example, how the process variable filter can configure the enrichment:
 
@@ -142,15 +147,16 @@ Here is an example, how the process variable filter can configure the enrichment
     public ProcessVariablesFilter myProcessVariablesFilter() {
 
       return new ProcessVariablesFilter(
-        // define a applyFilter for every process
-        new ProcessVariableFilter[]{
-          // for every process definition
-          new ProcessVariableFilter(
+        // define a variable filter for every process
+        new VariableFilter[]{
+          // define for every process definition
+          // either a TaskVariableFilter or ProcessVariableFilter
+          new TaskVariableFilter(
             ProcessApproveRequest.KEY,
             // filter type
             FilterType.INCLUDE,
             ImmutableMap.<String, List<String>>builder()
-              // define a applyFilter for every task
+              // define a variable filter for every task of the process
               .put(ProcessApproveRequest.Elements.APPROVE_REQUEST, Lists.newArrayList(
                 ProcessApproveRequest.Variables.REQUEST_ID,
                 ProcessApproveRequest.Variables.ORIGINATOR)
@@ -160,10 +166,13 @@ Here is an example, how the process variable filter can configure the enrichment
                 ProcessApproveRequest.Variables.REQUEST_ID,
                 ProcessApproveRequest.Variables.COMMENT,
                 ProcessApproveRequest.Variables.APPLICANT)
-              ).build(),
-            Collections.emptyList()
-          )
-        }, Collections.emptyMap()
+              ).build()
+          ),
+          // optionally add a global filter for all processes
+          // for that no individual filter was created
+          new ProcessVariableFilter(FilterType.INCLUDE,
+            Lists.newArrayList(CommonProcessVariables.CUSTOMER_ID))
+        }
       );
     }
 
@@ -264,4 +273,34 @@ are sent _before_ the process engine transaction is committed, otherwise command
 
 WARNING: Never send commands over remote messaging before the transaction is committed, since you may produce unexpected results if Camunda fails
 to commit the transaction.
+
+==== Handling command transmission
+
+The commands sent via gateway (e.g. `AxonCommandListGateway`) are received by Command Handlers. The latter may accept or reject commands, depending
+on the state of the aggregate and other components. The `AxonCommandListGateway` is informed about the command outcome. By default, it will log the outcome
+to console (success is logged in `DEBUG` log level, errors are using `ERROR` log level).
+
+In some situations it is required to take care of command outcome. A prominent example is to include a metric for command dispatching errors into monitoring. For doing so,
+it is possible to provide own handlers for success and error command outcome.
+
+For the Task Command Sender (as a part of `Taskpool Collector`) please provide a Spring Bean implementing the `io.holunda.camunda.taskpool.sender.gateway.TaskCommandSuccessHandler`
+and `io.holunda.camunda.taskpool.sender.gateway.TaskCommandErrorHandler` accordingly.
+
+
+[source, kotlin]
+----
+  @Bean
+  @Primary
+  fun taskCommandErrorHandler(): TaskCommandErrorHandler = object : LoggingTaskCommandErrorHandler(logger) {
+    override fun apply(commandMessage: Any, commandResultMessage: CommandResultMessage<out Any?>) {
+      logger.info { "<--------- CUSTOM ERROR HANDLER REPORT --------->" }
+      super.apply(commandMessage, commandResultMessage)
+      logger.info { "<------------------- END ----------------------->" }
+    }
+  }
+
+----
+
+
+
 

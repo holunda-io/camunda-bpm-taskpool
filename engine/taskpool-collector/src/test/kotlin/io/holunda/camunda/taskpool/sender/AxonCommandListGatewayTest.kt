@@ -6,6 +6,9 @@ import io.holunda.camunda.taskpool.api.task.AssignTaskCommand
 import io.holunda.camunda.taskpool.api.task.CreateTaskCommand
 import io.holunda.camunda.taskpool.api.task.ProcessReference
 import io.holunda.camunda.taskpool.sender.gateway.AxonCommandListGateway
+import io.holunda.camunda.taskpool.sender.gateway.LoggingTaskCommandErrorHandler
+import io.holunda.camunda.taskpool.sender.gateway.LoggingTaskCommandSuccessHandler
+import mu.KLogging
 import org.axonframework.commandhandling.CommandCallback
 import org.axonframework.commandhandling.GenericCommandMessage
 import org.axonframework.commandhandling.GenericCommandResultMessage
@@ -23,6 +26,8 @@ import org.mockito.junit.MockitoJUnit
 
 class AxonCommandListGatewayTest {
 
+  companion object : KLogging()
+
   @get: Rule
   val mockitoRule = MockitoJUnit.rule()
 
@@ -31,12 +36,17 @@ class AxonCommandListGatewayTest {
 
   @Test
   fun `should not send commands if disabled by property`() {
-    val wrapper = AxonCommandListGateway(commandGateway, TaskCollectorProperties(
-      springApplicationName = "some-name",
-      sender = TaskSenderProperties(
-        enabled = false
-      )
-    ))
+    val wrapper = AxonCommandListGateway(
+      commandGateway = commandGateway,
+      properties = TaskCollectorProperties(
+        springApplicationName = "some-name",
+        sender = TaskSenderProperties(
+          enabled = false
+        )
+      ),
+      taskCommandErrorHandler = LoggingTaskCommandErrorHandler(logger),
+      taskCommandSuccessHandler = LoggingTaskCommandSuccessHandler(logger)
+    )
 
     wrapper.sendToGateway(listOf(makeCreateTaskCommand()))
 
@@ -45,12 +55,17 @@ class AxonCommandListGatewayTest {
 
   @Test
   fun `should send commands in sequence`() {
-    val wrapper = AxonCommandListGateway(commandGateway, TaskCollectorProperties(
-      springApplicationName = "some-name",
-      sender = TaskSenderProperties(
-        enabled = true
-      )
-    ))
+    val wrapper = AxonCommandListGateway(
+      commandGateway = commandGateway,
+      properties = TaskCollectorProperties(
+        springApplicationName = "some-name",
+        sender = TaskSenderProperties(
+          enabled = true
+        )
+      ),
+      taskCommandErrorHandler = LoggingTaskCommandErrorHandler(logger),
+      taskCommandSuccessHandler = LoggingTaskCommandSuccessHandler(logger)
+    )
 
     val createTaskCommand = makeCreateTaskCommand()
     val assignTaskCommand = AssignTaskCommand(
