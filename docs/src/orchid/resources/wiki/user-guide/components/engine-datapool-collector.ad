@@ -81,7 +81,7 @@ For Data Entry Command Sender (as a part of `Datapool Collector`) please provide
 
   @Bean
   @Primary
-  fun dataEntryCommandErrorHandler() = object: DataEntryCommandResultHandler {
+  fun dataEntryCommandErrorHandler() = object: DataEntryCommandErrorHandler {
     override fun apply(commandMessage: Any, commandResultMessage: CommandResultMessage<out Any?>) {
       // do something here
       logger.error { "Error" }
