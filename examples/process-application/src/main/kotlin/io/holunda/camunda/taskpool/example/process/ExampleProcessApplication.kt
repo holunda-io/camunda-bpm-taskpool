@@ -1,19 +1,19 @@
 package io.holunda.camunda.taskpool.example.process
 
 import io.holunda.camunda.taskpool.EnableTaskpoolEngineSupport
-import io.holunda.camunda.taskpool.enricher.FilterType
-import io.holunda.camunda.taskpool.enricher.ProcessVariableCorrelation
-import io.holunda.camunda.taskpool.enricher.ProcessVariablesCorrelator
-import io.holunda.camunda.taskpool.enricher.ProcessVariablesFilter
-import io.holunda.camunda.taskpool.enricher.TaskVariableFilter
+import io.holunda.camunda.taskpool.enricher.*
 import io.holunda.camunda.taskpool.example.process.process.ProcessApproveRequest
 import io.holunda.camunda.taskpool.example.process.service.BusinessDataEntry
 import io.holunda.camunda.taskpool.example.users.EnableExampleUsers
+import io.holunda.camunda.taskpool.sender.gateway.LoggingTaskCommandErrorHandler
+import io.holunda.camunda.taskpool.sender.gateway.TaskCommandErrorHandler
 import mu.KLogging
+import org.axonframework.commandhandling.CommandResultMessage
 import org.camunda.bpm.spring.boot.starter.annotation.EnableProcessApplication
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Primary
 
 
 fun main(args: Array<String>) {
@@ -87,6 +87,40 @@ class ExampleProcessApplication {
         name = "AR $id"
       )
     })
+  */
+
+
+  @Bean
+  @Primary
+  fun myTaskCommandErrorHandler(): TaskCommandErrorHandler = object : LoggingTaskCommandErrorHandler(logger) {
+    override fun apply(commandMessage: Any, commandResultMessage: CommandResultMessage<out Any?>) {
+      logger.error { "<--------- CUSTOM ERROR HANDLER REPORT --------->" }
+      super.apply(commandMessage, commandResultMessage)
+      logger.error { "<------------------- END ----------------------->" }
+    }
+  }
+
+  /*
+
+  Uncomment this to override default logging handlers.
+
+  @Bean
+  @Primary
+  fun myDataEntryCommandSuccessHandler() = object : DataEntryCommandSuccessHandler {
+    override fun apply(commandMessage: Any, commandResultMessage: CommandResultMessage<out Any?>) {
+      // do something here
+      logger.trace { "Success" }
+    }
+  }
+
+  @Bean
+  @Primary
+  fun myDataEntryCommandErrorHandler() = object : DataEntryCommandErrorHandler {
+    override fun apply(commandMessage: Any, commandResultMessage: CommandResultMessage<out Any?>) {
+      // do something here
+      logger.error { "Error sending a command: ${commandResultMessage.exceptionResult()}." }
+    }
+  }
   */
 
 }

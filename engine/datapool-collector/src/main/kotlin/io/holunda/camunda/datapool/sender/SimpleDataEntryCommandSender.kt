@@ -6,6 +6,7 @@ import io.holunda.camunda.datapool.projector.DataEntryProjector
 import io.holunda.camunda.taskpool.api.business.*
 import io.holunda.camunda.taskpool.api.business.AuthorizationChange.Companion.addUser
 import io.holunda.camunda.variable.serializer.serialize
+import org.axonframework.commandhandling.CommandResultMessage
 import org.axonframework.commandhandling.gateway.CommandGateway
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -14,7 +15,9 @@ import org.slf4j.LoggerFactory
 class SimpleDataEntryCommandSender(
   private val gateway: CommandGateway,
   private val properties: DataEntrySenderProperties,
-  private val dataEntryProjector: DataEntryProjector
+  private val dataEntryProjector: DataEntryProjector,
+  private val successHandler: DataEntryCommandSuccessHandler,
+  private val errorHandler: DataEntryCommandErrorHandler
 ) : DataEntryCommandSender {
 
   private val logger: Logger = LoggerFactory.getLogger(DataEntryCommandSender::class.java)
@@ -75,10 +78,37 @@ class SimpleDataEntryCommandSender(
 
   override fun sendDataEntryCommand(command: CreateOrUpdateDataEntryCommand) {
     if (properties.enabled) {
-      gateway.send<Any, Any?>(command) { m, r -> logger.debug("Successfully submitted command $m, $r") }
+      gateway.send<Any, Any?>(command) { m, r ->
+        if (r.isExceptional) {
+          errorHandler.apply(m, r)
+        } else {
+          successHandler.apply(m, r)
+        }
+      }
     } else {
       logger.debug("Would have sent command $command")
     }
   }
 }
 
+/**
+ * Success handler, logging.
+ */
+class LoggingCommandSuccessHandler(private val logger: Logger) : DataEntryCommandSuccessHandler {
+
+  override fun apply(commandMessage: Any, commandResultMessage: CommandResultMessage<out Any?>) {
+    if (logger.isDebugEnabled) {
+      logger.debug("Successfully submitted command $commandMessage, $commandResultMessage")
+    }
+  }
+}
+
+/**
+ * Error handler, logging the error.
+ */
+class LoggingCommandErrorHandler(private val logger: Logger) : DataEntryCommandErrorHandler {
+
+  override fun apply(commandMessage: Any, commandResultMessage: CommandResultMessage<out Any?>) {
+    logger.error("SENDER-006: Sending command $commandMessage resulted in error", commandResultMessage.exceptionResult())
+  }
+}

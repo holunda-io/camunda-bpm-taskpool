@@ -2,6 +2,7 @@ package io.holunda.camunda.taskpool.sender.gateway
 
 import io.holunda.camunda.taskpool.TaskCollectorProperties
 import io.holunda.camunda.taskpool.sender.CommandSender
+import org.axonframework.commandhandling.CommandResultMessage
 import org.axonframework.commandhandling.gateway.CommandGateway
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -11,9 +12,11 @@ import org.springframework.stereotype.Component
  * Sends  a list commands via AXON command gateway one-by-one, only if the sender property is enabled.
  */
 @Component
-open class AxonCommandListGateway(
+class AxonCommandListGateway(
   private val commandGateway: CommandGateway,
-  private val properties: TaskCollectorProperties
+  private val properties: TaskCollectorProperties,
+  private val taskCommandSuccessHandler: TaskCommandSuccessHandler,
+  private val taskCommandErrorHandler: TaskCommandErrorHandler
 ) : CommandListGateway {
 
   private val logger: Logger = LoggerFactory.getLogger(CommandSender::class.java)
@@ -22,7 +25,7 @@ open class AxonCommandListGateway(
    * Sends data to gateway. Ignores any errors, but logs.
    */
   override fun sendToGateway(commands: List<Any>) {
-    if (!commands.isEmpty()) {
+    if (commands.isNotEmpty()) {
 
       val nextCommand = commands.first()
       val remainingCommands = commands.subList(1, commands.size)
@@ -30,9 +33,9 @@ open class AxonCommandListGateway(
       if (properties.sender.enabled) {
         commandGateway.send<Any, Any?>(nextCommand) { commandMessage, commandResultMessage ->
           if (commandResultMessage.isExceptional) {
-            logger.error("SENDER-006: Sending command $commandMessage resulted in error ${commandResultMessage.exceptionResult()}")
+            taskCommandErrorHandler.apply(commandMessage, commandResultMessage)
           } else {
-            logger.debug("SENDER-004: Successfully submitted command $commandMessage")
+            taskCommandSuccessHandler.apply(commandMessage, commandResultMessage)
           }
           sendToGateway(remainingCommands)
         }
@@ -44,3 +47,28 @@ open class AxonCommandListGateway(
   }
 
 }
+
+/**
+ * Error handler, logging the error.
+ */
+open class LoggingTaskCommandErrorHandler(private val logger: Logger) : TaskCommandErrorHandler {
+
+  override fun apply(commandMessage: Any, commandResultMessage: CommandResultMessage<out Any?>) {
+    logger.error("SENDER-006: Sending command $commandMessage resulted in error", commandResultMessage.exceptionResult())
+  }
+}
+
+/**
+ * Logs success.
+ */
+open class LoggingTaskCommandSuccessHandler(private val logger: Logger) : TaskCommandSuccessHandler {
+
+  override fun apply(commandMessage: Any, commandResultMessage: CommandResultMessage<out Any?>) {
+    if (logger.isDebugEnabled) {
+      logger.debug("SENDER-004: Successfully submitted command $commandMessage")
+    }
+  }
+}
+
+
+
