@@ -101,6 +101,9 @@ class ExampleProcessApplication {
   }
 
   /*
+
+  Uncomment this to override default logging handlers.
+
   @Bean
   @Primary
   fun myDataEntryCommandSuccessHandler() = object : DataEntryCommandSuccessHandler {

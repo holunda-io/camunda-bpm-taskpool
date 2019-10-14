@@ -97,7 +97,9 @@ class SimpleDataEntryCommandSender(
 class LoggingCommandSuccessHandler(private val logger: Logger) : DataEntryCommandSuccessHandler {
 
   override fun apply(commandMessage: Any, commandResultMessage: CommandResultMessage<out Any?>) {
-    logger.debug("Successfully submitted command $commandMessage, $commandResultMessage")
+    if (logger.isDebugEnabled) {
+      logger.debug("Successfully submitted command $commandMessage, $commandResultMessage")
+    }
   }
 }
 
@@ -107,6 +109,6 @@ class LoggingCommandSuccessHandler(private val logger: Logger) : DataEntryComman
 class LoggingCommandErrorHandler(private val logger: Logger) : DataEntryCommandErrorHandler {
 
   override fun apply(commandMessage: Any, commandResultMessage: CommandResultMessage<out Any?>) {
-    logger.error("SENDER-006: Sending command $commandMessage resulted in error ${commandResultMessage.exceptionResult()}")
+    logger.error("SENDER-006: Sending command $commandMessage resulted in error", commandResultMessage.exceptionResult())
   }
 }

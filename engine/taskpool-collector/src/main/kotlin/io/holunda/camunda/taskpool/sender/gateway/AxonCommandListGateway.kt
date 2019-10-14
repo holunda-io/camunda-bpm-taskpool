@@ -54,7 +54,7 @@ class AxonCommandListGateway(
 open class LoggingTaskCommandErrorHandler(private val logger: Logger) : TaskCommandErrorHandler {
 
   override fun apply(commandMessage: Any, commandResultMessage: CommandResultMessage<out Any?>) {
-    logger.error("SENDER-006: Sending command $commandMessage resulted in error ${commandResultMessage.exceptionResult()}")
+    logger.error("SENDER-006: Sending command $commandMessage resulted in error", commandResultMessage.exceptionResult())
   }
 }
 
@@ -64,7 +64,9 @@ open class LoggingTaskCommandErrorHandler(private val logger: Logger) : TaskComm
 open class LoggingTaskCommandSuccessHandler(private val logger: Logger) : TaskCommandSuccessHandler {
 
   override fun apply(commandMessage: Any, commandResultMessage: CommandResultMessage<out Any?>) {
-    logger.debug("SENDER-004: Successfully submitted command $commandMessage")
+    if (logger.isDebugEnabled) {
+      logger.debug("SENDER-004: Successfully submitted command $commandMessage")
+    }
   }
 }
 
