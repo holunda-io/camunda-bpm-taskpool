@@ -9,7 +9,7 @@ pageId: 'quick-start'
 
 === Start example task list and example process application
 
-To start quickly, just start the Example Task list Application. For doing so, please run:
+To start quickly, just start the Example Applications. For doing so, please run:
 
 [source,bash]
 ----
@@ -23,13 +23,13 @@ docker-compose -d up
 ./mvnw spring-boot:run -f examples/process-application
 ----
 
-Now, you should have a running infrastructure and the example task list. You can already
-call the empty task list by opening http://localhost:8081/tasklist/ in your browser. You can
-start new approval request and use the example application.
+Now, you should have a running infrastructure, the example task list and the example process application.
+You can already call the empty task list by opening http://localhost:8081/tasklist/ in your browser. You can
+start new approval request and use the example for application to get an idea of how it works.
 
 === Configure your process application
 
-Apart from the example application, you moght be interested in integrating task pool into your existing
+Apart from the example application, you might be interested in integrating task pool into your existing
 application. To do so, you need to enable your Camunda process engine to use the library.
 For doing so, add the `camunda-bpm-taskpool-engine-springboot-starter` library. In Maven, add the following dependency
 to your `pom.xml` :
