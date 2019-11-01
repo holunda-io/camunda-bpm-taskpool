@@ -15,8 +15,6 @@ camunda:
       enabled: false
       db-reporter-activate: false
   taskpool:
-    engine-eventing:
-      enabled: true
     collector:
       tasklist-url: http://localhost/test-tasklist/
       enricher:

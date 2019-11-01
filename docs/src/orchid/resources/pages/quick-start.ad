@@ -66,8 +66,6 @@ camunda:
     default-serialization-format: application/json
     history-level: full
   taskpool:
-    engine-eventing:
-        enabled: true
     collector:
       tasklist-url: http://localhost:8081/tasklist/
       process:
