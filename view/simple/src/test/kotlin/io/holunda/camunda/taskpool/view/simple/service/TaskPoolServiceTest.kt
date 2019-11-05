@@ -2,6 +2,7 @@ package io.holunda.camunda.taskpool.view.simple.service
 
 import com.tngtech.jgiven.junit.ScenarioTest
 import io.holunda.camunda.taskpool.api.task.CamundaTaskEvent
+import io.holunda.camunda.taskpool.api.task.ProcessReference
 import io.holunda.camunda.taskpool.view.query.task.ApplicationWithTaskCount
 import org.camunda.bpm.engine.variable.Variables
 import org.junit.Test
@@ -175,5 +176,43 @@ class TaskPoolServiceTest : ScenarioTest<TaskPoolGivenStage<*>, TaskPoolWhenStag
       .task_counts_are("app-1" withTaskCount 5, "app-2" withTaskCount 42)
   }
 
+  @Test
+  fun `tasks are returned for application name`() {
+    val task1 = TestTaskData(id = "task-1", sourceReference = processReference(applicationName = "app-1"))
+    val task2 = TestTaskData(id = "task-2", sourceReference = processReference(applicationName = "app-2"))
+    val task3 = TestTaskData(id = "task-3", sourceReference = processReference(applicationName = "app-1"))
+
+    given()
+      .no_task_exists()
+      .and()
+      .task_created_event_is_received(task1.asTaskCreatedEngineEvent())
+      .and()
+      .task_created_event_is_received(task2.asTaskCreatedEngineEvent())
+      .and()
+      .task_created_event_is_received(task3.asTaskCreatedEngineEvent())
+
+    `when`()
+      .tasks_queried_for_application("app-1")
+
+    then()
+      .tasks_are_returned_for_application(task1.asTask(), task3.asTask())
+  }
+
   private infix fun String.withTaskCount(taskCount: Int) = ApplicationWithTaskCount(this, taskCount)
+}
+
+private fun processReference(instanceId: String = "instance-id-12345",
+                             executionId: String = "execution-id-12345",
+                             definitionId: String = "definition-id-12345",
+                             definitionKey: String = "definition-key-abcde",
+                             name: String = "process-name",
+                             applicationName: String = "application-name"): ProcessReference {
+  return ProcessReference(
+    instanceId,
+    executionId,
+    definitionId,
+    definitionKey,
+    name,
+    applicationName
+  )
 }
