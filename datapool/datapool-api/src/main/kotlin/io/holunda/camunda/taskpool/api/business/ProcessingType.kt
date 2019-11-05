@@ -25,5 +25,8 @@ enum class ProcessingType {
    */
   UNDEFINED;
 
+  /**
+   * Factory method.
+   */
   fun of(state: String = "") = DataEntryStateImpl(processingType = this, state = state)
 }
