@@ -15,10 +15,19 @@ interface DataIdentity {
 
   fun asString() = dataIdentityString(entryType = entryType, entryId = entryId)
 }
-
+/**
+ * Id of business entry.
+ */
 typealias EntryId = String
+
+/**
+ * Type of business entry.
+ */
 typealias EntryType = String
 
+/**
+ * Separator.
+ */
 const val DATA_IDENTITY_SEPARATOR = "#"
 
 /**

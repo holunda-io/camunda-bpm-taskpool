@@ -1,9 +1,7 @@
 package io.holunda.camunda.taskpool.api.business
 
-import io.holunda.camunda.taskpool.api.business.Modification.Companion.NONE
 import org.camunda.bpm.engine.variable.VariableMap
 import org.camunda.bpm.engine.variable.Variables
-import java.time.OffsetDateTime
 
 /**
  * Represents a data entry.
@@ -49,7 +47,7 @@ data class DataEntry(
   /**
    * Modification information.
    */
-  val modification: Modification = NONE,
+  val modification: Modification = Modification.NONE,
   /**
    * Authorization information.
    */
@@ -59,122 +57,3 @@ data class DataEntry(
    */
   val formKey: String? = null
 )
-
-
-interface DataEntryState {
-  val processingType: ProcessingType
-  val state: String?
-}
-
-data class DataEntryStateImpl(
-  override val processingType: ProcessingType = ProcessingType.UNDEFINED,
-  override val state: String = ""
-) : DataEntryState
-
-enum class ProcessingType {
-  PRELIMINARY,
-  IN_PROGRESS,
-  COMPLETED,
-  CANCELLED,
-  UNDEFINED;
-
-  fun of(state: String = "") = DataEntryStateImpl(processingType = this, state = state)
-}
-
-
-data class Modification(
-  /**
-   * Time of update
-   */
-  val time: OffsetDateTime = OffsetDateTime.now(),
-  /**
-   * Username of the user who updated the business entry.
-   */
-  val username: String? = null,
-  /**
-   * Log entry for the update.
-   */
-  val log: String? = null,
-
-  /**
-   * Log entry details.
-   */
-  val logNotes: String? = null
-) {
-  companion object {
-    val NONE = Modification()
-
-    fun now() = Modification(time = OffsetDateTime.now())
-  }
-}
-
-
-sealed class AuthorizationChange {
-
-  companion object {
-    @JvmStatic
-    fun addUser(username: String): AuthorizationChange = AddAuthorization(authorizedUsers = listOf(username))
-
-    @JvmStatic
-    fun removeUser(username: String): AuthorizationChange = RemoveAuthorization(authorizedUsers = listOf(username))
-
-    @JvmStatic
-    fun addGroup(groupName: String): AuthorizationChange = AddAuthorization(authorizedGroups = listOf(groupName))
-
-    @JvmStatic
-    fun removeGroup(groupName: String): AuthorizationChange = RemoveAuthorization(authorizedGroups = listOf(groupName))
-
-    @JvmStatic
-    fun applyUserAuthorization(authorizedUsers: List<String>, authorizationChanges: List<AuthorizationChange>): List<String> {
-
-      val usersToRemove = authorizationChanges.filterIsInstance<RemoveAuthorization>().flatMap { it.authorizedUsers }
-      val usersToAdd = authorizationChanges.filterIsInstance<AddAuthorization>().flatMap { it.authorizedUsers }
-      val mutable = authorizedUsers.toMutableList()
-      mutable.addAll(usersToAdd)
-      mutable.removeAll(usersToRemove)
-
-      return mutable.toSet().toList()
-    }
-
-    @JvmStatic
-    fun applyGroupAuthorization(authorizedGroups: List<String>, authorizationChanges: List<AuthorizationChange>): List<String> {
-
-      val groupsToRemove = authorizationChanges.filterIsInstance<RemoveAuthorization>().flatMap { it.authorizedGroups }
-      val groupsToAdd = authorizationChanges.filterIsInstance<AddAuthorization>().flatMap { it.authorizedGroups }
-      val mutable = authorizedGroups.toMutableList()
-      mutable.addAll(groupsToAdd)
-      mutable.removeAll(groupsToRemove)
-
-      return mutable.toSet().toList()
-    }
-
-  }
-}
-
-/**
- * Grants access to data entry.
- */
-data class AddAuthorization(
-  /**
-   * List of authorized users to grant access.
-   */
-  val authorizedUsers: List<String> = listOf(),
-  /**
-   * List of authorized groups to grant access.
-   */
-  val authorizedGroups: List<String> = listOf()
-) : AuthorizationChange()
-
-/**
- * Removes access to data entry.
- */
-data class RemoveAuthorization(
-  /**
-   * List of authorized users to grant access.
-   */
-  val authorizedUsers: List<String> = listOf(),
-  /**
-   * List of authorized groups to grant access.
-   */
-  val authorizedGroups: List<String> = listOf()
-) : AuthorizationChange()
