@@ -16,4 +16,6 @@ interface TaskApi {
 
   fun query(query: TaskForIdQuery): Task?
 
+  fun query(query: TasksForApplicationQuery): TaskQueryResult
+
 }

@@ -120,6 +120,18 @@ class TaskPoolMongoService(
       .toFuture()
 
   /**
+   * Retrieves a list of all tasks of a given process application.
+   */
+  @QueryHandler
+  override fun query(query: TasksForApplicationQuery): CompletableFuture<TaskQueryResult> =
+    taskRepository.findAllForApplication(
+      applicationName = query.applicationName
+    ).map { it.task() }
+      .collectList()
+      .map { TaskQueryResult(it) }
+      .toFuture()
+
+  /**
    * Retrieves a list of all data entries of given entry type (and optional id).
    */
   @QueryHandler
