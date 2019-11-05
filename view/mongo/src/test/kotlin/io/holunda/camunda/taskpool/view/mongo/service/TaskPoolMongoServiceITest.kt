@@ -11,6 +11,7 @@ import io.holunda.camunda.taskpool.view.mongo.TaskpoolMongoTestApplication
 import io.holunda.camunda.taskpool.view.mongo.utils.MongoLauncher
 import io.holunda.camunda.taskpool.view.query.task.ApplicationWithTaskCount
 import io.holunda.camunda.taskpool.view.query.task.TaskCountByApplicationQuery
+import io.holunda.camunda.taskpool.view.query.task.TaskQueryResult
 import io.holunda.camunda.taskpool.view.query.task.TasksForUserQuery
 import io.holunda.camunda.taskpool.view.query.task.TasksWithDataEntriesForUserQuery
 import org.camunda.bpm.engine.variable.VariableMap
@@ -293,6 +294,26 @@ abstract class TaskPoolMongoServiceITestBase : SpringRuleScenarioTest<TaskPoolGi
         ApplicationWithTaskCount("app-2", 2),
         ApplicationWithTaskCount("app-2", 1)
       )
+  }
+
+  @Test
+  fun `tasks are returned for application name`() {
+    val task1 = TestTaskData(id = "task-1", sourceReference = processReference(applicationName = "app-1"))
+    val task2 = TestTaskData(id = "task-2", sourceReference = processReference(applicationName = "app-2"))
+    val task3 = TestTaskData(id = "task-3", sourceReference = processReference(applicationName = "app-1"))
+
+    given()
+      .no_task_exists()
+
+    `when`()
+      .task_created_event_is_received(task1.asTaskCreatedEngineEvent())
+      .and()
+      .task_created_event_is_received(task2.asTaskCreatedEngineEvent())
+      .and()
+      .task_created_event_is_received(task3.asTaskCreatedEngineEvent())
+
+    then()
+      .tasks_are_returned_for_application("app-1", TaskQueryResult(listOf(task1.asTask(), task3.asTask())))
   }
 
 }

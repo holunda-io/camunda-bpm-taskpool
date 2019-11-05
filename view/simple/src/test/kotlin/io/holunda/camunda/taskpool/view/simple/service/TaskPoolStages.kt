@@ -92,6 +92,9 @@ open class TaskPoolWhenStage<SELF : TaskPoolWhenStage<SELF>> : TaskPoolStage<SEL
   @ProvidedScenarioState(resolution = ScenarioState.Resolution.NAME)
   private var returnedTaskCounts: List<ApplicationWithTaskCount> = listOf()
 
+  @ProvidedScenarioState(resolution = ScenarioState.Resolution.NAME)
+  private var returnedTasksForApplication = TaskQueryResult(listOf())
+
   private fun query(page: Int, size: Int) = TasksWithDataEntriesForUserQuery(User("kermit", setOf()), page, size)
 
   @As("Page $ is queried with a page size of $")
@@ -103,6 +106,12 @@ open class TaskPoolWhenStage<SELF : TaskPoolWhenStage<SELF>> : TaskPoolStage<SEL
   @As("Task count by application is queried")
   open fun task_count_queried(): SELF {
     returnedTaskCounts = testee.query(TaskCountByApplicationQuery())
+    return self()
+  }
+
+  @As("Tasks are queried for application $")
+  open fun tasks_queried_for_application(applicationName: String): SELF {
+    returnedTasksForApplication = testee.query(TasksForApplicationQuery(applicationName))
     return self()
   }
 
@@ -119,6 +128,9 @@ open class TaskPoolThenStage<SELF : TaskPoolThenStage<SELF>> : TaskPoolStage<SEL
   @ExpectedScenarioState(resolution = ScenarioState.Resolution.NAME, required = true)
   private lateinit var returnedTaskCounts: List<ApplicationWithTaskCount>
 
+  @ExpectedScenarioState(resolution = ScenarioState.Resolution.NAME, required = true)
+  private lateinit var returnedTasksForApplication: TaskQueryResult
+
   @As("$ tasks are returned")
   open fun num_tasks_are_returned(numTasks: Int): SELF {
     assertThat(queriedTasks.size).isEqualTo(numTasks)
@@ -128,6 +140,12 @@ open class TaskPoolThenStage<SELF : TaskPoolThenStage<SELF>> : TaskPoolStage<SEL
   @As("all tasks are returned once")
   open fun all_tasks_are_returned(): SELF {
     assertThat(queriedTasks).isEqualTo(tasks)
+    return self()
+  }
+
+  @As("tasks $ are returned for application")
+  open fun tasks_are_returned_for_application(@Hidden vararg expectedTasks: Task): SELF {
+    assertThat(returnedTasksForApplication.elements).containsExactlyInAnyOrder(*expectedTasks)
     return self()
   }
 

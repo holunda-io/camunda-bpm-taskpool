@@ -16,10 +16,19 @@ import reactor.core.publisher.Mono
 @Repository
 interface DataEntryRepository : ReactiveMongoRepository<DataEntryDocument, String> {
 
+  /**
+   * Reactive finder by identity.
+   */
   fun findByIdentity(identity: DataIdentity): Mono<DataEntryDocument> = findById(dataIdentityString(entryId = identity.entryId, entryType = identity.entryType))
+
+  /**
+   * Reactive finder by type.
+   */
   fun findAllByEntryType(entryType: EntryType): Flux<DataEntryDocument>
 
+  /**
+   * Finder for user.
+   */
   @Query("{ \$or: [ { 'authorizedUsers' : ?0 }, { 'authorizedGroups' : { \$in: ?1 } } ] }")
   fun findAllForUser(@Param("username") username: String, @Param("groupNames") groupNames: Set<String>): Flux<DataEntryDocument>
-
 }

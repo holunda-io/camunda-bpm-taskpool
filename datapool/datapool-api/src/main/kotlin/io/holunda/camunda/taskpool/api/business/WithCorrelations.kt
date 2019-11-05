@@ -12,7 +12,9 @@ import org.camunda.bpm.engine.variable.value.StringValue
 interface WithCorrelations {
   val correlations: CorrelationMap
 }
-
+/**
+ * Map holding correlations between tasks and business objects or between two business objects..
+ */
 typealias CorrelationMap = VariableMap
 
 /**

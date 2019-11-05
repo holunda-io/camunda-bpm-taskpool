@@ -7,6 +7,9 @@ import org.axonframework.modelling.command.AggregateIdentifier
 import org.axonframework.modelling.command.AggregateLifecycle
 import org.axonframework.spring.stereotype.Aggregate
 
+/**
+ * Aggregate representing a data entry.
+ */
 @Aggregate
 class DataEntryAggregate() {
 
@@ -31,6 +34,9 @@ class DataEntryAggregate() {
     ))
   }
 
+  /**
+   * Handle update command.
+   */
   @CommandHandler
   fun handle(command: UpdateDataEntryCommand) {
     AggregateLifecycle.apply(DataEntryUpdatedEvent(
@@ -49,6 +55,9 @@ class DataEntryAggregate() {
     ))
   }
 
+  /**
+   * React on event.
+   */
   @EventSourcingHandler
   fun on(event: DataEntryCreatedEvent) {
     this.dataIdentity = dataIdentityString(entryType = event.entryType, entryId = event.entryId)

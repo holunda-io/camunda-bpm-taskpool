@@ -32,7 +32,13 @@ interface TaskRepository : ReactiveMongoRepository<TaskDocument, String>, TaskCo
   fun findAllForUser(@Param("username") username: String, @Param("groupNames") groupNames: Set<String>, pageable: Pageable? = null): Flux<TaskDocument>
 
   /**
-   * Retrieves a not deleted with given task.
+   * Retrieves all tasks for a process application.
+   */
+  @Query("{ 'deleted': {\$ne: true}, 'sourceReference.applicationName': ?0 }")
+  fun findAllForApplication(@Param("applicationName") applicationName: String): Flux<TaskDocument>
+
+  /**
+   * Retrieves a not deleted task with given id.
    */
   @Query("{ '_id': ?0, 'deleted': {\$ne: true} }")
   fun findNotDeletedById(id: String): Mono<TaskDocument>
