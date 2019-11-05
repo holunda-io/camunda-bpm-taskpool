@@ -19,6 +19,9 @@ import org.axonframework.queryhandling.QueryUpdateEmitter
 import org.springframework.stereotype.Component
 import java.util.concurrent.ConcurrentHashMap
 
+/**
+ * Data entry in-memory projection.
+ */
 @Component
 @ProcessingGroup(SimpleServiceViewProcessingGroup.PROCESSING_GROUP)
 class DataEntryService(
@@ -29,6 +32,9 @@ class DataEntryService(
 
   private val dataEntries = ConcurrentHashMap<String, DataEntry>()
 
+  /**
+   * Creates new data entry.
+   */
   @Suppress("unused")
   @EventHandler
   fun on(event: DataEntryCreatedEvent) {
@@ -39,6 +45,9 @@ class DataEntryService(
     updateDataEntryQuery(entryId)
   }
 
+  /**
+   * Updates data entry.
+   */
   @Suppress("unused")
   @EventHandler
   fun on(event: DataEntryUpdatedEvent) {
@@ -65,7 +74,9 @@ class DataEntryService(
 
 }
 
-
+/**
+ * Event to entry for an update, if an optional entry exists.
+ */
 fun DataEntryUpdatedEvent.toDataEntry(oldEntry: DataEntry?) = if (oldEntry == null) {
   DataEntry(
     entryType = this.entryType,
@@ -98,6 +109,9 @@ fun DataEntryUpdatedEvent.toDataEntry(oldEntry: DataEntry?) = if (oldEntry == nu
   )
 }
 
+/**
+ * Event to entry.
+ */
 fun DataEntryCreatedEvent.toDataEntry() = DataEntry(
   entryType = this.entryType,
   entryId = this.entryId,
