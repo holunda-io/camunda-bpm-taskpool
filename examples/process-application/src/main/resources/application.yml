@@ -30,8 +30,6 @@ camunda:
     webapp:
       index-redirect-enabled: false
   taskpool:
-    engine-eventing:
-        enabled: true
     collector:
       tasklist-url: http://localhost:8081/tasklist/
       process:

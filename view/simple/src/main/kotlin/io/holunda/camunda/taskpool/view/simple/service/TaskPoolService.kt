@@ -43,6 +43,12 @@ class TaskPoolService(
   override fun query(query: TaskForIdQuery): Task? = tasks.values.firstOrNull { query.applyFilter(it) }
 
   /**
+   * Retrieves a  list of all tasks of a given process application.
+   */
+  @QueryHandler
+  override fun query(query: TasksForApplicationQuery) = TaskQueryResult(tasks.values.filter { query.applyFilter(it) })
+
+  /**
    * Retrieves a task with data entries for given task id.
    */
   @QueryHandler

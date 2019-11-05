@@ -7,26 +7,30 @@ pageId: 'quick-start'
 
 == {{ page.title }}
 
-=== Start example task list application
+=== Start example task list and example process application
 
-To start quickly, just start the Example Task list Application. For doing so, please run:
+To start quickly, just start the Example Applications. For doing so, please run:
 
-[source, bash]
+[source,bash]
 ----
 git clone https://github.com/holunda-io/camunda-bpm-taskpool.git
 cd camunda-bpm-taskpool
+./mvnw clean install
 ./.docker/setup.sh
-docker-compose up
-./mvn spring-boot:run -f examples/taskpool-application
 
+docker-compose -d up
+./mvnw spring-boot:run -f examples/taskpool-application
+./mvnw spring-boot:run -f examples/process-application
 ----
 
-Now, you should have a running infrastructure and the example task list.
-
+Now, you should have a running infrastructure, the example task list and the example process application.
+You can already call the empty task list by opening http://localhost:8081/tasklist/ in your browser. You can
+start new approval request and use the example for application to get an idea of how it works.
 
 === Configure your process application
 
-If start using Camunda BPM Taskpool, you need to enable your Camunda process engine to use the library.
+Apart from the example application, you might be interested in integrating task pool into your existing
+application. To do so, you need to enable your Camunda process engine to use the library.
 For doing so, add the `camunda-bpm-taskpool-engine-springboot-starter` library. In Maven, add the following dependency
 to your `pom.xml` :
 
@@ -44,7 +48,6 @@ Now, find your SpringBoot application class and add an additional annotation to 
 [source, java]
 ----
 @SpringBootApplication
-@EnableProcessApplication
 @EnableTaskpoolEngineSupport
 public class MyApplication {
 
@@ -56,15 +59,13 @@ public class MyApplication {
 
 Finally, add the following block to your `application.yml`:
 
-[source, yaml] 
+[source, yaml]
 ----
 camunda:
   bpm:
     default-serialization-format: application/json
     history-level: full
   taskpool:
-    engine-eventing:
-        enabled: true
     collector:
       tasklist-url: http://localhost:8081/tasklist/
       process:
@@ -90,8 +91,5 @@ camunda:
 Now, start your process engine. If you run into a user task, you should see on the console how this is passed to task pool.
 In order to check the result, just open http://localhost:8081/tasklist/ in your browser.
 
-For more details on configuration of different options, please consult the link:/wiki/user-guide/examples[Taskpool Examples] and the 
-link:/wiki/user-guide[User Guide]. 
-
-
- 
+For more details on configuration of different options, please consult the link:/wiki/user-guide/examples[Taskpool Examples] and the
+link:/wiki/user-guide[User Guide].

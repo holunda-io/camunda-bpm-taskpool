@@ -5,6 +5,9 @@ import org.springframework.data.annotation.Id
 import org.springframework.data.annotation.TypeAlias
 import org.springframework.data.mongodb.core.mapping.Document
 
+/**
+ * Mongo document representing a deployed process definition.
+ */
 @Document(collection = "processes")
 @TypeAlias("process-definition")
 data class ProcessDefinitionDocument(
@@ -23,6 +26,9 @@ data class ProcessDefinitionDocument(
   val candidateStarterGroups: Set<String> = setOf()
 ) {
 
+  /**
+   * Creates a projection representation out of document.
+   */
   fun toProcessDefitinion(): ProcessDefinition =
     ProcessDefinition(
       processDefinitionId = this.processDefinitionId,

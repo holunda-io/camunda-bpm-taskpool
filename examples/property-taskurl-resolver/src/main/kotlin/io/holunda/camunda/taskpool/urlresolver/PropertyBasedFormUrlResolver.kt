@@ -9,6 +9,9 @@ import io.holunda.camunda.taskpool.view.ProcessDefinition
 import io.holunda.camunda.taskpool.view.Task
 import org.apache.commons.text.StringSubstitutor
 
+/**
+ * URL resolver backed with properies from yaml.
+ */
 class PropertyBasedFormUrlResolver(
   private val props: FormUrlResolverProperties,
   private val objectMapper: ObjectMapper = jacksonObjectMapper()
@@ -49,7 +52,7 @@ class PropertyBasedFormUrlResolver(
     val appTemplate = props.getApplicationTemplate(applicationName)
 
     val boTemplate = props.getBoTemplate(applicationName, dataEntry.entryType)
-    val boMap: Map<String, Any> = objectMapper.convertValue(dataEntry, object: TypeReference<Map<String, Any>>() {})
+    val boMap: Map<String, Any> = objectMapper.convertValue(dataEntry, object : TypeReference<Map<String, Any>>() {})
 
     return "${StringSubstitutor(appMap).replace(appTemplate)}/${StringSubstitutor(boMap).replace(boTemplate)}"
   }

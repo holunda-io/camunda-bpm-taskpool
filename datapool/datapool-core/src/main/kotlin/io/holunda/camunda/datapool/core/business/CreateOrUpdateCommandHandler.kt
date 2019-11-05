@@ -12,12 +12,18 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import java.util.*
 
+/**
+ * Handler taking care of existence of data entry aggregate.
+ */
 @Component
 class CreateOrUpdateCommandHandler {
 
   @Autowired
   private lateinit var eventSourcingRepository: EventSourcingRepository<DataEntryAggregate>
 
+  /**
+   * Receives create-or-update and decides what to do.
+   */
   @CommandHandler
   fun createOrUpdate(command: CreateOrUpdateDataEntryCommand) {
 

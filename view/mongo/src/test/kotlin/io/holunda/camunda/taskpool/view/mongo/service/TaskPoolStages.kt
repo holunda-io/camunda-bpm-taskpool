@@ -223,6 +223,12 @@ class TaskPoolThenStage<SELF : TaskPoolThenStage<SELF>> : TaskPoolStage<SELF>() 
     return self()
   }
 
+  @As("only tasks for application $ are returned")
+  fun tasks_are_returned_for_application(applicationName: String, @Hidden taskQueryResult: TaskQueryResult): SELF {
+    assertThat(testee.query(TasksForApplicationQuery(applicationName)).join()).isEqualTo(taskQueryResult)
+    return self()
+  }
+
   @As("the following query updates have been emitted for query \$query: \$updates")
   fun <T : Any> query_updates_have_been_emitted(query: T, vararg updates: Any): SELF {
     captureEmittedQueryUpdates()

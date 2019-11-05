@@ -5,6 +5,9 @@ import io.holunda.camunda.taskpool.api.task.ProcessReference
 import io.holunda.camunda.taskpool.api.task.SourceReference
 import org.camunda.bpm.engine.delegate.DelegateTask
 
+/**
+ * Retrieves source reference (process or case) from delegate task.
+ */
 fun DelegateTask.sourceReference(applicationName: String): SourceReference =
   when {
     this.processDefinitionId != null -> ProcessReference(
@@ -41,18 +44,37 @@ fun DelegateTask.formKey(): String? {
   return this.processEngine.formService.getTaskFormKey(definitionId, this.taskDefinitionKey)
 }
 
-
+/**
+ * Retrieves case definition key from delegate task.
+ */
 fun DelegateTask.caseDefinitionKey(): String = caseDefinition().key
+
+/**
+ * Retrieves case name from delegate task.
+ */
 fun DelegateTask.caseName(): String = caseDefinition().name
+
+/**
+ * Retrieves process definition key from delegate task.
+ */
 fun DelegateTask.processDefinitionKey(): String = processDefinition().key
+
+/**
+ * Retrieves process name from delegate task.
+ */
 fun DelegateTask.processName(): String = processDefinition().name
 
-
+/**
+ * Retrieves case definition from delegate task.
+ */
 fun DelegateTask.caseDefinition() = this.processEngine.repositoryService
   .createCaseDefinitionQuery().caseDefinitionId(caseDefinitionId)
   .singleResult()
   ?: throw IllegalArgumentException("Case definition could not be resolved for id $caseDefinitionId")
 
+/**
+ * Retrieves process definition from delegate task.
+ */
 fun DelegateTask.processDefinition() = this.processEngine.repositoryService
   .createProcessDefinitionQuery().processDefinitionId(processDefinitionId)
   .singleResult()

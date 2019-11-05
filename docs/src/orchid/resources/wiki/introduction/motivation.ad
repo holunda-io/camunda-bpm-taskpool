@@ -4,7 +4,7 @@ title: Motivation
 
 == Motivation
 
-In the last five years, we built custom Camunda task lists for different customers about six times.
+In the last five years, we built different process applications on behalf of the customer several times.
 Most of them were built based on Single Page Application (SPA) technologies, but some were
 using server-side rendered views. It turned out that some of the issues occurred every time during the implementation.
 

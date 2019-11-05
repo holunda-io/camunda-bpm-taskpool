@@ -6,7 +6,7 @@
   <parent>
     <groupId>io.holunda.taskpool</groupId>
     <artifactId>camunda-bpm-taskpool-engine-root</artifactId>
-    <version>2.0.4</version>
+    <version>2.0.5</version>
   </parent>
 
   <artifactId>camunda-bpm-taskpool-collector</artifactId>
@@ -82,11 +82,6 @@
     </dependency>
 
     <!-- For I-Testing -->
-    <dependency>
-      <groupId>io.holunda.taskpool</groupId>
-      <artifactId>camunda-bpm-engine-plugin</artifactId>
-      <scope>test</scope>
-    </dependency>
     <dependency>
       <groupId>com.h2database</groupId>
       <artifactId>h2</artifactId>

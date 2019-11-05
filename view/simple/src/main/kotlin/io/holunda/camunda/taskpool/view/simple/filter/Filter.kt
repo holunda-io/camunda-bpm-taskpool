@@ -15,8 +15,10 @@ const val GREATER = ">"
 const val LESS = "<"
 const val TASK_PREFIX = "task."
 
+/**
+ * Comparator function.
+ */
 typealias CompareOperator = (Any, Any?) -> Boolean
-
 
 val OPERATORS = Regex("[$EQUALS$LESS$GREATER]")
 
@@ -185,6 +187,9 @@ sealed class Criterion(open val name: String, open val value: String, open val o
     return result
   }
 
+  /**
+   * Empty aka null-objects.
+   */
   object EmptyCriterion : Criterion("empty", "no value", "none")
   /**
    * Criterion on task.
@@ -229,9 +234,28 @@ data class PropertyValuePredicate<T>(
   }
 }
 
+/**
+ * Retrieves a filed from class.
+ */
 fun extractField(targetClass: Class<*>, name: String): Field? = ReflectionUtils.findField(targetClass, name)
+
+/**
+ * Retrieves a field from object.
+ */
 fun extractField(target: Any, name: String): Field? = extractField(target::class.java, name)
+
+/**
+ * Extracts value from object usgin field.
+ */
 fun extractValue(target: Any, field: Field): Any? = ReflectionUtils.getField(field.apply { ReflectionUtils.makeAccessible(this) }, target)
+
+/**
+ * Extract key from map or [null]
+ */
 fun extractKey(target: Any, name: String): String? = if (target is Map<*, *> && target.containsKey(name)) name else null
+
+/**
+ * Extracts value from map or [null]
+ */
 fun extractValue(target: Any, key: String): Any? = if (target is Map<*, *>) target[key] else null
 

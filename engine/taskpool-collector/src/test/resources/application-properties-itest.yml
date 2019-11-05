@@ -4,8 +4,6 @@ spring:
 
 camunda:
   taskpool:
-    engine-eventing:
-      enabled: true
     collector:
       tasklist-url: http://localhost/test-tasklist/
 #

@@ -10,7 +10,6 @@ pageId: 'components'
 Engine Components are designed to be a part of process application deployment:
 
 * link:./engine-starter[Camunda Engine Taskpool Support SpringBoot Starter]
-* link:./engine-eventing-plugin[Camunda Engine Eventing Plugin]
 * link:./engine-interaction-client[Camunda Engine Interaction Client]
 * link:./engine-taskpool-collector[Taskpool Collector]
 * link:./engine-datapool-collector[Datapool Collector]

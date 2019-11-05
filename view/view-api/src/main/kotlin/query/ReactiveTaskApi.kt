@@ -35,4 +35,9 @@ interface ReactiveTaskApi {
    */
   fun query(query: TaskForIdQuery): CompletableFuture<Task?>
 
+  /**
+   * Query tasks for a given process application.
+   */
+  fun query(query: TasksForApplicationQuery): CompletableFuture<TaskQueryResult>
+
 }
