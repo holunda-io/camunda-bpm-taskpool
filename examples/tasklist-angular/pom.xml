@@ -5,12 +5,12 @@
 
   <parent>
     <groupId>io.holunda.taskpool</groupId>
-    <artifactId>camunda-bpm-taskpool-examples-root</artifactId>
+    <artifactId>taskpool-examples-root</artifactId>
     <version>2.0.6-SNAPSHOT</version>
   </parent>
 
-  <artifactId>camunda-bpm-taskpool-example-tasklist-angular</artifactId>
-  <name>example/${project.artifactId}</name>
+  <artifactId>taskpool-example-tasklist-angular</artifactId>
+  <name>examples/${project.artifactId}</name>
   <packaging>jar</packaging>
 
   <properties>
@@ -36,7 +36,6 @@
   </build>
 
   <profiles>
-
     <profile>
       <id>node-build</id>
       <activation>

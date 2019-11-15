@@ -9,9 +9,8 @@
   </parent>
 
   <artifactId>camunda-bpm-datapool-root</artifactId>
-  <name>datapool/${project.artifactId}</name>
   <packaging>pom</packaging>
-  
+
   <modules>
     <module>datapool-api</module>
     <module>datapool-core</module>
@@ -29,6 +28,6 @@
         <artifactId>camunda-bpm-datapool-core</artifactId>
         <version>${project.version}</version>
       </dependency>
-    </dependencies>    
+    </dependencies>
   </dependencyManagement>
 </project>

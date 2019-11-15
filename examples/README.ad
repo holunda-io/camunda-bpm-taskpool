@@ -1,9 +1,9 @@
 = Sample Approval Application
 
-The following application is an example demonstrating the usage of the Camunda BPM Taskpool. The application is 
+The following application is an example demonstrating the usage of the Camunda BPM Taskpool. The application is
 built as a SpringBoot process application and shows a simple approval process.
 
-== Preparations 
+== Preparations
 
 === System Requirements
 
@@ -11,7 +11,7 @@ built as a SpringBoot process application and shows a simple approval process.
 * Docker
 * Docker Compose
 
-Before you begin, please build the entire project with `mvn clean install` from the command line. 
+Before you begin, please build the entire project with `mvn clean install` from the command line.
 
 You will need some backing services (Axon Server, PostgreSQL, MongoDB) and you can easily start them locally
 by using the provided `docker-compose.yml` file.
@@ -29,7 +29,7 @@ Now, start required containers. The easiest way to do so is to run:
 ----
 docker-compose up
 ----
- 
+
 To verify it is running, open your browser http://localhost:8024/[http://localhost:8024/].
 
 The demo application consists of several Maven modules. In order to start the example, you will need to start only two
@@ -38,7 +38,7 @@ of them in the following order:
 1. taskpool-application
 2. process-application (example application)
 
- 
+
 The modules can be started by running
 
 [source,bash]
@@ -46,7 +46,7 @@ The modules can be started by running
 ./mvn spring-boot:run -f examples/taskpool-application
 ./mvn spring-boot:run -f examples/process-application
 ----
- 
+
 from command line in the top-level directory using Maven or start the
 packaged application using:
 
@@ -59,7 +59,7 @@ java -jar examples/process-application/target/*.jar
 
 
 Since the process application includes Camunda BPM engine, you can use the standard Camunda webapps by navigating to [http://localhost:8080/](http://localhost:8080/).
-The default user and password are `admin / admin `. 
+The default user and password are `admin / admin `.
 
 The taskpool application consists of the major taskpool components and delivers the example tasklist.
 To use the example tasklist, please call http://localhost:8081/tasklist/[http://localhost:8081/tasklist/]
@@ -93,13 +93,13 @@ image::tasklist-angular/docs/tasklist-angular-data.png["Angualar Tasklist, repre
 The following storyboard can be used to understand the Camunda BPM Taskpool mechanics. The following sample
 approval process has been implemented:
 
-image::process-application/src/main/resources/process_approve_request.png[Approval Process]
+image::process-backend/src/main/resources/process_approve_request.png[Approval Process]
 
 === Business context
- 
-Imagine a system that responsible for management of all requests in the company. Using this system, you can submit requests which then get 
+
+Imagine a system that responsible for management of all requests in the company. Using this system, you can submit requests which then get
 eventually approved or rejected. Sometimes, the approver doesn't approve or reject but returns the request back to the originator (that is the person,
-who submitted the request). Then, the originator can amend the request and resubmit it or cancel the request. 
+who submitted the request). Then, the originator can amend the request and resubmit it or cancel the request.
 
 === Technical context
 
@@ -125,7 +125,7 @@ new approval request process created one task with the name _Approve Request_.
 - Examine the task details by clicking _Data_ tab in _Details_ column. You can see the data of the request correlated to
 the current process instance.
 
-- Let's assume the salary increase request is too high and we want to inform kermit about this. We are not rejecting the 
+- Let's assume the salary increase request is too high and we want to inform kermit about this. We are not rejecting the
 request completely, but returning it to back to kermit with the comment, that this year, the salary increase limit is 750 GBP.
 To do so click on the task name which opens the user task form _Approve Request_ and complete the task, by
  selecting the _Return request to originator_ option and clicking the _Complete_ button. The process will create

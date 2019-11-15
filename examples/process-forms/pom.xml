@@ -5,12 +5,12 @@
 
   <parent>
     <groupId>io.holunda.taskpool</groupId>
-    <artifactId>camunda-bpm-taskpool-examples-root</artifactId>
+    <artifactId>taskpool-examples-root</artifactId>
     <version>2.0.6-SNAPSHOT</version>
   </parent>
 
-  <artifactId>camunda-bpm-taskpool-example-process-forms</artifactId>
-  <name>example/${project.artifactId}</name>
+  <artifactId>taskpool-example-process-forms</artifactId>
+  <name>examples/${project.artifactId}</name>
   <packaging>jar</packaging>
 
   <properties>
@@ -138,7 +138,7 @@
                   <outputDirectory>${project.build.directory}/swagger-model</outputDirectory>
                   <resources>
                     <resource>
-                      <directory>../process-application/src/main/api</directory>
+                      <directory>../process-backend/src/main/api</directory>
                     </resource>
                   </resources>
                 </configuration>

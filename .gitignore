@@ -4,7 +4,7 @@ camunda-license.txt
 *.class
 target/
 .tmp/
-.docker/mounts
+examples/scenarios/distributed-axon-server/.docker/mounts
 
 # Log file
 *.log

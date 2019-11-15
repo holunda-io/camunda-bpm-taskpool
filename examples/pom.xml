@@ -8,8 +8,7 @@
     <version>2.0.6-SNAPSHOT</version>
   </parent>
 
-  <artifactId>camunda-bpm-taskpool-examples-root</artifactId>
-  <name>example/${project.artifactId}</name>
+  <artifactId>taskpool-examples-root</artifactId>
   <packaging>pom</packaging>
 
   <properties>
@@ -17,12 +16,14 @@
   </properties>
 
   <modules>
+    <!-- Shared backend modules -->
     <module>tasklist-api</module>
     <module>tasklist-backend</module>
-    <module>process-application</module>
-    <module>taskpool-application</module>
-    <module>property-taskurl-resolver</module>
+    <module>process-backend</module>
     <module>users</module>
+
+    <!-- Example implementations for different scenarios -->
+    <module>scenarios</module>
   </modules>
 
   <profiles>
@@ -34,6 +35,7 @@
         </property>
       </activation>
       <modules>
+        <!-- Shared frontend modules -->
         <module>tasklist-angular</module>
         <module>process-forms</module>
       </modules>

@@ -17,6 +17,7 @@
     <module>camunda-engine-client</module>
     <module>taskpool-engine-springboot-starter</module>
     <module>variable-serializer</module>
+    <module>property-taskurl-resolver</module>
   </modules>
 
   <dependencyManagement>

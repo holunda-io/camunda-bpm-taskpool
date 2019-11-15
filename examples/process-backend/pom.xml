@@ -5,12 +5,12 @@
 
   <parent>
     <groupId>io.holunda.taskpool</groupId>
-    <artifactId>camunda-bpm-taskpool-examples-root</artifactId>
+    <artifactId>taskpool-examples-root</artifactId>
     <version>2.0.6-SNAPSHOT</version>
   </parent>
 
-  <artifactId>camunda-bpm-taskpool-example-process-application</artifactId>
-  <name>example/${project.artifactId}</name>
+  <artifactId>taskpool-example-process-backend</artifactId>
+  <name>examples/${project.artifactId}</name>
 
   <properties>
     <application.api-location>src/main/api</application.api-location>
@@ -33,7 +33,7 @@
     </dependency>
     <dependency>
       <groupId>io.holunda.taskpool</groupId>
-      <artifactId>camunda-bpm-taskpool-example-users</artifactId>
+      <artifactId>taskpool-example-users</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
@@ -50,7 +50,10 @@
       <groupId>org.axonframework</groupId>
       <artifactId>axon-spring-boot-starter</artifactId>
     </dependency>
-
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-webflux</artifactId>
@@ -270,59 +273,7 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
       </plugin>
-      <plugin>
-        <!-- for packaging springboot application -->
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-maven-plugin</artifactId>
-      </plugin>
     </plugins>
   </build>
-
-  <profiles>
-    <profile>
-      <id>frontend</id>
-      <activation>
-        <property>
-          <name>!skipFrontend</name>
-        </property>
-      </activation>
-      <dependencies>
-        <dependency>
-          <groupId>io.holunda.taskpool</groupId>
-          <artifactId>camunda-bpm-taskpool-example-process-forms</artifactId>
-          <version>${project.version}</version>
-        </dependency>
-      </dependencies>
-    </profile>
-    <profile>
-      <id>camunda-ce</id>
-      <activation>
-        <property>
-          <name>!camunda-ee</name>
-        </property>
-      </activation>
-      <dependencies>
-        <dependency>
-          <groupId>org.camunda.bpm.springboot</groupId>
-          <artifactId>camunda-bpm-spring-boot-starter-webapp</artifactId>
-        </dependency>
-      </dependencies>
-    </profile>
-    <profile>
-      <id>camunda-ee</id>
-      <activation>
-        <property>
-          <name>camunda-ee</name>
-        </property>
-      </activation>
-      <dependencies>
-        <dependency>
-          <groupId>org.camunda.bpm.springboot</groupId>
-          <artifactId>camunda-bpm-spring-boot-starter-webapp-ee</artifactId>
-        </dependency>
-      </dependencies>
-    </profile>
-  </profiles>
-
 
 </project>
