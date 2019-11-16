@@ -1,0 +1,76 @@
+---
+
+title: Distributed Scenario using Axon Server
+
+---
+
+== {{ page.title }}
+
+Axon Server provides such implementation leading to a distributed command and event-bus and a central event store. It is easy
+to use, easy to configure and easy to run. If you need a HA setup, you will need the enterprise license of Axon Server. Essentially,
+if don't have another HA ready-to use messaging, this scenario might be your way to go.
+
+This scenario supports:
+
+-  central task pool / data pool
+-  view must not have a persistent storage (can be replayed)
+-  no direct communication between task list and engine is required (routed via command bus)
+
+The following diagram depicts the distribution of the components and the messaging.
+
+image::{{baseUrl('assets/media/deployment-axon-server.png')}}["Deployment of taskpool with axon server"]
+
+=== Running Example
+
+The following application is an example demonstrating the usage of the Camunda BPM Taskpool. The application is
+built as a SpringBoot process application and shows a simple approval process.
+
+==== Preparations
+
+==== System Requirements
+
+* JDK 8
+* Docker
+* Docker Compose
+
+Before you begin, please build the entire project with `mvn clean install` from the command line in the project root directory.
+
+You will need some backing services (Axon Server, PostgreSQL, MongoDB) and you can easily start them locally
+by using the provided `docker-compose.yml` file.
+
+Before you start change the directory to `examples/scenarios/distributed-axon-server`, and execute once:
+
+[source,bash]
+----
+cd examples/scenarios/distributed-axon-server
+.docker/setup.sh
+----
+
+Now, start required containers. The easiest way to do so is to run:
+
+[source, bash]
+----
+docker-compose up -d
+----
+
+To verify it is running, open your browser http://localhost:8024/[http://localhost:8024/]. You should see
+the Axon Server administration console.
+
+The demo application consists of several Maven modules. In order to start the example, you will need to start only two
+of them in the following order:
+
+1. taskpool-application
+2. process-application (example application)
+
+
+The modules can be started by running from command line in the top-level directory using Maven or start the
+packaged application using:
+
+
+[source,bash]
+----
+java -jar examples/scenarios/distributed-axon-server/taskpool-application/target/*.jar
+java -jar examples/scenarios/distributed-axon-server/process-application/target/*.jar
+----
+
+

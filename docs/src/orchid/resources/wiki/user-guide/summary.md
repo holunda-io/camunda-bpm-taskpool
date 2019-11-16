@@ -3,7 +3,7 @@
 title: User Guide
 
 ---
-## Taskpool Components
+## Components
 
 * [Overview](components/index.ad)
 * Engine Components 
@@ -20,10 +20,10 @@ title: User Guide
   * [Taskpool Cockpit](components/view-cockpit.ad)
 
 
-## Taskpool Examples
-* [Examples](examples.ad)
+## Working Example
+* [Working Example](example.ad)
 
-## Taskpool Usage Scenarios
-* [Scenarios](scenarios.ad)
+## Usage Scenarios
+* [Usage Scenarios](scenarios/index.ad)
 
 

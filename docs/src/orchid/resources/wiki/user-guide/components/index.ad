@@ -28,6 +28,6 @@ process application, task list application or even completely separately.
 View Components are responsible for creation of a unified read-only projection of tasks and business data items.
 They are typically deployed as a part of the task list application.
 
-* link:./view-simple[Simple View]
+* link:./view-simple[In-Memory View]
 * link:./view-mongo[Mongo View]
 * link:./view-cockpit[Taskpool Cockpit]

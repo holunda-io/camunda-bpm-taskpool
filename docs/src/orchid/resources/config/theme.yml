@@ -44,3 +44,6 @@ menu:
       - type: 'page'
         title: 'License'
         itemId: 'License'
+      - type: 'page'
+        title: 'Project Readme'
+        itemId: 'Readme'
