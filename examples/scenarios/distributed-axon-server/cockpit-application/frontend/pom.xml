@@ -5,17 +5,18 @@
 
   <parent>
     <groupId>io.holunda.taskpool</groupId>
-    <artifactId>camunda-bpm-taskpool-cockpit</artifactId>
+    <artifactId>taskpool-example-cockpit-root</artifactId>
     <version>2.0.6-SNAPSHOT</version>
   </parent>
 
-  <artifactId>camunda-bpm-taskpool-cockpit-frontend</artifactId>
-  <name>view/${project.artifactId}</name>
+  <artifactId>taskpool-example-cockpit-frontend</artifactId>
+  <name>examples/${project.artifactId}</name>
 
   <properties>
     <npm.version>6.4.1</npm.version>
     <node.version>v10.15.1</node.version>
     <angular-app-name>taskpool-cockpit</angular-app-name>
+    <maven.deploy.skip>true</maven.deploy.skip>
   </properties>
 
   <build>

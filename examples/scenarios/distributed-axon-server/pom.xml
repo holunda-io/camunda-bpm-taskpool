@@ -20,6 +20,7 @@
   <modules>
     <module>process-application</module>
     <module>taskpool-application</module>
+    <module>cockpit-application</module>
   </modules>
 
 </project>

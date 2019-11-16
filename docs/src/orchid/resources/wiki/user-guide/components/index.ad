@@ -30,4 +30,3 @@ They are typically deployed as a part of the task list application.
 
 * link:./view-simple[In-Memory View]
 * link:./view-mongo[Mongo View]
-* link:./view-cockpit[Taskpool Cockpit]

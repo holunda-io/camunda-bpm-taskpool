@@ -91,5 +91,5 @@ camunda:
 Now, start your process engine. If you run into a user task, you should see on the console how this is passed to task pool.
 In order to check the result, just open http://localhost:8081/tasklist/ in your browser.
 
-For more details on configuration of different options, please consult the link:/wiki/user-guide/examples[Taskpool Examples] and the
+For more details on configuration of different options, please consult the link:/wiki/user-guide/example[Taskpool Example] and the
 link:/wiki/user-guide[User Guide].

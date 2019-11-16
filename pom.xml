@@ -50,7 +50,6 @@
     <module>taskpool</module>
     <module>datapool</module>
     <module>view</module>
-    <module>examples</module>
   </modules>
 
   <dependencyManagement>
@@ -81,7 +80,6 @@
         <artifactId>camunda-bpm-taskpool-variable-serializer</artifactId>
         <version>${project.version}</version>
       </dependency>
-
 
       <dependency>
         <groupId>io.holunda.taskpool</groupId>
@@ -988,6 +986,18 @@
       </activation>
       <modules>
         <module>docs</module>
+      </modules>
+    </profile>
+
+    <profile>
+      <id>examples</id>
+      <activation>
+        <property>
+          <name>!skipExamples</name>
+        </property>
+      </activation>
+      <modules>
+        <module>examples</module>
       </modules>
     </profile>
 

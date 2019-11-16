@@ -15,17 +15,16 @@
   <modules>
     <module>view-api</module>
     <module>simple</module>
-    <module>cockpit</module>
     <module>mongo</module>
   </modules>
-  
-  <dependencyManagement>  
+
+  <dependencyManagement>
     <dependencies>
       <dependency>
         <groupId>io.holunda.taskpool</groupId>
         <artifactId>camunda-bpm-taskpool-view-api</artifactId>
         <version>${project.version}</version>
-      </dependency>    
+      </dependency>
       <dependency>
         <groupId>io.holunda.taskpool</groupId>
         <artifactId>camunda-bpm-taskpool-api</artifactId>
@@ -35,7 +34,7 @@
         <groupId>io.holunda.taskpool</groupId>
         <artifactId>camunda-bpm-datapool-api</artifactId>
         <version>${project.version}</version>
-      </dependency>      
+      </dependency>
     </dependencies>
   </dependencyManagement>
 

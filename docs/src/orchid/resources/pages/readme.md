@@ -1,5 +1,5 @@
 ---
-title: Project Readme
+title: Readme
 components:
   - type: "readme"
 ---

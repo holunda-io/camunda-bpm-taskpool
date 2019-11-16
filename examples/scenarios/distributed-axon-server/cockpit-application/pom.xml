@@ -5,28 +5,22 @@
 
   <parent>
     <groupId>io.holunda.taskpool</groupId>
-    <artifactId>camunda-bpm-taskpool-view-root</artifactId>
+    <artifactId>taskpool-example-scenario-distributed-axon-server</artifactId>
     <version>2.0.6-SNAPSHOT</version>
   </parent>
 
-  <artifactId>camunda-bpm-taskpool-cockpit</artifactId>
-  <name>view/${project.artifactId}</name>
+  <artifactId>taskpool-example-cockpit-root</artifactId>
+  <name>examples/${project.artifactId}</name>
   <packaging>pom</packaging>
+
+  <properties>
+    <maven.deploy.skip>true</maven.deploy.skip>
+  </properties>
 
   <modules>
     <module>backend</module>
     <module>application</module>
   </modules>
-
-  <dependencyManagement>
-    <dependencies>
-      <dependency>
-        <groupId>io.holunda.taskpool</groupId>
-        <artifactId>camunda-bpm-taskpool-cockpit-backend</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-    </dependencies>
-  </dependencyManagement>
 
   <profiles>
     <profile>
@@ -39,15 +33,6 @@
       <modules>
         <module>frontend</module>
       </modules>
-      <dependencyManagement>
-        <dependencies>
-          <dependency>
-            <groupId>io.holunda.taskpool</groupId>
-            <artifactId>camunda-bpm-taskpool-cockpit-frontend</artifactId>
-            <version>${project.version}</version>
-          </dependency>
-        </dependencies>
-      </dependencyManagement>
     </profile>
   </profiles>
 
