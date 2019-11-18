@@ -5,7 +5,7 @@ title: Working Example
 == {{ page.title }}
 
 Along with library modules several example modules and applications are provided, demonstrating the main features of the solution.
-This includes a series of example applications for usage in different link:./scenarios[Usage Scenarios].
+This includes a series of example applications for usage in different link:../scenarios[Usage Scenarios].
 
 
 === Business context
@@ -60,7 +60,7 @@ examine the details of the `Approval Request` in the `Archive` again.
 
 === Running Examples
 
-To run the example please consult the link:./scenarios[Usage Scenarios] section.
+To run the example please consult the link:../scenarios[Usage Scenarios] section.
 
 TIP: Since the process application includes Camunda BPM engine, you can use the standard Camunda webapps by navigating to [http://localhost:8080/](http://localhost:8080/).
 The default user and password are `admin / admin `.

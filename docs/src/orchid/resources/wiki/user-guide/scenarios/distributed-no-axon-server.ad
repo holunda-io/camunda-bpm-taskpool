@@ -1,7 +1,6 @@
 ---
-
+pageId: distributed-no-axon-server
 title: Scenario without Axon Server
-
 ---
 
 == {{ page.title }}
@@ -34,10 +33,10 @@ image::{{baseUrl('assets/media/scenario_kafka_messaging_overview.png')}}["Kafka 
 
 image::{{baseUrl('assets/media/scenario_kafka_messaging_tx_view.png')}}["Kafka Message Transaction Overview"]
 
-==== From Process Application to Kafka
+=== From Process Application to Kafka
 
 image::{{baseUrl('assets/media/scenario_process_application_to_kafka_detail.png')}}["Process Application to Kafka Messaging"]
 
-==== From Kafka to Tasklist API
+=== From Kafka to Tasklist API
 
 image::{{baseUrl('assets/media/scenario_kafka_to_tasklist_detail.png')}}["Kafka to Tasklist API Messaging"]

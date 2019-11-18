@@ -1,7 +1,6 @@
 ---
-
+pageId: distributed-axon-server
 title: Distributed Scenario using Axon Server
-
 ---
 
 == {{ page.title }}
@@ -25,13 +24,13 @@ image::{{baseUrl('assets/media/deployment-axon-server.png')}}["Deployment of tas
 The following application is an example demonstrating the usage of the Camunda BPM Taskpool. The application is
 built as a SpringBoot process application and shows a simple approval process.
 
-==== Preparations
-
 ==== System Requirements
 
 * JDK 8
 * Docker
 * Docker Compose
+
+==== Preparations
 
 Before you begin, please build the entire project with `mvn clean install` from the command line in the project root directory.
 
@@ -56,16 +55,16 @@ docker-compose up -d
 To verify it is running, open your browser http://localhost:8024/[http://localhost:8024/]. You should see
 the Axon Server administration console.
 
+==== Start
+
 The demo application consists of several Maven modules. In order to start the example, you will need to start only two
 of them in the following order:
 
 1. taskpool-application
 2. process-application (example application)
 
-
 The modules can be started by running from command line in the top-level directory using Maven or start the
 packaged application using:
-
 
 [source,bash]
 ----

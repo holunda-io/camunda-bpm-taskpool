@@ -13,6 +13,10 @@ social:
     - link: 'https://www.holunda.io/camunda-bpm-taskpool/'
       label: 'Home'
       icon: 'fas fa-home'
+  slack:
+    - link: 'https://holunda.slack.com/messages/taskpool/'
+      label: 'Slack'
+      icon: 'fas fa-slack'
 menu:
 
   - type: 'submenu'

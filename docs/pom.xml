@@ -11,7 +11,7 @@
   <artifactId>camunda-bpm-taskpool-docs</artifactId>
 
   <properties>
-    <orchid.version>0.17.2</orchid.version>
+    <orchid.version>0.17.7</orchid.version>
     <baseUrl>http://localhost:8080/</baseUrl>
   </properties>
 
