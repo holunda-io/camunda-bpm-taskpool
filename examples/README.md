@@ -1,6 +1,7 @@
 # Taskpool Examples
 
-Please check the [User guide](https://www.holunda.io/camunda-bpm-taskpool/user-guide/)
+Please check the [User guide](https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/) first.
+
 The following Maven modules are part of taskpool examples: 
 
 * process-backend: example process application backend module, using Camunda SpringBoot starter.
@@ -12,5 +13,4 @@ The following Maven modules are part of taskpool examples:
 
 ## Scenarios
 
-Checkout the scenarios folder to find example applications for different usage scenarios. 
- 
+Checkout the scenarios folder to find example applications for different [Usage scenarios](https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/scenarios/). 
