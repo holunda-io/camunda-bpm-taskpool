@@ -9,25 +9,10 @@ pageId: 'quick-start'
 
 === Start example task list and example process application
 
-To start quickly, just start the Example Applications. For doing so, please run:
+To start quickly, just start the Example Applications. For doing so, please consult
+the link:/wiki/user-guide/example[Example Section].
 
-[source,bash]
-----
-git clone https://github.com/holunda-io/camunda-bpm-taskpool.git
-cd camunda-bpm-taskpool
-./mvnw clean install
-./.docker/setup.sh
-
-docker-compose -d up
-./mvnw spring-boot:run -f examples/taskpool-application
-./mvnw spring-boot:run -f examples/process-application
-----
-
-Now, you should have a running infrastructure, the example task list and the example process application.
-You can already call the empty task list by opening http://localhost:8081/tasklist/ in your browser. You can
-start new approval request and use the example for application to get an idea of how it works.
-
-=== Configure your process application
+=== Configure your existing process application
 
 Apart from the example application, you might be interested in integrating task pool into your existing
 application. To do so, you need to enable your Camunda process engine to use the library.

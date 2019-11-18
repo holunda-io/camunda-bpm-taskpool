@@ -12,11 +12,15 @@ sourceDirs:
   - './../../../../view/simple/src/main/kotlin'
   - './../../../../view/mongo/src/main/kotlin'
 
-classPages:
-  menu:
-    - type: 'separator'
-      title: 'Class Info'
-      order: 100
-    - type: 'kotlindocClassLinks'
-      includeItems: true
-      order: 110
+pages:
+  extraCss:
+    - 'assets/css/orchidKotlindoc.scss'
+
+#classPages:
+#  menu:
+#    - type: 'separator'
+#      title: 'Class Info'
+#      order: 100
+#    - type: 'kotlindocClassLinks'
+#      includeItems: true
+#      order: 110

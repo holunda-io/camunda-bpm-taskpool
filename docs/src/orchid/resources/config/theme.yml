@@ -4,6 +4,7 @@ primaryColor: '#B10000'
 trianglifyOptions:
   x_colors: ['#000', '#B10000', '#000']
 extraCss:
+  - 'assets/css/menu.scss'
   - 'assets/css/asciidoc-admonitionblock.scss'
 social:
   twitter: 'holisticon'
@@ -13,9 +14,6 @@ social:
       label: 'Home'
       icon: 'fas fa-home'
 menu:
-  - type: 'page'
-    itemId: 'Quick Start'
-    title: 'Quick Start'
 
   - type: 'submenu'
     title: 'Introduction'
