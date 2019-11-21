@@ -17,7 +17,7 @@
 
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <java.version>1.8</java.version>
+    <java.version>11</java.version>
     <version.java>${java.version}</version.java>
 
     <pattern.class.itest>**/*ITest.*</pattern.class.itest>
@@ -37,7 +37,7 @@
     <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
 
     <kotlin-logging.version>1.6.22</kotlin-logging.version>
-    <mockito.version>2.18.3</mockito.version>
+    <mockito.version>2.20.0</mockito.version>
     <version.camunda.spin>1.7.1</version.camunda.spin>
     <jackson.version>2.10.0</jackson.version>
     <org.mapstruct.version>1.2.0.Final</org.mapstruct.version>
@@ -363,7 +363,7 @@
           <!-- validate swagger -->
           <groupId>com.github.sylvainlaurent.maven</groupId>
           <artifactId>swagger-validator-maven-plugin</artifactId>
-          <version>1.2.2</version>
+          <version>1.2.6</version>
           <executions>
             <execution>
               <id>validate</id>
@@ -477,11 +477,10 @@
           <!-- java compiler -->
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
-          <version>3.7.0</version>
+          <version>3.8.0</version>
           <configuration>
             <encoding>UTF-8</encoding>
-            <source>1.8</source>
-            <target>1.8</target>
+            <release>11</release>
           </configuration>
           <executions>
             <!-- Replacing default-compile as it is treated specially by maven -->
@@ -671,6 +670,7 @@
           <artifactId>maven-surefire-plugin</artifactId>
           <version>2.22.1</version>
           <configuration>
+            <forkCount>0</forkCount>
             <useSystemClassLoader>false</useSystemClassLoader>
             <runOrder>random</runOrder>
             <excludes>
@@ -679,14 +679,19 @@
             </excludes>
             <!-- Sets the VM argument line used when unit tests are run. -->
             <!-- prevent the annoying ForkedBooter process from stealing window focus on Mac OS -->
-            <argLine>-Djava.awt.headless=true ${surefireArgLine} -XX:+StartAttachListener</argLine>
+            <argLine>-Djava.awt.headless=true ${surefireArgLine} -XX:+StartAttachListener --illegal-access=permit</argLine>
           </configuration>
         </plugin>
 
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-failsafe-plugin</artifactId>
-          <version>2.18.1</version>
+          <version>2.22.0</version>
+          <configuration>
+            <argLine>
+              --illegal-access=permit
+            </argLine>
+          </configuration>
         </plugin>
 
         <!-- gitflow -->
@@ -793,6 +798,26 @@
     </pluginManagement>
 
     <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <version>3.0.0-M2</version>
+        <executions>
+          <execution>
+            <id>enforce-maven</id>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+            <configuration>
+              <rules>
+                <requireMavenVersion>
+                  <version>3.6</version>
+                </requireMavenVersion>
+              </rules>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
       <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
