@@ -7,12 +7,12 @@ pageId: 'contribution'
 
 There are several ways in which you may contribute to this project.
 
-* https://github.com/holuda-io/camunda-bpm-taskpool/issues[File issues]
+* https://github.com/holunda-io/camunda-bpm-taskpool/issues[File issues]
 * Submit a pull requests
 
 === Found a bug or missing feature?
 
-Please https://github.com/holuda-io/camunda-bpm-taskpool/issues[file an issue] in our
+Please https://github.com/holunda-io/camunda-bpm-taskpool/issues[file an issue] in our
 issue tracking system.
 
 === Submit a Pull Request
