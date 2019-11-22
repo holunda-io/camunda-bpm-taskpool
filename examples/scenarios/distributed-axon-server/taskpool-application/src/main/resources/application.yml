@@ -10,13 +10,15 @@ camunda:
     form-url-resolver:
       defaultTaskTemplate:  "/tasks/${formKey}/${id}?userId=%userId%"
       defaultProcessTemplate: "/${formKey}?userId=%userId%"
+      defaultBoTemplate: "/${entryType}/${entryId}?userId=%userId%"
       defaultApplicationTemplate: "http://localhost:${server.port}/${applicationName}"
       applications:
         example-process-approval:
           url: "http://localhost:8080/example-process-approval"
           processes:
             process_approve_request: "start?userId=%userId%"
-
+          bos:
+            io.holunda.camunda.taskpool.example.ApprovalRequest: "approval-request/${entryId}?userId=%userId%"
 
 logging.level.io.holunda.camunda.taskpool:
   core: WARN

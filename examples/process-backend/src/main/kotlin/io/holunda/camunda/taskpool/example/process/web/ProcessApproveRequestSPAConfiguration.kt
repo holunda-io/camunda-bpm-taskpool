@@ -22,6 +22,7 @@ object Web {
 
   const val START = "/start"
   const val TASKS = "/tasks" // see process-forms/src/app/app-routing.module.ts
+  const val APPROVAL_REQUEST = "/approval-request" // see process-forms/src/app/app-routing.module.ts
   const val ANY = "/**"
 
   private const val CSS = "/**/*.css"
@@ -40,7 +41,7 @@ object Web {
 }
 
 @Configuration
-open class ProcessApproveRequestSPAConfiguration(
+class ProcessApproveRequestSPAConfiguration(
 // see process-forms/src/app/index.html#base@href
   @Value("\${spring.application.name}") val applicationName: String
 ) : WebMvcConfigurer {
@@ -58,6 +59,7 @@ open class ProcessApproveRequestSPAConfiguration(
     registry
       .addResourceHandler(
         "/$applicationName" + Web.TASKS + Web.ANY,
+        "/$applicationName" + Web.APPROVAL_REQUEST + Web.ANY,
         "/$applicationName" + Web.START
       )
       .addResourceLocations("$RESOURCE_LOCATION/index.html")

@@ -2,12 +2,13 @@ import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {of} from 'rxjs-compat/observable/of';
 import {StartComponent} from './start.component';
-import {FormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 import {EnvironmentHelperService} from 'app/services/environment.helper.service';
 import {RequestService} from 'process/api/request.service';
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {ApprovalRequestDraft} from 'process/model/approvalRequestDraft';
+import {RequestFormComponent} from 'app/components/request-form/request-form.component';
 
 @Component({
   selector: 'app-request',
@@ -47,11 +48,13 @@ describe('Component: StartComponent', () => {
 
     TestBed.configureTestingModule({
       imports: [
-        FormsModule
+        FormsModule,
+        ReactiveFormsModule
       ],
       declarations: [
         StartComponent,
-        StubRequestComponent
+        StubRequestComponent,
+        RequestFormComponent
       ],
       providers: [
         {
