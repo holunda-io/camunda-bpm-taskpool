@@ -1,0 +1,20 @@
+<div class="row">
+  <div class="col-lg-12">
+    <h1><img src="assets/holunda-io-logo.png" title="holunda logo">Approval request</h1>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-lg-12 content">
+    <div class="container-fluid">
+      <app-request-view [approvalRequest]="approvalRequest"></app-request-view>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-lg-12 content">
+  <div class="buttons">
+    <a appExternalUrl class="btn btn-secondary" role="button" [href]="environment.tasklistUrl">Back to archive</a>
+  </div>
+  </div>
+</div>

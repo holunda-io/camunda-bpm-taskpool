@@ -1,5 +1,6 @@
 package io.holunda.camunda.taskpool.example.users
 
+import io.holunda.camunda.taskpool.view.auth.UnknownUserException
 import io.holunda.camunda.taskpool.view.auth.User
 import io.holunda.camunda.taskpool.view.auth.UserService
 import org.springframework.stereotype.Component
@@ -17,7 +18,7 @@ class SimpleUserService : UserService, UserStoreService {
   )
 
   override fun getUser(userIdentifier: String): User {
-    return muppetUsers[userIdentifier] ?: throw IllegalArgumentException("Unknown user $userIdentifier")
+    return muppetUsers[userIdentifier] ?: throw UnknownUserException("Unknown user identified by '$userIdentifier'")
   }
 
   override fun getUsers(): List<User> = muppetUsers.values.toList()

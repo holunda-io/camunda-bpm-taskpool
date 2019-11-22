@@ -23,6 +23,7 @@ paths:
         200:
           schema:
             $ref: '#/definitions/Environment'
+
   '/request':
     post:
       tags:
@@ -47,30 +48,31 @@ paths:
         201:
           description: Sucessful operation.
 
-  '/request/{id}/start':
-    post:
+  '/request/{id}':
+    get:
       tags:
         - Request
-      summary: Starts approaval process for a request draft with specified id.
+      summary: Loads request for specified id.
       produces:
         - application/json
       parameters:
-        - in: path
-          name: id
-          type: string
-          description: Approval request id.
-          required: true
         - in: header
           name: X-Current-User-ID
           description: Specifies the id of current user.
           type: string
           required: true
-      operationId: approveDraft
+        - in: path
+          name: id
+          type: string
+          description: Request id.
+          required: true
+      operationId: getApprovalRequest
       responses:
-        201:
+        200:
           description: Sucessful operation.
-        400:
-          description: Error starting approval process, probably wrong id.
+          schema:
+            title: Approval Request.
+            $ref: '#/definitions/ApprovalRequest'
 
   '/approve-request/id/{id}':
     get:
