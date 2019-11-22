@@ -1,0 +1,65 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: example-process-approval
+  jpa:
+    generate-ddl: true
+    hibernate.ddl-auto: create-drop
+    show-sql: false
+    open-in-view: false
+
+camunda:
+  bpm:
+    default-serialization-format: application/json
+    authorization:
+      enabled: false
+    history-level: full
+    id-generator: strong
+    database:
+      schema-update: true
+    webapp:
+      index-redirect-enabled: false
+  taskpool:
+    collector:
+      tasklist-url: http://localhost:8081/tasklist/
+      process:
+        enabled: true
+      enricher:
+        application-name: ${spring.application.name}  # default
+        type: processVariables
+      sender:
+        enabled: true
+        type: tx
+    dataentry:
+      sender:
+        enabled: true
+        type: simple
+        applicationName: ${spring.application.name}  # default
+    form-url-resolver:
+      defaultApplicationTemplate: "http://localhost:${server.port}/${applicatioName}"
+      defaultTaskTemplate:  "/tasks/${formKey}/${id}?userId=%userId%"
+      defaultProcessTemplate: "/${formKey}?userId=%userId%"
+
+logging.level:
+  io.holunda.camunda:
+    taskpool:
+      sender: DEBUG
+      core: WARN
+      view.simple: DEBUG
+    datapool:
+      sender: DEBUG
+  org.hibernate.engine.jdbc.env.internal.LobCreatorBuilderImpl: ERROR
+
+swagger:
+  enabled: true
+  redirect: false
+  apiInfo:
+    title: Example Process Application
+    description: REST interface of the example process application.
+  dockets:
+    process:
+      basePackage: "io.holunda.camunda.taskpool.example.process.rest"
+      path: "/**"
+
