@@ -27,7 +27,7 @@ def isStable() {
 
 node {
 
-  env.JAVA_HOME = tool 'jdk-8-oracle'
+  env.JAVA_HOME = tool 'jdk-11.0.2'
   env.PATH = "${env.JAVA_HOME}/bin:${env.PATH}"
   def err = null
   def mvnOpts = "-V -U --batch-mode"
@@ -43,7 +43,7 @@ node {
         }
 
         stage('Build') {
-            sh "./mvnw clean verify -T4 ${mvnOpts}"
+            sh "./mvnw clean verify ${mvnOpts}"
         }
 
         stage('I-Test') {

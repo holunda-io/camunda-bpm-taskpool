@@ -1,7 +1,7 @@
 sudo: false
 language: java
 jdk:
-  - openjdk8
+  - openjdk11
 cache:
   directories:
   - $HOME/.m2
@@ -20,7 +20,7 @@ install: true
 # Verify
 #
 script:
-  - ./mvnw --settings .travis/settings.xml clean verify -T4 -U -B
+  - ./mvnw --settings .travis/settings.xml clean verify -U -B
   - ./mvnw --settings .travis/settings.xml integration-test failsafe:verify -Pitest -DskipFrontend -B
 #
 # Coveralls

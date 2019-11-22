@@ -17,7 +17,7 @@
 
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <java.version>11</java.version>
+    <java.version>1.8</java.version>
     <version.java>${java.version}</version.java>
 
     <pattern.class.itest>**/*ITest.*</pattern.class.itest>
@@ -43,6 +43,8 @@
     <org.mapstruct.version>1.2.0.Final</org.mapstruct.version>
     <camunda-bpm-assert.version>4.0.0</camunda-bpm-assert.version>
     <awaitability.version>3.1.5</awaitability.version>
+
+    <maven-surefire-plugin.version>3.0.0-M4</maven-surefire-plugin.version>
   </properties>
 
   <modules>
@@ -480,7 +482,8 @@
           <version>3.8.0</version>
           <configuration>
             <encoding>UTF-8</encoding>
-            <release>11</release>
+            <source>1.8</source>
+            <target>1.8</target>
           </configuration>
           <executions>
             <!-- Replacing default-compile as it is treated specially by maven -->
@@ -668,7 +671,7 @@
 
         <plugin>
           <artifactId>maven-surefire-plugin</artifactId>
-          <version>2.22.1</version>
+          <version>${maven-surefire-plugin.version}</version>
           <configuration>
             <forkCount>0</forkCount>
             <useSystemClassLoader>false</useSystemClassLoader>
@@ -679,7 +682,12 @@
             </excludes>
             <!-- Sets the VM argument line used when unit tests are run. -->
             <!-- prevent the annoying ForkedBooter process from stealing window focus on Mac OS -->
-            <argLine>-Djava.awt.headless=true ${surefireArgLine} -XX:+StartAttachListener --illegal-access=permit</argLine>
+            <argLine>
+              -Djava.awt.headless=true
+              ${surefireArgLine}
+              -XX:+StartAttachListener
+              --illegal-access=permit
+            </argLine>
           </configuration>
         </plugin>
 
@@ -852,6 +860,8 @@
             <configuration>
               <!-- Skip Unit test execution on ITest profile run -->
               <skipTests>true</skipTests>
+              <forkCount>0</forkCount>
+              <argLine>--illegal-access=permit</argLine>
             </configuration>
           </plugin>
           <plugin>
@@ -871,7 +881,10 @@
               </includes>
               <!-- Sets the VM argument line used when integration tests are run. -->
               <!-- prevent the annoying ForkedBooter process from stealing window focus on Mac OS -->
-              <argLine>-Djava.awt.headless=true ${failsafeArgLine}</argLine>
+              <argLine>
+                -Djava.awt.headless=true ${failsafeArgLine}
+                --illegal-access=permit
+              </argLine>
             </configuration>
           </plugin>
         </plugins>
