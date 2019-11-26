@@ -45,6 +45,7 @@
     <awaitability.version>3.1.5</awaitability.version>
 
     <maven-surefire-plugin.version>3.0.0-M4</maven-surefire-plugin.version>
+    <maven-failsafe-plugin.version>3.0.0-M4</maven-failsafe-plugin.version>
   </properties>
 
   <modules>
@@ -694,8 +695,9 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-failsafe-plugin</artifactId>
-          <version>2.22.0</version>
+          <version>${maven-failsafe-plugin.version}</version>
           <configuration>
+            <forkCount>0</forkCount>
             <argLine>
               --illegal-access=permit
             </argLine>
@@ -867,6 +869,7 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-failsafe-plugin</artifactId>
+            <version>${maven-failsafe-plugin.version}</version>
             <executions>
               <execution>
                 <goals>
@@ -875,6 +878,7 @@
               </execution>
             </executions>
             <configuration>
+              <forkCount>0</forkCount>
               <includes>
                 <include>${pattern.class.itest}</include>
                 <include>${pattern.package.itest}</include>
