@@ -7,6 +7,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         jdk: ['1.8', '11.0.5']
     steps:
@@ -15,12 +16,28 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: ${{ matrix.jdk }}
-      - name: Make dir world writable
-        run: chmod -R o+w .
+      - name: WhoAmI
+        run: id
+      - name: Log folder
+        run: ls -ln .
       - name: Build with Maven
         run: ./mvnw clean verify -U -B
+      - name: WhoAmI
+        run: id
+      - name: Log folder
+        run: ls -ln .
+      - name: Log folder
+        run: ls -ln view/mongo/
+      - name: Log folder
+        run: ls -ln view/mongo/target/
+      - name: Create jgiven folder
+        run: mkdir -p target/jgiven-reports/json
       - name: Run ITests with Maven
-        run: ./mvnw clean integration-test failsafe:verify -Pitest -DskipFrontend -B
+        run: ./mvnw integration-test failsafe:verify -Pitest -DskipFrontend -B
+      - name: Log folder
+        run: ls -ln target/
+      - name: Log folder
+        run: ls -ln view/mongo/target/
 
   codecov:
     runs-on: ubuntu-latest
