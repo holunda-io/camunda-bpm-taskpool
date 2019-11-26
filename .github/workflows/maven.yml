@@ -15,6 +15,8 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: ${{ matrix.jdk }}
+      - name: Make dir world writable
+        run: chmod -R o+w .
       - name: Build with Maven
         run: ./mvnw clean verify -U -B
       - name: Run ITests with Maven
