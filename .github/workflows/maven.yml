@@ -16,28 +16,12 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: ${{ matrix.jdk }}
-      - name: WhoAmI
-        run: id
-      - name: Log folder
-        run: ls -ln .
       - name: Build with Maven
         run: ./mvnw clean verify -U -B
-      - name: WhoAmI
-        run: id
-      - name: Log folder
-        run: ls -ln .
-      - name: Log folder
-        run: ls -ln view/mongo/
-      - name: Log folder
-        run: ls -ln view/mongo/target/
-      - name: Create jgiven folder
+      - name: Create jgiven folder (because of a bug in jgiven / CommonReportHelper)
         run: mkdir -p target/jgiven-reports/json
       - name: Run ITests with Maven
         run: ./mvnw integration-test failsafe:verify -Pitest -DskipFrontend -B
-      - name: Log folder
-        run: ls -ln target/
-      - name: Log folder
-        run: ls -ln view/mongo/target/
 
   codecov:
     runs-on: ubuntu-latest
