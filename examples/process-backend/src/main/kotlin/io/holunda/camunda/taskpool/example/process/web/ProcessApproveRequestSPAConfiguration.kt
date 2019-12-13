@@ -43,7 +43,7 @@ object Web {
 @Configuration
 class ProcessApproveRequestSPAConfiguration(
 // see process-forms/src/app/index.html#base@href
-  @Value("\${spring.application.name}") val applicationName: String
+  @Value("\${spring.application.name:unset-application-name}") val applicationName: String
 ) : WebMvcConfigurer {
 
   /**

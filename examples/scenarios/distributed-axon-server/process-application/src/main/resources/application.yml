@@ -1,6 +1,5 @@
 server:
   port: 8080
-
 spring:
   application:
     name: example-process-approval

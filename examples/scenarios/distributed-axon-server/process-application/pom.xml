@@ -22,6 +22,10 @@
       <artifactId>taskpool-example-process-backend</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>org.postgresql</groupId>
+      <artifactId>postgresql</artifactId>
+    </dependency>
   </dependencies>
 
   <build>
