@@ -1,6 +1,7 @@
 package io.holunda.camunda.taskpool.example.tasklist
 
-import io.holunda.camunda.taskpool.example.tasklist.Web.STATIC_LOCATION
+import io.holunda.camunda.taskpool.example.tasklist.Web.RESOURCE_LOCATION
+import io.holunda.camunda.taskpool.example.tasklist.Web.ROUTES
 import io.holunda.camunda.taskpool.example.tasklist.Web.STATIC_RESOURCES_LONG_CACHE
 import io.holunda.camunda.taskpool.example.tasklist.Web.STATIC_RESOURCES_SHORT_CACHE
 import org.springframework.beans.factory.annotation.Value
@@ -19,64 +20,44 @@ import java.util.concurrent.TimeUnit
 
 
 object Web {
-  const val BASE_PATH = "tasklist"
 
-  private const val CSS = "$BASE_PATH/*.css"
-  private const val JS = "$BASE_PATH/*.js"
-  private const val FONT2 = "$BASE_PATH/*.woff2"
-  private const val FONT = "$BASE_PATH/*.woff"
-  private const val TTF = "$BASE_PATH/*.ttf"
-  private const val PNG = "$BASE_PATH/**/*.png"
-  private const val JPG = "$BASE_PATH/**/*.jpg"
-  private const val ICO = "$BASE_PATH/*.ico"
-  private const val JSON = "$BASE_PATH/*.json"
+  const val BASE_PATH = "taskpool"
+  const val RESOURCE_LOCATION = "classpath:/static/taskpool/"
 
-  val STATIC_RESOURCES_LONG_CACHE = arrayOf(CSS, JS, FONT2, FONT, TTF)
-  val STATIC_RESOURCES_SHORT_CACHE = arrayOf(PNG, JPG, ICO, JSON)
+  val ROUTES = arrayOf("/${BASE_PATH}/", "/${BASE_PATH}/index.html", "/${BASE_PATH}/tasks", "/${BASE_PATH}/archive")
+  val STATIC_RESOURCES_LONG_CACHE = arrayOf("$BASE_PATH/*.css", "$BASE_PATH/*.js", "$BASE_PATH/*.woff2", "$BASE_PATH/*.woff", "$BASE_PATH/*.ttf")
+  val STATIC_RESOURCES_SHORT_CACHE = arrayOf("$BASE_PATH/**/*.png", "$BASE_PATH/**/*.jpg", "$BASE_PATH/*.ico", "$BASE_PATH/*.json")
 
-  const val STATIC_LOCATION = "classpath:/static/tasklist-angular/"
 }
 
 @Configuration
-class TasklistSPAConfiguration : WebFluxConfigurer {
-
-  @Value("${STATIC_LOCATION}index.html")
-  private lateinit var indexHtml: Resource
+class TasklistSPAConfiguration(
+  @Value("${RESOURCE_LOCATION}index.html") val indexHtml: Resource
+) : WebFluxConfigurer {
 
   @Bean
   fun tasklistSpaRouter() = router {
-
-    GET("/${Web.BASE_PATH}/") { ok().contentType(TEXT_HTML).syncBody(indexHtml) }
-    GET("/${Web.BASE_PATH}/index.html") { ok().contentType(TEXT_HTML).syncBody(indexHtml) }
-    GET("/${Web.BASE_PATH}/tasks") { ok().contentType(TEXT_HTML).syncBody(indexHtml) }
-    GET("/${Web.BASE_PATH}/archive") { ok().contentType(TEXT_HTML).syncBody(indexHtml) }
+    ROUTES.forEach {
+      GET(it) { ok().contentType(TEXT_HTML).bodyValue(indexHtml) }
+    }
   }
 
   override fun addResourceHandlers(registry: ResourceHandlerRegistry) {
-
-    /**
-     * Deliver the platform SPA index for all frontend states.
-     */
-    /*registry
-      .addResourceHandler(
-        "${Web.BASE_PATH}/index.html",
-        "${Web.BASE_PATH}/",
-        "${Web.BASE_PATH}/tasks/",
-        "${Web.BASE_PATH}/archive/"
-      )
-      .addResourceLocations(STATIC_LOCATION)
-      // .setCacheControl(CacheControl.maxAge(1, TimeUnit.DAYS))
-    */
     registry
       .addResourceHandler(*STATIC_RESOURCES_LONG_CACHE)
-      .addResourceLocations(STATIC_LOCATION)
+      .addResourceLocations(RESOURCE_LOCATION)
       .setCacheControl(CacheControl.maxAge(365, TimeUnit.DAYS))
 
     registry
       .addResourceHandler(*STATIC_RESOURCES_SHORT_CACHE)
-      .addResourceLocations(STATIC_LOCATION)
+      .addResourceLocations(RESOURCE_LOCATION)
       .setCacheControl(CacheControl.maxAge(1, TimeUnit.HOURS))
 
+    registry.addResourceHandler("/swagger-ui.html**")
+      .addResourceLocations("classpath:/META-INF/resources/");
+
+    registry.addResourceHandler("/webjars/**")
+      .addResourceLocations("classpath:/META-INF/resources/webjars/");
   }
 
   override fun configurePathMatching(configurer: PathMatchConfigurer) {

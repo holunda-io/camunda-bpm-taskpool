@@ -5,10 +5,13 @@ info:
   description: API for the example approval process.
 basePath: '/example-process-approval/rest/'
 tags:
-- name: Approve Request
-  description: Operations on task approve request.
 - name: Request
-  description: Operations to maniulate requests.
+  description: Operations to manipulate requests.
+- name: User Task Amend Request
+  description: Operations on task amend request.
+- name: User Task Approve Request
+  description: Operations on task approve request.
+
 schemes:
 - http
 - https
@@ -23,6 +26,7 @@ paths:
         200:
           schema:
             $ref: '#/definitions/Environment'
+
   '/request':
     post:
       tags:
@@ -47,35 +51,36 @@ paths:
         201:
           description: Sucessful operation.
 
-  '/request/{id}/start':
-    post:
+  '/request/{id}':
+    get:
       tags:
         - Request
-      summary: Starts approaval process for a request draft with specified id.
+      summary: Loads request for specified id.
       produces:
         - application/json
       parameters:
-        - in: path
-          name: id
-          type: string
-          description: Approval request id.
-          required: true
         - in: header
           name: X-Current-User-ID
           description: Specifies the id of current user.
           type: string
           required: true
-      operationId: approveDraft
+        - in: path
+          name: id
+          type: string
+          description: Request id.
+          required: true
+      operationId: getApprovalRequest
       responses:
-        201:
+        200:
           description: Sucessful operation.
-        400:
-          description: Error starting approval process, probably wrong id.
+          schema:
+            title: Approval Request.
+            $ref: '#/definitions/ApprovalRequest'
 
   '/approve-request/id/{id}':
     get:
       tags:
-        - Approve Request
+        - User Task Approve Request
       summary: Retrieves information about the task approve request with specified id.
       produces:
         - application/json
@@ -99,7 +104,7 @@ paths:
             $ref: '#/definitions/TaskApproveRequestFormData'
     post:
       tags:
-        - Approve Request
+        - User Task Approve Request
       summary: Receives form data for the completion of the task approve request with specified id.
       consumes:
         - application/json
@@ -127,7 +132,7 @@ paths:
   '/amend-request/id/{id}':
     get:
       tags:
-        - Amend Request
+        - User Task Amend Request
       summary: Retrieves information about the task amend request with specified id.
       produces:
         - application/json
@@ -151,7 +156,7 @@ paths:
             $ref: '#/definitions/TaskAmendRequestFormData'
     post:
       tags:
-        - Amend Request
+        - User Task Amend Request
       summary: Receives form data for the completion of the task amend request with specified id.
       consumes:
         - application/json

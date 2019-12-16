@@ -25,23 +25,26 @@
 
 
     <camunda-ee>false</camunda-ee>
-    <camunda.version>7.11.0</camunda.version>
-    <camunda.version.ee>7.11.4-ee</camunda.version.ee>
+    <camunda.version>7.12.0</camunda.version>
+    <camunda.version.ee>7.12.0-ee</camunda.version.ee>
 
-    <springboot.version>2.1.6.RELEASE</springboot.version>
-    <camunda-springboot.version>3.3.4</camunda-springboot.version>
+    <springboot.version>2.2.2.RELEASE</springboot.version>
+    <spring-framework.version>5.2.2.RELEASE</spring-framework.version>
+    <camunda-springboot.version>3.4.0</camunda-springboot.version>
+    <project-reactor.version>3.3.1.RELEASE</project-reactor.version>
     <axon.version>4.2</axon.version>
 
     <kotlin.version>1.3.50</kotlin.version>
     <kotlin.compiler.jvmTarget>${java.version}</kotlin.compiler.jvmTarget>
     <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
 
+    <springfox.version>3.0.0-SNAPSHOT</springfox.version>
     <kotlin-logging.version>1.6.22</kotlin-logging.version>
     <mockito.version>2.18.3</mockito.version>
     <version.camunda.spin>1.7.1</version.camunda.spin>
     <jackson.version>2.10.0</jackson.version>
     <org.mapstruct.version>1.2.0.Final</org.mapstruct.version>
-    <camunda-bpm-assert.version>4.0.0</camunda-bpm-assert.version>
+    <camunda-bpm-assert.version>5.0.0</camunda-bpm-assert.version>
     <awaitability.version>3.1.5</awaitability.version>
   </properties>
 
@@ -180,6 +183,7 @@
         <scope>import</scope>
         <type>pom</type>
       </dependency>
+
       <!-- Kotlin -->
       <dependency>
         <groupId>org.jetbrains.kotlin</groupId>
@@ -246,6 +250,24 @@
         <artifactId>axon-modelling</artifactId>
         <version>${axon.version}</version>
       </dependency>
+
+      <!-- Swagger -->
+      <dependency>
+        <groupId>io.springfox</groupId>
+        <artifactId>springfox-swagger2</artifactId>
+        <version>${springfox.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.springfox</groupId>
+        <artifactId>springfox-spring-webflux</artifactId>
+        <version>${springfox.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.springfox</groupId>
+        <artifactId>springfox-swagger-ui</artifactId>
+        <version>${springfox.version}</version>
+      </dependency>
+
 
       <!-- Testing -->
       <dependency>
@@ -333,6 +355,10 @@
     <dependency>
       <groupId>org.jetbrains.kotlin</groupId>
       <artifactId>kotlin-reflect</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.github.microutils</groupId>
+      <artifactId>kotlin-logging</artifactId>
     </dependency>
     <dependency>
       <groupId>org.jetbrains.kotlin</groupId>
@@ -1044,7 +1070,14 @@
       </releases>
     </pluginRepository>
   </pluginRepositories>
-
+  <repositories>
+    <!-- Swagger Snapshots -->
+    <repository>
+      <id>jcenter-snapshots</id>
+      <name>jcenter</name>
+      <url>http://oss.jfrog.org/artifactory/oss-snapshot-local/</url>
+    </repository>
+  </repositories>
   <developers>
     <developer>
       <id>zambrovski</id>

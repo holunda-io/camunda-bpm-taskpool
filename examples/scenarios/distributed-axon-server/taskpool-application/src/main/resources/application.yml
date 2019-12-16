@@ -8,32 +8,19 @@ spring:
 camunda:
   taskpool:
     form-url-resolver:
-      defaultTaskTemplate:  "/tasks/${formKey}/${id}?userId=%userId%"
-      defaultProcessTemplate: "/${formKey}?userId=%userId%"
+      defaultTaskTemplate:  "tasks/${formKey}/${id}?userId=%userId%"
+      defaultProcessTemplate: "${formKey}?userId=%userId%"
+      defaultBoTemplate: "${entryType}/${entryId}?userId=%userId%"
       defaultApplicationTemplate: "http://localhost:${server.port}/${applicationName}"
       applications:
         example-process-approval:
           url: "http://localhost:8080/example-process-approval"
           processes:
             process_approve_request: "start?userId=%userId%"
-
+          bos:
+            io.holunda.camunda.taskpool.example.ApprovalRequest: "approval-request/${entryId}?userId=%userId%"
 
 logging.level.io.holunda.camunda.taskpool:
   core: WARN
   view.simple: INFO
   example.tasklist: WARN
-
-
-swagger:
-  enabled: true
-  redirect: false
-  apiInfo:
-    title: Example Taskpool Application
-    description: Rest interface of the example taskpool application.
-  dockets:
-    tasklist:
-      basePackage: "io.holunda.camunda.taskpool.example.tasklist"
-      path: "/**"
-      apiInfo:
-        title: Tasklist Application
-        description: Rest interface of the task list.

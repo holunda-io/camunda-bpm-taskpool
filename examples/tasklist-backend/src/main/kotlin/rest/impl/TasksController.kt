@@ -8,6 +8,7 @@ import io.holunda.camunda.taskpool.example.tasklist.rest.model.TaskWithDataEntri
 import io.holunda.camunda.taskpool.view.auth.UserService
 import io.holunda.camunda.taskpool.view.query.task.TasksWithDataEntriesForUserQuery
 import io.holunda.camunda.taskpool.view.query.task.TasksWithDataEntriesQueryResult
+import io.swagger.annotations.Api
 import mu.KLogging
 import org.axonframework.messaging.responsetypes.ResponseTypes
 import org.axonframework.queryhandling.QueryGateway
@@ -20,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import java.util.*
 
-
+@Api(tags = ["Task"])
 @RestController
 @RequestMapping(Rest.REQUEST_PATH)
 class TasksController(

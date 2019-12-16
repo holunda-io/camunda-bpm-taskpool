@@ -8,22 +8,24 @@ import io.holunda.camunda.taskpool.view.TaskWithDataEntries
 import io.holunda.camunda.taskpool.view.auth.UserService
 import io.holunda.camunda.taskpool.view.query.task.TasksWithDataEntriesForUserQuery
 import io.holunda.camunda.taskpool.view.query.task.TasksWithDataEntriesQueryResult
+import io.swagger.annotations.Api
+import io.swagger.annotations.ApiParam
 import mu.KLogging
 import org.axonframework.messaging.responsetypes.ResponseTypes
 import org.axonframework.queryhandling.QueryGateway
 import org.axonframework.queryhandling.SubscriptionQueryResult
 import org.springframework.http.MediaType
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import reactor.core.publisher.Flux
 import java.util.*
+import javax.validation.constraints.NotNull
+import javax.validation.constraints.Pattern
 
 
 /**
  * Reactive controller delivering tasks.
  */
+@Api(tags = ["Task"])
 @RestController
 @RequestMapping(Rest.REACTIVE_PATH)
 class ReactiveTasksController(
@@ -37,14 +39,15 @@ class ReactiveTasksController(
 
   @GetMapping(path = ["/tasks"], produces = [MediaType.TEXT_EVENT_STREAM_VALUE, MediaType.APPLICATION_JSON_VALUE])
   fun getTasks(
-    @RequestParam(value = "filter") filters: List<String>,
-    @RequestParam(value = "page") page: Optional<Int>,
-    @RequestParam(value = "size") size: Optional<Int>,
-    @RequestParam(value = "sort") sort: Optional<String>
+    @NotNull @Pattern(regexp = "^([\\w]*)=([.]+)?$") @ApiParam(value = "One or multiple filter directives in the format prop1=value") @RequestParam(value = "filter", required = true, defaultValue = "[]") filters: List<String>,
+    @ApiParam(value = "The page number to access (0 indexed, defaults to 1)", defaultValue = "1") @RequestParam(value = "page", required = false, defaultValue = "1") page: Optional<Int>,
+    @ApiParam(value = "The page size requested (defaults to 20)", defaultValue = "20") @RequestParam(value = "size", required = false, defaultValue = "20") size: Optional<Int>,
+    @Pattern(regexp = "^[-+]([\\w]*)$") @ApiParam(value = "A collection of sort directives in the format +prop1.") @RequestParam(value = "sort", required = false, defaultValue = "") sort: Optional<String>,
+    @RequestHeader(value = "X-Current-User-ID", required = true) xCurrentUserID: Optional<String>
   ): Flux<TaskWithDataEntriesDto> {
 
-    val username = currentUserService.getCurrentUser()
-    val user = userService.getUser(username)
+    val userIdentifier = xCurrentUserID.orElseGet { currentUserService.getCurrentUser() }
+    val user = userService.getUser(userIdentifier)
 
     @Suppress("UNCHECKED_CAST")
     val taskEvents: SubscriptionQueryResult<TasksWithDataEntriesQueryResult, TaskWithDataEntries> = queryGateway

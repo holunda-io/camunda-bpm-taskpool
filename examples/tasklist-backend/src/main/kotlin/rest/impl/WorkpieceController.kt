@@ -8,6 +8,7 @@ import io.holunda.camunda.taskpool.example.tasklist.rest.model.DataEntryDto
 import io.holunda.camunda.taskpool.view.auth.UserService
 import io.holunda.camunda.taskpool.view.query.data.DataEntriesForUserQuery
 import io.holunda.camunda.taskpool.view.query.data.DataEntriesQueryResult
+import io.swagger.annotations.Api
 import org.axonframework.messaging.responsetypes.ResponseTypes
 import org.axonframework.queryhandling.QueryGateway
 import org.springframework.http.HttpHeaders
@@ -18,9 +19,10 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import java.util.*
 
+@Api(tags = ["Workpiece"])
 @RestController
 @RequestMapping(Rest.REQUEST_PATH)
-class ArchiveController(
+class WorkpieceController(
   private val queryGateway: QueryGateway,
   private val currentUserService: CurrentUserService,
   private val userService: UserService,

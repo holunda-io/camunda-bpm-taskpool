@@ -2,7 +2,7 @@ package io.holunda.camunda.taskpool.example.process
 
 import io.holunda.camunda.taskpool.EnableTaskpoolEngineSupport
 import io.holunda.camunda.taskpool.enricher.*
-import io.holunda.camunda.taskpool.example.process.process.ProcessApproveRequest
+import io.holunda.camunda.taskpool.example.process.process.RequestApprovalProcess
 import io.holunda.camunda.taskpool.example.process.service.BusinessDataEntry
 import io.holunda.camunda.taskpool.example.users.EnableExampleUsers
 import io.holunda.camunda.taskpool.sender.gateway.LoggingTaskCommandErrorHandler
@@ -10,21 +10,15 @@ import io.holunda.camunda.taskpool.sender.gateway.TaskCommandErrorHandler
 import mu.KLogging
 import org.axonframework.commandhandling.CommandResultMessage
 import org.camunda.bpm.spring.boot.starter.annotation.EnableProcessApplication
-import org.springframework.boot.SpringApplication
-import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Primary
 
-
-fun main(args: Array<String>) {
-  SpringApplication.run(ExampleProcessApplication::class.java, *args)
-}
-
-@SpringBootApplication
+@Configuration
 @EnableProcessApplication
 @EnableTaskpoolEngineSupport
 @EnableExampleUsers
-class ExampleProcessApplication {
+class RequestApprovalProcessConfiguration {
 
   companion object : KLogging()
 
@@ -33,23 +27,23 @@ class ExampleProcessApplication {
 
     // define a variable filter for every process
     TaskVariableFilter(
-      ProcessApproveRequest.KEY,
+      RequestApprovalProcess.KEY,
       FilterType.INCLUDE,
       mapOf(
 
         // define a variable filter for every task
-        ProcessApproveRequest.Elements.APPROVE_REQUEST to
+        RequestApprovalProcess.Elements.APPROVE_REQUEST to
           listOf(
-            ProcessApproveRequest.Variables.REQUEST_ID,
-            ProcessApproveRequest.Variables.ORIGINATOR
+            RequestApprovalProcess.Variables.REQUEST_ID,
+            RequestApprovalProcess.Variables.ORIGINATOR
           ),
 
         // and again
-        ProcessApproveRequest.Elements.AMEND_REQUEST to
+        RequestApprovalProcess.Elements.AMEND_REQUEST to
           listOf(
-            ProcessApproveRequest.Variables.REQUEST_ID,
-            ProcessApproveRequest.Variables.COMMENT,
-            ProcessApproveRequest.Variables.APPLICANT
+            RequestApprovalProcess.Variables.REQUEST_ID,
+            RequestApprovalProcess.Variables.COMMENT,
+            RequestApprovalProcess.Variables.APPLICANT
           )
       ))
   )
@@ -58,17 +52,17 @@ class ExampleProcessApplication {
   fun processVariablesCorrelator(): ProcessVariablesCorrelator = ProcessVariablesCorrelator(
 
     // define correlation for every process
-    ProcessVariableCorrelation(ProcessApproveRequest.KEY,
+    ProcessVariableCorrelation(RequestApprovalProcess.KEY,
       mapOf(
         // define a correlation for every task needed
-        ProcessApproveRequest.Elements.APPROVE_REQUEST to mapOf(
-          ProcessApproveRequest.Variables.REQUEST_ID to BusinessDataEntry.REQUEST,
-          ProcessApproveRequest.Variables.ORIGINATOR to BusinessDataEntry.USER
+        RequestApprovalProcess.Elements.APPROVE_REQUEST to mapOf(
+          RequestApprovalProcess.Variables.REQUEST_ID to BusinessDataEntry.REQUEST,
+          RequestApprovalProcess.Variables.ORIGINATOR to BusinessDataEntry.USER
         )
       ),
 
       // or globally
-      mapOf(ProcessApproveRequest.Variables.REQUEST_ID to BusinessDataEntry.REQUEST)
+      mapOf(RequestApprovalProcess.Variables.REQUEST_ID to BusinessDataEntry.REQUEST)
     )
   )
 

@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {UserStoreService} from 'app/user/state/user.store-service';
-import {ArchiveService} from 'tasklist/services';
+import {WorkpieceService} from 'tasklist/services';
 import {DataEntriesLoaded, DataEntryActionTypes, LoadDataEntries} from 'app/dataentry/state/dataentry.actions';
 import {catchError, filter, flatMap, map, withLatestFrom} from 'rxjs/operators';
 import {DataEntry as DataEntryDto} from 'tasklist/models';
@@ -14,7 +14,7 @@ import {of} from 'rxjs';
 export class DataentryEffects {
 
   public constructor(
-    private archiveService: ArchiveService,
+    private workpieceService: WorkpieceService,
     private userStore: UserStoreService,
     private actions$: Actions) {
   }
@@ -30,7 +30,7 @@ export class DataentryEffects {
   loadDataEntries$ = this.actions$.pipe(
     ofType(DataEntryActionTypes.LoadDataEntries),
     withLatestFrom(this.userStore.userId$()),
-    flatMap(([_, userId]) => this.archiveService.getBosResponse({
+    flatMap(([_, userId]) => this.workpieceService.getBosResponse({
       filter: [''],
       XCurrentUserID: userId
     })),

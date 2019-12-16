@@ -6,12 +6,14 @@ import io.holunda.camunda.taskpool.example.tasklist.rest.api.ProfileApi
 import io.holunda.camunda.taskpool.example.tasklist.rest.model.UserProfileDto
 import io.holunda.camunda.taskpool.view.auth.User
 import io.holunda.camunda.taskpool.view.auth.UserService
+import io.swagger.annotations.Api
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import java.util.*
 
+@Api(tags = ["Profile"])
 @RestController
 @RequestMapping(Rest.REQUEST_PATH)
 class UserProfileController(

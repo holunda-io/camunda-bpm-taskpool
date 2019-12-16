@@ -52,7 +52,7 @@ fun DelegateTask.caseDefinitionKey(): String = caseDefinition().key
 /**
  * Retrieves case name from delegate task.
  */
-fun DelegateTask.caseName(): String = caseDefinition().name
+fun DelegateTask.caseName(): String = caseDefinition().name ?: caseDefinitionKey()
 
 /**
  * Retrieves process definition key from delegate task.
@@ -60,9 +60,9 @@ fun DelegateTask.caseName(): String = caseDefinition().name
 fun DelegateTask.processDefinitionKey(): String = processDefinition().key
 
 /**
- * Retrieves process name from delegate task.
+ * Retrieves process name from delegate task. If the process name is not set, fall back to key.
  */
-fun DelegateTask.processName(): String = processDefinition().name
+fun DelegateTask.processName(): String = processDefinition().name ?: processDefinitionKey()
 
 /**
  * Retrieves case definition from delegate task.

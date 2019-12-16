@@ -1,17 +1,6 @@
 package io.holunda.camunda.taskpool.example.process.process
 
-import io.holunda.camunda.taskpool.example.process.process.ProcessApproveRequest.Variables.ORIGINATOR
-import io.holunda.camunda.taskpool.example.process.process.ProcessApproveRequest.Variables.REQUEST_ID
-import io.holunda.camunda.taskpool.example.process.service.Request
-import io.holunda.camunda.taskpool.example.process.service.RequestService
-import org.camunda.bpm.engine.RuntimeService
-import org.camunda.bpm.engine.TaskService
-import org.camunda.bpm.engine.task.Task
-import org.camunda.bpm.engine.variable.Variables
-import org.camunda.bpm.engine.variable.Variables.stringValue
-import org.springframework.stereotype.Component
-
-object ProcessApproveRequest {
+object RequestApprovalProcess {
   const val KEY = "process_approve_request"
   const val RESOURCE = "process_approve_request.bpmn"
 

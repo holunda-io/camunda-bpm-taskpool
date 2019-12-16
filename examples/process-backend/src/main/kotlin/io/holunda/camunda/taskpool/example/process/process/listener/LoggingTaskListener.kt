@@ -1,4 +1,4 @@
-package io.holunda.camunda.taskpool.example.process.process
+package io.holunda.camunda.taskpool.example.process.process.listener
 
 import io.holunda.camunda.taskpool.collector.TaskEventCollectorService
 import mu.KLogging

@@ -3,11 +3,11 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import * as ApprovalRequestDraftSamples from 'app/data/approval-request-draft';
 import {ApprovalRequestDraft} from 'process/model/approvalRequestDraft';
 @Component({
-  selector: 'app-request',
-  templateUrl: './request.component.html',
+  selector: 'app-request-form',
+  templateUrl: './request-form.component.html',
   styleUrls: []
 })
-export class RequestComponent implements OnInit {
+export class RequestFormComponent implements OnInit {
 
   @Input()
   approvalRequest: ApprovalRequestDraft;

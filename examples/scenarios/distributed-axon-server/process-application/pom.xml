@@ -22,6 +22,16 @@
       <artifactId>taskpool-example-process-backend</artifactId>
       <version>${project.version}</version>
     </dependency>
+
+    <!-- DB and Flyway -->
+    <dependency>
+      <groupId>org.postgresql</groupId>
+      <artifactId>postgresql</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.flywaydb</groupId>
+      <artifactId>flyway-core</artifactId>
+    </dependency>
   </dependencies>
 
   <build>
@@ -48,7 +58,6 @@
             </dependency>
           </requiresUnpack>
         </configuration>
-
       </plugin>
     </plugins>
   </build>
@@ -66,34 +75,6 @@
           <groupId>io.holunda.taskpool</groupId>
           <artifactId>taskpool-example-process-forms</artifactId>
           <version>${project.version}</version>
-        </dependency>
-      </dependencies>
-    </profile>
-    <profile>
-      <id>camunda-ce</id>
-      <activation>
-        <property>
-          <name>!camunda-ee</name>
-        </property>
-      </activation>
-      <dependencies>
-        <dependency>
-          <groupId>org.camunda.bpm.springboot</groupId>
-          <artifactId>camunda-bpm-spring-boot-starter-webapp</artifactId>
-        </dependency>
-      </dependencies>
-    </profile>
-    <profile>
-      <id>camunda-ee</id>
-      <activation>
-        <property>
-          <name>camunda-ee</name>
-        </property>
-      </activation>
-      <dependencies>
-        <dependency>
-          <groupId>org.camunda.bpm.springboot</groupId>
-          <artifactId>camunda-bpm-spring-boot-starter-webapp-ee</artifactId>
         </dependency>
       </dependencies>
     </profile>

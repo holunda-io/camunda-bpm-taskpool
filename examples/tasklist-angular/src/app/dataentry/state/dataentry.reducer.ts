@@ -1,6 +1,4 @@
 import {DataEntryActions, DataEntryActionTypes, LoadDataEntries} from './dataentry.actions';
-import {ProcessState} from 'app/process/state/process.reducer';
-import {ProcessActionTypes} from 'app/process/state/process.actions';
 
 export interface DataEntry {
   name: string;

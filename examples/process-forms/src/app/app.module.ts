@@ -11,13 +11,16 @@ import localeEn from '@angular/common/locales/en';
 import { ApiModule, BASE_PATH } from 'process';
 import { AppComponent } from 'app/app.component';
 import { AppRoutingModule } from 'app/app-routing.module';
-import { ApproveTaskComponent } from 'app/tasks/approve-request/approve-task.component';
-import { PageNotFoundComponent } from 'app/tasks/page-not-found/page-not-found.component';
+
 import { AmendTaskComponent } from 'app/tasks/amend-request/amend-task.component';
-import { ExternalUrlDirective } from 'app/components/external-url.directive';
+import { ApprovalRequestComponent } from 'app/data/approval-request/approval-request.component';
+import { ApproveTaskComponent } from 'app/tasks/approve-request/approve-task.component';
 import { EnvironmentHelperService } from 'app/services/environment.helper.service';
+import { ExternalUrlDirective } from 'app/components/external-url.directive';
+import { PageNotFoundComponent } from 'app/tasks/page-not-found/page-not-found.component';
+import { RequestFormComponent } from 'app/components/request-form/request-form.component';
+import { RequestViewComponent } from 'app/components/request-view/request-view.component';
 import { StartComponent } from 'app/tasks/start/start.component';
-import {RequestComponent} from 'app/components/request/request.component';
 
 
 registerLocaleData(localeFr, 'fr');
@@ -28,12 +31,38 @@ registerLocaleData(localeEn, 'en');
 @NgModule({
   declarations: [
     AppComponent,
+    /**
+     * Start form
+     */
     StartComponent,
+    /**
+     * 404
+     */
     PageNotFoundComponent,
+    /**
+     * "Approve request" user task form
+     */
     ApproveTaskComponent,
+    /**
+     * "Amend request" user task form
+     */
     AmendTaskComponent,
+    /**
+     * "Approval request" BO view
+     */
+    ApprovalRequestComponent,
+    /**
+     * Redirecter
+     */
     ExternalUrlDirective,
-    RequestComponent
+    /**
+     * Content component to enter "Approval request"
+     */
+    RequestFormComponent,
+    /**
+     * Content component to view "Approval request"
+     */
+    RequestViewComponent
   ],
   imports: [
     BrowserModule,

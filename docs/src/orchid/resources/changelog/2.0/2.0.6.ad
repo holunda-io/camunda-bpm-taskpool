@@ -4,10 +4,14 @@ version: 2.0.6
 
 == Features
 
+* Added support for Java 11 #175
+
 == Examples
 
 * Separated examples for different usage scenarios, #210, #211
+* Provided a dedicated example for single-node scenario #211
+* Implemented a business object view for a single approval request out of archive view #214
 
 == Docs
 
-* Restructured documentation
+* Restructured documentation #212

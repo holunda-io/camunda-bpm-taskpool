@@ -3,7 +3,7 @@ package io.holunda.camunda.taskpool
 import org.camunda.bpm.engine.repository.ProcessDefinition
 
 public class ProcessDefinitionFake internal constructor(
-  private val id: String?,
+  private val id: String,
   private val category: String?,
   private val name: String?,
   private val key: String?,
@@ -24,7 +24,7 @@ public class ProcessDefinitionFake internal constructor(
     return startableInTasklist ?: true
   }
 
-  override fun getId(): String? {
+  override fun getId(): String {
     return id
   }
 
@@ -92,7 +92,7 @@ public class ProcessDefinitionFake internal constructor(
 }
 
 class ProcessDefinitionFakeBuilder {
-  private var id: String? = null
+  private var id: String = "unset"
   private var category: String? = null
   private var name: String? = null
   private var key: String? = null

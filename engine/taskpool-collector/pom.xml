@@ -56,7 +56,7 @@
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-tx</artifactId>
-      <version>5.0.7.RELEASE</version>
+      <version>${spring-framework.version}</version>
     </dependency>
 
     <dependency>

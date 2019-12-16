@@ -5,11 +5,16 @@ import io.holunda.camunda.taskpool.example.process.rest.model.ApprovalRequestDto
 import io.holunda.camunda.taskpool.example.process.rest.model.TaskDto
 import io.holunda.camunda.taskpool.example.process.service.Request
 import org.camunda.bpm.engine.task.Task
+import org.omg.CORBA.UnknownUserException
 import org.springframework.context.annotation.Configuration
+import org.springframework.http.HttpStatus
+import org.springframework.web.bind.annotation.ControllerAdvice
+import org.springframework.web.bind.annotation.ExceptionHandler
+import org.springframework.web.bind.annotation.ResponseStatus
 import java.math.BigDecimal
 import java.time.OffsetDateTime
 import java.time.ZoneId
-import java.util.*
+import java.util.NoSuchElementException
 
 class Rest {
 

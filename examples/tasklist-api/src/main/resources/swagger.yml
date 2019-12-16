@@ -11,7 +11,7 @@ tags:
     description: User's propfile.
   - name: Process
     description: Operations on process definitions.
-  - name: Archive
+  - name: Workpiece
     description: Operation on business data entries.
 
 schemes:
@@ -283,7 +283,7 @@ paths:
   '/bolist':
     get:
       tags:
-        - Archive
+        - Workpiece
       summary: Lists business objects.
       produces:
         - application/json

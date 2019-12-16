@@ -1,4 +1,4 @@
-package io.holunda.camunda.taskpool.example.process.process
+package io.holunda.camunda.taskpool.example.process.process.listener
 
 import io.holunda.camunda.datapool.sender.DataEntryCommandSender
 import io.holunda.camunda.taskpool.api.business.AuthorizationChange.Companion.addUser
@@ -6,11 +6,12 @@ import io.holunda.camunda.taskpool.api.business.DataEntryState
 import io.holunda.camunda.taskpool.api.business.Modification
 import io.holunda.camunda.taskpool.api.business.ProcessingType.*
 import io.holunda.camunda.taskpool.collector.TaskEventCollectorService
-import io.holunda.camunda.taskpool.example.process.process.ProcessApproveRequest.Values.APPROVE
-import io.holunda.camunda.taskpool.example.process.process.ProcessApproveRequest.Values.CANCEL
-import io.holunda.camunda.taskpool.example.process.process.ProcessApproveRequest.Values.REJECT
-import io.holunda.camunda.taskpool.example.process.process.ProcessApproveRequest.Values.RESUBMIT
-import io.holunda.camunda.taskpool.example.process.process.ProcessApproveRequest.Values.RETURN
+import io.holunda.camunda.taskpool.example.process.process.RequestApprovalProcess
+import io.holunda.camunda.taskpool.example.process.process.RequestApprovalProcess.Values.APPROVE
+import io.holunda.camunda.taskpool.example.process.process.RequestApprovalProcess.Values.CANCEL
+import io.holunda.camunda.taskpool.example.process.process.RequestApprovalProcess.Values.REJECT
+import io.holunda.camunda.taskpool.example.process.process.RequestApprovalProcess.Values.RESUBMIT
+import io.holunda.camunda.taskpool.example.process.process.RequestApprovalProcess.Values.RETURN
 import io.holunda.camunda.taskpool.example.process.service.BusinessDataEntry
 import io.holunda.camunda.taskpool.example.process.service.Request
 import io.holunda.camunda.taskpool.example.process.service.RequestService
@@ -26,13 +27,13 @@ class RequestStatusListener(
   private val requestService: RequestService
 ) {
 
-  @EventListener(condition = "#task.eventName.equals('complete')")
+  @EventListener(condition = "#task != null && #task.eventName!= null && #task.eventName.equals('complete')")
   @Order(TaskEventCollectorService.ORDER - 11)
   fun notifyRequestStatusChange(task: DelegateTask) {
-    val approvalDecision = task.getVariable(ProcessApproveRequest.Variables.APPROVE_DECISION) as String?
-    val amendAction = task.getVariable(ProcessApproveRequest.Variables.AMEND_ACTION) as String?
+    val approvalDecision = task.getVariable(RequestApprovalProcess.Variables.APPROVE_DECISION) as String?
+    val amendAction = task.getVariable(RequestApprovalProcess.Variables.AMEND_ACTION) as String?
 
-    val id: String = task.getVariable(ProcessApproveRequest.Variables.REQUEST_ID) as String
+    val id: String = task.getVariable(RequestApprovalProcess.Variables.REQUEST_ID) as String
     val request: Request = requestService.getRequest(id)
 
     if (amendAction.isNullOrBlank()) {

@@ -15,9 +15,9 @@ class TaskPoolMongoServiceSortTest {
 
   @Test
   fun `should extract direction and field name`() {
-    assertThat(sort("+foo")).isEqualTo(Sort(Sort.Direction.ASC, "foo"))
-    assertThat(sort("-bar")).isEqualTo(Sort(Sort.Direction.DESC, "bar"))
-    assertThat(sort("-b")).isEqualTo(Sort(Sort.Direction.DESC, "b"))
+    assertThat(sort("+foo")).isEqualTo(Sort.by(Sort.Direction.ASC, "foo"))
+    assertThat(sort("-bar")).isEqualTo(Sort.by(Sort.Direction.DESC, "bar"))
+    assertThat(sort("-b")).isEqualTo(Sort.by(Sort.Direction.DESC, "b"))
   }
 
 }
