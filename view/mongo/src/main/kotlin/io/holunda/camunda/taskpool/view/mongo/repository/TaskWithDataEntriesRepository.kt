@@ -44,7 +44,7 @@ open class TaskWithDataEntriesRepositoryExtensionImpl(
 ) : TaskWithDataEntriesRepositoryExtension {
 
   companion object : KLogging() {
-    val DEFAULT_SORT = Sort(Sort.Direction.DESC, TaskWithDataEntriesDocument::dueDate.name)
+    val DEFAULT_SORT = Sort.by(Sort.Direction.DESC, TaskWithDataEntriesDocument::dueDate.name)
   }
 
 
