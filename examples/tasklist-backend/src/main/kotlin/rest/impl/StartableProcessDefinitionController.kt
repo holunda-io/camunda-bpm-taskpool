@@ -8,6 +8,7 @@ import io.holunda.camunda.taskpool.example.tasklist.rest.model.ProcessDefinition
 import io.holunda.camunda.taskpool.view.ProcessDefinition
 import io.holunda.camunda.taskpool.view.auth.UserService
 import io.holunda.camunda.taskpool.view.query.process.ProcessDefinitionsStartableByUserQuery
+import io.swagger.annotations.Api
 import org.axonframework.messaging.responsetypes.ResponseTypes
 import org.axonframework.queryhandling.QueryGateway
 import org.springframework.http.ResponseEntity
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController
 import java.util.*
 
 
+@Api(tags = ["Process"])
 @RestController
 @RequestMapping(Rest.REQUEST_PATH)
 class StartableProcessDefinitionController(

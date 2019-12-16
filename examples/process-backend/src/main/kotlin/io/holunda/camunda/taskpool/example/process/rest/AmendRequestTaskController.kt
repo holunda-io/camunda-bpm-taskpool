@@ -1,10 +1,11 @@
 package io.holunda.camunda.taskpool.example.process.rest
 
-import io.holunda.camunda.taskpool.example.process.process.ProcessApproveRequestBean
+import io.holunda.camunda.taskpool.example.process.process.RequestApprovalProcessBean
 import io.holunda.camunda.taskpool.example.process.rest.api.AmendRequestApi
 import io.holunda.camunda.taskpool.example.process.rest.model.TaskAmendRequestFormDataDto
 import io.holunda.camunda.taskpool.example.process.rest.model.TaskAmendRequestSubmitDataDto
 import io.holunda.camunda.taskpool.view.auth.UserService
+import io.swagger.annotations.Api
 import io.swagger.annotations.ApiParam
 import mu.KLogging
 import org.springframework.http.ResponseEntity
@@ -15,10 +16,11 @@ import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
 import javax.validation.Valid
 
+@Api(tags = ["User Task Amend Request"])
 @Controller
 @RequestMapping(path = [Rest.REST_PREFIX])
 class AmendRequestTaskController(
-  private val processApproveRequestBean: ProcessApproveRequestBean,
+  private val requestApprovalProcessBean: RequestApprovalProcessBean,
   private val userService: UserService
 ) : AmendRequestApi {
 
@@ -29,7 +31,7 @@ class AmendRequestTaskController(
     @ApiParam(value = "Specifies the id of current user.", required = true) @RequestHeader(value = "X-Current-User-ID", required = true) xCurrentUserID: String
     ): ResponseEntity<TaskAmendRequestFormDataDto> {
     logger.debug { "Loading data for task $id" }
-    val (task, approvalRequest) = processApproveRequestBean.loadAmendTaskFormData(id)
+    val (task, approvalRequest) = requestApprovalProcessBean.loadAmendTaskFormData(id)
     return ResponseEntity.ok(TaskAmendRequestFormDataDto().approvalRequest(approvalRequestDto(approvalRequest)).task(taskDto(task)))
   }
 
@@ -42,7 +44,7 @@ class AmendRequestTaskController(
 
     val username = userService.getUser(xCurrentUserID).username
 
-    processApproveRequestBean.amendTask(taskId = id, action = payload.action, request = request(payload.approvalRequest), username = username, comment = payload.comment)
+    requestApprovalProcessBean.amendTask(taskId = id, action = payload.action, request = request(payload.approvalRequest), username = username, comment = payload.comment)
     return ResponseEntity.noContent().build()
   }
 }

@@ -1,5 +1,5 @@
 {
-  "name": "process-forms",
+  "name": "example-process-approval",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",

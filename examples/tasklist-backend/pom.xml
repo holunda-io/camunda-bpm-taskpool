@@ -32,13 +32,13 @@
       <artifactId>taskpool-example-users</artifactId>
       <version>${project.version}</version>
     </dependency>
-
     <dependency>
       <groupId>io.holunda.taskpool</groupId>
       <artifactId>camunda-bpm-taskpool-view-api</artifactId>
       <version>${project.version}</version>
     </dependency>
 
+    <!-- SpringBoot -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-webflux</artifactId>
@@ -46,27 +46,41 @@
     <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>javax.servlet-api</artifactId>
-      <version>3.1.0</version>
     </dependency>
-
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-validation</artifactId>
     </dependency>
 
+    <!-- Jackson -->
     <dependency>
-      <groupId>io.github.microutils</groupId>
-      <artifactId>kotlin-logging</artifactId>
+      <groupId>com.fasterxml.jackson.datatype</groupId>
+      <artifactId>jackson-datatype-jsr310</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.datatype</groupId>
+      <artifactId>jackson-datatype-jdk8</artifactId>
     </dependency>
     <dependency>
       <groupId>com.fasterxml.jackson.module</groupId>
       <artifactId>jackson-module-kotlin</artifactId>
     </dependency>
+
+    <!-- Swagger -->
     <dependency>
-      <groupId>io.swagger</groupId>
-      <artifactId>swagger-annotations</artifactId>
-      <version>1.5.22</version>
+      <groupId>io.springfox</groupId>
+      <artifactId>springfox-swagger2</artifactId>
     </dependency>
+    <dependency>
+      <groupId>io.springfox</groupId>
+      <artifactId>springfox-spring-webflux</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.springfox</groupId>
+      <artifactId>springfox-swagger-ui</artifactId>
+    </dependency>
+
+    <!-- Axon -->
     <dependency>
       <groupId>org.axonframework</groupId>
       <artifactId>axon-messaging</artifactId>
@@ -264,8 +278,6 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
       </plugin>
-
-
     </plugins>
   </build>
 </project>

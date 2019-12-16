@@ -1,0 +1,36 @@
+server:
+  port: 8083
+spring:
+  application:
+    name: camunda
+  datasource:
+    url: jdbc:postgresql://localhost:5432/process
+    username: process_user
+    password: S3Cr3T!
+  jpa:
+    generate-ddl: false
+    hibernate.ddl-auto: validate
+    show-sql: false
+    open-in-view: false
+
+camunda:
+  bpm:
+    default-serialization-format: application/json
+    authorization:
+      enabled: false
+    history-level: full
+    id-generator: strong
+    database:
+      schema-update: false
+      type: postgres
+    webapp:
+      index-redirect-enabled: true
+    job-execution:
+      enabled: false
+    eventing:
+      execution: false
+      history: false
+      task: false
+
+logging.level:
+  org.hibernate.engine.jdbc.env.internal.LobCreatorBuilderImpl: ERROR

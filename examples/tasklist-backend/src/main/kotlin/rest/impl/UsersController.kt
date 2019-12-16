@@ -3,11 +3,13 @@ package io.holunda.camunda.taskpool.example.tasklist.rest.impl
 import io.holunda.camunda.taskpool.example.tasklist.rest.Rest
 import io.holunda.camunda.taskpool.example.tasklist.rest.api.UsersApi
 import io.holunda.camunda.taskpool.example.users.UserStoreService
+import io.swagger.annotations.Api
 import org.springframework.http.ResponseEntity
 import org.springframework.http.ResponseEntity.ok
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
+@Api(tags = ["Profile"])
 @RestController
 @RequestMapping(Rest.REQUEST_PATH)
 class UsersController(private val userStoreService: UserStoreService) : UsersApi {

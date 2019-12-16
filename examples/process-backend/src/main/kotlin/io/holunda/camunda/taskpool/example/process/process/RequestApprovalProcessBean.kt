@@ -1,7 +1,7 @@
 package io.holunda.camunda.taskpool.example.process.process
 
 import io.holunda.camunda.taskpool.api.business.ProcessingType
-import io.holunda.camunda.taskpool.example.process.process.ProcessApproveRequest.Values.RESUBMIT
+import io.holunda.camunda.taskpool.example.process.process.RequestApprovalProcess.Values.RESUBMIT
 import io.holunda.camunda.taskpool.example.process.service.Request
 import io.holunda.camunda.taskpool.example.process.service.RequestService
 import org.camunda.bpm.engine.RuntimeService
@@ -11,7 +11,7 @@ import org.camunda.bpm.engine.variable.Variables
 import org.springframework.stereotype.Component
 
 @Component
-class ProcessApproveRequestBean(
+class RequestApprovalProcessBean(
   private val runtimeService: RuntimeService,
   private val taskService: TaskService,
   private val requestService: RequestService
@@ -22,11 +22,11 @@ class ProcessApproveRequestBean(
    */
   fun startProcess(requestId: String, originator: String): String {
 
-    runtimeService.startProcessInstanceByKey(ProcessApproveRequest.KEY,
+    runtimeService.startProcessInstanceByKey(RequestApprovalProcess.KEY,
       requestId,
       Variables.createVariables()
-        .putValue(ProcessApproveRequest.Variables.REQUEST_ID, requestId)
-        .putValue(ProcessApproveRequest.Variables.ORIGINATOR, originator)
+        .putValue(RequestApprovalProcess.Variables.REQUEST_ID, requestId)
+        .putValue(RequestApprovalProcess.Variables.ORIGINATOR, originator)
     )
     requestService.changeRequestState(requestId, ProcessingType.IN_PROGRESS.of("Submitted"), originator, "New approval request submitted.")
     return requestId
@@ -36,22 +36,22 @@ class ProcessApproveRequestBean(
    * Completes the approval process if located in approve request task.
    */
   fun approveProcess(processInstanceId: String, decision: String, username: String, comment: String?) {
-    if (!ProcessApproveRequest.Values.APPROVE_DECISION.contains(decision.toUpperCase())) {
+    if (!RequestApprovalProcess.Values.APPROVE_DECISION.contains(decision.toUpperCase())) {
       throw IllegalArgumentException("Only one of APPROVE, RETURN, REJECT is supported.")
     }
 
     val task = taskService
       .createTaskQuery()
       .processInstanceBusinessKey(processInstanceId)
-      .taskDefinitionKey(ProcessApproveRequest.Elements.APPROVE_REQUEST)
+      .taskDefinitionKey(RequestApprovalProcess.Elements.APPROVE_REQUEST)
       .singleResult()
     taskService.claim(task.id, username)
 
     taskService.complete(task.id,
       Variables
         .createVariables()
-        .putValue(ProcessApproveRequest.Variables.APPROVE_DECISION, Variables.stringValue(decision.toUpperCase()))
-        .putValue(ProcessApproveRequest.Variables.COMMENT, Variables.stringValue(comment))
+        .putValue(RequestApprovalProcess.Variables.APPROVE_DECISION, Variables.stringValue(decision.toUpperCase()))
+        .putValue(RequestApprovalProcess.Variables.COMMENT, Variables.stringValue(comment))
     )
   }
 
@@ -60,20 +60,20 @@ class ProcessApproveRequestBean(
    */
   fun amendProcess(id: String, action: String, username: String, comment: String?) {
 
-    if (!ProcessApproveRequest.Values.AMEND_ACTION.contains(action.toUpperCase())) {
+    if (!RequestApprovalProcess.Values.AMEND_ACTION.contains(action.toUpperCase())) {
       throw IllegalArgumentException("Only one of CANCEL, RESUBMIT is supported.")
     }
 
     val task = taskService.createTaskQuery()
       .processInstanceBusinessKey(id)
-      .taskDefinitionKey(ProcessApproveRequest.Elements.AMEND_REQUEST)
+      .taskDefinitionKey(RequestApprovalProcess.Elements.AMEND_REQUEST)
       .singleResult()
 
     taskService.claim(task.id, username)
 
     taskService.complete(task.id, Variables.createVariables()
-      .putValue(ProcessApproveRequest.Variables.AMEND_ACTION, Variables.stringValue(action.toUpperCase()))
-      .putValue(ProcessApproveRequest.Variables.COMMENT, Variables.stringValue(comment))
+      .putValue(RequestApprovalProcess.Variables.AMEND_ACTION, Variables.stringValue(action.toUpperCase()))
+      .putValue(RequestApprovalProcess.Variables.COMMENT, Variables.stringValue(comment))
     )
   }
 
@@ -81,17 +81,17 @@ class ProcessApproveRequestBean(
    * Completes the approve request task with given id, decision and optional comment.
    */
   fun approveTask(taskId: String, decision: String, username: String, comment: String?) {
-    if (!ProcessApproveRequest.Values.APPROVE_DECISION.contains(decision.toUpperCase())) {
+    if (!RequestApprovalProcess.Values.APPROVE_DECISION.contains(decision.toUpperCase())) {
       throw IllegalArgumentException("Only one of APPROVE, RETURN, REJECT is supported.")
     }
 
     val task = taskService
       .createTaskQuery()
       .taskId(taskId)
-      .taskDefinitionKey(ProcessApproveRequest.Elements.APPROVE_REQUEST)
+      .taskDefinitionKey(RequestApprovalProcess.Elements.APPROVE_REQUEST)
       .singleResult() ?: throw NoSuchElementException("Task with id $taskId not found.")
 
-    val requestId = runtimeService.getVariable(task.executionId, ProcessApproveRequest.Variables.REQUEST_ID) as String
+    val requestId = runtimeService.getVariable(task.executionId, RequestApprovalProcess.Variables.REQUEST_ID) as String
     requestService.changeRequestState(
       id = requestId,
       username = username,
@@ -105,8 +105,8 @@ class ProcessApproveRequestBean(
     taskService.complete(task.id,
       Variables
         .createVariables()
-        .putValue(ProcessApproveRequest.Variables.APPROVE_DECISION, Variables.stringValue(decision.toUpperCase()))
-        .putValue(ProcessApproveRequest.Variables.COMMENT, Variables.stringValue(comment))
+        .putValue(RequestApprovalProcess.Variables.APPROVE_DECISION, Variables.stringValue(decision.toUpperCase()))
+        .putValue(RequestApprovalProcess.Variables.COMMENT, Variables.stringValue(comment))
     )
   }
 
@@ -114,14 +114,14 @@ class ProcessApproveRequestBean(
    * Completes the amend request task with given id, action and optional comment.
    */
   fun amendTask(taskId: String, action: String, request: Request, username: String, comment: String?) {
-    if (!ProcessApproveRequest.Values.AMEND_ACTION.contains(action.toUpperCase())) {
+    if (!RequestApprovalProcess.Values.AMEND_ACTION.contains(action.toUpperCase())) {
       throw IllegalArgumentException("Only one of CANCEL, RESUBMIT is supported.")
     }
 
     val task = taskService
       .createTaskQuery()
       .taskId(taskId)
-      .taskDefinitionKey(ProcessApproveRequest.Elements.AMEND_REQUEST)
+      .taskDefinitionKey(RequestApprovalProcess.Elements.AMEND_REQUEST)
       .singleResult() ?: throw NoSuchElementException("Task with id $taskId not found.")
 
     if (task.assignee != null) {
@@ -139,8 +139,8 @@ class ProcessApproveRequestBean(
     taskService.complete(task.id,
       Variables
         .createVariables()
-        .putValue(ProcessApproveRequest.Variables.AMEND_ACTION, Variables.stringValue(action.toUpperCase()))
-        .putValue(ProcessApproveRequest.Variables.COMMENT, Variables.stringValue(comment))
+        .putValue(RequestApprovalProcess.Variables.AMEND_ACTION, Variables.stringValue(action.toUpperCase()))
+        .putValue(RequestApprovalProcess.Variables.COMMENT, Variables.stringValue(comment))
     )
   }
 
@@ -167,7 +167,7 @@ class ProcessApproveRequestBean(
   private fun getAllInstancesQuery() =
     runtimeService
       .createProcessInstanceQuery()
-      .processDefinitionKey(ProcessApproveRequest.KEY)
+      .processDefinitionKey(RequestApprovalProcess.KEY)
 
   /**
    * Loads approve task form data.
@@ -175,11 +175,11 @@ class ProcessApproveRequestBean(
   fun loadApproveTaskFormData(id: String): TaskAndRequest {
     val task = taskService.createTaskQuery()
       .taskId(id)
-      .taskDefinitionKey(ProcessApproveRequest.Elements.APPROVE_REQUEST)
+      .taskDefinitionKey(RequestApprovalProcess.Elements.APPROVE_REQUEST)
       .initializeFormKeys()
       .singleResult() ?: throw NoSuchElementException("Task with id $id not found.")
 
-    val requestId = (this.runtimeService.getVariable(task.executionId, ProcessApproveRequest.Variables.REQUEST_ID)
+    val requestId = (this.runtimeService.getVariable(task.executionId, RequestApprovalProcess.Variables.REQUEST_ID)
       ?: throw NoSuchElementException("Request id could not be found for task $id")) as String
     val request = this.requestService.getRequest(requestId)
     return TaskAndRequest(task = task, approvalRequest = request)
@@ -191,11 +191,11 @@ class ProcessApproveRequestBean(
   fun loadAmendTaskFormData(id: String): TaskAndRequest {
     val task = taskService.createTaskQuery()
       .taskId(id)
-      .taskDefinitionKey(ProcessApproveRequest.Elements.AMEND_REQUEST)
+      .taskDefinitionKey(RequestApprovalProcess.Elements.AMEND_REQUEST)
       .initializeFormKeys()
       .singleResult() ?: throw NoSuchElementException("Task with id $id not found.")
 
-    val requestId = (this.runtimeService.getVariable(task.executionId, ProcessApproveRequest.Variables.REQUEST_ID)
+    val requestId = (this.runtimeService.getVariable(task.executionId, RequestApprovalProcess.Variables.REQUEST_ID)
       ?: throw NoSuchElementException("Request id could not be found for task $id")) as String
     val request = this.requestService.getRequest(requestId)
     return TaskAndRequest(task = task, approvalRequest = request)
