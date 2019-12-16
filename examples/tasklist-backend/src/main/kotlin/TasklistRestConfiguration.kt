@@ -18,6 +18,7 @@ class TasklistRestConfiguration {
 
   @Bean
   fun tasklistRestApi() = Docket(DocumentationType.SWAGGER_2)
+    .groupName("tasklist")
     .select()
     .apis(RequestHandlerSelectors.any())
     .paths(PathSelectors.any())

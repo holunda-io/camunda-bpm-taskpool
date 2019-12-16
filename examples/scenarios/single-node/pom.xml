@@ -17,11 +17,55 @@
   </properties>
 
   <dependencies>
+    <!-- Frontends -->
     <dependency>
       <groupId>io.holunda.taskpool</groupId>
       <artifactId>taskpool-example-process-forms</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>io.holunda.taskpool</groupId>
+      <artifactId>taskpool-example-tasklist-angular</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+    <!-- Core -->
+    <dependency>
+      <groupId>io.holunda.taskpool</groupId>
+      <artifactId>camunda-bpm-taskpool-core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.holunda.taskpool</groupId>
+      <artifactId>camunda-bpm-datapool-core</artifactId>
+    </dependency>
+
+    <!-- Tasklist -->
+    <dependency>
+      <groupId>io.holunda.taskpool</groupId>
+      <artifactId>taskpool-example-tasklist-api</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>io.holunda.taskpool</groupId>
+      <artifactId>taskpool-example-tasklist-backend</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>io.holunda.taskpool</groupId>
+      <artifactId>taskpool-property-taskurl-resolver</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>io.holunda.taskpool</groupId>
+      <artifactId>taskpool-example-users</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>io.holunda.taskpool</groupId>
+      <artifactId>camunda-bpm-taskpool-view-simple</artifactId>
+    </dependency>
+
+    <!-- Process application -->
     <dependency>
       <groupId>io.holunda.taskpool</groupId>
       <artifactId>taskpool-example-process-backend</artifactId>
@@ -31,14 +75,6 @@
           <groupId>org.axonframework</groupId>
           <artifactId>axon-server-connector</artifactId>
         </exclusion>
-        <exclusion>
-          <groupId>org.postgresql</groupId>
-          <artifactId>postgresql</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.flywaydb</groupId>
-          <artifactId>flyway-core</artifactId>
-        </exclusion>
       </exclusions>
     </dependency>
     <dependency>
@@ -46,37 +82,6 @@
       <artifactId>h2</artifactId>
     </dependency>
   </dependencies>
-
-  <profiles>
-    <profile>
-      <id>camunda-ce</id>
-      <activation>
-        <property>
-          <name>!camunda-ee</name>
-        </property>
-      </activation>
-      <dependencies>
-        <dependency>
-          <groupId>org.camunda.bpm.springboot</groupId>
-          <artifactId>camunda-bpm-spring-boot-starter-webapp</artifactId>
-        </dependency>
-      </dependencies>
-    </profile>
-    <profile>
-      <id>camunda-ee</id>
-      <activation>
-        <property>
-          <name>camunda-ee</name>
-        </property>
-      </activation>
-      <dependencies>
-        <dependency>
-          <groupId>org.camunda.bpm.springboot</groupId>
-          <artifactId>camunda-bpm-spring-boot-starter-webapp-ee</artifactId>
-        </dependency>
-      </dependencies>
-    </profile>
-  </profiles>
 
   <build>
     <plugins>
@@ -92,7 +97,6 @@
             </dependency>
           </requiresUnpack>
         </configuration>
-
       </plugin>
     </plugins>
 

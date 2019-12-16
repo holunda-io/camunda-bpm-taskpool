@@ -12,7 +12,7 @@ import springfox.documentation.builders.RequestHandlerSelectors
 import springfox.documentation.spi.DocumentationType
 import springfox.documentation.spring.web.plugins.Docket
 import springfox.documentation.swagger2.annotations.EnableSwagger2WebFlux
-import java.util.NoSuchElementException
+import java.util.*
 
 @Configuration
 @EnableSwagger2WebFlux
@@ -20,7 +20,8 @@ import java.util.NoSuchElementException
 class RequestApprovalProcessRestConfiguration {
 
   @Bean
-  fun tasklistRestApi() = Docket(DocumentationType.SWAGGER_2)
+  fun requestApprovalRestApi() = Docket(DocumentationType.SWAGGER_2)
+    .groupName("example-request-approval")
     .select()
     .apis(RequestHandlerSelectors.any())
     .paths(PathSelectors.any())
@@ -30,7 +31,7 @@ class RequestApprovalProcessRestConfiguration {
   @ExceptionHandler(value = [UnknownUserException::class])
   fun forbiddenException() = Unit
 
-  @ResponseStatus(value = HttpStatus.NOT_FOUND, reason ="Element not found.")
+  @ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "Element not found.")
   @ExceptionHandler(value = [NoSuchElementException::class])
   fun notFoundException() = Unit
 

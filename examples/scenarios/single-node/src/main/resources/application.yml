@@ -23,7 +23,7 @@ camunda:
       index-redirect-enabled: false
   taskpool:
     collector:
-      tasklist-url: http://localhost:8081/tasklist/
+      tasklist-url: http://localhost:8080/tasklist/
       process:
         enabled: true
       enricher:
@@ -38,9 +38,17 @@ camunda:
         type: simple
         applicationName: ${spring.application.name}  # default
     form-url-resolver:
-      defaultApplicationTemplate: "http://localhost:${server.port}/${applicatioName}"
-      defaultTaskTemplate:  "/tasks/${formKey}/${id}?userId=%userId%"
-      defaultProcessTemplate: "/${formKey}?userId=%userId%"
+      defaultApplicationTemplate: "http://localhost:${server.port}/${applicationName}"
+      defaultTaskTemplate:  "tasks/${formKey}/${id}?userId=%userId%"
+      defaultProcessTemplate: "${formKey}?userId=%userId%"
+      applications:
+        example-process-approval:
+          url: "http://localhost:8080/example-process-approval"
+          processes:
+            process_approve_request: "start?userId=%userId%"
+          bos:
+            io.holunda.camunda.taskpool.example.ApprovalRequest: "approval-request/${entryId}?userId=%userId%"
+
 
 logging.level:
   io.holunda.camunda:
@@ -51,15 +59,3 @@ logging.level:
     datapool:
       sender: DEBUG
   org.hibernate.engine.jdbc.env.internal.LobCreatorBuilderImpl: ERROR
-
-swagger:
-  enabled: true
-  redirect: false
-  apiInfo:
-    title: Example Process Application
-    description: REST interface of the example process application.
-  dockets:
-    process:
-      basePackage: "io.holunda.camunda.taskpool.example.process.rest"
-      path: "/**"
-

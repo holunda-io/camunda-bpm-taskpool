@@ -5,7 +5,7 @@ import { AmendTaskComponent } from './amend-task.component';
 import { Observable } from 'rxjs-compat';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { AmendRequestService } from 'process/api/amendRequest.service';
+import { UserTaskAmendRequestService } from 'process/api/userTaskAmendRequest.service';
 import { EnvironmentHelperService } from 'app/services/environment.helper.service';
 import { of } from 'rxjs-compat/observable/of';
 
@@ -45,7 +45,7 @@ describe('Component: ApproveTaskComponent', () => {
       ],
       providers: [
         { provide: Router, useValue: jasmine.createSpyObj('Router', { 'navigate': {} }) },
-        { provide: AmendRequestService, useValue: amendRequestServiceSpy },
+        { provide: UserTaskAmendRequestService, useValue: amendRequestServiceSpy },
         { provide: ActivatedRoute, useValue: {
             snapshot: {
               paramMap: {get: () => taskId},
