@@ -361,8 +361,8 @@ internal fun sort(sort: String?): Sort =
     val attribute = sort.substring(1)
       .replace("task.", "")
     when (sort.substring(0, 1)) {
-      "+" -> Sort(Sort.Direction.ASC, attribute)
-      "-" -> Sort(Sort.Direction.DESC, attribute)
+      "+" -> Sort.by(Sort.Direction.ASC, attribute)
+      "-" -> Sort.by(Sort.Direction.DESC, attribute)
       else -> Sort.unsorted()
     }
   } else {

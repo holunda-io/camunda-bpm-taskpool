@@ -31,10 +31,6 @@
       <artifactId>taskpool-example-cockpit-backend</artifactId>
       <version>${project.version}</version>
     </dependency>
-    <dependency>
-      <groupId>io.github.microutils</groupId>
-      <artifactId>kotlin-logging</artifactId>
-    </dependency>
   </dependencies>
 
   <build>

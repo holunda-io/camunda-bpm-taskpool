@@ -23,20 +23,6 @@ class Rest {
   }
 }
 
-
-@Configuration
-@ControllerAdvice
-class RestExceptionConfiguration {
-
-  @ResponseStatus(value = HttpStatus.FORBIDDEN, reason = "Unknown user.")
-  @ExceptionHandler(value = [UnknownUserException::class])
-  fun forbiddenException() = Unit
-
-  @ResponseStatus(value = HttpStatus.NOT_FOUND, reason ="Element not found.")
-  @ExceptionHandler(value = [NoSuchElementException::class])
-  fun notFoundException() = Unit
-}
-
 /**
  * Converts approval request to DTO.
  */

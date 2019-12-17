@@ -21,6 +21,7 @@
     <module>process-application</module>
     <module>taskpool-application</module>
     <module>cockpit-application</module>
+    <module>camunda-webapp-application</module>
   </modules>
 
 </project>

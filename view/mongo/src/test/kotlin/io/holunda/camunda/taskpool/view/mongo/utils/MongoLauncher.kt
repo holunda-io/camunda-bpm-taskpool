@@ -29,16 +29,17 @@ object MongoLauncher {
 
   private val isMongoRunning: Boolean
     get() {
-      try {
+      return try {
         val mongoSocket = SocketFactory.getDefault().createSocket(LOCALHOST, MONGO_DEFAULT_PORT)
         if (mongoSocket.isConnected) {
           mongoSocket.close()
-          return true
+          true
+        } else {
+          false
         }
       } catch (e: IOException) {
-        return false
+        false
       }
-      return false
     }
 
   fun prepareExecutable(asReplicaSet: Boolean): MongodExecutable {
@@ -70,6 +71,7 @@ object MongoLauncher {
   }
 
   open class MongoInstance(val asReplicaSet: Boolean, val databaseName: String) {
+
     companion object : KLogging()
 
     private var mongod: MongodProcess? = null
@@ -83,9 +85,8 @@ object MongoLauncher {
         // There was already an existing mongo instance that we are reusing. Clear it in case there is any leftover data from a previous test run
         clear()
       } else {
-        mongoExecutable = prepareExecutable(asReplicaSet)
-        val mongod = mongoExecutable!!.start()
-        this.mongod = mongod
+        this.mongoExecutable = prepareExecutable(asReplicaSet)
+        this.mongod = mongoExecutable!!.start()
         if (asReplicaSet) {
           MongoClient(LOCALHOST, MONGO_DEFAULT_PORT).use { mongo ->
             val adminDatabase = mongo.getDatabase("admin")

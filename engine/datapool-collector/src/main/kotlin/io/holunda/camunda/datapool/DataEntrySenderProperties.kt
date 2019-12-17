@@ -7,7 +7,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 data class DataEntrySenderProperties(
   var enabled: Boolean = false,
   var type: DataEntrySenderType = DataEntrySenderType.simple,
-  @Value("\${spring.application.name}")
+  @Value("\${spring.application.name:unset-application-name}")
   var applicationName: String
 )
 

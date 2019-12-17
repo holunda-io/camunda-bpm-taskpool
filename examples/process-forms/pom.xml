@@ -16,7 +16,7 @@
   <properties>
     <npm.version>6.4.1</npm.version>
     <node.version>v10.15.1</node.version>
-    <angular-app-name>process-forms</angular-app-name>
+    <angular-app-name>example-process-approval</angular-app-name>
     <maven.deploy.skip>true</maven.deploy.skip>
   </properties>
 
@@ -199,7 +199,7 @@
                 </goals>
                 <phase>initialize</phase>
                 <configuration>
-                  <arguments>install --verbose --no-optional</arguments>
+                  <arguments>install --no-optional</arguments>
                 </configuration>
               </execution>
               <execution>

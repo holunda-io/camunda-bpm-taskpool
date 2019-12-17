@@ -9,6 +9,7 @@ import io.holunda.camunda.taskpool.example.tasklist.rest.model.PayloadDto
 import io.holunda.camunda.taskpool.view.Task
 import io.holunda.camunda.taskpool.view.auth.UserService
 import io.holunda.camunda.taskpool.view.query.task.TaskForIdQuery
+import io.swagger.annotations.Api
 import mu.KLogging
 import org.axonframework.commandhandling.gateway.CommandGateway
 import org.axonframework.queryhandling.QueryGateway
@@ -20,6 +21,7 @@ import java.util.*
 import javax.validation.Valid
 import javax.validation.constraints.NotNull
 
+@Api(tags = ["Task"])
 @RestController
 @RequestMapping(Rest.REQUEST_PATH)
 class TaskController(
@@ -63,7 +65,7 @@ class TaskController(
   override fun complete(@PathVariable("id") id: String, @RequestHeader(value = "X-Current-User-ID", required = false) xCurrentUserID: Optional<String>, @Valid @RequestBody @NotNull payload: PayloadDto): ResponseEntity<Void> {
 
     val task = getTask(id)
-    val userIdentifier = xCurrentUserID.orElseGet{ currentUserService.getCurrentUser() }
+    val userIdentifier = xCurrentUserID.orElseGet { currentUserService.getCurrentUser() }
     val user = userService.getUser(userIdentifier)
 
     send(CompleteInteractionTaskCommand(

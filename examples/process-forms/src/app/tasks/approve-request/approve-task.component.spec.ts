@@ -3,7 +3,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import 'rxjs/add/observable/of';
 import { ApproveTaskComponent } from './approve-task.component';
 import { FormsModule } from '@angular/forms';
-import { ApproveRequestService } from 'process/api/approveRequest.service';
+import { UserTaskApproveRequestService } from 'process/api/userTaskApproveRequest.service';
 import { ActivatedRoute, RouterModule, Router } from '@angular/router';
 import { EnvironmentHelperService } from 'app/services/environment.helper.service';
 import { of } from 'rxjs-compat/observable/of';
@@ -44,7 +44,7 @@ describe('Component: ApproveTaskComponent', () => {
       ],
       providers: [
         { provide: Router, useValue: jasmine.createSpyObj('Router', { 'navigate': {} }) },
-        { provide: ApproveRequestService, useValue: approveRequestServiceSpy },
+        { provide: UserTaskApproveRequestService, useValue: approveRequestServiceSpy },
         { provide: ActivatedRoute, useValue: {
             snapshot: {
               paramMap: {get: () => taskId},

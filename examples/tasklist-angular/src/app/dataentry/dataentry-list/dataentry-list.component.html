@@ -1,4 +1,4 @@
-<p>An archive of business objects.</p>
+<p>An archive of business objects processed by the process application (workpieces).</p>
 <div class="row">
   <div class="col-lg-12">
     <div class="card">
@@ -7,7 +7,6 @@
           <thead class="thead-light">
           <tr>
             <th class="align-top" sortable-column="dataentry.type">Type</th>
-            <th class="align-top" sortable-column="dataentry.currentStatusType">Status</th>
             <th class="align-top" sortable-column="dataentry.name">Name</th>
             <th class="w-50 align-top">
               Details
@@ -22,6 +21,7 @@
 
               </div>
             </th>
+            <th class="align-top" sortable-column="dataentry.currentStatusType">Status</th>
             <th colspan="2" class="align-top">
               Actions
               <div class="pull-right">
@@ -36,8 +36,6 @@
           <tbody>
           <tr *ngFor="let dataEntry of (dataEntries$ | async) index as i">
             <td class="nowrap">{{ dataEntry.type }}</td>
-            <td class="nowrap">{{ dataEntry.currentStateType }}<span
-              *ngIf="dataEntry.currentState"> | {{ dataEntry.currentState }}</span></td>
             <td class="nowrap"><a appExternalUrl [href]="dataEntry.url">{{ dataEntry.name }}</a></td>
             <td>
               <div *ngIf="currentDataTab === 'description'">
@@ -73,8 +71,9 @@
                 </div>
               </div>
             </td>
-            <td>
-            </td>
+            <td class="nowrap">{{ dataEntry.currentStateType }}<span
+              *ngIf="dataEntry.currentState"> | {{ dataEntry.currentState }}</span></td>
+            <td><!-- action --></td>
           </tr>
           <tr *ngIf="(dataEntries$ | async).length === 0">
             <td colspan="7">No business object</td>

@@ -5,10 +5,13 @@ info:
   description: API for the example approval process.
 basePath: '/example-process-approval/rest/'
 tags:
-- name: Approve Request
-  description: Operations on task approve request.
 - name: Request
-  description: Operations to maniulate requests.
+  description: Operations to manipulate requests.
+- name: User Task Amend Request
+  description: Operations on task amend request.
+- name: User Task Approve Request
+  description: Operations on task approve request.
+
 schemes:
 - http
 - https
@@ -77,7 +80,7 @@ paths:
   '/approve-request/id/{id}':
     get:
       tags:
-        - Approve Request
+        - User Task Approve Request
       summary: Retrieves information about the task approve request with specified id.
       produces:
         - application/json
@@ -101,7 +104,7 @@ paths:
             $ref: '#/definitions/TaskApproveRequestFormData'
     post:
       tags:
-        - Approve Request
+        - User Task Approve Request
       summary: Receives form data for the completion of the task approve request with specified id.
       consumes:
         - application/json
@@ -129,7 +132,7 @@ paths:
   '/amend-request/id/{id}':
     get:
       tags:
-        - Amend Request
+        - User Task Amend Request
       summary: Retrieves information about the task amend request with specified id.
       produces:
         - application/json
@@ -153,7 +156,7 @@ paths:
             $ref: '#/definitions/TaskAmendRequestFormData'
     post:
       tags:
-        - Amend Request
+        - User Task Amend Request
       summary: Receives form data for the completion of the task amend request with specified id.
       consumes:
         - application/json

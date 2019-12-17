@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "tasklist-angular": {
+    "taskpool": {
       "root": "",
       "sourceRoot": "src",
       "projectType": "application",
@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/tasklist-angular",
+            "outputPath": "dist/taskpool",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -55,18 +55,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "tasklist-angular:build"
+            "browserTarget": "taskpool:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "tasklist-angular:build:production"
+              "browserTarget": "taskpool:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "tasklist-angular:build"
+            "browserTarget": "taskpool:build"
           }
         },
         "test": {
@@ -102,5 +102,5 @@
       }
     }
   },
-  "defaultProject": "tasklist-angular"
+  "defaultProject": "taskpool"
 }

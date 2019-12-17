@@ -1,6 +1,5 @@
 server:
   port: 8080
-
 spring:
   application:
     name: example-process-approval
@@ -31,7 +30,7 @@ camunda:
       index-redirect-enabled: false
   taskpool:
     collector:
-      tasklist-url: http://localhost:8081/tasklist/
+      tasklist-url: http://localhost:8081/taskpool/
       process:
         enabled: true
       enricher:
@@ -59,15 +58,3 @@ logging.level:
     datapool:
       sender: DEBUG
   org.hibernate.engine.jdbc.env.internal.LobCreatorBuilderImpl: ERROR
-
-swagger:
-  enabled: true
-  redirect: false
-  apiInfo:
-    title: Example Process Application
-    description: REST interface of the example process application.
-  dockets:
-    process:
-      basePackage: "io.holunda.camunda.taskpool.example.process.rest"
-      path: "/**"
-

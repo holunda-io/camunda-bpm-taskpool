@@ -7,12 +7,12 @@
       "^/tasklist/rest": "/tasklist/rest"
     }
   },
-  "/tasklist": {
+  "/taskpool": {
     "target": "http://localhost:4200",
     "secure": false,
     "logLevel": "debug",
     "pathRewrite": {
-      "^/tasklist": "/"
+      "^/taskpool": "/"
     }
   }
 }

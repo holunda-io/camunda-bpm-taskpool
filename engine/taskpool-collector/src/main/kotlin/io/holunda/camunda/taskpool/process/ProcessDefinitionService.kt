@@ -86,7 +86,7 @@ class ProcessDefinitionService(
       processDefinitionId = this.id,
       processDefinitionKey = this.key,
       processDefinitionVersion = this.version,
-      processName = this.name,
+      processName = this.name ?: this.key,
       processVersionTag = this.versionTag,
       processDescription = this.description,
       startableFromTasklist = this.isStartableInTasklist,

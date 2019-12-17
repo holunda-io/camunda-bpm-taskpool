@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ApprovalRequest } from 'process/model/approvalRequest';
-import { ApproveRequestService } from 'process/api/approveRequest.service';
+import { UserTaskApproveRequestService } from 'process/api/userTaskApproveRequest.service';
 import { Task } from 'process/model/task';
 import { TaskApproveRequestSubmitData } from 'process/model/taskApproveRequestSubmitData';
 import { EnvironmentHelperService } from 'app/services/environment.helper.service';
@@ -15,7 +15,7 @@ import { Environment } from 'process/model/environment';
 export class ApproveTaskComponent {
 
   constructor(
-    private client: ApproveRequestService,
+    private client: UserTaskApproveRequestService,
     route: ActivatedRoute,
     private router: Router,
     private envProvider: EnvironmentHelperService

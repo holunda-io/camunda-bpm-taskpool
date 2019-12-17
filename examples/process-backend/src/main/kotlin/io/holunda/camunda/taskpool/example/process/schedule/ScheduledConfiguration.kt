@@ -1,6 +1,6 @@
 package io.holunda.camunda.taskpool.example.process.schedule
 
-import io.holunda.camunda.taskpool.example.process.process.ProcessApproveRequestBean
+import io.holunda.camunda.taskpool.example.process.process.RequestApprovalProcessBean
 import io.holunda.camunda.taskpool.example.process.service.RequestService
 import io.holunda.camunda.taskpool.example.process.service.createDummyRequest
 import io.holunda.camunda.taskpool.example.users.UserStoreService
@@ -11,7 +11,6 @@ import org.springframework.context.annotation.Profile
 import org.springframework.scheduling.annotation.EnableScheduling
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
-import javax.annotation.PostConstruct
 
 
 @Configuration
@@ -21,7 +20,7 @@ class ScheduledConfiguration
 
 @Component
 class ScheduledStarter(
-  private val processBean: ProcessApproveRequestBean,
+  private val processApprovalProcessBean: RequestApprovalProcessBean,
   private val requestService: RequestService,
   private val userStoreService: UserStoreService
 ) {
@@ -32,7 +31,7 @@ class ScheduledStarter(
   private var limit: Long = 999
   private lateinit var requestId: String
 
-  @PostConstruct
+  @Scheduled(initialDelay = 2000, fixedRate = Integer.MAX_VALUE.toLong())
   fun saveDummyRequest() {
     val username = userStoreService.getUsers()[0].username
     this.requestId = requestService.addRequest(createDummyRequest(), username)
@@ -40,14 +39,14 @@ class ScheduledStarter(
 
   @Scheduled(initialDelay = 3000, fixedRate = 100)
   fun startProcess() {
-    if (processBean.countInstances() < limit) {
-      val started = processBean.startProcess(this.requestId, originator = userStoreService.getUsers()[0].username)
+    if (processApprovalProcessBean.countInstances() < limit) {
+      val started = processApprovalProcessBean.startProcess(this.requestId, originator = userStoreService.getUsers()[0].username)
       logger.info { "Successfully started process with $started" }
     }
   }
 
   @Scheduled(initialDelay = 30000, fixedRate = 20000)
   fun reportInstanceCount() {
-    logger.info { "Currently running instances: ${processBean.countInstances()}" }
+    logger.info { "Currently running instances: ${processApprovalProcessBean.countInstances()}" }
   }
 }

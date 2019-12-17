@@ -22,6 +22,16 @@
       <artifactId>taskpool-example-process-backend</artifactId>
       <version>${project.version}</version>
     </dependency>
+
+    <!-- DB and Flyway -->
+    <dependency>
+      <groupId>org.postgresql</groupId>
+      <artifactId>postgresql</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.flywaydb</groupId>
+      <artifactId>flyway-core</artifactId>
+    </dependency>
   </dependencies>
 
   <build>
@@ -48,7 +58,6 @@
             </dependency>
           </requiresUnpack>
         </configuration>
-
       </plugin>
     </plugins>
   </build>
@@ -69,6 +78,7 @@
         </dependency>
       </dependencies>
     </profile>
+
     <profile>
       <id>camunda-ce</id>
       <activation>
@@ -98,4 +108,5 @@
       </dependencies>
     </profile>
   </profiles>
+
 </project>
