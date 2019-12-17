@@ -13,6 +13,14 @@ spring:
 camunda:
   bpm:
     default-serialization-format: application/json
+    admin-user:
+      id: admin
+      first-name: Admin
+      last-name: Administrarius
+      email: admin@localhost
+      password: admin
+    filter:
+      create: All tasks
     authorization:
       enabled: false
     history-level: full
@@ -23,7 +31,7 @@ camunda:
       index-redirect-enabled: false
   taskpool:
     collector:
-      tasklist-url: http://localhost:8080/tasklist/
+      tasklist-url: http://localhost:${server.port}/taskpool/tasks
       process:
         enabled: true
       enricher:
@@ -32,18 +40,19 @@ camunda:
       sender:
         enabled: true
         type: tx
+        send-within-transaction: true                 # Must be set to true in single node scenario.
     dataentry:
       sender:
         enabled: true
         type: simple
-        applicationName: ${spring.application.name}  # default
+        applicationName: ${spring.application.name}   # default
     form-url-resolver:
       defaultApplicationTemplate: "http://localhost:${server.port}/${applicationName}"
       defaultTaskTemplate:  "tasks/${formKey}/${id}?userId=%userId%"
       defaultProcessTemplate: "${formKey}?userId=%userId%"
       applications:
         example-process-approval:
-          url: "http://localhost:8080/example-process-approval"
+          url: "http://localhost:${server.port}/${spring.application.name}"
           processes:
             process_approve_request: "start?userId=%userId%"
           bos:
@@ -53,9 +62,12 @@ camunda:
 logging.level:
   io.holunda.camunda:
     taskpool:
-      sender: DEBUG
+      sender: WARN
       core: WARN
-      view.simple: DEBUG
+      view.simple: WARN
     datapool:
       sender: DEBUG
-  org.hibernate.engine.jdbc.env.internal.LobCreatorBuilderImpl: ERROR
+  org.springframework.web: DEBUG
+
+# To log REST controllers
+#  org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping: TRACE

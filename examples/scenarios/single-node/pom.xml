@@ -17,17 +17,7 @@
   </properties>
 
   <dependencies>
-    <!-- Frontends -->
-    <dependency>
-      <groupId>io.holunda.taskpool</groupId>
-      <artifactId>taskpool-example-process-forms</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>io.holunda.taskpool</groupId>
-      <artifactId>taskpool-example-tasklist-angular</artifactId>
-      <version>${project.version}</version>
-    </dependency>
+    <!-- Frontends see below in the profile-->
 
     <!-- Core -->
     <dependency>
@@ -99,7 +89,59 @@
         </configuration>
       </plugin>
     </plugins>
-
   </build>
+
+  <profiles>
+    <profile>
+      <id>frontend</id>
+      <activation>
+        <property>
+          <name>!skipFrontend</name>
+        </property>
+      </activation>
+      <dependencies>
+        <dependency>
+          <groupId>io.holunda.taskpool</groupId>
+          <artifactId>taskpool-example-process-forms</artifactId>
+          <version>${project.version}</version>
+        </dependency>
+        <dependency>
+          <groupId>io.holunda.taskpool</groupId>
+          <artifactId>taskpool-example-tasklist-angular</artifactId>
+          <version>${project.version}</version>
+        </dependency>
+      </dependencies>
+    </profile>
+
+    <profile>
+      <id>camunda-ce</id>
+      <activation>
+        <property>
+          <name>!camunda-ee</name>
+        </property>
+      </activation>
+      <dependencies>
+        <dependency>
+          <groupId>org.camunda.bpm.springboot</groupId>
+          <artifactId>camunda-bpm-spring-boot-starter-webapp</artifactId>
+        </dependency>
+      </dependencies>
+    </profile>
+    <profile>
+      <id>camunda-ee</id>
+      <activation>
+        <property>
+          <name>camunda-ee</name>
+        </property>
+      </activation>
+      <dependencies>
+        <dependency>
+          <groupId>org.camunda.bpm.springboot</groupId>
+          <artifactId>camunda-bpm-spring-boot-starter-webapp-ee</artifactId>
+        </dependency>
+      </dependencies>
+    </profile>
+  </profiles>
+
 
 </project>

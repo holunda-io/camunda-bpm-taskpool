@@ -10,10 +10,10 @@ import org.springframework.context.annotation.Configuration
 
 @Configuration
 @EnableJGiven
-open class TaskPoolMongoTestContext {
+class TaskPoolMongoTestContext {
   @Bean
-  open fun queryUpdateEmitter(): QueryUpdateEmitter = Mockito.mock(QueryUpdateEmitter::class.java)
+  fun queryUpdateEmitter(): QueryUpdateEmitter = Mockito.mock(QueryUpdateEmitter::class.java)
 
   @Bean
-  open fun eventProcessingConfiguration(): EventProcessingConfiguration = Mockito.mock(EventProcessingConfiguration::class.java)
+  fun eventProcessingConfiguration(): EventProcessingConfiguration = Mockito.mock(EventProcessingConfiguration::class.java)
 }

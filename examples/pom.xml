@@ -18,6 +18,7 @@
   <modules>
     <!-- Shared backend modules -->
     <module>tasklist-api</module>
+    <module>components/tasklist-reactive-backend</module>
     <module>tasklist-backend</module>
     <module>process-backend</module>
     <module>users</module>

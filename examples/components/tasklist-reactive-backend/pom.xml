@@ -1,30 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
     <groupId>io.holunda.taskpool</groupId>
     <artifactId>taskpool-examples-root</artifactId>
     <version>2.0.6-SNAPSHOT</version>
+    <relativePath>../../</relativePath>
   </parent>
 
-  <artifactId>taskpool-example-process-backend</artifactId>
+  <artifactId>taskpool-example-tasklist-reactive-backend</artifactId>
   <name>examples/${project.artifactId}</name>
 
   <properties>
-    <application.api-location>src/main/api</application.api-location>
-    <application.base-package>io.holunda.camunda.taskpool.example.process.rest</application.base-package>
+    <application.api-location>../../tasklist-api/src/main/resources</application.api-location>
+    <application.base-package>io.holunda.camunda.taskpool.example.tasklist.rest</application.base-package>
     <application.api-package>${application.base-package}.api</application.api-package>
     <application.model-package>${application.base-package}.model</application.model-package>
     <application.config-package>${application.base-package}</application.config-package>
     <maven.deploy.skip>true</maven.deploy.skip>
+    <commons-text.version>1.6</commons-text.version>
   </properties>
 
   <dependencies>
     <dependency>
       <groupId>io.holunda.taskpool</groupId>
-      <artifactId>camunda-bpm-taskpool-engine-springboot-starter</artifactId>
+      <artifactId>taskpool-example-tasklist-api</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
@@ -32,68 +33,24 @@
       <artifactId>taskpool-example-users</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>io.holunda.taskpool</groupId>
+      <artifactId>camunda-bpm-taskpool-view-api</artifactId>
+      <version>${project.version}</version>
+    </dependency>
 
     <!-- SpringBoot -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-web</artifactId>
+      <artifactId>spring-boot-starter-webflux</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>javax.servlet-api</artifactId>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-validation</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-data-jpa</artifactId>
-    </dependency>
-
-    <!-- Swagger -->
-    <dependency>
-      <groupId>io.springfox</groupId>
-      <artifactId>springfox-swagger2</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.springfox</groupId>
-      <artifactId>springfox-spring-webmvc</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.springfox</groupId>
-      <artifactId>springfox-swagger-ui</artifactId>
-    </dependency>
-
-
-    <!-- Axon -->
-    <dependency>
-      <groupId>org.axonframework</groupId>
-      <artifactId>axon-spring-boot-starter</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.h2database</groupId>
-      <artifactId>h2</artifactId>
-      <scope>test</scope>
-    </dependency>
-
-    <!-- Camunda -->
-    <dependency>
-      <groupId>org.codehaus.groovy</groupId>
-      <artifactId>groovy-all</artifactId>
-    </dependency>
-
-    <!-- SPIN -->
-    <dependency>
-      <groupId>org.camunda.bpm</groupId>
-      <artifactId>camunda-engine-plugin-spin</artifactId>
-      <version>${camunda.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.camunda.spin</groupId>
-      <artifactId>camunda-spin-dataformat-json-jackson</artifactId>
-      <version>${version.camunda.spin}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.camunda.spin</groupId>
-      <artifactId>camunda-spin-core</artifactId>
-      <version>${version.camunda.spin}</version>
     </dependency>
 
     <!-- Jackson -->
@@ -109,6 +66,46 @@
       <groupId>com.fasterxml.jackson.module</groupId>
       <artifactId>jackson-module-kotlin</artifactId>
     </dependency>
+
+    <!-- Swagger -->
+    <dependency>
+      <groupId>io.springfox</groupId>
+      <artifactId>springfox-swagger2</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.springfox</groupId>
+      <artifactId>springfox-spring-webflux</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.springfox</groupId>
+      <artifactId>springfox-swagger-ui</artifactId>
+    </dependency>
+
+    <!-- Axon -->
+    <dependency>
+      <groupId>org.axonframework</groupId>
+      <artifactId>axon-messaging</artifactId>
+    </dependency>
+
+    <!-- MapStruct -->
+    <dependency>
+      <groupId>org.mapstruct</groupId>
+      <artifactId>mapstruct-jdk8</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.mapstruct</groupId>
+      <artifactId>mapstruct</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-test</artifactId>
+    </dependency>
   </dependencies>
 
   <build>
@@ -118,13 +115,13 @@
         <executions>
 
           <execution>
-            <id>copy-swagger-api</id>
+            <id>copy-rest-api</id>
             <phase>generate-sources</phase>
             <goals>
               <goal>copy-resources</goal>
             </goals>
             <configuration>
-              <outputDirectory>${project.build.directory}/swagger</outputDirectory>
+              <outputDirectory>${project.build.directory}/swagger-model</outputDirectory>
               <resources>
                 <resource>
                   <directory>${application.api-location}</directory>
@@ -135,7 +132,6 @@
               </resources>
             </configuration>
           </execution>
-
 
           <execution>
             <id>copy-swagger-ignore</id>
@@ -148,7 +144,7 @@
               </outputDirectory>
               <resources>
                 <resource>
-                  <directory>${application.api-location}</directory>
+                  <directory>src/main/resources</directory>
                   <includes>
                     <include>.swagger-codegen-ignore</include>
                   </includes>
@@ -157,9 +153,10 @@
             </configuration>
           </execution>
 
-          <!-- Enforce resource copy -->
-          <!-- This is a fix of Kotlin incremental Compiler bug -->
-          <!-- See https://discuss.kotlinlang.org/t/kotlin-compiler-incremental-not-copying-resources/5640/5 -->
+          <!--
+          Enforce resource copy. This is a fix of Kotlin incremental Compiler bug. See
+          https://discuss.kotlinlang.org/t/kotlin-compiler-incremental-not-copying-resources/5640/5
+          -->
           <execution>
             <id>extra-copy-resources</id>
             <phase>process-classes</phase>
@@ -191,7 +188,7 @@
               <goal>generate</goal>
             </goals>
             <configuration>
-              <inputSpec>${project.build.directory}/swagger/swagger.yml</inputSpec>
+              <inputSpec>${project.build.directory}/swagger-model/swagger.yml</inputSpec>
               <templateDirectory>src/main/swagger-templates</templateDirectory>
               <language>spring</language>
               <apiPackage>${application.api-package}</apiPackage>
@@ -199,9 +196,10 @@
               <modelNamePrefix />
               <modelNameSuffix>Dto</modelNameSuffix>
               <configOptions>
-                <interfaceOnly>true</interfaceOnly>
                 <basePackage>${application.base-package}</basePackage>
                 <configPackage>${application.config-package}</configPackage>
+                <singleContentTypes>false</singleContentTypes>
+                <interfaceOnly>true</interfaceOnly>
                 <swaggerDocketConfig>false</swaggerDocketConfig>
                 <dateLibrary>java8</dateLibrary>
                 <useOptional>true</useOptional>
@@ -263,6 +261,18 @@
             </configuration>
           </execution>
         </executions>
+        <dependencies>
+          <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-maven-allopen</artifactId>
+            <version>${kotlin.version}</version>
+          </dependency>
+          <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-maven-noarg</artifactId>
+            <version>${kotlin.version}</version>
+          </dependency>
+        </dependencies>
       </plugin>
       <!-- java compiler -->
       <plugin>
@@ -271,5 +281,4 @@
       </plugin>
     </plugins>
   </build>
-
 </project>

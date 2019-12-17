@@ -24,8 +24,4 @@ fun main(args: Array<String>) {
 @EnableDataPool
 @EnableTasklist
 @EnablePropertyBasedFormUrlResolver
-class SingleNodeExampleProcessApplication {
-
-  companion object : KLogging()
-
-}
+class SingleNodeExampleProcessApplication
