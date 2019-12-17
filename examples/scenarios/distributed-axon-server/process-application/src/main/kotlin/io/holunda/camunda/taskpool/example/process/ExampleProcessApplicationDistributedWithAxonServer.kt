@@ -5,8 +5,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 
 
 fun main(args: Array<String>) {
-  SpringApplication.run(ExampleProcessApplication::class.java, *args)
+  SpringApplication.run(ExampleProcessApplicationDistributedWithAxonServer::class.java, *args)
 }
 
 @SpringBootApplication
-class ExampleProcessApplication
+class ExampleProcessApplicationDistributedWithAxonServer
