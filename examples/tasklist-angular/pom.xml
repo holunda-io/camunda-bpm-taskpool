@@ -181,7 +181,7 @@
                 </goals>
                 <phase>initialize</phase>
                 <configuration>
-                  <arguments>install --verbose --no-optional</arguments>
+                  <arguments>install --no-optional</arguments>
                 </configuration>
               </execution>
               <execution>

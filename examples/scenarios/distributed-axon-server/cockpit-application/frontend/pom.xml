@@ -196,7 +196,7 @@
                 </goals>
                 <phase>initialize</phase>
                 <configuration>
-                  <arguments>install --no-optional --verbose</arguments>
+                  <arguments>install --no-optional</arguments>
                 </configuration>
               </execution>
               <execution>
