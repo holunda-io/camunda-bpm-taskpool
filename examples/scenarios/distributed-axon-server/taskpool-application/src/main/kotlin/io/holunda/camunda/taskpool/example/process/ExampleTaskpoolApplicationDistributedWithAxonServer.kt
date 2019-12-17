@@ -14,7 +14,7 @@ import org.springframework.boot.autoconfigure.mongo.MongoReactiveAutoConfigurati
 import org.springframework.context.annotation.Import
 
 fun main(args: Array<String>) {
-  SpringApplication.run(ExampleTaskpoolApplication::class.java, *args)
+  SpringApplication.run(ExampleTaskpoolApplicationDistributedWithAxonServer::class.java, *args)
 }
 
 @SpringBootApplication(exclude = [
@@ -30,4 +30,4 @@ fun main(args: Array<String>) {
 @EnableDataPool
 @EnableTasklist
 @EnablePropertyBasedFormUrlResolver
-class ExampleTaskpoolApplication
+class ExampleTaskpoolApplicationDistributedWithAxonServer

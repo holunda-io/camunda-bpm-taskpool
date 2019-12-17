@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ApprovalRequest } from 'process/model/approvalRequest';
-import { AmendRequestService } from 'process/api/amendRequest.service';
+import { UserTaskAmendRequestService } from 'process/api/userTaskAmendRequest.service';
 import { Task } from 'process/model/task';
 import { TaskAmendRequestSubmitData } from 'process/model/taskAmendRequestSubmitData';
 import { EnvironmentHelperService } from 'app/services/environment.helper.service';
@@ -15,7 +15,7 @@ import { Environment } from 'process/model/environment';
 export class AmendTaskComponent {
 
   constructor(
-    private client: AmendRequestService,
+    private client: UserTaskAmendRequestService,
     private envProvider: EnvironmentHelperService,
     private router: Router,
     route: ActivatedRoute
