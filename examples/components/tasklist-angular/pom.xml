@@ -7,6 +7,7 @@
     <groupId>io.holunda.taskpool</groupId>
     <artifactId>taskpool-examples-root</artifactId>
     <version>2.0.6-SNAPSHOT</version>
+    <relativePath>../../</relativePath>
   </parent>
 
   <artifactId>taskpool-example-tasklist-angular</artifactId>

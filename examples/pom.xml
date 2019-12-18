@@ -17,11 +17,11 @@
 
   <modules>
     <!-- Shared backend modules -->
-    <module>tasklist-api</module>
+    <module>components/tasklist-api</module>
     <module>components/tasklist-reactive-backend</module>
-    <module>tasklist-backend</module>
-    <module>process-backend</module>
-    <module>users</module>
+    <module>components/tasklist-backend</module>
+    <module>components/process-backend</module>
+    <module>components/users</module>
 
     <!-- Example implementations for different scenarios -->
     <module>scenarios</module>
@@ -37,8 +37,8 @@
       </activation>
       <modules>
         <!-- Shared frontend modules -->
-        <module>tasklist-angular</module>
-        <module>process-forms</module>
+        <module>components/tasklist-angular</module>
+        <module>components/process-forms</module>
       </modules>
     </profile>
   </profiles>

@@ -13,7 +13,7 @@
   <name>examples/${project.artifactId}</name>
 
   <properties>
-    <application.api-location>../../tasklist-api/src/main/resources</application.api-location>
+    <application.api-location>../tasklist-api/src/main/resources</application.api-location>
     <application.base-package>io.holunda.camunda.taskpool.example.tasklist.rest</application.base-package>
     <application.api-package>${application.base-package}.api</application.api-package>
     <application.model-package>${application.base-package}.model</application.model-package>
