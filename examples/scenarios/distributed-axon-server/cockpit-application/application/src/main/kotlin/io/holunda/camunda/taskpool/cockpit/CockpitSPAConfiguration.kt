@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit
  * SPA config.
  */
 @Configuration
-open class CockpitSPAConfiguration : WebFluxConfigurer {
+class CockpitSPAConfiguration : WebFluxConfigurer {
 
   /**
    * Constants.
@@ -48,7 +48,7 @@ open class CockpitSPAConfiguration : WebFluxConfigurer {
   @Bean
   fun cockpitSpaRouter() = router {
     GET("/$BASE_PATH/") {
-      ok().contentType(MediaType.TEXT_HTML).syncBody(indexHtml)
+      ok().contentType(MediaType.TEXT_HTML).bodyValue(indexHtml)
     }
   }
 
@@ -58,7 +58,7 @@ open class CockpitSPAConfiguration : WebFluxConfigurer {
      * Deliver the platform SPA index for all frontend states.
      */
     registry
-      .addResourceHandler("/${Web.BASE_PATH}/*.html")
+      .addResourceHandler("/${BASE_PATH}/*.html")
       .addResourceLocations(STATIC_LOCATION)
       .setCacheControl(CacheControl.maxAge(1, TimeUnit.DAYS))
 

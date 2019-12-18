@@ -66,6 +66,7 @@ class TaskChangeTracker(
     trulyDeleteChangeStreamSubscription = changeStream
       .filter { event -> event.body?.deleted == true }
       .concatMap { event ->
+        @Suppress("RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
         taskRepository.deleteById(event.body.id)
           .doOnSuccess { logger.trace { "Deleted task ${event.body.id} from database." } }
       }
@@ -85,7 +86,12 @@ class TaskChangeTracker(
    */
   fun trackTaskCountsByApplication(): Flux<ApplicationWithTaskCount> = changeStream
     .window(Duration.ofSeconds(1))
-    .concatMap { it.reduce(setOf<String>()) { applicationNames, event -> applicationNames + event.body.sourceReference.applicationName } }
+    .concatMap {
+      it.reduce(setOf<String>()) { applicationNames, event ->
+        @Suppress("RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
+        applicationNames + event.body.sourceReference.applicationName
+      }
+    }
     .concatMap { Flux.fromIterable(it) }
     .concatMap { taskRepository.findTaskCountForApplication(it) }
 
@@ -93,13 +99,17 @@ class TaskChangeTracker(
    * Adopt changes to task update stream.
    */
   fun trackTaskUpdates(): Flux<Task> = changeStream
-    .map { event -> event.body.task() }
+    .map { event ->
+      @Suppress("RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
+      event.body.task()
+    }
 
   /**
    * Adopt changes to task with data entries update stream.
    */
   fun trackTaskWithDataEntriesUpdates(): Flux<TaskWithDataEntries> = changeStream
     .concatMap { event ->
+      @Suppress("RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
       val task = event.body.task()
       this.dataEntryRepository.findAllById(task.correlations.map { dataIdentityString(entryType = it.key, entryId = it.value.toString()) })
         .map { it.dataEntry() }
