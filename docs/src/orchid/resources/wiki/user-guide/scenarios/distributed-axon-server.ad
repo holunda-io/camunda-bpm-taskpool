@@ -68,8 +68,9 @@ packaged application using:
 
 [source,bash]
 ----
-java -jar examples/scenarios/distributed-axon-server/taskpool-application/target/*.jar
-java -jar examples/scenarios/distributed-axon-server/process-application/target/*.jar
+java -jar taskpool-application/target/*.jar
+java -jar process-application/target/*.jar
 ----
 
+Goto: http://localhost:8081/tasklist/[http://localhost:8081/tasklist/]
 

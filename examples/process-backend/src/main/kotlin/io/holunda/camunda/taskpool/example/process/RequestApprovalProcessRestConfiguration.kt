@@ -1,6 +1,6 @@
 package io.holunda.camunda.taskpool.example.process
 
-import org.omg.CORBA.UnknownUserException
+import io.holunda.camunda.taskpool.view.auth.UnknownUserException
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpStatus

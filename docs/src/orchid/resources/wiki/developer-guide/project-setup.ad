@@ -140,8 +140,8 @@ Alternatively, you can run them from the command line:
 
 [source,bash]
 ----
-./mvn spring-boot:run -f examples/taskpool-application
-./mvn spring-boot:run -f examples/process-application
+./mvnw spring-boot:run -f examples/taskpool-application
+./mvnw spring-boot:run -f examples/process-application
 ----
 
 === Continuous Integration
