@@ -42,14 +42,6 @@ class TaskPoolMongoViewConfiguration {
   }
 
   @Bean
-  fun configure(mongoTemplate: MongoTemplate): TokenStore =
-    MongoTokenStore
-      .builder()
-      .mongoTemplate(mongoTemplate)
-      .serializer(XStreamSerializer.builder().build())
-      .build()
-
-  @Bean
   fun configureAxonMongoTemplate(mongoClient: MongoClient): MongoTemplate =
     DefaultMongoTemplate
       .builder()
@@ -59,6 +51,14 @@ class TaskPoolMongoViewConfiguration {
       .domainEventsCollectionName("domain-events")
       .sagasCollectionName("sagas")
       .snapshotEventsCollectionName("snapshots")
+      .build()
+
+  @Bean
+  fun configure(mongoTemplate: MongoTemplate): TokenStore =
+    MongoTokenStore
+      .builder()
+      .mongoTemplate(mongoTemplate)
+      .serializer(XStreamSerializer.builder().build())
       .build()
 
   @Bean
