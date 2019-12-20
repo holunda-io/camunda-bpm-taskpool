@@ -5,7 +5,4 @@ import io.zeebe.client.ZeebeClient
 class ZeebeProcessDefinitionWorker(val zeebeClient: ZeebeClient) {
 
 
-  fun doit() {
-    zeebeClient.
-  }
 }
