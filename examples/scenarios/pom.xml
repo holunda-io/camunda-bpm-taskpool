@@ -19,6 +19,7 @@
   <modules>
     <module>single-node</module>
     <module>distributed-axon-server</module>
+    <module>zeebe-tasklist</module>
   </modules>
 
 </project>
