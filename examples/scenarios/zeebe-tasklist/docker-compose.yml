@@ -20,6 +20,7 @@ services:
       - "5701:5701"
     volumes:
       - ./zeebe.cfg.toml:/usr/local/zeebe/conf/zeebe.cfg.toml
+      - ./zeebe-hazelcast-exporter-0.6.0-jar-with-dependencies.jar:/usr/local/zeebe/lib/zeebe-hazelcast-exporter.jar
     networks:
       - zeebe_network
 
@@ -33,7 +34,6 @@ services:
       - "8082:8080"
     depends_on:
       - zeebe
-    restart: always
     networks:
       - zeebe_network
 

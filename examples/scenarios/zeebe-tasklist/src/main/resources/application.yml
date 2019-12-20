@@ -1,0 +1,8 @@
+zeebe:
+  worker:
+    name: user-task-worker
+  client:
+    broker:
+      contactPoint: 127.0.0.1:26500
+    security:
+      plaintext: true

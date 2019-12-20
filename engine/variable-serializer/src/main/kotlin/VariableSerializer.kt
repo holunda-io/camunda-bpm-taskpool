@@ -16,3 +16,9 @@ fun serialize(payload: Any, mapper: ObjectMapper = jacksonObjectMapper()): Varia
     this.putAll(mapper.convertValue(payload, object : TypeReference<Map<String, Any>>() {}))
   }
 }
+
+fun deserialize(payload: String, mapper: ObjectMapper = jacksonObjectMapper()): VariableMap {
+  return Variables.createVariables().apply {
+    this.putAll(mapper.readValue(payload as String, object : TypeReference<Map<String, Any>>() {}))
+  }
+}
