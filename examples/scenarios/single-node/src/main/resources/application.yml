@@ -9,6 +9,10 @@ spring:
     hibernate.ddl-auto: create-drop
     show-sql: false
     open-in-view: false
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
 
 camunda:
   bpm:
