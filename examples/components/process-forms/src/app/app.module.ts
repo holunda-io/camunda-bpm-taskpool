@@ -11,6 +11,7 @@ import localeEn from '@angular/common/locales/en';
 import { ApiModule, BASE_PATH } from 'process';
 import { AppComponent } from 'app/app.component';
 import { AppRoutingModule } from 'app/app-routing.module';
+import { HttpClientModule } from '@angular/common/http';
 
 import { AmendTaskComponent } from 'app/tasks/amend-request/amend-task.component';
 import { ApprovalRequestComponent } from 'app/data/approval-request/approval-request.component';
@@ -73,7 +74,8 @@ registerLocaleData(localeEn, 'en');
     // generated server API
     ApiModule,
     // routing
-    AppRoutingModule
+    AppRoutingModule,
+    HttpClientModule
   ],
   providers: [
     { provide: BASE_PATH, useValue: '/example-process-approval/rest' },
