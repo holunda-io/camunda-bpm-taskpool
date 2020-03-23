@@ -34,6 +34,7 @@ import org.springframework.stereotype.Component
 import reactor.core.Disposable
 import reactor.core.publisher.Mono
 import reactor.core.publisher.switchIfEmpty
+import java.time.Duration
 import java.util.concurrent.CompletableFuture
 import javax.annotation.PostConstruct
 import javax.annotation.PreDestroy
@@ -200,6 +201,7 @@ class TaskPoolMongoService(
   fun on(event: TaskAssignedEngineEvent) {
     logger.debug { "Task assigned $event received" }
     taskRepository.findNotDeletedById(event.id)
+      .retryIfEmpty { "Cannot update task '${event.id}' because it does not exist in the database" }
       .flatMap {
         val resultingTask = task(event, it.task())
         taskRepository.save(resultingTask.taskDocument())
@@ -224,6 +226,7 @@ class TaskPoolMongoService(
 
   private fun deleteTask(id: String, applicationName: String) {
     taskRepository.findNotDeletedById(id)
+      .retryIfEmpty { "Cannot delete task '$id' because it does not exist in the database" }
       .map { it.copy(deleted = true) }
       .flatMap { taskDocument ->
         if (properties.changeTrackingMode == ChangeTrackingMode.CHANGE_STREAM) {
@@ -242,6 +245,7 @@ class TaskPoolMongoService(
   fun on(event: TaskAttributeUpdatedEngineEvent) {
     logger.debug { "Task attributes updated $event received" }
     taskRepository.findNotDeletedById(event.id)
+      .retryIfEmpty { "Cannot update task '${event.id}' because it does not exist in the database" }
       .flatMap {
         val resultingTask = task(event, it.task())
         taskRepository.save(resultingTask.taskDocument())
@@ -255,6 +259,7 @@ class TaskPoolMongoService(
   fun on(event: TaskCandidateGroupChanged) {
     logger.debug { "Task candidate groups changed $event received" }
     taskRepository.findNotDeletedById(event.id)
+      .retryIfEmpty { "Cannot update task '${event.id}' because it does not exist in the database" }
       .flatMap {
         val resultingTask = task(event, it.task())
         taskRepository.save(resultingTask.taskDocument())
@@ -268,6 +273,7 @@ class TaskPoolMongoService(
   fun on(event: TaskCandidateUserChanged) {
     logger.debug { "Task user groups changed $event received" }
     taskRepository.findNotDeletedById(event.id)
+      .retryIfEmpty { "Cannot update task '${event.id}' because it does not exist in the database" }
       .flatMap {
         val resultingTask = task(event, it.task())
         taskRepository.save(resultingTask.taskDocument())
@@ -353,8 +359,21 @@ class TaskPoolMongoService(
 
   private fun tasksWithDataEntries(taskDocument: TaskDocument) =
     tasksWithDataEntries(taskDocument.task())
+
+  private inline fun <T> Mono<T>.retryIfEmpty(numRetries: Long = 5, firstBackoff: Duration = Duration.ofMillis(100), crossinline logMessage: () -> String): Mono<T> =
+    this.switchIfEmpty {
+        logger.debug { "${logMessage()}, but will retry." }
+        Mono.error(TaskNotFoundException())
+      }
+      .retryBackoff(numRetries, firstBackoff)
+      .onErrorMap { if (it is IllegalStateException && it.cause is TaskNotFoundException) it.cause else it }
+      .onErrorResume(TaskNotFoundException::class.java) {
+        logger.warn { "${logMessage()} and retries are exhausted." }
+        Mono.empty()
+      }
 }
 
+internal class TaskNotFoundException : RuntimeException()
 
 internal fun sort(sort: String?): Sort =
   if (sort != null && sort.length > 1) {
