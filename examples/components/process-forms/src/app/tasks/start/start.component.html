@@ -1,0 +1,32 @@
+<div class="row">
+  <div class="col-lg-12">
+    <h1><img src="assets/holunda-io-logo.png" title="holunda logo">New approval process</h1>
+  </div>
+</div>
+
+<div *ngIf="startFailure" class="alert alert-danger">An error occurred while starting the approval process. Please try
+  again later.
+</div>
+<div *ngIf="startSuccess" class="alert alert-success">Approval process started successfully.</div>
+
+<div class="row">
+  <div class="col-lg-12 content">
+    <div class="container-fluid">
+      <app-request-form [(approvalRequest)]="approvalRequestDraft" (isValid)="validate($event)"></app-request-form>
+
+      <div class="row form">
+        <div class="col-lg-12 description">
+          <input type="checkbox" name="createAnotherRequest" [(ngModel)]="createAnotherRequest"/>&nbsp;Start further
+          process.
+        </div>
+        <div class="col-lg-12 description">
+          <hr/>
+          <div class="buttons">
+            <button [disabled]="!valid" class="btn btn-primary" type="button" (click)="start()">Start</button>&nbsp;
+            <button class="btn btn-secondary" type="button" (click)="tasklist()">Task list</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

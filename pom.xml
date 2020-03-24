@@ -5,7 +5,7 @@
 
   <groupId>io.holunda.taskpool</groupId>
   <artifactId>camunda-bpm-taskpool</artifactId>
-  <version>2.0.5</version>
+  <version>2.0.6</version>
   <packaging>pom</packaging>
 
   <name>${project.artifactId}</name>
@@ -14,7 +14,6 @@
 
   <properties>
     <skipFrontend>true</skipFrontend>
-
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <java.version>1.8</java.version>
@@ -25,24 +24,30 @@
 
 
     <camunda-ee>false</camunda-ee>
-    <camunda.version>7.11.0</camunda.version>
-    <camunda.version.ee>7.11.4-ee</camunda.version.ee>
+    <camunda.version>7.12.0</camunda.version>
+    <camunda.version.ee>7.12.0-ee</camunda.version.ee>
 
-    <springboot.version>2.1.6.RELEASE</springboot.version>
-    <camunda-springboot.version>3.3.4</camunda-springboot.version>
-    <axon.version>4.2</axon.version>
+    <springboot.version>2.2.2.RELEASE</springboot.version>
+    <spring-framework.version>5.2.2.RELEASE</spring-framework.version>
+    <camunda-springboot.version>3.4.1</camunda-springboot.version>
+    <project-reactor.version>3.3.3.RELEASE</project-reactor.version>
+    <axon.version>4.3.1</axon.version>
 
-    <kotlin.version>1.3.50</kotlin.version>
+    <kotlin.version>1.3.61</kotlin.version>
     <kotlin.compiler.jvmTarget>${java.version}</kotlin.compiler.jvmTarget>
     <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
 
+    <!-- Allow snapshots as long as we are using springfox -->
+    <allowSnapshots>true</allowSnapshots>
+    <springfox.version>3.0.0-SNAPSHOT</springfox.version>
     <kotlin-logging.version>1.6.22</kotlin-logging.version>
-    <mockito.version>2.18.3</mockito.version>
-    <version.camunda.spin>1.7.1</version.camunda.spin>
+    <mockito.version>2.20.0</mockito.version>
+    <version.camunda.spin>1.8.0</version.camunda.spin>
     <jackson.version>2.10.0</jackson.version>
     <org.mapstruct.version>1.2.0.Final</org.mapstruct.version>
-    <camunda-bpm-assert.version>4.0.0</camunda-bpm-assert.version>
+    <camunda-bpm-assert.version>5.0.0</camunda-bpm-assert.version>
     <awaitability.version>3.1.5</awaitability.version>
+
   </properties>
 
   <modules>
@@ -50,7 +55,6 @@
     <module>taskpool</module>
     <module>datapool</module>
     <module>view</module>
-    <module>examples</module>
   </modules>
 
   <dependencyManagement>
@@ -81,7 +85,6 @@
         <artifactId>camunda-bpm-taskpool-variable-serializer</artifactId>
         <version>${project.version}</version>
       </dependency>
-
 
       <dependency>
         <groupId>io.holunda.taskpool</groupId>
@@ -182,6 +185,7 @@
         <scope>import</scope>
         <type>pom</type>
       </dependency>
+
       <!-- Kotlin -->
       <dependency>
         <groupId>org.jetbrains.kotlin</groupId>
@@ -248,6 +252,29 @@
         <artifactId>axon-modelling</artifactId>
         <version>${axon.version}</version>
       </dependency>
+
+      <!-- Swagger -->
+      <dependency>
+        <groupId>io.springfox</groupId>
+        <artifactId>springfox-swagger2</artifactId>
+        <version>${springfox.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.springfox</groupId>
+        <artifactId>springfox-spring-webmvc</artifactId>
+        <version>${springfox.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.springfox</groupId>
+        <artifactId>springfox-spring-webflux</artifactId>
+        <version>${springfox.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.springfox</groupId>
+        <artifactId>springfox-swagger-ui</artifactId>
+        <version>${springfox.version}</version>
+      </dependency>
+
 
       <!-- Testing -->
       <dependency>
@@ -337,6 +364,10 @@
       <artifactId>kotlin-reflect</artifactId>
     </dependency>
     <dependency>
+      <groupId>io.github.microutils</groupId>
+      <artifactId>kotlin-logging</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.jetbrains.kotlin</groupId>
       <artifactId>kotlin-test</artifactId>
       <scope>test</scope>
@@ -351,21 +382,21 @@
           <!-- cleaning -->
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-clean-plugin</artifactId>
-          <version>3.0.0</version>
+          <version>3.1.0</version>
         </plugin>
 
         <plugin>
           <!-- for generating stubs -->
           <groupId>io.swagger</groupId>
           <artifactId>swagger-codegen-maven-plugin</artifactId>
-          <version>2.3.1</version>
+          <version>2.4.8</version>
         </plugin>
 
         <plugin>
           <!-- validate swagger -->
           <groupId>com.github.sylvainlaurent.maven</groupId>
           <artifactId>swagger-validator-maven-plugin</artifactId>
-          <version>1.2.2</version>
+          <version>1.2.6</version>
           <executions>
             <execution>
               <id>validate</id>
@@ -388,7 +419,7 @@
         <plugin>
           <groupId>org.jacoco</groupId>
           <artifactId>jacoco-maven-plugin</artifactId>
-          <version>0.8.0</version>
+          <version>0.8.5</version>
           <executions>
             <!--
                 Prepares the property pointing to the JaCoCo runtime agent which
@@ -479,7 +510,7 @@
           <!-- java compiler -->
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
-          <version>3.7.0</version>
+          <version>3.8.1</version>
           <configuration>
             <encoding>UTF-8</encoding>
             <source>1.8</source>
@@ -517,7 +548,7 @@
           <!-- resources -->
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-resources-plugin</artifactId>
-          <version>3.0.2</version>
+          <version>3.1.0</version>
           <configuration>
             <encoding>UTF-8</encoding>
           </configuration>
@@ -527,7 +558,7 @@
           <!-- jar -->
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-jar-plugin</artifactId>
-          <version>3.0.2</version>
+          <version>3.2.0</version>
           <configuration>
             <archive>
               <manifest>
@@ -576,7 +607,7 @@
           <!-- for loading and unpacking artifacts -->
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-dependency-plugin</artifactId>
-          <version>3.0.2</version>
+          <version>3.1.1</version>
         </plugin>
 
         <plugin>
@@ -589,7 +620,7 @@
           <!-- for running npm build -->
           <groupId>com.github.eirslett</groupId>
           <artifactId>frontend-maven-plugin</artifactId>
-          <version>1.6</version>
+          <version>1.8.0</version>
         </plugin>
 
         <plugin>
@@ -670,9 +701,21 @@
         </plugin>
 
         <plugin>
-          <artifactId>maven-surefire-plugin</artifactId>
-          <version>2.22.1</version>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>versions-maven-plugin</artifactId>
+          <version>2.7</version>
           <configuration>
+            <generateBackupPoms>false</generateBackupPoms>
+          </configuration>
+        </plugin>
+
+        <plugin>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>3.0.0-M4</version>
+          <configuration>
+            <!--
+            <forkCount>0</forkCount>
+            -->
             <useSystemClassLoader>false</useSystemClassLoader>
             <runOrder>random</runOrder>
             <excludes>
@@ -681,21 +724,33 @@
             </excludes>
             <!-- Sets the VM argument line used when unit tests are run. -->
             <!-- prevent the annoying ForkedBooter process from stealing window focus on Mac OS -->
-            <argLine>-Djava.awt.headless=true ${surefireArgLine} -XX:+StartAttachListener</argLine>
+            <argLine>
+              -Djava.awt.headless=true
+              ${surefireArgLine}
+              -XX:+StartAttachListener
+            </argLine>
+            <systemPropertyVariables>
+              <jgiven.report.dir>${project.build.directory}/jgiven-reports</jgiven.report.dir>
+            </systemPropertyVariables>
           </configuration>
         </plugin>
 
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-failsafe-plugin</artifactId>
-          <version>2.18.1</version>
+          <version>3.0.0-M4</version>
+          <configuration>
+            <!--
+            <forkCount>0</forkCount>
+            -->
+          </configuration>
         </plugin>
 
         <!-- gitflow -->
         <plugin>
           <groupId>com.amashchenko.maven.plugin</groupId>
           <artifactId>gitflow-maven-plugin</artifactId>
-          <version>1.11.0</version>
+          <version>1.14.0</version>
           <configuration>
             <gitFlowConfig>
               <productionBranch>master</productionBranch>
@@ -717,7 +772,7 @@
         <plugin>
           <groupId>org.jetbrains.dokka</groupId>
           <artifactId>dokka-maven-plugin</artifactId>
-          <version>0.9.13</version>
+          <version>0.10.0</version>
           <executions>
             <execution>
               <phase>test</phase>
@@ -753,7 +808,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-source-plugin</artifactId>
-          <version>3.0.1</version>
+          <version>3.2.0</version>
           <executions>
             <execution>
               <id>attach-sources</id>
@@ -774,6 +829,15 @@
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-gpg-plugin</artifactId>
           <version>1.6</version>
+          <configuration>
+            <keyname>${gpg.keyname}</keyname>
+            <gpgArguments>
+              <arg>--batch</arg>
+              <arg>--yes</arg>
+              <arg>--pinentry-mode</arg>
+              <arg>loopback</arg>
+            </gpgArguments>
+          </configuration>
           <executions>
             <execution>
               <id>sign-artifacts</id>
@@ -789,8 +853,59 @@
         <!-- Deploy -->
         <plugin>
           <artifactId>maven-deploy-plugin</artifactId>
-          <version>2.8.2</version>
+          <version>3.0.0-M1</version>
+          <configuration>
+            <skip>true</skip>
+          </configuration>
         </plugin>
+        <plugin>
+          <groupId>org.sonatype.plugins</groupId>
+          <artifactId>nexus-staging-maven-plugin</artifactId>
+          <version>1.6.8</version>
+          <configuration>
+            <autoReleaseAfterClose>true</autoReleaseAfterClose>
+            <serverId>ossrh</serverId>
+            <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+          </configuration>
+          <executions>
+            <execution>
+              <id>default-deploy</id>
+              <phase>deploy</phase>
+              <goals>
+                <goal>release</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+
+        <!-- Install -->
+        <plugin>
+          <artifactId>maven-install-plugin</artifactId>
+          <version>3.0.0-M1</version>
+        </plugin>
+
+        <!-- Enforce -->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-enforcer-plugin</artifactId>
+          <version>3.0.0-M3</version>
+          <executions>
+            <execution>
+              <id>enforce-maven</id>
+              <goals>
+                <goal>enforce</goal>
+              </goals>
+              <configuration>
+                <rules>
+                  <requireMavenVersion>
+                    <version>3.6.0</version>
+                  </requireMavenVersion>
+                </rules>
+              </configuration>
+            </execution>
+          </executions>
+        </plugin>
+
       </plugins>
     </pluginManagement>
 
@@ -806,6 +921,10 @@
       <plugin>
         <groupId>com.github.eirslett</groupId>
         <artifactId>frontend-maven-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
       </plugin>
     </plugins>
   </build>
@@ -848,7 +967,9 @@
               </includes>
               <!-- Sets the VM argument line used when integration tests are run. -->
               <!-- prevent the annoying ForkedBooter process from stealing window focus on Mac OS -->
-              <argLine>-Djava.awt.headless=true ${failsafeArgLine}</argLine>
+              <argLine>
+                -Djava.awt.headless=true ${failsafeArgLine}
+              </argLine>
             </configuration>
           </plugin>
         </plugins>
@@ -862,7 +983,7 @@
           <plugin>
             <groupId>de.juplo</groupId>
             <artifactId>hibernate-maven-plugin</artifactId>
-            <version>2.1.0</version>
+            <version>2.1.1</version>
             <executions>
               <execution>
                 <id>generate-h2-ddl</id>
@@ -895,11 +1016,6 @@
           <name>release</name>
         </property>
       </activation>
-      <properties>
-        <gpg.executable>gpg</gpg.executable>
-        <gpg.passphrase>${env.GPG_PASSPHRASE}</gpg.passphrase>
-        <gpg.keyname>${env.GPG_KEYNAME}</gpg.keyname>
-      </properties>
       <build>
         <plugins>
           <plugin>
@@ -917,14 +1033,10 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-gpg-plugin</artifactId>
-            <configuration>
-              <gpgArguments>
-                <arg>--batch</arg>
-                <arg>--yes</arg>
-                <arg>--pinentry-mode</arg>
-                <arg>loopback</arg>
-              </gpgArguments>
-            </configuration>
+          </plugin>
+          <plugin>
+            <groupId>org.sonatype.plugins</groupId>
+            <artifactId>nexus-staging-maven-plugin</artifactId>
           </plugin>
         </plugins>
       </build>
@@ -991,6 +1103,18 @@
       </modules>
     </profile>
 
+    <profile>
+      <id>examples</id>
+      <activation>
+        <property>
+          <name>!skipExamples</name>
+        </property>
+      </activation>
+      <modules>
+        <module>examples</module>
+      </modules>
+    </profile>
+
   </profiles>
 
   <licenses>
@@ -1034,7 +1158,20 @@
       </releases>
     </pluginRepository>
   </pluginRepositories>
-
+  <repositories>
+    <!-- Swagger Snapshots only-->
+    <repository>
+      <id>jfrog-snapshots</id>
+      <name>JFrog</name>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+      <url>http://oss.jfrog.org/artifactory/oss-snapshot-local/</url>
+    </repository>
+  </repositories>
   <developers>
     <developer>
       <id>zambrovski</id>
@@ -1062,6 +1199,10 @@
       <name>Christoph Wolff</name>
       <organization>Holisticon AG</organization>
       <organizationUrl>http://www.holisticon.de</organizationUrl>
+    </developer>
+    <developer>
+      <id>lbilger</id>
+      <name>Lars Bilger</name>
     </developer>
     <developer>
       <id>a-hegerath</id>

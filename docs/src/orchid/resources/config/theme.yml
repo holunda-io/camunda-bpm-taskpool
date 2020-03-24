@@ -1,9 +1,10 @@
 useSidebarSearch: true
-showVersion: true
+showVersion: false
 primaryColor: '#B10000'
 trianglifyOptions:
   x_colors: ['#000', '#B10000', '#000']
 extraCss:
+  - 'assets/css/menu.scss'
   - 'assets/css/asciidoc-admonitionblock.scss'
 social:
   twitter: 'holisticon'
@@ -12,10 +13,11 @@ social:
     - link: 'https://www.holunda.io/camunda-bpm-taskpool/'
       label: 'Home'
       icon: 'fas fa-home'
+  slack:
+    - link: 'https://holunda.slack.com/messages/taskpool/'
+      label: 'Slack'
+      icon: 'fas fa-slack'
 menu:
-  - type: 'page'
-    itemId: 'Quick Start'
-    title: 'Quick Start'
 
   - type: 'submenu'
     title: 'Introduction'
@@ -25,6 +27,7 @@ menu:
 
   - type: 'submenu'
     title: 'User Guide'
+    icon: 'fas fa-home'
     menu:
       - type: 'wiki'
         section: 'user-guide'
@@ -44,3 +47,6 @@ menu:
       - type: 'page'
         title: 'License'
         itemId: 'License'
+      - type: 'page'
+        title: 'Project Readme'
+        itemId: 'Readme'

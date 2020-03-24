@@ -1,0 +1,19 @@
+<div class="row">
+  <div class="col-lg-12">
+    <nav class="navbar navbar-expand-md navbar-light">
+
+      <a class="navbar-brand" href="#">
+        <h1><img src="assets/holunda-io-logo.png" title="Tasks">Taskpool</h1>
+      </a>
+
+      <button class="navbar-toggler hidden-sm-up" type="button" (click)="isNavbarCollapsed = !isNavbarCollapsed" data-target="#navbarsDefault"
+              aria-controls="navbarsDefault" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div [ngbCollapse]="isNavbarCollapsed" class="collapse navbar-collapse" id="navbarsDefault">
+        <ng-content></ng-content>
+      </div>
+    </nav>
+  </div>
+</div>

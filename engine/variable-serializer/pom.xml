@@ -6,7 +6,7 @@
   <parent>
     <groupId>io.holunda.taskpool</groupId>
     <artifactId>camunda-bpm-taskpool-engine-root</artifactId>
-    <version>2.0.5</version>
+    <version>2.0.6</version>
   </parent>
 
   <artifactId>camunda-bpm-taskpool-variable-serializer</artifactId>
@@ -31,11 +31,6 @@
       <groupId>com.fasterxml.jackson.module</groupId>
       <artifactId>jackson-module-kotlin</artifactId>
     </dependency>
-    <dependency>
-      <groupId>io.github.microutils</groupId>
-      <artifactId>kotlin-logging</artifactId>
-    </dependency>
-
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>

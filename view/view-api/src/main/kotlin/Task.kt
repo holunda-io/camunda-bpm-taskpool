@@ -37,6 +37,12 @@ data class Task(
 
 }
 
+/**
+ * Create a new task from data of existing task and incoming event.
+ * @param event to construct from.
+ * @param task existing task.
+ * @return new task with merged values.
+ */
 fun task(event: TaskAssignedEngineEvent, task: Task) = Task(
   id = event.id,
   sourceReference = event.sourceReference,
@@ -59,6 +65,11 @@ fun task(event: TaskAssignedEngineEvent, task: Task) = Task(
   dueDate = event.dueDate
 )
 
+/**
+ * Create a new task from data of incoming event.
+ * @param event to construct from.
+ * @return new task.
+ */
 fun task(event: TaskCreatedEngineEvent) = Task(
   id = event.id,
   sourceReference = event.sourceReference,
@@ -81,6 +92,12 @@ fun task(event: TaskCreatedEngineEvent) = Task(
   dueDate = event.dueDate
 )
 
+/**
+ * Create a new task from data of existing task and incoming event.
+ * @param event to construct from.
+ * @param task existing task.
+ * @return new task with merged values.
+ */
 fun task(event: TaskAttributeUpdatedEngineEvent, task: Task) = Task(
   id = event.id,
   sourceReference = event.sourceReference,
@@ -130,6 +147,12 @@ fun task(event: TaskCandidateGroupChanged, task: Task) = Task(
   dueDate = task.dueDate
 )
 
+/**
+ * Create a new task from data of existing task and incoming event.
+ * @param event to construct from.
+ * @param task existing task.
+ * @return new task with merged values.
+ */
 fun task(event: TaskCandidateUserChanged, task: Task) = Task(
   id = event.id,
   sourceReference = event.sourceReference,

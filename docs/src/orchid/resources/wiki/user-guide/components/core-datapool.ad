@@ -8,6 +8,9 @@ pageId: core-datapool
 
 === Purpose
 
+The component is responsible for maintaining and storing the consistent state of the datapool
+core concept of Business Data Entry.
 
-
-=== Configuration options
+The component receives all commands and emits events, if changes are performed on underlying entities.
+The event stream is used to store all changes (purely event-sourced) and should be used by all other
+parties interested in changes.

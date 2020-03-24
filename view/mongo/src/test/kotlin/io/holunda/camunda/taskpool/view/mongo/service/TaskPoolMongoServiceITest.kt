@@ -16,12 +16,10 @@ import io.holunda.camunda.taskpool.view.query.task.TasksForUserQuery
 import io.holunda.camunda.taskpool.view.query.task.TasksWithDataEntriesForUserQuery
 import org.camunda.bpm.engine.variable.VariableMap
 import org.camunda.bpm.engine.variable.Variables
-import org.junit.After
-import org.junit.AfterClass
-import org.junit.BeforeClass
-import org.junit.Test
+import org.junit.*
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.annotation.DirtiesContext
+import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.TestPropertySource
 import java.util.*
 
@@ -319,9 +317,38 @@ abstract class TaskPoolMongoServiceITestBase : SpringRuleScenarioTest<TaskPoolGi
 }
 
 @TestPropertySource(properties = [
+  "camunda.taskpool.view.mongo.changeTrackingMode=CHANGE_STREAM",
+  "spring.data.mongodb.database=TaskPoolMongoServiceChangeStreamChangeTrackingITest"
+])
+@ActiveProfiles("itest-replicated")
+class TaskPoolMongoServiceChangeStreamChangeTrackingITest : TaskPoolMongoServiceITestBase() {
+  companion object {
+    private val mongo = MongoLauncher.MongoInstance(true, "TaskPoolMongoServiceChangeStreamChangeTrackingITest")
+
+    @BeforeClass
+    @JvmStatic
+    fun initMongo() {
+      mongo.init()
+    }
+
+    @AfterClass
+    @JvmStatic
+    fun stop() {
+      mongo.stop()
+    }
+  }
+
+  @After
+  fun clearMongo() {
+    mongo.clear()
+  }
+}
+
+@TestPropertySource(properties = [
   "camunda.taskpool.view.mongo.changeTrackingMode=EVENT_HANDLER",
   "spring.data.mongodb.database=TaskPoolMongoServiceEventHandlerChangeTrackingITest"
 ])
+@ActiveProfiles("itest-standalone")
 class TaskPoolMongoServiceEventHandlerChangeTrackingITest : TaskPoolMongoServiceITestBase() {
   companion object {
     private val mongo = MongoLauncher.MongoInstance(false, "TaskPoolMongoServiceEventHandlerChangeTrackingITest")
@@ -345,32 +372,6 @@ class TaskPoolMongoServiceEventHandlerChangeTrackingITest : TaskPoolMongoService
   }
 }
 
-@TestPropertySource(properties = [
-  "camunda.taskpool.view.mongo.changeTrackingMode=CHANGE_STREAM",
-  "spring.data.mongodb.database=TaskPoolMongoServiceChangeStreamChangeTrackingITest"
-])
-class TaskPoolMongoServiceChangeStreamChangeTrackingITest : TaskPoolMongoServiceITestBase() {
-  companion object {
-    private val mongo = MongoLauncher.MongoInstance(true, "TaskPoolMongoServiceChangeStreamChangeTrackingITest")
-
-    @BeforeClass
-    @JvmStatic
-    fun initMongo() {
-      mongo.init()
-    }
-
-    @AfterClass
-    @JvmStatic
-    fun stop() {
-      mongo.stop()
-    }
-  }
-
-  @After
-  fun clearMongo() {
-    mongo.clear()
-  }
-}
 
 data class TestTaskData(
   val id: String,

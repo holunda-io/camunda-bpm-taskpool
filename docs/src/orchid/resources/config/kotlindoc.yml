@@ -2,7 +2,6 @@ sourceDirs:
   - './../../../../datapool/datapool-api/src/main/kotlin'
   - './../../../../datapool/datapool-core/src/main/kotlin'
   - './../../../../engine/camunda-engine-client/src/main/kotlin'
-  - './../../../../engine/camunda-engine-plugin/src/main/kotlin'
   - './../../../../engine/datapool-collector/src/main/kotlin'
   - './../../../../engine/taskpool-collector/src/main/kotlin'
   - './../../../../engine/taskpool-engine-springboot-starter/src/main/kotlin'
@@ -13,11 +12,15 @@ sourceDirs:
   - './../../../../view/simple/src/main/kotlin'
   - './../../../../view/mongo/src/main/kotlin'
 
-classPages:
-  menu:
-    - type: 'separator'
-      title: 'Class Info'
-      order: 100
-    - type: 'kotlindocClassLinks'
-      includeItems: true
-      order: 110
+pages:
+  extraCss:
+    - 'assets/css/orchidKotlindoc.scss'
+
+#classPages:
+#  menu:
+#    - type: 'separator'
+#      title: 'Class Info'
+#      order: 100
+#    - type: 'kotlindocClassLinks'
+#      includeItems: true
+#      order: 110

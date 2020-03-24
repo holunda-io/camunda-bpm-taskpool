@@ -1,0 +1,19 @@
+{
+  "/tasklist/rest": {
+    "target": "http://localhost:8081",
+    "secure": false,
+    "logLevel": "debug",
+    "pathRewrite": {
+      "^/tasklist/rest": "/tasklist/rest"
+    }
+  },
+  "/taskpool": {
+    "target": "http://localhost:4200",
+    "secure": false,
+    "logLevel": "debug",
+    "pathRewrite": {
+      "^/taskpool": "/"
+    }
+  }
+}
+

@@ -1,0 +1,26 @@
+<div class="container-fluid">
+  <tasks-header>
+
+    <div class="navbar-nav navbar-light">
+      <div class="nav-item" routerLinkActive="active">
+        <a class="nav-link" routerLink="/tasks">User Tasks</a>
+      </div>
+      <div class="nav-item" routerLinkActive="active">
+        <a class="nav-link" routerLink="/archive">Workpieces</a>
+      </div>
+      <div class="nav-item dropdown" ngbDropdown>
+        <div class="nav-link dropdown-toggle" ngbDropdownToggle>Start new...</div>
+        <tasks-process-list></tasks-process-list>
+      </div>
+    </div>
+
+    <div class="flex-spacer"></div>
+
+    <div class="navbar-nav">
+      <tasks-search></tasks-search>
+      <tasks-user-selection></tasks-user-selection>
+    </div>
+  </tasks-header>
+  <router-outlet></router-outlet>
+  <tasks-footer></tasks-footer>
+</div>

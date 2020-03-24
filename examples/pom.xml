@@ -5,11 +5,10 @@
   <parent>
     <groupId>io.holunda.taskpool</groupId>
     <artifactId>camunda-bpm-taskpool</artifactId>
-    <version>2.0.5</version>
+    <version>2.0.6</version>
   </parent>
 
-  <artifactId>camunda-bpm-taskpool-examples-root</artifactId>
-  <name>example/${project.artifactId}</name>
+  <artifactId>taskpool-examples-root</artifactId>
   <packaging>pom</packaging>
 
   <properties>
@@ -17,12 +16,15 @@
   </properties>
 
   <modules>
-    <module>tasklist-api</module>
-    <module>tasklist-backend</module>
-    <module>process-application</module>
-    <module>taskpool-application</module>
-    <module>property-taskurl-resolver</module>
-    <module>users</module>
+    <!-- Shared backend modules -->
+    <module>components/tasklist-api</module>
+    <module>components/tasklist-reactive-backend</module>
+    <module>components/tasklist-backend</module>
+    <module>components/process-backend</module>
+    <module>components/users</module>
+
+    <!-- Example implementations for different scenarios -->
+    <module>scenarios</module>
   </modules>
 
   <profiles>
@@ -34,8 +36,9 @@
         </property>
       </activation>
       <modules>
-        <module>tasklist-angular</module>
-        <module>process-forms</module>
+        <!-- Shared frontend modules -->
+        <module>components/tasklist-angular</module>
+        <module>components/process-forms</module>
       </modules>
     </profile>
   </profiles>

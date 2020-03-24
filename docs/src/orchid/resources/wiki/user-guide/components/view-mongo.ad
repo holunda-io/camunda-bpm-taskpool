@@ -20,6 +20,58 @@ the Taskpool and Datapool View API and persists the projection as document colle
 
 === Configuration options
 
+In order to activate the Mongo implementation, please include the following dependency on your classpath:
+
+[source,xml]
+----
+<dependency>
+  <groupId>io.holunda.taskpool</groupId>
+  <artifactId>camunda-bpm-taskpool-view-mongo</artifactId>
+  <version>${taskpool.version}</version>
+</dependency>
+----
+
+The implementation relies on Spring Data Mongo and needs to activate those. Please add
+the following annotation to any class marked as Spring Configuration loaded during initialization:
+
+[source,java]
+----
+@Configuration
+@EnableTaskPoolMongoView
+@Import({
+    org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration.class,
+    org.springframework.boot.autoconfigure.mongo.MongoReactiveAutoConfiguration.class,
+    org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration.class,
+    org.springframework.boot.autoconfigure.data.mongo.MongoReactiveDataAutoConfiguration.class
+  })
+public class MyViewConfiguration {
+
+}
+----
+
+In addition, configure a Mongo connection to database called `tasks-payload` using `application.properties` or
+`application.yaml`:
+
+[source,yml]
+----
+spring:
+  data:
+    mongodb:
+      database: tasks-payload
+      host: localhost
+      port: 27017
+----
+
+The view implementation provides runtime details using standard logging facility. If you
+want to increase the logging level, please setup it e.g. in your `application.yaml`:
+
+[source,yml]
+----
+logging.level.io.holunda.camunda.taskpool.view.mongo: DEBUG
+----
+
+
+
 Depending on your setup, you might want to use Axon Query Bus for subscription queries or not. MongoDB provides
 a change stream if run in a replication set. Using the property `camunda.taskpool.view.mongo.change-tracking-mode`
 you can control, whether you use subscription query based on Axon Query Bus (value `EVENT_HANDLER`, default) or based

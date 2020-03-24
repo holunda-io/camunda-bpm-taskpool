@@ -9,21 +9,30 @@ import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
 import javax.annotation.PostConstruct
 
+/**
+ * Configuration fo in-memory taskpool view.
+ */
 @ComponentScan
 @Configuration
-open class TaskPoolSimpleViewConfiguration {
+class TaskPoolSimpleViewConfiguration {
 
   companion object : KLogging()
 
+  /**
+   * Initializes processing group and starts replay.
+   */
   @Bean
   @ConditionalOnProperty(prefix = "camunda.taskpool.view.simple", name = ["replay"], matchIfMissing = true)
-  open fun initializeSimpleView(
+  fun initializeSimpleView(
     simpleServiceViewProcessingGroup: SimpleServiceViewProcessingGroup) = ApplicationRunner {
     simpleServiceViewProcessingGroup.restore()
   }
 
+  /**
+   * Logs a little.
+   */
   @PostConstruct
-  open fun info() {
+  fun info() {
     logger.info { "VIEW-SIMPLE-001: Initialized simple view" }
   }
 }

@@ -37,20 +37,12 @@ class TaskPoolMongoViewConfiguration {
   lateinit var mongoDatabaseName: String
 
   @PostConstruct
-  open fun info() {
-    logger.info { "VIEW-MONGO-001: Initialized mongo view" }
+  fun info() {
+    logger.info { "VIEW-MONGO-001: Initialized mongo view to use database '$mongoDatabaseName'" }
   }
 
   @Bean
-  open fun configure(mongoTemplate: MongoTemplate): TokenStore =
-    MongoTokenStore
-      .builder()
-      .mongoTemplate(mongoTemplate)
-      .serializer(XStreamSerializer.builder().build())
-      .build()
-
-  @Bean
-  open fun configureAxonMongoTemplate(mongoClient: MongoClient): MongoTemplate =
+  fun configureAxonMongoTemplate(mongoClient: MongoClient): MongoTemplate =
     DefaultMongoTemplate
       .builder()
       .mongoDatabase(mongoClient, mongoDatabaseName)
@@ -62,7 +54,15 @@ class TaskPoolMongoViewConfiguration {
       .build()
 
   @Bean
-  open fun mongoConverter(mongoFactory: MongoDbFactory) = MappingMongoConverter(
+  fun configure(mongoTemplate: MongoTemplate): TokenStore =
+    MongoTokenStore
+      .builder()
+      .mongoTemplate(mongoTemplate)
+      .serializer(XStreamSerializer.builder().build())
+      .build()
+
+  @Bean
+  fun mongoConverter(mongoFactory: MongoDbFactory) = MappingMongoConverter(
     DefaultDbRefResolver(mongoFactory),
     MongoMappingContext()
   )

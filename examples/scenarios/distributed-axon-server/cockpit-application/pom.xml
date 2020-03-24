@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>io.holunda.taskpool</groupId>
+    <artifactId>taskpool-example-scenario-distributed-axon-server</artifactId>
+    <version>2.0.6</version>
+  </parent>
+
+  <artifactId>taskpool-example-cockpit-root</artifactId>
+  <name>examples/${project.artifactId}</name>
+  <packaging>pom</packaging>
+
+  <properties>
+    <maven.deploy.skip>true</maven.deploy.skip>
+  </properties>
+
+  <modules>
+    <module>backend</module>
+    <module>application</module>
+  </modules>
+
+  <profiles>
+    <profile>
+      <id>frontend</id>
+      <activation>
+        <property>
+          <name>!skipFrontend</name>
+        </property>
+      </activation>
+      <modules>
+        <module>frontend</module>
+      </modules>
+    </profile>
+  </profiles>
+
+</project>

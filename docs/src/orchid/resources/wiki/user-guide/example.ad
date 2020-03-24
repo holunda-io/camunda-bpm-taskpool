@@ -1,0 +1,107 @@
+---
+title: Working Example
+---
+
+== {{ page.title }}
+
+Along with library modules several example modules and applications are provided, demonstrating the main features of the solution.
+This includes a series of example applications for usage in different link:../scenarios[Usage Scenarios].
+
+
+=== Business context
+
+image::{{baseUrl('assets/media/process_approve_request.png')}}[Approval Process]
+
+Imagine a system that responsible for management of all requests in the company. Using this system, you can submit requests
+which then get eventually approved or rejected. Sometimes, the approver doesn't approve or reject, but returns the request
+back to the originator (that is the person, who submitted the request). Then, the originator can amend the request and
+resubmit it or cancel the request.
+
+The request is initially crated in `DRAFT` mode. It gets to state `IN PROGRESS` as soon as the process is started and will
+eventually get to `ACCEPTED` or `REJECTED` as a final state.
+
+For sample purposes two groups of users are created: The Muppet Show (Kermit, Piggy, Gonzo and Fozzy) and The Avengers (Ironman,
+Hulk). Gonzo and Fozzy are responsible for approvals.
+
+=== Story board
+
+The following storyboard can be used to understand the mechanics behind the provided implementation:
+
+- To start the `Approval process` for a given request open your browser and navigate to the `Tasklist`:
+http://localhost:8081/tasklist/[http://localhost:8081/tasklist/]. Please note that the selected user is `Ironman`.
+Open the menu (Start new...) in the top-left corner and select 'Approval Request'. You should see the start
+form for the example approval process.
+
+- Select from one of predefined templates and click _Start_. The start form will disappear and redirect back to
+the `Tasklist` where the new approval request process created one task with the name _Approve Request_. If the selected
+user is still `Ironman` you won't see any task, but it will be visible if you switch to `Gonzo`.
+
+- Examine the task details by clicking _Data_ tab in _Details_ column. You can see the data of the request correlated to
+the current process instance.
+
+- Switch to `Archive` and you should see the request business object. Examine the approval request by clicking
+_Data_, _Audit_ and _Description_ tabs in _Details_ column.
+
+- Let's assume the request amount is too high and we want to inform `Ironman` about this. We are not rejecting the
+request completely, but returning it to back to `Ironman`. To do so click on the task name which opens the user task
+form _Approve Request_ and complete the task, by selecting the _Return request to originator_ option and clicking
+the _Complete_ button. The process will create a new user task `Amend Request` for the originator, who is
+`Ironman` which is visible in the `Tasklist`.
+
+- `Ironman` should now change the amount of the request in the and re-submit the request. For doing so, click
+on task named _Amend Approval Request_, change the amount to a new value and complete the task by selecting the
+_Re-submit request_ option and clicking on _Complete_ button.
+
+- Again, let's examine the data correlated with the task. Note that the amount is changed, despite the fact that the
+request amount is not a data item available to the process instance but is still available in the `Tasklist`. You can
+examine the details of the `Approval Request` in the `Archive` again.
+
+- Switch back to the `Tasklist` and approve the request by selecting the appropriate option.
+
+=== Running Examples
+
+To run the example please consult the link:../scenarios[Usage Scenarios] section.
+
+TIP: Since the process application includes Camunda BPM engine, you can use the standard Camunda webapps by navigating to [http://localhost:8080/](http://localhost:8080/).
+The default user and password are `admin / admin `.
+
+=== Tasklist
+
+The currently implemented `Tasklist` is a simple application (implemented as a single-page-application based on Angular)
+that shows the list of taks available in the task pool. In doing so it provides the ability to filter, sort and page
+tasks with correlated business events. Here is how it looks like now:
+
+image::{{baseUrl('assets/media/tasklist-angular-classic.png')}}["Angualar Tasklist, classic representation of tasks"]
+image::{{baseUrl('assets/media/tasklist-angular-data.png')}}["Angualar Tasklist, representation of tasks with correlated data"]
+
+==== Features
+
+- Lists tasks in the system for selected user
+- Allows for switching users
+- Tasks include information about the process, name, description, create time, due date, priority and assignment.
+- Tasks include process data (from process instance)
+- Tasks include correlated business data
+- The list of tasks is sortable
+- The list of tasks is paged (7 items per page)
+- Claiming / Unclaiming
+- Jump to form
+- Allows to start processes
+
+==== Ongoing / TODO
+
+- Filtering
+
+=== Archive list
+
+==== Features
+
+- Lists business object in the system for selected user
+- Allows for switching users
+- Business objects include information about the type, status (with sub status), name, details
+- Business objects include details about contained data
+- Business objects include audit log with all state changes
+- The list is paged (7 items per page)
+
+==== Ongoing / TODO
+
+- Business object view

@@ -11,6 +11,8 @@ interface ReactiveProcessDefinitionApi {
 
   /**
    * Query for startable process definitions.
+   * @param query query object.
+   * @return observable list of process definitions.
    */
   fun query(query: ProcessDefinitionsStartableByUserQuery): CompletableFuture<List<ProcessDefinition>>
 }

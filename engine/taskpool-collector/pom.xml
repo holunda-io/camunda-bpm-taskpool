@@ -6,7 +6,7 @@
   <parent>
     <groupId>io.holunda.taskpool</groupId>
     <artifactId>camunda-bpm-taskpool-engine-root</artifactId>
-    <version>2.0.5</version>
+    <version>2.0.6</version>
   </parent>
 
   <artifactId>camunda-bpm-taskpool-collector</artifactId>
@@ -56,7 +56,7 @@
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-tx</artifactId>
-      <version>5.0.7.RELEASE</version>
+      <version>${spring-framework.version}</version>
     </dependency>
 
     <dependency>
@@ -99,10 +99,6 @@
     <dependency>
       <groupId>org.awaitility</groupId>
       <artifactId>awaitility</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.github.microutils</groupId>
-      <artifactId>kotlin-logging</artifactId>
     </dependency>
   </dependencies>
 

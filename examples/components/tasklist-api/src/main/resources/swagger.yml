@@ -1,0 +1,566 @@
+swagger: '2.0'
+info:
+  title: Camunda BPM Taskpool Tasklist
+  version: 0.0.1
+  description: API for the task list.
+basePath: '/tasklist/rest'
+tags:
+  - name: Task
+    description: Operations on tasks.
+  - name: Profile
+    description: User's propfile.
+  - name: Process
+    description: Operations on process definitions.
+  - name: Workpiece
+    description: Operation on business data entries.
+
+schemes:
+  - http
+  - https
+paths:
+  '/profile':
+    get:
+      tags:
+        - Profile
+      summary: Retrieves the user's profile.
+      produces:
+        - application/json
+      operationId: getProfile
+      parameters:
+        - in: header
+          name: X-Current-User-ID
+          description: Specifies the id of current user.
+          type: string
+      responses:
+        '200':
+          description: Successful operation.
+          schema:
+            title: User profile.
+            $ref: '#/definitions/UserProfile'
+  '/users':
+    get:
+      tags:
+        - Profile
+      summary: Retrieves the list of all user ids in the system as a help for login fake.
+      produces:
+        - application/json
+      operationId: getUsers
+      responses:
+        '200':
+          description: Successful operation.
+          schema:
+            title: List of user ids.
+            type: object
+            additionalProperties:
+              type: string
+  '/processes':
+    get:
+      tags:
+        - Process
+      summary: List processes startable by current user.
+      produces:
+        - application/json
+      operationId: getStartableProcesses
+      parameters:
+        - in: header
+          name: X-Current-User-ID
+          description: Specifies the id of current user.
+          type: string
+      responses:
+        '200':
+          description: Successful operation.
+          schema:
+            title: List of processes.
+            type: array
+            items:
+              $ref: '#/definitions/ProcessDefinition'
+          headers:
+            X-ElementCount:
+              type: integer
+              description: Number of elements in total.
+        '401':
+          description: Not authenticated.
+        '403':
+          description: Not authorized.
+
+  '/tasks':
+    get:
+      tags:
+        - Task
+      summary: Lists tasks.
+      produces:
+        - application/json
+      operationId: getTasks
+      parameters:
+        - in: query
+          name: page
+          description: The page number to access (0 indexed, defaults to 0)
+          default: 0
+          type: integer
+        - in: query
+          name: size
+          description: The page size requested (defaults to 20)
+          default: 0
+          type: integer
+        - in: query
+          name: sort
+          description: A collection of sort directives in the format +prop1.
+          type: string
+          pattern: '^[-+]([\w]*)$'
+        - in: query
+          name: filter
+          description: One or multiple filter directives in the format prop1=value
+          type: array
+          items:
+            type: string
+          pattern: '^([\w]*)=([.]+)?$'
+          collectionFormat: multi
+          required: true
+          default: '[]'
+        - in: header
+          name: X-Current-User-ID
+          description: Specifies the id of current user.
+          type: string
+      responses:
+        '200':
+          description: Successful operation.
+          schema:
+            title: List of tasks.
+            type: array
+            items:
+              $ref: '#/definitions/TaskWithDataEntries'
+          headers:
+            X-ElementCount:
+              type: integer
+              description: Number of elements in total.
+        '401':
+          description: Not authenticated.
+        '403':
+          description: Not authorized.
+
+  '/task/{id}/claim':
+    post:
+      tags:
+        - Task
+      summary: Claims a task.
+      operationId: claim
+      parameters:
+        - in: path
+          name: id
+          type: string
+          description: Task id.
+          required: true
+        - in: header
+          name: X-Current-User-ID
+          description: Specifies the id of current user.
+          type: string
+      responses:
+        '204':
+          description: Sucessful operation.
+        '401':
+          description: Not authenticated.
+        '403':
+          description: Not authorized.
+        '404':
+          description: Task not found.
+
+  '/task/{id}/unclaim':
+    post:
+      tags:
+        - Task
+      summary: Unclaims a task.
+      operationId: unclaim
+      parameters:
+        - in: path
+          name: id
+          type: string
+          description: Task id.
+          required: true
+        - in: header
+          name: X-Current-User-ID
+          description: Specifies the id of current user.
+          type: string
+      responses:
+        '204':
+          description: Sucessful operation.
+        '401':
+          description: Not authenticated.
+        '403':
+          description: Not authorized.
+        '404':
+          description: Task not found.
+
+  '/task/{id}/defer':
+    post:
+      tags:
+        - Task
+      summary: Defers a task.
+      operationId: defer
+      parameters:
+        - in: path
+          name: id
+          type: string
+          description: Task id.
+          required: true
+        - in: header
+          name: X-Current-User-ID
+          description: Specifies the id of current user.
+          type: string
+        - in: body
+          name: followUpDate
+          description: A date until the task is deferred.
+          schema:
+            type: string
+            format: date-time
+      responses:
+        '204':
+          description: Sucessful operation.
+        '401':
+          description: Not authenticated.
+        '403':
+          description: Not authorized.
+        '404':
+          description: Task not found.
+
+  '/task/{id}/undefer':
+    post:
+      tags:
+        - Task
+      summary: Undefers a task.
+      operationId: undefer
+      parameters:
+        - in: path
+          name: id
+          type: string
+          description: Task id.
+          required: true
+        - in: header
+          name: X-Current-User-ID
+          description: Specifies the id of current user.
+          type: string
+      responses:
+        '204':
+          description: Sucessful operation.
+        '401':
+          description: Not authenticated.
+        '403':
+          description: Not authorized.
+        '404':
+          description: Task not found.
+
+
+  '/task/{id}/complete':
+    post:
+      tags:
+        - Task
+      summary: Completes a task.
+      operationId: complete
+      parameters:
+        - in: path
+          name: id
+          type: string
+          description: Task id.
+          required: true
+        - in: header
+          name: X-Current-User-ID
+          description: Specifies the id of current user.
+          type: string
+        - in: body
+          name: payload
+          description: Payload to be added to the process instance on task completion.
+          schema:
+            $ref: '#/definitions/Payload'
+      responses:
+        '204':
+          description: Sucessful operation.
+        '401':
+          description: Not authenticated.
+        '403':
+          description: Not authorized.
+        '404':
+          description: Task not found.
+
+  '/bolist':
+    get:
+      tags:
+        - Workpiece
+      summary: Lists business objects.
+      produces:
+        - application/json
+      operationId: getBos
+      parameters:
+        - in: query
+          name: page
+          description: The page number to access (0 indexed, defaults to 0)
+          default: 0
+          type: integer
+        - in: query
+          name: size
+          description: The page size requested (defaults to 20)
+          default: 0
+          type: integer
+        - in: query
+          name: sort
+          description: A collection of sort directives in the format +prop1.
+          type: string
+          pattern: '^[-+]([\w]*)$'
+        - in: query
+          name: filter
+          description: One or multiple filter directives in the format prop1=value
+          type: array
+          items:
+            type: string
+          pattern: '^([\w]*)=([.]+)?$'
+          collectionFormat: multi
+          required: true
+          default: '[]'
+        - in: header
+          name: X-Current-User-ID
+          description: Specifies the id of current user.
+          type: string
+      responses:
+        '200':
+          description: Successful operation.
+          schema:
+            title: List of bos.
+            type: array
+            items:
+              $ref: '#/definitions/DataEntry'
+          headers:
+            X-ElementCount:
+              type: integer
+              description: Number of elements in total.
+        '401':
+          description: Not authenticated.
+        '403':
+          description: Not authorized.
+
+
+definitions:
+  TaskWithDataEntries:
+    type: object
+    description: Represents a user task.
+    properties:
+      task:
+        $ref: '#/definitions/Task'
+      dataEntries:
+        type: array
+        items:
+          $ref: '#/definitions/DataEntry'
+    required:
+      - task
+      - dataEntries
+
+  Task:
+    type: object
+    properties:
+      id:
+        type: string
+        description: Id of the user task.
+      name:
+        type: string
+        description: Action to execute.
+      description:
+        type: string
+        description: Description of the user task.
+      url:
+        type: string
+        description: URL used to open user task.
+      formKey:
+        type: string
+        description: Form key of the task (as defined in the process model).
+      candidateGroups:
+        type: array
+        description: Set of candidate groups represented by their group ids.
+        items:
+          type: string
+      candidateUsers:
+        type: array
+        description: Set of candidate users represented by their user ids.
+        items:
+          type: string
+      assignee:
+        type: string
+        description: User name of assigned user.
+      processName:
+        type: string
+        description: Name of the process.
+      createTime:
+        type: string
+        description: Creation date and time of the task.
+        format: date-time
+      dueDate:
+        type: string
+        description: Due date and time of the task.
+        format: date-time
+      followUpDate:
+        type: string
+        description: Follow-up date and time of the task.
+        format: date-time
+      businessKey:
+        type: string
+        description: Business Key of the process.
+      priority:
+        type: integer
+        description: Priority of the task.
+      payload:
+        type: object
+        additionalProperties:
+          type: object
+
+    required:
+      - id
+      - name
+      - description
+      - url
+      - candidateGroups
+      - candidateUsers
+      - processName
+      - createTime
+      - dueDate
+      - businessKey
+
+  DataEntry:
+    type: object
+    properties:
+      entryType:
+        type: string
+        description: Type of entry
+      entryId:
+        type: string
+        description: Id of the entry
+      payload:
+        type: object
+        additionalProperties:
+          type: object
+      name:
+        type: string
+        description: Human-readable data entry name.
+      description:
+        type: string
+        description: Human-readable additional information.
+      type:
+        type: string
+        description: Human readable type.
+      formKey:
+        type: string
+        description: Form key of the form.
+      url:
+        type: string
+        description: URL to form.
+      applicationName:
+        type: string
+        description: Origin of the data entry.
+      currentState:
+        type: string
+        description: State of data entry.
+      currentStateType:
+        type: string
+        description: State type.
+        enum:
+          - PRELIMINARY
+          - IN_PROGRESS
+          - COMPLETED
+          - CANCELLED
+          - UNDEFINED
+      protocol:
+        type: array
+        items:
+          $ref: '#/definitions/ProtocolEntry'
+        description: Protocol entries for this business object.
+    required:
+      - entryType
+      - entryId
+      - payload
+      - name
+      - type
+      - applicationName
+      - protocol
+
+  ProtocolEntry:
+    type: object
+    properties:
+      timestamp:
+        type: string
+        format: date-time
+        description: Timestamp of protocol entry.
+      state:
+        type: string
+        description: State at the time of the protocol entry.
+      stateType:
+        type: string
+        description: Processing state at the time of the protocol entry.
+        enum:
+          - PRELIMINARY
+          - IN_PROGRESS
+          - COMPLETED
+          - CANCELLED
+          - UNDEFINED
+      user:
+        type: string
+        description: Username of the user.
+      log:
+        type: string
+        description: Log message.
+      logDetails:
+        type: string
+        description: Log details.
+    required:
+      - timestamp
+      - state
+      - stateType
+
+  ProcessDefinition:
+    type: object
+    properties:
+      definitionId:
+        type: string
+        description: Process definition id.
+      definitionKey:
+        type: string
+        description: Process definition key.
+      definitionVersion:
+        type: string
+        description: Process definition version.
+      applicationName:
+        type: string
+        description: Origin of the process definition.
+      processName:
+        type: string
+        description: Process name.
+      versionTag:
+        type: string
+        description: Version Tag.
+      description:
+        type: string
+        description: Goal or description of the process.
+      formKey:
+        type: string
+        description: Form key of the start form.
+      url:
+        type: string
+        description: URL of the start form.
+      candidateGroups:
+        type: array
+        description: Set of candidate groups represented by their group ids.
+        items:
+          type: string
+      candidateUsers:
+        type: array
+        description: Set of candidate users represented by their user ids.
+        items:
+          type: string
+
+  Payload:
+    type: object
+    additionalProperties:
+      type: object
+
+  UserProfile:
+    type: object
+    properties:
+      username:
+        type: string
+        description: username of currently logged-in user.
+
+

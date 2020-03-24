@@ -3,13 +3,14 @@ package io.holunda.camunda.taskpool
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.context.properties.NestedConfigurationProperty
+import java.lang.IllegalStateException
 
 /**
  * Configuration properties of task collector.
  */
 @ConfigurationProperties(prefix = "camunda.taskpool.collector")
 class TaskCollectorProperties(
-  @Value("\${spring.application.name}")
+  @Value("\${spring.application.name:unset-application-name}")
   springApplicationName: String,
 
   /**
@@ -28,6 +29,9 @@ class TaskCollectorProperties(
   @NestedConfigurationProperty
   var enricher: TaskCollectorEnricherProperties = TaskCollectorEnricherProperties(applicationName = springApplicationName),
 
+  /**
+   * Process definition collection properties.
+   */
   @NestedConfigurationProperty
   var process: ProcessDefinitionProperties = ProcessDefinitionProperties()
 )

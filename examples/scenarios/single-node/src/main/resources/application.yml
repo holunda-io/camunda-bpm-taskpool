@@ -1,0 +1,77 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: example-process-approval
+  jpa:
+    generate-ddl: true
+    hibernate.ddl-auto: create-drop
+    show-sql: false
+    open-in-view: false
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+camunda:
+  bpm:
+    default-serialization-format: application/json
+    admin-user:
+      id: admin
+      first-name: Admin
+      last-name: Administrarius
+      email: admin@localhost
+      password: admin
+    filter:
+      create: All tasks
+    authorization:
+      enabled: false
+    history-level: full
+    id-generator: strong
+    database:
+      schema-update: true
+    webapp:
+      index-redirect-enabled: false
+  taskpool:
+    collector:
+      tasklist-url: http://localhost:${server.port}/taskpool/tasks
+      process:
+        enabled: true
+      enricher:
+        application-name: ${spring.application.name}  # default
+        type: processVariables
+      sender:
+        enabled: true
+        type: tx
+        send-within-transaction: true                 # Must be set to true in single node scenario.
+    dataentry:
+      sender:
+        enabled: true
+        type: simple
+        applicationName: ${spring.application.name}   # default
+    form-url-resolver:
+      defaultApplicationTemplate: "http://localhost:${server.port}/${applicationName}"
+      defaultTaskTemplate:  "tasks/${formKey}/${id}?userId=%userId%"
+      defaultProcessTemplate: "${formKey}?userId=%userId%"
+      applications:
+        example-process-approval:
+          url: "http://localhost:${server.port}/${spring.application.name}"
+          processes:
+            process_approve_request: "start?userId=%userId%"
+          bos:
+            io.holunda.camunda.taskpool.example.ApprovalRequest: "approval-request/${entryId}?userId=%userId%"
+
+
+logging.level:
+  io.holunda.camunda:
+    taskpool:
+      sender: WARN
+      core: WARN
+      view.simple: WARN
+    datapool:
+      sender: DEBUG
+  org.springframework.web: DEBUG
+
+# To log REST controllers
+#  org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping: TRACE

@@ -96,6 +96,16 @@ In order to publish documentation to github pages, please run from command line
 ./mvnw -f docs -Pdeploy-docs -DgithubToken=GITHUB_TOKEN
 ----
 
+==== Examples
+
+Taskpool provides a series of examples demonstrating different features of the library. By default, the examples are
+built during the project build. If you want to skip the examples, please add the following parameter to your command
+line or disable the `examples` module in your IDE.
+
+[source,bash]
+----
+./mvnw clean package -DskipExamples
+----
 
 === Local Start
 
@@ -115,33 +125,34 @@ This will create required docker volumes and network.
 
 ==== Start containers
 
-In order to operate, the example applications will require several containers. These are:
+In order to operate, the distributed example applications will require several containers. These are:
 
 * Axon Server
 * PostgreSQL Database
 * Mongo Database (if used in projection)
 
-Please start the required containers executing:
+Please start the required containers executing the corresponding command from `examples/scenarios/distributed-axon-server`:
 
 [source,bash]
 ----
+cd ./examples/scenarios/distributed-axon-server
 docker-compose up
 ----
 
-==== Starting application
+==== Starting application (distributed scenario)
 
-To start applications, either use your IDE and create two
-run configurations for the classes (in this order):
+For the distributed scenario, the containers from the previous section needs to be started.
+To start applications, either use your IDE and create two run configurations for the classes (in this order):
 
-* `io.holunda.camunda.taskpool.example.process.ExampleTaskpoolApplication`
-* `io.holunda.camunda.taskpool.example.process.ExampleProcessApplication`
+* `io.holunda.camunda.taskpool.example.process.ExampleTaskpoolApplicationDistributedWithAxonServer`
+* `io.holunda.camunda.taskpool.example.process.ExampleProcessApplicationDistributedWithAxonServer`
 
 Alternatively, you can run them from the command line:
 
 [source,bash]
 ----
-./mvn spring-boot:run -f examples/taskpool-application
-./mvn spring-boot:run -f examples/process-application
+./mvnw spring-boot:run -f examples/scenarios/distributed-axon-server/taskpool-application
+./mvnw spring-boot:run -f examples/scenarios/distributed-axon-server/process-application
 ----
 
 === Continuous Integration
@@ -152,7 +163,6 @@ is used to build the releases.
 === Release Management
 
 Release management has been set-up for use of Sonatype Nexus (= Maven Central)
-
 
 ==== What modules get deployed to repository
 
@@ -190,16 +200,22 @@ and update the `develop` branch for the new development version.
 
 WARNING: This operation requires special permissions.
 
-Currently, CI allows for deployment of artifacts to Maven Central and is executed on Holisticon Jenkins.
+Currently, CI allows for deployment of artifacts to Maven Central and is executed using github actions.
 This means, that a push to `master` branch will start the corresponding build job, and if successful the
 artifacts will get into `Staging Repositories` of OSS Sonatype without manual intervention.
 
-If you still want to execute the the deployment from your local machine, you need to execute the
-following command on the `master` branch:
+==== Run deploy from local machine
+
+WARNING: This operation requires special permissions.
+
+If you still want to execute the the deployment from your local machine, you need to have GPG keys at place and
+to execute the following command on the `master` branch:
 
 [source,sh]
 ----
-./mvnw clean deploy -B -DskipTests -Prelease
+export GPG_KEYNAME="<keyname>"
+export GPG_PASSPHRASE="<secret>"
+./mvnw clean deploy -B -DskipTests -DskipExamples -Prelease -Dgpg.keyname=$GPG_KEYNAME -Dgpg.passphrase=$GPG_PASSPHRASE
 ----
 
 ==== Release to public repositories
@@ -208,10 +224,3 @@ WARNING: This operation requires special permissions.
 
 The deploy job will publish the artifacts to Nexus OSS staging repositories. Don't forget to close and release the
 repository to enable it's sync with Maven Central.
-
-
-==== References
-
-* https://www.phillip-kruger.com/post/continuous_integration_to_maven_central/ (primary)
-* https://docs.travis-ci.com/user/deployment
-* https://blog.travis-ci.com/2017-03-30-deploy-maven-travis-ci-packagecloud/
