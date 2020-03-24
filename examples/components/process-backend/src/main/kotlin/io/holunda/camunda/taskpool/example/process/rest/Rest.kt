@@ -16,11 +16,11 @@ import java.time.OffsetDateTime
 import java.time.ZoneId
 import java.util.*
 
-class Rest {
-
-  companion object {
-    const val REST_PREFIX = "/example-process-approval/rest"
-  }
+/**
+ * REST constants.
+ */
+object Rest {
+  const val REST_PREFIX = "/example-process-approval/rest"
 }
 
 /**

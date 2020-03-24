@@ -6,11 +6,17 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
+/**
+ * Configuration for property-based form url resolver component.
+ */
 @Configuration
 @EnableConfigurationProperties(FormUrlResolverProperties::class)
-open class PropertyBasedFormUrlResolverConfiguration {
+class PropertyBasedFormUrlResolverConfiguration {
 
+  /**
+   * Constructs a resolver based on configuration properties.
+   */
   @Bean
   @ConditionalOnMissingBean(FormUrlResolver::class)
-  open fun taskUrlResolver(props: FormUrlResolverProperties) = PropertyBasedFormUrlResolver(props)
+  fun taskUrlResolver(props: FormUrlResolverProperties) = PropertyBasedFormUrlResolver(props)
 }
