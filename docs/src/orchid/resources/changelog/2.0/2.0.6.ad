@@ -6,11 +6,14 @@ version: 2.0.6
 
 * Added support for Java 11 #175
 * Migrated to latest versions (Camunda 7.12, Camunda SpringBoot 3.4, SpringBoot 2.2.2) #221
+* Migrated to Axon 4.3.1 #231
+* Switch to Github Actions as CI/CD #233
 
 == Bugfixes
 
 * Provided a default for missing collector application name #218
 * Provided a default for missing process name #216
+* Provided a retry strategy for Mongo-based projection #235
 
 == Examples
 
@@ -21,4 +24,4 @@ version: 2.0.6
 
 == Docs
 
-* Restructured documentation #212
+* Restructured documentation #212, #206

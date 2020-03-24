@@ -60,7 +60,7 @@ jobs:
           servers: '[{"id": "ossrh", "username": "${{secrets.SONATYPE_USERNAME}}", "password": "${{secrets.SONATYPE_PASSWORD}}"}]'
 
       - name: Deploy a new version to central
-        run: ./mvnw clean deploy -B -DskipTests -DskipExamples -Prelease -Dgpg.passphrase=${{secrets.GPG_PASSPHRASE}}
+        run: ./mvnw clean deploy -B -DskipTests -DskipExamples -Prelease -Dgpg.keyname=${{secrets.GPG_KEYNAME}} -Dgpg.passphrase=${{secrets.GPG_PASSPHRASE}}
 
       - name: Build and deploy site docs
         run: ./mvnw -Pdeploy-docs -f docs -DgithubToken=${{secrets.GH_TOKEN}}

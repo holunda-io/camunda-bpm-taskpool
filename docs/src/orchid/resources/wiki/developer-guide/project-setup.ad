@@ -190,7 +190,7 @@ and update the `develop` branch for the new development version.
 
 WARNING: This operation requires special permissions.
 
-Currently, CI allows for deployment of artifacts to Maven Central and is executed on Holisticon Jenkins.
+Currently, CI allows for deployment of artifacts to Maven Central and is executed using github actions.
 This means, that a push to `master` branch will start the corresponding build job, and if successful the
 artifacts will get into `Staging Repositories` of OSS Sonatype without manual intervention.
 
