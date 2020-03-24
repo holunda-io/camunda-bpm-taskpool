@@ -5,7 +5,7 @@
 
   <groupId>io.holunda.taskpool</groupId>
   <artifactId>camunda-bpm-taskpool</artifactId>
-  <version>2.0.6-SNAPSHOT</version>
+  <version>2.0.6</version>
   <packaging>pom</packaging>
 
   <name>${project.artifactId}</name>
@@ -14,7 +14,6 @@
 
   <properties>
     <skipFrontend>true</skipFrontend>
-
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <java.version>1.8</java.version>
@@ -38,6 +37,8 @@
     <kotlin.compiler.jvmTarget>${java.version}</kotlin.compiler.jvmTarget>
     <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
 
+    <!-- Allow snapshots as long as we are using springfox -->
+    <allowSnapshots>true</allowSnapshots>
     <springfox.version>3.0.0-SNAPSHOT</springfox.version>
     <kotlin-logging.version>1.6.22</kotlin-logging.version>
     <mockito.version>2.20.0</mockito.version>
