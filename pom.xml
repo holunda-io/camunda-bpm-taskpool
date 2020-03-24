@@ -862,18 +862,18 @@
           <groupId>org.sonatype.plugins</groupId>
           <artifactId>nexus-staging-maven-plugin</artifactId>
           <version>1.6.8</version>
-          <configuration>
-            <autoReleaseAfterClose>true</autoReleaseAfterClose>
-            <serverId>ossrh</serverId>
-            <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-          </configuration>
           <executions>
             <execution>
               <id>default-deploy</id>
               <phase>deploy</phase>
               <goals>
-                <goal>release</goal>
+                <goal>deploy</goal>
               </goals>
+              <configuration>
+                <serverId>ossrh</serverId>
+                <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                <autoReleaseAfterClose>true</autoReleaseAfterClose>
+              </configuration>
             </execution>
           </executions>
         </plugin>
