@@ -1158,10 +1158,16 @@
     </pluginRepository>
   </pluginRepositories>
   <repositories>
-    <!-- Swagger Snapshots -->
+    <!-- Swagger Snapshots only-->
     <repository>
-      <id>jcenter-snapshots</id>
-      <name>jcenter</name>
+      <id>jfrog-snapshots</id>
+      <name>JFrog</name>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
       <url>http://oss.jfrog.org/artifactory/oss-snapshot-local/</url>
     </repository>
   </repositories>
