@@ -7,6 +7,7 @@ import org.camunda.bpm.engine.delegate.DelegateTask
 
 /**
  * Retrieves source reference (process or case) from delegate task.
+ * @param applicationName name of the application.
  */
 fun DelegateTask.sourceReference(applicationName: String): SourceReference =
   when {
