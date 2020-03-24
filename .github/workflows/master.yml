@@ -1,0 +1,66 @@
+name: Master build
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v1
+
+      - name: Set up JDK
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.8
+
+      - name: Cache .m2
+        uses: actions/cache@v1
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven
+
+      - name: Prepare Maven Wrapper
+        run: chmod +x ./mvnw
+
+      - name: Build with Maven
+        run: ./mvnw clean verify -U -B -T4
+
+      - name: Prepare I-Tests
+        run: mkdir -p target/jgiven-reports/json
+
+      - name: Run I-Tests with Maven
+        run: ./mvnw integration-test failsafe:verify -Pitest -DskipFrontend -B -T4
+
+      - name: Upolad coverage information
+        uses: codecov/codecov-action@v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }} #required
+
+      - name: Import GPG Owner Trust
+        run: echo ${{secrets.GPG_OWNERTRUST}} | base64 --decode | gpg --import-ownertrust
+
+      - name: Import GPG key
+        run: echo ${{secrets.GPG_SECRET_KEYS}} | base64 --decode | gpg --import --no-tty --batch --yes
+
+      - name: Clean settings.xml
+        run: rm -rf ~/.m2/settings.xml
+
+      - name: Create settings.xml
+        uses: s4u/maven-settings-action@v1
+        with:
+          servers: '[{"id": "ossrh", "username": "${{secrets.SONATYPE_USERNAME}}", "password": "${{secrets.SONATYPE_PASSWORD}}"}]'
+
+      - name: Deploy a new version to central
+        run: ./mvnw clean deploy -B -DskipTests -DskipExamples -Prelease -Dgpg.passphrase=${{secrets.GPG_PASSPHRASE}}
+
+      - name: Build and deploy site docs
+        run: ./mvnw -Pdeploy-docs -f docs -DgithubToken=${{secrets.GH_TOKEN}}

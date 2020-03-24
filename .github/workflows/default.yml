@@ -1,33 +1,54 @@
-name: Java CI
+name: Development braches
 
-on: [push]
+on:
+  push:
+    branches:
+      - '*'
+      - '**/*'
+      - '!master'
+
 
 jobs:
 
   build:
+
     runs-on: ubuntu-latest
+
     strategy:
       fail-fast: false
       matrix:
         jdk: ['1.8', '11.0.5']
+
     steps:
-      - uses: actions/checkout@v1
+      - name: Checkout code
+        uses: actions/checkout@v1
+
       - name: Set up JDK
         uses: actions/setup-java@v1
         with:
           java-version: ${{ matrix.jdk }}
+
+      - name: Cache .m2
+        uses: actions/cache@v1
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven
+
+      - name: Prepare Maven Wrapper
+        run: chmod +x ./mvnw
+
       - name: Build with Maven
         run: ./mvnw clean verify -U -B -T4
+
       - name: Prepare I-Tests
         run: mkdir -p target/jgiven-reports/json
+
       - name: Run I-Tests with Maven
         run: ./mvnw integration-test failsafe:verify -Pitest -DskipFrontend -B -T4
 
-  codecov:
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - uses: codecov/codecov-action@v1
+      - name: Upolad coverage information
+        uses: codecov/codecov-action@v1
         with:
           token: ${{ secrets.CODECOV_TOKEN }} #required
-          yml: ./codecov.yml #optional
