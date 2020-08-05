@@ -13,6 +13,9 @@ spring:
     console:
       enabled: true
       path: /h2-console
+  groovy:
+    template:
+      check-template-location: false
 
 camunda:
   bpm:

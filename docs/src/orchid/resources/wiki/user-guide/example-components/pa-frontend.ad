@@ -1,0 +1,35 @@
+---
+
+title: Taskpool Components
+pageId: 'components'
+
+---
+
+== Process Engine Components
+
+Process Engine Components are designed to be a part of process application deployment
+and react on engine changes / interact with the engine. These are:
+
+* link:components/engine-starter[Camunda Engine Taskpool Support SpringBoot Starter]
+* link:components/engine-interaction-client[Camunda Engine Interaction Client]
+* link:components/engine-taskpool-collector[Taskpool Collector]
+* link:components/engine-datapool-collector[Datapool Collector]
+
+== Process Platform Components
+Process Platform Components are designed to build a process platform.
+
+=== Core Components
+Core Components are responsible for the processing of engine commands and form an event stream
+consumed by the view components. Depending on the scenario, they can be deployed either within the
+process application, process platform or even completely separately.
+
+* link:components/core-taskpool[Taskpool Core]
+* link:components/core-datapool[Datapool Core]
+
+=== View Components
+
+View Components are responsible for creation of a unified read-only projection of tasks and business data items.
+They are typically deployed as a part of the process platform.
+
+* link:components/view-simple[In-Memory View]
+* link:components/view-mongo[Mongo View]

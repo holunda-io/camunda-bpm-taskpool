@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --proxy-config proxy-local.json",
+    "start": "ng serve --proxy-config proxy-local.json --base-href taskpool",
     "build": "ng build",
     "test": "ng test --code-coverage --watch=false --browsers=ChromeHeadless",
     "watch-test": "ng test --watch=true",

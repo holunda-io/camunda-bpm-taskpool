@@ -27,28 +27,29 @@
     <camunda-ee>false</camunda-ee>
     Use the system property: -Dcamunda-ee to enable EE
     -->
-    <camunda-ce.version>7.12.0</camunda-ce.version>
-    <camunda-ee.version>7.12.7-ee</camunda-ee.version>
+    <camunda-ce.version>7.13.0</camunda-ce.version>
+    <camunda-ee.version>7.13.0-ee</camunda-ee.version>
+    <camunda-springboot.version>${camunda-ce.version}</camunda-springboot.version>
+    <camunda-bpm-assert.version>6.0.0</camunda-bpm-assert.version>
+    <camunda-bpm-mockito.version>4.13.0</camunda-bpm-mockito.version>
+    <version.camunda.spin>1.9.0</version.camunda.spin>
 
-    <springboot.version>2.2.2.RELEASE</springboot.version>
-    <spring-framework.version>5.2.2.RELEASE</spring-framework.version>
-    <camunda-springboot.version>3.4.1</camunda-springboot.version>
-    <project-reactor.version>3.3.3.RELEASE</project-reactor.version>
+    <springboot.version>2.2.9.RELEASE</springboot.version>
+    <spring-framework.version>5.2.8.RELEASE</spring-framework.version>
+    <project-reactor.version>3.3.8.RELEASE</project-reactor.version>
+
     <axon.version>4.3.1</axon.version>
 
-    <kotlin.version>1.3.61</kotlin.version>
+    <kotlin.version>1.3.72</kotlin.version>
     <kotlin.compiler.jvmTarget>${java.version}</kotlin.compiler.jvmTarget>
     <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
+    <kotlin-logging.version>1.8.3</kotlin-logging.version>
 
-    <!-- Allow snapshots as long as we are using springfox -->
-    <allowSnapshots>true</allowSnapshots>
-    <springfox.version>3.0.0-SNAPSHOT</springfox.version>
-    <kotlin-logging.version>1.6.22</kotlin-logging.version>
-    <mockito.version>2.20.0</mockito.version>
-    <version.camunda.spin>1.8.0</version.camunda.spin>
-    <jackson.version>2.10.0</jackson.version>
-    <org.mapstruct.version>1.2.0.Final</org.mapstruct.version>
-    <camunda-bpm-assert.version>5.0.0</camunda-bpm-assert.version>
+    <springboot-swagger-starter.version>0.3.0</springboot-swagger-starter.version>
+    <org.mapstruct.version>1.3.1.Final</org.mapstruct.version>
+
+    <mockito.version>2.23.4</mockito.version>
+    <mockito-kotlin.version>2.2.0</mockito-kotlin.version>
     <awaitability.version>3.1.5</awaitability.version>
 
   </properties>
@@ -134,46 +135,8 @@
         <artifactId>camunda-bpm-spring-boot-starter</artifactId>
         <version>${camunda-springboot.version}</version>
       </dependency>
-      <dependency>
-        <groupId>org.codehaus.groovy</groupId>
-        <artifactId>groovy-all</artifactId>
-        <version>2.4.5</version>
-      </dependency>
-
-      <!-- Jackson -->
-      <dependency>
-        <groupId>com.fasterxml.jackson.core</groupId>
-        <artifactId>jackson-core</artifactId>
-        <version>${jackson.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.fasterxml.jackson.core</groupId>
-        <artifactId>jackson-databind</artifactId>
-        <version>${jackson.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.fasterxml.jackson.module</groupId>
-        <artifactId>jackson-module-kotlin</artifactId>
-        <version>${jackson.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.fasterxml.jackson.datatype</groupId>
-        <artifactId>jackson-datatype-jsr310</artifactId>
-        <version>${jackson.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.fasterxml.jackson.datatype</groupId>
-        <artifactId>jackson-datatype-jdk8</artifactId>
-        <version>${jackson.version}</version>
-      </dependency>
-
 
       <!-- MapStruct -->
-      <dependency>
-        <groupId>org.mapstruct</groupId>
-        <artifactId>mapstruct-jdk8</artifactId>
-        <version>${org.mapstruct.version}</version>
-      </dependency>
       <dependency>
         <groupId>org.mapstruct</groupId>
         <artifactId>mapstruct</artifactId>
@@ -258,26 +221,10 @@
 
       <!-- Swagger -->
       <dependency>
-        <groupId>io.springfox</groupId>
-        <artifactId>springfox-swagger2</artifactId>
-        <version>${springfox.version}</version>
+        <groupId>io.toolisticon.springboot</groupId>
+        <artifactId>springboot-swagger-starter</artifactId>
+        <version>${springboot-swagger-starter.version}</version>
       </dependency>
-      <dependency>
-        <groupId>io.springfox</groupId>
-        <artifactId>springfox-spring-webmvc</artifactId>
-        <version>${springfox.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>io.springfox</groupId>
-        <artifactId>springfox-spring-webflux</artifactId>
-        <version>${springfox.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>io.springfox</groupId>
-        <artifactId>springfox-swagger-ui</artifactId>
-        <version>${springfox.version}</version>
-      </dependency>
-
 
       <!-- Testing -->
       <dependency>
@@ -317,9 +264,9 @@
         <scope>test</scope>
       </dependency>
       <dependency>
-        <groupId>com.nhaarman</groupId>
+        <groupId>com.nhaarman.mockitokotlin2</groupId>
         <artifactId>mockito-kotlin</artifactId>
-        <version>1.5.0</version>
+        <version>${mockito-kotlin.version}</version>
         <scope>test</scope>
       </dependency>
       <dependency>
@@ -337,7 +284,7 @@
       <dependency>
         <groupId>org.camunda.bpm.extension.mockito</groupId>
         <artifactId>camunda-bpm-mockito</artifactId>
-        <version>4.0.0</version>
+        <version>${camunda-bpm-mockito.version}</version>
         <scope>test</scope>
       </dependency>
       <dependency>
@@ -1065,7 +1012,7 @@
           <dependency>
             <groupId>org.camunda.bpm.springboot</groupId>
             <artifactId>camunda-bpm-spring-boot-starter-webapp</artifactId>
-            <version>${camunda-springboot.version}</version>
+            <version>${camunda.version}</version>
           </dependency>
         </dependencies>
       </dependencyManagement>
@@ -1093,7 +1040,7 @@
           <dependency>
             <groupId>org.camunda.bpm.springboot</groupId>
             <artifactId>camunda-bpm-spring-boot-starter-webapp-ee</artifactId>
-            <version>${camunda-springboot.version}</version>
+            <version>${camunda.version}</version>
           </dependency>
         </dependencies>
       </dependencyManagement>

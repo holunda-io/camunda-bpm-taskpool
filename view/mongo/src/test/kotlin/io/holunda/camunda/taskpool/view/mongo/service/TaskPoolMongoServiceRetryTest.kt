@@ -1,6 +1,6 @@
 package io.holunda.camunda.taskpool.view.mongo.service
 
-import com.nhaarman.mockito_kotlin.*
+import com.nhaarman.mockitokotlin2.*
 import io.holunda.camunda.taskpool.api.task.ProcessReference
 import io.holunda.camunda.taskpool.api.task.TaskAssignedEngineEvent
 import io.holunda.camunda.taskpool.view.mongo.ChangeTrackingMode
