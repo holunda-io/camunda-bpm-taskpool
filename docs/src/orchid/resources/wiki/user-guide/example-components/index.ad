@@ -1,0 +1,25 @@
+---
+
+title: Example Components
+---
+
+== {{ page.title }}
+
+For demonstration purposes we built several example components and reuse them to demonstrate the link:example[Example] in
+different link:scenarios[Usage Scenarios]. These components are not part of a taskpool distribution and serve demonstration
+purposes only.
+
+=== Process Application Example Components
+
+* link:example-components/pa-frontend[Process Application Frontend]
+* link:example-components/pa-backend[Process Application Backend]
+
+=== Process Platform Example Components
+
+* link:example-components/pp-frontend[Process Platform Frontend]
+* link:example-components/pp-backend[Process Platform Backend]
+
+=== Shared Example Components
+
+* link:example-components/user-management[User Management]
+

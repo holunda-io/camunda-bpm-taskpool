@@ -1,5 +1,6 @@
 useSidebarSearch: true
 showVersion: false
+legacySearch: false
 primaryColor: '#B10000'
 trianglifyOptions:
   x_colors: ['#000', '#B10000', '#000']
@@ -18,26 +19,22 @@ social:
       label: 'Slack'
       icon: 'fas fa-slack'
 menu:
-
   - type: 'submenu'
     title: 'Introduction'
     menu:
       - type: 'wiki'
         section: 'introduction'
-
   - type: 'submenu'
     title: 'User Guide'
     icon: 'fas fa-home'
     menu:
       - type: 'wiki'
         section: 'user-guide'
-
   - type: 'submenu'
     title: 'Developer Guide'
     menu:
       - type: 'wiki'
         section: 'developer-guide'
-
   - type: 'submenu'
     title: 'Explore'
     menu:
