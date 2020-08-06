@@ -2,20 +2,6 @@
 title: User Guide
 ---
 
-## Taskpool Components
-* [Components Overview](components/index.ad)
-* Engine Components
-  - [Camunda Engine Taskpool Support SpringBoot Starter](components/engine-starter.ad)
-  - [Camunda Engine Interaction Client](components/engine-interaction-client.ad)
-* Core Components
-  - [Taskpool Collector](components/engine-taskpool-collector.ad)
-  - [Datapool Collector](components/engine-datapool-collector.ad)
-  - [Taskpool Core](components/core-taskpool.ad)
-  - [Datapool Core](components/core-datapool.ad)
-* View Components
-  - [In-Memory View](components/view-simple.ad)
-  - [Mongo View](components/view-mongo.ad)
-
 ## Working Example Application
 * [Example Overview](example.ad)
 * Example Components
@@ -31,4 +17,18 @@ title: User Guide
   - [Distributed using Axon Server](scenarios/distributed-axon-server.ad)
   - [Distributed without Axon Server](scenarios/distributed-no-axon-server.ad)
 
+## Taskpool Components
+* [Integration Guide](integration-guide.ad)
+* [Components Overview](components/index.ad)
+* Engine Components
+  - [Camunda Engine Taskpool Support SpringBoot Starter](components/engine-starter.ad)
+  - [Camunda Engine Interaction Client](components/engine-interaction-client.ad)
+* Core Components
+  - [Taskpool Collector](components/engine-taskpool-collector.ad)
+  - [Datapool Collector](components/engine-datapool-collector.ad)
+  - [Taskpool Core](components/core-taskpool.ad)
+  - [Datapool Core](components/core-datapool.ad)
+* View Components
+  - [In-Memory View](components/view-simple.ad)
+  - [Mongo View](components/view-mongo.ad)
 
