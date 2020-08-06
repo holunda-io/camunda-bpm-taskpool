@@ -62,7 +62,7 @@ and link:https://holunda.slack.com/messages/taskpool/[slack] chats available, if
 === Working Example
 
 Studying link:https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/example[Working Example] might be easier to understand
-the different link:https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/scenarios/[Usage scenarios] of the component.
+the different link:https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/scenarios[Usage scenarios] of the component.
 
 === License
 
