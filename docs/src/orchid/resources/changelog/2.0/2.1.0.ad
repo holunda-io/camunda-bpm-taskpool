@@ -5,9 +5,16 @@ version: 2.0.7
 == Features
 
 * Added support for Java 11 #175
-* Migrated to latest versions (Camunda 7.12, Camunda SpringBoot 3.4, SpringBoot 2.2.2) #221
+* Migrated to latest versions (Camunda, Camunda SpringBoot, SpringBoot, see below) #221
 * Migrated to Axon 4.3.1 #231
 * Switch to Github Actions as CI/CD #233
+* Provide new command / event /query for process instance, #240
+
+== Breaking Changes
+
+* Separated internal datapool and taskpool events into artifacts `camunda-bpm-taskpool-event` and 'camunda-bpm-datapool-event' #246
+* Fixed package for process-definition commands #244
+* `SourceReference` is now an interface #242
 
 == Chore
 
