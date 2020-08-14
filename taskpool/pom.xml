@@ -11,9 +11,10 @@
   <artifactId>camunda-bpm-taskpool-root</artifactId>
   <name>taskpool/${project.artifactId}</name>
   <packaging>pom</packaging>
-  
+
   <modules>
     <module>taskpool-api</module>
+    <module>taskpool-event</module>
     <module>taskpool-core</module>
   </modules>
 
@@ -22,6 +23,11 @@
       <dependency>
         <groupId>io.holunda.taskpool</groupId>
         <artifactId>camunda-bpm-taskpool-api</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.holunda.taskpool</groupId>
+        <artifactId>camunda-bpm-taskpool-event</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
@@ -35,6 +41,6 @@
         <version>${project.version}</version>
       </dependency>
 
-    </dependencies>    
+    </dependencies>
   </dependencyManagement>
 </project>
