@@ -5,36 +5,42 @@ package io.holunda.camunda.taskpool.api.task
  * Represents the source of the task.
  * Currently supported is process or case.
  */
-sealed class SourceReference(
+interface SourceReference {
   /**
    * Source instance id.
    */
-  open val instanceId: String,
+  val instanceId: String
+
   /**
    * Source execution id.
    */
-  open val executionId: String,
+  val executionId: String
+
   /**
    * Source definition id.
    */
-  open val definitionId: String,
+  val definitionId: String
+
   /**
    * Source definition key.
    */
-  open val definitionKey: String,
+  val definitionKey: String
+
   /**
    * Source name.
    */
-  open val name: String,
+  val name: String
+
   /**
    * Application name.
    */
-  open val applicationName: String,
+  val applicationName: String
+
   /**
    * Tenant id.
    */
-  open val tenantId: String?
-)
+  val tenantId: String?
+}
 
 /**
  * The source of the task is a process.
@@ -68,7 +74,7 @@ data class ProcessReference(
    * Optional Camunda tenant id.
    */
   override val tenantId: String? = null
-) : SourceReference(instanceId, executionId, definitionId, definitionKey, name, applicationName, tenantId)
+) : SourceReference
 
 /**
  * * The source of the task is a case.
@@ -102,5 +108,5 @@ data class CaseReference(
    * Optional Camunda tenant id.
    */
   override val tenantId: String? = null
-) : SourceReference(instanceId, executionId, definitionId, definitionKey, name, applicationName, tenantId)
+) : SourceReference
 

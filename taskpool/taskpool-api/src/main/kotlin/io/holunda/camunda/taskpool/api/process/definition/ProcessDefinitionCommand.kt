@@ -1,5 +1,6 @@
-package io.holunda.camunda.taskpool.api.task
+package io.holunda.camunda.taskpool.api.process.definition
 
+import io.holunda.camunda.taskpool.api.task.WithFormKey
 import org.axonframework.modelling.command.TargetAggregateIdentifier
 
 

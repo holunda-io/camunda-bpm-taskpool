@@ -1,7 +1,7 @@
 package io.holunda.camunda.taskpool.itest
 
 import io.holunda.camunda.taskpool.api.task.*
-import io.holunda.camunda.taskpool.api.task.CamundaTaskEvent.Companion.CREATE
+import io.holunda.camunda.taskpool.api.task.CamundaTaskEventType.Companion.CREATE
 import io.holunda.camunda.taskpool.sender.gateway.AxonCommandListGateway
 import org.awaitility.Awaitility.await
 import org.awaitility.Awaitility.waitAtMost

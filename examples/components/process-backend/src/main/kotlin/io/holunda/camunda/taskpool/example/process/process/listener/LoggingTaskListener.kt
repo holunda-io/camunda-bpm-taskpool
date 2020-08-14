@@ -1,6 +1,6 @@
 package io.holunda.camunda.taskpool.example.process.process.listener
 
-import io.holunda.camunda.taskpool.collector.TaskEventCollectorService
+import io.holunda.camunda.taskpool.collector.task.TaskEventCollectorService
 import mu.KLogging
 import org.camunda.bpm.engine.delegate.DelegateTask
 import org.springframework.context.event.EventListener

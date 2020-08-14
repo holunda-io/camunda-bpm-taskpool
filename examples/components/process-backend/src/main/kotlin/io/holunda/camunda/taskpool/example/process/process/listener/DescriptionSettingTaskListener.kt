@@ -1,6 +1,6 @@
 package io.holunda.camunda.taskpool.example.process.process.listener
 
-import io.holunda.camunda.taskpool.collector.TaskEventCollectorService.Companion.ORDER
+import io.holunda.camunda.taskpool.collector.task.TaskEventCollectorService.Companion.ORDER
 import io.holunda.camunda.taskpool.example.process.process.RequestApprovalProcess
 import io.holunda.camunda.taskpool.example.process.process.RequestApprovalProcess.Variables.APPLICANT
 import io.holunda.camunda.taskpool.example.process.process.RequestApprovalProcess.Variables.ORIGINATOR

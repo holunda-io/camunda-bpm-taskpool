@@ -133,8 +133,8 @@ fun task(event: TaskCandidateGroupChanged, task: Task) = Task(
   assignee = task.assignee,
 
   candidateGroups = when (event.assignmentUpdateType) {
-    CamundaTaskEvent.CANDIDATE_GROUP_ADD -> task.candidateGroups.plus(event.groupId)
-    CamundaTaskEvent.CANDIDATE_GROUP_DELETE -> task.candidateGroups.minus(event.groupId)
+    CamundaTaskEventType.CANDIDATE_GROUP_ADD -> task.candidateGroups.plus(event.groupId)
+    CamundaTaskEventType.CANDIDATE_GROUP_DELETE -> task.candidateGroups.minus(event.groupId)
     else -> task.candidateGroups
   },
   candidateUsers = task.candidateUsers,
@@ -167,8 +167,8 @@ fun task(event: TaskCandidateUserChanged, task: Task) = Task(
 
   candidateGroups = task.candidateGroups,
   candidateUsers = when (event.assignmentUpdateType) {
-    CamundaTaskEvent.CANDIDATE_USER_ADD -> task.candidateUsers.plus(event.userId)
-    CamundaTaskEvent.CANDIDATE_USER_DELETE -> task.candidateUsers.minus(event.userId)
+    CamundaTaskEventType.CANDIDATE_USER_ADD -> task.candidateUsers.plus(event.userId)
+    CamundaTaskEventType.CANDIDATE_USER_DELETE -> task.candidateUsers.minus(event.userId)
     else -> task.candidateUsers
   },
 

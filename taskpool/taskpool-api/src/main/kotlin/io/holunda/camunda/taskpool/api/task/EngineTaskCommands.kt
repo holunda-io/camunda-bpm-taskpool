@@ -2,15 +2,15 @@ package io.holunda.camunda.taskpool.api.task
 
 import io.holunda.camunda.taskpool.api.business.CorrelationMap
 import io.holunda.camunda.taskpool.api.business.newCorrelations
-import io.holunda.camunda.taskpool.api.task.CamundaTaskEvent.Companion.ASSIGN
-import io.holunda.camunda.taskpool.api.task.CamundaTaskEvent.Companion.ATTRIBUTES
-import io.holunda.camunda.taskpool.api.task.CamundaTaskEvent.Companion.CANDIDATE_GROUP_ADD
-import io.holunda.camunda.taskpool.api.task.CamundaTaskEvent.Companion.CANDIDATE_GROUP_DELETE
-import io.holunda.camunda.taskpool.api.task.CamundaTaskEvent.Companion.CANDIDATE_USER_ADD
-import io.holunda.camunda.taskpool.api.task.CamundaTaskEvent.Companion.CANDIDATE_USER_DELETE
-import io.holunda.camunda.taskpool.api.task.CamundaTaskEvent.Companion.COMPLETE
-import io.holunda.camunda.taskpool.api.task.CamundaTaskEvent.Companion.CREATE
-import io.holunda.camunda.taskpool.api.task.CamundaTaskEvent.Companion.DELETE
+import io.holunda.camunda.taskpool.api.task.CamundaTaskEventType.Companion.ASSIGN
+import io.holunda.camunda.taskpool.api.task.CamundaTaskEventType.Companion.ATTRIBUTES
+import io.holunda.camunda.taskpool.api.task.CamundaTaskEventType.Companion.CANDIDATE_GROUP_ADD
+import io.holunda.camunda.taskpool.api.task.CamundaTaskEventType.Companion.CANDIDATE_GROUP_DELETE
+import io.holunda.camunda.taskpool.api.task.CamundaTaskEventType.Companion.CANDIDATE_USER_ADD
+import io.holunda.camunda.taskpool.api.task.CamundaTaskEventType.Companion.CANDIDATE_USER_DELETE
+import io.holunda.camunda.taskpool.api.task.CamundaTaskEventType.Companion.COMPLETE
+import io.holunda.camunda.taskpool.api.task.CamundaTaskEventType.Companion.CREATE
+import io.holunda.camunda.taskpool.api.task.CamundaTaskEventType.Companion.DELETE
 import org.axonframework.modelling.command.TargetAggregateIdentifier
 import org.camunda.bpm.engine.variable.VariableMap
 import org.camunda.bpm.engine.variable.Variables

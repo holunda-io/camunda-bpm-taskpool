@@ -1,4 +1,4 @@
-package io.holunda.camunda.taskpool.process
+package io.holunda.camunda.taskpool.collector.process.definition
 
 import io.holunda.camunda.taskpool.TaskCollectorProperties
 import org.camunda.bpm.engine.spring.SpringProcessEngineConfiguration

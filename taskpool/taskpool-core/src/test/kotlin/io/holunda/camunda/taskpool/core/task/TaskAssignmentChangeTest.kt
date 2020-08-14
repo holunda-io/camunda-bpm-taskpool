@@ -87,7 +87,7 @@ class TaskAssignmentChangeTest {
           id = "4711",
           sourceReference = processReference,
           taskDefinitionKey = "foo",
-          assignmentUpdateType = CamundaTaskEvent.CANDIDATE_GROUP_ADD,
+          assignmentUpdateType = CamundaTaskEventType.CANDIDATE_GROUP_ADD,
           groupId = "nasa"
         )
       )
@@ -107,7 +107,7 @@ class TaskAssignmentChangeTest {
           id = "4711",
           sourceReference = processReference,
           taskDefinitionKey = "foo",
-          assignmentUpdateType = CamundaTaskEvent.CANDIDATE_USER_ADD,
+          assignmentUpdateType = CamundaTaskEventType.CANDIDATE_USER_ADD,
           userId = "rocketman"
         )
       )
@@ -127,7 +127,7 @@ class TaskAssignmentChangeTest {
           id = "4711",
           sourceReference = processReference,
           taskDefinitionKey = "foo",
-          assignmentUpdateType = CamundaTaskEvent.CANDIDATE_GROUP_DELETE,
+          assignmentUpdateType = CamundaTaskEventType.CANDIDATE_GROUP_DELETE,
           groupId = "muppetshow"
         )
       )
@@ -147,7 +147,7 @@ class TaskAssignmentChangeTest {
           id = "4711",
           sourceReference = processReference,
           taskDefinitionKey = "foo",
-          assignmentUpdateType = CamundaTaskEvent.CANDIDATE_USER_DELETE,
+          assignmentUpdateType = CamundaTaskEventType.CANDIDATE_USER_DELETE,
           userId = "kermit"
         )
       )

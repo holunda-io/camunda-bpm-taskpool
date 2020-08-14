@@ -1,25 +1,13 @@
 package io.holunda.camunda.taskpool.api.process.instance
 
 import io.holunda.camunda.taskpool.api.task.SourceReference
-import org.axonframework.modelling.command.TargetAggregateIdentifier
 import org.axonframework.serialization.Revision
 
-/**
- * Command related to process instance.
- */
-interface ProcessInstanceCommand {
-  val sourceReference: SourceReference
-  val processInstanceId: String
-}
+@Revision("1")
+data class ProcessInstanceStartedEvent(
 
-/**
- * Informs about a process instance started in the engine.
- */
-data class StartProcessInstanceCommand(
-
-  @TargetAggregateIdentifier
-  override val processInstanceId: String,
-  override val sourceReference: SourceReference,
+  val processInstanceId: String,
+  val sourceReference: SourceReference,
 
   /** the business key of the process instance  */
   val businessKey: String? = null,
@@ -32,17 +20,12 @@ data class StartProcessInstanceCommand(
 
   /** id of the activity which started the process instance  */
   val startActivityId: String? = null
+)
 
-) : ProcessInstanceCommand
-
-/**
- * Informs about a process instance ended in the engine.
- */
-data class EndProcessInstanceCommand(
-
-  @TargetAggregateIdentifier
-  override val processInstanceId: String,
-  override val sourceReference: SourceReference,
+@Revision("2")
+data class ProcessInstanceEndedEvent(
+  val processInstanceId: String,
+  val sourceReference: SourceReference,
 
   /** the business key of the process instance  */
   val businessKey: String? = null,
@@ -55,5 +38,4 @@ data class EndProcessInstanceCommand(
 
   /** the reason why this process instance was cancelled (deleted) */
   val deleteReason: String?
-
-) : ProcessInstanceCommand
+)

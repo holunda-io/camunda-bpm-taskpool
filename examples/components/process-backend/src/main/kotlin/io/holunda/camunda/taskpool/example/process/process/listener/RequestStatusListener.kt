@@ -5,7 +5,7 @@ import io.holunda.camunda.taskpool.api.business.AuthorizationChange.Companion.ad
 import io.holunda.camunda.taskpool.api.business.DataEntryState
 import io.holunda.camunda.taskpool.api.business.Modification
 import io.holunda.camunda.taskpool.api.business.ProcessingType.*
-import io.holunda.camunda.taskpool.collector.TaskEventCollectorService
+import io.holunda.camunda.taskpool.collector.task.TaskEventCollectorService
 import io.holunda.camunda.taskpool.example.process.process.RequestApprovalProcess
 import io.holunda.camunda.taskpool.example.process.process.RequestApprovalProcess.Values.APPROVE
 import io.holunda.camunda.taskpool.example.process.process.RequestApprovalProcess.Values.CANCEL

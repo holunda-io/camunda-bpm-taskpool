@@ -1,7 +1,7 @@
-package io.holunda.camunda.taskpool.process
+package io.holunda.camunda.taskpool.collector.process.definition
 
 import io.holunda.camunda.taskpool.TaskCollectorProperties
-import io.holunda.camunda.taskpool.api.task.RegisterProcessDefinitionCommand
+import io.holunda.camunda.taskpool.api.process.definition.RegisterProcessDefinitionCommand
 import io.holunda.camunda.taskpool.candidateGroups
 import io.holunda.camunda.taskpool.candidateUsers
 import io.holunda.camunda.taskpool.executeInCommandContext

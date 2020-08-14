@@ -3,7 +3,7 @@ package io.holunda.camunda.taskpool.api.task
 /**
  * Identifies camunda task event.
  */
-interface CamundaTaskEvent {
+interface CamundaTaskEventType {
   /**
    * Event classification.
    */

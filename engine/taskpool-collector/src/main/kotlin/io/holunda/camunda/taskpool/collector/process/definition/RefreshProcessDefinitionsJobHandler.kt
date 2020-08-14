@@ -1,5 +1,6 @@
-package io.holunda.camunda.taskpool.process
+package io.holunda.camunda.taskpool.collector.process.definition
 
+import io.holunda.camunda.taskpool.collector.process.definition.ProcessDefinitionService
 import io.holunda.camunda.taskpool.sender.gateway.CommandListGateway
 import org.camunda.bpm.engine.impl.interceptor.Command
 import org.camunda.bpm.engine.impl.interceptor.CommandContext
@@ -8,7 +9,6 @@ import org.camunda.bpm.engine.impl.jobexecutor.JobHandlerConfiguration
 import org.camunda.bpm.engine.impl.persistence.entity.ExecutionEntity
 import org.camunda.bpm.engine.impl.persistence.entity.JobEntity
 import org.camunda.bpm.engine.impl.persistence.entity.MessageEntity
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Lazy
 import org.springframework.stereotype.Component
 
@@ -20,8 +20,8 @@ import org.springframework.stereotype.Component
  */
 @Component
 class RefreshProcessDefinitionsJobHandler(
-  private val processDefinitionService: ProcessDefinitionService,
-  @Lazy
+        private val processDefinitionService: ProcessDefinitionService,
+        @Lazy
   private val gateway: CommandListGateway
 ) : JobHandler<RefreshProcessDefinitionsJobConfiguration> {
 
