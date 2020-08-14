@@ -1,5 +1,6 @@
 package io.holunda.camunda.taskpool.collector
 
+import io.holunda.camunda.taskpool.collector.task.TaskEventCollectorService
 import mu.KLogging
 import org.camunda.bpm.engine.impl.history.event.HistoricProcessInstanceEventEntity
 import org.springframework.context.event.EventListener

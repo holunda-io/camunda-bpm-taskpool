@@ -5,30 +5,21 @@
 
   <parent>
     <groupId>io.holunda.taskpool</groupId>
-    <artifactId>camunda-bpm-taskpool-view-root</artifactId>
+    <artifactId>camunda-bpm-taskpool-root</artifactId>
     <version>2.0.7-SNAPSHOT</version>
   </parent>
 
-  <artifactId>camunda-bpm-taskpool-view-api</artifactId>
-  <name>view/${project.artifactId}</name>
+  <artifactId>camunda-bpm-taskpool-event</artifactId>
+  <name>taskpool/${project.artifactId}</name>
 
   <dependencies>
     <dependency>
       <groupId>io.holunda.taskpool</groupId>
-      <artifactId>camunda-bpm-taskpool-event</artifactId>
+      <artifactId>camunda-bpm-taskpool-api</artifactId>
     </dependency>
     <dependency>
       <groupId>io.holunda.taskpool</groupId>
-      <artifactId>camunda-bpm-datapool-event</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.assertj</groupId>
-      <artifactId>assertj-core</artifactId>
+      <artifactId>camunda-bpm-datapool-api</artifactId>
     </dependency>
   </dependencies>
 </project>

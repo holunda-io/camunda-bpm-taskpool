@@ -1,7 +1,9 @@
-package io.holunda.camunda.taskpool.collector
+package io.holunda.camunda.taskpool.collector.task
 
 import io.holunda.camunda.taskpool.TaskCollectorProperties
 import io.holunda.camunda.taskpool.api.task.*
+import io.holunda.camunda.taskpool.collector.formKey
+import io.holunda.camunda.taskpool.collector.sourceReference
 import org.camunda.bpm.engine.FormService
 import org.camunda.bpm.engine.RepositoryService
 import org.camunda.bpm.engine.delegate.DelegateTask
