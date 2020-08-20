@@ -60,7 +60,7 @@ class CommandAccumulatorTest {
     val sortingCommandAccumulator = SortingCommandAccumulator()
     val collectedTaskCommands = listOf(deleteTaskCommand, updateAttributeTaskCommand, createTaskCommand, completeTaskCommand)
     val sortedTaskCommands = sortingCommandAccumulator.invoke(collectedTaskCommands)
-    assertThat(sortedTaskCommands).containsExactly(createTaskCommand, updateAttributeTaskCommand, completeTaskCommand, deleteTaskCommand)
+    assertThat(sortedTaskCommands).containsExactly(createTaskCommand, completeTaskCommand, deleteTaskCommand, updateAttributeTaskCommand)
   }
 
 
