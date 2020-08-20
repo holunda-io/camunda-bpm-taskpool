@@ -219,12 +219,9 @@ class TaskCollectorITest {
     assertThat(instance).isWaitingAt(taskDefinitionKey)
 
     reset(commandGateway)
-    val assignTaskCommand = AssignTaskCommand(
+    val completeCommand = CompleteTaskCommand(
       id = task().id,
       assignee = "BudSpencer"
-    )
-    val completeCommand = CompleteTaskCommand(
-      id = task().id
     )
 
     val doInOneTransactionCommand = Command { commandContext ->
@@ -235,7 +232,6 @@ class TaskCollectorITest {
 
     commandExecutor.execute(doInOneTransactionCommand)
 
-    verify(commandGateway).sendToGateway(listOf(assignTaskCommand))
     verify(commandGateway).sendToGateway(listOf(completeCommand))
   }
 

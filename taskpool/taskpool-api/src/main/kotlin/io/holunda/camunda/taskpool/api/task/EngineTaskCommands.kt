@@ -147,7 +147,7 @@ data class CompleteTaskCommand(
   override val id: String,
 
   override val order: Int = ORDER_TASK_COMPLETION,
-  override val eventName: String = COMPLETE
+  override val eventName: String = COMPLETE,
   /**
    * Username of the assigned user.
    */

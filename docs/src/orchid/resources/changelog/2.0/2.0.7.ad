@@ -1,0 +1,13 @@
+---
+version: 2.0.7
+---
+
+== Features
+
+* Update Axon to 4.4.1
+
+== Bugfixes
+
+* Make sure that Completed Event is send, even if in the same transaction a assign happend #250
+* PROJECTOR-001 Error is just written for unknown cases #249
+
