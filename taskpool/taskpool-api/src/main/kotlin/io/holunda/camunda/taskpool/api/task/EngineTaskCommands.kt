@@ -148,6 +148,10 @@ data class CompleteTaskCommand(
 
   override val order: Int = ORDER_TASK_COMPLETION,
   override val eventName: String = COMPLETE
+  /**
+   * Username of the assigned user.
+   */
+  val assignee: String? = null
 ) : EngineTaskCommand
 
 /**
