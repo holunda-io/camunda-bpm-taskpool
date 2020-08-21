@@ -5,6 +5,7 @@ import io.holunda.camunda.taskpool.api.process.instance.EndProcessInstanceComman
 import io.holunda.camunda.taskpool.api.process.instance.StartProcessInstanceCommand
 import io.holunda.camunda.taskpool.collector.sourceReference
 import io.holunda.camunda.taskpool.collector.task.TaskEventCollectorService
+import org.camunda.bpm.engine.RepositoryService
 import org.camunda.bpm.engine.impl.history.event.HistoricProcessInstanceEventEntity
 import org.springframework.context.event.EventListener
 import org.springframework.core.annotation.Order
@@ -16,7 +17,8 @@ import org.springframework.stereotype.Component
  */
 @Component
 class ProcessInstanceEventCollectorService(
-  private val collectorProperties: TaskCollectorProperties
+  private val collectorProperties: TaskCollectorProperties,
+  private val repositoryService: RepositoryService
 ) {
 
   companion object {
@@ -30,7 +32,7 @@ class ProcessInstanceEventCollectorService(
   @Order(TaskEventCollectorService.ORDER)
   @EventListener(condition = "#processInstance.eventType.equals('start')")
   fun create(processInstance: HistoricProcessInstanceEventEntity): StartProcessInstanceCommand = processInstance
-    .toStartProcessInstanceCommand(collectorProperties.enricher.applicationName)
+    .toStartProcessInstanceCommand(repositoryService, collectorProperties.enricher.applicationName)
 
   /**
    * Fires end process instance command.
@@ -38,11 +40,11 @@ class ProcessInstanceEventCollectorService(
   @Order(TaskEventCollectorService.ORDER)
   @EventListener(condition = "#processInstance.eventType.equals('end')")
   fun end(processInstance: HistoricProcessInstanceEventEntity): EndProcessInstanceCommand = processInstance
-    .toEndProcessInstanceCommand(collectorProperties.enricher.applicationName)
+    .toEndProcessInstanceCommand(repositoryService, collectorProperties.enricher.applicationName)
 }
 
-private fun HistoricProcessInstanceEventEntity.toStartProcessInstanceCommand(applicationName: String) = StartProcessInstanceCommand(
-  sourceReference = this.sourceReference(applicationName),
+private fun HistoricProcessInstanceEventEntity.toStartProcessInstanceCommand(repositoryService: RepositoryService, applicationName: String) = StartProcessInstanceCommand(
+  sourceReference = this.sourceReference(repositoryService, applicationName),
   processInstanceId = this.processInstanceId,
   businessKey = this.businessKey,
   startActivityId = this.startActivityId,
@@ -54,8 +56,8 @@ private fun HistoricProcessInstanceEventEntity.toStartProcessInstanceCommand(app
   }
 )
 
-private fun HistoricProcessInstanceEventEntity.toEndProcessInstanceCommand(applicationName: String) = EndProcessInstanceCommand(
-  sourceReference = this.sourceReference(applicationName),
+private fun HistoricProcessInstanceEventEntity.toEndProcessInstanceCommand(repositoryService: RepositoryService, applicationName: String) = EndProcessInstanceCommand(
+  sourceReference = this.sourceReference(repositoryService, applicationName),
   processInstanceId = this.processInstanceId,
   businessKey = this.businessKey,
   endActivityId = this.endActivityId,
