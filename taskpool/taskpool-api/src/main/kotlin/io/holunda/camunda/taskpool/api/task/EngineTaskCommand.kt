@@ -1,7 +1,5 @@
 package io.holunda.camunda.taskpool.api.task
 
-import io.holunda.camunda.taskpool.api.business.WithCorrelations
-
 /**
  * Task command received from the Camunda Engine.
  */
