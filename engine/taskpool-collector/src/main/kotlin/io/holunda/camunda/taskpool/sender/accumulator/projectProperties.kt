@@ -44,7 +44,8 @@ fun <T : Any> projectProperties(
   propertyOperationConfig: PropertyOperationConfiguration = mapOf(),
   mapper: Mapper<T> = jacksonMapper(),
   unmapper: Unmapper<T> = jacksonUnmapper(original::class.java),
-  ignoredProperties: List<String> = emptyList()
+  ignoredProperties: List<String> = emptyList(),
+  projectionErrorDetector: ProjectionErrorDetector
 ): T {
 
   val originalProperties = original.javaClass.kotlin.memberProperties
@@ -65,9 +66,16 @@ fun <T : Any> projectProperties(
     }
 
     if (potentialMatchingProperties.isEmpty()) {
-      LoggerFactory
-        .getLogger(ProjectingCommandAccumulator::class.java)
-        .error("PROJECTOR-001: No matching attributes of two commands to the same task found. The second command $detail is ignored.")
+      val errorText = "PROJECTOR-001: No matching attributes of two commands to the same task found. The second command $detail is ignored.";
+      if(projectionErrorDetector.shouldReportError(original = original, detail = detail)) {
+        LoggerFactory
+          .getLogger(ProjectingCommandAccumulator::class.java)
+          .error(errorText)
+      } else {
+        LoggerFactory
+          .getLogger(ProjectingCommandAccumulator::class.java)
+          .debug(errorText)
+      }
     }
 
     //
@@ -119,3 +127,7 @@ val variableMapModule = SimpleModule()
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "@class", include = JsonTypeInfo.As.PROPERTY)
 class KotlinTypeInfo
+
+interface ProjectionErrorDetector {
+  fun shouldReportError(original: Any, detail: Any): Boolean = true
+}

@@ -389,5 +389,4 @@ abstract class TaskEventMapper {
   fun toOffsetDateTime(@Valid instant: Instant?): OffsetDateTime? {
     return if (instant == null) null else OffsetDateTime.ofInstant(instant, ZoneOffset.UTC)
   }
-
 }

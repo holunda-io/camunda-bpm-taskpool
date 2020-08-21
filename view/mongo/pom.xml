@@ -6,7 +6,7 @@
   <parent>
     <groupId>io.holunda.taskpool</groupId>
     <artifactId>camunda-bpm-taskpool-view-root</artifactId>
-    <version>2.0.6</version>
+    <version>2.0.7</version>
   </parent>
 
   <artifactId>camunda-bpm-taskpool-view-mongo</artifactId>
@@ -78,7 +78,7 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>com.nhaarman</groupId>
+      <groupId>com.nhaarman.mockitokotlin2</groupId>
       <artifactId>mockito-kotlin</artifactId>
       <scope>test</scope>
     </dependency>

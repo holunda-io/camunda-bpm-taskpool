@@ -1,18 +1,11 @@
 spring:
   application.name: collector-test
-  datasource:
-    url: jdbc:h2:mem:testdb
-    username: sa
-    password: sa
-
 camunda:
   bpm:
     default-serialization-format: application/json
     authorization:
       enabled: false
     id-generator: strong
-    database:
-      type: h2
     history-level: full
     metrics:
       enabled: false

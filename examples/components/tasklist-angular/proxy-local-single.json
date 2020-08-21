@@ -1,0 +1,11 @@
+{
+  "/tasklist/rest": {
+    "target": "http://localhost:8080",
+    "secure": false,
+    "logLevel": "debug",
+    "pathRewrite": {
+      "^/tasklist/rest": "/tasklist/rest"
+    }
+  }
+}
+

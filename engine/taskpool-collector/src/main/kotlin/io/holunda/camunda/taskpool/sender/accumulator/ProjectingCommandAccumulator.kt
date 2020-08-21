@@ -69,7 +69,8 @@ class ProjectingCommandAccumulator : CommandAccumulator {
       // handled separately
       WithPayload::payload.name,
       WithCorrelations::correlations.name
-    )
+    ),
+    projectionErrorDetector = EngineCommandProjectionErrorDetector
   )
 
   /**
@@ -82,4 +83,18 @@ class ProjectingCommandAccumulator : CommandAccumulator {
       command.copy(payload = serialize(command.payload)) as T
     else
       command
+}
+
+/**
+ * If detail is AddCandidateUsersCommand or UpdateAttributeTaskCommand, no error reporting should be done. => False will be returned.
+ */
+object EngineCommandProjectionErrorDetector: ProjectionErrorDetector {
+
+  override fun shouldReportError(original: Any, detail: Any): Boolean {
+    return when(detail) {
+      is AddCandidateUsersCommand,
+      is UpdateAttributeTaskCommand -> false
+      else -> true
+    }
+  }
 }

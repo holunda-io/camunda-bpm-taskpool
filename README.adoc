@@ -1,7 +1,7 @@
 [cols="a,a,a,a,a,a,a"]
 |===
-| // travis
-image::https://travis-ci.org/holunda-io/camunda-bpm-taskpool.svg?branch=master[caption="Build Status", link=https://travis-ci.org/holunda-io/camunda-bpm-taskpool]
+| // github actions
+image::https://github.com/holunda-io/camunda-bpm-taskpool/workflows/Development%20braches/badge.svg[caption="Build Status", link=https://github.com/holunda-io/camunda-bpm-taskpool/actions]
 | // maven central
 image::https://maven-badges.herokuapp.com/maven-central/io.holunda.taskpool/camunda-bpm-taskpool/badge.svg[caption="Maven Central", link=https://maven-badges.herokuapp.com/maven-central/io.holunda.taskpool/camunda-bpm-taskpool]
 | // codecov
@@ -18,7 +18,7 @@ image::https://badges.gitter.im/holunda-io/camunda-bpm-taskpool.svg[link="https:
 
 == Camunda BPM Taskpool
 
-> A component for pooling Camunda BPM user tasks with business data for high performance queries.
+> A component for building Camunda BPM task lists with user tasks and business data in distributed scenarios.
 
 In the last five years, we built different process applications on behalf of the customer several times. It turned out
 that some of the issues occurred every time during the implementation.
@@ -62,7 +62,7 @@ and link:https://holunda.slack.com/messages/taskpool/[slack] chats available, if
 === Working Example
 
 Studying link:https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/example[Working Example] might be easier to understand
-the different link:https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/scenarios/[Usage scenarios] of the component.
+the different link:https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/scenarios[Usage scenarios] of the component.
 
 === License
 

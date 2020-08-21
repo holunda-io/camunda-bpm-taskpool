@@ -4,6 +4,8 @@ import io.holunda.camunda.taskpool.process.ProcessDefinitionService
 import io.holunda.camunda.taskpool.sender.gateway.AxonCommandListGateway
 import org.assertj.core.api.Assertions.assertThat
 import org.camunda.bpm.engine.FormService
+import org.camunda.bpm.engine.ProcessEngine
+import org.camunda.bpm.engine.ProcessEngineConfiguration
 import org.camunda.bpm.engine.RepositoryService
 import org.camunda.bpm.engine.impl.cfg.ProcessEngineConfigurationImpl
 import org.camunda.bpm.model.bpmn.Bpmn
@@ -39,13 +41,13 @@ class ProcessDefinitionServiceITest {
   private lateinit var commandGateway: AxonCommandListGateway
 
   @Autowired
-  private lateinit var configuration: ProcessEngineConfigurationImpl
-
-  @Autowired
   private lateinit var processDefinitionService: ProcessDefinitionService
 
   @Autowired
   private lateinit var repositoryService: RepositoryService
+
+  @Autowired
+  private lateinit var processEngine: ProcessEngine
 
   @Autowired
   private lateinit var formService: FormService
@@ -76,7 +78,9 @@ class ProcessDefinitionServiceITest {
       .addModelInstance("process-with-start-form.bpmn", modelInstance)
       .deploy()
 
-    val definitions = processDefinitionService.getProcessDefinitions(configuration)
+
+
+    val definitions = processDefinitionService.getProcessDefinitions(processEngine.processEngineConfiguration as ProcessEngineConfigurationImpl)
 
     assertThat(definitions).isNotEmpty
     assertThat(definitions[0].processName).isEqualTo("My Process")

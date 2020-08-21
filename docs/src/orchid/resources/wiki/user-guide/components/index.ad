@@ -1,32 +1,41 @@
 ---
 
 title: Taskpool Components
-pageId: 'components'
 
 ---
 
-== Engine Components
+== Taskpool Components Overview
 
-Engine Components are designed to be a part of process application deployment:
+We decided to build `camunda-bpm-taskpool` as a collection of loose-coupled components which can be used during the construction
+of the process automation solution. In doing so, we provide __Process Engine Components__ which are intended to be deployed as
+a part of the process application. In addition, we provide __Process Platform Components__ which serve as a building blocks
+for the process platform.
 
-* link:./engine-starter[Camunda Engine Taskpool Support SpringBoot Starter]
-* link:./engine-interaction-client[Camunda Engine Interaction Client]
-* link:./engine-taskpool-collector[Taskpool Collector]
-* link:./engine-datapool-collector[Datapool Collector]
+=== Process Engine Components
 
-== Core Components
+Process Engine Components are designed to be a part of process application deployment
+and react on engine changes / interact with the engine. These are:
 
+* link:components/engine-starter[Camunda Engine Taskpool Support SpringBoot Starter]
+* link:components/engine-interaction-client[Camunda Engine Interaction Client]
+* link:components/engine-taskpool-collector[Taskpool Collector]
+* link:components/engine-datapool-collector[Datapool Collector]
+
+=== Process Platform Components
+Process Platform Components are designed to build a process platform.
+
+==== Core Components
 Core Components are responsible for the processing of engine commands and form an event stream
-consumed by the view components. Depending on scenario, they can be deployed either within the
-process application, task list application or even completely separately.
+consumed by the view components. Depending on the scenario, they can be deployed either within the
+process application, process platform or even completely separately.
 
-* link:./core-taskpool[Taskpool Core]
-* link:./core-datapool[Datapool Core]
+* link:components/core-taskpool[Taskpool Core]
+* link:components/core-datapool[Datapool Core]
 
-== View Components
+==== View Components
 
 View Components are responsible for creation of a unified read-only projection of tasks and business data items.
-They are typically deployed as a part of the task list application.
+They are typically deployed as a part of the process platform.
 
-* link:./view-simple[In-Memory View]
-* link:./view-mongo[Mongo View]
+* link:components/view-simple[In-Memory View]
+* link:components/view-mongo[Mongo View]

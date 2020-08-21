@@ -5,7 +5,7 @@
   <parent>
     <groupId>io.holunda.taskpool</groupId>
     <artifactId>taskpool-examples-root</artifactId>
-    <version>2.0.6</version>
+    <version>2.0.7</version>
     <relativePath>../../</relativePath>
   </parent>
 
@@ -69,16 +69,8 @@
 
     <!-- Swagger -->
     <dependency>
-      <groupId>io.springfox</groupId>
-      <artifactId>springfox-swagger2</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.springfox</groupId>
-      <artifactId>springfox-spring-webflux</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.springfox</groupId>
-      <artifactId>springfox-swagger-ui</artifactId>
+      <groupId>io.toolisticon.springboot</groupId>
+      <artifactId>springboot-swagger-starter</artifactId>
     </dependency>
 
     <!-- Axon -->
@@ -88,10 +80,6 @@
     </dependency>
 
     <!-- MapStruct -->
-    <dependency>
-      <groupId>org.mapstruct</groupId>
-      <artifactId>mapstruct-jdk8</artifactId>
-    </dependency>
     <dependency>
       <groupId>org.mapstruct</groupId>
       <artifactId>mapstruct</artifactId>
@@ -223,8 +211,7 @@
             </goals>
             <configuration>
               <sourceDirs>
-                <sourceDir>${project.basedir}/target/generated-sources/swagger/src/main/java
-                </sourceDir>
+                <sourceDir>${project.basedir}/target/generated-sources/swagger/src/main/java</sourceDir>
                 <sourceDir>src/main/kotlin</sourceDir>
               </sourceDirs>
               <annotationProcessorPaths>

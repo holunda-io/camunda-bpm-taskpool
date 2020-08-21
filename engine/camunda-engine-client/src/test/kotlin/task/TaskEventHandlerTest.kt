@@ -1,7 +1,7 @@
 package task
 
-import com.nhaarman.mockito_kotlin.verify
-import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
+import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import io.holunda.camunda.client.task.TaskEventHandlers
 import io.holunda.camunda.taskpool.TaskCollectorProperties
 import io.holunda.camunda.taskpool.api.task.*

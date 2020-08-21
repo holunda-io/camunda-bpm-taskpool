@@ -1,9 +1,9 @@
 package io.holunda.camunda.taskpool.view.mongo.service
 
-import com.nhaarman.mockito_kotlin.argumentCaptor
-import com.nhaarman.mockito_kotlin.atLeast
-import com.nhaarman.mockito_kotlin.clearInvocations
-import com.nhaarman.mockito_kotlin.verify
+import com.nhaarman.mockitokotlin2.argumentCaptor
+import com.nhaarman.mockitokotlin2.atLeast
+import com.nhaarman.mockitokotlin2.clearInvocations
+import com.nhaarman.mockitokotlin2.verify
 import com.tngtech.jgiven.Stage
 import com.tngtech.jgiven.annotation.*
 import com.tngtech.jgiven.integration.spring.JGivenStage
