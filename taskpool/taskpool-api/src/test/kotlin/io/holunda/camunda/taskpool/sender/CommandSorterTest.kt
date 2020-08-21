@@ -68,7 +68,7 @@ class CommandSorterTest {
   )
 
   @Test
-  fun `create task commands should precede other events`() {
+  fun `create task commands should come after all other events`() {
     listOf(assignTaskCommand, updateTaskCommand, completeTaskCommand, deleteTaskCommand,
       addCandidateUserCommand, deleteCandidateUserCommand, addCandidateGroupCommand, deleteCandidateGroupCommand).forEach {
       assertThat(EngineTaskCommandSorter().compare(createTaskCommand, it)).isEqualTo(-1)
@@ -77,21 +77,26 @@ class CommandSorterTest {
   }
 
   @Test
-  fun `delete task commands should come after all other events`() {
-    listOf(createTaskCommand, assignTaskCommand, updateTaskCommand, completeTaskCommand,
+  fun `complete task commands should come after all other events except for create`() {
+    listOf(assignTaskCommand, updateTaskCommand, deleteTaskCommand,
       addCandidateUserCommand, deleteCandidateUserCommand, addCandidateGroupCommand, deleteCandidateGroupCommand).forEach {
-      assertThat(EngineTaskCommandSorter().compare(deleteTaskCommand, it)).isEqualTo(1)
-      assertThat(EngineTaskCommandSorter().compare(it, deleteTaskCommand)).isEqualTo(-1)
+      assertThat(EngineTaskCommandSorter().compare(completeTaskCommand, it)).isEqualTo(-1)
+      assertThat(EngineTaskCommandSorter().compare(it, completeTaskCommand)).isEqualTo(1)
     }
+    assertThat(EngineTaskCommandSorter().compare(completeTaskCommand, createTaskCommand)).isEqualTo(1)
+    assertThat(EngineTaskCommandSorter().compare(createTaskCommand, completeTaskCommand)).isEqualTo(-1)
   }
 
   @Test
-  fun `complete task commands should come after all other events except for delete task`() {
-    listOf(createTaskCommand, assignTaskCommand, updateTaskCommand,
+  fun `delete task commands should come after all other events except create and complete task`() {
+    listOf(assignTaskCommand, updateTaskCommand,
       addCandidateUserCommand, deleteCandidateUserCommand, addCandidateGroupCommand, deleteCandidateGroupCommand).forEach {
-      assertThat(EngineTaskCommandSorter().compare(completeTaskCommand, it)).isEqualTo(1)
-      assertThat(EngineTaskCommandSorter().compare(it, completeTaskCommand)).isEqualTo(-1)
+      assertThat(EngineTaskCommandSorter().compare(deleteTaskCommand, it)).isEqualTo(-1)
+      assertThat(EngineTaskCommandSorter().compare(it, deleteTaskCommand)).isEqualTo(1)
     }
+    assertThat(EngineTaskCommandSorter().compare(createTaskCommand, deleteTaskCommand)).isEqualTo(-1)
+    assertThat(EngineTaskCommandSorter().compare(deleteTaskCommand, createTaskCommand)).isEqualTo(1)
+
     assertThat(EngineTaskCommandSorter().compare(completeTaskCommand, deleteTaskCommand)).isEqualTo(-1)
     assertThat(EngineTaskCommandSorter().compare(deleteTaskCommand, completeTaskCommand)).isEqualTo(1)
   }

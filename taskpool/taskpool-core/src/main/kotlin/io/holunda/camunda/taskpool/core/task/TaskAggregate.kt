@@ -73,7 +73,7 @@ class TaskAggregate() {
   @CommandHandler
   fun handle(command: CompleteTaskCommand) {
     if (!deleted && !completed) {
-      complete()
+      complete(command.assignee)
     }
   }
 
@@ -295,7 +295,29 @@ class TaskAggregate() {
         followUpDate = command.followUpDate
       ))
 
-  private fun complete() =
+  private fun complete(assignee: String?) {
+    if (assignee != null) {
+      AggregateLifecycle.apply(
+        TaskAssignedEngineEvent(
+          id = this.id,
+          taskDefinitionKey = this.taskDefinitionKey,
+          sourceReference = this.sourceReference,
+          formKey = this.formKey,
+          name = this.name,
+          description = this.description,
+          priority = this.priority,
+          owner = this.owner,
+          dueDate = this.dueDate,
+          createTime = this.createTime,
+          candidateUsers = this.candidateUsers,
+          candidateGroups = this.candidateGroups,
+          assignee = assignee,
+          payload = this.payload,
+          correlations = this.correlations,
+          businessKey = this.businessKey,
+          followUpDate = this.followUpDate
+        ))
+    }
     AggregateLifecycle.apply(
       TaskCompletedEngineEvent(
         id = this.id,
@@ -316,6 +338,7 @@ class TaskAggregate() {
         businessKey = this.businessKey,
         followUpDate = this.followUpDate
       ))
+  }
 
   private fun delete(command: DeleteTaskCommand) =
     AggregateLifecycle.apply(

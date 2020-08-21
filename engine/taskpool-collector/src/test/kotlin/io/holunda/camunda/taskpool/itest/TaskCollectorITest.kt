@@ -10,6 +10,8 @@ import org.camunda.bpm.engine.RuntimeService
 import org.camunda.bpm.engine.TaskService
 import org.camunda.bpm.engine.delegate.DelegateTask
 import org.camunda.bpm.engine.delegate.TaskListener
+import org.camunda.bpm.engine.impl.interceptor.Command
+import org.camunda.bpm.engine.impl.interceptor.CommandExecutor
 import org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.*
 import org.camunda.bpm.engine.variable.Variables
 import org.camunda.bpm.model.bpmn.Bpmn
@@ -51,6 +53,9 @@ class TaskCollectorITest {
 
   @Autowired
   lateinit var taskService: TaskService
+
+  @Autowired
+  lateinit var commandExecutor: CommandExecutor
 
   /**
    * The process is started and waits in the user task. If the instance is deleted,
@@ -176,6 +181,56 @@ class TaskCollectorITest {
 
     // complete
     taskService.complete(task().id, Variables.putValue("input", "from user"))
+
+    verify(commandGateway).sendToGateway(listOf(completeCommand))
+  }
+
+  /**
+   * The process is started and wait in a user task. If this gets claimed and completed,
+   * the process runs to the next user task.
+   * The complete command is send after the TX commit and contains all process
+   * variables (prior to complete and after the complete)
+   */
+  @Test
+  fun `should do task claim and complete`() {
+
+    val businessKey = "BK1"
+    val processId = "processId"
+    val taskDefinitionKey = "userTask"
+
+    // deploy
+    repositoryService
+      .createDeployment()
+      .addModelInstance("process.bpmn",
+        createUserTaskProcess(processId,
+          taskDefinitionKey,
+          true))
+      .deploy()
+
+    // start
+    val instance = runtimeService
+      .startProcessInstanceByKey(
+        processId,
+        businessKey,
+        Variables.putValue("key", "value")
+      )
+    assertThat(instance).isNotNull
+    assertThat(instance).isStarted
+    assertThat(instance).isWaitingAt(taskDefinitionKey)
+
+    reset(commandGateway)
+    val completeCommand = CompleteTaskCommand(
+      id = task().id,
+      assignee = "BudSpencer"
+    )
+
+    val doInOneTransactionCommand = Command { commandContext ->
+      taskService.claim(task().id, "BudSpencer")
+      // complete
+      taskService.complete(task().id, Variables.putValue("input", "from user"))
+    }
+
+    commandExecutor.execute(doInOneTransactionCommand)
 
     verify(commandGateway).sendToGateway(listOf(completeCommand))
   }
