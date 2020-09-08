@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_07ng7cv" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.2.0">
+  <bpmn:collaboration id="Collaboration_0uv6bfo">
+    <bpmn:participant id="Participant_1yt6yga" name="processWithEventSubProcess" processRef="processWithEventSubProcess" />
+  </bpmn:collaboration>
+  <bpmn:process id="processWithEventSubProcess" isExecutable="true">
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>Flow_0y4zoas</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:endEvent id="Event_13gd52w">
+      <bpmn:incoming>Flow_1oxdy64</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:userTask id="userTask" name="User Task">
+      <bpmn:incoming>Flow_0y4zoas</bpmn:incoming>
+      <bpmn:outgoing>Flow_1oxdy64</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="Flow_0y4zoas" sourceRef="StartEvent_1" targetRef="userTask" />
+    <bpmn:sequenceFlow id="Flow_1oxdy64" sourceRef="userTask" targetRef="Event_13gd52w" />
+    <bpmn:subProcess id="myEventSubProcess" name="Fancy Subprocess" triggeredByEvent="true">
+      <bpmn:sequenceFlow id="Flow_1d5cvv8" sourceRef="Event_0ry14v3" targetRef="Event_1oc33i3" />
+      <bpmn:startEvent id="Event_0ry14v3">
+        <bpmn:outgoing>Flow_1d5cvv8</bpmn:outgoing>
+        <bpmn:messageEventDefinition id="MessageEventDefinition_06l9nmw" messageRef="Message_03udyob" />
+      </bpmn:startEvent>
+      <bpmn:endEvent id="Event_1oc33i3">
+        <bpmn:incoming>Flow_1d5cvv8</bpmn:incoming>
+        <bpmn:terminateEventDefinition id="TerminateEventDefinition_12dhlzt" />
+      </bpmn:endEvent>
+    </bpmn:subProcess>
+  </bpmn:process>
+  <bpmn:message id="Message_03udyob" name="CANCEL_PROCESS" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_0uv6bfo">
+      <bpmndi:BPMNShape id="Participant_1yt6yga_di" bpmnElement="Participant_1yt6yga" isHorizontal="true">
+        <dc:Bounds x="160" y="90" width="470" height="430" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_1oxdy64_di" bpmnElement="Flow_1oxdy64">
+        <di:waypoint x="450" y="177" />
+        <di:waypoint x="512" y="177" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0y4zoas_di" bpmnElement="Flow_0y4zoas">
+        <di:waypoint x="295" y="177" />
+        <di:waypoint x="350" y="177" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="259" y="159" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_13gd52w_di" bpmnElement="Event_13gd52w">
+        <dc:Bounds x="512" y="159" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1gl506w_di" bpmnElement="userTask">
+        <dc:Bounds x="350" y="137" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1i1stl4_di" bpmnElement="myEventSubProcess" isExpanded="true">
+        <dc:Bounds x="240" y="280" width="350" height="200" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_1d5cvv8_di" bpmnElement="Flow_1d5cvv8">
+        <di:waypoint x="316" y="380" />
+        <di:waypoint x="532" y="380" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Event_0128cq6_di" bpmnElement="Event_0ry14v3">
+        <dc:Bounds x="280" y="362" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0jhd0oh_di" bpmnElement="Event_1oc33i3">
+        <dc:Bounds x="532" y="362" width="36" height="36" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

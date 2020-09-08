@@ -32,6 +32,7 @@ import java.time.Instant.now
 import java.util.*
 import java.util.concurrent.TimeUnit
 
+const val BPMN_WITH_SUBPROCESS = "bpmn/process_with_event_sub_process.bpmn"
 
 /**
  * This ITests simulates work of Camunda collector including variable enrichment.
@@ -96,6 +97,45 @@ class TaskCollectorITest {
 
     // delete
     runtimeService.deleteProcessInstance(instance.processInstanceId, reason, false)
+
+    verify(commandGateway).sendToGateway(listOf(deleteCommand))
+  }
+
+  @Test
+  fun `should send task delete on process instance deletion by terminate end event`() {
+
+    val businessKey = "BK1"
+    val processId = "processWithEventSubProcess"
+    val taskDefinitionKey = "userTask"
+    val reason = "Interrupting activity Activity(myEventSubProcess) executed."
+    val message = "CANCEL_PROCESS"
+
+    // deploy
+    repositoryService
+      .createDeployment()
+      .addClasspathResource(BPMN_WITH_SUBPROCESS)
+      .deploy()
+
+    // start
+    val instance = runtimeService
+      .startProcessInstanceByKey(
+        processId,
+        businessKey,
+        Variables.putValue("key", "value")
+      )
+
+    assertThat(instance).isNotNull
+    assertThat(instance).isStarted
+    assertThat(instance).isWaitingAt(taskDefinitionKey)
+
+    reset(commandGateway)
+    val deleteCommand = DeleteTaskCommand(
+      id = task().id,
+      deleteReason = reason
+    )
+
+    // delete
+    runtimeService.correlateMessage(message, businessKey)
 
     verify(commandGateway).sendToGateway(listOf(deleteCommand))
   }
