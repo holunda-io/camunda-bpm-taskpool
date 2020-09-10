@@ -31,6 +31,10 @@
       <artifactId>camunda-bpm-taskpool-api</artifactId>
     </dependency>
     <dependency>
+      <groupId>io.holunda.taskpool</groupId>
+      <artifactId>camunda-bpm-taskpool-event</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.axonframework</groupId>
       <artifactId>axon-messaging</artifactId>
     </dependency>

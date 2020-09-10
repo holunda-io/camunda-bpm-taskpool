@@ -5,6 +5,11 @@ spring:
   application:
     name: taskpool
 
+axon.serializer:
+  general: jackson
+  events: jackson
+  messages: jackson
+
 camunda:
   taskpool:
     form-url-resolver:

@@ -22,7 +22,7 @@ data class ProcessInstanceStartedEvent(
   val startActivityId: String? = null
 )
 
-@Revision("2")
+@Revision("1")
 data class ProcessInstanceEndedEvent(
   val processInstanceId: String,
   val sourceReference: SourceReference,

@@ -1,8 +1,11 @@
-package io.holunda.camunda.taskpool.api.task
+package io.holunda.camunda.taskpool.api.process.definition
+
+import org.axonframework.serialization.Revision
 
 /**
  * Event sent after a new process has been deployed.
  */
+@Revision("1")
 data class ProcessDefinitionRegisteredEvent(
   val processDefinitionId: String,
   val processDefinitionKey: String,

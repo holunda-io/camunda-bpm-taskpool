@@ -1,7 +1,7 @@
 package io.holunda.camunda.taskpool.core.process
 
 import io.holunda.camunda.taskpool.api.process.definition.RegisterProcessDefinitionCommand
-import io.holunda.camunda.taskpool.api.task.ProcessDefinitionRegisteredEvent
+import io.holunda.camunda.taskpool.api.process.definition.ProcessDefinitionRegisteredEvent
 import org.axonframework.test.aggregate.AggregateTestFixture
 import org.junit.Test
 

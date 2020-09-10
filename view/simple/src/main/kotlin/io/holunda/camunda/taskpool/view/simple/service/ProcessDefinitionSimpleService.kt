@@ -1,6 +1,6 @@
 package io.holunda.camunda.taskpool.view.simple.service
 
-import io.holunda.camunda.taskpool.api.task.ProcessDefinitionRegisteredEvent
+import io.holunda.camunda.taskpool.api.process.definition.ProcessDefinitionRegisteredEvent
 import io.holunda.camunda.taskpool.view.ProcessDefinition
 import io.holunda.camunda.taskpool.view.query.ProcessDefinitionApi
 import io.holunda.camunda.taskpool.view.query.process.ProcessDefinitionsStartableByUserQuery

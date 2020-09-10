@@ -1,6 +1,6 @@
 package io.holunda.camunda.taskpool.core.process
 
-import io.holunda.camunda.taskpool.api.task.ProcessDefinitionRegisteredEvent
+import io.holunda.camunda.taskpool.api.process.definition.ProcessDefinitionRegisteredEvent
 import io.holunda.camunda.taskpool.api.process.definition.RegisterProcessDefinitionCommand
 import org.axonframework.commandhandling.CommandHandler
 import org.axonframework.eventsourcing.EventSourcingHandler
