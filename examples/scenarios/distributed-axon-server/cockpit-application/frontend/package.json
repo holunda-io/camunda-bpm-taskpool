@@ -24,6 +24,7 @@
     "bootstrap": "^4.2.1",
     "core-js": "^2.6.3",
     "font-awesome": "^4.7.0",
+    "node-sass": "4.14.1",
     "rxjs": "^6.4.0",
     "rxjs-compat": "^6.4.0",
     "zone.js": "^0.8.29"
@@ -46,6 +47,7 @@
     "karma-jasmine-html-reporter": "^0.2.2",
     "karma-junit-reporter": "1.2.0",
     "karma-remap-istanbul": "0.6.0",
+    "node-sass": "4.14.1",
     "puppeteer": "^1.12.1",
     "ts-node": "^8.0.2",
     "tslint": "^5.12.1",
