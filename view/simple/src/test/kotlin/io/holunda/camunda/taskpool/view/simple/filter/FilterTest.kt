@@ -66,7 +66,7 @@ class FilterTest {
     assertThat(criteria).isNotNull
     assertThat(criteria.size).isEqualTo(4)
     assertThat(criteria).containsExactlyElementsOf(listOf(Criterion.TaskCriterion("name", "myName"), Criterion.TaskCriterion("assignee", "kermit"),
-      Criterion.DataEntryCriterion("dataAttr1", "value"), Criterion.DataEntryCriterion("dataAttr2", "another")))
+      Criterion.PayloadEntryCriterion("dataAttr1", "value"), Criterion.PayloadEntryCriterion("dataAttr2", "another")))
   }
 
   @Test
@@ -90,7 +90,7 @@ class FilterTest {
   fun `should create predicates`() {
 
     val criteria = toCriteria(filtersList)
-    val predicates = createPredicates(criteria)
+    val predicates = createTaskPredicates(criteria)
 
     assertThat(predicates).isNotNull()
     assertThat(predicates.taskPredicate).isNotNull
