@@ -9,6 +9,11 @@ import io.holunda.camunda.taskpool.view.simple.filter.isTaskAttribute
 import java.lang.reflect.Field
 import java.util.*
 
+/**
+ * Creates a new data entry comparator.
+ * @param sort a sort string (like +field or -name)
+ * @return comparator for the sort string.
+ */
 fun dataComparator(sort: String?): DataEntryComparator? {
   if (sort == null || sort.isBlank()) return null
   val sortDirection = parse(sort) ?: return null
@@ -21,6 +26,11 @@ fun dataComparator(sort: String?): DataEntryComparator? {
   return DataEntryComparator(field to sortDirection)
 }
 
+/**
+ * Creates a new task comparator.
+ * @param sort a sort string (like +field or -name)
+ * @return comparator for the sort string.
+ */
 fun taskComparator(sort: String?): TasksWithDataEntriesComparator? {
   if (sort == null || sort.isBlank()) return null
   val sortDirection = parse(sort) ?: return null
@@ -34,17 +44,29 @@ fun taskComparator(sort: String?): TasksWithDataEntriesComparator? {
   return TasksWithDataEntriesComparator(field to sortDirection)
 }
 
+/**
+ * Comparison mode.
+ */
 enum class CompareMode {
   EQUAL, LESS_THAN, GREATER_THAN, DEFAULT
 }
 
+/**
+ * Sort direction.
+ */
 enum class SortDirection(val modifier: Int, val sign: String) {
   ASCENDING(1, "+"),
   DESCENDING(-1, "-");
 }
 
+/**
+ * Parses sort direction.
+ */
 internal fun parse(sort: String) = SortDirection.values().find { it.sign == sort.substring(0, 1) }
 
+/**
+ * Finds comparison mode.
+ */
 internal fun findCompareMode(o1: Any?, o2: Any?): CompareMode {
   return when {
     (null != o1) and (null != o2) -> CompareMode.DEFAULT
@@ -55,6 +77,9 @@ internal fun findCompareMode(o1: Any?, o2: Any?): CompareMode {
   }
 }
 
+/**
+ * Compares.
+ */
 internal fun compareActual(fieldSort: Pair<Field, SortDirection>, v1: Any?, v2: Any?): Int {
   return when (fieldSort.first.type) {
     java.lang.Integer::class.java -> (v1 as Int).compareTo(v2 as Int) * fieldSort.second.modifier

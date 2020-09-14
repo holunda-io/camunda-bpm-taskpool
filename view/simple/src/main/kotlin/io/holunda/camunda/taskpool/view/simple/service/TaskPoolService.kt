@@ -94,6 +94,9 @@ class TaskPoolService(
   override fun query(query: TaskCountByApplicationQuery): List<ApplicationWithTaskCount> =
     tasks.values.groupingBy { it.sourceReference.applicationName }.eachCount().map { ApplicationWithTaskCount(it.key, it.value) }
 
+  /**
+   * Creates task.
+   */
   @Suppress("unused")
   @EventHandler
   fun on(event: TaskCreatedEngineEvent) {
@@ -104,6 +107,9 @@ class TaskPoolService(
     updateTaskCountByApplicationQuery(task.sourceReference.applicationName)
   }
 
+  /**
+   * Assigns task.
+   */
   @Suppress("unused")
   @EventHandler
   fun on(event: TaskAssignedEngineEvent) {
@@ -115,6 +121,9 @@ class TaskPoolService(
     }
   }
 
+  /**
+   * Completes task.
+   */
   @Suppress("unused")
   @EventHandler
   fun on(event: TaskCompletedEngineEvent) {
@@ -125,6 +134,9 @@ class TaskPoolService(
     applicationName?.let { updateTaskCountByApplicationQuery(it) }
   }
 
+  /**
+   * Deletes task.
+   */
   @Suppress("unused")
   @EventHandler
   fun on(event: TaskDeletedEngineEvent) {
@@ -135,6 +147,9 @@ class TaskPoolService(
     applicationName?.let { updateTaskCountByApplicationQuery(it) }
   }
 
+  /**
+   * Performs a task attribute update.
+   */
   @Suppress("unused")
   @EventHandler
   fun on(event: TaskAttributeUpdatedEngineEvent) {
@@ -146,6 +161,9 @@ class TaskPoolService(
     }
   }
 
+  /**
+   * Changes task candidatges groups.
+   */
   @Suppress("unused")
   @EventHandler
   fun on(event: TaskCandidateGroupChanged) {
@@ -156,7 +174,9 @@ class TaskPoolService(
       updateTaskCountByApplicationQuery(tasks[event.id]!!.sourceReference.applicationName)
     }
   }
-
+  /**
+   * Changes task candidatges users.
+   */
   @Suppress("unused")
   @EventHandler
   fun on(event: TaskCandidateUserChanged) {
@@ -168,6 +188,9 @@ class TaskPoolService(
     }
   }
 
+  /**
+   * Creates a data entry.
+   */
   @Suppress("unused")
   @EventHandler
   fun on(event: DataEntryCreatedEvent) {
@@ -177,6 +200,9 @@ class TaskPoolService(
     // FIXME: update task query. see https://github.com/holunda-io/camunda-bpm-taskpool/issues/141
   }
 
+  /**
+   * Update data entry.
+   */
   @Suppress("unused")
   @EventHandler
   fun on(event: DataEntryUpdatedEvent) {

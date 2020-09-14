@@ -134,6 +134,9 @@ internal fun createTaskPredicates(criteria: List<Criterion>): TaskPredicateWrapp
     })
 }
 
+/**
+ * Create critera for given class fields.
+ */
 fun List<Criterion>.toClassAttributePredicates(clazz: KClass<out Criterion>) =
   this
     .asSequence()
@@ -150,6 +153,9 @@ fun List<Criterion>.toClassAttributePredicates(clazz: KClass<out Criterion>) =
     }
     .toList()
 
+/**
+ * Create critera for a map.
+ */
 fun List<Criterion>.toPayloadPredicates() = this
   .asSequence()
   .filter { it is Criterion.PayloadEntryCriterion }

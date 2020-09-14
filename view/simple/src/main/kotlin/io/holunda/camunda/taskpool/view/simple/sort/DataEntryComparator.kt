@@ -6,6 +6,9 @@ import java.lang.reflect.Field
 import java.util.Comparator
 import javax.xml.datatype.DatatypeConstants
 
+/**
+ * Comparator of data entries to be used in a sort.
+ */
 data class DataEntryComparator(
   private val fieldSort: Pair<Field, SortDirection>
 ) : Comparator<DataEntry> {
