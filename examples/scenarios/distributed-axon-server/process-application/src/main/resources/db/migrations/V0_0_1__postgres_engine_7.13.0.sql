@@ -63,7 +63,7 @@ create table ACT_GE_SCHEMA_LOG (
 );
 
 insert into ACT_GE_SCHEMA_LOG
-values ('0', CURRENT_TIMESTAMP, '7.12.0');
+values ('0', CURRENT_TIMESTAMP, '7.13.0');
 
 create table ACT_RE_DEPLOYMENT (
     ID_ varchar(64),
@@ -112,6 +112,7 @@ create table ACT_RU_JOB (
     RETRIES_ integer,
     EXCEPTION_STACK_ID_ varchar(64),
     EXCEPTION_MSG_ varchar(4000),
+    FAILED_ACT_ID_ varchar(255),
     DUEDATE_ timestamp,
     REPEAT_ varchar(255),
     REPEAT_OFFSET_ bigint DEFAULT 0,
@@ -138,6 +139,7 @@ create table ACT_RU_JOBDEF (
     SUSPENSION_STATE_ integer,
     JOB_PRIORITY_ bigint,
     TENANT_ID_ varchar(64),
+    DEPLOYMENT_ID_ varchar(64),
     primary key (ID_)
 );
 
@@ -204,6 +206,7 @@ create table ACT_RU_VARIABLE (
     NAME_ varchar(255) not null,
     EXECUTION_ID_ varchar(64),
     PROC_INST_ID_ varchar(64),
+    PROC_DEF_ID_ varchar(64),
     CASE_EXECUTION_ID_ varchar(64),
     CASE_INST_ID_ varchar(64),
     TASK_ID_ varchar(64),
@@ -241,6 +244,7 @@ create table ACT_RU_INCIDENT (
   INCIDENT_TYPE_ varchar(255) not null,
   EXECUTION_ID_ varchar(64),
   ACTIVITY_ID_ varchar(255),
+  FAILED_ACTIVITY_ID_ varchar(255),
   PROC_INST_ID_ varchar(64),
   PROC_DEF_ID_ varchar(64),
   CAUSE_INCIDENT_ID_ varchar(64),
@@ -260,6 +264,8 @@ create table ACT_RU_AUTHORIZATION (
   RESOURCE_TYPE_ integer not null,
   RESOURCE_ID_ varchar(255),
   PERMS_ integer,
+  REMOVAL_TIME_ timestamp,
+  ROOT_PROC_INST_ID_ varchar(64),
   primary key (ID_)
 );
 
@@ -545,6 +551,10 @@ create index ACT_IDX_EVENT_SUBSCR_EVT_NAME ON ACT_RU_EVENT_SUBSCR(EVENT_NAME_);
 create index ACT_IDX_PROCDEF_DEPLOYMENT_ID ON ACT_RE_PROCDEF(DEPLOYMENT_ID_);
 create index ACT_IDX_PROCDEF_TENANT_ID ON ACT_RE_PROCDEF(TENANT_ID_);
 create index ACT_IDX_PROCDEF_VER_TAG ON ACT_RE_PROCDEF(VERSION_TAG_);
+
+-- indices for history cleanup: https://jira.camunda.com/browse/CAM-11616
+create index ACT_IDX_AUTH_ROOT_PI on ACT_RU_AUTHORIZATION(ROOT_PROC_INST_ID_);
+create index ACT_IDX_AUTH_RM_TIME on ACT_RU_AUTHORIZATION(REMOVAL_TIME_);
 --
 -- Copyright Camunda Services GmbH and/or licensed to Camunda Services GmbH
 -- under one or more contributor license agreements. See the NOTICE file
@@ -891,6 +901,7 @@ create table ACT_HI_DETAIL (
     TENANT_ID_ varchar(64),
     OPERATION_ID_ varchar(64),
     REMOVAL_TIME_ timestamp,
+    INITIAL_ boolean,
     primary key (ID_)
 );
 
@@ -988,6 +999,7 @@ create table ACT_HI_INCIDENT (
   INCIDENT_MSG_ varchar(4000),
   INCIDENT_TYPE_ varchar(255) not null,
   ACTIVITY_ID_ varchar(255),
+  FAILED_ACTIVITY_ID_ varchar(255),
   CAUSE_INCIDENT_ID_ varchar(64),
   ROOT_CAUSE_INCIDENT_ID_ varchar(64),
   CONFIGURATION_ varchar(255),
@@ -1013,6 +1025,7 @@ create table ACT_HI_JOB_LOG (
     JOB_DEF_TYPE_ varchar(255),
     JOB_DEF_CONFIGURATION_ varchar(255),
     ACT_ID_ varchar(255),
+    FAILED_ACT_ID_ varchar(255),
     EXECUTION_ID_ varchar(64),
     ROOT_PROC_INST_ID_ varchar(64),
     PROCESS_INSTANCE_ID_ varchar(64),
@@ -1021,6 +1034,7 @@ create table ACT_HI_JOB_LOG (
     DEPLOYMENT_ID_ varchar(64),
     SEQUENCE_COUNTER_ bigint,
     TENANT_ID_ varchar(64),
+    HOSTNAME_ varchar(255),
     REMOVAL_TIME_ timestamp,
     primary key (ID_)
 );
@@ -1075,7 +1089,7 @@ create index ACT_IDX_HI_PRO_INST_ROOT_PI on ACT_HI_PROCINST(ROOT_PROC_INST_ID_);
 create index ACT_IDX_HI_PRO_INST_RM_TIME on ACT_HI_PROCINST(REMOVAL_TIME_);
 
 create index ACT_IDX_HI_ACTINST_ROOT_PI on ACT_HI_ACTINST(ROOT_PROC_INST_ID_);
-create index ACT_IDX_HI_ACT_INST_START on ACT_HI_ACTINST(START_TIME_);
+create index ACT_IDX_HI_ACT_INST_START_END on ACT_HI_ACTINST(START_TIME_, END_TIME_);
 create index ACT_IDX_HI_ACT_INST_END on ACT_HI_ACTINST(END_TIME_);
 create index ACT_IDX_HI_ACT_INST_PROCINST on ACT_HI_ACTINST(PROC_INST_ID_, ACT_ID_);
 create index ACT_IDX_HI_ACT_INST_COMP on ACT_HI_ACTINST(EXECUTION_ID_, ACT_ID_, END_TIME_, ID_);
@@ -1126,6 +1140,7 @@ create index ACT_IDX_HI_VAR_INST_TENANT_ID on ACT_HI_VARINST(TENANT_ID_);
 create index ACT_IDX_HI_VAR_INST_PROC_DEF_KEY on ACT_HI_VARINST(PROC_DEF_KEY_);
 create index ACT_IDX_HI_VARINST_BYTEAR on ACT_HI_VARINST(BYTEARRAY_ID_);
 create index ACT_IDX_HI_VARINST_RM_TIME on ACT_HI_VARINST(REMOVAL_TIME_);
+create index ACT_IDX_HI_VAR_PI_NAME_TYPE on ACT_HI_VARINST(PROC_INST_ID_, NAME_, VAR_TYPE_);
 
 create index ACT_IDX_HI_INCIDENT_TENANT_ID on ACT_HI_INCIDENT(TENANT_ID_);
 create index ACT_IDX_HI_INCIDENT_PROC_DEF_KEY on ACT_HI_INCIDENT(PROC_DEF_KEY_);

@@ -1,6 +1,7 @@
 package io.holunda.camunda.taskpool.process
 
 import io.holunda.camunda.taskpool.sender.gateway.CommandListGateway
+import mu.KLogging
 import org.camunda.bpm.engine.impl.interceptor.Command
 import org.camunda.bpm.engine.impl.interceptor.CommandContext
 import org.camunda.bpm.engine.impl.jobexecutor.JobHandler
@@ -25,7 +26,7 @@ class RefreshProcessDefinitionsJobHandler(
   private val gateway: CommandListGateway
 ) : JobHandler<RefreshProcessDefinitionsJobConfiguration> {
 
-  companion object {
+  companion object: KLogging() {
     const val TYPE = "RefreshProcessDefinitionsJobHandler"
   }
 
@@ -39,6 +40,7 @@ class RefreshProcessDefinitionsJobHandler(
       returnAll = false
     )
     // send to the task pool core.
+    logger.info { "EVENTING-022: Registering ${commands.size} new process definitions." }
     gateway.sendToGateway(commands)
   }
 
@@ -52,7 +54,11 @@ class RefreshProcessDefinitionsJobHandler(
  * Command to inform about new process definition.
  */
 data class RefreshProcessDefinitionsJobCommand(val processDefinitionKey: String) : Command<String> {
+
+  companion object: KLogging()
+
   override fun execute(commandContext: CommandContext): String {
+    logger.info { "EVENTING-021: New process definition detected. Sending the command for ${this.processDefinitionKey}." }
     val message = MessageEntity()
     message.init(commandContext)
     message.jobHandlerType = RefreshProcessDefinitionsJobHandler.TYPE
