@@ -1,0 +1,7 @@
+---
+version: 2.0.9
+---
+
+== Bugfix
+
+* Fix data pool simple view query for data entries, see #256

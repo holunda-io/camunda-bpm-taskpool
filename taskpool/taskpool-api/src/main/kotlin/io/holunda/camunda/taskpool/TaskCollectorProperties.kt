@@ -2,6 +2,7 @@ package io.holunda.camunda.taskpool
 
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.context.properties.ConfigurationProperties
+import org.springframework.boot.context.properties.ConstructorBinding
 import org.springframework.boot.context.properties.NestedConfigurationProperty
 import java.lang.IllegalStateException
 
@@ -71,6 +72,7 @@ enum class TaskCollectorEnricherType {
 /**
  * Task command sender properties.
  */
+@ConstructorBinding
 data class TaskSenderProperties(
   /**
    * Task sender enabled. Defaults to false.
@@ -105,6 +107,7 @@ enum class TaskSenderType {
 /**
  * Properties controlling the transfer of process definitions deployments.
  */
+@ConstructorBinding
 data class ProcessDefinitionProperties(
 
   /**

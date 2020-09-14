@@ -13,8 +13,6 @@
   <name>examples/${project.artifactId}</name>
 
   <properties>
-    <npm.version>6.4.1</npm.version>
-    <node.version>v10.15.1</node.version>
     <angular-app-name>taskpool-cockpit</angular-app-name>
     <maven.deploy.skip>true</maven.deploy.skip>
   </properties>

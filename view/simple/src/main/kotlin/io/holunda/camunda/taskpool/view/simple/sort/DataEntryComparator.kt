@@ -1,22 +1,23 @@
 package io.holunda.camunda.taskpool.view.simple.sort
 
-import io.holunda.camunda.taskpool.view.TaskWithDataEntries
+import io.holunda.camunda.taskpool.view.DataEntry
 import io.holunda.camunda.taskpool.view.simple.filter.extractValue
 import java.lang.reflect.Field
-import java.util.*
-import javax.xml.datatype.DatatypeConstants.LESSER
+import java.util.Comparator
+import javax.xml.datatype.DatatypeConstants
 
 /**
- * Comparator for Tasks with Data Entries
+ * Comparator of data entries to be used in a sort.
  */
-data class TasksWithDataEntriesComparator(
+data class DataEntryComparator(
   private val fieldSort: Pair<Field, SortDirection>
-) : Comparator<TaskWithDataEntries> {
-  override fun compare(o1: TaskWithDataEntries, o2: TaskWithDataEntries): Int {
+) : Comparator<DataEntry> {
+
+  override fun compare(o1: DataEntry, o2: DataEntry): Int {
     return try {
 
-      val v1 = extractValue(o1.task, this.fieldSort.first)
-      val v2 = extractValue(o2.task, this.fieldSort.first)
+      val v1 = extractValue(o1, this.fieldSort.first)
+      val v2 = extractValue(o2, this.fieldSort.first)
 
       when (findCompareMode(v1, v2)) {
         CompareMode.DEFAULT -> compareActual(fieldSort, v1, v2)
@@ -25,8 +26,7 @@ data class TasksWithDataEntriesComparator(
         CompareMode.EQUAL -> 0 * this.fieldSort.second.modifier
       }
     } catch (e: Exception) {
-      LESSER
+      DatatypeConstants.LESSER
     }
   }
 }
-
