@@ -2,7 +2,7 @@
 version: 2.0.8
 ---
 
-== Chore / Dependencies
+== Chore and Dependencies
 
 * Update to AxonFramework 4.3.5
-* Update Angular to 7 in all example projects 
+* Update Angular to 7 in all example projects

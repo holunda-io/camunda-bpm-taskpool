@@ -1,5 +1,6 @@
 package io.holunda.camunda.taskpool.view.simple.filter
 
+import io.holunda.camunda.taskpool.view.DataEntry
 import io.holunda.camunda.taskpool.view.Task
 import io.holunda.camunda.taskpool.view.TaskWithDataEntries
 import org.springframework.util.ReflectionUtils
@@ -8,12 +9,14 @@ import java.math.BigDecimal
 import java.time.Instant
 import java.util.*
 import java.util.function.Predicate
+import kotlin.reflect.KClass
 import kotlin.reflect.full.memberProperties
 
 const val EQUALS = "="
 const val GREATER = ">"
 const val LESS = "<"
 const val TASK_PREFIX = "task."
+const val DATA_PREFIX = "data."
 
 /**
  * Comparator function.
@@ -53,20 +56,20 @@ internal fun compareOperator(sign: String): CompareOperator =
  * Filters the list of tasks by provided filters.
  */
 internal fun filter(filters: List<String>, values: List<TaskWithDataEntries>): List<TaskWithDataEntries> {
-  val predicates = createPredicates(toCriteria(filters))
-  return filterByPredicates(values, predicates)
+  val predicates = createTaskPredicates(toCriteria(filters))
+  return filterByPredicate(values, predicates)
 }
 
 /**
  * Filters by applying applies predicates on the list of tasks.
  */
-internal fun filterByPredicates(values: List<TaskWithDataEntries>, wrapper: TaskPredicateWrapper): List<TaskWithDataEntries> = values.filter { filterByPredicates(it, wrapper) }
+internal fun filterByPredicate(values: List<TaskWithDataEntries>, wrapper: TaskPredicateWrapper): List<TaskWithDataEntries> = values.filter { filterByPredicate(it, wrapper) }
 
 
 /**
  * Checks if a single task matches the predicates.
  */
-internal fun filterByPredicates(value: TaskWithDataEntries, wrapper: TaskPredicateWrapper): Boolean =
+internal fun filterByPredicate(value: TaskWithDataEntries, wrapper: TaskPredicateWrapper): Boolean =
 // no constraints
   (wrapper.taskPredicate == null && wrapper.dataEntriesPredicate == null)
     // constraint is defined on task and matches on task property
@@ -78,53 +81,95 @@ internal fun filterByPredicates(value: TaskWithDataEntries, wrapper: TaskPredica
     .map { dataEntry -> dataEntry.payload }
     .find { payload -> wrapper.dataEntriesPredicate.test(payload) } != null || wrapper.dataEntriesPredicate.test(value.task.payload)))
 
+
 /**
- * Constructs predicates out of criteria.
+ * Checks if a single data entry matches the predicate.
  */
-internal fun createPredicates(criteria: List<Criterion>): TaskPredicateWrapper {
-  val taskPredicates: List<Predicate<Any>> = criteria
+internal fun filterByPredicate(value: DataEntry, wrapper: DataEntryPredicateWrapper): Boolean =
+// no constraints
+  (wrapper.dataEntryAttributePredicate == null && wrapper.dataPayloadPredicate == null)
+    // constraint is defined on data and matches on data entry property
+    || (wrapper.dataEntryAttributePredicate != null && wrapper.dataEntryAttributePredicate.test(value))
+    // constraint is defined on data payload and matches
+    || (wrapper.dataPayloadPredicate != null && wrapper.dataPayloadPredicate.test(value.payload))
+
+
+/**
+ * Constructs data entry predicates
+ */
+internal fun createDataEntryPredicates(criteria: List<Criterion>): DataEntryPredicateWrapper {
+  val dataEntryPredicates: List<Predicate<Any>> = criteria.toClassAttributePredicates(Criterion.DataEntryCriterion::class)
+  val dataEntryPayloadPredicates: List<Predicate<Any>> = criteria.toPayloadPredicates()
+
+  return DataEntryPredicateWrapper(
+    dataEntryAttributePredicate = if (dataEntryPredicates.isEmpty()) {
+      null
+    } else {
+      dataEntryPredicates.reduce { combined, predicate -> combined.or(predicate) }
+    },
+    dataPayloadPredicate = if (dataEntryPayloadPredicates.isEmpty()) {
+      null
+    } else {
+      dataEntryPayloadPredicates.reduce { combined, predicate -> combined.or(predicate) }
+    }
+  )
+}
+
+/**
+ * Constructs task predicates out of criteria.
+ */
+internal fun createTaskPredicates(criteria: List<Criterion>): TaskPredicateWrapper {
+  val taskPredicates: List<Predicate<Any>> = criteria.toClassAttributePredicates(Criterion.TaskCriterion::class)
+  val dataEntryPayloadPredicates: List<Predicate<Any>> = criteria.toPayloadPredicates()
+  return TaskPredicateWrapper(
+    taskPredicate = if (taskPredicates.isEmpty()) {
+      null
+    } else {
+      taskPredicates.reduce { combined, predicate -> combined.or(predicate) }
+    },
+    dataEntriesPredicate = if (dataEntryPayloadPredicates.isEmpty()) {
+      null
+    } else {
+      dataEntryPayloadPredicates.reduce { combined, predicate -> combined.or(predicate) }
+    })
+}
+
+/**
+ * Create critera for given class fields.
+ */
+fun List<Criterion>.toClassAttributePredicates(clazz: KClass<out Criterion>) =
+  this
     .asSequence()
-    .filter { it is Criterion.TaskCriterion }
+    .filter { clazz.isInstance(it) }
     .map {
       PropertyValuePredicate(
         name = it.name,
         value = it.value,
         // extract field here
-        fieldExtractor = { target, fieldName -> extractField(target, fieldName) },
+        fieldExtractor = { target, fieldName -> extractField(target, fieldName) }, // field name, data entry property
         valueExtractor = { target, field -> extractValue(target, field) },
         compareOperator = compareOperator(it.operator)
       )
     }
     .toList()
 
-  val dataEntriesPredicates: List<Predicate<Any>> = criteria
-    .asSequence()
-    .filter { it is Criterion.DataEntryCriterion }
-    .map {
-      PropertyValuePredicate(
-        name = it.name,
-        value = it.value,
-        // extract key from the map
-        fieldExtractor = { target, fieldName -> extractKey(target, fieldName) },
-        valueExtractor = { target, key -> extractValue(target, key) },
-        compareOperator = compareOperator(it.operator)
-      )
-    }
-    .toList()
-
-  val taskPredicate = if (taskPredicates.isEmpty()) {
-    null
-  } else {
-    taskPredicates.reduce { combined, predicate -> combined.or(predicate) }
+/**
+ * Create critera for a map.
+ */
+fun List<Criterion>.toPayloadPredicates() = this
+  .asSequence()
+  .filter { it is Criterion.PayloadEntryCriterion }
+  .map {
+    PropertyValuePredicate(
+      name = it.name,
+      value = it.value,
+      // extract key from the map
+      fieldExtractor = { target, fieldName -> extractKey(target, fieldName) }, // key, payload is a map
+      valueExtractor = { target, key -> extractValue(target, key) },
+      compareOperator = compareOperator(it.operator)
+    )
   }
-  val dataEntriesPredicate = if (dataEntriesPredicates.isEmpty()) {
-    null
-  } else {
-    dataEntriesPredicates.reduce { combined, predicate -> combined.or(predicate) }
-  }
-
-  return TaskPredicateWrapper(taskPredicate, dataEntriesPredicate)
-}
+  .toList()
 
 /**
  * Forms criteria from string filters.
@@ -150,10 +195,16 @@ internal fun toCriterion(filter: String): Criterion {
   }
   require(segments.size == 3 && !segments[0].isBlank() && !segments[0].isBlank()) { "Failed to create criteria from $filter." }
 
-  return if (isTaskAttribute(segments[0])) {
-    Criterion.TaskCriterion(name = segments[0].substring(TASK_PREFIX.length), value = segments[1], operator = segments[2])
-  } else {
-    Criterion.DataEntryCriterion(name = segments[0], value = segments[1], operator = segments[2])
+  return when {
+      isTaskAttribute(segments[0]) -> {
+        Criterion.TaskCriterion(name = segments[0].substring(TASK_PREFIX.length), value = segments[1], operator = segments[2])
+      }
+      isDataEntryAttribute(segments[0]) -> {
+        Criterion.DataEntryCriterion(name = segments[0].substring(DATA_PREFIX.length), value = segments[1], operator = segments[2])
+      }
+      else -> {
+        Criterion.PayloadEntryCriterion(name = segments[0], value = segments[1], operator = segments[2])
+      }
   }
 }
 
@@ -164,6 +215,14 @@ internal fun isTaskAttribute(propertyName: String): Boolean =
   propertyName.startsWith(TASK_PREFIX)
     && propertyName.length > TASK_PREFIX.length
     && Task::class.memberProperties.map { it.name }.contains(propertyName.substring(TASK_PREFIX.length))
+
+/**
+ * Checks is a property is a data entry attribute.
+ */
+internal fun isDataEntryAttribute(propertyName: String): Boolean =
+  propertyName.startsWith(DATA_PREFIX)
+    && propertyName.length > DATA_PREFIX.length
+    && DataEntry::class.memberProperties.map { it.name }.contains(propertyName.substring(DATA_PREFIX.length))
 
 /**
  * Criterion.
@@ -191,6 +250,7 @@ sealed class Criterion(open val name: String, open val value: String, open val o
    * Empty aka null-objects.
    */
   object EmptyCriterion : Criterion("empty", "no value", "none")
+
   /**
    * Criterion on task.
    */
@@ -200,12 +260,23 @@ sealed class Criterion(open val name: String, open val value: String, open val o
    * Criterion on data entry.
    */
   data class DataEntryCriterion(override val name: String, override val value: String, override val operator: String = EQUALS) : Criterion(name, value, operator)
+
+  /**
+   * Criterion on payload.
+   */
+  data class PayloadEntryCriterion(override val name: String, override val value: String, override val operator: String = EQUALS) : Criterion(name, value, operator)
+
 }
 
 /**
  * Wrapper for a pair of task and data entry predicate.
  */
 data class TaskPredicateWrapper(val taskPredicate: Predicate<Any>?, val dataEntriesPredicate: Predicate<Any>?)
+
+/**
+ * Wrapper for a pair of data entry and data payload predicate.
+ */
+data class DataEntryPredicateWrapper(val dataEntryAttributePredicate: Predicate<Any>?, val dataPayloadPredicate: Predicate<Any>?)
 
 /**
  * <V> type of the property
@@ -258,4 +329,5 @@ fun extractKey(target: Any, name: String): String? = if (target is Map<*, *> && 
  * Extracts value from map or [null]
  */
 fun extractValue(target: Any, key: String): Any? = if (target is Map<*, *>) target[key] else null
+
 

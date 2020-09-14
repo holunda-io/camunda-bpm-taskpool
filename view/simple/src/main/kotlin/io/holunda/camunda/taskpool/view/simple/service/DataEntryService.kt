@@ -11,6 +11,10 @@ import io.holunda.camunda.taskpool.view.query.DataEntryApi
 import io.holunda.camunda.taskpool.view.query.data.DataEntriesForUserQuery
 import io.holunda.camunda.taskpool.view.query.data.DataEntriesQueryResult
 import io.holunda.camunda.taskpool.view.query.data.DataEntryForIdentityQuery
+import io.holunda.camunda.taskpool.view.simple.filter.createDataEntryPredicates
+import io.holunda.camunda.taskpool.view.simple.filter.filterByPredicate
+import io.holunda.camunda.taskpool.view.simple.filter.toCriteria
+import io.holunda.camunda.taskpool.view.simple.sort.dataComparator
 import mu.KLogging
 import org.axonframework.config.ProcessingGroup
 import org.axonframework.eventhandling.EventHandler
@@ -64,10 +68,27 @@ class DataEntryService(
   override fun query(query: DataEntryForIdentityQuery) = DataEntriesQueryResult(dataEntries.values.filter { query.applyFilter(it) })
 
   /**
-   * Retrieves a list of all data entries visible for current user.
+   * Retrieves a list of all data entries visible for current user matching the filter.
    */
   @QueryHandler
-  override fun query(query: DataEntriesForUserQuery) = DataEntriesQueryResult(dataEntries.values.filter { query.applyFilter(it) }).slice(query)
+  override fun query(query: DataEntriesForUserQuery): DataEntriesQueryResult {
+
+    val predicate = createDataEntryPredicates(toCriteria(query.filters))
+    val filtered = dataEntries.values
+      .filter { query.applyFilter(it) }
+      .filter { filterByPredicate(it, predicate) }
+      .toList()
+
+    val comparator = dataComparator(query.sort)
+
+    val sorted = if (comparator != null) {
+      filtered.sortedWith(comparator)
+    } else {
+      filtered
+    }
+
+    return DataEntriesQueryResult(elements = sorted).slice(query = query)
+  }
 
 
   private fun updateDataEntryQuery(identity: String) = queryUpdateEmitter.updateMapFilterQuery(dataEntries, identity, DataEntriesForUserQuery::class.java)
