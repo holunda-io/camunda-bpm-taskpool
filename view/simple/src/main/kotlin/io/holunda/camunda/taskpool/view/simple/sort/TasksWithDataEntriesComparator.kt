@@ -6,6 +6,9 @@ import java.lang.reflect.Field
 import java.util.*
 import javax.xml.datatype.DatatypeConstants.LESSER
 
+/**
+ * Comparator for Tasks with Data Entries
+ */
 data class TasksWithDataEntriesComparator(
   private val fieldSort: Pair<Field, SortDirection>
 ) : Comparator<TaskWithDataEntries> {
