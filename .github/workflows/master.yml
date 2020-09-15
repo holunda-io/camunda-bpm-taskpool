@@ -47,4 +47,4 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
       - name: Build and deploy site docs
-        run: ./mvnw -Pdeploy-docs -f docs -DgithubToken=${{secrets.GH_TOKEN}}
+        run: ./mvnw -Pdeploy-docs -f docs -DgithubToken=${{secrets.GITHUB_TOKEN}}
