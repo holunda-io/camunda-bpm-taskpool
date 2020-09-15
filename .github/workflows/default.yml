@@ -1,4 +1,4 @@
-name: Development braches
+name: Development branches
 
 on:
   push:
