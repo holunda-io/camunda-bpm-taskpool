@@ -1,0 +1,11 @@
+---
+version: 2.0.10
+---
+
+== Feature
+
+* Implement pageable query in mongo data pool projection, see #259
+
+== Bugfix
+
+* Fix documentation publication, see #258
