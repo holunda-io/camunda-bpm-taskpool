@@ -6,7 +6,7 @@
   <parent>
     <groupId>io.holunda.taskpool</groupId>
     <artifactId>camunda-bpm-taskpool-engine-root</artifactId>
-    <version>2.0.10-SNAPSHOT</version>
+    <version>2.0.10</version>
   </parent>
 
   <artifactId>taskpool-property-taskurl-resolver</artifactId>
