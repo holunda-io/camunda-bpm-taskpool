@@ -13,6 +13,7 @@ import org.axonframework.serialization.json.JacksonSerializer
 import org.axonframework.serialization.upcasting.event.EventUpcasterChain
 import org.axonframework.serialization.upcasting.event.InitialEventRepresentation
 import org.axonframework.serialization.upcasting.event.IntermediateEventRepresentation
+import org.axonframework.serialization.xml.XStreamSerializer
 import org.junit.Test
 import java.time.Instant
 import java.util.*
@@ -21,10 +22,8 @@ import kotlin.streams.toList
 
 class UpcasterTest {
 
-  private val serializer = JacksonSerializer.builder().objectMapper(jacksonObjectMapper()).build()
-
   @Test
-  fun shouldUpcast() {
+  fun shouldUpcastJackson() {
 
     val json = """
         {
@@ -42,6 +41,8 @@ class UpcasterTest {
         }
     """.trimIndent()
 
+    val serializer = JacksonSerializer.builder().objectMapper(jacksonObjectMapper()).build()
+
     val entry: EventData<String> = SimpleEventData<String>(
       metaData = SimpleSerializedObject<String>("{}", String::class.java, SimpleSerializedType(MetaData::class.java.name, null)),
       payload = SimpleSerializedObject<String>(json, String::class.java, SimpleSerializedType("io.holunda.camunda.taskpool.api.task.ProcessDefinitionRegisteredEvent",null))
@@ -52,12 +53,49 @@ class UpcasterTest {
         serializer
       )
     )
-    val upcaster = EventUpcasterChain(ProcessDefinitionEventNullTo1Upcaster(serializer.objectMapper))
+    val upcaster = EventUpcasterChain(ProcessDefinitionEventNullTo1Upcaster())
+    val result = upcaster.upcast(eventStream).toList()
+    val event: ProcessDefinitionRegisteredEvent = serializer.deserialize(result[0].data)
+    assertThat(event).isNotNull
+  }
+
+  @Test
+  fun shouldUpcastXStream() {
+
+    val xml = """
+      <io.holunda.camunda.taskpool.api.task.ProcessDefinitionRegisteredEvent>
+          <processDefinitionId>id</processDefinitionId>
+          <processDefinitionKey>key</processDefinitionKey>
+          <processDefinitionVersion>0</processDefinitionVersion>
+          <applicationName>taskpool</applicationName>
+          <processName>My name</processName>
+          <processDescription>description</processDescription>
+          <startableFromTasklist>false</startableFromTasklist>
+          <candidateStarterUsers/>
+          <candidateStarterGroups/>
+      </io.holunda.camunda.taskpool.api.task.ProcessDefinitionRegisteredEvent>
+    """.trimIndent()
+
+    val serializer = XStreamSerializer.defaultSerializer()
+
+    val entry: EventData<String> = SimpleEventData<String>(
+      metaData = SimpleSerializedObject<String>("", String::class.java, SimpleSerializedType(MetaData::class.java.name, null)),
+      payload = SimpleSerializedObject<String>(xml, String::class.java, SimpleSerializedType("io.holunda.camunda.taskpool.api.task.ProcessDefinitionRegisteredEvent",null))
+    )
+    val eventStream: Stream<IntermediateEventRepresentation> = Stream.of(
+      InitialEventRepresentation(
+        entry,
+        serializer
+      )
+    )
+    val upcaster = EventUpcasterChain(ProcessDefinitionEventNullTo1Upcaster())
     val result = upcaster.upcast(eventStream).toList()
     val event: ProcessDefinitionRegisteredEvent = serializer.deserialize(result[0].data)
 
     assertThat(event).isNotNull
+
   }
+
 }
 
 

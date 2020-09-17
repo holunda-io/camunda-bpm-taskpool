@@ -16,10 +16,10 @@ spring:
     enabled: true
     locations: "classpath:db/migrations"
 
-axon.serializer:
-  general: jackson
-  events: jackson
-  messages: jackson
+#axon.serializer:
+#  general: jackson
+#  events: jackson
+#  messages: jackson
 
 camunda:
   bpm:

@@ -9,9 +9,11 @@ import io.holunda.camunda.taskpool.api.task.SourceReference
 import io.holunda.camunda.taskpool.core.EnableTaskPool
 import io.holunda.camunda.taskpool.example.tasklist.EnableTasklist
 import io.holunda.camunda.taskpool.example.users.UsersConfiguration
+import io.holunda.camunda.taskpool.upcast.definition.ProcessDefinitionEventNullTo1Upcaster
 import io.holunda.camunda.taskpool.urlresolver.EnablePropertyBasedFormUrlResolver
 import org.axonframework.serialization.Serializer
 import org.axonframework.serialization.json.JacksonSerializer
+import org.axonframework.serialization.upcasting.event.EventUpcaster
 import org.camunda.bpm.engine.variable.VariableMap
 import org.camunda.bpm.engine.variable.impl.VariableMapImpl
 import org.springframework.boot.SpringApplication
@@ -49,11 +51,15 @@ class ExampleTaskpoolApplicationDistributedWithAxonServer {
       .configureTaskpoolJacksonObjectMapper()
   }
 
-  @Bean
-  fun eventSerializer(objectMapper: ObjectMapper): Serializer = JacksonSerializer.builder().objectMapper(objectMapper).build()
+//  @Bean
+//  fun eventSerializer(objectMapper: ObjectMapper): Serializer = JacksonSerializer.builder().objectMapper(objectMapper).build()
+//
+//  @Bean
+//  fun messageSerializer(objectMapper: ObjectMapper): Serializer = JacksonSerializer.builder().objectMapper(objectMapper).build()
 
   @Bean
-  fun messageSerializer(objectMapper: ObjectMapper): Serializer = JacksonSerializer.builder().objectMapper(objectMapper).build()
+  fun processDefinitionEventUpcaster(): EventUpcaster = ProcessDefinitionEventNullTo1Upcaster()
+
 
   /**
    * Configures Jackson object mapper to handle VariableMap and Source Reference correctly.

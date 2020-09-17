@@ -18,7 +18,7 @@ abstract class AnnotationBasedSingleEventUpcaster : SingleEventUpcaster() {
   override fun canUpcast(representation: IntermediateEventRepresentation): Boolean =
     targetType == representation.type
 
-  private fun extractAnnotatedEventType(): SimpleSerializedType {
+  internal fun extractAnnotatedEventType(): SimpleSerializedType {
     val annotation = this::class.findAnnotation<AnnotatedEventUpcaster>()
       ?: throw IllegalStateException("Sub-classes of ${AnnotationBasedSingleEventUpcaster::class.simpleName} must be annotated with ${AnnotatedEventUpcaster::class.simpleName}")
 
