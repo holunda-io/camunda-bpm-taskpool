@@ -1,5 +1,6 @@
 package io.holunda.camunda.taskpool
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import io.holunda.camunda.taskpool.enricher.*
 import io.holunda.camunda.taskpool.sender.CommandSender
 import io.holunda.camunda.taskpool.sender.TxAwareAccumulatingCommandSender
@@ -32,7 +33,7 @@ class TaskCollectorConfiguration(
    * Create accumulator.
    */
   @Bean
-  fun commandAccumulator(): CommandAccumulator = ProjectingCommandAccumulator()
+  fun commandAccumulator(objectMapper: ObjectMapper): CommandAccumulator = ProjectingCommandAccumulator(objectMapper = objectMapper)
 
 
   /**

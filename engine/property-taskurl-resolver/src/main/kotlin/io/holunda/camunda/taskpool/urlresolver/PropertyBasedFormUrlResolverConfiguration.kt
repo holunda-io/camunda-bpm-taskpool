@@ -1,5 +1,6 @@
 package io.holunda.camunda.taskpool.urlresolver
 
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.holunda.camunda.taskpool.view.FormUrlResolver
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.context.properties.EnableConfigurationProperties
@@ -18,5 +19,5 @@ class PropertyBasedFormUrlResolverConfiguration {
    */
   @Bean
   @ConditionalOnMissingBean(FormUrlResolver::class)
-  fun taskUrlResolver(props: FormUrlResolverProperties) = PropertyBasedFormUrlResolver(props)
+  fun taskUrlResolver(props: FormUrlResolverProperties) = PropertyBasedFormUrlResolver(props, jacksonObjectMapper())
 }

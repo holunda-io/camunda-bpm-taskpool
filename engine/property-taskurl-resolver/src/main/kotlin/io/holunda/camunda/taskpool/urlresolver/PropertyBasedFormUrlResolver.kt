@@ -10,11 +10,11 @@ import io.holunda.camunda.taskpool.view.Task
 import org.apache.commons.text.StringSubstitutor
 
 /**
- * URL resolver backed with properies from yaml.
+ * URL resolver backed with properties from yaml.
  */
 class PropertyBasedFormUrlResolver(
   private val props: FormUrlResolverProperties,
-  private val objectMapper: ObjectMapper = jacksonObjectMapper()
+  private val objectMapper: ObjectMapper
 ) : FormUrlResolver {
 
   companion object {

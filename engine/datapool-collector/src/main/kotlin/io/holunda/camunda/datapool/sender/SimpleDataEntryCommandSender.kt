@@ -1,5 +1,7 @@
 package io.holunda.camunda.datapool.sender
 
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.holunda.camunda.datapool.DataEntrySenderProperties
 import io.holunda.camunda.datapool.projector.DataEntryProjectionSupplier
 import io.holunda.camunda.datapool.projector.DataEntryProjector
@@ -17,7 +19,8 @@ class SimpleDataEntryCommandSender(
   private val properties: DataEntrySenderProperties,
   private val dataEntryProjector: DataEntryProjector,
   private val successHandler: DataEntryCommandSuccessHandler,
-  private val errorHandler: DataEntryCommandErrorHandler
+  private val errorHandler: DataEntryCommandErrorHandler,
+  private val objectMapper: ObjectMapper = jacksonObjectMapper()
 ) : DataEntryCommandSender {
 
   private val logger: Logger = LoggerFactory.getLogger(DataEntryCommandSender::class.java)
@@ -35,7 +38,7 @@ class SimpleDataEntryCommandSender(
       dataEntryProjectionSupplier?.get()?.apply(entryId, payload) ?: DataEntry(
         entryType = entryType,
         entryId = entryId,
-        payload = serialize(payload),
+        payload = serialize(payload = payload, mapper = objectMapper),
         correlations = correlations,
         name = entryId,
         type = entryType,
@@ -62,7 +65,7 @@ class SimpleDataEntryCommandSender(
       DataEntry(
         entryType = entryType,
         entryId = entryId,
-        payload = serialize(payload),
+        payload = serialize(payload = payload, mapper = objectMapper),
         correlations = correlations,
         name = name,
         type = type,
