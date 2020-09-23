@@ -1,0 +1,8 @@
+---
+version: 2.0.11
+---
+
+== Bugfix
+
+* Allow re-configuration of object mapper for data entry payload serialization, see #263
+* Switch to Kotlin 1.4.10 and Dokka 1.4.10, see #262
