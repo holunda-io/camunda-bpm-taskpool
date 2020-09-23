@@ -1,6 +1,7 @@
 package io.holunda.camunda.taskpool
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.holunda.camunda.taskpool.enricher.*
 import io.holunda.camunda.taskpool.sender.CommandSender
 import io.holunda.camunda.taskpool.sender.TxAwareAccumulatingCommandSender
@@ -11,6 +12,7 @@ import org.camunda.bpm.engine.RuntimeService
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.ComponentScan
@@ -28,6 +30,14 @@ class TaskCollectorConfiguration(
 ) {
 
   private val logger: Logger = LoggerFactory.getLogger(TaskCollectorConfiguration::class.java)
+
+
+  /**
+   * Conditional object mapper, if not defined by the user.
+   */
+  @Bean
+  @ConditionalOnMissingBean(ObjectMapper::class)
+  fun taskCollectorObjectMapper(): ObjectMapper = jacksonObjectMapper().findAndRegisterModules()
 
   /**
    * Create accumulator.
