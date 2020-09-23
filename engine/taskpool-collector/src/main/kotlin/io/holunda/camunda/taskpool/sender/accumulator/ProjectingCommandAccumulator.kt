@@ -1,5 +1,7 @@
 package io.holunda.camunda.taskpool.sender.accumulator
 
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.holunda.camunda.taskpool.api.business.WithCorrelations
 import io.holunda.camunda.taskpool.api.task.*
 import io.holunda.camunda.variable.serializer.serialize
@@ -7,9 +9,12 @@ import kotlin.reflect.KClass
 
 
 /**
- * sorts commands by their order id and project attribute to one command
+ * Sorts commands by their order id and project attribute to one command
+ * @param objectMapper optional object mapper used for serialization, defaults to jacksonObjectMapper with Kotlin module.
  */
-class ProjectingCommandAccumulator : CommandAccumulator {
+class ProjectingCommandAccumulator(
+  val objectMapper: ObjectMapper = jacksonObjectMapper()
+) : CommandAccumulator {
 
   private val sorter: CommandAccumulator = SortingCommandAccumulator()
 
@@ -21,7 +26,7 @@ class ProjectingCommandAccumulator : CommandAccumulator {
     } else {
       // otherwise just return the empty or singleton list
       taskCommands
-    }.map(::handlePayloadAndCorrelations)
+    }.map { handlePayloadAndCorrelations(it) }
 
 
   @Suppress("UNCHECKED_CAST")
@@ -80,7 +85,7 @@ class ProjectingCommandAccumulator : CommandAccumulator {
   fun <T : WithTaskId> handlePayloadAndCorrelations(command: T): T =
     // handle payload and correlations
     if (command is CreateTaskCommand)
-      command.copy(payload = serialize(command.payload)) as T
+      command.copy(payload = serialize(payload = command.payload, mapper = objectMapper)) as T
     else
       command
 }
@@ -88,10 +93,10 @@ class ProjectingCommandAccumulator : CommandAccumulator {
 /**
  * If detail is AddCandidateUsersCommand or UpdateAttributeTaskCommand, no error reporting should be done. => False will be returned.
  */
-object EngineCommandProjectionErrorDetector: ProjectionErrorDetector {
+object EngineCommandProjectionErrorDetector : ProjectionErrorDetector {
 
   override fun shouldReportError(original: Any, detail: Any): Boolean {
-    return when(detail) {
+    return when (detail) {
       is AddCandidateUsersCommand,
       is UpdateAttributeTaskCommand -> false
       else -> true

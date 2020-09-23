@@ -1,5 +1,6 @@
 package io.holunda.camunda.taskpool.urlresolver
 
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.holunda.camunda.taskpool.api.task.ProcessReference
 import io.holunda.camunda.taskpool.view.ProcessDefinition
 import io.holunda.camunda.taskpool.view.Task
@@ -34,8 +35,7 @@ class FormUrlResolverTest {
         defaultTaskTemplate = "id/\${id}",
         defaultApplicationTemplate = "holunda://foo:1234/\${applicationName}",
         applications = mapOf("test" to FormUrlResolverProperties.Application(url = null, tasks = mapOf("foo" to "forms/\${formKey}/id/\${id}")))
-      )
-    )
+      ), objectMapper = jacksonObjectMapper())
     assertThat(resolver.resolveUrl(task)).isEqualTo("holunda://foo:1234/test/forms/formKey/id/1")
   }
 
@@ -46,7 +46,7 @@ class FormUrlResolverTest {
       props = FormUrlResolverProperties(
         defaultApplicationTemplate = "holunda://foo:1234/\${applicationName}",
         applications = mapOf("test" to FormUrlResolverProperties.Application(url = "muppetshow://kermithost:0987/my", tasks = mapOf("foo" to "views/\${formKey}/\${id}")))
-      )
+      ), objectMapper = jacksonObjectMapper()
     )
 
     assertThat(resolver.resolveUrl(task)).isEqualTo("muppetshow://kermithost:0987/my/views/formKey/1")
@@ -62,7 +62,7 @@ class FormUrlResolverTest {
           "test" to FormUrlResolverProperties.Application(tasks = mapOf("foo" to "views/\${formKey}/\${id}")),
           "test2" to FormUrlResolverProperties.Application(tasks = mapOf("foo" to "wrong/\${formKey}/\${id}"))
         )
-      )
+      ), objectMapper = jacksonObjectMapper()
     )
     assertThat(resolver.resolveUrl(task)).isEqualTo("holunda://foo:1234/test/views/formKey/1")
   }
@@ -76,7 +76,7 @@ class FormUrlResolverTest {
         applications = mapOf(
           "test" to FormUrlResolverProperties.Application(processes = mapOf("foo" to "start/\${processDefinitionKey}/\${formKey}"))
         )
-      )
+      ), objectMapper = jacksonObjectMapper()
     )
 
     assertThat(resolver.resolveUrl(process)).isEqualTo("holunda://foo:1234/test/start/foo/startMe")

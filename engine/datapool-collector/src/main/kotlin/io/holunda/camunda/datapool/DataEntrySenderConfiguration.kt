@@ -1,5 +1,6 @@
 package io.holunda.camunda.datapool
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import io.holunda.camunda.datapool.projector.DataEntryProjector
 import io.holunda.camunda.datapool.sender.*
 import org.axonframework.commandhandling.gateway.CommandGateway
@@ -43,8 +44,9 @@ class DataEntrySenderConfiguration {
   fun initSimpleSender(gateway: CommandGateway,
                        dataEntryProjector: DataEntryProjector,
                        dataEntryCommandSuccessHandler: DataEntryCommandSuccessHandler,
-                       dataEntryCommandErrorHandler: DataEntryCommandErrorHandler
+                       dataEntryCommandErrorHandler: DataEntryCommandErrorHandler,
+                       objectMapper: ObjectMapper
   ): DataEntryCommandSender {
-    return SimpleDataEntryCommandSender(gateway, properties, dataEntryProjector, dataEntryCommandSuccessHandler, dataEntryCommandErrorHandler)
+    return SimpleDataEntryCommandSender(gateway, properties, dataEntryProjector, dataEntryCommandSuccessHandler, dataEntryCommandErrorHandler, objectMapper)
   }
 }
