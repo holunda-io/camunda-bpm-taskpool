@@ -21,7 +21,8 @@
 
     <pattern.class.itest>**/*ITest.*</pattern.class.itest>
     <pattern.package.itest>**/itest/**/*.*</pattern.package.itest>
-
+    <npm.version>6.14.8</npm.version>
+    <node.version>v10.22.0</node.version>
 
     <!--
     <camunda-ee>false</camunda-ee>
