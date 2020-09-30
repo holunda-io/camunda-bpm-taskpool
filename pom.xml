@@ -39,7 +39,7 @@
     <spring-framework.version>5.2.8.RELEASE</spring-framework.version>
     <project-reactor.version>3.3.8.RELEASE</project-reactor.version>
 
-    <axon.version>4.3.5</axon.version>
+    <axon.version>4.4.3</axon.version>
 
     <kotlin.version>1.4.10</kotlin.version>
     <kotlin.compiler.jvmTarget>${java.version}</kotlin.compiler.jvmTarget>
