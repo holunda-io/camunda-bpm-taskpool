@@ -49,9 +49,10 @@ class SimpleDataEntryCommandSenderTest {
     mapper.dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'")
     mapper.registerModule(JavaTimeModule())
     mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
+    mapper.configure(SerializationFeature.WRITE_DATE_TIMESTAMPS_AS_NANOSECONDS, false)
 
-    val pojo = Pojo5(key = "value", ts = now(), date = now().atOffset(ZoneOffset.UTC))
-
+    val now = now()
+    val pojo = Pojo5(key = "value", ts = now, date = now.atOffset(ZoneOffset.UTC))
     val result = serialize(pojo, mapper)
 
     assertThat(result[Pojo5::key.name]).isEqualTo(pojo.key)

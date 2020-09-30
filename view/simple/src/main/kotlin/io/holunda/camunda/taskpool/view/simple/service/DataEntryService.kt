@@ -8,7 +8,9 @@ import io.holunda.camunda.taskpool.api.business.dataIdentityString
 import io.holunda.camunda.taskpool.view.DataEntry
 import io.holunda.camunda.taskpool.view.addModification
 import io.holunda.camunda.taskpool.view.query.DataEntryApi
+import io.holunda.camunda.taskpool.view.query.FilterQuery
 import io.holunda.camunda.taskpool.view.query.data.DataEntriesForUserQuery
+import io.holunda.camunda.taskpool.view.query.data.DataEntriesQuery
 import io.holunda.camunda.taskpool.view.query.data.DataEntriesQueryResult
 import io.holunda.camunda.taskpool.view.query.data.DataEntryForIdentityQuery
 import io.holunda.camunda.taskpool.view.simple.filter.createDataEntryPredicates
@@ -18,6 +20,7 @@ import io.holunda.camunda.taskpool.view.simple.sort.dataComparator
 import mu.KLogging
 import org.axonframework.config.ProcessingGroup
 import org.axonframework.eventhandling.EventHandler
+import org.axonframework.messaging.MetaData
 import org.axonframework.queryhandling.QueryHandler
 import org.axonframework.queryhandling.QueryUpdateEmitter
 import org.springframework.stereotype.Component
@@ -35,17 +38,19 @@ class DataEntryService(
   companion object : KLogging()
 
   private val dataEntries = ConcurrentHashMap<String, DataEntry>()
+  private val dataEntryMetaData = ConcurrentHashMap<String, MetaData>()
 
   /**
    * Creates new data entry.
    */
   @Suppress("unused")
   @EventHandler
-  fun on(event: DataEntryCreatedEvent) {
+  fun on(event: DataEntryCreatedEvent, metaData: MetaData) {
     logger.debug { "Business data entry created $event" }
     val entryId = dataIdentityString(entryType = event.entryType, entryId = event.entryId)
     dataEntries[entryId] = event.toDataEntry()
-
+    // store latest metadata for data entry
+    dataEntryMetaData[entryId] = metaData
     updateDataEntryQuery(entryId)
   }
 
@@ -54,10 +59,12 @@ class DataEntryService(
    */
   @Suppress("unused")
   @EventHandler
-  fun on(event: DataEntryUpdatedEvent) {
+  fun on(event: DataEntryUpdatedEvent, metaData: MetaData) {
     logger.debug { "Business data entry updated $event" }
     val entryId = dataIdentityString(entryType = event.entryType, entryId = event.entryId)
     dataEntries[entryId] = event.toDataEntry(dataEntries[entryId])
+    // store latest metadata for data entry
+    dataEntryMetaData[entryId] = metaData
     updateDataEntryQuery(entryId)
   }
 
@@ -65,13 +72,35 @@ class DataEntryService(
    * Retrieves a list of all data entries of given entry type (and optional id).
    */
   @QueryHandler
-  override fun query(query: DataEntryForIdentityQuery) = DataEntriesQueryResult(dataEntries.values.filter { query.applyFilter(it) })
+  override fun query(query: DataEntriesQuery, metaData: MetaData?): DataEntriesQueryResult {
+    val predicate = createDataEntryPredicates(toCriteria(query.filters))
+    val filtered = dataEntries.values.filter { filterByPredicate(it, predicate) }
+    val comparator = dataComparator(query.sort)
+    val sorted = if (comparator != null) {
+      filtered.sortedWith(comparator)
+    } else {
+      filtered
+    }
+    // FIXME -> find latest metadata?
+    return DataEntriesQueryResult(elements = sorted).slice(query = query)
+  }
+
+
+  /**
+   * Retrieves a list of all data entries of given entry type (and optional id).
+   */
+  @QueryHandler
+  override fun query(query: DataEntryForIdentityQuery, metaData: MetaData?): DataEntriesQueryResult {
+    // FIXME: find latest metadata
+    // val metaData: MetaData? = dataEntryMetaData[dataIdentityString(entryType = query.entryType, entryId = query.entryId)]
+    return DataEntriesQueryResult(elements = dataEntries.values.filter { query.applyFilter(it) })
+  }
 
   /**
    * Retrieves a list of all data entries visible for current user matching the filter.
    */
   @QueryHandler
-  override fun query(query: DataEntriesForUserQuery): DataEntriesQueryResult {
+  override fun query(query: DataEntriesForUserQuery, metaData: MetaData?): DataEntriesQueryResult {
 
     val predicate = createDataEntryPredicates(toCriteria(query.filters))
     val filtered = dataEntries.values
@@ -87,12 +116,23 @@ class DataEntryService(
       filtered
     }
 
+    // FIXME
     return DataEntriesQueryResult(elements = sorted).slice(query = query)
   }
 
 
   private fun updateDataEntryQuery(identity: String) = queryUpdateEmitter.updateMapFilterQuery(dataEntries, identity, DataEntriesForUserQuery::class.java)
 
+}
+
+/**
+ * Update query if the element is resent in the map.
+ */
+fun <T : Any, Q : FilterQuery<T>> QueryUpdateEmitter.updateMapFilterQuery(map: Map<String, T>, key: String, clazz: Class<Q>) {
+  if (map.contains(key)) {
+    val entry = map.getValue(key)
+    this.emit(clazz, { query -> query.applyFilter(entry) }, entry)
+  }
 }
 
 /**

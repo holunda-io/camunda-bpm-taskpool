@@ -9,6 +9,7 @@ import io.holunda.camunda.taskpool.view.DataEntry
 import io.holunda.camunda.taskpool.view.auth.User
 import io.holunda.camunda.taskpool.view.query.data.DataEntriesForUserQuery
 import org.assertj.core.api.Assertions
+import org.axonframework.messaging.MetaData
 import org.axonframework.queryhandling.QueryUpdateEmitter
 import org.mockito.Mockito
 
@@ -24,12 +25,12 @@ class DataPoolStage<SELF : DataPoolStage<SELF>> : Stage<SELF>() {
   }
 
   fun data_entry_created_event(event: DataEntryCreatedEvent): SELF {
-    testee.on(event)
+    testee.on(event, MetaData.emptyInstance())
     return self()
   }
 
   fun data_entry_updated_event(event: DataEntryUpdatedEvent): SELF {
-    testee.on(event)
+    testee.on(event, MetaData.emptyInstance())
     return self()
   }
 }
@@ -54,7 +55,7 @@ open class DataPoolGivenStage<SELF : DataPoolGivenStage<SELF>> : DataPoolStage<S
   }
 
   private fun createDataInTestee(entries: List<TestDataEntry>) {
-    entries.forEach { testee.on(it.asCreatedEvent()) }
+    entries.forEach { testee.on(it.asCreatedEvent(), MetaData.emptyInstance()) }
   }
 }
 
