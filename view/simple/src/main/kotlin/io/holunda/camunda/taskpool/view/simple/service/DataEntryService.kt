@@ -72,7 +72,7 @@ class DataEntryService(
    * Retrieves a list of all data entries of given entry type (and optional id).
    */
   @QueryHandler
-  override fun query(query: DataEntriesQuery, metaData: MetaData?): DataEntriesQueryResult {
+  override fun query(query: DataEntriesQuery, metaData: MetaData): DataEntriesQueryResult {
     val predicate = createDataEntryPredicates(toCriteria(query.filters))
     val filtered = dataEntries.values.filter { filterByPredicate(it, predicate) }
     val comparator = dataComparator(query.sort)
@@ -90,7 +90,7 @@ class DataEntryService(
    * Retrieves a list of all data entries of given entry type (and optional id).
    */
   @QueryHandler
-  override fun query(query: DataEntryForIdentityQuery, metaData: MetaData?): DataEntriesQueryResult {
+  override fun query(query: DataEntryForIdentityQuery, metaData: MetaData): DataEntriesQueryResult {
     // FIXME: find latest metadata
     // val metaData: MetaData? = dataEntryMetaData[dataIdentityString(entryType = query.entryType, entryId = query.entryId)]
     return DataEntriesQueryResult(elements = dataEntries.values.filter { query.applyFilter(it) })
@@ -100,7 +100,7 @@ class DataEntryService(
    * Retrieves a list of all data entries visible for current user matching the filter.
    */
   @QueryHandler
-  override fun query(query: DataEntriesForUserQuery, metaData: MetaData?): DataEntriesQueryResult {
+  override fun query(query: DataEntriesForUserQuery, metaData: MetaData): DataEntriesQueryResult {
 
     val predicate = createDataEntryPredicates(toCriteria(query.filters))
     val filtered = dataEntries.values

@@ -14,25 +14,25 @@ interface DataEntryApi {
   /**
    * Query data entries for given id.
    * @param query object
-   * @param metaData meta of the query, may be null.
+   * @param metaData meta of the query, may be empty.
    * @return query result.
    */
-  fun query(query: DataEntryForIdentityQuery, metaData: MetaData? = null): DataEntriesQueryResult
+  fun query(query: DataEntryForIdentityQuery, metaData: MetaData = MetaData.emptyInstance()): DataEntriesQueryResult
 
   /**
    * Query data entries for provided user.
-   * @param metaData meta of the query
+   * @param metaData meta of the query, may be empty.
    * @param query object
    * @return query result.
    */
-  fun query(query: DataEntriesForUserQuery, metaData: MetaData? = null): DataEntriesQueryResult
+  fun query(query: DataEntriesForUserQuery, metaData: MetaData = MetaData.emptyInstance()): DataEntriesQueryResult
 
   /**
    * Query data entries.
    * @param query object
-   * @param metaData meta of the query
+   * @param metaData meta of the query, may be empty.
    * @return query result.
    */
-  fun query(query: DataEntriesQuery, metaData: MetaData? = null): DataEntriesQueryResult
+  fun query(query: DataEntriesQuery, metaData: MetaData = MetaData.emptyInstance()): DataEntriesQueryResult
 
 }

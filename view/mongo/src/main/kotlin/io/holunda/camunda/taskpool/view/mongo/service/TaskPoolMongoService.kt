@@ -95,7 +95,7 @@ class TaskPoolMongoService(
    * Retrieves a list of all data entries for current user.
    */
   @QueryHandler
-  override fun query(query: DataEntriesForUserQuery, metaData: MetaData?): CompletableFuture<DataEntriesQueryResult> =
+  override fun query(query: DataEntriesForUserQuery, metaData: MetaData): CompletableFuture<DataEntriesQueryResult> =
     dataEntryRepository
       .findAllForUser(
         username = query.user.username,
@@ -110,7 +110,7 @@ class TaskPoolMongoService(
    * Retrieves a list of all data entries of given entry type (and optional id).
    */
   @QueryHandler
-  override fun query(query: DataEntryForIdentityQuery, metaData: MetaData?): CompletableFuture<DataEntriesQueryResult> =
+  override fun query(query: DataEntryForIdentityQuery, metaData: MetaData): CompletableFuture<DataEntriesQueryResult> =
     (if (query.entryId != null) {
       dataEntryRepository
         .findByIdentity(query.identity())
@@ -128,7 +128,7 @@ class TaskPoolMongoService(
    * Retrieves a list of all data entries.
    */
   @QueryHandler
-  override fun query(query: DataEntriesQuery, metaData: MetaData?): CompletableFuture<DataEntriesQueryResult> =
+  override fun query(query: DataEntriesQuery, metaData: MetaData): CompletableFuture<DataEntriesQueryResult> =
     dataEntryRepository.findAll(sort(query.sort))
       .map { it.dataEntry() }
       .collectList()
