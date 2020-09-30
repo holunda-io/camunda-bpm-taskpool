@@ -33,6 +33,10 @@
       <artifactId>taskpool-example-users</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>io.holunda.taskpool</groupId>
+      <artifactId>camunda-bpm-taskpool-view-simple</artifactId>
+    </dependency>
 
     <!-- SpringBoot -->
     <dependency>

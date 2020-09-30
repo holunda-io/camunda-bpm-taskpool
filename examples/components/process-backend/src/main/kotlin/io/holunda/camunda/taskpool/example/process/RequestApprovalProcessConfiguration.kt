@@ -7,9 +7,14 @@ import io.holunda.camunda.taskpool.example.process.service.BusinessDataEntry
 import io.holunda.camunda.taskpool.example.users.EnableExampleUsers
 import io.holunda.camunda.taskpool.sender.gateway.LoggingTaskCommandErrorHandler
 import io.holunda.camunda.taskpool.sender.gateway.TaskCommandErrorHandler
+import io.holunda.camunda.taskpool.view.simple.EnableTaskPoolSimpleView
+import io.holunda.camunda.taskpool.view.simple.service.SimpleServiceViewProcessingGroup
 import mu.KLogging
 import org.axonframework.commandhandling.CommandResultMessage
+import org.axonframework.config.EventProcessingConfigurer
+import org.axonframework.eventhandling.tokenstore.inmemory.InMemoryTokenStore
 import org.camunda.bpm.spring.boot.starter.annotation.EnableProcessApplication
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Primary
@@ -18,6 +23,7 @@ import org.springframework.context.annotation.Primary
 @EnableProcessApplication
 @EnableTaskpoolEngineSupport
 @EnableExampleUsers
+@EnableTaskPoolSimpleView
 class RequestApprovalProcessConfiguration {
 
   companion object : KLogging()
