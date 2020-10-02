@@ -57,9 +57,9 @@ camunda:
 logging.level:
   io.holunda.camunda:
     taskpool:
-      sender: DEBUG
+      sender: INFO
       core: WARN
       view.simple: DEBUG
     datapool:
-      sender: DEBUG
+      sender: INFO
   org.hibernate.engine.jdbc.env.internal.LobCreatorBuilderImpl: ERROR

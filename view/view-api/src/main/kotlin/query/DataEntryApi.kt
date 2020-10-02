@@ -5,6 +5,7 @@ import io.holunda.camunda.taskpool.view.query.data.DataEntriesQuery
 import io.holunda.camunda.taskpool.view.query.data.DataEntriesQueryResult
 import io.holunda.camunda.taskpool.view.query.data.DataEntryForIdentityQuery
 import org.axonframework.messaging.MetaData
+import org.axonframework.queryhandling.QueryResponseMessage
 
 /**
  * Defines an API interface for Data Entry Queries.

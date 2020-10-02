@@ -11,6 +11,7 @@ import io.holunda.camunda.taskpool.view.simple.filter.createTaskPredicates
 import io.holunda.camunda.taskpool.view.simple.filter.filterByPredicate
 import io.holunda.camunda.taskpool.view.simple.filter.toCriteria
 import io.holunda.camunda.taskpool.view.simple.sort.taskComparator
+import io.holunda.camunda.taskpool.view.simple.updateMapFilterQuery
 import mu.KLogging
 import org.axonframework.config.ProcessingGroup
 import org.axonframework.eventhandling.EventHandler

@@ -1,7 +1,6 @@
 package io.holunda.camunda.datapool.sender
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.holunda.camunda.datapool.DataEntrySenderProperties
 import io.holunda.camunda.datapool.projector.DataEntryProjectionSupplier
 import io.holunda.camunda.datapool.projector.DataEntryProjector
@@ -9,18 +8,23 @@ import io.holunda.camunda.taskpool.api.business.*
 import io.holunda.camunda.taskpool.api.business.AuthorizationChange.Companion.addUser
 import io.holunda.camunda.variable.serializer.serialize
 import org.axonframework.commandhandling.CommandResultMessage
+import org.axonframework.commandhandling.GenericCommandMessage
 import org.axonframework.commandhandling.gateway.CommandGateway
+import org.axonframework.messaging.MetaData
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
 // FIXME: reason about the API and refactor it...
+/**
+ * Simple data entry command sender.
+ */
 class SimpleDataEntryCommandSender(
   private val gateway: CommandGateway,
   private val properties: DataEntrySenderProperties,
   private val dataEntryProjector: DataEntryProjector,
   private val successHandler: DataEntryCommandSuccessHandler,
   private val errorHandler: DataEntryCommandErrorHandler,
-  private val objectMapper: ObjectMapper = jacksonObjectMapper()
+  private val objectMapper: ObjectMapper
 ) : DataEntryCommandSender {
 
   private val logger: Logger = LoggerFactory.getLogger(DataEntryCommandSender::class.java)
@@ -31,7 +35,9 @@ class SimpleDataEntryCommandSender(
     payload: Any,
     state: DataEntryState,
     modification: Modification,
-    correlations: CorrelationMap) {
+    correlations: CorrelationMap,
+    metaData: MetaData
+  ) {
 
     val dataEntryProjectionSupplier: DataEntryProjectionSupplier? = dataEntryProjector.getProjection(entryType)
     val command = CreateOrUpdateDataEntryCommand(
@@ -60,7 +66,9 @@ class SimpleDataEntryCommandSender(
     state: DataEntryState,
     modification: Modification,
     correlations: CorrelationMap,
-    authorizations: List<AuthorizationChange>) {
+    authorizations: List<AuthorizationChange>,
+    metaData: MetaData
+  ) {
     val command = CreateOrUpdateDataEntryCommand(
       DataEntry(
         entryType = entryType,
@@ -75,13 +83,15 @@ class SimpleDataEntryCommandSender(
         state = state,
         modification = modification
       ))
-    this.sendDataEntryCommand(command = command)
-
+    this.sendDataEntryCommand(command = command, metaData = metaData)
   }
 
-  override fun sendDataEntryCommand(command: CreateOrUpdateDataEntryCommand) {
+  override fun sendDataEntryCommand(command: CreateOrUpdateDataEntryCommand, metaData: MetaData) {
     if (properties.enabled) {
-      gateway.send<Any, Any?>(command) { m, r ->
+      val message = GenericCommandMessage
+        .asCommandMessage<CreateOrUpdateDataEntryCommand>(command)
+        .withMetaData(metaData)
+      gateway.send<Any, Any?>(message) { m, r ->
         if (r.isExceptional) {
           errorHandler.apply(m, r)
         } else {

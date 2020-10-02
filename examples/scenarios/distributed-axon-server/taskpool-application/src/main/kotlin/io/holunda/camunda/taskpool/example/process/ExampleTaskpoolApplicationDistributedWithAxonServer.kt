@@ -11,11 +11,7 @@ import io.holunda.camunda.taskpool.example.tasklist.EnableTasklist
 import io.holunda.camunda.taskpool.example.users.UsersConfiguration
 import io.holunda.camunda.taskpool.upcast.definition.ProcessDefinitionEventNullTo1Upcaster
 import io.holunda.camunda.taskpool.urlresolver.EnablePropertyBasedFormUrlResolver
-import org.axonframework.serialization.Serializer
-import org.axonframework.serialization.json.JacksonSerializer
 import org.axonframework.serialization.upcasting.event.EventUpcaster
-import org.camunda.bpm.engine.variable.VariableMap
-import org.camunda.bpm.engine.variable.impl.VariableMapImpl
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration

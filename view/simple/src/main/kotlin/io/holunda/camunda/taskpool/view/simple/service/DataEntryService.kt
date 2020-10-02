@@ -8,7 +8,7 @@ import io.holunda.camunda.taskpool.api.business.dataIdentityString
 import io.holunda.camunda.taskpool.view.DataEntry
 import io.holunda.camunda.taskpool.view.addModification
 import io.holunda.camunda.taskpool.view.query.DataEntryApi
-import io.holunda.camunda.taskpool.view.query.FilterQuery
+import io.holunda.camunda.taskpool.view.query.RevisionValue
 import io.holunda.camunda.taskpool.view.query.data.DataEntriesForUserQuery
 import io.holunda.camunda.taskpool.view.query.data.DataEntriesQuery
 import io.holunda.camunda.taskpool.view.query.data.DataEntriesQueryResult
@@ -17,6 +17,7 @@ import io.holunda.camunda.taskpool.view.simple.filter.createDataEntryPredicates
 import io.holunda.camunda.taskpool.view.simple.filter.filterByPredicate
 import io.holunda.camunda.taskpool.view.simple.filter.toCriteria
 import io.holunda.camunda.taskpool.view.simple.sort.dataComparator
+import io.holunda.camunda.taskpool.view.simple.updateMapFilterQuery
 import mu.KLogging
 import org.axonframework.config.ProcessingGroup
 import org.axonframework.eventhandling.EventHandler
@@ -37,8 +38,8 @@ class DataEntryService(
 
   companion object : KLogging()
 
+  private val revisionSupport = RevisionSupport()
   private val dataEntries = ConcurrentHashMap<String, DataEntry>()
-  private val dataEntryMetaData = ConcurrentHashMap<String, MetaData>()
 
   /**
    * Creates new data entry.
@@ -46,13 +47,17 @@ class DataEntryService(
   @Suppress("unused")
   @EventHandler
   fun on(event: DataEntryCreatedEvent, metaData: MetaData) {
+
     logger.debug { "Business data entry created $event" }
+
     val entryId = dataIdentityString(entryType = event.entryType, entryId = event.entryId)
+
     dataEntries[entryId] = event.toDataEntry()
-    // store latest metadata for data entry
-    dataEntryMetaData[entryId] = metaData
+
+    revisionSupport.updateRevision(entryId, RevisionValue.fromMetaData(metaData))
     updateDataEntryQuery(entryId)
   }
+
 
   /**
    * Updates data entry.
@@ -60,11 +65,14 @@ class DataEntryService(
   @Suppress("unused")
   @EventHandler
   fun on(event: DataEntryUpdatedEvent, metaData: MetaData) {
+
     logger.debug { "Business data entry updated $event" }
+
     val entryId = dataIdentityString(entryType = event.entryType, entryId = event.entryId)
+
     dataEntries[entryId] = event.toDataEntry(dataEntries[entryId])
-    // store latest metadata for data entry
-    dataEntryMetaData[entryId] = metaData
+
+    revisionSupport.updateRevision(entryId, RevisionValue.fromMetaData(metaData))
     updateDataEntryQuery(entryId)
   }
 
@@ -81,8 +89,10 @@ class DataEntryService(
     } else {
       filtered
     }
-    // FIXME -> find latest metadata?
-    return DataEntriesQueryResult(elements = sorted).slice(query = query)
+    return DataEntriesQueryResult(
+      elements = sorted,
+      revisionValue = revisionSupport.getRevisionMax(sorted.map { it.identity })
+    ).slice(query = query)
   }
 
 
@@ -91,9 +101,10 @@ class DataEntryService(
    */
   @QueryHandler
   override fun query(query: DataEntryForIdentityQuery, metaData: MetaData): DataEntriesQueryResult {
-    // FIXME: find latest metadata
-    // val metaData: MetaData? = dataEntryMetaData[dataIdentityString(entryType = query.entryType, entryId = query.entryId)]
-    return DataEntriesQueryResult(elements = dataEntries.values.filter { query.applyFilter(it) })
+    val filtered = dataEntries.values.filter { query.applyFilter(it) }
+    return DataEntriesQueryResult(
+      elements = filtered,
+      revisionValue = revisionSupport.getRevisionMax(filtered.map { it.identity }))
   }
 
   /**
@@ -116,24 +127,28 @@ class DataEntryService(
       filtered
     }
 
-    // FIXME
-    return DataEntriesQueryResult(elements = sorted).slice(query = query)
+    val result = DataEntriesQueryResult(
+      elements = sorted,
+      revisionValue = revisionSupport.getRevisionMax(sorted.map { it.identity })
+    ).slice(query = query)
+
+    return result
+    // FIXME: attempt to solve on framework level -> Axon Server fails to de-serialize
+//    return GenericQueryResponseMessage
+//        .asNullableResponseMessage(
+//          DataEntriesQueryResult::class.java,
+//          DataEntriesQueryResult(elements = sorted).slice(query = query)
+//        ).withMetaData(mapOf("foo" to "bar"))
   }
 
 
-  private fun updateDataEntryQuery(identity: String) = queryUpdateEmitter.updateMapFilterQuery(dataEntries, identity, DataEntriesForUserQuery::class.java)
-
+  private fun updateDataEntryQuery(identity: String) =
+    queryUpdateEmitter
+      .updateMapFilterQuery(dataEntries.toMap(), identity, DataEntriesForUserQuery::class.java) {
+        DataEntriesQueryResult(elements = listOf(it), revisionValue = revisionSupport.getRevisionMax(setOf(it.identity)))
+      }
 }
 
-/**
- * Update query if the element is resent in the map.
- */
-fun <T : Any, Q : FilterQuery<T>> QueryUpdateEmitter.updateMapFilterQuery(map: Map<String, T>, key: String, clazz: Class<Q>) {
-  if (map.contains(key)) {
-    val entry = map.getValue(key)
-    this.emit(clazz, { query -> query.applyFilter(entry) }, entry)
-  }
-}
 
 /**
  * Event to entry for an update, if an optional entry exists.

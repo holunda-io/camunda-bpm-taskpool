@@ -2,6 +2,7 @@ package io.holunda.camunda.datapool.sender
 
 import io.holunda.camunda.taskpool.api.business.*
 import org.axonframework.commandhandling.CommandResultMessage
+import org.axonframework.messaging.MetaData
 import java.util.function.BiFunction
 
 /**
@@ -11,6 +12,7 @@ interface DataEntryCommandSender {
 
   /**
    * Sends command about data entry creation or update.
+   * @param metaData meta data, will default to empty metadata.
    */
   fun sendDataEntryCommand(
     entryType: EntryType,
@@ -18,11 +20,13 @@ interface DataEntryCommandSender {
     payload: Any,
     state: DataEntryState = ProcessingType.UNDEFINED.of(),
     modification: Modification = Modification.now(),
-    correlations: CorrelationMap = newCorrelations()
+    correlations: CorrelationMap = newCorrelations(),
+    metaData: MetaData = MetaData.emptyInstance()
   )
 
   /**
    * Sends command about data entry creation or update.
+   * @param metaData meta data, will default to empty metadata.
    */
   fun sendDataEntryCommand(
     entryType: EntryType,
@@ -34,14 +38,17 @@ interface DataEntryCommandSender {
     state: DataEntryState = ProcessingType.UNDEFINED.of(),
     modification: Modification = Modification.now(),
     correlations: CorrelationMap = newCorrelations(),
-    authorizations: List<AuthorizationChange> = listOf()
+    authorizations: List<AuthorizationChange> = listOf(),
+    metaData: MetaData = MetaData.emptyInstance()
   )
 
 
   /**
    * Sends a data entry command.
+   * @param command command to send.
+   * @param metaData meta data, will default to empty metadata.
    */
-  fun sendDataEntryCommand(command: CreateOrUpdateDataEntryCommand)
+  fun sendDataEntryCommand(command: CreateOrUpdateDataEntryCommand, metaData: MetaData = MetaData.emptyInstance())
 }
 
 /**

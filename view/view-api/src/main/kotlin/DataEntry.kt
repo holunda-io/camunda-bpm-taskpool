@@ -3,7 +3,6 @@ package io.holunda.camunda.taskpool.view
 import io.holunda.camunda.taskpool.api.business.*
 import org.camunda.bpm.engine.variable.VariableMap
 import org.camunda.bpm.engine.variable.Variables
-import java.time.OffsetDateTime
 import java.util.*
 
 /**
@@ -69,17 +68,6 @@ data class DataEntry(
     dataIdentityString(entryType, entryId)
   }
 }
-
-/**
- * Represents a protocol entry.
- */
-data class ProtocolEntry(
-  val time: Date,
-  val state: DataEntryState,
-  val username: String?,
-  val logMessage: String?,
-  val logDetails: String?
-)
 
 fun addModification(modifications: List<ProtocolEntry>, modification: Modification, state: DataEntryState) =
   modifications.plus(ProtocolEntry(

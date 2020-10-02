@@ -13,8 +13,8 @@ interface ReactiveProcessDefinitionApi {
   /**
    * Query for startable process definitions.
    * @param query query object.
-   * @param metaData query metaData, may be null
+   * @param metaData query metaData, may be empty.
    * @return observable list of process definitions.
    */
-  fun query(query: ProcessDefinitionsStartableByUserQuery, metaData: MetaData? = null): CompletableFuture<List<ProcessDefinition>>
+  fun query(query: ProcessDefinitionsStartableByUserQuery, metaData: MetaData = MetaData.emptyInstance()): CompletableFuture<List<ProcessDefinition>>
 }

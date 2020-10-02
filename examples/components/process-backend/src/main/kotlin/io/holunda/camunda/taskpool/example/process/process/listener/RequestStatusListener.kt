@@ -42,7 +42,7 @@ class RequestStatusListener(
           notifyChange(request = request, task = task, state = COMPLETED.of("Approved"), log = "Request successfully approved.")
         }
         REJECT -> {
-          notifyChange(request = request, task = task, state = CANCELLED.of("Rejected"), log = "Request rejected by approver.")
+          notifyChange(request = request, task = task, state = COMPLETED.of("Rejected"), log = "Request rejected by approver.")
         }
         RETURN -> {
           notifyChange(request = request, task = task, state = IN_PROGRESS.of("Returned"), log = "Request returned to originator.")

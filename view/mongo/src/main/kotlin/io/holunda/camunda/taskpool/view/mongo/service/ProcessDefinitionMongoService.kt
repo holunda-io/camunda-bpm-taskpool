@@ -51,7 +51,7 @@ class ProcessDefinitionMongoService(
   }
 
   @QueryHandler
-  override fun query(query: ProcessDefinitionsStartableByUserQuery, metaData: MetaData?): CompletableFuture<List<ProcessDefinition>> {
+  override fun query(query: ProcessDefinitionsStartableByUserQuery, metaData: MetaData): CompletableFuture<List<ProcessDefinition>> {
     // This is the naive Kotlin way, not the Mongo way it should be. Please don't laugh.
     // Get all definitions in all versions and group them by process
     return processDefinitionRepository

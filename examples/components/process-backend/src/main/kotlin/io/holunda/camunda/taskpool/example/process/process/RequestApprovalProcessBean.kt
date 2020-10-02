@@ -20,15 +20,16 @@ class RequestApprovalProcessBean(
   /**
    * Starts the process for a given request id.
    */
-  fun startProcess(requestId: String, originator: String): String {
+  fun startProcess(requestId: String, originator: String, revision: Long = 1L): String {
 
     runtimeService.startProcessInstanceByKey(RequestApprovalProcess.KEY,
       requestId,
       Variables.createVariables()
         .putValue(RequestApprovalProcess.Variables.REQUEST_ID, requestId)
         .putValue(RequestApprovalProcess.Variables.ORIGINATOR, originator)
+        .putValue(RequestApprovalProcess.Variables.PROJECTION_REVISION, revision)
     )
-    requestService.changeRequestState(requestId, ProcessingType.IN_PROGRESS.of("Submitted"), originator, "New approval request submitted.")
+    requestService.changeRequestState(requestId, ProcessingType.IN_PROGRESS.of("Submitted"), originator, revision,"New approval request submitted.")
     return requestId
   }
 
@@ -92,9 +93,13 @@ class RequestApprovalProcessBean(
       .singleResult() ?: throw NoSuchElementException("Task with id $taskId not found.")
 
     val requestId = runtimeService.getVariable(task.executionId, RequestApprovalProcess.Variables.REQUEST_ID) as String
+
+    val newRevision = updateAndStoreNewRevision(task)
+
     requestService.changeRequestState(
       id = requestId,
       username = username,
+      revision = newRevision,
       state = ProcessingType.IN_PROGRESS.of("Decided"),
       log = "Approval decision was $decision.",
       logNotes = comment
@@ -130,7 +135,8 @@ class RequestApprovalProcessBean(
 
     if (action == RESUBMIT) {
       if (requestService.checkRequest(request.id)) {
-        requestService.updateRequest(id = request.id, request = request, username = username)
+        val newRevision = updateAndStoreNewRevision(task)
+        requestService.updateRequest(id = request.id, request = request, username = username, revision = newRevision)
       } else {
         throw IllegalArgumentException("Request with id ${request.id} was not found.")
       }
@@ -162,14 +168,6 @@ class RequestApprovalProcessBean(
   fun countInstances() = getAllInstancesQuery().active().count()
 
   /**
-   * Retrieves all running instances.
-   */
-  private fun getAllInstancesQuery() =
-    runtimeService
-      .createProcessInstanceQuery()
-      .processDefinitionKey(RequestApprovalProcess.KEY)
-
-  /**
    * Loads approve task form data.
    */
   fun loadApproveTaskFormData(id: String): TaskAndRequest {
@@ -199,6 +197,27 @@ class RequestApprovalProcessBean(
       ?: throw NoSuchElementException("Request id could not be found for task $id")) as String
     val request = this.requestService.getRequest(requestId)
     return TaskAndRequest(task = task, approvalRequest = request)
+  }
+
+  /**
+   * Retrieves all running instances.
+   */
+  private fun getAllInstancesQuery() =
+    runtimeService
+      .createProcessInstanceQuery()
+      .processDefinitionKey(RequestApprovalProcess.KEY)
+
+  /**
+   * Increments the revision in process variables and returns it.
+   * @param task executed task
+   * @return new revision number
+   */
+  private fun updateAndStoreNewRevision(task: Task): Long {
+    // update the revision
+    val oldRevision = (runtimeService.getVariable(task.executionId, RequestApprovalProcess.Variables.PROJECTION_REVISION)?:0L) as Long
+    val newRevision = oldRevision + 1
+    runtimeService.setVariable(task.executionId, RequestApprovalProcess.Variables.PROJECTION_REVISION, newRevision)
+    return newRevision
   }
 
 }

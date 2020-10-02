@@ -10,7 +10,5 @@ import io.holunda.camunda.taskpool.view.query.QueryResult
 data class TasksWithDataEntriesQueryResult(
   override val elements: List<TaskWithDataEntries>
 ) : QueryResult<TaskWithDataEntries, TasksWithDataEntriesQueryResult>(elements = elements) {
-  override fun slice(query: PageableSortableQuery): TasksWithDataEntriesQueryResult {
-    return TasksWithDataEntriesQueryResult(super.slice(query).elements)
-  }
+  override fun slice(query: PageableSortableQuery) = this.copy(elements = super.slice(query).elements)
 }

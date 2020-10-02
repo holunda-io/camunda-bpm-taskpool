@@ -15,6 +15,8 @@ object RequestApprovalProcess {
     const val APPROVE_DECISION = "approveDecision"
     const val AMEND_ACTION = "amendAction"
     const val COMMENT = "comment"
+
+    const val PROJECTION_REVISION = "projectionRevision"
   }
 
   object Elements {

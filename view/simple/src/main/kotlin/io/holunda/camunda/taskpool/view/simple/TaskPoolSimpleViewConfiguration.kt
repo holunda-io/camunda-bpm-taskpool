@@ -1,9 +1,12 @@
 package io.holunda.camunda.taskpool.view.simple
 
+import io.holunda.camunda.taskpool.view.query.FilterQuery
+import io.holunda.camunda.taskpool.view.query.QueryResult
 import io.holunda.camunda.taskpool.view.simple.service.SimpleServiceViewProcessingGroup
 import mu.KLogging
 import org.axonframework.config.EventProcessingConfigurer
 import org.axonframework.eventhandling.tokenstore.inmemory.InMemoryTokenStore
+import org.axonframework.queryhandling.QueryUpdateEmitter
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.ApplicationRunner
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
@@ -50,5 +53,26 @@ class TaskPoolSimpleViewConfiguration {
   @PostConstruct
   fun info() {
     logger.info { "VIEW-SIMPLE-001: Initialized simple view" }
+  }
+}
+
+
+/**
+ * Update query if the element is reset in the map.
+ */
+fun <T : Any, Q : FilterQuery<T>> QueryUpdateEmitter.updateMapFilterQuery(map: Map<String, T>, key: String, queryClazz: Class<Q>) {
+  if (map.contains(key)) {
+    val entry = map.getValue(key)
+    this.emit(queryClazz, { query -> query.applyFilter(entry) }, entry)
+  }
+}
+
+/**
+ * Update query if the element is reset in the map.
+ */
+fun <T : Any, Q : FilterQuery<T>, QR : QueryResult<T, QR>> QueryUpdateEmitter.updateMapFilterQuery(map: Map<String, T>, key: String, queryClazz: Class<Q>, queryResultFactory: (T) -> QR) {
+  if (map.contains(key)) {
+    val entry = map.getValue(key)
+    this.emit(queryClazz, { query -> query.applyFilter(entry) }, queryResultFactory.invoke(entry))
   }
 }

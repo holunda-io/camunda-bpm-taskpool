@@ -16,7 +16,7 @@
     <skipFrontend>true</skipFrontend>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <java.version>1.8</java.version>
+    <java.version>11</java.version>
     <version.java>${java.version}</version.java>
 
     <pattern.class.itest>**/*ITest.*</pattern.class.itest>
@@ -48,7 +48,7 @@
     <kotlin-logging.version>2.0.3</kotlin-logging.version>
 
     <springboot-swagger-starter.version>0.3.0</springboot-swagger-starter.version>
-    <org.mapstruct.version>1.3.1.Final</org.mapstruct.version>
+    <org.mapstruct.version>1.4.0.Final</org.mapstruct.version>
 
     <mockito.version>2.23.4</mockito.version>
     <mockito-kotlin.version>2.2.0</mockito-kotlin.version>
@@ -463,8 +463,8 @@
           <version>3.8.1</version>
           <configuration>
             <encoding>UTF-8</encoding>
-            <source>1.8</source>
-            <target>1.8</target>
+            <source>${java.version}</source>
+            <target>${java.version}</target>
           </configuration>
           <executions>
             <!-- Replacing default-compile as it is treated specially by maven -->

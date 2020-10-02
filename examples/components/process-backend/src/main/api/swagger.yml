@@ -50,6 +50,32 @@ paths:
       responses:
         201:
           description: Sucessful operation.
+    get:
+      tags:
+        - Request
+      summary: Retrieves all events known by the projections.
+      produces:
+        - application/json
+      parameters:
+        - in: header
+          name: X-Current-User-ID
+          description: Specifies the id of current user.
+          type: string
+          required: true
+        - in: query
+          name: revision
+          description: Revision of the projection.
+          type: string
+          required: false
+      operationId: getApprovalForUser
+      responses:
+        200:
+          description: Successful operation.
+          schema:
+            title: Approval Request List.
+            type: array
+            items:
+              $ref: '#/definitions/ApprovalRequest'
 
   '/request/{id}':
     get:
