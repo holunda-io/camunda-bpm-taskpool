@@ -206,7 +206,6 @@ class TaskPoolService(
     findTasksForDataEntry(entryId).forEach { taskId ->
       val task = tasks[taskId]!!
       updateTaskForUserQuery(task.id)
-      updateTaskCountByApplicationQuery(task.sourceReference.applicationName)
     }
   }
 
@@ -222,7 +221,6 @@ class TaskPoolService(
     findTasksForDataEntry(entryId).forEach { taskId ->
       val task = tasks[taskId]!!
       updateTaskForUserQuery(task.id)
-      updateTaskCountByApplicationQuery(task.sourceReference.applicationName)
     }
   }
 
