@@ -1,4 +1,4 @@
-package io.holunda.camunda.taskpool.example.process.service.projection
+package io.holunda.camunda.taskpool.gateway
 
 import io.holunda.camunda.taskpool.view.query.RevisionQueryParameters
 import io.holunda.camunda.taskpool.view.query.Revisionable
@@ -11,8 +11,6 @@ import org.axonframework.messaging.MessageDispatchInterceptor
 import org.axonframework.messaging.responsetypes.ResponseType
 import org.axonframework.messaging.responsetypes.ResponseTypes
 import org.axonframework.queryhandling.*
-import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Configuration
 import reactor.util.concurrent.Queues
 import java.time.Duration
 import java.time.temporal.ChronoUnit
@@ -21,21 +19,13 @@ import java.util.concurrent.CompletableFuture
 import java.util.concurrent.CopyOnWriteArrayList
 import java.util.concurrent.TimeoutException
 
-@Configuration
-class SyncGatewayConfiguration {
-  @Bean
-  fun syncGateway(queryBus: QueryBus): QueryGateway {
-    return SyncQueryGateway(queryBus, 20_000)
-  }
-}
-
 /**
- * Synchronizing gateway taking care of a revision of the projection requested by the query and will deliver
+ * The revision  gateway taking care of a revision of the projection requested by the query and will deliver
  * results matching at leas this revision.
  * @param queryBus bus to use.
  * @param defaultTimeout default timeout to use if not specified in the query.
  */
-class SyncQueryGateway(
+class RevisionAwareQueryGateway(
   private val queryBus: QueryBus,
   private val defaultTimeout: Long
 ) : DefaultQueryGateway(builder().queryBus(queryBus)) {
@@ -66,7 +56,11 @@ class SyncQueryGateway(
       )
 
       val queryResult: SubscriptionQueryResult<QueryResponseMessage<R>, SubscriptionQueryUpdateMessage<R>> = queryBus
-        .subscriptionQuery(processInterceptors(subscriptionQueryMessage), SubscriptionQueryBackpressure.defaultBackpressure(), Queues.SMALL_BUFFER_SIZE)
+        .subscriptionQuery(
+          processInterceptors(subscriptionQueryMessage),
+          SubscriptionQueryBackpressure.defaultBackpressure(),
+          Queues.SMALL_BUFFER_SIZE
+        )
 
       queryResult
         .initialResult()
@@ -79,7 +73,7 @@ class SyncQueryGateway(
           .map { obj: SubscriptionQueryUpdateMessage<R> -> obj.payload }
         )
         .map {
-          println("-----------------------> Element $it")
+          logger.debug { "Response received:\n $it" } // FIXME: change severity
           it
         }
         .timeout(
@@ -91,7 +85,7 @@ class SyncQueryGateway(
         .map { it to (it as Revisionable).revisionValue }
         .filter { pair -> pair.second.revision >= revisionQueryParameter.minimalRevision }
         .map {
-          println("Projection ordinal: ${it.second}")
+          logger.info { "Response revision: ${it.second}"} // FIXME: change severity
           it.first
         }
         .subscribe { projectionResult -> result.complete(projectionResult) }
@@ -115,42 +109,3 @@ class SyncQueryGateway(
   }
 
 }
-
-// FIXME -> currently unused. remove...
-//class QueryResponseMessageResponseType<T : Any> : AbstractResponseType<T> {
-//
-//  companion object {
-//    @JvmStatic
-//    inline fun <reified T : Any> queryResponseMessageResponseType() = QueryResponseMessageResponseType(T::class)
-//  }
-//
-//  @JsonCreator
-//  @ConstructorProperties("expectedResponseType")
-//  constructor(@JsonProperty("expectedResponseType") clazz: KClass<T>) : super(clazz.java)
-//
-//  override fun matches(responseType: Type): Boolean {
-//    val unwrapped = ReflectionUtils.unwrapIfType(responseType, QueryResponseMessage::class.java)
-//    return isGenericAssignableFrom(unwrapped) || isAssignableFrom(unwrapped)
-//  }
-//
-//  @SuppressWarnings("unchecked")
-//  @Suppress("UNCHECKED_CAST")
-//  override fun responseMessagePayloadType(): Class {
-//    return expectedResponseType as Class<T>
-//  }
-//
-//  @Suppress("UNCHECKED_CAST")
-//  override fun forSerialization(): ResponseType<T> {
-//    return ResponseTypes.instanceOf(expectedResponseType as Class<T>)
-//  }
-//
-//  override fun convert(response: Any): T {
-//    return super.convert(response)
-//  }
-//
-//  override fun toString(): String {
-//    return "QueryResponseMessageResponseType{$expectedResponseType}"
-//  }
-//
-//
-//}

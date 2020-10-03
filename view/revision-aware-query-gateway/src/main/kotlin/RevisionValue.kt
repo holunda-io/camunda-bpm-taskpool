@@ -1,4 +1,4 @@
-package io.holunda.camunda.taskpool.view.query
+package io.holunda.camunda.taskpool.gateway.io.holunda.camunda.taskpool.gateway
 
 import org.axonframework.messaging.MetaData
 
@@ -22,7 +22,7 @@ data class RevisionValue(
      */
     fun fromMetaData(metaData: MetaData): RevisionValue {
       return  if (metaData.containsKey(REVISION_KEY) && metaData[REVISION_KEY] is Long) {
-        RevisionValue(revision = metaData[RevisionQueryParameters.REVISION_KEY] as Long)
+          RevisionValue(revision = metaData[RevisionQueryParameters.REVISION_KEY] as Long)
       } else {
         NO_REVISION
       }

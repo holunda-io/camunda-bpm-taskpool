@@ -1,4 +1,4 @@
-package io.holunda.camunda.taskpool.view.query
+package io.holunda.camunda.taskpool.gateway.io.holunda.camunda.taskpool.gateway
 
 /**
  * Represents revisionable model entity.
