@@ -16,6 +16,9 @@ class TaskEventHandlers(
 
   companion object : KLogging()
 
+  /**
+   * Engine reaction to claim.
+   */
   @EventHandler
   fun on(event: TaskClaimedEvent) {
     // filter by application name.
@@ -34,6 +37,9 @@ class TaskEventHandlers(
     }
   }
 
+  /**
+   * Engine reaction to unclaim.
+   */
   @EventHandler
   fun on(event: TaskUnclaimedEvent) {
     // filter by application name.
@@ -52,6 +58,9 @@ class TaskEventHandlers(
     }
   }
 
+  /**
+   * Engine reaction to complete.
+   */
   @EventHandler
   fun on(event: TaskToBeCompletedEvent) {
     // filter by application name.
@@ -70,6 +79,9 @@ class TaskEventHandlers(
     }
   }
 
+  /**
+   * Engine reaction to defer.
+   */
   @EventHandler
   fun on(event: TaskDeferredEvent) {
     // filter by application name.
@@ -93,6 +105,9 @@ class TaskEventHandlers(
     }
   }
 
+  /**
+   * Engine reaction to undefer.
+   */
   @EventHandler
   fun on(event: TaskUndeferredEvent) {
     // filter by application name.
