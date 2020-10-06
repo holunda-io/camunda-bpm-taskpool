@@ -10,7 +10,7 @@ import org.junit.Test
 
 class ProcessInstanceAggregateTest {
 
-  val fixture = AggregateTestFixture<ProcessInstanceAggregate>(ProcessInstanceAggregate::class.java)
+  val fixture = AggregateTestFixture(ProcessInstanceAggregate::class.java)
 
 
   @Test
