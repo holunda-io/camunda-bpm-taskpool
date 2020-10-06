@@ -5,6 +5,7 @@ import io.holunda.camunda.taskpool.api.process.instance.EndProcessInstanceComman
 import io.holunda.camunda.taskpool.api.process.instance.StartProcessInstanceCommand
 import io.holunda.camunda.taskpool.collector.sourceReference
 import io.holunda.camunda.taskpool.collector.task.TaskEventCollectorService
+import mu.KLogging
 import org.camunda.bpm.engine.RepositoryService
 import org.camunda.bpm.engine.impl.history.event.HistoricProcessInstanceEventEntity
 import org.springframework.context.event.EventListener
@@ -21,23 +22,26 @@ class ProcessInstanceEventCollectorService(
   private val repositoryService: RepositoryService
 ) {
 
-  companion object {
+  companion object: KLogging() {
     // high order to be later than all other listeners and work on changed entity
     const val ORDER = Integer.MAX_VALUE - 100
   }
 
+
   /**
    * Fires create process instance command.
+   * See [HistoryEventTypes.PROCESS_INSTANCE_START]
    */
-  @Order(TaskEventCollectorService.ORDER)
+  @Order(ORDER)
   @EventListener(condition = "#processInstance.eventType.equals('start')")
   fun create(processInstance: HistoricProcessInstanceEventEntity): StartProcessInstanceCommand = processInstance
     .toStartProcessInstanceCommand(repositoryService, collectorProperties.enricher.applicationName)
 
   /**
    * Fires end process instance command.
+   * See [HistoryEventTypes.PROCESS_INSTANCE_END]
    */
-  @Order(TaskEventCollectorService.ORDER)
+  @Order(ORDER)
   @EventListener(condition = "#processInstance.eventType.equals('end')")
   fun end(processInstance: HistoricProcessInstanceEventEntity): EndProcessInstanceCommand = processInstance
     .toEndProcessInstanceCommand(repositoryService, collectorProperties.enricher.applicationName)

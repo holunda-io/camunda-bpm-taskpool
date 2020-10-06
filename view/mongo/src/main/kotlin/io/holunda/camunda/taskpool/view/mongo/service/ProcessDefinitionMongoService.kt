@@ -4,7 +4,7 @@ import io.holunda.camunda.taskpool.api.process.definition.ProcessDefinitionRegis
 import io.holunda.camunda.taskpool.view.ProcessDefinition
 import io.holunda.camunda.taskpool.view.mongo.repository.ProcessDefinitionDocument
 import io.holunda.camunda.taskpool.view.mongo.repository.ProcessDefinitionRepository
-import io.holunda.camunda.taskpool.view.query.ReactiveProcessDefinitionApi
+import io.holunda.camunda.taskpool.view.query.process.ReactiveProcessDefinitionApi
 import io.holunda.camunda.taskpool.view.query.process.ProcessDefinitionsStartableByUserQuery
 import mu.KLogging
 import org.axonframework.eventhandling.EventHandler

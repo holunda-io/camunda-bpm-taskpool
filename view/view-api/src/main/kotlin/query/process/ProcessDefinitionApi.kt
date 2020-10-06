@@ -1,4 +1,4 @@
-package io.holunda.camunda.taskpool.view.query
+package io.holunda.camunda.taskpool.view.query.process
 
 import io.holunda.camunda.taskpool.view.ProcessDefinition
 import io.holunda.camunda.taskpool.view.query.process.ProcessDefinitionsStartableByUserQuery

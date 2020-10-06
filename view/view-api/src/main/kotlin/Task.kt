@@ -120,6 +120,12 @@ fun task(event: TaskAttributeUpdatedEngineEvent, task: Task) = Task(
   dueDate = event.dueDate
 )
 
+/**
+ * Create a new task from data of existing task and incoming event.
+ * @param event to construct from.
+ * @param task existing task.
+ * @return new task with merged values.
+ */
 fun task(event: TaskCandidateGroupChanged, task: Task) = Task(
   id = event.id,
   sourceReference = event.sourceReference,

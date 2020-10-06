@@ -11,8 +11,8 @@ import io.holunda.camunda.taskpool.view.mongo.ChangeTrackingMode
 import io.holunda.camunda.taskpool.view.mongo.TaskPoolMongoViewProperties
 import io.holunda.camunda.taskpool.view.mongo.repository.*
 import io.holunda.camunda.taskpool.view.query.FilterQuery
-import io.holunda.camunda.taskpool.view.query.ReactiveDataEntryApi
-import io.holunda.camunda.taskpool.view.query.ReactiveTaskApi
+import io.holunda.camunda.taskpool.view.query.data.ReactiveDataEntryApi
+import io.holunda.camunda.taskpool.view.query.task.ReactiveTaskApi
 import io.holunda.camunda.taskpool.view.query.data.*
 import io.holunda.camunda.taskpool.view.query.task.*
 import io.holunda.camunda.taskpool.view.task

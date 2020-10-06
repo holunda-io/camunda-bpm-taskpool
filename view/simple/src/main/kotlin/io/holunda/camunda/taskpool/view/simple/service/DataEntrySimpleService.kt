@@ -9,7 +9,7 @@ import io.holunda.camunda.taskpool.api.business.DataEntryUpdatedEvent
 import io.holunda.camunda.taskpool.api.business.dataIdentityString
 import io.holunda.camunda.taskpool.view.DataEntry
 import io.holunda.camunda.taskpool.view.addModification
-import io.holunda.camunda.taskpool.view.query.DataEntryApi
+import io.holunda.camunda.taskpool.view.query.data.DataEntryApi
 import io.holunda.camunda.taskpool.view.query.data.DataEntriesForUserQuery
 import io.holunda.camunda.taskpool.view.query.data.DataEntriesQuery
 import io.holunda.camunda.taskpool.view.query.data.DataEntriesQueryResult
@@ -33,7 +33,7 @@ import java.util.concurrent.ConcurrentHashMap
  */
 @Component
 @ProcessingGroup(SimpleServiceViewProcessingGroup.PROCESSING_GROUP)
-class DataEntryService(
+class DataEntrySimpleService(
   private val queryUpdateEmitter: QueryUpdateEmitter
 ) : DataEntryApi {
 
@@ -51,8 +51,8 @@ class DataEntryService(
 
     val entryId = dataIdentityString(entryType = event.entryType, entryId = event.entryId)
     dataEntries[entryId] = event.toDataEntry()
-    revisionSupport.updateRevision(entryId, RevisionValue.fromMetaData(metaData))
-    logger.debug { "SIMPLE-VIEW-31: Business data entry created $event, new revision is" }
+    val revision = revisionSupport.updateRevision(entryId, RevisionValue.fromMetaData(metaData))
+    logger.debug { "SIMPLE-VIEW-31: Business data entry created $event." }
     updateDataEntryQuery(entryId)
   }
 

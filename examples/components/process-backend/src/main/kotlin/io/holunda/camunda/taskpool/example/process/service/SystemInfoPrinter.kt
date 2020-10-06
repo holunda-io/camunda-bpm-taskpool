@@ -1,7 +1,12 @@
 package io.holunda.camunda.taskpool.example.process.service
 
+import io.holixon.axon.gateway.query.QueryResponseMessageResponseType
 import io.holunda.camunda.taskpool.example.users.UserStoreService
+import io.holunda.camunda.taskpool.view.ProcessInstanceState
+import io.holunda.camunda.taskpool.view.query.process.ProcessInstanceQueryResult
+import io.holunda.camunda.taskpool.view.query.process.ProcessInstancesByStateQuery
 import mu.KLogging
+import org.axonframework.queryhandling.QueryGateway
 import org.springframework.boot.ApplicationRunner
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -10,7 +15,8 @@ import org.springframework.context.annotation.Configuration
 @Configuration
 class SystemInfoPrinter(
   private val requestService: RequestService,
-  private val userStoreService: UserStoreService
+  private val userStoreService: UserStoreService,
+  private val queryGateway: QueryGateway
 ) {
 
   companion object : KLogging()
@@ -35,6 +41,27 @@ class SystemInfoPrinter(
         logger.info { "User $it" }
       }
     }
+  }
+
+  @Bean
+  fun processInstancePrinter(): ApplicationRunner {
+    return ApplicationRunner {
+      val subscription = queryGateway.subscriptionQuery(
+        ProcessInstancesByStateQuery(setOf(ProcessInstanceState.RUNNING, ProcessInstanceState.FINISHED)),
+        QueryResponseMessageResponseType.queryResponseMessageResponseType<ProcessInstanceQueryResult>(),
+        QueryResponseMessageResponseType.queryResponseMessageResponseType<ProcessInstanceQueryResult>()
+      )
+
+      subscription
+        .initialResult()
+        .concatWith(subscription.updates())
+        .subscribe { result ->
+          result.elements.forEach {
+            logger.info { "Process instance ${it.processInstanceId} (${it.businessKey}) is ${it.state}." }
+          }
+        }
+    }
+
   }
 
 }

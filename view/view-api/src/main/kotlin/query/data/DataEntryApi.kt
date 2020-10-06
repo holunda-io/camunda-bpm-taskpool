@@ -1,4 +1,4 @@
-package io.holunda.camunda.taskpool.view.query
+package io.holunda.camunda.taskpool.view.query.data
 
 import io.holunda.camunda.taskpool.view.query.data.DataEntriesForUserQuery
 import io.holunda.camunda.taskpool.view.query.data.DataEntriesQuery

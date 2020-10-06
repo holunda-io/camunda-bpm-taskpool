@@ -7,7 +7,7 @@ import io.holunda.camunda.taskpool.api.task.*
 import io.holunda.camunda.taskpool.view.DataEntry
 import io.holunda.camunda.taskpool.view.Task
 import io.holunda.camunda.taskpool.view.TaskWithDataEntries
-import io.holunda.camunda.taskpool.view.query.TaskApi
+import io.holunda.camunda.taskpool.view.query.task.TaskApi
 import io.holunda.camunda.taskpool.view.query.task.*
 import io.holunda.camunda.taskpool.view.simple.filter.createTaskPredicates
 import io.holunda.camunda.taskpool.view.simple.filter.filterByPredicate
