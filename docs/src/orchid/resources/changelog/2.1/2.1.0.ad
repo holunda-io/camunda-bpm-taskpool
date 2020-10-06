@@ -18,6 +18,7 @@ version: 2.1.0
 * `SourceReference` is now an interface #242
 * Changed subscription behavior of query handlers for `DataEntryQuery...` queries
 * Changed command side API of Data Entry
+* Dropped support for JDK 8, the JDK version is now 11
 
 == Chore
 
