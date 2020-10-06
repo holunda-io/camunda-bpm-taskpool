@@ -9,14 +9,13 @@ import org.axonframework.modelling.command.AggregateLifecycle
 import org.axonframework.spring.stereotype.Aggregate
 
 @Aggregate
-class ProcessDefinitionAggregate() {
+class ProcessDefinitionAggregate {
 
   @AggregateIdentifier
   lateinit var processDefinitionId: String
 
-
   @CommandHandler
-  constructor(command: RegisterProcessDefinitionCommand) : this() {
+  fun handle(command: RegisterProcessDefinitionCommand) {
     AggregateLifecycle.apply(ProcessDefinitionRegisteredEvent(
       processDefinitionId = command.processDefinitionId,
       processDefinitionKey = command.processDefinitionKey,

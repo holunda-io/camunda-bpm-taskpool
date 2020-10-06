@@ -48,7 +48,7 @@ class ProcessDefinitionSimpleService(
     )
 
     processDefinitions
-      .getOrPut(event.processDefinitionKey) { TreeSet(kotlin.Comparator { val1, val2 -> val1.processDefinitionVersion.compareTo(val2.processDefinitionVersion) }) }
+      .getOrPut(event.processDefinitionKey) { TreeSet { val1, val2 -> val1.processDefinitionVersion.compareTo(val2.processDefinitionVersion) } }
       .add(entry)
 
     queryUpdateEmitter.emit(ProcessDefinitionsStartableByUserQuery::class.java, { query -> query.applyFilter(entry) }, entry)

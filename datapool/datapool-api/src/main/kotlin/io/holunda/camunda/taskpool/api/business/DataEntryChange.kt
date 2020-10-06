@@ -4,10 +4,9 @@ import org.camunda.bpm.engine.variable.VariableMap
 import org.camunda.bpm.engine.variable.Variables
 
 /**
- * Represents a data entry.
+ * Represents a data entry change.
  */
-data class DataEntry(
-
+data class DataEntryChange(
   /**
    * Entry type
    */
@@ -51,7 +50,7 @@ data class DataEntry(
   /**
    * Authorization information.
    */
-  val authorizations: List<AuthorizationChange> = listOf(),
+  val authorizationChanges: List<AuthorizationChange> = listOf(),
   /**
    * Form key.
    */

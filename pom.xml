@@ -33,6 +33,7 @@
     <camunda-springboot.version>${camunda-ce.version}</camunda-springboot.version>
     <camunda-bpm-assert.version>6.0.0</camunda-bpm-assert.version>
     <camunda-bpm-mockito.version>4.13.0</camunda-bpm-mockito.version>
+    <camunda-bpm-data.version>1.0.2</camunda-bpm-data.version>
     <version.camunda.spin>1.9.0</version.camunda.spin>
 
     <springboot.version>2.2.9.RELEASE</springboot.version>
@@ -41,6 +42,7 @@
 
     <axon.version>4.4.3</axon.version>
     <axon-kotlin.version>0.1.0</axon-kotlin.version>
+    <axon-gateway-extension.version>0.0.4</axon-gateway-extension.version>
 
     <kotlin.version>1.4.10</kotlin.version>
     <kotlin.compiler.jvmTarget>${java.version}</kotlin.compiler.jvmTarget>
@@ -166,6 +168,12 @@
         <version>${camunda-springboot.version}</version>
       </dependency>
 
+      <dependency>
+        <groupId>io.holunda.data</groupId>
+        <artifactId>camunda-bpm-data</artifactId>
+        <version>${camunda-bpm-data.version}</version>
+      </dependency>
+
       <!-- MapStruct -->
       <dependency>
         <groupId>org.mapstruct</groupId>
@@ -210,6 +218,17 @@
         <groupId>org.axonframework</groupId>
         <artifactId>axon-modelling</artifactId>
         <version>${axon.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.holixon</groupId>
+        <artifactId>axon-gateway-extension</artifactId>
+        <version>${axon-gateway-extension.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.holixon</groupId>
+        <artifactId>axon-gateway-spring-boot-starter</artifactId>
+        <version>${axon-gateway-extension.version}</version>
       </dependency>
 
       <!-- Swagger -->

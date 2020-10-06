@@ -34,15 +34,20 @@ class ScheduledStarter(
 
   @Scheduled(initialDelay = 2000, fixedRate = Integer.MAX_VALUE.toLong())
   fun saveDummyRequest() {
-    val username = userStoreService.getUsers()[0].username
-    val revision = 1L
-    this.requestInfo = requestService.addRequest(createDummyRequest(), username, revision) to AtomicLong(revision)
+    val username = userStoreService.getUsers().map{
+      val revision = 1L
+      this.requestInfo = requestService.addRequest(createDummyRequest(), it.username, revision) to AtomicLong(revision)
+    }
   }
 
   @Scheduled(initialDelay = 3000, fixedRate = 100)
   fun startProcess() {
     if (processApprovalProcessBean.countInstances() < limit) {
-      val started = processApprovalProcessBean.startProcess(this.requestInfo.first, originator = userStoreService.getUsers()[0].username, this.requestInfo.second.incrementAndGet())
+      val started = processApprovalProcessBean.startProcess(
+        requestId = this.requestInfo.first,
+        originator = userStoreService.getUsers()[0].username,
+        revision = this.requestInfo.second.incrementAndGet()
+      )
       logger.info { "Successfully started process with $started" }
     }
   }

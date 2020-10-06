@@ -35,9 +35,8 @@ class CreateOrUpdateCommandHandler {
         aggregate.invoke {
           it.handle(
             command = UpdateDataEntryCommand(
-              dataEntry = command.dataEntry
-            ),
-            metaData = metaData
+              dataEntryChange = command.dataEntryChange
+            )
           )
         }
       },
@@ -45,9 +44,8 @@ class CreateOrUpdateCommandHandler {
         eventSourcingRepository.newInstance {
           DataEntryAggregate(
             command = CreateDataEntryCommand(
-              dataEntry = command.dataEntry
-            ),
-            metaData = metaData
+              dataEntryChange = command.dataEntryChange
+            )
           )
         }
       }

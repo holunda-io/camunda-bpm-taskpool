@@ -1,13 +1,18 @@
 package io.holunda.camunda.taskpool.example.process.process
 
-import io.holunda.camunda.taskpool.api.business.ProcessingType
+import io.holunda.camunda.bpm.data.CamundaBpmData.builder
 import io.holunda.camunda.taskpool.example.process.process.RequestApprovalProcess.Values.RESUBMIT
+import io.holunda.camunda.taskpool.example.process.process.RequestApprovalProcess.Variables.AMEND_ACTION
+import io.holunda.camunda.taskpool.example.process.process.RequestApprovalProcess.Variables.APPROVE_DECISION
+import io.holunda.camunda.taskpool.example.process.process.RequestApprovalProcess.Variables.COMMENT
+import io.holunda.camunda.taskpool.example.process.process.RequestApprovalProcess.Variables.ORIGINATOR
+import io.holunda.camunda.taskpool.example.process.process.RequestApprovalProcess.Variables.PROJECTION_REVISION
+import io.holunda.camunda.taskpool.example.process.process.RequestApprovalProcess.Variables.REQUEST_ID
 import io.holunda.camunda.taskpool.example.process.service.Request
 import io.holunda.camunda.taskpool.example.process.service.RequestService
 import org.camunda.bpm.engine.RuntimeService
 import org.camunda.bpm.engine.TaskService
 import org.camunda.bpm.engine.task.Task
-import org.camunda.bpm.engine.variable.Variables
 import org.springframework.stereotype.Component
 
 @Component
@@ -18,71 +23,37 @@ class RequestApprovalProcessBean(
 ) {
 
   /**
+   * Creates draft.
+   * @param request request draft to save.
+   * @param originator user saved the request.
+   * @param revision revision of te command.
+   */
+  fun submitDraft(request: Request, originator: String, revision: Long = 1L) {
+    val requestId = requestService.addRequest(request, originator, revision)
+    startProcess(request.id, originator, revision)
+  }
+
+  /**
    * Starts the process for a given request id.
    */
   fun startProcess(requestId: String, originator: String, revision: Long = 1L): String {
 
     runtimeService.startProcessInstanceByKey(RequestApprovalProcess.KEY,
       requestId,
-      Variables.createVariables()
-        .putValue(RequestApprovalProcess.Variables.REQUEST_ID, requestId)
-        .putValue(RequestApprovalProcess.Variables.ORIGINATOR, originator)
-        .putValue(RequestApprovalProcess.Variables.PROJECTION_REVISION, revision)
+      builder()
+        .set(REQUEST_ID, requestId)
+        .set(ORIGINATOR, originator)
+        .set(PROJECTION_REVISION, revision)
+        .build()
     )
-    requestService.changeRequestState(requestId, ProcessingType.IN_PROGRESS.of("Submitted"), originator, revision,"New approval request submitted.")
     return requestId
-  }
-
-  /**
-   * Completes the approval process if located in approve request task.
-   */
-  fun approveProcess(processInstanceId: String, decision: String, username: String, comment: String?) {
-    if (!RequestApprovalProcess.Values.APPROVE_DECISION.contains(decision.toUpperCase())) {
-      throw IllegalArgumentException("Only one of APPROVE, RETURN, REJECT is supported.")
-    }
-
-    val task = taskService
-      .createTaskQuery()
-      .processInstanceBusinessKey(processInstanceId)
-      .taskDefinitionKey(RequestApprovalProcess.Elements.APPROVE_REQUEST)
-      .singleResult()
-    taskService.claim(task.id, username)
-
-    taskService.complete(task.id,
-      Variables
-        .createVariables()
-        .putValue(RequestApprovalProcess.Variables.APPROVE_DECISION, Variables.stringValue(decision.toUpperCase()))
-        .putValue(RequestApprovalProcess.Variables.COMMENT, Variables.stringValue(comment))
-    )
-  }
-
-  /**
-   * Completes the approval process if located in amend request task.
-   */
-  fun amendProcess(id: String, action: String, username: String, comment: String?) {
-
-    if (!RequestApprovalProcess.Values.AMEND_ACTION.contains(action.toUpperCase())) {
-      throw IllegalArgumentException("Only one of CANCEL, RESUBMIT is supported.")
-    }
-
-    val task = taskService.createTaskQuery()
-      .processInstanceBusinessKey(id)
-      .taskDefinitionKey(RequestApprovalProcess.Elements.AMEND_REQUEST)
-      .singleResult()
-
-    taskService.claim(task.id, username)
-
-    taskService.complete(task.id, Variables.createVariables()
-      .putValue(RequestApprovalProcess.Variables.AMEND_ACTION, Variables.stringValue(action.toUpperCase()))
-      .putValue(RequestApprovalProcess.Variables.COMMENT, Variables.stringValue(comment))
-    )
   }
 
   /**
    * Completes the approve request task with given id, decision and optional comment.
    */
   fun approveTask(taskId: String, decision: String, username: String, comment: String?) {
-    if (!RequestApprovalProcess.Values.APPROVE_DECISION.contains(decision.toUpperCase())) {
+    if (!RequestApprovalProcess.Values.APPROVE_DECISION_VALUES.contains(decision.toUpperCase())) {
       throw IllegalArgumentException("Only one of APPROVE, RETURN, REJECT is supported.")
     }
 
@@ -92,26 +63,13 @@ class RequestApprovalProcessBean(
       .taskDefinitionKey(RequestApprovalProcess.Elements.APPROVE_REQUEST)
       .singleResult() ?: throw NoSuchElementException("Task with id $taskId not found.")
 
-    val requestId = runtimeService.getVariable(task.executionId, RequestApprovalProcess.Variables.REQUEST_ID) as String
-
-    val newRevision = updateAndStoreNewRevision(task)
-
-    requestService.changeRequestState(
-      id = requestId,
-      username = username,
-      revision = newRevision,
-      state = ProcessingType.IN_PROGRESS.of("Decided"),
-      log = "Approval decision was $decision.",
-      logNotes = comment
-    )
-
     taskService.claim(task.id, username)
 
     taskService.complete(task.id,
-      Variables
-        .createVariables()
-        .putValue(RequestApprovalProcess.Variables.APPROVE_DECISION, Variables.stringValue(decision.toUpperCase()))
-        .putValue(RequestApprovalProcess.Variables.COMMENT, Variables.stringValue(comment))
+      builder()
+        .set(APPROVE_DECISION, decision.toUpperCase())
+        .set(COMMENT, comment)
+        .build()
     )
   }
 
@@ -119,7 +77,7 @@ class RequestApprovalProcessBean(
    * Completes the amend request task with given id, action and optional comment.
    */
   fun amendTask(taskId: String, action: String, request: Request, username: String, comment: String?) {
-    if (!RequestApprovalProcess.Values.AMEND_ACTION.contains(action.toUpperCase())) {
+    if (!RequestApprovalProcess.Values.AMEND_ACTION_VALUES.contains(action.toUpperCase())) {
       throw IllegalArgumentException("Only one of CANCEL, RESUBMIT is supported.")
     }
 
@@ -129,25 +87,28 @@ class RequestApprovalProcessBean(
       .taskDefinitionKey(RequestApprovalProcess.Elements.AMEND_REQUEST)
       .singleResult() ?: throw NoSuchElementException("Task with id $taskId not found.")
 
+    val revision = PROJECTION_REVISION.from(taskService, task.id).get() + 1
+
     if (task.assignee != null) {
+      // un-claim the task
+      if (task.assignee != username) {
+        task.assignee = null
+        taskService.saveTask(task)
+      }
       taskService.claim(task.id, username)
     }
 
-    if (action == RESUBMIT) {
-      if (requestService.checkRequest(request.id)) {
-        val newRevision = updateAndStoreNewRevision(task)
-        requestService.updateRequest(id = request.id, request = request, username = username, revision = newRevision)
-      } else {
-        throw IllegalArgumentException("Request with id ${request.id} was not found.")
-      }
-    }
+    val variables = builder()
+      .set(AMEND_ACTION, action.toUpperCase())
+      .set(COMMENT, comment)
 
-    taskService.complete(task.id,
-      Variables
-        .createVariables()
-        .putValue(RequestApprovalProcess.Variables.AMEND_ACTION, Variables.stringValue(action.toUpperCase()))
-        .putValue(RequestApprovalProcess.Variables.COMMENT, Variables.stringValue(comment))
-    )
+
+    if (action == RESUBMIT) {
+      val updatedRevision = requestService.updateRequest(id = request.id, request = request, username = username, revision = revision)
+      variables
+        .set(PROJECTION_REVISION, updatedRevision)
+    }
+    taskService.complete(task.id, variables.build())
   }
 
   /**
@@ -177,9 +138,10 @@ class RequestApprovalProcessBean(
       .initializeFormKeys()
       .singleResult() ?: throw NoSuchElementException("Task with id $id not found.")
 
-    val requestId = (this.runtimeService.getVariable(task.executionId, RequestApprovalProcess.Variables.REQUEST_ID)
-      ?: throw NoSuchElementException("Request id could not be found for task $id")) as String
-    val request = this.requestService.getRequest(requestId)
+    val requestId = REQUEST_ID.from(runtimeService, task.executionId).optional.orElseThrow { NoSuchElementException("Request id could not be found for task $id") }
+    val revision = PROJECTION_REVISION.from(runtimeService, task.executionId).optional.orElseThrow { NoSuchElementException("Project revision could not be found for task $id") }
+
+    val request = this.requestService.getRequest(requestId, revision)
     return TaskAndRequest(task = task, approvalRequest = request)
   }
 
@@ -193,9 +155,10 @@ class RequestApprovalProcessBean(
       .initializeFormKeys()
       .singleResult() ?: throw NoSuchElementException("Task with id $id not found.")
 
-    val requestId = (this.runtimeService.getVariable(task.executionId, RequestApprovalProcess.Variables.REQUEST_ID)
-      ?: throw NoSuchElementException("Request id could not be found for task $id")) as String
-    val request = this.requestService.getRequest(requestId)
+    val requestId = REQUEST_ID.from(runtimeService, task.executionId).optional.orElseThrow { NoSuchElementException("Request id could not be found for task $id") }
+    val revision = PROJECTION_REVISION.from(runtimeService, task.executionId).optional.orElseThrow { NoSuchElementException("Project revision could not be found for task $id") }
+
+    val request = this.requestService.getRequest(requestId, revision)
     return TaskAndRequest(task = task, approvalRequest = request)
   }
 
@@ -206,19 +169,6 @@ class RequestApprovalProcessBean(
     runtimeService
       .createProcessInstanceQuery()
       .processDefinitionKey(RequestApprovalProcess.KEY)
-
-  /**
-   * Increments the revision in process variables and returns it.
-   * @param task executed task
-   * @return new revision number
-   */
-  private fun updateAndStoreNewRevision(task: Task): Long {
-    // update the revision
-    val oldRevision = (runtimeService.getVariable(task.executionId, RequestApprovalProcess.Variables.PROJECTION_REVISION)?:0L) as Long
-    val newRevision = oldRevision + 1
-    runtimeService.setVariable(task.executionId, RequestApprovalProcess.Variables.PROJECTION_REVISION, newRevision)
-    return newRevision
-  }
 
 }
 

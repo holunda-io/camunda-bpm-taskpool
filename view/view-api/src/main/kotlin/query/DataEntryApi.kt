@@ -18,7 +18,7 @@ interface DataEntryApi {
    * @param metaData meta of the query, may be empty.
    * @return query result.
    */
-  fun query(query: DataEntryForIdentityQuery, metaData: MetaData = MetaData.emptyInstance()): DataEntriesQueryResult
+  fun query(query: DataEntryForIdentityQuery, metaData: MetaData = MetaData.emptyInstance()): QueryResponseMessage<DataEntriesQueryResult>
 
   /**
    * Query data entries for provided user.
@@ -26,7 +26,7 @@ interface DataEntryApi {
    * @param query object
    * @return query result.
    */
-  fun query(query: DataEntriesForUserQuery, metaData: MetaData = MetaData.emptyInstance()): DataEntriesQueryResult
+  fun query(query: DataEntriesForUserQuery, metaData: MetaData = MetaData.emptyInstance()): QueryResponseMessage<DataEntriesQueryResult>
 
   /**
    * Query data entries.
@@ -34,6 +34,6 @@ interface DataEntryApi {
    * @param metaData meta of the query, may be empty.
    * @return query result.
    */
-  fun query(query: DataEntriesQuery, metaData: MetaData = MetaData.emptyInstance()): DataEntriesQueryResult
+  fun query(query: DataEntriesQuery, metaData: MetaData = MetaData.emptyInstance()): QueryResponseMessage<DataEntriesQueryResult>
 
 }

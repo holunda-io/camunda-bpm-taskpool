@@ -15,6 +15,9 @@ spring:
   flyway:
     enabled: true
     locations: "classpath:db/migrations"
+  groovy:
+    template:
+      check-template-location: false
 
 #axon.serializer:
 #  general: jackson
@@ -34,6 +37,11 @@ camunda:
     webapp:
       index-redirect-enabled: false
   taskpool:
+
+    gateway:
+      type: revision-aware
+      revision-aware:
+        default-query-timeout: 3
     collector:
       tasklist-url: http://localhost:8081/taskpool/
       process:
@@ -57,9 +65,10 @@ camunda:
 logging.level:
   io.holunda.camunda:
     taskpool:
+      gateway: DEBUG
       sender: INFO
       core: WARN
-      view.simple: DEBUG
+      view.simple: INFO
     datapool:
       sender: INFO
   org.hibernate.engine.jdbc.env.internal.LobCreatorBuilderImpl: ERROR

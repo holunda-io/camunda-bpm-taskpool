@@ -1,5 +1,6 @@
 package io.holunda.camunda.taskpool.example.tasklist.rest.impl
 
+import io.holixon.axon.gateway.query.QueryResponseMessageResponseType
 import io.holunda.camunda.taskpool.example.tasklist.auth.CurrentUserService
 import io.holunda.camunda.taskpool.example.tasklist.rest.Rest
 import io.holunda.camunda.taskpool.example.tasklist.rest.api.BolistApi
@@ -9,16 +10,13 @@ import io.holunda.camunda.taskpool.view.auth.UserService
 import io.holunda.camunda.taskpool.view.query.data.DataEntriesForUserQuery
 import io.holunda.camunda.taskpool.view.query.data.DataEntriesQueryResult
 import io.swagger.annotations.Api
-import org.axonframework.messaging.responsetypes.ResponseTypes
 import org.axonframework.queryhandling.QueryGateway
-import org.axonframework.queryhandling.QueryResponseMessage
 import org.springframework.http.HttpHeaders
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
-import rest.QueryResponseMessageResponseType
 import java.util.*
 
 @Api(tags = ["Workpiece"])
@@ -53,9 +51,7 @@ class DataEntryController(
           sort = sort.orElseGet { "" },
           filters = filters
         ),
-        ResponseTypes.instanceOf(DataEntriesQueryResult::class.java)
-        // FIXME: attempt to solve it on framework level -> currently Axon Server fails to deserializes the response
-        // QueryResponseMessageResponseType(DataEntriesQueryResult::class.java)
+        QueryResponseMessageResponseType.queryResponseMessageResponseType<DataEntriesQueryResult>()
       )
       .join()
 

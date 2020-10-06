@@ -35,7 +35,6 @@
         <artifactId>camunda-bpm-datapool-event</artifactId>
         <version>${project.version}</version>
       </dependency>
-
       <dependency>
         <groupId>io.holunda.taskpool</groupId>
         <artifactId>camunda-bpm-datapool-api</artifactId>

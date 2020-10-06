@@ -25,16 +25,6 @@ class TaskPoolSimpleViewConfiguration {
   companion object : KLogging()
 
   /**
-   * Initializes processing group and starts replay.
-   */
-  @Bean
-  @ConditionalOnProperty(prefix = "camunda.taskpool.view.simple", name = ["replay"], matchIfMissing = true)
-  fun initializeSimpleView(
-    simpleServiceViewProcessingGroup: SimpleServiceViewProcessingGroup) = ApplicationRunner {
-    simpleServiceViewProcessingGroup.restore()
-  }
-
-  /**
    * Configures the in-memory (simple) view to use an in-memory token store, to make sure that the
    * token and the projection are stored in the same place.
    *
@@ -59,6 +49,11 @@ class TaskPoolSimpleViewConfiguration {
 
 /**
  * Update query if the element is reset in the map.
+ * @param map containing elements
+ * @param key a key of the updated element in the map
+ * @param queryClazz class of the query to apply to.
+ * @param [T] type of entry.
+ * @param [Q] type of filter query, capable to filter relevant elements.
  */
 fun <T : Any, Q : FilterQuery<T>> QueryUpdateEmitter.updateMapFilterQuery(map: Map<String, T>, key: String, queryClazz: Class<Q>) {
   if (map.contains(key)) {
@@ -69,6 +64,13 @@ fun <T : Any, Q : FilterQuery<T>> QueryUpdateEmitter.updateMapFilterQuery(map: M
 
 /**
  * Update query if the element is reset in the map.
+ * @param map containing elements
+ * @param key a key of the updated element in the map
+ * @param queryClazz class of the query to apply to.
+ * @param queryResultFactory factory to produce the query result of of entry from the map.
+ * @param [T] type of entry.
+ * @param [Q] type of filter query, capable to filter relevant elements.
+ * @param [QR] type of query result.
  */
 fun <T : Any, Q : FilterQuery<T>, QR : QueryResult<T, QR>> QueryUpdateEmitter.updateMapFilterQuery(map: Map<String, T>, key: String, queryClazz: Class<Q>, queryResultFactory: (T) -> QR) {
   if (map.contains(key)) {

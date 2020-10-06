@@ -71,7 +71,7 @@ class DataPoolWhenStage<SELF : DataPoolWhenStage<SELF>> : DataPoolStage<SELF>() 
   private fun query(sort: String, filters: List<String>) = DataEntriesForUserQuery(User("kermit", setOf()), 1, Integer.MAX_VALUE, sort, filters)
 
   fun data_queried(filters: List<String>): SELF {
-    queriedEntries.addAll(testee.query(query("+name", filters)).elements)
+    queriedEntries.addAll(testee.query(query("+name", filters)).payload.elements)
     return self()
   }
 }

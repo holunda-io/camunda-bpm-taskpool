@@ -166,7 +166,7 @@ class TaskPoolService(
   }
 
   /**
-   * Changes task candidatges groups.
+   * Changes task candidate groups.
    */
   @Suppress("unused")
   @EventHandler

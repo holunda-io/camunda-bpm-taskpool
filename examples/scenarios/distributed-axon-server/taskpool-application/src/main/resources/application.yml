@@ -27,5 +27,6 @@ camunda:
 
 logging.level.io.holunda.camunda.taskpool:
   core: WARN
-  view.simple: INFO
+  view.simple.service.DataEntryService : DEBUG
+  view.simple.service.TaskPoolService : INFO
   example.tasklist: WARN

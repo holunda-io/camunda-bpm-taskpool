@@ -8,7 +8,7 @@
     <groupId>io.holunda.taskpool</groupId>
     <artifactId>taskpool-examples-root</artifactId>
     <version>2.0.12-SNAPSHOT</version>
-    <relativePath>../../</relativePath>
+    <relativePath>../../pom.xml</relativePath>
   </parent>
 
   <artifactId>taskpool-example-users</artifactId>

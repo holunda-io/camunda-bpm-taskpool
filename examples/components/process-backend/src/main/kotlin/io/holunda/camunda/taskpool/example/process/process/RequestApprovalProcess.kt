@@ -1,27 +1,34 @@
 package io.holunda.camunda.taskpool.example.process.process
 
+import io.holunda.camunda.bpm.data.CamundaBpmDataKotlin.customVariable
+import io.holunda.camunda.bpm.data.CamundaBpmData.longVariable
+import io.holunda.camunda.bpm.data.CamundaBpmData.stringVariable
+import java.math.BigDecimal
+
 object RequestApprovalProcess {
   const val KEY = "process_approve_request"
   const val RESOURCE = "process_approve_request.bpmn"
 
   object Variables {
-    const val REQUEST_ID = "request"
-    const val ORIGINATOR = "originator"
-    const val APPLICANT = "applicant"
-    const val SUBJECT = "subject"
-    const val AMOUNT = "amount"
-    const val CURRENCY = "currency"
+    val REQUEST_ID = stringVariable("request")
+    val ORIGINATOR = stringVariable("originator")
+    val APPLICANT = stringVariable("applicant")
+    val SUBJECT = stringVariable("subject")
+    val AMOUNT = customVariable<BigDecimal>("amount")
+    val CURRENCY = stringVariable("currency")
 
-    const val APPROVE_DECISION = "approveDecision"
-    const val AMEND_ACTION = "amendAction"
-    const val COMMENT = "comment"
+    val APPROVE_DECISION = stringVariable("approveDecision")
+    val AMEND_ACTION = stringVariable("amendAction")
+    val COMMENT = stringVariable("comment")
 
-    const val PROJECTION_REVISION = "projectionRevision"
+    val PROJECTION_REVISION = longVariable("projectionRevision")
   }
 
   object Elements {
     const val APPROVE_REQUEST = "user_approve_request"
     const val AMEND_REQUEST = "user_amend_request"
+
+    const val AUDIT_SUBMITTED = "audit_submitted"
   }
 
   object Values {
@@ -32,8 +39,8 @@ object RequestApprovalProcess {
     const val CANCEL = "CANCEL"
     const val RESUBMIT = "RESUBMIT"
 
-    val APPROVE_DECISION = arrayOf(APPROVE, REJECT, RETURN)
-    val AMEND_ACTION = arrayOf(CANCEL, RESUBMIT)
+    val APPROVE_DECISION_VALUES = arrayOf(APPROVE, REJECT, RETURN)
+    val AMEND_ACTION_VALUES = arrayOf(CANCEL, RESUBMIT)
   }
 }
 

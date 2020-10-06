@@ -74,6 +74,11 @@
       <artifactId>axon-messaging</artifactId>
     </dependency>
 
+    <dependency>
+      <groupId>io.holixon</groupId>
+      <artifactId>axon-gateway-spring-boot-starter</artifactId>
+    </dependency>
+
     <!-- MapStruct -->
     <dependency>
       <groupId>org.mapstruct</groupId>

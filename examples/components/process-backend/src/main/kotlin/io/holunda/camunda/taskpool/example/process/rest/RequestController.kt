@@ -1,6 +1,8 @@
 package io.holunda.camunda.taskpool.example.process.rest
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import io.holixon.axon.gateway.query.QueryResponseMessageResponseType
+import io.holixon.axon.gateway.query.RevisionQueryParameters
 import io.holunda.camunda.taskpool.example.process.process.RequestApprovalProcessBean
 import io.holunda.camunda.taskpool.example.process.rest.api.RequestApi
 import io.holunda.camunda.taskpool.example.process.rest.model.ApprovalRequestDraftDto
@@ -9,13 +11,11 @@ import io.holunda.camunda.taskpool.example.process.service.Request
 import io.holunda.camunda.taskpool.example.process.service.RequestService
 import io.holunda.camunda.taskpool.view.auth.User
 import io.holunda.camunda.taskpool.view.auth.UserService
-import io.holunda.camunda.taskpool.view.query.RevisionQueryParameters
 import io.holunda.camunda.taskpool.view.query.data.DataEntriesForUserQuery
 import io.holunda.camunda.taskpool.view.query.data.DataEntriesQueryResult
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiParam
 import org.axonframework.messaging.GenericMessage
-import org.axonframework.messaging.responsetypes.ResponseTypes
 import org.axonframework.queryhandling.QueryGateway
 import org.springframework.http.ResponseEntity
 import org.springframework.http.ResponseEntity.noContent
@@ -42,8 +42,7 @@ class RequestController(
 
     val revision = 1L
     val username = userService.getUser(xCurrentUserID).username
-    val requestId = requestService.addRequest(draft(request), username, revision)
-    requestApprovalProcessBean.startProcess(requestId, username, revision)
+    requestApprovalProcessBean.submitDraft(draft(request), username, revision)
 
     return noContent().build()
   }
@@ -55,7 +54,7 @@ class RequestController(
   ): ResponseEntity<ApprovalRequestDto> {
 
     // val username = userService.getUser(xCurrentUserID).username
-    val request = requestService.getRequest(id)
+    val request = requestService.getRequest(id, 1)
 
     return ok(approvalRequestDto(request))
   }
@@ -76,8 +75,8 @@ class RequestController(
           sort = "",
           filters = listOf()
         )
-      ).andMetaData(RevisionQueryParameters(revisionNumber).toMetaData()),
-      ResponseTypes.instanceOf(DataEntriesQueryResult::class.java)
+      ).andMetaData(RevisionQueryParameters(revisionNumber, 10).toMetaData()),
+      QueryResponseMessageResponseType.queryResponseMessageResponseType<DataEntriesQueryResult>()
     ).join()
 
     return ok(result.elements

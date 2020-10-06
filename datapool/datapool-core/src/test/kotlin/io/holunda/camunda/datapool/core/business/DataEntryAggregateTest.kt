@@ -14,7 +14,7 @@ class DataEntryAggregateTest {
   fun `should create aggregate`() {
 
     val command = CreateDataEntryCommand(
-      dataEntry = DataEntry(
+      dataEntryChange = DataEntryChange(
         entryType = "io.holunda.My",
         entryId = UUID.randomUUID().toString(),
         applicationName = "myApp",
@@ -29,18 +29,18 @@ class DataEntryAggregateTest {
       .givenNoPriorActivity()
       .`when`(command)
       .expectEvents(DataEntryCreatedEvent(
-        entryId = command.dataEntry.entryId,
-        entryType = command.dataEntry.entryType,
-        name = command.dataEntry.name,
-        type = command.dataEntry.type,
-        applicationName = command.dataEntry.applicationName,
-        state = command.dataEntry.state,
-        description = command.dataEntry.description,
-        payload = command.dataEntry.payload,
-        correlations = command.dataEntry.correlations,
-        createModification = command.dataEntry.modification,
-        authorizations = command.dataEntry.authorizations,
-        formKey = command.dataEntry.formKey
+        entryId = command.dataEntryChange.entryId,
+        entryType = command.dataEntryChange.entryType,
+        name = command.dataEntryChange.name,
+        type = command.dataEntryChange.type,
+        applicationName = command.dataEntryChange.applicationName,
+        state = command.dataEntryChange.state,
+        description = command.dataEntryChange.description,
+        payload = command.dataEntryChange.payload,
+        correlations = command.dataEntryChange.correlations,
+        createModification = command.dataEntryChange.modification,
+        authorizations = command.dataEntryChange.authorizationChanges,
+        formKey = command.dataEntryChange.formKey
       ))
   }
 
@@ -48,7 +48,7 @@ class DataEntryAggregateTest {
   fun `should update aggregate`() {
 
     val command = UpdateDataEntryCommand(
-      dataEntry = DataEntry(
+      dataEntryChange = DataEntryChange(
         entryType = "io.holunda.My",
         entryId = UUID.randomUUID().toString(),
         applicationName = "myApp",
@@ -61,34 +61,34 @@ class DataEntryAggregateTest {
     fixture
       .given(
         DataEntryCreatedEvent(
-          entryId = command.dataEntry.entryId,
-          entryType = command.dataEntry.entryType,
+          entryId = command.dataEntryChange.entryId,
+          entryType = command.dataEntryChange.entryType,
           name = "Some name",
           type = "Another",
           applicationName = "Different application",
-          state = command.dataEntry.state,
-          description = command.dataEntry.description,
-          payload = command.dataEntry.payload,
-          correlations = command.dataEntry.correlations,
-          createModification = command.dataEntry.modification,
-          authorizations = command.dataEntry.authorizations,
-          formKey = command.dataEntry.formKey
+          state = command.dataEntryChange.state,
+          description = command.dataEntryChange.description,
+          payload = command.dataEntryChange.payload,
+          correlations = command.dataEntryChange.correlations,
+          createModification = command.dataEntryChange.modification,
+          authorizations = command.dataEntryChange.authorizationChanges,
+          formKey = command.dataEntryChange.formKey
           )
         )
       .`when`(command)
       .expectEvents(DataEntryUpdatedEvent(
-        entryId = command.dataEntry.entryId,
-        entryType = command.dataEntry.entryType,
-        name = command.dataEntry.name,
-        type = command.dataEntry.type,
-        applicationName = command.dataEntry.applicationName,
-        state = command.dataEntry.state,
-        description = command.dataEntry.description,
-        payload = command.dataEntry.payload,
-        correlations = command.dataEntry.correlations,
-        updateModification = command.dataEntry.modification,
-        authorizations = command.dataEntry.authorizations,
-        formKey = command.dataEntry.formKey
+        entryId = command.dataEntryChange.entryId,
+        entryType = command.dataEntryChange.entryType,
+        name = command.dataEntryChange.name,
+        type = command.dataEntryChange.type,
+        applicationName = command.dataEntryChange.applicationName,
+        state = command.dataEntryChange.state,
+        description = command.dataEntryChange.description,
+        payload = command.dataEntryChange.payload,
+        correlations = command.dataEntryChange.correlations,
+        updateModification = command.dataEntryChange.modification,
+        authorizations = command.dataEntryChange.authorizationChanges,
+        formKey = command.dataEntryChange.formKey
       ))
 
   }

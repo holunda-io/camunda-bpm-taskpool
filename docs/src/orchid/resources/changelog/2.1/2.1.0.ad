@@ -4,11 +4,12 @@ version: 2.1.0
 
 == Features
 
-* Migrated to latest versions (Camunda, Camunda SpringBoot, SpringBoot, see below) #221
+* Migrated to decent versions (Camunda, Camunda SpringBoot, SpringBoot, see below) #221
 * Migrated to Axon Framework 4.4.3 #231 #265
 * Switch to Github Actions as CI/CD #233
 * Provide new command / event / query for process instance, #240
 * `SimpleView` automatically configures in-memory token store, #261
+* Provide an example way to synchronize data entry view and use it as read model, see #267
 
 == Breaking Changes
 
@@ -16,6 +17,7 @@ version: 2.1.0
 * Fixed package for process-definition commands #244
 * `SourceReference` is now an interface #242
 * Changed subscription behavior of query handlers for `DataEntryQuery...` queries
+* Changed command side API of Data Entry
 
 == Chore
 
@@ -35,6 +37,7 @@ version: 2.1.0
 
 == Bugfixes
 
+* Simple view will trigger notification for a subscription query on any `TaskWithDataEntry` on changes of data entries.
 
 == Examples
 
