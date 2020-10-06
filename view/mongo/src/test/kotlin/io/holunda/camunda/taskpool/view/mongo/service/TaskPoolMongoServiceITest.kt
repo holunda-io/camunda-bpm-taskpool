@@ -131,11 +131,11 @@ abstract class TaskPoolMongoServiceITestBase : SpringRuleScenarioTest<TaskPoolGi
       .task_created_event_is_received(testTaskData.asTaskCreatedEngineEvent())
 
     `when`()
-      .task_candidate_group_changed_event_is_received(TestTaskData(id = "some-id").asCandidateGroupChangedEvent("muppetshow", CamundaTaskEvent.CANDIDATE_GROUP_DELETE))
+      .task_candidate_group_changed_event_is_received(TestTaskData(id = "some-id").asCandidateGroupChangedEvent("muppetshow", CamundaTaskEventType.CANDIDATE_GROUP_DELETE))
       .and()
       .time_passes_until_query_update_is_emitted()
       .and()
-      .task_candidate_group_changed_event_is_received(TestTaskData(id = "some-id").asCandidateGroupChangedEvent("simpsons", CamundaTaskEvent.CANDIDATE_GROUP_ADD))
+      .task_candidate_group_changed_event_is_received(TestTaskData(id = "some-id").asCandidateGroupChangedEvent("simpsons", CamundaTaskEventType.CANDIDATE_GROUP_ADD))
       .and()
       .time_passes_until_query_update_is_emitted()
 
@@ -156,11 +156,11 @@ abstract class TaskPoolMongoServiceITestBase : SpringRuleScenarioTest<TaskPoolGi
       .task_created_event_is_received(TestTaskData(id = "some-id", candidateUsers = setOf("kermit")).asTaskCreatedEngineEvent())
 
     `when`()
-      .task_candidate_user_changed_event_is_received(TestTaskData(id = "some-id").asCandidateUserChangedEvent("kermit", CamundaTaskEvent.CANDIDATE_USER_DELETE))
+      .task_candidate_user_changed_event_is_received(TestTaskData(id = "some-id").asCandidateUserChangedEvent("kermit", CamundaTaskEventType.CANDIDATE_USER_DELETE))
       .and()
       .time_passes_until_query_update_is_emitted()
       .and()
-      .task_candidate_user_changed_event_is_received(TestTaskData(id = "some-id").asCandidateUserChangedEvent("gonzo", CamundaTaskEvent.CANDIDATE_USER_ADD))
+      .task_candidate_user_changed_event_is_received(TestTaskData(id = "some-id").asCandidateUserChangedEvent("gonzo", CamundaTaskEventType.CANDIDATE_USER_ADD))
       .and()
       .time_passes_until_query_update_is_emitted()
 

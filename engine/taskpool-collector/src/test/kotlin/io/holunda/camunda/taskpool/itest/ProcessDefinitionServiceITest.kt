@@ -1,11 +1,10 @@
 package io.holunda.camunda.taskpool.itest
 
-import io.holunda.camunda.taskpool.process.ProcessDefinitionService
+import io.holunda.camunda.taskpool.collector.process.definition.ProcessDefinitionService
 import io.holunda.camunda.taskpool.sender.gateway.AxonCommandListGateway
 import org.assertj.core.api.Assertions.assertThat
 import org.camunda.bpm.engine.FormService
 import org.camunda.bpm.engine.ProcessEngine
-import org.camunda.bpm.engine.ProcessEngineConfiguration
 import org.camunda.bpm.engine.RepositoryService
 import org.camunda.bpm.engine.impl.cfg.ProcessEngineConfigurationImpl
 import org.camunda.bpm.model.bpmn.Bpmn

@@ -1,8 +1,9 @@
 package io.holunda.camunda.taskpool.example.process.service
 
-import io.holunda.camunda.datapool.sender.DataEntryCommandSender
+import com.fasterxml.jackson.databind.ObjectMapper
+import io.holixon.axon.gateway.query.RevisionQueryParameters
+import io.holixon.axon.gateway.query.RevisionValue
 import io.holunda.camunda.taskpool.api.business.AuthorizationChange.Companion.addUser
-import io.holunda.camunda.taskpool.api.business.DataEntryState
 import io.holunda.camunda.taskpool.api.business.Modification
 import io.holunda.camunda.taskpool.api.business.ProcessingType
 import org.springframework.stereotype.Service
@@ -14,77 +15,75 @@ import kotlin.NoSuchElementException
 
 /**
  * Request service acts as an abstraction of an external "legacy" application.
- * It is responsible for stroage of requests and can be used to modify the requests
+ * It is responsible for storage of requests and can be used to modify the requests
  * independent from the process.
  */
 @Service
 class RequestService(
-  private val sender: DataEntryCommandSender,
-  private val repository: RequestRepository
+  private val dataEntryRepository: RequestDataEntryRepository,
+  private val objectMapper: ObjectMapper
 ) {
 
-  fun addRequest(request: Request, username: String): String {
-    val saved = repository.save(request)
-    sender.sendDataEntryCommand(
+  fun addRequest(request: Request, username: String, revision: Long): String {
+    dataEntryRepository.save(
       entryType = BusinessDataEntry.REQUEST,
       entryId = request.id,
       payload = request,
       state = ProcessingType.PRELIMINARY.of("Draft"),
-      name = "AR ${request.id}",
-      description = request.subject,
-      type = "Approval Request",
+      name = request.name(),
+      description = request.description(),
+      type = request.type(),
       modification = Modification(
         time = OffsetDateTime.now(),
         username = username,
         log = "Draft created.",
         logNotes = "Request draft on behalf of ${request.applicant} created."
       ),
-      authorizations = listOf(addUser(username), addUser(request.applicant))
+      authorizationChanges = listOf(addUser(username), addUser(request.applicant)),
+      metaData = RevisionValue(revision).toMetaData()
     )
-
-    return saved.id
+    return request.id
   }
 
-  fun getRequest(id: String): Request {
-    return repository.findById(id).orElseThrow { NoSuchElementException("Request with id $id not found.") }
+  fun getRequest(id: String, revision: Long): Request {
+    return getAllRequests(revision).find { it.id == id } ?: throw NoSuchElementException("Request with id $id not found.")
   }
 
-  fun checkRequest(id: String): Boolean = this.repository.existsById(id)
+  fun checkRequest(id: String, revision: Long): Boolean {
+    return getAllRequests(revision).find { it.id == id } != null
+  }
 
 
-  fun updateRequest(id: String, request: Request, username: String) {
-    if (checkRequest(id)) {
-      this.repository.save(request)
-      changeRequestState(request, ProcessingType.IN_PROGRESS.of(state = "Amended"), username = username, log = "Request amended.")
+  fun updateRequest(id: String, request: Request, username: String, revision: Long) : Long {
+    if (checkRequest(id, revision)) {
+      val newRevision = revision + 1
+      dataEntryRepository.save(
+        entryType = BusinessDataEntry.REQUEST,
+        entryId = request.id,
+        payload = request,
+        state = ProcessingType.IN_PROGRESS.of("Amended"),
+        name = request.name(),
+        description = request.description(),
+        type = request.type(),
+        modification = Modification(
+          time = OffsetDateTime.now(),
+          username = username,
+          log = "Approval request amended.",
+          logNotes = "Request on behalf of ${request.applicant} amended."
+        ),
+        authorizationChanges = listOf(addUser(username), addUser(request.applicant)),
+        metaData = RevisionValue(newRevision).toMetaData()
+      )
+      return newRevision
     }
+    return revision
   }
 
-  fun getAllRequests(): List<Request> {
-    return this.repository.findAll()
+  fun getAllRequests(revision: Long): List<Request> {
+    return dataEntryRepository
+      .getAll(RevisionQueryParameters(minimalRevision = revision))
+      .map { objectMapper.convertValue(it.payload, Request::class.java) }
   }
-
-  fun changeRequestState(id: String, state: DataEntryState, username: String, log: String? = null, logNotes: String? = null) =
-    changeRequestState(getRequest(id), state, username, log, logNotes)
-
-  private fun changeRequestState(request: Request, state: DataEntryState, username: String, log: String? = null, logNotes: String? = null) {
-    sender.sendDataEntryCommand(
-      entryType = BusinessDataEntry.REQUEST,
-      entryId = request.id,
-      payload = request,
-      state = state,
-      name = "AR ${request.id}",
-      description = request.subject,
-      type = "Approval Request",
-      modification = Modification(
-        time = OffsetDateTime.now(),
-        username = username,
-        log = log,
-        logNotes = logNotes
-      ),
-      authorizations = listOf(addUser(username))
-    )
-  }
-
 }
 
 fun createDummyRequest(id: String = UUID.randomUUID().toString()) = Request(
@@ -100,3 +99,4 @@ object BusinessDataEntry {
   const val REQUEST = "io.holunda.camunda.taskpool.example.ApprovalRequest"
   const val USER = "io.holunda.camunda.taskpool.example.User"
 }
+

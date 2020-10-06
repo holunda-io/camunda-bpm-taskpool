@@ -17,7 +17,7 @@ class DataEntryCreatedEventUpcaster : SingleEventUpcaster() {
       ir.type.revision == null
 
 
-  override fun doUpcast(ir: IntermediateEventRepresentation) =
+  override fun doUpcast(ir: IntermediateEventRepresentation): IntermediateEventRepresentation =
     ir.upcastPayload(
       SimpleSerializedType(DataEntryCreatedEvent::class.qualifiedName, "2"),
       Document::class.java

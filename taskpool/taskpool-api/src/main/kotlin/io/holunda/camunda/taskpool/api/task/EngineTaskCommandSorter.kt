@@ -17,6 +17,6 @@ class EngineTaskCommandSorter : Comparator<EngineTaskCommand> {
   override fun compare(command: EngineTaskCommand, otherCommand: EngineTaskCommand): Int {
 
     // EngineTaskCommand with lower order value comes first
-    return Integer.compare(command.order, otherCommand.order)
+    return command.order.compareTo(otherCommand.order)
   }
 }

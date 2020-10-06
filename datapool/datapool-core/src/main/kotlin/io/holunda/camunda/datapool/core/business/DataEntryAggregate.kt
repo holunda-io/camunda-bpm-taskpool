@@ -16,21 +16,24 @@ class DataEntryAggregate() {
   @AggregateIdentifier
   private lateinit var dataIdentity: String
 
+  /**
+   * Handle creation of data entry aggregate.
+   */
   @CommandHandler
   constructor(command: CreateDataEntryCommand) : this() {
     AggregateLifecycle.apply(DataEntryCreatedEvent(
-      entryId = command.dataEntry.entryId,
-      entryType = command.dataEntry.entryType,
-      name = command.dataEntry.name,
-      type = command.dataEntry.type,
-      applicationName = command.dataEntry.applicationName,
-      state = command.dataEntry.state,
-      description = command.dataEntry.description,
-      payload = command.dataEntry.payload,
-      correlations = command.dataEntry.correlations,
-      createModification = command.dataEntry.modification,
-      authorizations = command.dataEntry.authorizations,
-      formKey = command.dataEntry.formKey
+      entryId = command.dataEntryChange.entryId,
+      entryType = command.dataEntryChange.entryType,
+      name = command.dataEntryChange.name,
+      type = command.dataEntryChange.type,
+      applicationName = command.dataEntryChange.applicationName,
+      state = command.dataEntryChange.state,
+      description = command.dataEntryChange.description,
+      payload = command.dataEntryChange.payload,
+      correlations = command.dataEntryChange.correlations,
+      createModification = command.dataEntryChange.modification,
+      authorizations = command.dataEntryChange.authorizationChanges,
+      formKey = command.dataEntryChange.formKey
     ))
   }
 
@@ -40,18 +43,18 @@ class DataEntryAggregate() {
   @CommandHandler
   fun handle(command: UpdateDataEntryCommand) {
     AggregateLifecycle.apply(DataEntryUpdatedEvent(
-      entryId = command.dataEntry.entryId,
-      entryType = command.dataEntry.entryType,
-      name = command.dataEntry.name,
-      type = command.dataEntry.type,
-      applicationName = command.dataEntry.applicationName,
-      state = command.dataEntry.state,
-      description = command.dataEntry.description,
-      payload = command.dataEntry.payload,
-      correlations = command.dataEntry.correlations,
-      updateModification = command.dataEntry.modification,
-      authorizations = command.dataEntry.authorizations,
-      formKey = command.dataEntry.formKey
+      entryId = command.dataEntryChange.entryId,
+      entryType = command.dataEntryChange.entryType,
+      name = command.dataEntryChange.name,
+      type = command.dataEntryChange.type,
+      applicationName = command.dataEntryChange.applicationName,
+      state = command.dataEntryChange.state,
+      description = command.dataEntryChange.description,
+      payload = command.dataEntryChange.payload,
+      correlations = command.dataEntryChange.correlations,
+      updateModification = command.dataEntryChange.modification,
+      authorizations = command.dataEntryChange.authorizationChanges,
+      formKey = command.dataEntryChange.formKey
     ))
   }
 

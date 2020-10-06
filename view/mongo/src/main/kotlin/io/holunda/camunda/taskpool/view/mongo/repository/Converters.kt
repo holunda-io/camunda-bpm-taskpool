@@ -18,6 +18,7 @@ fun Task.taskDocument() = TaskDocument(
   sourceReference = when (val reference = this.sourceReference) {
     is ProcessReference -> ProcessReferenceDocument(reference)
     is CaseReference -> CaseReferenceDocument(reference)
+    else -> throw IllegalArgumentException("Unknown source reference of ${reference::class.java}")
   },
   taskDefinitionKey = this.taskDefinitionKey,
   payload = this.payload.toMutableMap(),

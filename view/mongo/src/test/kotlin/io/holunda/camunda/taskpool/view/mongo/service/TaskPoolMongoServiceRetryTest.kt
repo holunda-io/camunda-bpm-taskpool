@@ -8,6 +8,7 @@ import io.holunda.camunda.taskpool.view.mongo.TaskPoolMongoViewProperties
 import io.holunda.camunda.taskpool.view.mongo.repository.ProcessReferenceDocument
 import io.holunda.camunda.taskpool.view.mongo.repository.TaskDocument
 import io.holunda.camunda.taskpool.view.mongo.repository.TaskRepository
+import org.axonframework.messaging.MetaData
 import org.junit.Test
 import reactor.core.publisher.Mono
 import java.util.*
@@ -39,14 +40,14 @@ class TaskPoolMongoServiceRetryTest {
     ))
     whenever(taskRepository.findNotDeletedById(taskId)).thenReturn(Mono.defer { results.poll() })
     whenever(taskRepository.save(any<TaskDocument>())).thenAnswer { Mono.just(it.getArgument<TaskDocument>(0)) }
-    taskPoolMongoService.on(TaskAssignedEngineEvent(taskId, processReference, "foo:bar"))
+    taskPoolMongoService.on(TaskAssignedEngineEvent(taskId, processReference, "foo:bar"), MetaData.emptyInstance())
     verify(taskRepository).save(taskDocument)
   }
 
   @Test
   fun `stops retrying after five attempts`() {
     whenever(taskRepository.findNotDeletedById(taskId)).thenReturn(Mono.empty())
-    taskPoolMongoService.on(TaskAssignedEngineEvent(taskId, processReference, "foo:bar"))
+    taskPoolMongoService.on(TaskAssignedEngineEvent(taskId, processReference, "foo:bar"), MetaData.emptyInstance())
     verify(taskRepository, never()).save(any<TaskDocument>())
   }
 }

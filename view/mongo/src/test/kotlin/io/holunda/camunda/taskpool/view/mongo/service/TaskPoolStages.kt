@@ -16,6 +16,7 @@ import mu.KLogging
 import org.assertj.core.api.Assertions.assertThat
 import org.awaitility.Awaitility
 import org.awaitility.core.ConditionTimeoutException
+import org.axonframework.messaging.MetaData
 import org.axonframework.queryhandling.QueryUpdateEmitter
 import org.camunda.bpm.engine.variable.VariableMap
 import org.springframework.beans.factory.annotation.Autowired
@@ -37,32 +38,32 @@ open class TaskPoolStage<SELF : TaskPoolStage<SELF>> : Stage<SELF>() {
   var emittedQueryUpdates: List<QueryUpdate<Any>> = listOf()
 
   open fun task_created_event_is_received(event: TaskCreatedEngineEvent): SELF {
-    testee.on(event)
+    testee.on(event, MetaData.emptyInstance())
     return self()
   }
 
   open fun task_assign_event_is_received(event: TaskAssignedEngineEvent): SELF {
-    testee.on(event)
+    testee.on(event, MetaData.emptyInstance())
     return self()
   }
 
   open fun task_attributes_update_event_is_received(event: TaskAttributeUpdatedEngineEvent): SELF {
-    testee.on(event)
+    testee.on(event, MetaData.emptyInstance())
     return self()
   }
 
   open fun task_candidate_group_changed_event_is_received(event: TaskCandidateGroupChanged): SELF {
-    testee.on(event)
+    testee.on(event, MetaData.emptyInstance())
     return self()
   }
 
   open fun task_candidate_user_changed_event_is_received(event: TaskCandidateUserChanged): SELF {
-    testee.on(event)
+    testee.on(event, MetaData.emptyInstance())
     return self()
   }
 
   open fun task_deleted_event_is_received(event: TaskDeletedEngineEvent): SELF {
-    testee.on(event)
+    testee.on(event, MetaData.emptyInstance())
     return self()
   }
 

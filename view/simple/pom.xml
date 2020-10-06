@@ -20,6 +20,7 @@
       <groupId>io.holunda.taskpool</groupId>
       <artifactId>camunda-bpm-taskpool-view-api</artifactId>
     </dependency>
+
     <dependency>
       <groupId>org.axonframework</groupId>
       <artifactId>axon-messaging</artifactId>

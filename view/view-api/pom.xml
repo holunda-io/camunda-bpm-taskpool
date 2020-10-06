@@ -15,7 +15,15 @@
   <dependencies>
     <dependency>
       <groupId>io.holunda.taskpool</groupId>
-      <artifactId>camunda-bpm-taskpool-api</artifactId>
+      <artifactId>camunda-bpm-taskpool-event</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.holunda.taskpool</groupId>
+      <artifactId>camunda-bpm-datapool-event</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.holixon</groupId>
+      <artifactId>axon-gateway-extension</artifactId>
     </dependency>
     <dependency>
       <groupId>junit</groupId>

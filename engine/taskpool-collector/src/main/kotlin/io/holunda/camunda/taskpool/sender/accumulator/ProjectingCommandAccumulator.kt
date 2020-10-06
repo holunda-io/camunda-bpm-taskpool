@@ -69,7 +69,7 @@ class ProjectingCommandAccumulator(
     },
     ignoredProperties = listOf(
       WithTaskId::id.name,
-      CamundaTaskEvent::eventName.name,
+      CamundaTaskEventType::eventName.name,
       EngineTaskCommand::order.name,
       // handled separately
       WithPayload::payload.name,

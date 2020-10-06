@@ -18,7 +18,7 @@ class SystemInfoPrinter(
   @Bean
   fun requestPrinter(): ApplicationRunner {
     return ApplicationRunner {
-      val requests = requestService.getAllRequests()
+      val requests = requestService.getAllRequests(1)
       logger.info("Found ${requests.size} requests.")
       requests.forEach {
         logger.info("Request $it")

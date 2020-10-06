@@ -13,7 +13,7 @@
   <dependencies>
     <dependency>
       <groupId>io.holunda.taskpool</groupId>
-      <artifactId>camunda-bpm-taskpool-api</artifactId>
+      <artifactId>camunda-bpm-taskpool-event</artifactId>
     </dependency>
     <dependency>
       <groupId>org.axonframework</groupId>

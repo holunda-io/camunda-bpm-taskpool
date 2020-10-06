@@ -1,7 +1,7 @@
 package io.holunda.camunda.taskpool.view.simple.service
 
 import com.tngtech.jgiven.junit.ScenarioTest
-import io.holunda.camunda.taskpool.api.task.CamundaTaskEvent
+import io.holunda.camunda.taskpool.api.task.CamundaTaskEventType
 import io.holunda.camunda.taskpool.api.task.ProcessReference
 import io.holunda.camunda.taskpool.view.query.task.ApplicationWithTaskCount
 import org.camunda.bpm.engine.variable.Variables
@@ -138,9 +138,9 @@ class TaskPoolServiceTest : ScenarioTest<TaskPoolGivenStage<*>, TaskPoolWhenStag
       .task_created_event_is_received(TestTaskData(id = "some-id", candidateGroups = setOf("muppetshow")).asTaskCreatedEngineEvent())
 
     `when`()
-      .task_candidate_group_changed_event_is_received(TestTaskData(id = "some-id").asCandidateGroupChangedEvent("muppetshow", CamundaTaskEvent.CANDIDATE_GROUP_DELETE))
+      .task_candidate_group_changed_event_is_received(TestTaskData(id = "some-id").asCandidateGroupChangedEvent("muppetshow", CamundaTaskEventType.CANDIDATE_GROUP_DELETE))
       .and()
-      .task_candidate_group_changed_event_is_received(TestTaskData(id = "some-id").asCandidateGroupChangedEvent("simpsons", CamundaTaskEvent.CANDIDATE_GROUP_ADD))
+      .task_candidate_group_changed_event_is_received(TestTaskData(id = "some-id").asCandidateGroupChangedEvent("simpsons", CamundaTaskEventType.CANDIDATE_GROUP_ADD))
 
     then()
       .task_has_candidate_groups("some-id", setOf("simpsons"))
@@ -154,9 +154,9 @@ class TaskPoolServiceTest : ScenarioTest<TaskPoolGivenStage<*>, TaskPoolWhenStag
       .task_created_event_is_received(TestTaskData(id = "some-id", candidateUsers = setOf("kermit")).asTaskCreatedEngineEvent())
 
     `when`()
-      .task_candidate_user_changed_event_is_received(TestTaskData(id = "some-id").asCandidateUserChangedEvent("kermit", CamundaTaskEvent.CANDIDATE_USER_DELETE))
+      .task_candidate_user_changed_event_is_received(TestTaskData(id = "some-id").asCandidateUserChangedEvent("kermit", CamundaTaskEventType.CANDIDATE_USER_DELETE))
       .and()
-      .task_candidate_user_changed_event_is_received(TestTaskData(id = "some-id").asCandidateUserChangedEvent("gonzo", CamundaTaskEvent.CANDIDATE_USER_ADD))
+      .task_candidate_user_changed_event_is_received(TestTaskData(id = "some-id").asCandidateUserChangedEvent("gonzo", CamundaTaskEventType.CANDIDATE_USER_ADD))
 
     then()
       .task_has_candidate_users("some-id", setOf("gonzo"))

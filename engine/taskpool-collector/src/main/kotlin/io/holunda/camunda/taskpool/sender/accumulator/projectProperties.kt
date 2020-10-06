@@ -2,6 +2,7 @@ package io.holunda.camunda.taskpool.sender.accumulator
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo
 import com.fasterxml.jackson.core.type.TypeReference
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.module.SimpleModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.holunda.camunda.taskpool.api.task.SourceReference
@@ -101,24 +102,22 @@ fun <T : Any> projectProperties(
   return unmapper.invoke(values)
 }
 
+fun configureTaskpoolJacksonObjectMapper(objectMapper: ObjectMapper = jacksonObjectMapper()): ObjectMapper = objectMapper
+  .registerModule(variableMapModule)
+  .apply {
+    addMixIn(SourceReference::class.java, KotlinTypeInfo::class.java)
+  }
+
 
 fun <T> jacksonMapper(): Mapper<T> = {
-  jacksonObjectMapper()
-    .registerModule(variableMapModule)
-    .apply {
-      addMixIn(SourceReference::class.java, KotlinTypeInfo::class.java)
-    }
+  configureTaskpoolJacksonObjectMapper()
     .convertValue(it, object : TypeReference<MutableMap<String, Any?>>() {})
 }
 
 fun <T> jacksonUnmapper(clazz: Class<T>): Unmapper<T> = {
-  jacksonObjectMapper()
-    .apply {
-      addMixIn(SourceReference::class.java, KotlinTypeInfo::class.java)
-    }
-    .registerModule(variableMapModule)
-    .convertValue(it, clazz)
+  configureTaskpoolJacksonObjectMapper().convertValue(it, clazz)
 }
+
 
 val variableMapModule = SimpleModule()
   .apply {

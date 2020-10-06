@@ -26,7 +26,7 @@ class TaskCommandEnricherService(
    * Enriches the command, if possible.
    */
   private fun enrich(command: EngineTaskCommand): EngineTaskCommand = when (command) {
-    is TaskIdentityWithPayloadAndCorrelations -> enricher.enrich(command) as EngineTaskCommand
+    is TaskIdentityWithPayloadAndCorrelations -> enricher.enrich(command)
     else -> command
   }
 }
