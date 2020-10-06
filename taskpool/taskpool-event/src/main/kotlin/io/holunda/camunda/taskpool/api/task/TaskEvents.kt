@@ -19,9 +19,21 @@ import java.util.*
  */
 sealed class TaskEvent(val eventType: String) : TaskIdentity
 
+/**
+ * Event informing about changes in the engine.
+ * @param eventType type of event.
+ */
 sealed class TaskEngineEvent(eventType: String) : TaskEvent(eventType), WithPayload, WithCorrelations
+
+/**
+ * Event informing about changes by the user interaction.
+ * @param eventType type of event.
+ */
 sealed class TaskInteractionEvent(eventType: String) : TaskEvent(eventType), WithFormKey
 
+/**
+ * Task created.
+ */
 @Revision("3")
 data class TaskCreatedEngineEvent(
   override val id: String,
@@ -43,6 +55,9 @@ data class TaskCreatedEngineEvent(
   val followUpDate: Date? = null
 ) : TaskEngineEvent("create")
 
+/**
+ * Task assigned to user.
+ */
 @Revision("3")
 data class TaskAssignedEngineEvent(
   override val id: String,
@@ -64,6 +79,9 @@ data class TaskAssignedEngineEvent(
   val followUpDate: Date? = null
 ) : TaskEngineEvent("assign")
 
+/**
+ * Task completed.
+ */
 @Revision("3")
 data class TaskCompletedEngineEvent(
   override val id: String,
@@ -86,6 +104,9 @@ data class TaskCompletedEngineEvent(
   val followUpDate: Date? = null
 ) : TaskEngineEvent("complete")
 
+/**
+ * Task deleted (happenc on instance cancellation).
+ */
 @Revision("3")
 data class TaskDeletedEngineEvent(
   override val id: String,
@@ -109,6 +130,9 @@ data class TaskDeletedEngineEvent(
   val deleteReason: String?
 ) : TaskEngineEvent("delete")
 
+/**
+ * Changes of task attributes (but not assingment).
+ */
 @Revision("3")
 data class TaskAttributeUpdatedEngineEvent(
   override val id: String,
@@ -122,6 +146,9 @@ data class TaskAttributeUpdatedEngineEvent(
   val followUpDate: Date? = null
 ) : TaskEvent("attribute-update")
 
+/**
+ * Changes of task assignment.
+ */
 @Revision("3")
 sealed class TaskAssignmentUpdatedEngineEvent(
   override val id: String,
@@ -130,6 +157,9 @@ sealed class TaskAssignmentUpdatedEngineEvent(
   assignmentUpdateType: String
 ) : TaskEvent(assignmentUpdateType)
 
+/**
+ * Change of a candidate group.
+ */
 @Revision("1")
 data class TaskCandidateGroupChanged(
   override val id: String,
@@ -139,6 +169,9 @@ data class TaskCandidateGroupChanged(
   val assignmentUpdateType: String
 ) : TaskAssignmentUpdatedEngineEvent(id, sourceReference, taskDefinitionKey, assignmentUpdateType)
 
+/**
+ * Change of candidate user.
+ */
 @Revision("1")
 data class TaskCandidateUserChanged(
   override val id: String,
@@ -148,7 +181,9 @@ data class TaskCandidateUserChanged(
   val assignmentUpdateType: String
 ) : TaskAssignmentUpdatedEngineEvent(id, sourceReference, taskDefinitionKey, assignmentUpdateType)
 
-
+/**
+ * Claim executed by the user. Task engine listens to this event to change the assignee.
+ */
 @Revision("2")
 data class TaskClaimedEvent(
   override val id: String,
@@ -158,6 +193,9 @@ data class TaskClaimedEvent(
   val assignee: String
 ) : TaskInteractionEvent("claim")
 
+/**
+ * Un-claim executed by the user. Task engine listens to this event to change the assignee.
+ */
 @Revision("2")
 data class TaskUnclaimedEvent(
   override val id: String,
@@ -166,6 +204,9 @@ data class TaskUnclaimedEvent(
   override val formKey: String?
 ) : TaskInteractionEvent("unclaim")
 
+/**
+ * Complete by the user. Task engine listens to this event to complete the task.
+ */
 @Revision("2")
 data class TaskToBeCompletedEvent(
   override val id: String,
@@ -175,6 +216,9 @@ data class TaskToBeCompletedEvent(
   val payload: VariableMap = Variables.createVariables()
 ) : TaskInteractionEvent("mark-complete")
 
+/**
+ * Defer by the user. Task engine listens to this event to change the follow-up date.
+ */
 @Revision("2")
 data class TaskDeferredEvent(
   override val id: String,
@@ -184,6 +228,9 @@ data class TaskDeferredEvent(
   val followUpDate: Date
 ) : TaskInteractionEvent("defer")
 
+/**
+ * Undefer by the user. Task engine listens to this event to change the follow-up date.
+ */
 @Revision("2")
 data class TaskUndeferredEvent(
   override val id: String,
