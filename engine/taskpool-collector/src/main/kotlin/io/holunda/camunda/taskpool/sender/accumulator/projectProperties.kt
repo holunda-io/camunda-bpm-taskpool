@@ -1,13 +1,8 @@
 package io.holunda.camunda.taskpool.sender.accumulator
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo
 import com.fasterxml.jackson.core.type.TypeReference
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.databind.module.SimpleModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import io.holunda.camunda.taskpool.api.task.SourceReference
-import org.camunda.bpm.engine.variable.VariableMap
-import org.camunda.bpm.engine.variable.impl.VariableMapImpl
+import io.holunda.camunda.taskpool.configureTaskpoolJacksonObjectMapper
 import org.slf4j.LoggerFactory
 import kotlin.reflect.KClass
 import kotlin.reflect.full.memberProperties
@@ -68,7 +63,7 @@ fun <T : Any> projectProperties(
 
     if (potentialMatchingProperties.isEmpty()) {
       val errorText = "PROJECTOR-001: No matching attributes of two commands to the same task found. The second command $detail is ignored.";
-      if(projectionErrorDetector.shouldReportError(original = original, detail = detail)) {
+      if (projectionErrorDetector.shouldReportError(original = original, detail = detail)) {
         LoggerFactory
           .getLogger(ProjectingCommandAccumulator::class.java)
           .error(errorText)
@@ -102,31 +97,32 @@ fun <T : Any> projectProperties(
   return unmapper.invoke(values)
 }
 
-fun configureTaskpoolJacksonObjectMapper(objectMapper: ObjectMapper = jacksonObjectMapper()): ObjectMapper = objectMapper
-  .registerModule(variableMapModule)
-  .apply {
-    addMixIn(SourceReference::class.java, KotlinTypeInfo::class.java)
-  }
-
-
+/**
+ * Default Jackson Mapper (object to map).
+ */
 fun <T> jacksonMapper(): Mapper<T> = {
-  configureTaskpoolJacksonObjectMapper()
+  jacksonObjectMapper()
+    .configureTaskpoolJacksonObjectMapper()
     .convertValue(it, object : TypeReference<MutableMap<String, Any?>>() {})
 }
 
+/**
+ * Default Jackson Unmapper (map to object).
+ */
 fun <T> jacksonUnmapper(clazz: Class<T>): Unmapper<T> = {
-  configureTaskpoolJacksonObjectMapper().convertValue(it, clazz)
+  jacksonObjectMapper()
+    .configureTaskpoolJacksonObjectMapper().convertValue(it, clazz)
 }
 
-
-val variableMapModule = SimpleModule()
-  .apply {
-    addAbstractTypeMapping(VariableMap::class.java, VariableMapImpl::class.java)
-  }
-
-@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "@class", include = JsonTypeInfo.As.PROPERTY)
-class KotlinTypeInfo
-
+/**
+ * Detector of errors during projection.
+ */
 interface ProjectionErrorDetector {
+  /**
+   * Determines if an error will be reported.
+   * @param original main command.
+   * @param detail detail properties.
+   * @return true if by property mismatch an error whsould be reported.
+   */
   fun shouldReportError(original: Any, detail: Any): Boolean = true
 }

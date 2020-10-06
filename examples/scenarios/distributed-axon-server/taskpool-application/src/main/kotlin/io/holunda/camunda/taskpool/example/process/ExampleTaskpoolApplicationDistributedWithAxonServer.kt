@@ -8,6 +8,7 @@ import io.holixon.axon.gateway.query.RevisionValue
 import io.holunda.camunda.datapool.core.EnableDataPool
 import io.holunda.camunda.taskpool.api.task.SourceReference
 import io.holunda.camunda.taskpool.core.EnableTaskPool
+import io.holunda.camunda.taskpool.core.configureTaskpoolJacksonObjectMapper
 import io.holunda.camunda.taskpool.example.tasklist.EnableTasklist
 import io.holunda.camunda.taskpool.example.users.UsersConfiguration
 import io.holunda.camunda.taskpool.upcast.definition.ProcessDefinitionEventNullTo1Upcaster
@@ -76,24 +77,6 @@ class ExampleTaskpoolApplicationDistributedWithAxonServer {
       )
     )
   }
-
-
-  /**
-   * Configures Jackson object mapper to handle VariableMap and Source Reference correctly.
-   */
-  fun ObjectMapper.configureTaskpoolJacksonObjectMapper(): ObjectMapper = this
-    .registerModule(SimpleModule()
-      .apply {
-        addAbstractTypeMapping(org.camunda.bpm.engine.variable.VariableMap::class.java, org.camunda.bpm.engine.variable.impl.VariableMapImpl::class.java)
-      })
-    .apply {
-      addMixIn(SourceReference::class.java, KotlinTypeInfo::class.java)
-    }
-
-
-  @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "@class", include = JsonTypeInfo.As.PROPERTY)
-  class KotlinTypeInfo
-
 }
 
 
