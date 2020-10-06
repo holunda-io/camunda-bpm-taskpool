@@ -22,7 +22,7 @@ An approval request is modelled in the following way. The __subject__  describes
 person whom it is about (can be different from __originator__). Finally, the __amount__ and __currency__ denote the costs of the request.
 All requests must be stored for compliance purposes.
 
-The request is initially crated in `DRAFT` mode. It gets to state `IN PROGRESS` as soon as the process is started and will
+The request is initially created in `DRAFT` mode. It gets to state `IN PROGRESS` as soon as the process is started and will
 eventually get to `ACCEPTED` or `REJECTED` as a final state.
 
 For sample purposes two groups of users are created: The Muppet Show (`Kermit`, `Piggy`, `Gonzo` and `Fozzy`) and The Avengers (`Ironman`,
@@ -50,7 +50,7 @@ The default user and password are `admin / admin`.
 The following storyboard can be used to understand the mechanics behind the provided implementation:
 
 TIP: In this storyboard, we assume you started the single node scenario and the application runs locally
-on http://localhost:8080. Please adjust the URLs accordingly, if you started differntly.
+on http://localhost:8080. Please adjust the URLs accordingly, if you started differently.
 
 - To start the approval process for a given request open your browser and navigate to the `Example Tasklist`:
 http://localhost:8080/taskpool/[http://localhost:8080/taskpool/]. Please note that the selected user is `Ironman`.

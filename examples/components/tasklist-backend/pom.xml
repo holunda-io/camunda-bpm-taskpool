@@ -5,7 +5,7 @@
   <parent>
     <groupId>io.holunda.taskpool</groupId>
     <artifactId>taskpool-examples-root</artifactId>
-    <version>2.0.11</version>
+    <version>2.1.0</version>
     <relativePath>../../pom.xml</relativePath>
   </parent>
 
@@ -72,6 +72,11 @@
     <dependency>
       <groupId>org.axonframework</groupId>
       <artifactId>axon-messaging</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>io.holixon</groupId>
+      <artifactId>axon-gateway-spring-boot-starter</artifactId>
     </dependency>
 
     <!-- MapStruct -->

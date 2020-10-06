@@ -441,28 +441,28 @@ class TaskAggregate() {
           taskDefinitionKey = this.taskDefinitionKey,
           sourceReference = this.sourceReference,
           groupId = command.candidateGroups.first(),
-          assignmentUpdateType = CamundaTaskEvent.CANDIDATE_GROUP_ADD
+          assignmentUpdateType = CamundaTaskEventType.CANDIDATE_GROUP_ADD
         )
         is DeleteCandidateGroupsCommand -> TaskCandidateGroupChanged(
           id = this.id,
           taskDefinitionKey = this.taskDefinitionKey,
           sourceReference = this.sourceReference,
           groupId = command.candidateGroups.first(),
-          assignmentUpdateType = CamundaTaskEvent.CANDIDATE_GROUP_DELETE
+          assignmentUpdateType = CamundaTaskEventType.CANDIDATE_GROUP_DELETE
         )
         is AddCandidateUsersCommand -> TaskCandidateUserChanged(
           id = this.id,
           taskDefinitionKey = this.taskDefinitionKey,
           sourceReference = this.sourceReference,
           userId = command.candidateUsers.first(),
-          assignmentUpdateType = CamundaTaskEvent.CANDIDATE_USER_ADD
+          assignmentUpdateType = CamundaTaskEventType.CANDIDATE_USER_ADD
         )
         is DeleteCandidateUsersCommand -> TaskCandidateUserChanged(
           id = this.id,
           taskDefinitionKey = this.taskDefinitionKey,
           sourceReference = this.sourceReference,
           userId = command.candidateUsers.first(),
-          assignmentUpdateType = CamundaTaskEvent.CANDIDATE_USER_DELETE
+          assignmentUpdateType = CamundaTaskEventType.CANDIDATE_USER_DELETE
         )
       }
     )

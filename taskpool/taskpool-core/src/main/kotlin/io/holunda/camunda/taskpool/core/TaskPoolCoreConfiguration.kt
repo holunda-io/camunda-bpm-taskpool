@@ -1,11 +1,15 @@
 package io.holunda.camunda.taskpool.core
 
+import io.holunda.camunda.taskpool.core.process.ProcessDefinitionAggregate
 import io.holunda.camunda.taskpool.core.task.TaskAggregate
 import org.axonframework.eventsourcing.EventSourcingRepository
 import org.axonframework.eventsourcing.eventstore.EventStore
+import org.axonframework.modelling.command.Aggregate
+import org.axonframework.modelling.command.AggregateNotFoundException
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
+import java.util.*
 
 
 @Configuration
@@ -20,4 +24,24 @@ class TaskPoolCoreConfiguration {
       .build()
   }
 
+  @Bean
+  fun processDefinitionAggregateRepository(eventStore: EventStore): EventSourcingRepository<ProcessDefinitionAggregate> {
+    return EventSourcingRepository
+      .builder(ProcessDefinitionAggregate::class.java)
+      .eventStore(eventStore)
+      .build()
+  }
+
 }
+
+/**
+ * Tries to load an aggregate for given identifier.
+ * @param id aggregate identifier.
+ * @return Optional result, if found.
+ */
+fun <T: Any> EventSourcingRepository<T>.loadOptional(id: String): Optional<Aggregate<T>> =
+    try {
+      Optional.of(this.load(id))
+    } catch (e: AggregateNotFoundException) {
+      Optional.empty()
+    }

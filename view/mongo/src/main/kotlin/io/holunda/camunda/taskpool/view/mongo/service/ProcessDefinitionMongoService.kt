@@ -1,20 +1,21 @@
 package io.holunda.camunda.taskpool.view.mongo.service
 
-import io.holunda.camunda.taskpool.api.task.ProcessDefinitionRegisteredEvent
+import io.holunda.camunda.taskpool.api.process.definition.ProcessDefinitionRegisteredEvent
 import io.holunda.camunda.taskpool.view.ProcessDefinition
 import io.holunda.camunda.taskpool.view.mongo.repository.ProcessDefinitionDocument
 import io.holunda.camunda.taskpool.view.mongo.repository.ProcessDefinitionRepository
-import io.holunda.camunda.taskpool.view.query.ReactiveProcessDefinitionApi
+import io.holunda.camunda.taskpool.view.query.process.ReactiveProcessDefinitionApi
 import io.holunda.camunda.taskpool.view.query.process.ProcessDefinitionsStartableByUserQuery
 import mu.KLogging
 import org.axonframework.eventhandling.EventHandler
+import org.axonframework.messaging.MetaData
 import org.axonframework.queryhandling.QueryHandler
 import org.axonframework.queryhandling.QueryUpdateEmitter
 import org.springframework.stereotype.Component
 import java.util.concurrent.CompletableFuture
 
 /**
- * Mongo proces sdefinition projection.
+ * Mongo process definition projection.
  */
 @Component
 class ProcessDefinitionMongoService(
@@ -26,7 +27,7 @@ class ProcessDefinitionMongoService(
 
   @EventHandler
   @Suppress("unused")
-  fun on(event: ProcessDefinitionRegisteredEvent) {
+  fun on(event: ProcessDefinitionRegisteredEvent, metaData: MetaData) {
 
     logger.debug { "New process definition with id ${event.processDefinitionId} registered (${event.processName}, ${event.applicationName})." }
 
@@ -50,7 +51,7 @@ class ProcessDefinitionMongoService(
   }
 
   @QueryHandler
-  override fun query(query: ProcessDefinitionsStartableByUserQuery): CompletableFuture<List<ProcessDefinition>> {
+  override fun query(query: ProcessDefinitionsStartableByUserQuery, metaData: MetaData): CompletableFuture<List<ProcessDefinition>> {
     // This is the naive Kotlin way, not the Mongo way it should be. Please don't laugh.
     // Get all definitions in all versions and group them by process
     return processDefinitionRepository

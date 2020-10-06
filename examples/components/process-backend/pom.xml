@@ -6,8 +6,8 @@
   <parent>
     <groupId>io.holunda.taskpool</groupId>
     <artifactId>taskpool-examples-root</artifactId>
-    <version>2.0.11</version>
-    <relativePath>../../</relativePath>
+    <version>2.1.0</version>
+    <relativePath>../../pom.xml</relativePath>
   </parent>
 
   <artifactId>taskpool-example-process-backend</artifactId>
@@ -29,10 +29,20 @@
       <version>${project.version}</version>
     </dependency>
     <dependency>
+      <groupId>io.holixon</groupId>
+      <artifactId>axon-gateway-spring-boot-starter</artifactId>
+    </dependency>
+    <dependency>
       <groupId>io.holunda.taskpool</groupId>
       <artifactId>taskpool-example-users</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <!--
+    <dependency>
+      <groupId>io.holunda.taskpool</groupId>
+      <artifactId>camunda-bpm-taskpool-view-simple</artifactId>
+    </dependency>
+    -->
 
     <!-- SpringBoot -->
     <dependency>
@@ -101,6 +111,12 @@
     <dependency>
       <groupId>org.codehaus.groovy</groupId>
       <artifactId>groovy-xml</artifactId>
+    </dependency>
+    <!-- Data -->
+    <dependency>
+      <groupId>io.holunda.data</groupId>
+      <artifactId>camunda-bpm-data</artifactId>
+      <version>${camunda-bpm-data.version}</version>
     </dependency>
 
     <!-- SPIN -->

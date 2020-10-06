@@ -9,6 +9,7 @@ import io.holunda.camunda.taskpool.view.DataEntry
 import io.holunda.camunda.taskpool.view.auth.User
 import io.holunda.camunda.taskpool.view.query.data.DataEntriesForUserQuery
 import org.assertj.core.api.Assertions
+import org.axonframework.messaging.MetaData
 import org.axonframework.queryhandling.QueryUpdateEmitter
 import org.mockito.Mockito
 
@@ -16,20 +17,20 @@ import org.mockito.Mockito
 class DataPoolStage<SELF : DataPoolStage<SELF>> : Stage<SELF>() {
 
   @ScenarioState
-  lateinit var testee: DataEntryService
+  lateinit var testee: DataEntrySimpleService
 
   @BeforeScenario
   fun init() {
-    testee = DataEntryService(Mockito.mock(QueryUpdateEmitter::class.java))
+    testee = DataEntrySimpleService(Mockito.mock(QueryUpdateEmitter::class.java))
   }
 
   fun data_entry_created_event(event: DataEntryCreatedEvent): SELF {
-    testee.on(event)
+    testee.on(event, MetaData.emptyInstance())
     return self()
   }
 
   fun data_entry_updated_event(event: DataEntryUpdatedEvent): SELF {
-    testee.on(event)
+    testee.on(event, MetaData.emptyInstance())
     return self()
   }
 }
@@ -54,7 +55,7 @@ open class DataPoolGivenStage<SELF : DataPoolGivenStage<SELF>> : DataPoolStage<S
   }
 
   private fun createDataInTestee(entries: List<TestDataEntry>) {
-    entries.forEach { testee.on(it.asCreatedEvent()) }
+    entries.forEach { testee.on(it.asCreatedEvent(), MetaData.emptyInstance()) }
   }
 }
 
@@ -70,7 +71,7 @@ class DataPoolWhenStage<SELF : DataPoolWhenStage<SELF>> : DataPoolStage<SELF>() 
   private fun query(sort: String, filters: List<String>) = DataEntriesForUserQuery(User("kermit", setOf()), 1, Integer.MAX_VALUE, sort, filters)
 
   fun data_queried(filters: List<String>): SELF {
-    queriedEntries.addAll(testee.query(query("+name", filters)).elements)
+    queriedEntries.addAll(testee.query(query("+name", filters)).payload.elements)
     return self()
   }
 }

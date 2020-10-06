@@ -15,7 +15,8 @@ import reactor.core.publisher.Mono
  * Repository for data entry documents.
  */
 @Repository
-interface DataEntryRepository : ReactiveMongoRepository<DataEntryDocument, String> {
+interface DataEntryRepository :
+  ReactiveMongoRepository<DataEntryDocument, String> {
 
   /**
    * Reactive finder by identity.

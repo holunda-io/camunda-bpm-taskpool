@@ -1,0 +1,12 @@
+${AnsiColor.GREEN}
+████████╗ █████╗ ███████╗██╗  ██╗██████╗  ██████╗  ██████╗ ██╗
+╚══██╔══╝██╔══██╗██╔════╝██║ ██╔╝██╔══██╗██╔═══██╗██╔═══██╗██║
+   ██║   ███████║███████╗█████╔╝ ██████╔╝██║   ██║██║   ██║██║
+   ██║   ██╔══██║╚════██║██╔═██╗ ██╔═══╝ ██║   ██║██║   ██║██║
+   ██║   ██║  ██║███████║██║  ██╗██║     ╚██████╔╝╚██████╔╝███████╗
+   ╚═╝   ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═╝      ╚═════╝  ╚═════╝ ╚══════╝
+${AnsiColor.WHITE}
+ :: Spring Boot ::        ${spring-boot.formatted-version}
+
+ Task list URL:       http://localhost:${server.port}/taskpool/tasks
+ Workpieces list URL: http://localhost:${server.port}/taskpool/archive

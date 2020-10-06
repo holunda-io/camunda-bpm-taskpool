@@ -16,5 +16,4 @@ class DataPoolCoreConfiguration {
   fun dataEntryAggregateRepository(eventStore: EventStore): EventSourcingRepository<DataEntryAggregate> {
     return EventSourcingRepository.builder(DataEntryAggregate::class.java).eventStore(eventStore).build()
   }
-
 }

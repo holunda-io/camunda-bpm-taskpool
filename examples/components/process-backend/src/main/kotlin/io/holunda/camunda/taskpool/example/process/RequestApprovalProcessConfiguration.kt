@@ -5,6 +5,11 @@ import io.holunda.camunda.taskpool.enricher.*
 import io.holunda.camunda.taskpool.example.process.process.RequestApprovalProcess
 import io.holunda.camunda.taskpool.example.process.service.BusinessDataEntry
 import io.holunda.camunda.taskpool.example.users.EnableExampleUsers
+import io.holixon.axon.gateway.configuration.query.EnableRevisionAwareQueryGateway
+import io.holunda.camunda.taskpool.example.process.process.RequestApprovalProcess.Variables.APPLICANT
+import io.holunda.camunda.taskpool.example.process.process.RequestApprovalProcess.Variables.COMMENT
+import io.holunda.camunda.taskpool.example.process.process.RequestApprovalProcess.Variables.ORIGINATOR
+import io.holunda.camunda.taskpool.example.process.process.RequestApprovalProcess.Variables.REQUEST_ID
 import io.holunda.camunda.taskpool.sender.gateway.LoggingTaskCommandErrorHandler
 import io.holunda.camunda.taskpool.sender.gateway.TaskCommandErrorHandler
 import mu.KLogging
@@ -18,6 +23,7 @@ import org.springframework.context.annotation.Primary
 @EnableProcessApplication
 @EnableTaskpoolEngineSupport
 @EnableExampleUsers
+@EnableRevisionAwareQueryGateway
 class RequestApprovalProcessConfiguration {
 
   companion object : KLogging()
@@ -34,16 +40,16 @@ class RequestApprovalProcessConfiguration {
         // define a variable filter for every task
         RequestApprovalProcess.Elements.APPROVE_REQUEST to
           listOf(
-            RequestApprovalProcess.Variables.REQUEST_ID,
-            RequestApprovalProcess.Variables.ORIGINATOR
+            REQUEST_ID.name,
+            ORIGINATOR.name
           ),
 
         // and again
         RequestApprovalProcess.Elements.AMEND_REQUEST to
           listOf(
-            RequestApprovalProcess.Variables.REQUEST_ID,
-            RequestApprovalProcess.Variables.COMMENT,
-            RequestApprovalProcess.Variables.APPLICANT
+            REQUEST_ID.name,
+            COMMENT.name,
+            APPLICANT.name
           )
       ))
   )
@@ -56,13 +62,13 @@ class RequestApprovalProcessConfiguration {
       mapOf(
         // define a correlation for every task needed
         RequestApprovalProcess.Elements.APPROVE_REQUEST to mapOf(
-          RequestApprovalProcess.Variables.REQUEST_ID to BusinessDataEntry.REQUEST,
-          RequestApprovalProcess.Variables.ORIGINATOR to BusinessDataEntry.USER
+          REQUEST_ID.name to BusinessDataEntry.REQUEST,
+          ORIGINATOR.name to BusinessDataEntry.USER
         )
       ),
 
       // or globally
-      mapOf(RequestApprovalProcess.Variables.REQUEST_ID to BusinessDataEntry.REQUEST)
+      mapOf(REQUEST_ID.name to BusinessDataEntry.REQUEST)
     )
   )
 

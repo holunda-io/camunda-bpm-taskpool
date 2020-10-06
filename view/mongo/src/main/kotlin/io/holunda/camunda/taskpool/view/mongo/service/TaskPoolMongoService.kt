@@ -11,12 +11,9 @@ import io.holunda.camunda.taskpool.view.mongo.ChangeTrackingMode
 import io.holunda.camunda.taskpool.view.mongo.TaskPoolMongoViewProperties
 import io.holunda.camunda.taskpool.view.mongo.repository.*
 import io.holunda.camunda.taskpool.view.query.FilterQuery
-import io.holunda.camunda.taskpool.view.query.ReactiveDataEntryApi
-import io.holunda.camunda.taskpool.view.query.ReactiveTaskApi
-import io.holunda.camunda.taskpool.view.query.data.DataEntriesForUserQuery
-import io.holunda.camunda.taskpool.view.query.data.DataEntriesQueryResult
-import io.holunda.camunda.taskpool.view.query.data.DataEntryForIdentityQuery
-import io.holunda.camunda.taskpool.view.query.data.QueryDataIdentity
+import io.holunda.camunda.taskpool.view.query.data.ReactiveDataEntryApi
+import io.holunda.camunda.taskpool.view.query.task.ReactiveTaskApi
+import io.holunda.camunda.taskpool.view.query.data.*
 import io.holunda.camunda.taskpool.view.query.task.*
 import io.holunda.camunda.taskpool.view.task
 import mu.KLogging
@@ -25,6 +22,7 @@ import org.axonframework.config.ProcessingGroup
 import org.axonframework.eventhandling.EventHandler
 import org.axonframework.eventhandling.EventProcessor
 import org.axonframework.eventhandling.TrackingEventProcessor
+import org.axonframework.messaging.MetaData
 import org.axonframework.queryhandling.QueryHandler
 import org.axonframework.queryhandling.QueryUpdateEmitter
 import org.springframework.beans.factory.annotation.Autowired
@@ -97,14 +95,44 @@ class TaskPoolMongoService(
    * Retrieves a list of all data entries for current user.
    */
   @QueryHandler
-  override fun query(query: DataEntriesForUserQuery): CompletableFuture<DataEntriesQueryResult> =
+  override fun query(query: DataEntriesForUserQuery, metaData: MetaData): CompletableFuture<DataEntriesQueryResult> =
     dataEntryRepository
       .findAllForUser(
         username = query.user.username,
-        groupNames = query.user.groups
-      ).map { it.dataEntry() }
+        groupNames = query.user.groups)
+      .map { it.dataEntry() }
       .collectList()
-      .map { DataEntriesQueryResult(it).slice(query) }
+      .map { DataEntriesQueryResult(elements = it).slice(query) }
+      .toFuture()
+
+
+  /**
+   * Retrieves a list of all data entries of given entry type (and optional id).
+   */
+  @QueryHandler
+  override fun query(query: DataEntryForIdentityQuery, metaData: MetaData): CompletableFuture<DataEntriesQueryResult> =
+    (if (query.entryId != null) {
+      dataEntryRepository
+        .findByIdentity(query.identity())
+        .map { it.dataEntry() }
+        .map { listOf(it) }
+        .defaultIfEmpty(listOf())
+    } else {
+      dataEntryRepository.findAllByEntryType(query.entryType)
+        .map { it.dataEntry() }
+        .collectList()
+    }).map { DataEntriesQueryResult(elements = it) }
+      .toFuture()
+
+  /**
+   * Retrieves a list of all data entries.
+   */
+  @QueryHandler
+  override fun query(query: DataEntriesQuery, metaData: MetaData): CompletableFuture<DataEntriesQueryResult> =
+    dataEntryRepository.findAll(sort(query.sort))
+      .map { it.dataEntry() }
+      .collectList()
+      .map { DataEntriesQueryResult(elements = it) }
       .toFuture()
 
   /**
@@ -130,23 +158,6 @@ class TaskPoolMongoService(
     ).map { it.task() }
       .collectList()
       .map { TaskQueryResult(it) }
-      .toFuture()
-
-  /**
-   * Retrieves a list of all data entries of given entry type (and optional id).
-   */
-  @QueryHandler
-  override fun query(query: DataEntryForIdentityQuery): CompletableFuture<DataEntriesQueryResult> =
-    (if (query.entryId != null)
-      dataEntryRepository.findByIdentity(query.identity())
-        .map { it.dataEntry() }
-        .map { listOf(it) }
-        .defaultIfEmpty(listOf())
-    else
-      dataEntryRepository.findAllByEntryType(query.entryType)
-        .map { it.dataEntry() }
-        .collectList()
-      ).map { DataEntriesQueryResult(it) }
       .toFuture()
 
   /**
@@ -187,7 +198,7 @@ class TaskPoolMongoService(
 
   @Suppress("unused")
   @EventHandler
-  fun on(event: TaskCreatedEngineEvent) {
+  fun on(event: TaskCreatedEngineEvent, metaData: MetaData) {
     logger.debug { "Task created $event received" }
     val task = task(event)
     taskRepository.save(task.taskDocument())
@@ -198,7 +209,7 @@ class TaskPoolMongoService(
 
   @Suppress("unused")
   @EventHandler
-  fun on(event: TaskAssignedEngineEvent) {
+  fun on(event: TaskAssignedEngineEvent, metaData: MetaData) {
     logger.debug { "Task assigned $event received" }
     taskRepository.findNotDeletedById(event.id)
       .retryIfEmpty { "Cannot update task '${event.id}' because it does not exist in the database" }
@@ -212,14 +223,14 @@ class TaskPoolMongoService(
 
   @Suppress("unused")
   @EventHandler
-  fun on(event: TaskCompletedEngineEvent) {
+  fun on(event: TaskCompletedEngineEvent, metaData: MetaData) {
     logger.debug { "Task completed $event received" }
     deleteTask(event.id, event.sourceReference.applicationName)
   }
 
   @Suppress("unused")
   @EventHandler
-  fun on(event: TaskDeletedEngineEvent) {
+  fun on(event: TaskDeletedEngineEvent, metaData: MetaData) {
     logger.debug { "Task deleted $event received" }
     deleteTask(event.id, event.sourceReference.applicationName)
   }
@@ -242,7 +253,7 @@ class TaskPoolMongoService(
 
   @Suppress("unused")
   @EventHandler
-  fun on(event: TaskAttributeUpdatedEngineEvent) {
+  fun on(event: TaskAttributeUpdatedEngineEvent, metaData: MetaData) {
     logger.debug { "Task attributes updated $event received" }
     taskRepository.findNotDeletedById(event.id)
       .retryIfEmpty { "Cannot update task '${event.id}' because it does not exist in the database" }
@@ -256,7 +267,7 @@ class TaskPoolMongoService(
 
   @Suppress("unused")
   @EventHandler
-  fun on(event: TaskCandidateGroupChanged) {
+  fun on(event: TaskCandidateGroupChanged, metaData: MetaData) {
     logger.debug { "Task candidate groups changed $event received" }
     taskRepository.findNotDeletedById(event.id)
       .retryIfEmpty { "Cannot update task '${event.id}' because it does not exist in the database" }
@@ -270,7 +281,7 @@ class TaskPoolMongoService(
 
   @Suppress("unused")
   @EventHandler
-  fun on(event: TaskCandidateUserChanged) {
+  fun on(event: TaskCandidateUserChanged, metaData: MetaData) {
     logger.debug { "Task user groups changed $event received" }
     taskRepository.findNotDeletedById(event.id)
       .retryIfEmpty { "Cannot update task '${event.id}' because it does not exist in the database" }
@@ -284,7 +295,7 @@ class TaskPoolMongoService(
 
   @Suppress("unused")
   @EventHandler
-  fun on(event: DataEntryCreatedEvent) {
+  fun on(event: DataEntryCreatedEvent, metaData: MetaData) {
     logger.debug { "Business data entry created $event" }
     dataEntryRepository.save(event.toDocument())
       .then(updateDataEntryQuery(QueryDataIdentity(entryType = event.entryType, entryId = event.entryId)))
@@ -293,7 +304,7 @@ class TaskPoolMongoService(
 
   @Suppress("unused")
   @EventHandler
-  fun on(event: DataEntryUpdatedEvent) {
+  fun on(event: DataEntryUpdatedEvent, metaData: MetaData) {
     logger.debug { "Business data entry updated $event" }
     dataEntryRepository.findById(dataIdentityString(entryType = event.entryType, entryId = event.entryId))
       .map { oldEntry -> event.toDocument(oldEntry) }
@@ -362,9 +373,9 @@ class TaskPoolMongoService(
 
   private inline fun <T> Mono<T>.retryIfEmpty(numRetries: Long = 5, firstBackoff: Duration = Duration.ofMillis(100), crossinline logMessage: () -> String): Mono<T> =
     this.switchIfEmpty {
-        logger.debug { "${logMessage()}, but will retry." }
-        Mono.error(TaskNotFoundException())
-      }
+      logger.debug { "${logMessage()}, but will retry." }
+      Mono.error(TaskNotFoundException())
+    }
       .retryBackoff(numRetries, firstBackoff)
       .onErrorMap { if (it is IllegalStateException && it.cause is TaskNotFoundException) it.cause else it }
       .onErrorResume(TaskNotFoundException::class.java) {

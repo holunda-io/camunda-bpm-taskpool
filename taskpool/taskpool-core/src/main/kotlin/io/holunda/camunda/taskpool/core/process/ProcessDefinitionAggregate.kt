@@ -1,7 +1,7 @@
 package io.holunda.camunda.taskpool.core.process
 
-import io.holunda.camunda.taskpool.api.task.ProcessDefinitionRegisteredEvent
-import io.holunda.camunda.taskpool.api.task.RegisterProcessDefinitionCommand
+import io.holunda.camunda.taskpool.api.process.definition.ProcessDefinitionRegisteredEvent
+import io.holunda.camunda.taskpool.api.process.definition.RegisterProcessDefinitionCommand
 import org.axonframework.commandhandling.CommandHandler
 import org.axonframework.eventsourcing.EventSourcingHandler
 import org.axonframework.modelling.command.AggregateIdentifier
@@ -14,9 +14,11 @@ class ProcessDefinitionAggregate() {
   @AggregateIdentifier
   lateinit var processDefinitionId: String
 
-
-  @CommandHandler
-  constructor(command: RegisterProcessDefinitionCommand) : this() {
+  /**
+   * Handles registration, no [CommandHandler] annotation, since we use an external handler.
+   * @param command registration command.
+   */
+  fun handle(command: RegisterProcessDefinitionCommand) {
     AggregateLifecycle.apply(ProcessDefinitionRegisteredEvent(
       processDefinitionId = command.processDefinitionId,
       processDefinitionKey = command.processDefinitionKey,

@@ -73,6 +73,7 @@ abstract class TaskEventMapper {
   )
   abstract fun dto(task: TaskCreatedEngineEvent, instant: Instant?): TaskEventDto
 
+
   @Mappings(
     Mapping(target = "task.id", source = "task.id"),
     Mapping(target = "task.formKey", source = "task.formKey"),

@@ -1,9 +1,9 @@
 package io.holunda.camunda.taskpool.example.tasklist.rest.mapper
 
-import com.fasterxml.jackson.core.JsonProcessingException
-import io.holunda.camunda.taskpool.api.business.DataEntryState
-import io.holunda.camunda.taskpool.api.business.Modification
-import io.holunda.camunda.taskpool.example.tasklist.rest.model.*
+import io.holunda.camunda.taskpool.example.tasklist.rest.model.DataEntryDto
+import io.holunda.camunda.taskpool.example.tasklist.rest.model.ProtocolEntryDto
+import io.holunda.camunda.taskpool.example.tasklist.rest.model.TaskDto
+import io.holunda.camunda.taskpool.example.tasklist.rest.model.TaskWithDataEntriesDto
 import io.holunda.camunda.taskpool.view.*
 import org.mapstruct.Mapper
 import org.mapstruct.Mapping
@@ -15,31 +15,46 @@ import java.time.ZoneOffset
 import java.util.*
 import javax.validation.Valid
 
+/**
+ * REST mapper.
+ */
 @Mapper(
   componentModel = "spring",
   unmappedTargetPolicy = ReportingPolicy.ERROR
 )
 abstract class TaskWithDataEntriesMapper {
 
+  /**
+   * Form resolver to get URL. from form key.
+   */
   @Suppress("unused")
   @Autowired
   lateinit var formUrlResolver: FormUrlResolver
 
+  /**
+   * Task to DTO.
+   */
   @Mappings(
     Mapping(target = "processName", source = "sourceReference.name"),
     Mapping(target = "url", expression = "java(formUrlResolver.resolveUrl(task))")
   )
   abstract fun dto(task: Task): TaskDto
 
+  /**
+   * Data Entry to DTO.
+   */
   @Mappings(
     Mapping(target = "payload", source = "dataEntry.payload"),
     Mapping(target = "url", expression = "java(formUrlResolver.resolveUrl(dataEntry))"),
     Mapping(target = "currentState", source = "dataEntry.state.state"),
     Mapping(target = "currentStateType", source = "dataEntry.state.processingType"),
-    Mapping(target = "protocol", source="dataEntry.protocol")
+    Mapping(target = "protocol", source = "dataEntry.protocol")
   )
   abstract fun dto(dataEntry: DataEntry): DataEntryDto
 
+  /**
+   * Protocol Entry to DTO.
+   */
   @Mappings(
     Mapping(target = "timestamp", source = "entry.time"),
     Mapping(target = "user", source = "entry.username"),
@@ -50,6 +65,9 @@ abstract class TaskWithDataEntriesMapper {
   )
   abstract fun dto(entry: ProtocolEntry): ProtocolEntryDto
 
+  /**
+   * Task with data entries to DTO.
+   */
   @Mappings(
     Mapping(target = "task", source = "task"),
     Mapping(target = "dataEntries", source = "dataEntries")
@@ -57,6 +75,9 @@ abstract class TaskWithDataEntriesMapper {
   abstract fun dto(taskWithDataEntries: TaskWithDataEntries): TaskWithDataEntriesDto
 
 
+  /**
+   * Date formatter.
+   */
   fun toOffsetDateTime(@Valid time: Date?): OffsetDateTime? {
     return if (time == null) null else OffsetDateTime.ofInstant(time.toInstant(), ZoneOffset.UTC)
   }

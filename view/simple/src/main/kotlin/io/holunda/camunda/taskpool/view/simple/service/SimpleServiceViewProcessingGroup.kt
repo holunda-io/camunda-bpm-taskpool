@@ -33,13 +33,3 @@ class SimpleServiceViewProcessingGroup(
 
 }
 
-/**
- * Update query if the element is resent in the map.
- */
-fun <T : Any, Q : FilterQuery<T>> QueryUpdateEmitter.updateMapFilterQuery(map: Map<String, T>, key: String, clazz: Class<Q>) {
-  if (map.contains(key)) {
-    val entry = map.getValue(key)
-    this.emit(clazz, { query -> query.applyFilter(entry) }, entry)
-  }
-}
-

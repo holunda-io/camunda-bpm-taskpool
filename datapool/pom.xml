@@ -5,7 +5,7 @@
   <parent>
     <groupId>io.holunda.taskpool</groupId>
     <artifactId>camunda-bpm-taskpool</artifactId>
-    <version>2.0.11</version>
+    <version>2.1.0</version>
   </parent>
 
   <artifactId>camunda-bpm-datapool-root</artifactId>
@@ -13,6 +13,7 @@
 
   <modules>
     <module>datapool-api</module>
+    <module>datapool-event</module>
     <module>datapool-core</module>
   </modules>
 
@@ -21,6 +22,11 @@
       <dependency>
         <groupId>io.holunda.taskpool</groupId>
         <artifactId>camunda-bpm-datapool-api</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.holunda.taskpool</groupId>
+        <artifactId>camunda-bpm-datapool-event</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>

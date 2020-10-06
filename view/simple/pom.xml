@@ -5,7 +5,7 @@
   <parent>
     <groupId>io.holunda.taskpool</groupId>
     <artifactId>camunda-bpm-taskpool-view-root</artifactId>
-    <version>2.0.11</version>
+    <version>2.1.0</version>
   </parent>
 
   <artifactId>camunda-bpm-taskpool-view-simple</artifactId>
@@ -20,6 +20,7 @@
       <groupId>io.holunda.taskpool</groupId>
       <artifactId>camunda-bpm-taskpool-view-api</artifactId>
     </dependency>
+
     <dependency>
       <groupId>org.axonframework</groupId>
       <artifactId>axon-messaging</artifactId>

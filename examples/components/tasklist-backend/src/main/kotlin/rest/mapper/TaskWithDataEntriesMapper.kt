@@ -1,9 +1,9 @@
 package io.holunda.camunda.taskpool.example.tasklist.rest.mapper
 
-import com.fasterxml.jackson.core.JsonProcessingException
-import io.holunda.camunda.taskpool.api.business.DataEntryState
-import io.holunda.camunda.taskpool.api.business.Modification
-import io.holunda.camunda.taskpool.example.tasklist.rest.model.*
+import io.holunda.camunda.taskpool.example.tasklist.rest.model.DataEntryDto
+import io.holunda.camunda.taskpool.example.tasklist.rest.model.ProtocolEntryDto
+import io.holunda.camunda.taskpool.example.tasklist.rest.model.TaskDto
+import io.holunda.camunda.taskpool.example.tasklist.rest.model.TaskWithDataEntriesDto
 import io.holunda.camunda.taskpool.view.*
 import org.mapstruct.Mapper
 import org.mapstruct.Mapping
@@ -36,7 +36,7 @@ abstract class TaskWithDataEntriesMapper {
     Mapping(target = "url", expression = "java(formUrlResolver.resolveUrl(dataEntry))"),
     Mapping(target = "currentState", source = "dataEntry.state.state"),
     Mapping(target = "currentStateType", source = "dataEntry.state.processingType"),
-    Mapping(target = "protocol", source="dataEntry.protocol")
+    Mapping(target = "protocol", source = "dataEntry.protocol")
   )
   abstract fun dto(dataEntry: DataEntry): DataEntryDto
 
