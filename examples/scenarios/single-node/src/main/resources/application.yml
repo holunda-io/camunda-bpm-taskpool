@@ -39,7 +39,9 @@ camunda:
   taskpool:
     collector:
       tasklist-url: http://localhost:${server.port}/taskpool/tasks
-      process:
+      process-instance:
+        enabled: true
+      process-definition:
         enabled: true
       enricher:
         application-name: ${spring.application.name}  # default

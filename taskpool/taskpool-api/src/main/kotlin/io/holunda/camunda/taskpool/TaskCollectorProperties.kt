@@ -34,7 +34,13 @@ class TaskCollectorProperties(
    * Process definition collection properties.
    */
   @NestedConfigurationProperty
-  var process: ProcessDefinitionProperties = ProcessDefinitionProperties()
+  var processDefintion: ProcessDefinitionProperties = ProcessDefinitionProperties(),
+
+  /**
+   * Process instance collection properties.
+   */
+  @NestedConfigurationProperty
+  var processInstance: ProcessInstanceProperties = ProcessInstanceProperties()
 )
 
 /**
@@ -116,3 +122,15 @@ data class ProcessDefinitionProperties(
   var enabled: Boolean = false
 )
 
+
+/**
+ * Properties controlling the transfer of process instance.
+ */
+@ConstructorBinding
+data class ProcessInstanceProperties(
+
+  /**
+   * Disable by default.
+   */
+  var enabled: Boolean = false
+)

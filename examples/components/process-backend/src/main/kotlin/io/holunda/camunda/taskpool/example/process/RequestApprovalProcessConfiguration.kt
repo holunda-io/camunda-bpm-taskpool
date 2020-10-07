@@ -11,7 +11,7 @@ import io.holunda.camunda.taskpool.example.process.process.RequestApprovalProces
 import io.holunda.camunda.taskpool.example.process.process.RequestApprovalProcess.Variables.ORIGINATOR
 import io.holunda.camunda.taskpool.example.process.process.RequestApprovalProcess.Variables.REQUEST_ID
 import io.holunda.camunda.taskpool.sender.gateway.LoggingTaskCommandErrorHandler
-import io.holunda.camunda.taskpool.sender.gateway.TaskCommandErrorHandler
+import io.holunda.camunda.taskpool.sender.gateway.CommandErrorHandler
 import mu.KLogging
 import org.axonframework.commandhandling.CommandResultMessage
 import org.camunda.bpm.spring.boot.starter.annotation.EnableProcessApplication
@@ -92,7 +92,7 @@ class RequestApprovalProcessConfiguration {
 
   @Bean
   @Primary
-  fun myTaskCommandErrorHandler(): TaskCommandErrorHandler = object : LoggingTaskCommandErrorHandler(logger) {
+  fun myTaskCommandErrorHandler(): CommandErrorHandler = object : LoggingTaskCommandErrorHandler(logger) {
     override fun apply(commandMessage: Any, commandResultMessage: CommandResultMessage<out Any?>) {
       logger.error { "<--------- CUSTOM ERROR HANDLER REPORT --------->" }
       super.apply(commandMessage, commandResultMessage)

@@ -44,8 +44,8 @@ class AxonCommandListGatewayTest {
           enabled = false
         )
       ),
-      taskCommandErrorHandler = LoggingTaskCommandErrorHandler(logger),
-      taskCommandSuccessHandler = LoggingTaskCommandSuccessHandler(logger)
+      commandErrorHandler = LoggingTaskCommandErrorHandler(logger),
+      commandSuccessHandler = LoggingTaskCommandSuccessHandler(logger)
     )
 
     wrapper.sendToGateway(listOf(makeCreateTaskCommand()))
@@ -63,8 +63,8 @@ class AxonCommandListGatewayTest {
           enabled = true
         )
       ),
-      taskCommandErrorHandler = LoggingTaskCommandErrorHandler(logger),
-      taskCommandSuccessHandler = LoggingTaskCommandSuccessHandler(logger)
+      commandErrorHandler = LoggingTaskCommandErrorHandler(logger),
+      commandSuccessHandler = LoggingTaskCommandSuccessHandler(logger)
     )
 
     val createTaskCommand = makeCreateTaskCommand()

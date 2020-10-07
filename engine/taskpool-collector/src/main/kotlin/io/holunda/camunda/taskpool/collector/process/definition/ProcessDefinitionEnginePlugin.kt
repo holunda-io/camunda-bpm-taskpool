@@ -15,7 +15,7 @@ class ProcessDefinitionEnginePlugin(
   private val logger: Logger = LoggerFactory.getLogger(ProcessDefinitionEnginePlugin::class.java)
 
   override fun preInit(springConfiguration: SpringProcessEngineConfiguration) {
-    if (properties.process.enabled) {
+    if (properties.processDefintion.enabled) {
       logger.info("EVENTING-010: Process definition registration plugin registered.")
       springConfiguration.customPostBPMNParseListeners.add(
         RegisterProcessDefinitionParseListener(springConfiguration)

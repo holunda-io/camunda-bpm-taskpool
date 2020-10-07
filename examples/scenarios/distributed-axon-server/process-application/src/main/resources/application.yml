@@ -44,7 +44,9 @@ camunda:
         default-query-timeout: 3
     collector:
       tasklist-url: http://localhost:8081/taskpool/
-      process:
+      process-definition:
+        enabled: true
+      process-instance:
         enabled: true
       enricher:
         application-name: ${spring.application.name}  # default

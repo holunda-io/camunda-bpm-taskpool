@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.holunda.camunda.taskpool.enricher.*
 import io.holunda.camunda.taskpool.sender.CommandSender
-import io.holunda.camunda.taskpool.sender.TxAwareAccumulatingCommandSender
+import io.holunda.camunda.taskpool.sender.TxAwareAccumulatingEngineTaskCommandSender
 import io.holunda.camunda.taskpool.sender.accumulator.CommandAccumulator
 import io.holunda.camunda.taskpool.sender.accumulator.ProjectingCommandAccumulator
 import io.holunda.camunda.taskpool.sender.gateway.*
@@ -65,7 +65,7 @@ class TaskCollectorConfiguration(
   @ConditionalOnExpression("'\${camunda.taskpool.collector.sender.type}' != 'custom'")
   fun txCommandSender(commandListGateway: CommandListGateway, accumulator: CommandAccumulator): CommandSender =
     when (properties.sender.type) {
-      TaskSenderType.tx -> TxAwareAccumulatingCommandSender(commandListGateway, accumulator, properties.sender.sendWithinTransaction)
+      TaskSenderType.tx -> TxAwareAccumulatingEngineTaskCommandSender(commandListGateway, accumulator, properties.sender.sendWithinTransaction)
       else -> throw IllegalStateException("Could not initialize sender, used ${properties.sender.type} type.")
     }
 
@@ -97,12 +97,12 @@ class TaskCollectorConfiguration(
    * Default logging handler.
    */
   @Bean
-  fun loggingTaskCommandSuccessHandler(): TaskCommandSuccessHandler = LoggingTaskCommandSuccessHandler(LoggerFactory.getLogger(CommandSender::class.java))
+  fun loggingTaskCommandSuccessHandler(): CommandSuccessHandler = LoggingTaskCommandSuccessHandler(LoggerFactory.getLogger(CommandSender::class.java))
 
   /**
    * Default logging handler.
    */
   @Bean
-  fun loggingTaskCommandErrorHandler(): TaskCommandErrorHandler = LoggingTaskCommandErrorHandler(LoggerFactory.getLogger(CommandSender::class.java))
+  fun loggingTaskCommandErrorHandler(): CommandErrorHandler = LoggingTaskCommandErrorHandler(LoggerFactory.getLogger(CommandSender::class.java))
 }
 

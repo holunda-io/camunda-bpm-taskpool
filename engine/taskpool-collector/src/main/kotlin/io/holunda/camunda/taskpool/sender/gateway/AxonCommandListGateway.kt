@@ -15,8 +15,8 @@ import org.springframework.stereotype.Component
 class AxonCommandListGateway(
   private val commandGateway: CommandGateway,
   private val properties: TaskCollectorProperties,
-  private val taskCommandSuccessHandler: TaskCommandSuccessHandler,
-  private val taskCommandErrorHandler: TaskCommandErrorHandler
+  private val commandSuccessHandler: CommandSuccessHandler,
+  private val commandErrorHandler: CommandErrorHandler
 ) : CommandListGateway {
 
   private val logger: Logger = LoggerFactory.getLogger(CommandSender::class.java)
@@ -33,9 +33,9 @@ class AxonCommandListGateway(
       if (properties.sender.enabled) {
         commandGateway.send<Any, Any?>(nextCommand) { commandMessage, commandResultMessage ->
           if (commandResultMessage.isExceptional) {
-            taskCommandErrorHandler.apply(commandMessage, commandResultMessage)
+            commandErrorHandler.apply(commandMessage, commandResultMessage)
           } else {
-            taskCommandSuccessHandler.apply(commandMessage, commandResultMessage)
+            commandSuccessHandler.apply(commandMessage, commandResultMessage)
           }
           sendToGateway(remainingCommands)
         }
@@ -51,7 +51,7 @@ class AxonCommandListGateway(
 /**
  * Error handler, logging the error.
  */
-open class LoggingTaskCommandErrorHandler(private val logger: Logger) : TaskCommandErrorHandler {
+open class LoggingTaskCommandErrorHandler(private val logger: Logger) : CommandErrorHandler {
 
   override fun apply(commandMessage: Any, commandResultMessage: CommandResultMessage<out Any?>) {
     logger.error("SENDER-006: Sending command $commandMessage resulted in error", commandResultMessage.exceptionResult())
@@ -61,7 +61,7 @@ open class LoggingTaskCommandErrorHandler(private val logger: Logger) : TaskComm
 /**
  * Logs success.
  */
-open class LoggingTaskCommandSuccessHandler(private val logger: Logger) : TaskCommandSuccessHandler {
+open class LoggingTaskCommandSuccessHandler(private val logger: Logger) : CommandSuccessHandler {
 
   override fun apply(commandMessage: Any, commandResultMessage: CommandResultMessage<out Any?>) {
     if (logger.isDebugEnabled) {
