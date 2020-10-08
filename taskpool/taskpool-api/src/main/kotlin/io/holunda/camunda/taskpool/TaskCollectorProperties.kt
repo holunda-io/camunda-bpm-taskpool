@@ -34,7 +34,7 @@ class TaskCollectorProperties(
    * Process definition collection properties.
    */
   @NestedConfigurationProperty
-  var processDefintion: ProcessDefinitionProperties = ProcessDefinitionProperties(),
+  var processDefinition: ProcessDefinitionProperties = ProcessDefinitionProperties(),
 
   /**
    * Process instance collection properties.
