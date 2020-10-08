@@ -1,63 +1,57 @@
 package io.holunda.camunda.taskpool.upcast.definition
 
+import io.holunda.camunda.taskpool.upcast.definition.RepresentationContentType.JSON
+import mu.KLogging
 import org.axonframework.serialization.SimpleSerializedType
 import org.axonframework.serialization.upcasting.event.IntermediateEventRepresentation
-import org.xml.sax.InputSource
-import java.io.StringReader
-import java.io.StringWriter
+import org.dom4j.Document
 import java.util.function.Function
-import javax.xml.parsers.DocumentBuilderFactory
-import javax.xml.transform.TransformerFactory
-import javax.xml.transform.dom.DOMSource
-import javax.xml.transform.stream.StreamResult
 
 
 @AnnotatedEventUpcaster("io.holunda.camunda.taskpool.api.task.ProcessDefinitionRegisteredEvent")
-class ProcessDefinitionEventNullTo1Upcaster : AnnotationBasedSingleEventUpcaster() {
+class ProcessDefinitionEventXMLNullTo1Upcaster : AnnotationBasedSingleEventUpcaster() {
 
-  companion object {
+  companion object : KLogging() {
     const val RESULT_OBJECT_TYPE = "io.holunda.camunda.taskpool.api.process.definition.ProcessDefinitionRegisteredEvent"
+  }
+
+  init {
+    logger.debug { "EVENT-UPCASTER-001: Activating ${this::class.simpleName} for $RESULT_OBJECT_TYPE" }
+  }
+
+  override fun doUpcast(representation: IntermediateEventRepresentation): IntermediateEventRepresentation {
+    return representation.upcastPayload(
+      SimpleSerializedType(RESULT_OBJECT_TYPE, "1"),
+      Document::class.java)
+    // XStream writes the event types into the event.
+    { document ->
+      document.apply {
+        val nodes = this.selectNodes("//" + extractAnnotatedEventType().name) // use the type name from the annotation
+        nodes.forEach { node ->
+          node.name = RESULT_OBJECT_TYPE
+        }
+      }
+    }
+  }
+}
+
+@AnnotatedEventUpcaster("io.holunda.camunda.taskpool.api.task.ProcessDefinitionRegisteredEvent", representationContentType = JSON)
+class ProcessDefinitionEventJSONNullTo1Upcaster : AnnotationBasedSingleEventUpcaster() {
+
+  companion object : KLogging() {
+    const val RESULT_OBJECT_TYPE = "io.holunda.camunda.taskpool.api.process.definition.ProcessDefinitionRegisteredEvent"
+  }
+
+  init {
+    logger.debug { "EVENT-UPCASTER-001: Activating ${this::class.simpleName} for $RESULT_OBJECT_TYPE" }
   }
 
   override fun doUpcast(representation: IntermediateEventRepresentation): IntermediateEventRepresentation {
     return representation.upcastPayload(
       SimpleSerializedType(RESULT_OBJECT_TYPE, "1"),
       String::class.java,
-      when (representation.contentType()) {
-        // Jackson is not writing class names inside the event.
-        RepresentationContentType.JSON -> Function.identity<String>()
-        // XStream writes the event types into the event.
-        RepresentationContentType.XML -> Function {
-          val document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(InputSource(StringReader(it)))
-          val nodes = document.getElementsByTagName(extractAnnotatedEventType().name) // use the type name from the annotation
-          for (i: Int in 0 until nodes.length) {
-            document.renameNode(nodes.item(i), null, RESULT_OBJECT_TYPE)
-          }
-          val transformer = TransformerFactory.newInstance().newTransformer()
-          val writer = StringWriter()
-          transformer.transform(DOMSource(document), StreamResult(writer))
-          writer.buffer.toString()
-        }
-      }
+      // Jackson is not writing class names inside the event.
+      Function.identity()
     )
   }
-}
-
-/**
- * Determines the content type based on the first character of the content.
- */
-fun IntermediateEventRepresentation.contentType(): RepresentationContentType {
-  if (this.data.data.toString().startsWith("<")) {
-    return RepresentationContentType.XML
-  } else if (this.data.data.toString().startsWith("{")) {
-    return RepresentationContentType.JSON
-  }
-  throw IllegalStateException("Unknown content type")
-}
-
-/**
- * Supported content typess for this upcaster.
- */
-enum class RepresentationContentType {
-  JSON, XML
 }

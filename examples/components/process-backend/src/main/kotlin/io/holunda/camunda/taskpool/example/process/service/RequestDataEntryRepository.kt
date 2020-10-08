@@ -15,6 +15,10 @@ import org.axonframework.messaging.MetaData
 import org.axonframework.queryhandling.QueryGateway
 import org.springframework.stereotype.Component
 
+/**
+ * Repository for storing and retrievieng data entries using data entry
+ * projection of data pool.
+ */
 @Component
 class RequestDataEntryRepository(
   private val queryGateway: QueryGateway,
