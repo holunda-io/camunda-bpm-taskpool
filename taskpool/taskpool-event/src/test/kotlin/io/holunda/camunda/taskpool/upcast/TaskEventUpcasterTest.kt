@@ -14,21 +14,14 @@ import org.axonframework.serialization.xml.XStreamSerializer
 import org.dom4j.Document
 import org.dom4j.DocumentHelper
 import org.dom4j.io.SAXReader
-import org.junit.Ignore
 import org.junit.Test
 import java.io.StringReader
 import java.util.stream.Stream
 import kotlin.reflect.KClass
 import kotlin.streams.toList
 
+// TODO: Move out test setup into separate project.
 class TaskEventUpcasterTest {
-
-  // FIXME: not implemented yet.
-  @Ignore
-  @Test
-  fun shouldUpcastJackson() {
-
-  }
 
   @Test
   fun shouldUpcastXStream() {
@@ -49,7 +42,7 @@ class TaskEventUpcasterTest {
 
   private inline fun <reified T : Any> runTheTest(clazz: KClass<T>, revisionNumber: String) {
     val eventName: String = clazz.qualifiedName!!
-    val xml = generateFakeOldEvent(clazz)
+    val xml = generateFakeOldEventXML(clazz)
     val document = SAXReader().read(StringReader(xml))
     val clazz = org.dom4j.Document::class.java
     val serializer = XStreamSerializer.defaultSerializer()
@@ -92,7 +85,7 @@ class TaskEventUpcasterTest {
   /**
    * This method generates the relevant part of the old event. Most other fields are empty, but the source reference is filled.
    */
-  internal fun <T : Any> generateFakeOldEvent(clazz: KClass<T>): String {
+  private fun <T : Any> generateFakeOldEventXML(clazz: KClass<T>): String {
     return when (clazz) {
       TaskCreatedEngineEvent::class,
       TaskDeletedEngineEvent::class,

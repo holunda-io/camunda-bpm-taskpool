@@ -17,6 +17,7 @@ abstract class AnnotationBasedSingleEventUpcaster : SingleEventUpcaster() {
   @Suppress("MemberVisibilityCanBePrivate")
   val targetType = extractAnnotatedEventType()
 
+  // TODO: maybe check revision already here?
   override fun canUpcast(representation: IntermediateEventRepresentation): Boolean =
     targetType == representation.type && representation.contentType() == representationContentType()
 
@@ -69,6 +70,8 @@ fun IntermediateEventRepresentation.contentType(): RepresentationContentType {
       return RepresentationContentType.JSON
     }
     is ByteArray -> {
+      // TODO: this seems expensive, maybe a check for the first byte is faster?
+      // what about encoding?
       val asString = String(this.data.data as ByteArray)
       if (asString.startsWith("<")) {
         return RepresentationContentType.XML
