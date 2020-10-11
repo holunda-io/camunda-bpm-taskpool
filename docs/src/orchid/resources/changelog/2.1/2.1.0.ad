@@ -13,11 +13,12 @@ version: 2.1.0
 
 == Breaking Changes
 
-* Separated internal datapool and taskpool events into artifacts `camunda-bpm-taskpool-event` and 'camunda-bpm-datapool-event' #246
+* Separated internal datapool and taskpool events into artifacts `camunda-bpm-taskpool-event` and `camunda-bpm-datapool-event` #246
+* Renamed `CamundaEvent` into `CamundaEventType`
 * Fixed package for process-definition commands #244
 * `SourceReference` is now an interface #242
 * Changed subscription behavior of query handlers for `DataEntryQuery...` queries
-* Changed command side API of Data Entry
+* Changed command side API of Data Entry (`DataEntrySender`)
 * Dropped support for JDK 8, the JDK version is now 11
 
 == Chore

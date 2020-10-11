@@ -1,7 +1,7 @@
 site:
   about:
-    siteName: Camunda BPM Taskpool
-    siteDescription: A component for pooling Camunda BPM user tasks with business data for high performance queries.
+    siteName: BPM Taskpool
+    siteDescription: A component for pooling user tasks with business data for high performance queries.
     avatar: 'assets/media/favicon.png'
 
 allPages:

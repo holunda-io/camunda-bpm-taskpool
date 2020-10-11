@@ -19,7 +19,7 @@ to build parts of the process platform.
 
 == Design Decisions
 
-We decided to build `camunda-bpm-taskpool` as a collection of loose-coupled components which can be used during the construction
+We decided to build thi library as a collection of loose-coupled components which can be used during the construction
 of the process automation solution in different ways, depending on your link:../user-guide/scenarios[Usage Scenario].
 
 The process platform is a central application consisting of business process independent components like a central user management,

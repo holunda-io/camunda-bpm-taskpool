@@ -1,9 +1,9 @@
 useSidebarSearch: true
 showVersion: false
 legacySearch: false
-primaryColor: '#B10000'
+primaryColor: '#16480c'
 trianglifyOptions:
-  x_colors: ['#000', '#B10000', '#000']
+  x_colors: ['#000', '#16480c', '#000']
 extraCss:
   - 'assets/css/menu.scss'
   - 'assets/css/asciidoc-admonitionblock.scss'

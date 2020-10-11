@@ -34,7 +34,7 @@ sealed class TaskInteractionEvent(eventType: String) : TaskEvent(eventType), Wit
 /**
  * Task created.
  */
-@Revision("3")
+@Revision("4")
 data class TaskCreatedEngineEvent(
   override val id: String,
   override val sourceReference: SourceReference,
@@ -58,7 +58,7 @@ data class TaskCreatedEngineEvent(
 /**
  * Task assigned to user.
  */
-@Revision("3")
+@Revision("4")
 data class TaskAssignedEngineEvent(
   override val id: String,
   override val sourceReference: SourceReference,
@@ -82,7 +82,7 @@ data class TaskAssignedEngineEvent(
 /**
  * Task completed.
  */
-@Revision("3")
+@Revision("4")
 data class TaskCompletedEngineEvent(
   override val id: String,
   override val sourceReference: SourceReference,
@@ -107,7 +107,7 @@ data class TaskCompletedEngineEvent(
 /**
  * Task deleted (happenc on instance cancellation).
  */
-@Revision("3")
+@Revision("4")
 data class TaskDeletedEngineEvent(
   override val id: String,
   override val sourceReference: SourceReference,
@@ -133,7 +133,7 @@ data class TaskDeletedEngineEvent(
 /**
  * Changes of task attributes (but not assingment).
  */
-@Revision("3")
+@Revision("4")
 data class TaskAttributeUpdatedEngineEvent(
   override val id: String,
   override val sourceReference: SourceReference,
@@ -149,7 +149,7 @@ data class TaskAttributeUpdatedEngineEvent(
 /**
  * Changes of task assignment.
  */
-@Revision("3")
+@Revision("4")
 sealed class TaskAssignmentUpdatedEngineEvent(
   override val id: String,
   override val sourceReference: SourceReference,
@@ -160,7 +160,7 @@ sealed class TaskAssignmentUpdatedEngineEvent(
 /**
  * Change of a candidate group.
  */
-@Revision("1")
+@Revision("4")
 data class TaskCandidateGroupChanged(
   override val id: String,
   override val sourceReference: SourceReference,
@@ -172,7 +172,7 @@ data class TaskCandidateGroupChanged(
 /**
  * Change of candidate user.
  */
-@Revision("1")
+@Revision("4")
 data class TaskCandidateUserChanged(
   override val id: String,
   override val sourceReference: SourceReference,
@@ -184,7 +184,7 @@ data class TaskCandidateUserChanged(
 /**
  * Claim executed by the user. Task engine listens to this event to change the assignee.
  */
-@Revision("2")
+@Revision("4")
 data class TaskClaimedEvent(
   override val id: String,
   override val sourceReference: SourceReference,
@@ -196,7 +196,7 @@ data class TaskClaimedEvent(
 /**
  * Un-claim executed by the user. Task engine listens to this event to change the assignee.
  */
-@Revision("2")
+@Revision("4")
 data class TaskUnclaimedEvent(
   override val id: String,
   override val sourceReference: SourceReference,
@@ -207,7 +207,7 @@ data class TaskUnclaimedEvent(
 /**
  * Complete by the user. Task engine listens to this event to complete the task.
  */
-@Revision("2")
+@Revision("4")
 data class TaskToBeCompletedEvent(
   override val id: String,
   override val sourceReference: SourceReference,
@@ -219,7 +219,7 @@ data class TaskToBeCompletedEvent(
 /**
  * Defer by the user. Task engine listens to this event to change the follow-up date.
  */
-@Revision("2")
+@Revision("4")
 data class TaskDeferredEvent(
   override val id: String,
   override val sourceReference: SourceReference,
@@ -231,7 +231,7 @@ data class TaskDeferredEvent(
 /**
  * Undefer by the user. Task engine listens to this event to change the follow-up date.
  */
-@Revision("2")
+@Revision("4")
 data class TaskUndeferredEvent(
   override val id: String,
   override val sourceReference: SourceReference,

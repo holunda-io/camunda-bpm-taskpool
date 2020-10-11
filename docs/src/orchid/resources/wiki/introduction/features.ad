@@ -4,29 +4,30 @@ title: Features
 
 == {{ page.title }}
 
+=== Supported process engines
+
+* Camunda BPM
+
 === Task List
 
-A task list is a application allowing to represent a list of user tasks. This list is individually created based on
-user's profile (including authorizations based on roles). The following features are provided by `camunda-bpm-taskpool` library:
+A task list is an application allowing to represent a list of user tasks. This list is created based on
+user's profile (including authorizations based on roles) for every user. The following features are provided
+by the library:
 
 * user task API providing attributes important for processing
-
 * mirroring tasks: provides a list of tasks in the system including all task attributes provided by Camunda BPM Engine
-
 * reacts on all task life cycle events fired by the process engine
-
 * high performance queries: creates of read-optimized projections including task-, process- and business data
-
 * centralized task list: running several Camunda BPM Engines in several applications
    is a common use case for larger companies. From the user's perspective, it is not feasible
    to login to several task lists and check for relevant user tasks. The demand for the
-   centralized task list arises and can be addressed by `camunda-bpm-taskpool`
+   centralized task list arises and can be addressed by the the use of the `taskpool` library
    if the tasks from several process engines are collected and transmitted over the network.
 
-* data enrichment: all use cases in which the data is not stored in the process result
+* data enrichment: all scenarios in which the data is not stored in the process payload result
    in a cascade of queries executed after the task fetch. In contrast to that,
-   the usage of the `camunda-bpm-taskpool` with a data enrichment plugin mechanism
-   (allowing to plug-in some data enricher on task creation) would allow for caching the additional
+   the usage of the `taskpool` libary with a data enrichment plugin mechanism
+   (allowing to plug-in some data enricher on task creation) allows for caching the additional
    business data along with the task information, instead of querying it during task fetch.
 
 === Archive List
@@ -37,7 +38,14 @@ of such objects with different statuses like preliminary, in process or complete
 following features:
 
 * business object API providing attributes important for processing
-
-* business object modification API for creating an Audit Log
-
+* business object modification API for creating an audit Log
 * authorization API for business objects
+
+=== Process List
+
+A process list provides a list of running instances and a list of process definitions deployed in the process engines connected to
+the library.
+
+* list of startable process definitions (including URLs to start forms)
+* list of running process instances
+* reacts on life cycle events of process instance
