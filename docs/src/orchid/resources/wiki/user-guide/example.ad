@@ -5,7 +5,7 @@ title: Example Application
 == {{ page.title }}
 
 Along with library modules several example modules and applications are provided, demonstrating the main features of the solution.
-This includes a series of example applications for usage in different link:scenarios[Usage Scenarios]. They all share the same
+This includes a series of example applications for usage in different link:../scenarios/[Usage Scenarios]. They all share the same
 business process described in the next section.
 
 
