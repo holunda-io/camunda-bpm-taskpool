@@ -38,6 +38,25 @@ interface DataEntryCommandSender {
   )
 
   /**
+   * Sends command about data entry creation or update.
+   * @param entryType type of entry.
+   * @param entryId id of entry.
+   * @param payload payload to send,
+   * @param name human readable name of the data entry.
+   * @param type human readable type of the entry.
+   * @param state new state of the entry.
+   */
+  fun sendDataEntryChange(
+    entryType: EntryType,
+    entryId: EntryId,
+    payload: Any = mapOf<String, Any>(),
+    name: String = entryId,
+    description: String? = null,
+    type: String = entryType,
+    state: DataEntryState = ProcessingType.UNDEFINED.of()
+  )
+
+  /**
    * Sends a data entry command.
    * @param command command to send.
    * @param metaData meta data, will default to empty metadata.

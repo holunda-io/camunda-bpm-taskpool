@@ -28,6 +28,29 @@ class SimpleDataEntryCommandSender(
 
   private val logger: Logger = LoggerFactory.getLogger(DataEntryCommandSender::class.java)
 
+  /** to be more java friendly **/
+  override fun sendDataEntryChange(
+    entryType: EntryType,
+    entryId: EntryId,
+    payload: Any,
+    name: String,
+    description: String?,
+    type: String,
+    state: DataEntryState
+  )= sendDataEntryChange(
+      entryType = entryType,
+      entryId = entryId,
+      payload = payload,
+      name = name,
+      description = description,
+      type = type,
+      state = state,
+      modification = Modification.now(),
+      correlations = newCorrelations(),
+      authorizationChanges = listOf(),
+      metaData = MetaData.emptyInstance()
+  )
+
   override fun sendDataEntryChange(
     entryType: EntryType,
     entryId: EntryId,
