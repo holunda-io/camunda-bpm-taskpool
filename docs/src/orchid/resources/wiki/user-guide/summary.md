@@ -17,7 +17,7 @@ title: User Guide
   - [Distributed using Axon Server](scenarios/distributed-axon-server.ad)
   - [Distributed without Axon Server](scenarios/distributed-no-axon-server.ad)
 
-## Taskpool Components
+## Components
 * [Integration Guide](integration-guide.ad)
 * [Components Overview](components/index.ad)
 * Engine Components
