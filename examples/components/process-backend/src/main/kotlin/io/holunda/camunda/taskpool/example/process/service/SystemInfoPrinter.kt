@@ -47,7 +47,7 @@ class SystemInfoPrinter(
   fun processInstancePrinter(): ApplicationRunner {
     return ApplicationRunner {
       val subscription = queryGateway.subscriptionQuery(
-        ProcessInstancesByStateQuery(setOf(ProcessInstanceState.RUNNING, ProcessInstanceState.FINISHED)),
+        ProcessInstancesByStateQuery(setOf(ProcessInstanceState.RUNNING, ProcessInstanceState.SUSPENDED, ProcessInstanceState.FINISHED)),
         QueryResponseMessageResponseType.queryResponseMessageResponseType<ProcessInstanceQueryResult>(),
         QueryResponseMessageResponseType.queryResponseMessageResponseType<ProcessInstanceQueryResult>()
       )

@@ -22,8 +22,24 @@ data class ProcessInstanceStartedEvent(
   val startActivityId: String? = null
 )
 
-@Revision("1")
+@Revision("2")
 data class ProcessInstanceEndedEvent(
+  val processInstanceId: String,
+  val sourceReference: SourceReference,
+
+  /** the business key of the process instance  */
+  val businessKey: String? = null,
+
+  /** the id of the super case instance  */
+  val superInstanceId: String? = null,
+
+  /** id of the activity which ended the process instance */
+  val endActivityId: String?
+)
+
+
+@Revision("1")
+data class ProcessInstanceCancelledEvent(
   val processInstanceId: String,
   val sourceReference: SourceReference,
 
@@ -38,4 +54,17 @@ data class ProcessInstanceEndedEvent(
 
   /** the reason why this process instance was cancelled (deleted) */
   val deleteReason: String?
+)
+
+
+@Revision("1")
+data class ProcessInstanceSuspendedEvent(
+  val processInstanceId: String,
+  val sourceReference: SourceReference,
+)
+
+@Revision("1")
+data class ProcessInstanceResumedEvent(
+  val processInstanceId: String,
+  val sourceReference: SourceReference,
 )
