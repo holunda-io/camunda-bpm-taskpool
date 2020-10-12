@@ -5,6 +5,7 @@ version: 2.1.3
 == Features
 
 * Respect process instance lifecycle, see #281
+* Provide `BOM` for taskpool and datapool, see #280
 
 == Bugfixes
 
