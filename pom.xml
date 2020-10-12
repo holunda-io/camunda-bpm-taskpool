@@ -63,6 +63,8 @@
     <module>taskpool</module>
     <module>datapool</module>
     <module>view</module>
+    <module>bom/taskpool-dependencies</module>
+    <module>bom/datapool-dependencies</module>
   </modules>
 
   <dependencyManagement>
