@@ -39,6 +39,9 @@ data class StartProcessInstanceCommand(
  */
 abstract class EndProcessInstanceCommand : ProcessInstanceCommand
 
+/**
+ * Informs about a process instance finished in the engine.
+ */
 data class FinishProcessInstanceCommand(
   @TargetAggregateIdentifier
   override val processInstanceId: String,
@@ -54,6 +57,9 @@ data class FinishProcessInstanceCommand(
   val endActivityId: String?,
 ): EndProcessInstanceCommand()
 
+/**
+ * Informs about a process instance cancelled by the user in the engine.
+ */
 data class CancelProcessInstanceCommand(
   @TargetAggregateIdentifier
   override val processInstanceId: String,

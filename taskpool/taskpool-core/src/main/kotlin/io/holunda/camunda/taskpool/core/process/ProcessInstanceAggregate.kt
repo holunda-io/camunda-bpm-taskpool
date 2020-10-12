@@ -13,6 +13,9 @@ class ProcessInstanceAggregate() {
   @AggregateIdentifier
   lateinit var processInstanceId: String
 
+  /**
+   * Create instance handler.
+   */
   @CommandHandler
   constructor(cmd: StartProcessInstanceCommand): this() {
     AggregateLifecycle.apply(ProcessInstanceStartedEvent(
@@ -25,6 +28,9 @@ class ProcessInstanceAggregate() {
     ))
   }
 
+  /**
+   * Finish instance handler.
+   */
   @CommandHandler
   fun end(cmd: FinishProcessInstanceCommand) {
     AggregateLifecycle.apply(ProcessInstanceEndedEvent(
@@ -36,6 +42,9 @@ class ProcessInstanceAggregate() {
     ))
   }
 
+  /**
+   * Cancel instance handler (by user).
+   */
   @CommandHandler
   fun cancel(cmd: CancelProcessInstanceCommand) {
     AggregateLifecycle.apply(ProcessInstanceCancelledEvent(
@@ -48,6 +57,9 @@ class ProcessInstanceAggregate() {
     ))
   }
 
+  /**
+   * Suspend instance handler (by user).
+   */
   @CommandHandler
   fun suspend(cmd: SuspendProcessInstanceCommand) {
     AggregateLifecycle.apply(ProcessInstanceSuspendedEvent(
@@ -56,6 +68,9 @@ class ProcessInstanceAggregate() {
     ))
   }
 
+  /**
+   * Resume instance handler (by user).
+   */
   @CommandHandler
   fun resume(cmd: ResumeProcessInstanceCommand) {
     AggregateLifecycle.apply(ProcessInstanceResumedEvent(
@@ -64,7 +79,9 @@ class ProcessInstanceAggregate() {
     ))
   }
 
-
+  /**
+   * Set process instance id..
+   */
   @EventSourcingHandler
   fun on(event: ProcessInstanceStartedEvent) {
     this.processInstanceId = event.processInstanceId
