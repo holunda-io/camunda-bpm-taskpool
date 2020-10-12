@@ -29,7 +29,7 @@ open class FallbackProcessVariablesFilterConfiguration {
 @ConditionalOnMissingBean(ProcessVariablesCorrelator::class)
 open class FallbackProcessVariablesCorrelatorConfiguration {
   /**
-   * Empty correlator.
+   * Empty corellator.
    */
   @Bean
   open fun processVariablesCorrelatorFallback(): ProcessVariablesCorrelator = ProcessVariablesCorrelator()

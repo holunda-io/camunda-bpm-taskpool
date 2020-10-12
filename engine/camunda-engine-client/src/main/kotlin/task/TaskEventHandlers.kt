@@ -132,5 +132,5 @@ class TaskEventHandlers(
   }
 
 
-  private fun isAddressedToMe(event: TaskIdentity) = taskCollectorProperties.enricher.applicationName == event.sourceReference.applicationName
+  private fun isAddressedToMe(event: TaskIdentity) = taskCollectorProperties.applicationName == event.sourceReference.applicationName
 }

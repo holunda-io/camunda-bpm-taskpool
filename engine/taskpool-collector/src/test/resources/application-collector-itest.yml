@@ -13,12 +13,9 @@ camunda:
   taskpool:
     collector:
       tasklist-url: http://localhost/test-tasklist/
-      enricher:
-#        application-name: collector-test
-        type: processVariables
-      sender:
+      send-commands-enabled: true
+      task:
         enabled: true
-        type: tx
 
 logging.level.io.holunda.camunda.taskpool:
   sender: DEBUG

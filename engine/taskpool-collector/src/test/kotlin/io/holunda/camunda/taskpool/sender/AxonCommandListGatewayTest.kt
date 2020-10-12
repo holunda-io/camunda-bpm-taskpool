@@ -1,7 +1,6 @@
 package io.holunda.camunda.taskpool.sender
 
 import io.holunda.camunda.taskpool.TaskCollectorProperties
-import io.holunda.camunda.taskpool.TaskSenderProperties
 import io.holunda.camunda.taskpool.api.task.AssignTaskCommand
 import io.holunda.camunda.taskpool.api.task.CreateTaskCommand
 import io.holunda.camunda.taskpool.api.task.ProcessReference
@@ -39,10 +38,8 @@ class AxonCommandListGatewayTest {
     val wrapper = AxonCommandListGateway(
       commandGateway = commandGateway,
       properties = TaskCollectorProperties(
-        springApplicationName = "some-name",
-        sender = TaskSenderProperties(
-          enabled = false
-        )
+        applicationName = "some-name",
+        sendCommandsEnabled = false
       ),
       commandErrorHandler = LoggingTaskCommandErrorHandler(logger),
       commandSuccessHandler = LoggingTaskCommandSuccessHandler(logger)
@@ -58,10 +55,8 @@ class AxonCommandListGatewayTest {
     val wrapper = AxonCommandListGateway(
       commandGateway = commandGateway,
       properties = TaskCollectorProperties(
-        springApplicationName = "some-name",
-        sender = TaskSenderProperties(
-          enabled = true
-        )
+        applicationName = "some-name",
+        sendCommandsEnabled = true
       ),
       commandErrorHandler = LoggingTaskCommandErrorHandler(logger),
       commandSuccessHandler = LoggingTaskCommandSuccessHandler(logger)
@@ -72,6 +67,7 @@ class AxonCommandListGatewayTest {
       id = "some-id",
       assignee = "kermit"
     )
+
     @Suppress("UNCHECKED_CAST")
     val callbackMatcher: ArgumentCaptor<CommandCallback<CreateTaskCommand, String>> =
       ArgumentCaptor.forClass(CommandCallback::class.java) as ArgumentCaptor<CommandCallback<CreateTaskCommand, String>>

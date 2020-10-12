@@ -49,7 +49,7 @@ class TaskEventCollectorService(
       formKey = task.formKey(),
       taskDefinitionKey = task.taskDefinitionKey,
       businessKey = task.execution.businessKey,
-      sourceReference = task.sourceReference(collectorProperties.enricher.applicationName)
+      sourceReference = task.sourceReference(collectorProperties.applicationName)
     )
 
   /**

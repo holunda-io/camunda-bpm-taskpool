@@ -21,7 +21,7 @@ class EnvironmentController(
   override fun getEnvironment(): ResponseEntity<EnvironmentDto> =
     ok(
       EnvironmentDto()
-        .applicationName(properties.enricher.applicationName)
+        .applicationName(properties.applicationName)
         .tasklistUrl(tasklistUrlResolver.getTasklistUrl())
     )
 }

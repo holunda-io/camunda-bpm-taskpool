@@ -33,8 +33,19 @@ class ProcessInstanceEventCollectorService(
    */
   @Order(ORDER)
   @EventListener(condition = "#processInstance.eventType.equals('start')")
-  fun create(processInstance: HistoricProcessInstanceEventEntity): StartProcessInstanceCommand = processInstance
-    .toStartProcessInstanceCommand(repositoryService, collectorProperties.enricher.applicationName)
+  fun create(processInstance: HistoricProcessInstanceEventEntity): StartProcessInstanceCommand =
+    StartProcessInstanceCommand(
+      sourceReference = processInstance.sourceReference(repositoryService, collectorProperties.applicationName),
+      processInstanceId = processInstance.processInstanceId,
+      businessKey = processInstance.businessKey,
+      startActivityId = processInstance.startActivityId,
+      startUserId = processInstance.startUserId,
+      superInstanceId = when {
+        processInstance.superProcessInstanceId != null -> processInstance.superProcessInstanceId
+        processInstance.superCaseInstanceId != null -> processInstance.superCaseInstanceId
+        else -> null
+      }
+    )
 
   /**
    * Fires update process instance command.
@@ -44,9 +55,17 @@ class ProcessInstanceEventCollectorService(
   @EventListener(condition = "#processInstance.eventType.equals('update')")
   fun update(processInstance: HistoricProcessInstanceEventEntity): UpdateProcessInstanceCommand? = when (processInstance.state) {
     // suspend
-    HistoricProcessInstance.STATE_SUSPENDED -> processInstance.toSuspendProcessInstanceCommand(repositoryService, collectorProperties.enricher.applicationName)
+    HistoricProcessInstance.STATE_SUSPENDED ->
+      SuspendProcessInstanceCommand(
+        sourceReference = processInstance.sourceReference(repositoryService, collectorProperties.applicationName),
+        processInstanceId = processInstance.processInstanceId,
+      )
     // resume
-    HistoricProcessInstance.STATE_ACTIVE -> processInstance.toResumeProcessInstanceCommand(repositoryService, collectorProperties.enricher.applicationName)
+    HistoricProcessInstance.STATE_ACTIVE ->
+      ResumeProcessInstanceCommand(
+        sourceReference = processInstance.sourceReference(repositoryService, collectorProperties.applicationName),
+        processInstanceId = processInstance.processInstanceId,
+      )
     else -> {
       logger.debug { "Unknown update process instance event received $processInstance" }
       null
@@ -62,63 +81,35 @@ class ProcessInstanceEventCollectorService(
   @EventListener(condition = "#processInstance.eventType.equals('end')")
   fun end(processInstance: HistoricProcessInstanceEventEntity): EndProcessInstanceCommand? = when (processInstance.state) {
     // cancel
-    HistoricProcessInstance.STATE_EXTERNALLY_TERMINATED -> processInstance.toCancelProcessInstanceCommand(repositoryService, collectorProperties.enricher.applicationName)
+    HistoricProcessInstance.STATE_EXTERNALLY_TERMINATED ->
+      CancelProcessInstanceCommand(
+        sourceReference = processInstance.sourceReference(repositoryService, collectorProperties.applicationName),
+        processInstanceId = processInstance.processInstanceId,
+        businessKey = processInstance.businessKey,
+        endActivityId = processInstance.endActivityId,
+        superInstanceId = when {
+          processInstance.superProcessInstanceId != null -> processInstance.superProcessInstanceId
+          processInstance.superCaseInstanceId != null -> processInstance.superCaseInstanceId
+          else -> null
+        },
+        deleteReason = processInstance.deleteReason
+      )
     // finish
-    HistoricProcessInstance.STATE_INTERNALLY_TERMINATED -> processInstance.toFinishProcessInstanceCommand(repositoryService, collectorProperties.enricher.applicationName)
+    HistoricProcessInstance.STATE_INTERNALLY_TERMINATED ->
+      FinishProcessInstanceCommand(
+        sourceReference = processInstance.sourceReference(repositoryService, collectorProperties.applicationName),
+        processInstanceId = processInstance.processInstanceId,
+        businessKey = processInstance.businessKey,
+        endActivityId = processInstance.endActivityId,
+        superInstanceId = when {
+          processInstance.superProcessInstanceId != null -> processInstance.superProcessInstanceId
+          processInstance.superCaseInstanceId != null -> processInstance.superCaseInstanceId
+          else -> null
+        }
+      )
     else -> {
       logger.debug { "Unknown end process instance event received $processInstance" }
       null
     }
   }
-
 }
-
-private fun HistoricProcessInstanceEventEntity.toStartProcessInstanceCommand(repositoryService: RepositoryService, applicationName: String) = StartProcessInstanceCommand(
-  sourceReference = this.sourceReference(repositoryService, applicationName),
-  processInstanceId = this.processInstanceId,
-  businessKey = this.businessKey,
-  startActivityId = this.startActivityId,
-  startUserId = this.startUserId,
-  superInstanceId = when {
-    this.superProcessInstanceId != null -> this.superProcessInstanceId
-    this.superCaseInstanceId != null -> this.superCaseInstanceId
-    else -> null
-  }
-)
-
-private fun HistoricProcessInstanceEventEntity.toFinishProcessInstanceCommand(repositoryService: RepositoryService, applicationName: String) = FinishProcessInstanceCommand(
-  sourceReference = this.sourceReference(repositoryService, applicationName),
-  processInstanceId = this.processInstanceId,
-  businessKey = this.businessKey,
-  endActivityId = this.endActivityId,
-  superInstanceId = when {
-    this.superProcessInstanceId != null -> this.superProcessInstanceId
-    this.superCaseInstanceId != null -> this.superCaseInstanceId
-    else -> null
-  }
-)
-
-private fun HistoricProcessInstanceEventEntity.toCancelProcessInstanceCommand(repositoryService: RepositoryService, applicationName: String) = CancelProcessInstanceCommand(
-  sourceReference = this.sourceReference(repositoryService, applicationName),
-  processInstanceId = this.processInstanceId,
-  businessKey = this.businessKey,
-  endActivityId = this.endActivityId,
-  superInstanceId = when {
-    this.superProcessInstanceId != null -> this.superProcessInstanceId
-    this.superCaseInstanceId != null -> this.superCaseInstanceId
-    else -> null
-  },
-  deleteReason = this.deleteReason
-)
-
-
-private fun HistoricProcessInstanceEventEntity.toSuspendProcessInstanceCommand(repositoryService: RepositoryService, applicationName: String) = SuspendProcessInstanceCommand(
-  sourceReference = this.sourceReference(repositoryService, applicationName),
-  processInstanceId = this.processInstanceId,
-)
-
-
-private fun HistoricProcessInstanceEventEntity.toResumeProcessInstanceCommand(repositoryService: RepositoryService, applicationName: String) = ResumeProcessInstanceCommand(
-  sourceReference = this.sourceReference(repositoryService, applicationName),
-  processInstanceId = this.processInstanceId,
-)

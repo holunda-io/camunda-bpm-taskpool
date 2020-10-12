@@ -21,11 +21,11 @@ class TaskEventHandlerTest {
   @get: Rule
   val mockitoRule: MockitoRule = MockitoJUnit.rule()
 
-  private val taskCollectorProperties = TaskCollectorProperties("myApplication")
+  private val taskCollectorProperties = TaskCollectorProperties(applicationName = "myApplication")
   private val processReference = ProcessReference(
     instanceId = UUID.randomUUID().toString(),
     name = "My Process",
-    applicationName = taskCollectorProperties.enricher.applicationName,
+    applicationName = taskCollectorProperties.applicationName,
     definitionId = "PROCESS:001",
     definitionKey = "PROCESS",
     executionId = UUID.randomUUID().toString()

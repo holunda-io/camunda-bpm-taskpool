@@ -259,7 +259,7 @@ The default provided command sender (type: `tx`) is collects all task commands d
 and accumulates by creating one command reflecting the intent of the task operation. It uses Axon Command Bus (encapsulated
 by the `AxonCommandListGateway`.
 
-TIP: If you want to implement a custom command sending, please provide your own implementation of the interface `CommandSender`
+TIP: If you want to implement a custom command sending, please provide your own implementation of the interface `EngineTaskCommandSender`
 (register a Spring Component of the type) and set the property `camunda.taskpool.collector.sender.type` to `custom`.
 
 The Spring event listeners receiving events from the Camunda Engine plugin are called before the engine commits the transaction.

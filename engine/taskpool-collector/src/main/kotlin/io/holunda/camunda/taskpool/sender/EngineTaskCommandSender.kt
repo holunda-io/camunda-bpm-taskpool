@@ -3,9 +3,9 @@ package io.holunda.camunda.taskpool.sender
 import io.holunda.camunda.taskpool.api.task.EngineTaskCommand
 
 /**
- * Interface for beans sending commands.
+ * Interface for beans sending task commands.
  */
-interface CommandSender {
+interface EngineTaskCommandSender {
   /**
    * Sends the command to core and enriches it, if possible.
    */
