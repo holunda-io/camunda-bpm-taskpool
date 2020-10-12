@@ -2,8 +2,7 @@ package io.holunda.camunda.taskpool.view.simple.service
 
 import io.holixon.axon.gateway.query.QueryResponseMessageResponseType
 import io.holixon.axon.gateway.query.RevisionValue
-import io.holunda.camunda.taskpool.api.process.instance.ProcessInstanceEndedEvent
-import io.holunda.camunda.taskpool.api.process.instance.ProcessInstanceStartedEvent
+import io.holunda.camunda.taskpool.api.process.instance.*
 import io.holunda.camunda.taskpool.view.ProcessInstance
 import io.holunda.camunda.taskpool.view.ProcessInstanceState
 import io.holunda.camunda.taskpool.view.query.process.ProcessInstanceApi
@@ -67,10 +66,49 @@ class ProcessInstanceSimpleService(
     updateProcessInstanceQuery(event.processInstanceId)
   }
 
+  /**
+   * Handles suspend of process instance.
+   */
+  @EventHandler
+  fun on(event: ProcessInstanceSuspendedEvent, metaData: MetaData) {
+    val processInstance = processInstances[event.processInstanceId]
+    if (processInstance != null) {
+      processInstances[event.processInstanceId] = processInstance.copy(state = ProcessInstanceState.SUSPENDED)
+      revisionSupport.updateRevision(event.processInstanceId, RevisionValue.fromMetaData(metaData))
+      logger.debug { "SIMPLE-VIEW-43: Process instance suspended $event." }
+      updateProcessInstanceQuery(event.processInstanceId)
+    }
+  }
+
+  /**
+   * Handles resume of process instance.
+   */
+  @EventHandler
+  fun on(event: ProcessInstanceResumedEvent, metaData: MetaData) {
+    val processInstance = processInstances[event.processInstanceId]
+    if (processInstance != null) {
+      processInstances[event.processInstanceId] = processInstance.copy(state = ProcessInstanceState.RUNNING)
+      revisionSupport.updateRevision(event.processInstanceId, RevisionValue.fromMetaData(metaData))
+      logger.debug { "SIMPLE-VIEW-44: Process instance resumed $event." }
+      updateProcessInstanceQuery(event.processInstanceId)
+    }
+  }
+
+  /**
+   * Handles cancel of process instance.
+   */
+  @EventHandler
+  fun on(event: ProcessInstanceCancelledEvent, metaData: MetaData) {
+    processInstances[event.processInstanceId] = event.toProcessInstance(processInstances[event.processInstanceId])
+    revisionSupport.updateRevision(event.processInstanceId, RevisionValue.fromMetaData(metaData))
+    logger.debug { "SIMPLE-VIEW-45: Process instance was cancelled $event." }
+    updateProcessInstanceQuery(event.processInstanceId)
+  }
+
 
   private fun updateProcessInstanceQuery(processInstanceId: String) {
     val revisionValue = revisionSupport.getRevisionMax(setOf(processInstanceId))
-    logger.debug { "SIMPLE-VIEW-43: Updating query with new element $processInstanceId with revision $revisionValue" }
+    logger.debug { "SIMPLE-VIEW-49: Updating query with new element $processInstanceId with revision $revisionValue" }
     val processInstance = processInstances.getValue(processInstanceId)
     queryUpdateEmitter.emit(
       ProcessInstancesByStateQuery::class.java,
@@ -107,8 +145,23 @@ fun ProcessInstanceEndedEvent.toProcessInstance(processInstance: ProcessInstance
   businessKey = this.businessKey,
   superInstanceId = this.superInstanceId,
   endActivityId = this.endActivityId,
+  startActivityId = processInstance?.startActivityId,
+  startUserId = processInstance?.startUserId,
+  state = ProcessInstanceState.FINISHED
+)
+
+/**
+ * Converts event to view model.
+ * @param processInstance an old version of the view model.
+ */
+fun ProcessInstanceCancelledEvent.toProcessInstance(processInstance: ProcessInstance?): ProcessInstance = ProcessInstance(
+  processInstanceId = this.processInstanceId,
+  sourceReference = this.sourceReference,
+  businessKey = this.businessKey,
+  superInstanceId = this.superInstanceId,
+  endActivityId = this.endActivityId,
   deleteReason = this.deleteReason,
   startActivityId = processInstance?.startActivityId,
   startUserId = processInstance?.startUserId,
-  state = if (this.deleteReason == null) ProcessInstanceState.FINISHED else ProcessInstanceState.CANCELLED
+  state = ProcessInstanceState.CANCELLED
 )
