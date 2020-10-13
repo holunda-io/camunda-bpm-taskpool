@@ -45,7 +45,7 @@ class TaskEventUpcasterTest {
     val xml = generateFakeOldEventXML(clazz)
     val document = SAXReader().read(StringReader(xml))
     val clazz = org.dom4j.Document::class.java
-    val serializer = XStreamSerializer.defaultSerializer()
+    val serializer = XStreamSerializer.builder().lenientDeserialization().build()
 
     val entry: EventData<Document> = SimpleEventData<Document>(
       metaData = SimpleSerializedObject(DocumentHelper.createDocument(), clazz, SimpleSerializedType(MetaData::class.java.name, null)),
@@ -73,6 +73,7 @@ class TaskEventUpcasterTest {
       TaskToBeCompletedEvent2To4Upcaster(),
       TaskDeferredEvent2To4Upcaster(),
       TaskUndeferredEvent2To4Upcaster(),
+
     )
     val result = upcaster.upcast(eventStream).toList()
     val event: T = serializer.deserialize(result[0].data)
