@@ -12,15 +12,28 @@ import org.axonframework.messaging.correlation.CorrelationDataProvider
 import org.axonframework.messaging.correlation.MessageOriginProvider
 import org.axonframework.messaging.correlation.MultiCorrelationDataProvider
 import org.axonframework.messaging.correlation.SimpleCorrelationDataProvider
+import org.axonframework.serialization.Serializer
+import org.axonframework.serialization.xml.XStreamSerializer
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
+import org.springframework.boot.runApplication
 import org.springframework.context.annotation.Bean
 
-
+/**
+ * Starts the single node application.
+ */
 fun main(args: Array<String>) {
-  SpringApplication.run(SingleNodeExampleProcessApplication::class.java, *args)
+  runApplication<SingleNodeExampleProcessApplication>().let { Unit }
 }
 
+/**
+ * Application being everything in one node:
+ * - process application
+ * - task pool core
+ * - data pool core
+ * - in-memory view
+ * - task list
+ */
 @SpringBootApplication
 @EnableExampleUsers
 @EnableTaskPoolSimpleView
@@ -43,5 +56,4 @@ class SingleNodeExampleProcessApplication {
       )
     )
   }
-
 }
