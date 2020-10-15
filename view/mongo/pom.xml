@@ -87,6 +87,12 @@
       <artifactId>awaitility</artifactId>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>io.projectreactor</groupId>
+      <artifactId>reactor-test</artifactId>
+      <version>${project-reactor.version}</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
 </project>
