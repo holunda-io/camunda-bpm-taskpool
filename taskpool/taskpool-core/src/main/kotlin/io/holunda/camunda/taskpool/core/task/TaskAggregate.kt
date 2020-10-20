@@ -208,7 +208,6 @@ class TaskAggregate() {
     }
   }
 
-
   @EventSourcingHandler
   fun on(event: TaskCreatedEngineEvent) {
     this.id = event.id
@@ -229,26 +228,21 @@ class TaskAggregate() {
     this.owner = event.owner
     this.payload = event.payload
     this.priority = event.priority
-
-    logger.debug { "Created task $event" }
   }
 
   @EventSourcingHandler
   fun on(event: TaskAssignedEngineEvent) {
     this.assignee = event.assignee
-    logger.debug { "Assigned task $this.id to $assignee" }
   }
 
   @EventSourcingHandler
   fun on(event: TaskCompletedEngineEvent) {
     this.completed = true
-    logger.debug { "Completed task $this.id by $assignee" }
   }
 
   @EventSourcingHandler
   fun on(event: TaskDeletedEngineEvent) {
     this.deleted = true
-    logger.debug { "Deleted task $this.id with reason ${event.deleteReason}" }
   }
 
   private fun assign(command: AssignTaskCommand) =
@@ -271,7 +265,8 @@ class TaskAggregate() {
         correlations = this.correlations,
         businessKey = this.businessKey,
         followUpDate = this.followUpDate
-      ))
+      ).also { logger.debug { "Assigned task ${it.id} to ${it.assignee}" } }
+    )
 
   private fun create(command: CreateTaskCommand) =
     AggregateLifecycle.apply(
@@ -293,7 +288,8 @@ class TaskAggregate() {
         correlations = command.correlations,
         businessKey = command.businessKey,
         followUpDate = command.followUpDate
-      ))
+      ).also { logger.debug { "Created task $it" } }
+    )
 
   private fun complete(assignee: String?) {
     if (assignee != null) {
@@ -316,7 +312,8 @@ class TaskAggregate() {
           correlations = this.correlations,
           businessKey = this.businessKey,
           followUpDate = this.followUpDate
-        ))
+        )
+      )
     }
     AggregateLifecycle.apply(
       TaskCompletedEngineEvent(
@@ -337,7 +334,8 @@ class TaskAggregate() {
         correlations = this.correlations,
         businessKey = this.businessKey,
         followUpDate = this.followUpDate
-      ))
+      ).also { logger.debug { "Completed task ${it.id} by $it.assignee" } }
+    )
   }
 
   private fun delete(command: DeleteTaskCommand) =
@@ -362,7 +360,8 @@ class TaskAggregate() {
         followUpDate = this.followUpDate,
 
         deleteReason = command.deleteReason
-      ))
+      ).also { logger.debug { "Deleted task ${it.id} with reason ${it.deleteReason}" } }
+    )
 
   private fun updateAttributes(command: UpdateAttributeTaskCommand) {
     AggregateLifecycle.apply(
