@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.holunda.camunda.taskpool.enricher.*
 import io.holunda.camunda.taskpool.sender.EngineTaskCommandSender
+import io.holunda.camunda.taskpool.sender.SimpleEngineTaskCommandSender
 import io.holunda.camunda.taskpool.sender.TxAwareAccumulatingEngineTaskCommandSender
 import io.holunda.camunda.taskpool.sender.accumulator.EngineTaskCommandAccumulator
 import io.holunda.camunda.taskpool.sender.accumulator.ProjectingCommandAccumulator
@@ -66,6 +67,7 @@ class TaskCollectorConfiguration(
   fun txCommandSender(commandListGateway: CommandListGateway, accumulator: EngineTaskCommandAccumulator): EngineTaskCommandSender =
     when (properties.task.sender.type) {
       TaskSenderType.tx -> TxAwareAccumulatingEngineTaskCommandSender(commandListGateway, accumulator, properties.task.sender.sendWithinTransaction)
+      TaskSenderType.simple -> SimpleEngineTaskCommandSender(commandListGateway)
       else -> throw IllegalStateException("Could not initialize sender, used unknown  ${properties.task.sender.type} type.")
     }
 

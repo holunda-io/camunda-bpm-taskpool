@@ -40,7 +40,7 @@ class AxonCommandListGateway(
           sendToGateway(remainingCommands)
         }
       } else {
-        logger.debug("SENDER-003: Seding command over gateway disabled by property. Would have sent command $nextCommand")
+        logger.debug("SENDER-003: Sending command over gateway disabled by property. Would have sent command $nextCommand")
         sendToGateway(remainingCommands)
       }
     }

@@ -137,7 +137,12 @@ enum class TaskSenderType {
   /**
    * Custom sending.
    */
-  custom
+  custom,
+
+  /**
+   * Direct sending.
+   */
+  simple
 }
 
 /**
