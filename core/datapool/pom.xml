@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
+
   <parent>
     <groupId>io.holunda.polyflow</groupId>
     <artifactId>polyflow-parent</artifactId>
@@ -10,20 +9,21 @@
     <relativePath>../../pom.xml</relativePath>
   </parent>
 
-  <artifactId>polyflow-datapool-dependencies</artifactId>
-  <name>BOM: ${project.artifactId}</name>
+  <artifactId>polyflow-datapool-root</artifactId>
   <packaging>pom</packaging>
+  <name>POM: ${project.artifactId}</name>
+
+  <modules>
+    <module>datapool-api</module>
+    <module>datapool-event</module>
+    <module>datapool-core</module>
+  </modules>
 
   <dependencyManagement>
     <dependencies>
       <dependency>
         <groupId>io.holunda.polyflow</groupId>
         <artifactId>polyflow-datapool-api</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>io.holunda.polyflow</groupId>
-        <artifactId>polyflow-datapool-collector</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
@@ -38,5 +38,4 @@
       </dependency>
     </dependencies>
   </dependencyManagement>
-
 </project>

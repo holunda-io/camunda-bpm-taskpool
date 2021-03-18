@@ -17,10 +17,7 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v1
-      - name: Set up JDK
-        uses: actions/setup-java@v1
-        with:
-          java-version: ${{ matrix.jdk }}
+
       - name: Cache .m2
         uses: actions/cache@v1
         with:
@@ -28,14 +25,24 @@ jobs:
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-maven
+
+      - name: Set up JDK
+        uses: actions/setup-java@v1
+        with:
+          java-version: ${{ matrix.jdk }}
+
       - name: Prepare Maven Wrapper
         run: chmod +x ./mvnw
+
       - name: Build with Maven
         run: ./mvnw clean verify -U -B -T4
+
       - name: Prepare I-Tests
         run: mkdir -p target/jgiven-reports/json
+
       - name: Run I-Tests with Maven
-        run: ./mvnw integration-test failsafe:verify -Pitest -DskipFrontend -B -T4
+        run: ./mvnw integration-test failsafe:verify -Pitest -DskipFrontend -DskipExamples -B -T4
+
       - name: Upolad coverage information
         uses: codecov/codecov-action@v1
         with:

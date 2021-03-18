@@ -7,10 +7,16 @@ version: 2.1.3
 * Respect process instance lifecycle, see #281
 * Provide BOM for taskpool, see #280
 
-
 == Breaking changes
 
-* Chnaged taskpoool collector configuration properties (engine side), #286
+* Changed taskpoool collector configuration properties (engine side), #286
+* Bumped versions, #295
+
+== Chore:
+* Kotlin 1.4.20
+* Spring Boot -> 2.4.3
+* Axon -> 4.4.7
+* Axon Mongo -> 4.4
 
 == Bugfixes
 
