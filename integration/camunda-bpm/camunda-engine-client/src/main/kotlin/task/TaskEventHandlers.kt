@@ -1,6 +1,6 @@
 package io.holunda.camunda.client.task
 
-import io.holunda.camunda.taskpool.TaskCollectorProperties
+import io.holunda.camunda.client.CamundaEngineClientProperties
 import io.holunda.camunda.taskpool.api.task.*
 import mu.KLogging
 import org.axonframework.eventhandling.EventHandler
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component
 @Component
 class TaskEventHandlers(
   private val taskService: TaskService,
-  private val taskCollectorProperties: TaskCollectorProperties
+  private val properties: CamundaEngineClientProperties
 ) {
 
   companion object : KLogging()
@@ -132,5 +132,5 @@ class TaskEventHandlers(
   }
 
 
-  private fun isAddressedToMe(event: TaskIdentity) = taskCollectorProperties.applicationName == event.sourceReference.applicationName
+  private fun isAddressedToMe(event: TaskIdentity) = properties.applicationName == event.sourceReference.applicationName
 }

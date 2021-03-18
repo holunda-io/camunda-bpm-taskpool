@@ -1,9 +1,8 @@
-package task
+package io.holunda.camunda.client.task
 
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
-import io.holunda.camunda.client.task.TaskEventHandlers
-import io.holunda.camunda.taskpool.TaskCollectorProperties
+import io.holunda.camunda.client.CamundaEngineClientProperties
 import io.holunda.camunda.taskpool.api.task.*
 import org.camunda.bpm.engine.TaskService
 import org.camunda.bpm.extension.mockito.QueryMocks
@@ -18,11 +17,11 @@ import java.util.*
 @ExtendWith(MockitoExtension::class)
 class TaskEventHandlerTest {
 
-  private val taskCollectorProperties = TaskCollectorProperties(applicationName = "myApplication")
+  private val properties = CamundaEngineClientProperties(applicationName = "myApplication")
   private val processReference = ProcessReference(
     instanceId = UUID.randomUUID().toString(),
     name = "My Process",
-    applicationName = taskCollectorProperties.applicationName,
+    applicationName = properties.applicationName,
     definitionId = "PROCESS:001",
     definitionKey = "PROCESS",
     executionId = UUID.randomUUID().toString()
@@ -36,7 +35,7 @@ class TaskEventHandlerTest {
 
   @BeforeEach
   fun init() {
-    taskEventHandlers = TaskEventHandlers(taskService, taskCollectorProperties)
+    taskEventHandlers = TaskEventHandlers(taskService, properties)
     now = Date()
   }
 
