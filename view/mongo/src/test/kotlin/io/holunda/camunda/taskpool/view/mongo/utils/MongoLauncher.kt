@@ -104,11 +104,10 @@ object MongoLauncher {
         this.mongod = mongoExecutable!!.start()
         if (asReplicaSet) {
 
-          // ServerAddress(LOCALHOST, MONGO_DEFAULT_PORT),
           MongoClients.create(
             MongoClientSettings
               .builder()
-              .applyConnectionString(ConnectionString("mongodb://$LOCALHOST:$MONGO_DEFAULT_PORT"))
+              .applyConnectionString(ConnectionString("mongodb://$LOCALHOST:$MONGO_DEFAULT_PORT/?replicaSet=repembedded"))
               .readPreference(ReadPreference.nearest())
               .writeConcern(WriteConcern.W2)
               .build()

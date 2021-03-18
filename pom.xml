@@ -43,7 +43,6 @@
     <axon-kotlin.version>0.1.0</axon-kotlin.version>
     <axon-gateway-extension.version>0.0.4</axon-gateway-extension.version>
 
-
     <kotlin.version>1.4.20</kotlin.version>
     <kotlin.compiler.jvmTarget>${java.version}</kotlin.compiler.jvmTarget>
     <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
@@ -101,7 +100,6 @@
         <artifactId>camunda-bpm-taskpool-variable-serializer</artifactId>
         <version>${project.version}</version>
       </dependency>
-
       <dependency>
         <groupId>io.holunda.taskpool</groupId>
         <artifactId>camunda-bpm-datapool-api</artifactId>
@@ -188,6 +186,7 @@
 
 
       <!-- Axon Framework -->
+      <!-- FIXME: replace with BOM as soon as released -->
       <dependency>
         <groupId>org.axonframework</groupId>
         <artifactId>axon-messaging</artifactId>
@@ -250,12 +249,6 @@
       </dependency>
 
       <!-- Testing -->
-      <dependency>
-        <groupId>org.jetbrains.kotlin</groupId>
-        <artifactId>kotlin-test</artifactId>
-        <version>${kotlin.version}</version>
-        <scope>test</scope>
-      </dependency>
       <dependency>
         <groupId>org.jetbrains.kotlin</groupId>
         <artifactId>kotlin-test-junit</artifactId>
@@ -322,7 +315,6 @@
         <scope>test</scope>
       </dependency>
 
-
     </dependencies>
   </dependencyManagement>
 
@@ -342,7 +334,7 @@
     </dependency>
     <dependency>
       <groupId>org.jetbrains.kotlin</groupId>
-      <artifactId>kotlin-test</artifactId>
+      <artifactId>kotlin-test-junit</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -364,6 +356,7 @@
         </plugin>
 
         <plugin>
+          <!-- FIXME: move to open api generator -->
           <!-- for generating stubs -->
           <groupId>io.swagger</groupId>
           <artifactId>swagger-codegen-maven-plugin</artifactId>
@@ -399,29 +392,16 @@
           <artifactId>jacoco-maven-plugin</artifactId>
           <version>0.8.6</version>
           <executions>
-            <!--
-                Prepares the property pointing to the JaCoCo runtime agent which
-                is passed as VM argument when Maven the Surefire plugin is executed.
-            -->
             <execution>
               <id>pre-unit-test</id>
               <goals>
                 <goal>prepare-agent</goal>
               </goals>
               <configuration>
-                <!-- Sets the path to the file which contains the execution data. -->
                 <destFile>${project.build.directory}/coverage-reports/jacoco-ut.exec</destFile>
-                <!--
-                    Sets the name of the property containing the settings
-                    for JaCoCo runtime agent.
-                -->
                 <propertyName>surefireArgLine</propertyName>
               </configuration>
             </execution>
-            <!--
-                Ensures that the code coverage report for unit tests is created after
-                unit tests have been run.
-            -->
             <execution>
               <id>post-unit-test</id>
               <phase>test</phase>
@@ -429,9 +409,7 @@
                 <goal>report</goal>
               </goals>
               <configuration>
-                <!-- Sets the path to the file which contains the execution data. -->
                 <dataFile>${project.build.directory}/coverage-reports/jacoco-ut.exec</dataFile>
-                <!-- Sets the output directory for the code coverage report. -->
                 <outputDirectory>${project.reporting.outputDirectory}/jacoco-ut</outputDirectory>
                 <excludes>
                   <exclude>${pattern.package.itest}</exclude>
@@ -439,11 +417,6 @@
                 </excludes>
               </configuration>
             </execution>
-            <!-- The Executions required by unit tests are omitted. -->
-            <!--
-                Prepares the property pointing to the JaCoCo runtime agent which
-                is passed as VM argument when Maven the Failsafe plugin is executed.
-            -->
             <execution>
               <id>pre-integration-test</id>
               <phase>pre-integration-test</phase>
@@ -451,19 +424,10 @@
                 <goal>prepare-agent</goal>
               </goals>
               <configuration>
-                <!-- Sets the path to the file which contains the execution data. -->
                 <destFile>${project.build.directory}/coverage-reports/jacoco-it.exec</destFile>
-                <!--
-                    Sets the name of the property containing the settings
-                    for JaCoCo runtime agent.
-                -->
                 <propertyName>failsafeArgLine</propertyName>
               </configuration>
             </execution>
-            <!--
-                Ensures that the code coverage report for integration tests after
-                integration tests have been run.
-            -->
             <execution>
               <id>post-integration-test</id>
               <phase>post-integration-test</phase>
@@ -471,9 +435,7 @@
                 <goal>report</goal>
               </goals>
               <configuration>
-                <!-- Sets the path to the file which contains the execution data. -->
                 <dataFile>${project.build.directory}/coverage-reports/jacoco-it.exec</dataFile>
-                <!-- Sets the output directory for the code coverage report. -->
                 <outputDirectory>${project.reporting.outputDirectory}/jacoco-it</outputDirectory>
                 <excludes>
                   <exclude>${pattern.package.itest}</exclude>
@@ -598,7 +560,7 @@
           <!-- for running npm build -->
           <groupId>com.github.eirslett</groupId>
           <artifactId>frontend-maven-plugin</artifactId>
-          <version>1.8.0</version>
+          <version>1.10.0</version>
         </plugin>
 
         <plugin>
@@ -681,7 +643,7 @@
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>versions-maven-plugin</artifactId>
-          <version>2.7</version>
+          <version>2.8.1</version>
           <configuration>
             <generateBackupPoms>false</generateBackupPoms>
           </configuration>
@@ -740,7 +702,7 @@
         <plugin>
           <groupId>com.amashchenko.maven.plugin</groupId>
           <artifactId>gitflow-maven-plugin</artifactId>
-          <version>1.14.0</version>
+          <version>1.15.1</version>
           <configuration>
             <gitFlowConfig>
               <productionBranch>master</productionBranch>
@@ -798,7 +760,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-source-plugin</artifactId>
-          <version>3.2.0</version>
+          <version>3.2.1</version>
           <executions>
             <execution>
               <id>attach-sources</id>
