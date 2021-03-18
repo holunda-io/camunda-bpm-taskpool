@@ -4,9 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.holunda.camunda.taskpool.enricher.*
 import io.holunda.camunda.taskpool.sender.EngineTaskCommandSender
-import io.holunda.camunda.taskpool.sender.TxAwareAccumulatingEngineTaskCommandSender
-import io.holunda.camunda.taskpool.sender.accumulator.EngineTaskCommandAccumulator
-import io.holunda.camunda.taskpool.sender.accumulator.ProjectingCommandAccumulator
+import io.holunda.camunda.taskpool.sender.task.TxAwareAccumulatingEngineTaskCommandSender
+import io.holunda.camunda.taskpool.sender.task.accumulator.EngineTaskCommandAccumulator
+import io.holunda.camunda.taskpool.sender.task.accumulator.ProjectingCommandAccumulator
 import io.holunda.camunda.taskpool.sender.gateway.*
 import org.camunda.bpm.engine.RuntimeService
 import org.slf4j.Logger
@@ -69,13 +69,20 @@ class TaskCollectorConfiguration(
       else -> throw IllegalStateException("Could not initialize sender, used unknown  ${properties.task.sender.type} type.")
     }
 
+
+  @Bean
+  fun taskSenderProperties() = properties.task.sender
+
+  @Bean
+  fun taskEnricherProperties() = properties.task.enricher
+
   /**
    * Prints sender config.
    */
   @PostConstruct
   fun printSenderConfiguration() {
 
-    if (properties.sendCommandsEnabled) {
+    if (properties.task.sender.sendCommandsEnabled) {
       logger.info("SENDER-001: Taskpool commands will be distributed over command bus.")
     } else {
       logger.info("SENDER-002: Taskpool command distribution is disabled by property.")

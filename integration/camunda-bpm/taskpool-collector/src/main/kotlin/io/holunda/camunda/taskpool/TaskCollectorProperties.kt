@@ -26,6 +26,7 @@ class TaskCollectorProperties(
   /**
    * Global value to control the command gateway.
    */
+  @Deprecated("Please use camunda.taskpool.collector.task.sender.sendCommandsEnabled instead")
   var sendCommandsEnabled: Boolean = false,
 
   /**
@@ -60,10 +61,6 @@ class TaskCollectorProperties(
 @ConstructorBinding
 data class TaskProperties(
   /**
-   * Enable by default (since it was enabled before).
-   */
-  val enabled: Boolean = true,
-  /**
    * Task enricher properties.
    */
   @NestedConfigurationProperty
@@ -73,7 +70,7 @@ data class TaskProperties(
    * Task sender properties.
    */
   @NestedConfigurationProperty
-  val sender: TaskSenderProperties = TaskSenderProperties()
+  val sender: SenderProperties = SenderProperties()
 )
 
 /**
@@ -103,39 +100,6 @@ enum class TaskCollectorEnricherType {
 
   /**
    * Custom enricher.
-   */
-  custom
-}
-
-
-/**
- * Command sender properties.
- */
-@ConstructorBinding
-data class TaskSenderProperties(
-  /**
-   * Sender type, defaults to <code>tx</code>
-   */
-  val type: TaskSenderType = TaskSenderType.tx,
-  /**
-   * This flag controls if the tasks are sent within an open transaction (value true, before commit)
-   * or not (value false, default, after commit). This setting is required if you move the command bus
-   * and the command handling on the engine side.
-   */
-  val sendWithinTransaction: Boolean = false
-)
-
-/**
- * Sender type.
- */
-enum class TaskSenderType {
-  /**
-   * Sending after transaction commit.
-   */
-  tx,
-
-  /**
-   * Custom sending.
    */
   custom
 }

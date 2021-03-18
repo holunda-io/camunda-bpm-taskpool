@@ -101,6 +101,11 @@
       </dependency>
       <dependency>
         <groupId>io.holunda.polyflow</groupId>
+        <artifactId>polyflow-taskpool-sender</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.holunda.polyflow</groupId>
         <artifactId>polyflow-property-url-resolver</artifactId>
         <version>${project.version}</version>
       </dependency>

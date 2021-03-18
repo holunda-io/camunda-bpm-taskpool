@@ -9,7 +9,6 @@ import org.camunda.bpm.engine.FormService
 import org.camunda.bpm.engine.RepositoryService
 import org.camunda.bpm.engine.impl.cfg.ProcessEngineConfigurationImpl
 import org.camunda.bpm.engine.impl.context.Context
-import org.camunda.bpm.engine.impl.interceptor.Command
 import org.camunda.bpm.engine.impl.persistence.entity.ProcessDefinitionEntity
 import org.camunda.bpm.engine.repository.ProcessDefinition
 import org.springframework.stereotype.Component
@@ -47,8 +46,7 @@ class ProcessDefinitionService(
     }
     val newDefinitions: List<ProcessDefinitionEntity> = query.list()
       .filter { returnAll || !processDefinitions.map { def -> def.id }.contains(it.id) }
-      .filter { it is ProcessDefinitionEntity }
-      .map { it as ProcessDefinitionEntity }
+      .filterIsInstance<ProcessDefinitionEntity>()
 
     if (returnAll) {
       this.processDefinitions.clear()
@@ -69,7 +67,7 @@ class ProcessDefinitionService(
     processDefinitionKey: String? = null,
     returnAll: Boolean = true
   ): List<RegisterProcessDefinitionCommand> {
-    return cfg.executeInCommandContext(Command {
+    return cfg.executeInCommandContext {
       RegisterProcessDefinitionCommandList(
         getProcessDefinitions(
           formService = cfg.formService,
@@ -77,7 +75,7 @@ class ProcessDefinitionService(
           processDefinitionKey = processDefinitionKey,
           returnAll = returnAll)
       )
-    }).commands
+    }.commands
   }
 
 

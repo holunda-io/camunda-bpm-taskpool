@@ -1,9 +1,9 @@
 package io.holunda.camunda.taskpool.sender
 
 import io.holunda.camunda.taskpool.api.task.*
-import io.holunda.camunda.taskpool.sender.accumulator.DirectCommandAccumulator
-import io.holunda.camunda.taskpool.sender.accumulator.InvertingCommandAccumulator
-import io.holunda.camunda.taskpool.sender.accumulator.SortingCommandAccumulator
+import io.holunda.camunda.taskpool.sender.task.accumulator.DirectCommandAccumulator
+import io.holunda.camunda.taskpool.sender.task.accumulator.InvertingCommandAccumulator
+import io.holunda.camunda.taskpool.sender.task.accumulator.SortingCommandAccumulator
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 
