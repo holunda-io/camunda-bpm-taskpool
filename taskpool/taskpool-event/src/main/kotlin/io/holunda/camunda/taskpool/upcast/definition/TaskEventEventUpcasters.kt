@@ -180,7 +180,7 @@ abstract class AbstractSourceReferenceElementRemovingUpcaster : AnnotationBasedS
   abstract fun getType(): String
 
   private fun removeWrongElement(document: Document, tagName: String) {
-    val nodes = document.selectNodes("//" + tagName + "[@defined-in='io.holunda.camunda.taskpool.api.task.SourceReference']")
+    val nodes = document.selectNodes("//${tagName}[@defined-in='io.holunda.camunda.taskpool.api.task.SourceReference']")
     nodes.forEach {
       it.parent.remove(it)
     }

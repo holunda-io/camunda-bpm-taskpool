@@ -68,7 +68,7 @@ class SimpleDataEntryCommandSenderTest {
     val result = serialize(pojo, mapper)
 
     assertThat(result[Pojo4::key.name]).isEqualTo(pojo.key)
-    assertThat(result[Pojo4::anotherKey.name] as List<*>).containsOnlyElementsOf(pojo.anotherKey)
+    assertThat(result[Pojo4::anotherKey.name] as List<*>).containsExactlyElementsOf(pojo.anotherKey)
   }
 
   @Test

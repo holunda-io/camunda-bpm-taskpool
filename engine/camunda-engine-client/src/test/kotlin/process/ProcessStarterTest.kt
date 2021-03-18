@@ -9,25 +9,22 @@ import org.camunda.bpm.engine.RuntimeService
 import org.camunda.bpm.engine.variable.Variables
 import org.camunda.bpm.engine.variable.Variables.stringValue
 import org.camunda.bpm.extension.mockito.process.ProcessInstanceFake
-import org.junit.Before
-import org.junit.Rule
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
-import org.mockito.junit.MockitoJUnit
-import org.mockito.junit.MockitoRule
+import org.mockito.junit.jupiter.MockitoExtension
 
 
+@ExtendWith(MockitoExtension::class)
 class ProcessStarterTest {
-
-  @get: Rule
-  val mockitoRule: MockitoRule = MockitoJUnit.rule()
 
   @Mock
   private lateinit var runtimeService: RuntimeService
 
   private lateinit var processStarter: ProcessStarter
 
-  @Before
+  @BeforeEach
   fun init() {
     processStarter = ProcessStarter(runtimeService)
   }

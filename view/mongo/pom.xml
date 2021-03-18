@@ -13,8 +13,7 @@
   <name>view/${project.artifactId}</name>
 
   <properties>
-    <jgiven.version>0.17.0</jgiven.version>
-    <axon-mongo.version>4.2</axon-mongo.version>
+    <axon-mongo.version>4.4</axon-mongo.version>
   </properties>
 
   <dependencies>
@@ -31,7 +30,6 @@
       <artifactId>axon-mongo</artifactId>
       <version>${axon-mongo.version}</version>
     </dependency>
-
     <dependency>
       <groupId>org.axonframework</groupId>
       <artifactId>axon-messaging</artifactId>
@@ -40,41 +38,39 @@
       <groupId>org.axonframework</groupId>
       <artifactId>axon-configuration</artifactId>
     </dependency>
-
     <dependency>
       <groupId>io.projectreactor</groupId>
       <artifactId>reactor-core</artifactId>
-      <version>${project-reactor.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>io.projectreactor.kotlin</groupId>
+      <artifactId>reactor-kotlin-extensions</artifactId>
     </dependency>
 
+    <!-- Testing -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>
+      <scope>test</scope>
     </dependency>
-
     <dependency>
       <groupId>de.flapdoodle.embed</groupId>
       <artifactId>de.flapdoodle.embed.mongo</artifactId>
-      <version>2.2.0</version>
       <scope>test</scope>
     </dependency>
-
     <dependency>
       <groupId>com.tngtech.jgiven</groupId>
       <artifactId>jgiven-junit</artifactId>
-      <version>${jgiven.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>com.tngtech.jgiven</groupId>
       <artifactId>jgiven-spring</artifactId>
-      <version>${jgiven.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>com.tngtech.jgiven</groupId>
       <artifactId>jgiven-html5-report</artifactId>
-      <version>${jgiven.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -90,7 +86,6 @@
     <dependency>
       <groupId>io.projectreactor</groupId>
       <artifactId>reactor-test</artifactId>
-      <version>${project-reactor.version}</version>
       <scope>test</scope>
     </dependency>
   </dependencies>

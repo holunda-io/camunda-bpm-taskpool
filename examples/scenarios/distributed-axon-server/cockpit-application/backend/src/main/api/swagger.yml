@@ -4,6 +4,7 @@ info:
   version: 0.0.1
   description: API for the cockpit.
 basePath: '/taskpool-cockpit/rest'
+host: localhost
 tags:
 - name: Task Event
   description: Operations on tasks and task events.
@@ -30,6 +31,9 @@ paths:
         type: string
         description: Command, currently only delete is supported.
         required: true
+      responses:
+        '204':
+          description: Sucessful operation.
   '/task-events':
     get:
       tags:
@@ -38,7 +42,6 @@ paths:
       produces:
       - application/json
       operationId: getTaskEvents
-      parameters:
       responses:
         '200':
           description: Successful operation.

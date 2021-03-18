@@ -18,13 +18,14 @@ class TaskPoolMongoServiceRetryTest {
   private val taskRepository: TaskRepository = mock()
 
   private val taskPoolMongoService: TaskPoolMongoService = TaskPoolMongoService(
-    TaskPoolMongoViewProperties(changeTrackingMode = ChangeTrackingMode.CHANGE_STREAM),
-    taskRepository,
-    mock(),
-    mock(),
-    mock(),
-    mock(),
-    mock())
+    properties = TaskPoolMongoViewProperties(changeTrackingMode = ChangeTrackingMode.CHANGE_STREAM),
+    taskRepository = taskRepository,
+    dataEntryRepository = mock(),
+    taskWithDataEntriesRepository = mock(),
+    taskChangeTracker = mock(),
+    queryUpdateEmitter = mock(),
+    configuration = mock()
+  )
 
   private val taskId = "some-id"
 
