@@ -28,33 +28,34 @@
     <camunda-ee>false</camunda-ee>
     Use the system property: -Dcamunda-ee to enable EE
     -->
-    <camunda-ce.version>7.13.0</camunda-ce.version>
-    <camunda-ee.version>7.13.0-ee</camunda-ee.version>
+    <camunda-ce.version>7.14.0</camunda-ce.version>
+    <camunda-ee.version>7.14.1-ee</camunda-ee.version>
     <camunda-springboot.version>${camunda-ce.version}</camunda-springboot.version>
-    <camunda-bpm-assert.version>6.0.0</camunda-bpm-assert.version>
+    <camunda-bpm-assert.version>8.0.0</camunda-bpm-assert.version>
     <camunda-bpm-mockito.version>4.13.0</camunda-bpm-mockito.version>
-    <camunda-bpm-data.version>1.0.2</camunda-bpm-data.version>
-    <version.camunda.spin>1.9.0</version.camunda.spin>
+    <camunda-bpm-data.version>1.2.0</camunda-bpm-data.version>
+    <version.camunda.spin>1.10.0</version.camunda.spin>
 
-    <springboot.version>2.2.9.RELEASE</springboot.version>
-    <spring-framework.version>5.2.8.RELEASE</spring-framework.version>
-    <project-reactor.version>3.3.8.RELEASE</project-reactor.version>
+    <springboot.version>2.4.3</springboot.version>
+    <reactor-kotlin-extensions.version>1.1.3</reactor-kotlin-extensions.version>
 
-    <axon.version>4.4.3</axon.version>
+    <axon.version>4.4.7</axon.version>
     <axon-kotlin.version>0.1.0</axon-kotlin.version>
     <axon-gateway-extension.version>0.0.4</axon-gateway-extension.version>
 
-    <kotlin.version>1.4.10</kotlin.version>
+
+    <kotlin.version>1.4.20</kotlin.version>
     <kotlin.compiler.jvmTarget>${java.version}</kotlin.compiler.jvmTarget>
     <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
     <kotlin-logging.version>2.0.3</kotlin-logging.version>
 
     <springboot-swagger-starter.version>0.3.0</springboot-swagger-starter.version>
-    <org.mapstruct.version>1.4.0.Final</org.mapstruct.version>
+    <org.mapstruct.version>1.4.2.Final</org.mapstruct.version>
 
-    <mockito.version>2.23.4</mockito.version>
     <mockito-kotlin.version>2.2.0</mockito-kotlin.version>
     <awaitability.version>3.1.5</awaitability.version>
+    <!-- TODO Update to 1.0.0, see #297 -->
+    <jgiven.version>0.18.0</jgiven.version>
 
   </properties>
 
@@ -164,12 +165,7 @@
         <type>pom</type>
       </dependency>
 
-      <dependency>
-        <groupId>org.camunda.bpm.springboot</groupId>
-        <artifactId>camunda-bpm-spring-boot-starter</artifactId>
-        <version>${camunda-springboot.version}</version>
-      </dependency>
-
+      <!-- Camunda BPM Data -->
       <dependency>
         <groupId>io.holunda.data</groupId>
         <artifactId>camunda-bpm-data</artifactId>
@@ -183,21 +179,18 @@
         <version>${org.mapstruct.version}</version>
       </dependency>
 
+      <!-- Reactor -->
+      <dependency>
+        <groupId>io.projectreactor.kotlin</groupId>
+        <artifactId>reactor-kotlin-extensions</artifactId>
+        <version>${reactor-kotlin-extensions.version}</version>
+      </dependency>
+
+
       <!-- Axon Framework -->
-      <!-- https://mvnrepository.com/artifact/org.axonframework/axon -->
       <dependency>
         <groupId>org.axonframework</groupId>
         <artifactId>axon-messaging</artifactId>
-        <version>${axon.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.axonframework.extensions.kotlin</groupId>
-        <artifactId>axon-kotlin</artifactId>
-        <version>${axon-kotlin.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.axonframework</groupId>
-        <artifactId>axon-spring</artifactId>
         <version>${axon.version}</version>
       </dependency>
       <dependency>
@@ -207,10 +200,14 @@
       </dependency>
       <dependency>
         <groupId>org.axonframework</groupId>
+        <artifactId>axon-modelling</artifactId>
+        <version>${axon.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.axonframework</groupId>
         <artifactId>axon-configuration</artifactId>
         <version>${axon.version}</version>
       </dependency>
-
       <dependency>
         <groupId>org.axonframework</groupId>
         <artifactId>axon-spring-boot-starter</artifactId>
@@ -218,10 +215,15 @@
       </dependency>
       <dependency>
         <groupId>org.axonframework</groupId>
-        <artifactId>axon-modelling</artifactId>
+        <artifactId>axon-spring</artifactId>
         <version>${axon.version}</version>
       </dependency>
 
+      <dependency>
+        <groupId>org.axonframework.extensions.kotlin</groupId>
+        <artifactId>axon-kotlin</artifactId>
+        <version>${axon-kotlin.version}</version>
+      </dependency>
       <dependency>
         <groupId>io.holixon</groupId>
         <artifactId>axon-gateway-extension</artifactId>
@@ -248,30 +250,6 @@
       </dependency>
 
       <!-- Testing -->
-      <dependency>
-        <groupId>junit</groupId>
-        <artifactId>junit</artifactId>
-        <version>4.13.1</version>
-        <scope>test</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.mockito</groupId>
-        <artifactId>mockito-core</artifactId>
-        <version>${mockito.version}</version>
-        <scope>test</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.mockito</groupId>
-        <artifactId>mockito-inline</artifactId>
-        <version>${mockito.version}</version>
-        <scope>test</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.axonframework</groupId>
-        <artifactId>axon-test</artifactId>
-        <version>${axon.version}</version>
-        <scope>test</scope>
-      </dependency>
       <dependency>
         <groupId>org.jetbrains.kotlin</groupId>
         <artifactId>kotlin-test</artifactId>
@@ -303,6 +281,11 @@
         <scope>test</scope>
       </dependency>
       <dependency>
+        <groupId>org.axonframework</groupId>
+        <artifactId>axon-test</artifactId>
+        <version>${axon.version}</version>
+      </dependency>
+      <dependency>
         <groupId>org.camunda.bpm.extension.mockito</groupId>
         <artifactId>camunda-bpm-mockito</artifactId>
         <version>${camunda-bpm-mockito.version}</version>
@@ -320,6 +303,25 @@
         <version>${awaitability.version}</version>
         <scope>test</scope>
       </dependency>
+      <dependency>
+        <groupId>com.tngtech.jgiven</groupId>
+        <artifactId>jgiven-junit</artifactId>
+        <version>${jgiven.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>com.tngtech.jgiven</groupId>
+        <artifactId>jgiven-spring</artifactId>
+        <version>${jgiven.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>com.tngtech.jgiven</groupId>
+        <artifactId>jgiven-html5-report</artifactId>
+        <version>${jgiven.version}</version>
+        <scope>test</scope>
+      </dependency>
+
 
     </dependencies>
   </dependencyManagement>
@@ -341,6 +343,11 @@
     <dependency>
       <groupId>org.jetbrains.kotlin</groupId>
       <artifactId>kotlin-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.vintage</groupId>
+      <artifactId>junit-vintage-engine</artifactId>
       <scope>test</scope>
     </dependency>
   </dependencies>
@@ -682,11 +689,15 @@
 
         <plugin>
           <artifactId>maven-surefire-plugin</artifactId>
-          <version>2.22.2</version>
+          <version>3.0.0-M5</version>
+          <dependencies>
+            <dependency>
+              <groupId>org.junit.vintage</groupId>
+              <artifactId>junit-vintage-engine</artifactId>
+              <version>5.7.1</version>
+            </dependency>
+          </dependencies>
           <configuration>
-            <!--
-            <forkCount>0</forkCount>
-            -->
             <useSystemClassLoader>false</useSystemClassLoader>
             <runOrder>random</runOrder>
             <excludes>
@@ -695,11 +706,7 @@
             </excludes>
             <!-- Sets the VM argument line used when unit tests are run. -->
             <!-- prevent the annoying ForkedBooter process from stealing window focus on Mac OS -->
-            <argLine>
-              -Djava.awt.headless=true
-              ${surefireArgLine}
-              -XX:+StartAttachListener
-            </argLine>
+            <argLine>-Djava.awt.headless=true ${surefireArgLine} -XX:+StartAttachListener</argLine>
             <systemPropertyVariables>
               <jgiven.report.dir>${project.build.directory}/jgiven-reports</jgiven.report.dir>
             </systemPropertyVariables>
@@ -709,11 +716,23 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-failsafe-plugin</artifactId>
-          <version>2.22.2</version>
+          <version>3.0.0-M4</version>
+          <executions>
+            <execution>
+              <goals>
+                <goal>integration-test</goal>
+              </goals>
+            </execution>
+          </executions>
           <configuration>
-            <!--
-            <forkCount>0</forkCount>
-            -->
+            <useSystemClassLoader>false</useSystemClassLoader>
+            <includes>
+              <include>${pattern.class.itest}</include>
+              <include>${pattern.package.itest}</include>
+            </includes>
+            <!-- Sets the VM argument line used when integration tests are run. -->
+            <!-- prevent the annoying ForkedBooter process from stealing window focus on Mac OS -->
+            <argLine>-Djava.awt.headless=true ${failsafeArgLine} -XX:+StartAttachListener</argLine>
           </configuration>
         </plugin>
 
@@ -743,7 +762,7 @@
         <plugin>
           <groupId>org.jetbrains.dokka</groupId>
           <artifactId>dokka-maven-plugin</artifactId>
-          <version>1.4.10</version>
+          <version>1.4.20</version>
           <executions>
             <execution>
               <phase>test</phase>
@@ -859,7 +878,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-enforcer-plugin</artifactId>
-          <version>1.4.2.jenkins-1</version>
+          <version>3.0.0-M3</version>
           <executions>
             <execution>
               <id>enforce-maven</id>
@@ -871,6 +890,9 @@
                   <requireMavenVersion>
                     <version>3.6.0</version>
                   </requireMavenVersion>
+                  <requireJavaVersion>
+                    <version>11</version>
+                  </requireJavaVersion>
                 </rules>
               </configuration>
             </execution>
@@ -924,24 +946,6 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-failsafe-plugin</artifactId>
-            <executions>
-              <execution>
-                <goals>
-                  <goal>integration-test</goal>
-                </goals>
-              </execution>
-            </executions>
-            <configuration>
-              <includes>
-                <include>${pattern.class.itest}</include>
-                <include>${pattern.package.itest}</include>
-              </includes>
-              <!-- Sets the VM argument line used when integration tests are run. -->
-              <!-- prevent the annoying ForkedBooter process from stealing window focus on Mac OS -->
-              <argLine>
-                -Djava.awt.headless=true ${failsafeArgLine}
-              </argLine>
-            </configuration>
           </plugin>
         </plugins>
       </build>
@@ -1075,6 +1079,16 @@
       <modules>
         <module>docs</module>
       </modules>
+      <pluginRepositories>
+        <pluginRepository>
+          <id>jcenter</id>
+          <name>JCenter</name>
+          <url>https://jcenter.bintray.com/</url>
+          <releases>
+            <enabled>true</enabled>
+          </releases>
+        </pluginRepository>
+      </pluginRepositories>
     </profile>
 
     <profile>
@@ -1121,31 +1135,6 @@
     </repository>
   </distributionManagement>
 
-  <pluginRepositories>
-    <!-- required for Dokka (Kotlin javadoc) -->
-    <pluginRepository>
-      <id>jcenter</id>
-      <name>JCenter</name>
-      <url>https://jcenter.bintray.com/</url>
-      <releases>
-        <enabled>true</enabled>
-      </releases>
-    </pluginRepository>
-  </pluginRepositories>
-  <repositories>
-    <!-- Swagger Snapshots only-->
-    <repository>
-      <id>jfrog-snapshots</id>
-      <name>JFrog</name>
-      <releases>
-        <enabled>false</enabled>
-      </releases>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-      <url>http://oss.jfrog.org/artifactory/oss-snapshot-local/</url>
-    </repository>
-  </repositories>
   <developers>
     <developer>
       <id>zambrovski</id>
@@ -1162,19 +1151,6 @@
       <organizationUrl>http://www.holisticon.de</organizationUrl>
     </developer>
     <developer>
-      <id>dthuesen</id>
-      <name>Detlef von Thuesen</name>
-      <email>dthuesen@gmx.de</email>
-      <organization>Holisticon AG</organization>
-      <organizationUrl>http://www.holisticon.de</organizationUrl>
-    </developer>
-    <developer>
-      <id>bignesta</id>
-      <name>Christoph Wolff</name>
-      <organization>Holisticon AG</organization>
-      <organizationUrl>http://www.holisticon.de</organizationUrl>
-    </developer>
-    <developer>
       <id>lbilger</id>
       <name>Lars Bilger</name>
     </developer>
@@ -1184,6 +1160,19 @@
       <email>ah@hbt.de</email>
       <organization>HBT GmbH</organization>
       <organizationUrl>https://www.hbt.de/</organizationUrl>
+    </developer>
+    <developer>
+      <id>bignesta</id>
+      <name>Christoph Wolff</name>
+      <organization>Holisticon AG</organization>
+      <organizationUrl>http://www.holisticon.de</organizationUrl>
+    </developer>
+    <developer>
+      <id>dthuesen</id>
+      <name>Detlef von Thuesen</name>
+      <email>dthuesen@gmx.de</email>
+      <organization>Holisticon AG</organization>
+      <organizationUrl>http://www.holisticon.de</organizationUrl>
     </developer>
   </developers>
 </project>

@@ -1,6 +1,7 @@
 package io.holunda.camunda.taskpool.collector.variable
 
 import io.holunda.camunda.taskpool.TaskCollectorProperties
+import io.holunda.camunda.taskpool.collector.sourceReference
 import mu.KLogging
 import org.camunda.bpm.engine.RepositoryService
 import org.camunda.bpm.engine.impl.history.event.HistoricVariableUpdateEventEntity
@@ -39,7 +40,18 @@ class ProcessVariableEventCollectorService(
   @Order(ORDER)
   @EventListener(condition = "#variableEvent.eventType.equals('create')")
   fun create(variableEvent: HistoricVariableUpdateEventEntity) {
-    logger.debug { "Created variable $variableEvent" }
+    val sourceReference = variableEvent.sourceReference(repositoryService, collectorProperties.applicationName)
+    logger.debug { "Created variable ${variableEvent.variableName} for source ref: $sourceReference" }
+  }
+
+  /**
+   * Fires update process variable command.
+   * See [HistoryEventTypes.VARIABLE_INSTANCE_UPDATE]
+   */
+  @Order(ORDER)
+  @EventListener(condition = "#variableEvent.eventType.equals('update')")
+  fun update(variableEvent: HistoricVariableUpdateEventEntity) {
+    logger.debug { "Update variable $variableEvent" }
   }
 
   /**
@@ -60,16 +72,6 @@ class ProcessVariableEventCollectorService(
   @EventListener(condition = "#variableEvent.eventType.equals('delete')")
   fun delete(variableEvent: HistoricVariableUpdateEventEntity) {
     logger.debug { "Created variable $variableEvent" }
-  }
-
-  /**
-   * Fires update process variable command.
-   * See [HistoryEventTypes.VARIABLE_INSTANCE_UPDATE]
-   */
-  @Order(ORDER)
-  @EventListener(condition = "#variableEvent.eventType.equals('update')")
-  fun update(variableEvent: HistoricVariableUpdateEventEntity) {
-    logger.debug { "Update variable $variableEvent" }
   }
 
   /**

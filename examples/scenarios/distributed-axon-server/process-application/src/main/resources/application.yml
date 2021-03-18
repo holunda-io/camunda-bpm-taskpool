@@ -48,7 +48,7 @@ camunda:
       task:
         enabled: true
         enricher:
-          type: processVariablesSimpleDataEntryCommandSenderTest
+          type: processVariables
         sender:
           type: tx
       process-definition:
@@ -58,7 +58,7 @@ camunda:
     dataentry:
       sender:
         enabled: true
-        type: simpleSimpleDataEntryCommandSenderTest
+        type: simple
         applicationName: ${spring.application.name}  # default
     form-url-resolver:
       defaultTaskTemplate:  "/tasks/${formKey}/${id}?userId=%userId%"

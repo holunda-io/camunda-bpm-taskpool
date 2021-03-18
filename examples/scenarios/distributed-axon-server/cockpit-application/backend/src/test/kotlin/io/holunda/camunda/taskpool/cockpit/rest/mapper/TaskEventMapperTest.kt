@@ -5,24 +5,21 @@ import io.holunda.camunda.taskpool.api.task.TaskCreatedEngineEvent
 import io.holunda.camunda.taskpool.cockpit.service.TaskEventWithMetaData
 import org.assertj.core.api.Assertions.assertThat
 import org.axonframework.messaging.MetaData
-import org.junit.Before
-import org.junit.Test
-import org.mockito.Mockito.spy
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import java.time.Instant
 
 class TaskEventMapperTest {
 
   private lateinit var taskEventMapper: TaskEventMapper
 
-  @Before
+  @BeforeEach
   fun init() {
     taskEventMapper = TaskEventMapperImpl()
   }
 
   @Test
   fun `should map the instant`() {
-    taskEventMapper = spy(TaskEventMapperImpl::class.java)
-
     val now = Instant.now()
     val event = TaskCreatedEngineEvent(
       id = "4711",

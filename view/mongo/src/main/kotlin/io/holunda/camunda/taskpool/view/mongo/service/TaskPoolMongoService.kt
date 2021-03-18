@@ -11,8 +11,6 @@ import io.holunda.camunda.taskpool.view.mongo.ChangeTrackingMode
 import io.holunda.camunda.taskpool.view.mongo.TaskPoolMongoViewProperties
 import io.holunda.camunda.taskpool.view.mongo.repository.*
 import io.holunda.camunda.taskpool.view.query.FilterQuery
-import io.holunda.camunda.taskpool.view.query.data.ReactiveDataEntryApi
-import io.holunda.camunda.taskpool.view.query.task.ReactiveTaskApi
 import io.holunda.camunda.taskpool.view.query.data.*
 import io.holunda.camunda.taskpool.view.query.task.*
 import io.holunda.camunda.taskpool.view.task
@@ -31,7 +29,8 @@ import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Component
 import reactor.core.Disposable
 import reactor.core.publisher.Mono
-import reactor.core.publisher.switchIfEmpty
+import reactor.kotlin.core.publisher.switchIfEmpty
+import reactor.util.retry.Retry
 import java.time.Duration
 import java.util.concurrent.CompletableFuture
 import javax.annotation.PostConstruct
@@ -375,8 +374,7 @@ class TaskPoolMongoService(
     this.switchIfEmpty {
       logger.debug { "${logMessage()}, but will retry." }
       Mono.error(TaskNotFoundException())
-    }
-      .retryBackoff(numRetries, firstBackoff)
+    }.retryWhen(Retry.backoff(numRetries, firstBackoff))
       .onErrorMap { if (it is IllegalStateException && it.cause is TaskNotFoundException) it.cause else it }
       .onErrorResume(TaskNotFoundException::class.java) {
         logger.warn { "${logMessage()} and retries are exhausted." }

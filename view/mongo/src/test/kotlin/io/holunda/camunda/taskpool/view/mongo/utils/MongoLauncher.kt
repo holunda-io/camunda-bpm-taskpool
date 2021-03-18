@@ -1,7 +1,7 @@
 package io.holunda.camunda.taskpool.view.mongo.utils
 
 import com.mongodb.*
-import com.mongodb.client.MongoDatabase
+import com.mongodb.client.MongoClients
 import de.flapdoodle.embed.mongo.Command
 import de.flapdoodle.embed.mongo.MongodExecutable
 import de.flapdoodle.embed.mongo.MongodProcess
@@ -104,9 +104,11 @@ object MongoLauncher {
         this.mongod = mongoExecutable!!.start()
         if (asReplicaSet) {
 
-          MongoClient(
-            ServerAddress(LOCALHOST, MONGO_DEFAULT_PORT),
-            MongoClientOptions.builder()
+          // ServerAddress(LOCALHOST, MONGO_DEFAULT_PORT),
+          MongoClients.create(
+            MongoClientSettings
+              .builder()
+              .applyConnectionString(ConnectionString("mongodb://$LOCALHOST:$MONGO_DEFAULT_PORT"))
               .readPreference(ReadPreference.nearest())
               .writeConcern(WriteConcern.W2)
               .build()
@@ -115,7 +117,7 @@ object MongoLauncher {
 
             val config = Document(mapOf("_id" to "repembedded",
               "members" to BasicDBList().apply {
-                add(Document("_id", 0).append("host", "${LOCALHOST}:${MONGO_DEFAULT_PORT}"))
+                add(Document("_id", 0).append("host", "$LOCALHOST:$MONGO_DEFAULT_PORT"))
               }))
             logger.info { "MongoDB Replica Config: $config" }
 
@@ -136,8 +138,9 @@ object MongoLauncher {
      * Clear client and db.
      */
     fun clear() {
-      MongoClient(LOCALHOST, MONGO_DEFAULT_PORT).use {
-        it.dropDatabase(databaseName)
+      MongoClients.create("mongodb://$LOCALHOST:$MONGO_DEFAULT_PORT").use {
+      val database = it.getDatabase(databaseName)
+      database.drop()
       }
     }
 

@@ -43,6 +43,5 @@
       <artifactId>camunda-bpm-mockito</artifactId>
     </dependency>
 
-
   </dependencies>
 </project>

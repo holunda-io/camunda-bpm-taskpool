@@ -1,6 +1,6 @@
 package io.holunda.camunda.taskpool.view.mongo
 
-import com.mongodb.MongoClient
+import com.mongodb.client.MongoClient
 import io.holunda.camunda.taskpool.view.mongo.repository.CaseReferenceDocument
 import io.holunda.camunda.taskpool.view.mongo.repository.ProcessReferenceDocument
 import io.holunda.camunda.taskpool.view.mongo.repository.ReferenceDocument
@@ -16,20 +16,22 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
 import org.springframework.data.convert.ConfigurableTypeInformationMapper
-import org.springframework.data.mongodb.MongoDbFactory
-import org.springframework.data.mongodb.core.convert.DefaultDbRefResolver
+import org.springframework.data.mongodb.MongoDatabaseFactory
+import org.springframework.data.mongodb.config.AbstractMongoClientConfiguration
 import org.springframework.data.mongodb.core.convert.DefaultMongoTypeMapper
 import org.springframework.data.mongodb.core.convert.DefaultMongoTypeMapper.DEFAULT_TYPE_KEY
 import org.springframework.data.mongodb.core.convert.MappingMongoConverter
+import org.springframework.data.mongodb.core.convert.MongoCustomConversions
 import org.springframework.data.mongodb.core.mapping.MongoMappingContext
 import org.springframework.data.mongodb.repository.config.EnableReactiveMongoRepositories
 import javax.annotation.PostConstruct
+
 
 @Configuration
 @ComponentScan
 @EnableReactiveMongoRepositories
 @EnableConfigurationProperties(TaskPoolMongoViewProperties::class)
-class TaskPoolMongoViewConfiguration {
+class TaskPoolMongoViewConfiguration : AbstractMongoClientConfiguration() {
 
   companion object : KLogging()
 
@@ -42,10 +44,10 @@ class TaskPoolMongoViewConfiguration {
   }
 
   @Bean
-  fun configureAxonMongoTemplate(mongoClient: MongoClient): MongoTemplate =
+  fun configureAxonMongoTemplate(): MongoTemplate =
     DefaultMongoTemplate
       .builder()
-      .mongoDatabase(mongoClient, mongoDatabaseName)
+      .mongoDatabase(mongoClient(), mongoDatabaseName)
       .trackingTokensCollectionName("tracking-tokens")
       // these collections are configured, but not used on the client side.
       .domainEventsCollectionName("domain-events")
@@ -54,7 +56,7 @@ class TaskPoolMongoViewConfiguration {
       .build()
 
   @Bean
-  fun configure(mongoTemplate: MongoTemplate): TokenStore =
+  fun configureAxonMongoTokenStore(mongoTemplate: MongoTemplate): TokenStore =
     MongoTokenStore
       .builder()
       .mongoTemplate(mongoTemplate)
@@ -62,11 +64,9 @@ class TaskPoolMongoViewConfiguration {
       .build()
 
   @Bean
-  fun mongoConverter(mongoFactory: MongoDbFactory) = MappingMongoConverter(
-    DefaultDbRefResolver(mongoFactory),
-    MongoMappingContext()
-  )
-    .apply {
+  override fun mappingMongoConverter(mongoDatabaseFactory: MongoDatabaseFactory, customConversions: MongoCustomConversions, mappingContext: MongoMappingContext): MappingMongoConverter {
+    val mmc = super.mappingMongoConverter(mongoDatabaseFactory, customConversions, mappingContext)
+    mmc.apply {
       this.typeMapper = DefaultMongoTypeMapper(DEFAULT_TYPE_KEY, listOf(
         // register type aliases for source references.
         ConfigurableTypeInformationMapper(
@@ -79,5 +79,8 @@ class TaskPoolMongoViewConfiguration {
       // replace "." with ":" (relevant for correlation)
       this.setMapKeyDotReplacement(":")
     }
+    return mmc
+  }
 
+  override fun getDatabaseName(): String = this.mongoDatabaseName
 }
