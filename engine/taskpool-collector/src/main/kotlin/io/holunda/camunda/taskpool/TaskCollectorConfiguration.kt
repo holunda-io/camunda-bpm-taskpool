@@ -3,9 +3,9 @@ package io.holunda.camunda.taskpool
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.holunda.camunda.taskpool.enricher.*
-import io.holunda.camunda.taskpool.sender.CommandSender
+import io.holunda.camunda.taskpool.sender.EngineTaskCommandSender
 import io.holunda.camunda.taskpool.sender.TxAwareAccumulatingEngineTaskCommandSender
-import io.holunda.camunda.taskpool.sender.accumulator.CommandAccumulator
+import io.holunda.camunda.taskpool.sender.accumulator.EngineTaskCommandAccumulator
 import io.holunda.camunda.taskpool.sender.accumulator.ProjectingCommandAccumulator
 import io.holunda.camunda.taskpool.sender.gateway.*
 import org.camunda.bpm.engine.RuntimeService
@@ -43,30 +43,30 @@ class TaskCollectorConfiguration(
    * Create accumulator.
    */
   @Bean
-  fun commandAccumulator(objectMapper: ObjectMapper): CommandAccumulator = ProjectingCommandAccumulator(objectMapper = objectMapper)
+  fun commandAccumulator(objectMapper: ObjectMapper): EngineTaskCommandAccumulator = ProjectingCommandAccumulator(objectMapper = objectMapper)
 
 
   /**
    * Create enricher.
    */
   @Bean
-  @ConditionalOnExpression("'\${camunda.taskpool.collector.enricher.type}' != 'custom'")
+  @ConditionalOnExpression("'\${camunda.taskpool.collector.task.enricher.type}' != 'custom'")
   fun processVariablesEnricher(runtimeService: RuntimeService, filter: ProcessVariablesFilter, correlator: ProcessVariablesCorrelator): VariablesEnricher =
-    when (properties.enricher.type) {
+    when (properties.task.enricher.type) {
       TaskCollectorEnricherType.processVariables -> ProcessVariablesTaskCommandEnricher(runtimeService, filter, correlator)
       TaskCollectorEnricherType.no -> EmptyTaskCommandEnricher()
-      else -> throw IllegalStateException("Could not initialize enricher, used ${properties.enricher.type} type.")
+      else -> throw IllegalStateException("Could not initialize task enricher, used unknown ${properties.task.enricher.type} type.")
     }
 
   /**
    * Create command sender.
    */
   @Bean
-  @ConditionalOnExpression("'\${camunda.taskpool.collector.sender.type}' != 'custom'")
-  fun txCommandSender(commandListGateway: CommandListGateway, accumulator: CommandAccumulator): CommandSender =
-    when (properties.sender.type) {
-      TaskSenderType.tx -> TxAwareAccumulatingEngineTaskCommandSender(commandListGateway, accumulator, properties.sender.sendWithinTransaction)
-      else -> throw IllegalStateException("Could not initialize sender, used ${properties.sender.type} type.")
+  @ConditionalOnExpression("'\${camunda.taskpool.collector.task.sender.type}' != 'custom'")
+  fun txCommandSender(commandListGateway: CommandListGateway, accumulator: EngineTaskCommandAccumulator): EngineTaskCommandSender =
+    when (properties.task.sender.type) {
+      TaskSenderType.tx -> TxAwareAccumulatingEngineTaskCommandSender(commandListGateway, accumulator, properties.task.sender.sendWithinTransaction)
+      else -> throw IllegalStateException("Could not initialize sender, used unknown  ${properties.task.sender.type} type.")
     }
 
   /**
@@ -74,35 +74,48 @@ class TaskCollectorConfiguration(
    */
   @PostConstruct
   fun printSenderConfiguration() {
-    if (properties.sender.enabled) {
-      logger.info("SENDER-001: Camunda Taskpool commands will be distributed over command bus.")
+
+    if (properties.sendCommandsEnabled) {
+      logger.info("SENDER-001: Taskpool commands will be distributed over command bus.")
     } else {
-      logger.info("SENDER-002: Camunda Taskpool command distribution is disabled by property.")
+      logger.info("SENDER-002: Taskpool command distribution is disabled by property.")
     }
   }
 
+
   /**
-   * Prints enricher config.
+   * Prints sender config.
    */
   @PostConstruct
-  fun printEnricherConfiguration() {
-    when (properties.enricher.type) {
-      TaskCollectorEnricherType.processVariables -> logger.info("ENRICHER-001: Camunda Taskpool commands will be enriched with process variables.")
-      TaskCollectorEnricherType.no -> logger.info("ENRICHER-002: Camunda Taskpool commands will not be enriched.")
-      else -> logger.info("ENRICHER-003: Camunda Taskpool commands will not be enriched by a custom enricher.")
+  fun printTaskEnricherConfiguration() {
+    require(properties.enricher == null) {
+      "'camunda.taskpool.collector.enricher' property has been deprecated, please use 'camunda.taskpool.collector.task.enricher' instead."
+    }
+
+    if (properties.task.enabled) {
+      logger.info ("COLLECTOR-001: Task commands will be collected.")
+      when (properties.task.enricher.type) {
+        TaskCollectorEnricherType.processVariables -> logger.info("ENRICHER-001: Task commands will be enriched with process variables.")
+        TaskCollectorEnricherType.no -> logger.info("ENRICHER-002: Task commands will not be enriched.")
+        else -> logger.info("ENRICHER-003: Task commands will be enriched by a custom enricher.")
+      }
+    } else {
+      logger.info ("COLLECTOR-002: Task commands not be collected.")
     }
   }
 
-  /**
+
+    /**
    * Default logging handler.
    */
   @Bean
-  fun loggingTaskCommandSuccessHandler(): CommandSuccessHandler = LoggingTaskCommandSuccessHandler(LoggerFactory.getLogger(CommandSender::class.java))
+  fun loggingTaskCommandSuccessHandler(): CommandSuccessHandler = LoggingTaskCommandSuccessHandler(LoggerFactory.getLogger(EngineTaskCommandSender::class.java))
 
   /**
    * Default logging handler.
    */
   @Bean
-  fun loggingTaskCommandErrorHandler(): CommandErrorHandler = LoggingTaskCommandErrorHandler(LoggerFactory.getLogger(CommandSender::class.java))
+  fun loggingTaskCommandErrorHandler(): CommandErrorHandler = LoggingTaskCommandErrorHandler(LoggerFactory.getLogger(EngineTaskCommandSender::class.java))
+
 }
 

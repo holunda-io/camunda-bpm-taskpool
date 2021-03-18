@@ -6,6 +6,6 @@ import io.holunda.camunda.taskpool.api.task.EngineTaskCommandSorter
 /**
  * Sorts commands by their order id
  */
-class SortingCommandAccumulator : CommandAccumulator {
+class SortingCommandAccumulator : EngineTaskCommandAccumulator {
   override fun invoke(taskCommands: List<EngineTaskCommand>) = taskCommands.sortedWith(EngineTaskCommandSorter())
 }

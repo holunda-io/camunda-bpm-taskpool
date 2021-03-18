@@ -1,7 +1,7 @@
 package io.holunda.camunda.taskpool.sender.gateway
 
 import io.holunda.camunda.taskpool.TaskCollectorProperties
-import io.holunda.camunda.taskpool.sender.CommandSender
+import io.holunda.camunda.taskpool.sender.EngineTaskCommandSender
 import org.axonframework.commandhandling.CommandResultMessage
 import org.axonframework.commandhandling.gateway.CommandGateway
 import org.slf4j.Logger
@@ -19,7 +19,7 @@ class AxonCommandListGateway(
   private val commandErrorHandler: CommandErrorHandler
 ) : CommandListGateway {
 
-  private val logger: Logger = LoggerFactory.getLogger(CommandSender::class.java)
+  private val logger: Logger = LoggerFactory.getLogger(EngineTaskCommandSender::class.java)
 
   /**
    * Sends data to gateway. Ignores any errors, but logs.
@@ -30,7 +30,7 @@ class AxonCommandListGateway(
       val nextCommand = commands.first()
       val remainingCommands = commands.subList(1, commands.size)
 
-      if (properties.sender.enabled) {
+      if (properties.sendCommandsEnabled) {
         commandGateway.send<Any, Any?>(nextCommand) { commandMessage, commandResultMessage ->
           if (commandResultMessage.isExceptional) {
             commandErrorHandler.apply(commandMessage, commandResultMessage)
@@ -40,7 +40,7 @@ class AxonCommandListGateway(
           sendToGateway(remainingCommands)
         }
       } else {
-        logger.debug("SENDER-003: Would have sent command $nextCommand")
+        logger.debug("SENDER-003: Seding command over gateway disabled by property. Would have sent command $nextCommand")
         sendToGateway(remainingCommands)
       }
     }

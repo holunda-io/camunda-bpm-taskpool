@@ -5,6 +5,6 @@ import io.holunda.camunda.taskpool.api.task.EngineTaskCommand
 /**
  * Just passing the commands straight through.
  */
-class DirectCommandAccumulator : CommandAccumulator {
+class DirectCommandAccumulator : EngineTaskCommandAccumulator {
   override fun invoke(taskCommands: List<EngineTaskCommand>) = taskCommands
 }

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <artifactId>camunda-bpm-taskpool</artifactId>
+    <groupId>io.holunda.taskpool</groupId>
+    <version>2.1.3</version>
+    <relativePath>../../pom.xml</relativePath>
+  </parent>
+
+  <artifactId>taskpool-dependencies</artifactId>
+  <packaging>pom</packaging>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>io.holunda.taskpool</groupId>
+        <artifactId>datapool-dependencies</artifactId>
+        <version>${project.version}</version>
+        <scope>import</scope>
+        <type>pom</type>
+      </dependency>
+      <dependency>
+        <groupId>io.holunda.taskpool</groupId>
+        <artifactId>camunda-bpm-taskpool-api</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.holunda.taskpool</groupId>
+        <artifactId>camunda-bpm-taskpool-collector</artifactId>
+        <version>2.1.3</version>
+      </dependency>
+      <dependency>
+        <groupId>io.holunda.taskpool</groupId>
+        <artifactId>camunda-bpm-taskpool-event</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.holunda.taskpool</groupId>
+        <artifactId>camunda-bpm-taskpool-core</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.holunda.taskpool</groupId>
+        <artifactId>camunda-bpm-taskpool-engine-springboot-starter</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.holunda.taskpool</groupId>
+        <artifactId>camunda-bpm-taskpool-view-api</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.holunda.taskpool</groupId>
+        <artifactId>camunda-bpm-taskpool-view-simple</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.holunda.taskpool</groupId>
+        <artifactId>camunda-bpm-taskpool-view-mongo</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.holunda.taskpool</groupId>
+        <artifactId>camunda-bpm-taskpool-variable-serializer</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.holunda.taskpool</groupId>
+        <artifactId>camunda-bpm-engine-client</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.holunda.taskpool</groupId>
+        <artifactId>taskpool-property-taskurl-resolver</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+
+</project>

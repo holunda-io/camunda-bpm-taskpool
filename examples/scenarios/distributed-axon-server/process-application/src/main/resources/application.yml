@@ -37,23 +37,24 @@ camunda:
     webapp:
       index-redirect-enabled: false
   taskpool:
-
     gateway:
       type: revision-aware
       revision-aware:
         default-query-timeout: 3
     collector:
       tasklist-url: http://localhost:8081/taskpool/
+      application-name: ${spring.application.name}  # default
+      send-commands-enabled: true
+      task:
+        enabled: true
+        enricher:
+          type: processVariables
+        sender:
+          type: tx
       process-definition:
         enabled: true
       process-instance:
         enabled: true
-      enricher:
-        application-name: ${spring.application.name}  # default
-        type: processVariables
-      sender:
-        enabled: true
-        type: tx
     dataentry:
       sender:
         enabled: true

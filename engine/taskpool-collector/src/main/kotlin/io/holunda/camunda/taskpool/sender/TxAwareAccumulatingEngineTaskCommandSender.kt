@@ -1,7 +1,7 @@
 package io.holunda.camunda.taskpool.sender
 
 import io.holunda.camunda.taskpool.api.task.EngineTaskCommand
-import io.holunda.camunda.taskpool.sender.accumulator.CommandAccumulator
+import io.holunda.camunda.taskpool.sender.accumulator.EngineTaskCommandAccumulator
 import io.holunda.camunda.taskpool.sender.gateway.CommandListGateway
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -13,22 +13,22 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
  */
 open class TxAwareAccumulatingEngineTaskCommandSender(
   private val commandListGateway: CommandListGateway,
-  private val commandAccumulator: CommandAccumulator,
+  private val engineTaskCommandAccumulator: EngineTaskCommandAccumulator,
   private val sendTasksWithinTransaction: Boolean
-) : CommandSender {
-  private val logger: Logger = LoggerFactory.getLogger(CommandSender::class.java)
+) : EngineTaskCommandSender {
+  private val logger: Logger = LoggerFactory.getLogger(EngineTaskCommandSender::class.java)
 
   private val registered: ThreadLocal<Boolean> = ThreadLocal.withInitial { false }
   @Suppress("RemoveExplicitTypeArguments")
-  private val commands: ThreadLocal<MutableMap<String, MutableList<EngineTaskCommand>>> = ThreadLocal.withInitial { mutableMapOf<String, MutableList<EngineTaskCommand>>() }
+  private val taskCommands: ThreadLocal<MutableMap<String, MutableList<EngineTaskCommand>>> = ThreadLocal.withInitial { mutableMapOf<String, MutableList<EngineTaskCommand>>() }
 
   /**
-   * Sends an engine command.send
+   * Sends an engine task command (after commit).
    */
   override fun send(command: EngineTaskCommand) {
 
     // add command to list
-    commands.get().getOrPut(command.id) { mutableListOf() }.add(command)
+    taskCommands.get().getOrPut(command.id) { mutableListOf() }.add(command)
 
     // register synchronization only once
     if (!registered.get()) {
@@ -58,7 +58,7 @@ open class TxAwareAccumulatingEngineTaskCommandSender(
          * Clean-up the thread on completion.
          */
         override fun afterCompletion(status: Int) {
-          commands.remove()
+          taskCommands.remove()
           registered.remove()
         }
       })
@@ -70,11 +70,11 @@ open class TxAwareAccumulatingEngineTaskCommandSender(
 
   private fun send() {
     // iterate over messages and send them
-    commands.get().forEach { (taskId: String, taskCommands: MutableList<EngineTaskCommand>) ->
-      val accumulatorName = commandAccumulator::class.simpleName
+    taskCommands.get().forEach { (taskId: String, taskCommands: MutableList<EngineTaskCommand>) ->
+      val accumulatorName = engineTaskCommandAccumulator::class.simpleName
       logger.debug("SENDER-005: Handling ${taskCommands.size} commands for task $taskId using command accumulator $accumulatorName")
 
-      val commands = commandAccumulator.invoke(taskCommands)
+      val commands = engineTaskCommandAccumulator.invoke(taskCommands)
 
       // handle messages for every task
       commandListGateway.sendToGateway(commands)

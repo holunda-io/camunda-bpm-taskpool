@@ -21,7 +21,7 @@ class TaskCollectorPropertiesITest {
 
   @Test
   fun test_properties() {
-    assertThat(props.enricher.applicationName).isEqualTo("Foo")
+    assertThat(props.applicationName).isEqualTo("Foo")
   }
 }
 

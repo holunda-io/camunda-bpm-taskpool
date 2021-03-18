@@ -37,7 +37,7 @@ import java.util.concurrent.TimeUnit
  * This ITests simulates work of Camunda collector including variable enrichment.
  */
 @RunWith(SpringRunner::class)
-@SpringBootTest(classes = [TaskCollectorTestApplication::class], webEnvironment = SpringBootTest.WebEnvironment.MOCK)
+@SpringBootTest(classes = [CollectorTestApplication::class], webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @ActiveProfiles("collector-itest")
 @DirtiesContext
 class TaskCollectorITest {

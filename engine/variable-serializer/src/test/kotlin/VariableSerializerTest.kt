@@ -7,7 +7,6 @@ import org.camunda.bpm.engine.variable.Variables
 import org.junit.Test
 import java.text.SimpleDateFormat
 import java.time.Instant
-import java.time.Instant.now
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
 
@@ -51,7 +50,7 @@ class SimpleDataEntryCommandSenderTest {
     mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
     mapper.configure(SerializationFeature.WRITE_DATE_TIMESTAMPS_AS_NANOSECONDS, false)
 
-    val now = now()
+    val now = Instant.parse("2020-10-15T07:20:05.871641Z")
     val pojo = Pojo5(key = "value", ts = now, date = now.atOffset(ZoneOffset.UTC))
     val result = serialize(pojo, mapper)
 
@@ -69,7 +68,7 @@ class SimpleDataEntryCommandSenderTest {
     val result = serialize(pojo, mapper)
 
     assertThat(result[Pojo4::key.name]).isEqualTo(pojo.key)
-    assertThat(result[Pojo4::anotherKey.name] as List<*>).containsOnlyElementsOf(pojo.anotherKey)
+    assertThat(result[Pojo4::anotherKey.name] as List<*>).containsExactlyElementsOf(pojo.anotherKey)
   }
 
   @Test

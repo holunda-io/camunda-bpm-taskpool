@@ -16,12 +16,12 @@ class ProcessDefinitionEnginePlugin(
 
   override fun preInit(springConfiguration: SpringProcessEngineConfiguration) {
     if (properties.processDefinition.enabled) {
-      logger.info("EVENTING-010: Process definition registration plugin registered.")
+      logger.info("EVENTING-010: Process definition registration plugin activated.")
       springConfiguration.customPostBPMNParseListeners.add(
         RegisterProcessDefinitionParseListener(springConfiguration)
       )
     } else {
-      logger.info("EVENTING-011: Process definition disabled by property.")
+      logger.info("EVENTING-011: Process definition registration disabled by property.")
     }
   }
 }

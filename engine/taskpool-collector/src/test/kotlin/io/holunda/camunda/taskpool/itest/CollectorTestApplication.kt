@@ -8,4 +8,4 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 @SpringBootApplication
 @EnableProcessApplication
 @EnableTaskCollector
-class TaskCollectorTestApplication
+class CollectorTestApplication

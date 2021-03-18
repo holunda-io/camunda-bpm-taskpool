@@ -24,7 +24,7 @@ import org.springframework.test.context.junit4.SpringRunner
  * This ITests simulates work of Camunda process definition collector.
  */
 @RunWith(SpringRunner::class)
-@SpringBootTest(classes = [TaskCollectorTestApplication::class], webEnvironment = SpringBootTest.WebEnvironment.MOCK)
+@SpringBootTest(classes = [CollectorTestApplication::class], webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @ActiveProfiles("collector-itest")
 @DirtiesContext
 class ProcessDefinitionServiceITest {

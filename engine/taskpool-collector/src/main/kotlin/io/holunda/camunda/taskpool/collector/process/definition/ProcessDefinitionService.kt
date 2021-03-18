@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component
  */
 @Component
 class ProcessDefinitionService(
-  private val properties: TaskCollectorProperties
+  private val collectorProperties: TaskCollectorProperties
 ) {
 
   private val processDefinitions: MutableSet<ProcessDefinition> = mutableSetOf()
@@ -55,7 +55,7 @@ class ProcessDefinitionService(
     }
     this.processDefinitions.addAll(newDefinitions)
 
-    return newDefinitions.map { it.asCommand(applicationName = properties.enricher.applicationName, formKey = formService.getStartFormKey(it.id)) }
+    return newDefinitions.map { it.asCommand(applicationName = collectorProperties.applicationName, formKey = formService.getStartFormKey(it.id)) }
   }
 
   /**

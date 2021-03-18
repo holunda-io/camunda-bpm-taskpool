@@ -8,24 +8,21 @@ import io.holunda.camunda.taskpool.api.task.*
 import org.camunda.bpm.engine.TaskService
 import org.camunda.bpm.extension.mockito.QueryMocks
 import org.camunda.bpm.extension.mockito.task.TaskFake
-import org.junit.Before
-import org.junit.Rule
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
-import org.mockito.junit.MockitoJUnit
-import org.mockito.junit.MockitoRule
+import org.mockito.junit.jupiter.MockitoExtension
 import java.util.*
 
+@ExtendWith(MockitoExtension::class)
 class TaskEventHandlerTest {
 
-  @get: Rule
-  val mockitoRule: MockitoRule = MockitoJUnit.rule()
-
-  private val taskCollectorProperties = TaskCollectorProperties("myApplication")
+  private val taskCollectorProperties = TaskCollectorProperties(applicationName = "myApplication")
   private val processReference = ProcessReference(
     instanceId = UUID.randomUUID().toString(),
     name = "My Process",
-    applicationName = taskCollectorProperties.enricher.applicationName,
+    applicationName = taskCollectorProperties.applicationName,
     definitionId = "PROCESS:001",
     definitionKey = "PROCESS",
     executionId = UUID.randomUUID().toString()
@@ -37,7 +34,7 @@ class TaskEventHandlerTest {
   private lateinit var taskEventHandlers: TaskEventHandlers
   private lateinit var now: Date
 
-  @Before
+  @BeforeEach
   fun init() {
     taskEventHandlers = TaskEventHandlers(taskService, taskCollectorProperties)
     now = Date()

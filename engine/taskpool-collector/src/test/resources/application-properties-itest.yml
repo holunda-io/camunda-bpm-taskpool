@@ -4,17 +4,16 @@ spring:
 
 camunda:
   taskpool:
+    #
+    #      application-name property is disabled, to make sure that the defaulting to spring application name works.
+    #
     collector:
       tasklist-url: http://localhost/test-tasklist/
-#
-#      Enricher properties are disabled, to make sure that the defaulting to spring application name works.
-#
-#      enricher:
-#        application-name: ${spring.application.name}  # default
-#        type: processVariables
-      sender:
-        enabled: true
-        type: tx
+      task:
+        sender:
+          type: tx
+        enricher:
+          type: processVariables
     dataentry:
       sender:
         enabled: true

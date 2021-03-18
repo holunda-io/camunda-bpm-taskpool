@@ -39,17 +39,19 @@ camunda:
   taskpool:
     collector:
       tasklist-url: http://localhost:${server.port}/taskpool/tasks
+      application-name: ${spring.application.name}  # default
+      send-commands-enabled: true
       process-instance:
         enabled: true
       process-definition:
         enabled: true
-      enricher:
-        application-name: ${spring.application.name}  # default
-        type: processVariables
-      sender:
+      task:
         enabled: true
-        type: tx
-        send-within-transaction: true                 # Must be set to true in single node scenario.
+        enricher:
+          type: processVariables
+        sender:
+          type: tx
+          send-within-transaction: true             # Must be set to true in single node scenario.
     dataentry:
       sender:
         enabled: true
@@ -71,12 +73,16 @@ camunda:
 logging.level:
   io.holunda.camunda:
     taskpool:
+      collector:
+        variable: DEBUG
       sender: WARN
       core: WARN
       view.simple: WARN
     datapool:
-      sender: DEBUG
-  org.springframework.web: DEBUG
+      sender: INFO
+
 
 # To log REST controllers
 #  org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping: TRACE
+# To log web access
+# org.springframework.web: DEBUG
