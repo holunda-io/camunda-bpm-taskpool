@@ -25,7 +25,7 @@
   <dependencies>
     <dependency>
       <groupId>io.holunda.polyflow</groupId>
-      <artifactId>camunda-bpm-engine-springboot-starter</artifactId>
+      <artifactId>polyflow-camunda-bpm-springboot-starter</artifactId>
     </dependency>
     <dependency>
       <groupId>io.holunda.polyflow</groupId>

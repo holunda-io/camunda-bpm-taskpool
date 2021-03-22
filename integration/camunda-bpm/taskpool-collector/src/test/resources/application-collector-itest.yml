@@ -10,12 +10,17 @@ camunda:
     metrics:
       enabled: false
       db-reporter-activate: false
-  taskpool:
+
+polyflow:
+  intgegration:
     collector:
-      tasklist-url: http://localhost/test-tasklist/
-      send-commands-enabled: true
-      task:
-        enabled: true
+      camunda:
+        task:
+          enabled: true
+        process-instance:
+          enabled: false
+        process-definition:
+          enabled: false
 
 logging.level.io.holunda.camunda.taskpool:
   sender: DEBUG

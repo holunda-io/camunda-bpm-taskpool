@@ -3,6 +3,7 @@ package io.holunda.camunda.taskpool.sender
 import io.holunda.camunda.taskpool.SenderConfiguration
 import io.holunda.camunda.taskpool.SenderProperties
 import io.holunda.camunda.taskpool.SenderType
+import io.holunda.camunda.taskpool.sender.gateway.CommandListGateway
 import io.holunda.camunda.taskpool.sender.task.EngineTaskCommandSender
 import org.assertj.core.api.Assertions.assertThat
 import org.axonframework.commandhandling.gateway.CommandGateway
@@ -85,8 +86,10 @@ class SenderPropertiesExtendedTest {
   private class TestMockConfiguration {
 
     @Bean
-    fun eventSerializer(): Serializer = XStreamSerializer.builder().build()
+    fun commandListGateway(): CommandListGateway = mock(CommandListGateway::class.java)
 
+    @Bean
+    fun eventSerializer(): Serializer = XStreamSerializer.builder().build()
 
     @Bean
     fun eventBus(): EventBus = mock(EventBus::class.java)

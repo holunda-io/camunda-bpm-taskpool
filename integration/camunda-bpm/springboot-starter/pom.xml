@@ -9,13 +9,13 @@
     <version>3.0.0-SNAPSHOT</version>
   </parent>
 
-  <artifactId>camunda-bpm-engine-springboot-starter</artifactId>
+  <artifactId>polyflow-camunda-bpm-springboot-starter</artifactId>
   <name>integration/camunda-bpm/${project.artifactId}</name>
 
   <dependencies>
     <dependency>
       <groupId>io.holunda.polyflow</groupId>
-      <artifactId>polyflow-taskpool-collector</artifactId>
+      <artifactId>polyflow-camunda-bpm-taskpool-collector</artifactId>
     </dependency>
     <dependency>
       <groupId>io.holunda.polyflow</groupId>
@@ -23,7 +23,7 @@
     </dependency>
     <dependency>
       <groupId>io.holunda.polyflow</groupId>
-      <artifactId>camunda-bpm-engine-client</artifactId>
+      <artifactId>polyflow-camunda-bpm-engine-client</artifactId>
     </dependency>
     <dependency>
       <groupId>io.holunda.polyflow</groupId>

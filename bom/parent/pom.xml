@@ -292,13 +292,6 @@
     <defaultGoal>clean jacoco:prepare-agent package</defaultGoal>
     <pluginManagement>
       <plugins>
-        <plugin>
-          <!-- cleaning -->
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-clean-plugin</artifactId>
-          <version>3.1.0</version>
-        </plugin>
-
         <!-- Coverage metering -->
         <plugin>
           <groupId>org.jacoco</groupId>
@@ -489,6 +482,8 @@
             <jvmTarget>${java.version}</jvmTarget>
           </configuration>
           <executions>
+            <!--
+            No kapt for a moment
             <execution>
               <id>kapt</id>
               <goals>
@@ -508,6 +503,7 @@
                 </annotationProcessorPaths>
               </configuration>
             </execution>
+            -->
             <execution>
               <id>compile</id>
               <goals>
@@ -544,15 +540,6 @@
               <version>${kotlin.version}</version>
             </dependency>
           </dependencies>
-        </plugin>
-
-        <plugin>
-          <groupId>org.codehaus.mojo</groupId>
-          <artifactId>versions-maven-plugin</artifactId>
-          <version>2.8.1</version>
-          <configuration>
-            <generateBackupPoms>false</generateBackupPoms>
-          </configuration>
         </plugin>
 
         <plugin>
@@ -601,28 +588,6 @@
             <!-- Sets the VM argument line used when integration tests are run. -->
             <!-- prevent the annoying ForkedBooter process from stealing window focus on Mac OS -->
             <argLine>-Djava.awt.headless=true ${failsafeArgLine} -XX:+StartAttachListener</argLine>
-          </configuration>
-        </plugin>
-
-        <!-- gitflow -->
-        <plugin>
-          <groupId>com.amashchenko.maven.plugin</groupId>
-          <artifactId>gitflow-maven-plugin</artifactId>
-          <version>1.15.1</version>
-          <configuration>
-            <gitFlowConfig>
-              <productionBranch>master</productionBranch>
-              <developmentBranch>develop</developmentBranch>
-              <featureBranchPrefix>feature/</featureBranchPrefix>
-              <releaseBranchPrefix>release/</releaseBranchPrefix>
-              <hotfixBranchPrefix>hotfix/</hotfixBranchPrefix>
-              <supportBranchPrefix>support/</supportBranchPrefix>
-              <origin>origin</origin>
-            </gitFlowConfig>
-            <useSnapshotInHotfix>true</useSnapshotInHotfix>
-            <useSnapshotInRelease>true</useSnapshotInRelease>
-            <keepBranch>false</keepBranch>
-            <pushRemote>true</pushRemote>
           </configuration>
         </plugin>
 
@@ -741,7 +706,6 @@
         <skipFrontend>true</skipFrontend>
       </properties>
       <build>
-        <defaultGoal>integration-test failsafe:verify</defaultGoal>
         <plugins>
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>

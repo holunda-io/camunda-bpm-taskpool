@@ -9,7 +9,7 @@
     <version>3.0.0-SNAPSHOT</version>
   </parent>
 
-  <artifactId>polyflow-taskpool-collector</artifactId>
+  <artifactId>polyflow-camunda-bpm-taskpool-collector</artifactId>
   <name>integration/camunda-bpm/${project.artifactId}</name>
 
   <dependencies>
@@ -97,6 +97,10 @@
       <groupId>org.awaitility</groupId>
       <artifactId>awaitility</artifactId>
       <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.nhaarman.mockitokotlin2</groupId>
+      <artifactId>mockito-kotlin</artifactId>
     </dependency>
   </dependencies>
 

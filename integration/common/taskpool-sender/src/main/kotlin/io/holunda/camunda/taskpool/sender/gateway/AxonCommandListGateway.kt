@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component
 /**
  * Sends  a list commands via AXON command gateway one-by-one, only if the sender property is enabled.
  */
-@Component
 internal class AxonCommandListGateway(
   private val commandGateway: CommandGateway,
   private val properties: SenderProperties,

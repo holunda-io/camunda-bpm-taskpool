@@ -19,11 +19,6 @@ class CamundaTaskpoolCollectorProperties(
   var applicationName: String,
 
   /**
-   * Optional tasklist url, if no explicit resolver is provided.
-   */
-  var tasklistUrl: String? = null,
-
-  /**
    * Task collector properties.
    */
   @NestedConfigurationProperty

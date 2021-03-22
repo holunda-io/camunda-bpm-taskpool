@@ -12,15 +12,16 @@ import io.holunda.camunda.taskpool.sender.task.SimpleEngineTaskCommandSender
 import io.holunda.camunda.taskpool.sender.task.TxAwareAccumulatingEngineTaskCommandSender
 import io.holunda.camunda.taskpool.sender.task.accumulator.EngineTaskCommandAccumulator
 import io.holunda.camunda.taskpool.sender.task.accumulator.ProjectingCommandAccumulator
+import org.axonframework.commandhandling.gateway.CommandGateway
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
-import org.springframework.context.annotation.EnableMBeanExport
 import javax.annotation.PostConstruct
 
 @Configuration
@@ -41,6 +42,25 @@ class SenderConfiguration(private val properties: SenderProperties) {
    */
   @Bean
   fun taskCommandAccumulator(objectMapper: ObjectMapper): EngineTaskCommandAccumulator = ProjectingCommandAccumulator(objectMapper = objectMapper)
+
+  /**
+   * Create a command list gateway, if none is provided.
+   */
+  @Bean
+  @ConditionalOnBean(CommandGateway::class)
+  @ConditionalOnMissingBean(CommandListGateway::class)
+  fun defaultCommandListGateway(
+    commandGateway: CommandGateway,
+    senderProperties: SenderProperties,
+    commandSuccessHandler: CommandSuccessHandler,
+    commandErrorHandler: CommandErrorHandler
+  ): CommandListGateway
+    = AxonCommandListGateway(
+    commandGateway = commandGateway,
+    properties = senderProperties,
+    commandSuccessHandler = commandSuccessHandler,
+    commandErrorHandler = commandErrorHandler
+  )
 
   /**
    * Create command sender for tasks.

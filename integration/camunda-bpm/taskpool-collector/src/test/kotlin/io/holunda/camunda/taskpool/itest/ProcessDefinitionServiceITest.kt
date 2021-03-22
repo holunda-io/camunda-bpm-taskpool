@@ -1,7 +1,6 @@
 package io.holunda.camunda.taskpool.itest
 
 import io.holunda.camunda.taskpool.collector.process.definition.ProcessDefinitionService
-import io.holunda.camunda.taskpool.sender.process.definition.ProcessDefinitionCommandSender
 import org.assertj.core.api.Assertions.assertThat
 import org.camunda.bpm.engine.FormService
 import org.camunda.bpm.engine.ProcessEngine
@@ -9,13 +8,11 @@ import org.camunda.bpm.engine.RepositoryService
 import org.camunda.bpm.engine.impl.cfg.ProcessEngineConfigurationImpl
 import org.camunda.bpm.model.bpmn.Bpmn
 import org.camunda.bpm.model.xml.instance.ModelElementInstance
-import org.junit.Rule
 import org.junit.Test
-import org.junit.rules.ExpectedException
+import org.junit.jupiter.api.assertThrows
 import org.junit.runner.RunWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit4.SpringRunner
@@ -33,12 +30,6 @@ class ProcessDefinitionServiceITest {
     const val NS_CAMUNDA = "http://camunda.org/schema/1.0/bpmn"
   }
 
-  @get: Rule
-  val expectedException: ExpectedException = ExpectedException.none()
-
-  @MockBean
-  private lateinit var sender: ProcessDefinitionCommandSender
-
   @Autowired
   private lateinit var processDefinitionService: ProcessDefinitionService
 
@@ -53,8 +44,10 @@ class ProcessDefinitionServiceITest {
 
   @Test
   fun `should not run outside of command context`() {
-    expectedException.expectMessage("This method must be executed inside a Camunda command context.")
-    processDefinitionService.getProcessDefinitions(formService, repositoryService)
+    val exception = assertThrows<Exception> {
+      processDefinitionService.getProcessDefinitions(formService, repositoryService)
+    }
+    assertThat(exception.message).isEqualTo("This method must be executed inside a Camunda command context.")
   }
 
   @Test

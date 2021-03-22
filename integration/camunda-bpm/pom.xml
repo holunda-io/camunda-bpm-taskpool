@@ -21,12 +21,23 @@
 
   <modules>
     <module>taskpool-collector</module>
-    <module>camunda-engine-client</module>
-    <module>camunda-engine-springboot-starter</module>
+    <module>engine-client</module>
+    <module>springboot-starter</module>
   </modules>
 
   <dependencyManagement>
     <dependencies>
+
+      <dependency>
+        <groupId>io.holunda.polyflow</groupId>
+        <artifactId>polyflow-camunda-bpm-engine-client</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.holunda.polyflow</groupId>
+        <artifactId>polyflow-camunda-bpm-taskpool-collector</artifactId>
+        <version>${project.version}</version>
+      </dependency>
 
       <dependency>
         <groupId>org.camunda.bpm</groupId>
@@ -34,12 +45,6 @@
         <version>${camunda-bpm.version}</version>
         <scope>import</scope>
         <type>pom</type>
-      </dependency>
-
-      <dependency>
-        <groupId>io.holunda.taskpool</groupId>
-        <artifactId>camunda-bpm-taskpool-collector</artifactId>
-        <version>${project.version}</version>
       </dependency>
 
       <dependency>
@@ -60,7 +65,6 @@
         <version>${camunda-bpm-assert.version}</version>
         <scope>test</scope>
       </dependency>
-
 
     </dependencies>
   </dependencyManagement>
