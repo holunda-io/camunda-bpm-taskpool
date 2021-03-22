@@ -43,8 +43,6 @@ camunda:
         default-query-timeout: 3
     collector:
       tasklist-url: http://localhost:8081/taskpool/
-      application-name: ${spring.application.name}  # default
-      send-commands-enabled: true
       task:
         enabled: true
         enricher:
@@ -55,8 +53,14 @@ camunda:
         enabled: true
       process-instance:
         enabled: true
-    dataentry:
-      sender:
+      dataentry:
+        applicationName: ${spring.application.name}  # default
+    sender:
+      task:
+        enabled: true
+        type: tx
+        send-within-transaction: true
+      dataentry:
         enabled: true
         type: simple
         applicationName: ${spring.application.name}  # default

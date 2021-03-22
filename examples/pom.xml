@@ -3,10 +3,15 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>io.holunda.polyflow</groupId>
+  <parent>
+    <groupId>io.holunda.polyflow</groupId>
+    <artifactId>polyflow-root</artifactId>
+    <version>3.0.0-SNAPSHOT</version>
+    <relativePath>../pom.xml</relativePath>
+  </parent>
+
   <artifactId>polyflow-examples-parent</artifactId>
   <packaging>pom</packaging>
-  <version>2.1.3-SNAPSHOT</version>
   <name>POM: ${project.artifactId}</name>
 
   <properties>
@@ -36,17 +41,6 @@
     <version.camunda.spin>1.10.0</version.camunda.spin>
 
     <springboot.version>2.4.3</springboot.version>
-
-    <!--
-    <axon.version>4.4.7</axon.version>
-    <axon-kotlin.version>0.1.0</axon-kotlin.version>
-    <axon-gateway-extension.version>0.0.4</axon-gateway-extension.version>
-    -->
-
-    <kotlin.version>1.4.20</kotlin.version>
-    <kotlin.compiler.jvmTarget>${java.version}</kotlin.compiler.jvmTarget>
-    <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
-    <kotlin-logging.version>2.0.3</kotlin-logging.version>
 
     <springboot-swagger-starter.version>0.3.0</springboot-swagger-starter.version>
     <org.mapstruct.version>1.4.2.Final</org.mapstruct.version>
