@@ -1,7 +1,7 @@
 package io.holunda.camunda.taskpool.itest
 
 import io.holunda.camunda.taskpool.collector.process.definition.ProcessDefinitionService
-import io.holunda.camunda.taskpool.sender.gateway.AxonCommandListGateway
+import io.holunda.camunda.taskpool.sender.process.definition.ProcessDefinitionCommandSender
 import org.assertj.core.api.Assertions.assertThat
 import org.camunda.bpm.engine.FormService
 import org.camunda.bpm.engine.ProcessEngine
@@ -37,7 +37,7 @@ class ProcessDefinitionServiceITest {
   val expectedException: ExpectedException = ExpectedException.none()
 
   @MockBean
-  private lateinit var commandGateway: AxonCommandListGateway
+  private lateinit var sender: ProcessDefinitionCommandSender
 
   @Autowired
   private lateinit var processDefinitionService: ProcessDefinitionService

@@ -6,7 +6,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 /**
  * Configuration properties for data entry sender (data pool)
  */
-@ConfigurationProperties(prefix = "camunda.taskpool.dataentry.sender")
+@ConfigurationProperties(prefix = "polyflow.integration.sender.data-entry")
 data class DataEntrySenderProperties(
   var enabled: Boolean = false,
   var type: DataEntrySenderType = DataEntrySenderType.simple,

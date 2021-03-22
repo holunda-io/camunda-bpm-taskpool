@@ -1,6 +1,6 @@
 package io.holunda.camunda.taskpool.collector.process.definition
 
-import io.holunda.camunda.taskpool.TaskCollectorProperties
+import io.holunda.camunda.taskpool.CamundaTaskpoolCollectorProperties
 import org.camunda.bpm.engine.spring.SpringProcessEngineConfiguration
 import org.camunda.bpm.spring.boot.starter.util.SpringBootProcessEnginePlugin
 import org.slf4j.Logger
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component
 
 @Component
 class ProcessDefinitionEnginePlugin(
-  private val properties: TaskCollectorProperties
+  private val properties: CamundaTaskpoolCollectorProperties
 ) : SpringBootProcessEnginePlugin() {
 
   private val logger: Logger = LoggerFactory.getLogger(ProcessDefinitionEnginePlugin::class.java)

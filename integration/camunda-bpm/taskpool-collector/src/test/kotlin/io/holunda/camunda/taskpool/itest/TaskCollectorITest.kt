@@ -2,7 +2,7 @@ package io.holunda.camunda.taskpool.itest
 
 import io.holunda.camunda.taskpool.api.task.*
 import io.holunda.camunda.taskpool.api.task.CamundaTaskEventType.Companion.CREATE
-import io.holunda.camunda.taskpool.sender.gateway.AxonCommandListGateway
+import io.holunda.camunda.taskpool.sender.task.EngineTaskCommandSender
 import org.awaitility.Awaitility.await
 import org.awaitility.Awaitility.waitAtMost
 import org.camunda.bpm.engine.RepositoryService
@@ -43,7 +43,7 @@ import java.util.concurrent.TimeUnit
 class TaskCollectorITest {
 
   @MockBean
-  lateinit var commandGateway: AxonCommandListGateway
+  lateinit var taskSender: EngineTaskCommandSender
 
   @Autowired
   lateinit var repositoryService: RepositoryService
@@ -88,7 +88,7 @@ class TaskCollectorITest {
     assertThat(instance).isStarted
     assertThat(instance).isWaitingAt(taskDefinitionKey)
 
-    reset(commandGateway)
+    reset(taskSender)
     val deleteCommand = DeleteTaskCommand(
       id = task().id,
       deleteReason = reason
@@ -97,7 +97,7 @@ class TaskCollectorITest {
     // delete
     runtimeService.deleteProcessInstance(instance.processInstanceId, reason, false)
 
-    verify(commandGateway).sendToGateway(listOf(deleteCommand))
+    verify(taskSender).send(deleteCommand)
   }
 
   /**
@@ -130,7 +130,7 @@ class TaskCollectorITest {
     assertThat(instance).isStarted
     assertThat(instance).isWaitingAt(taskDefinitionKey)
 
-    reset(commandGateway)
+    reset(taskSender)
     val completeCommand = CompleteTaskCommand(
       id = task().id
     )
@@ -138,7 +138,7 @@ class TaskCollectorITest {
     // complete
     taskService.complete(task().id, Variables.putValue("input", "from user"))
 
-    verify(commandGateway).sendToGateway(listOf(completeCommand))
+    verify(taskSender).send(completeCommand)
   }
 
   /**
@@ -174,7 +174,7 @@ class TaskCollectorITest {
     assertThat(instance).isStarted
     assertThat(instance).isWaitingAt(taskDefinitionKey)
 
-    reset(commandGateway)
+    reset(taskSender)
     val completeCommand = CompleteTaskCommand(
       id = task().id
     )
@@ -182,7 +182,7 @@ class TaskCollectorITest {
     // complete
     taskService.complete(task().id, Variables.putValue("input", "from user"))
 
-    verify(commandGateway).sendToGateway(listOf(completeCommand))
+    verify(taskSender).send(completeCommand)
   }
 
   /**
@@ -218,7 +218,7 @@ class TaskCollectorITest {
     assertThat(instance).isStarted
     assertThat(instance).isWaitingAt(taskDefinitionKey)
 
-    reset(commandGateway)
+    reset(taskSender)
     val completeCommand = CompleteTaskCommand(
       id = task().id,
       assignee = "BudSpencer"
@@ -232,7 +232,7 @@ class TaskCollectorITest {
 
     commandExecutor.execute(doInOneTransactionCommand)
 
-    verify(commandGateway).sendToGateway(listOf(completeCommand))
+    verify(taskSender).send(completeCommand)
   }
 
 
@@ -267,7 +267,7 @@ class TaskCollectorITest {
     assertThat(instance).isStarted
     assertThat(instance).isWaitingAt(taskDefinitionKey)
 
-    reset(commandGateway)
+    reset(taskSender)
     val now = Date.from(now())
     val updateCommand = UpdateAttributeTaskCommand(
       id = task().id,
@@ -281,7 +281,7 @@ class TaskCollectorITest {
     // set due date to now
     taskService.saveTask(task().apply { dueDate = now })
 
-    verify(commandGateway).sendToGateway(listOf(updateCommand))
+    verify(taskSender).send(updateCommand)
   }
 
   /**
@@ -351,7 +351,7 @@ class TaskCollectorITest {
     )
 
     // we need to take into account that dispatching the accumulated commands is done asynchronously and therefore we might have to wait a little bit
-    waitAtMost(1, TimeUnit.SECONDS).untilAsserted { verify(commandGateway).sendToGateway(listOf(createCommand)) }
+    waitAtMost(1, TimeUnit.SECONDS).untilAsserted { verify(taskSender).send(createCommand) }
   }
 
   /**
@@ -385,7 +385,7 @@ class TaskCollectorITest {
     assertThat(instance).isStarted
     assertThat(instance).isWaitingAt(taskDefinitionKey)
 
-    reset(commandGateway)
+    reset(taskSender)
     val assignTaskCommand = AssignTaskCommand(
       id = task().id,
       assignee = "kermit"
@@ -393,7 +393,7 @@ class TaskCollectorITest {
 
     taskService.setAssignee(task().id, "kermit")
 
-    verify(commandGateway).sendToGateway(listOf(assignTaskCommand))
+    verify(taskSender).send(assignTaskCommand)
   }
 
   /**

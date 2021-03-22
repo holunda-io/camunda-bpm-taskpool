@@ -22,7 +22,7 @@ import org.springframework.stereotype.Component
 class RefreshProcessDefinitionsJobHandler(
   private val processDefinitionService: ProcessDefinitionService,
   @Lazy
-  private val processDefinitionCommandSender: ProcessDefinitionCommandSender
+  private val processDefinitionProcessorService: ProcessDefinitionProcessorService
 ) : JobHandler<RefreshProcessDefinitionsJobConfiguration> {
 
   companion object : KLogging() {
@@ -41,7 +41,7 @@ class RefreshProcessDefinitionsJobHandler(
     // send to the task pool core.
     logger.info { "EVENTING-022: Registering ${commands.size} new process definitions." }
     commands.forEach {
-      processDefinitionCommandSender.send(it)
+      processDefinitionProcessorService.send(it)
     }
   }
 

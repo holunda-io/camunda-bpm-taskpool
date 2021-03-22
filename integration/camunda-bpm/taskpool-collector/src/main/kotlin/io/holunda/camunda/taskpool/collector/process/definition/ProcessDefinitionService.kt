@@ -1,6 +1,6 @@
 package io.holunda.camunda.taskpool.collector.process.definition
 
-import io.holunda.camunda.taskpool.TaskCollectorProperties
+import io.holunda.camunda.taskpool.CamundaTaskpoolCollectorProperties
 import io.holunda.camunda.taskpool.api.process.definition.RegisterProcessDefinitionCommand
 import io.holunda.camunda.taskpool.candidateGroups
 import io.holunda.camunda.taskpool.candidateUsers
@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component
  */
 @Component
 class ProcessDefinitionService(
-  private val collectorProperties: TaskCollectorProperties
+  private val collectorProperties: CamundaTaskpoolCollectorProperties
 ) {
 
   private val processDefinitions: MutableSet<ProcessDefinition> = mutableSetOf()

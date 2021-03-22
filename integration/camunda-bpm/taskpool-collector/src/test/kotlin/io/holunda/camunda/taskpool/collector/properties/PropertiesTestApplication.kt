@@ -1,9 +1,9 @@
 package io.holunda.camunda.taskpool.collector.properties
 
-import io.holunda.camunda.taskpool.TaskCollectorProperties
+import io.holunda.camunda.taskpool.CamundaTaskpoolCollectorProperties
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 
 @SpringBootApplication
-@EnableConfigurationProperties(TaskCollectorProperties::class)
+@EnableConfigurationProperties(CamundaTaskpoolCollectorProperties::class)
 class PropertiesTestApplication

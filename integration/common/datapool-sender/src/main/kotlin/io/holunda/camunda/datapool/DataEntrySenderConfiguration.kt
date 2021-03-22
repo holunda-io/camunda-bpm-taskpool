@@ -6,8 +6,7 @@ import io.holunda.camunda.datapool.sender.*
 import org.axonframework.commandhandling.gateway.CommandGateway
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
+import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.ComponentScan
@@ -37,16 +36,27 @@ class DataEntrySenderConfiguration {
   fun loggingDataEntryCommandErrorHandler(): DataEntryCommandErrorHandler = LoggingCommandErrorHandler(LoggerFactory.getLogger(DataEntryCommandSender::class.java))
 
   /**
-   * Default configuration of the simple sender.
+   * Default configuration of the data entry sender.
    */
   @Bean
-  @ConditionalOnProperty(name = ["camunda.taskpool.dataentry.sender.type"], havingValue = "simple")
-  fun initSimpleSender(gateway: CommandGateway,
-                       dataEntryProjector: DataEntryProjector,
-                       dataEntryCommandSuccessHandler: DataEntryCommandSuccessHandler,
-                       dataEntryCommandErrorHandler: DataEntryCommandErrorHandler,
-                       objectMapper: ObjectMapper
+  @ConditionalOnExpression("'\${polyflow.integration.sender.data-entry.type}' != 'custom'")
+  fun configureSender(
+    gateway: CommandGateway,
+    dataEntryProjector: DataEntryProjector,
+    dataEntryCommandSuccessHandler: DataEntryCommandSuccessHandler,
+    dataEntryCommandErrorHandler: DataEntryCommandErrorHandler,
+    objectMapper: ObjectMapper,
   ): DataEntryCommandSender {
-    return SimpleDataEntryCommandSender(gateway, properties, dataEntryProjector, dataEntryCommandSuccessHandler, dataEntryCommandErrorHandler, objectMapper)
+    return when (properties.type) {
+      DataEntrySenderType.simple -> SimpleDataEntryCommandSender(
+        gateway,
+        properties,
+        dataEntryProjector,
+        dataEntryCommandSuccessHandler,
+        dataEntryCommandErrorHandler,
+        objectMapper
+      )
+      else -> throw IllegalStateException("Could not initialize sender, used unknown ${properties.type} type.")
+    }
   }
 }

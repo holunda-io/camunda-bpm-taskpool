@@ -1,6 +1,6 @@
 package io.holunda.camunda.taskpool.collector.variable
 
-import io.holunda.camunda.taskpool.TaskCollectorProperties
+import io.holunda.camunda.taskpool.CamundaTaskpoolCollectorProperties
 import io.holunda.camunda.taskpool.collector.sourceReference
 import mu.KLogging
 import org.camunda.bpm.engine.RepositoryService
@@ -24,8 +24,8 @@ import org.springframework.stereotype.Component
  */
 @Component
 class ProcessVariableEventCollectorService(
-  private val collectorProperties: TaskCollectorProperties,
-  private val repositoryService: RepositoryService
+        private val collectorProperties: CamundaTaskpoolCollectorProperties,
+        private val repositoryService: RepositoryService
 ) {
 
   companion object : KLogging() {

@@ -1,7 +1,7 @@
 package io.holunda.camunda.taskpool.example.process
 
 import io.holunda.camunda.taskpool.EnableTaskpoolEngineSupport
-import io.holunda.camunda.taskpool.enricher.*
+import io.holunda.camunda.taskpool.collector.task.enricher.*
 import io.holunda.camunda.taskpool.example.process.process.RequestApprovalProcess
 import io.holunda.camunda.taskpool.example.process.service.BusinessDataEntry
 import io.holunda.camunda.taskpool.example.users.EnableExampleUsers

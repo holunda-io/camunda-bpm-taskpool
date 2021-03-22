@@ -3,7 +3,7 @@ package io.holunda.camunda.taskpool.sender.process.definition
 import io.holunda.camunda.taskpool.api.process.definition.ProcessDefinitionCommand
 
 /**
- * Sender for process deifnitions.
+ * Sender for process definitions.
  */
 interface ProcessDefinitionCommandSender {
 

@@ -1,6 +1,6 @@
 package io.holunda.camunda.taskpool.collector.task
 
-import io.holunda.camunda.taskpool.TaskCollectorProperties
+import io.holunda.camunda.taskpool.CamundaTaskpoolCollectorProperties
 import io.holunda.camunda.taskpool.api.task.*
 import io.holunda.camunda.taskpool.collector.formKey
 import io.holunda.camunda.taskpool.collector.sourceReference
@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component
  */
 @Component
 class TaskEventCollectorService(
-  private val collectorProperties: TaskCollectorProperties
+  private val collectorProperties: CamundaTaskpoolCollectorProperties
 ) {
 
   private val logger = LoggerFactory.getLogger(TaskEventCollectorService::class.java)

@@ -1,6 +1,6 @@
 package io.holunda.camunda.taskpool.collector.properties
 
-import io.holunda.camunda.taskpool.TaskCollectorProperties
+import io.holunda.camunda.taskpool.CamundaTaskpoolCollectorProperties
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -17,7 +17,7 @@ import org.springframework.test.context.junit4.SpringRunner
 class TaskCollectorPropertiesITest {
 
   @Autowired
-  lateinit var props: TaskCollectorProperties
+  lateinit var props: CamundaTaskpoolCollectorProperties
 
   @Test
   fun test_properties() {
