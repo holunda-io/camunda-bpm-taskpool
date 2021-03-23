@@ -1,10 +1,7 @@
-@file:Suppress("UNREACHABLE_CODE", "UNCHECKED_CAST")
+package io.holunda.camunda.taskpool.sender.task.accumulator
 
-package io.holunda.camunda.taskpool.sender
-
-import io.holunda.camunda.taskpool.sender.task.accumulator.ProjectionErrorDetector
-import io.holunda.camunda.taskpool.sender.task.accumulator.PropertyOperation
-import io.holunda.camunda.taskpool.sender.task.accumulator.projectProperties
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import io.holunda.camunda.taskpool.configureTaskpoolJacksonObjectMapper
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import java.util.*
@@ -12,11 +9,13 @@ import kotlin.reflect.KClass
 
 class PropertiesProjectorTest {
 
+  private val objectMapper = jacksonObjectMapper().configureTaskpoolJacksonObjectMapper()
+
   @Test
   fun `should return the command if details are empty`() {
 
     val model = model("Foo", "My foo model")
-    val result = projectProperties(model, projectionErrorDetector = object:ProjectionErrorDetector{})
+    val result = projectProperties(model, projectionErrorDetector = object:ProjectionErrorDetector{}, mapper = jacksonMapper(objectMapper), unmapper = jacksonUnmapper(model::class.java, objectMapper))
 
     assertThat(result).isEqualTo(model)
   }
@@ -25,7 +24,7 @@ class PropertiesProjectorTest {
   fun `should replace a detail`() {
 
     val model = model("Foo", "My foo model")
-    val result = projectProperties(model, listOf(named(name = "new name", id = model.id)), projectionErrorDetector = object:ProjectionErrorDetector{})
+    val result = projectProperties(model, listOf(named(name = "new name", id = model.id)), projectionErrorDetector = object:ProjectionErrorDetector{}, mapper = jacksonMapper(objectMapper), unmapper = jacksonUnmapper(model::class.java, objectMapper))
 
     assertThat(result).isEqualTo(model.copy(name = "new name"))
   }
@@ -37,7 +36,8 @@ class PropertiesProjectorTest {
     val result = projectProperties(model, listOf(
       named(name = "wrong name", id = model.id),
       named(name = "new name", id = model.id)),
-      projectionErrorDetector = object:ProjectionErrorDetector{}
+      projectionErrorDetector = object:ProjectionErrorDetector{},
+      mapper = jacksonMapper(objectMapper), unmapper = jacksonUnmapper(model::class.java, objectMapper)
     )
 
     assertThat(result).isEqualTo(model.copy(name = "new name"))
@@ -50,7 +50,7 @@ class PropertiesProjectorTest {
     val result = projectProperties(model, listOf(
       payload(payload = mutableMapOf("zee" to "test"), id = model.id),
       named(name = "new name", id = model.id)),
-      projectionErrorDetector = object:ProjectionErrorDetector{}
+      projectionErrorDetector = object:ProjectionErrorDetector{}, mapper = jacksonMapper(objectMapper), unmapper = jacksonUnmapper(model::class.java, objectMapper)
     )
 
     assertThat(result).isEqualTo(model.copy(name = "new name", enriched = true, payload = mutableMapOf("zee" to "test")))
@@ -72,7 +72,7 @@ class PropertiesProjectorTest {
           }
         }
       ),
-      projectionErrorDetector = object:ProjectionErrorDetector{}
+      projectionErrorDetector = object:ProjectionErrorDetector{}, mapper = jacksonMapper(objectMapper), unmapper = jacksonUnmapper(model::class.java, objectMapper)
     )
 
     assertThat(result).isEqualTo(model.copy(name = "new name", enriched = true, payload = mutableMapOf("foo" to "bar", "zee" to "test")))
@@ -101,7 +101,7 @@ class PropertiesProjectorTest {
           }
         }
       ),
-      projectionErrorDetector = object:ProjectionErrorDetector{}
+      projectionErrorDetector = object:ProjectionErrorDetector{}, mapper = jacksonMapper(objectMapper), unmapper = jacksonUnmapper(model::class.java, objectMapper)
     )
 
     // map elements should vanish, kermit remains alone in the list
