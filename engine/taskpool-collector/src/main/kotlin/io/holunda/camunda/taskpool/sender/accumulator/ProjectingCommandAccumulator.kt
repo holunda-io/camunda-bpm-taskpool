@@ -1,15 +1,17 @@
 package io.holunda.camunda.taskpool.sender.accumulator
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.holunda.camunda.taskpool.api.business.WithCorrelations
 import io.holunda.camunda.taskpool.api.task.*
+import io.holunda.camunda.taskpool.configureTaskpoolJacksonObjectMapper
 import io.holunda.camunda.variable.serializer.serialize
 import kotlin.reflect.KClass
 
 
 /**
  * Sorts commands by their order id and project attribute to one command
- * @param objectMapper optional object mapper used for serialization, defaults to jacksonObjectMapper with Kotlin module.
+ * @param objectMapper optional object mapper used for serialization.
  */
 class ProjectingCommandAccumulator(
   val objectMapper: ObjectMapper
@@ -74,7 +76,9 @@ class ProjectingCommandAccumulator(
       WithPayload::payload.name,
       WithCorrelations::correlations.name
     ),
-    projectionErrorDetector = EngineTaskCommandProjectionErrorDetector
+    projectionErrorDetector = EngineTaskCommandProjectionErrorDetector,
+    mapper = jacksonMapper(objectMapper = objectMapper),
+    unmapper = jacksonUnmapper(clazz = command::class.java, objectMapper = objectMapper)
   )
 
   /**
