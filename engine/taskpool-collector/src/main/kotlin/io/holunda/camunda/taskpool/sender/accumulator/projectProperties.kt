@@ -1,6 +1,7 @@
 package io.holunda.camunda.taskpool.sender.accumulator
 
 import com.fasterxml.jackson.core.type.TypeReference
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.holunda.camunda.taskpool.configureTaskpoolJacksonObjectMapper
 import org.slf4j.LoggerFactory
@@ -38,8 +39,8 @@ fun <T : Any> projectProperties(
   original: T,
   details: List<Any> = emptyList(),
   propertyOperationConfig: PropertyOperationConfiguration = mapOf(),
-  mapper: Mapper<T> = jacksonMapper(),
-  unmapper: Unmapper<T> = jacksonUnmapper(original::class.java),
+  mapper: Mapper<T>,
+  unmapper: Unmapper<T>,
   ignoredProperties: List<String> = emptyList(),
   projectionErrorDetector: ProjectionErrorDetector
 ): T {
@@ -100,8 +101,8 @@ fun <T : Any> projectProperties(
 /**
  * Default Jackson Mapper (object to map).
  */
-fun <T> jacksonMapper(): Mapper<T> = {
-  jacksonObjectMapper()
+fun <T> jacksonMapper(objectMapper: ObjectMapper = jacksonObjectMapper()): Mapper<T> = {
+  objectMapper
     .configureTaskpoolJacksonObjectMapper()
     .convertValue(it, object : TypeReference<MutableMap<String, Any?>>() {})
 }
@@ -109,9 +110,10 @@ fun <T> jacksonMapper(): Mapper<T> = {
 /**
  * Default Jackson Unmapper (map to object).
  */
-fun <T> jacksonUnmapper(clazz: Class<T>): Unmapper<T> = {
-  jacksonObjectMapper()
-    .configureTaskpoolJacksonObjectMapper().convertValue(it, clazz)
+fun <T> jacksonUnmapper(clazz: Class<T>, objectMapper: ObjectMapper = jacksonObjectMapper()): Unmapper<T> = {
+  objectMapper
+    .configureTaskpoolJacksonObjectMapper()
+    .convertValue(it, clazz)
 }
 
 /**
