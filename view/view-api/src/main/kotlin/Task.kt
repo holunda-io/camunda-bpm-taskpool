@@ -111,7 +111,7 @@ fun task(event: TaskAttributeUpdatedEngineEvent, task: Task) = Task(
 
   name = event.name,
   description = event.description,
-  businessKey = event.businessKey,
+  businessKey = event.businessKey ?: task.businessKey,
   priority = event.priority,
   owner = event.owner,
   followUpDate = event.followUpDate,

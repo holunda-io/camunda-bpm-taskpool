@@ -224,7 +224,7 @@ class TaskCollectorITest {
       assignee = "BudSpencer"
     )
 
-    val doInOneTransactionCommand = Command { commandContext ->
+    val doInOneTransactionCommand = Command { _ ->
       taskService.claim(task().id, "BudSpencer")
       // complete
       taskService.complete(task().id, Variables.putValue("input", "from user"))
@@ -284,8 +284,10 @@ class TaskCollectorITest {
         name = "My Process",
         definitionKey = processId,
         applicationName = "collector-test"
-      )
-      )
+      ),
+      enriched = true,
+      payload = Variables.putValue("key", Variables.stringValue("value"))
+    )
 
     // set due date to now
     taskService.saveTask(task().apply { dueDate = now })

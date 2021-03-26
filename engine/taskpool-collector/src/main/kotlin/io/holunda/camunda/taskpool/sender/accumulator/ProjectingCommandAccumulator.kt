@@ -74,7 +74,9 @@ class ProjectingCommandAccumulator(
       EngineTaskCommand::order.name,
       // handled separately
       WithPayload::payload.name,
-      WithCorrelations::correlations.name
+      WithCorrelations::correlations.name,
+      // there is no reason to overwrite a business key ever
+      WithPayload::businessKey.name
     ),
     projectionErrorDetector = EngineTaskCommandProjectionErrorDetector,
     mapper = jacksonMapper(objectMapper = objectMapper),
