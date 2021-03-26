@@ -103,9 +103,6 @@ fun task(event: TaskAttributeUpdatedEngineEvent, task: Task) = Task(
   sourceReference = event.sourceReference,
   taskDefinitionKey = event.taskDefinitionKey,
 
-  correlations = task.correlations,
-  payload = task.payload,
-  businessKey = task.businessKey,
   formKey = task.formKey,
   createTime = task.createTime,
   assignee = task.assignee,
@@ -114,10 +111,14 @@ fun task(event: TaskAttributeUpdatedEngineEvent, task: Task) = Task(
 
   name = event.name,
   description = event.description,
+  businessKey = event.businessKey,
   priority = event.priority,
   owner = event.owner,
   followUpDate = event.followUpDate,
-  dueDate = event.dueDate
+  dueDate = event.dueDate,
+  correlations = event.correlations,
+  payload = event.payload
+
 )
 
 /**

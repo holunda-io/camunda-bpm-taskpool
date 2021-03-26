@@ -275,8 +275,17 @@ class TaskCollectorITest {
       description = null,
       dueDate = now,
       owner = null,
-      priority = 50
-    )
+      priority = 50,
+      taskDefinitionKey = taskDefinitionKey,
+      sourceReference = ProcessReference(
+        instanceId = instance.id,
+        executionId = task().executionId,
+        definitionId = task().processDefinitionId,
+        name = "My Process",
+        definitionKey = processId,
+        applicationName = "collector-test"
+      )
+      )
 
     // set due date to now
     taskService.saveTask(task().apply { dueDate = now })

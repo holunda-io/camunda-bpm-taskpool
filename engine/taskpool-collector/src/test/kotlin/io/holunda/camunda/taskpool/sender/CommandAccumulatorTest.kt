@@ -27,7 +27,16 @@ class CommandAccumulatorTest {
     priority = 50,
     owner = null,
     description = "some description",
-    name = "task name"
+    name = "task name",
+    taskDefinitionKey = "userTask-123",
+    sourceReference = ProcessReference(
+      instanceId = "d7c7c8cd-0475-11e9-90f1-a0c589a3e9e5",
+      executionId = "d7c7c8cd-0475-11e9-90f1-a0c589a3e9e5",
+      definitionId = "processId:4:d7c6de6c-0475-11e9-90f1-a0c589a3e9e5",
+      name = "My Process",
+      definitionKey = "processId",
+      applicationName = "command-projector-test"
+    )
   )
 
   private val completeTaskCommand = CompleteTaskCommand(

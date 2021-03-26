@@ -113,7 +113,6 @@ object MongoLauncher {
               .build()
           ).use { mongo ->
 
-
             val config = Document(mapOf("_id" to "repembedded",
               "members" to BasicDBList().apply {
                 add(Document("_id", 0).append("host", "$LOCALHOST:$MONGO_DEFAULT_PORT"))
