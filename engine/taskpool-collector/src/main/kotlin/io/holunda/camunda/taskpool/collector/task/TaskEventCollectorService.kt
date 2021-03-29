@@ -98,7 +98,7 @@ class TaskEventCollectorService(
    * </ul>
    */
   @Order(ORDER)
-  @EventListener
+  @EventListener()
   fun update(changeEvent: HistoricTaskInstanceEventEntity): UpdateAttributeTaskCommand? =
     when (changeEvent.eventType) {
       "update" ->
