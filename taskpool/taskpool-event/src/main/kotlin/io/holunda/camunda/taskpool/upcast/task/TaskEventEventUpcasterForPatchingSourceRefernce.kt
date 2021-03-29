@@ -1,10 +1,12 @@
-package io.holunda.camunda.taskpool.upcast.definition
+package io.holunda.camunda.taskpool.upcast.task
 
+import io.holunda.camunda.taskpool.upcast.definition.AnnotatedEventUpcaster
+import io.holunda.camunda.taskpool.upcast.definition.AnnotationBasedSingleEventUpcaster
 import mu.KLogging
 import org.axonframework.serialization.SimpleSerializedType
 import org.axonframework.serialization.upcasting.event.IntermediateEventRepresentation
+import org.dom4j.Attribute
 import org.dom4j.Document
-import org.dom4j.Node
 
 /**
  * Upcaster fixing source reference changed introduced by #242.
@@ -152,7 +154,8 @@ class TaskUndeferredEvent2To4Upcaster : AbstractSourceReferenceElementRemovingUp
 }
 
 /**
- * Abstract upcaster to be used for all task events.
+ * Abstract upcaster to be used for all task events. Removes the element duplicates from the source-reference tag introduced by the
+ * usage of a sealed class instead of the interface.
  */
 abstract class AbstractSourceReferenceElementRemovingUpcaster : AnnotationBasedSingleEventUpcaster() {
 

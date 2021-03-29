@@ -111,13 +111,14 @@ fun task(event: TaskAttributeUpdatedEngineEvent, task: Task) = Task(
 
   name = event.name,
   description = event.description,
-  businessKey = event.businessKey ?: task.businessKey,
   priority = event.priority,
   owner = event.owner,
   followUpDate = event.followUpDate,
   dueDate = event.dueDate,
-  correlations = event.correlations,
-  payload = event.payload
+
+  businessKey = event.businessKey ?: task.businessKey,
+  correlations = if (event.correlations.isEmpty()) { task.correlations } else { event.correlations },
+  payload = if (event.payload.isEmpty()) {task.payload } else { event.payload }
 
 )
 
