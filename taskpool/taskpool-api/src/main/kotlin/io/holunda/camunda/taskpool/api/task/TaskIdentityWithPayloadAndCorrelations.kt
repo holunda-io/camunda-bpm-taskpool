@@ -7,7 +7,7 @@ import io.holunda.camunda.taskpool.api.business.WithCorrelations
  */
 interface TaskIdentityWithPayloadAndCorrelations : TaskIdentity, WithPayload, WithCorrelations {
   /**
-   * Flag, indicating if the enrichment has been performed.
+   * Flag, indicating if the enrichment has been performed. The payload is only then taken into account.
    */
   var enriched: Boolean
 }

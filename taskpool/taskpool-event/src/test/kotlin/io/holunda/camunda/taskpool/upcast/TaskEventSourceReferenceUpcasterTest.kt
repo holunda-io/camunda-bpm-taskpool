@@ -1,8 +1,9 @@
 package io.holunda.camunda.taskpool.upcast
 
 import io.holunda.camunda.taskpool.api.task.*
-import io.holunda.camunda.taskpool.upcast.definition.*
+import io.holunda.camunda.taskpool.upcast.task.*
 import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
 import org.axonframework.eventhandling.EventData
 import org.axonframework.messaging.MetaData
 import org.axonframework.serialization.SimpleSerializedObject
@@ -21,7 +22,7 @@ import kotlin.reflect.KClass
 import kotlin.streams.toList
 
 // TODO: Move out test setup into separate project.
-class TaskEventUpcasterTest {
+class TaskEventSourceReferenceUpcasterTest {
 
   @Test
   fun shouldUpcastXStream() {
@@ -30,7 +31,6 @@ class TaskEventUpcasterTest {
     runTheTest(TaskAssignedEngineEvent::class, "3")
     runTheTest(TaskDeletedEngineEvent::class, "3")
     runTheTest(TaskAttributeUpdatedEngineEvent::class, "3")
-
     runTheTest(TaskCandidateGroupChanged::class, "1")
     runTheTest(TaskCandidateUserChanged::class, "1")
     runTheTest(TaskClaimedEvent::class, "2")
@@ -40,7 +40,10 @@ class TaskEventUpcasterTest {
     runTheTest(TaskUndeferredEvent::class, "2")
   }
 
-  private inline fun <reified T : Any> runTheTest(clazz: KClass<T>, revisionNumber: String) {
+  /**
+   * Run the test with the specified version of the event.
+   */
+  private inline fun <reified T : Any> runTheTest(clazz: KClass<T>, revisionNumber: String) : T {
     val eventName: String = clazz.qualifiedName!!
     val xml = generateFakeOldEventXML(clazz)
     val document = SAXReader().read(StringReader(xml))
@@ -79,7 +82,7 @@ class TaskEventUpcasterTest {
     val event: T = serializer.deserialize(result[0].data)
 
     Assertions.assertThat(event).isNotNull
-
+    return event
   }
 
 

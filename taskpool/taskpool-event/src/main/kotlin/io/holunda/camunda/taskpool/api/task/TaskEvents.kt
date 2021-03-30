@@ -131,20 +131,23 @@ data class TaskDeletedEngineEvent(
 ) : TaskEngineEvent("delete")
 
 /**
- * Changes of task attributes (but not assingment).
+ * Changes of task attributes (but not assignment).
  */
-@Revision("4")
+@Revision("5")
 data class TaskAttributeUpdatedEngineEvent(
   override val id: String,
   override val sourceReference: SourceReference,
   override val taskDefinitionKey: String,
+  override val payload: VariableMap = Variables.createVariables(),
+  override val correlations: CorrelationMap = newCorrelations(),
+  override val businessKey: String? = null,
   val name: String? = null,
   val description: String? = null,
   val priority: Int? = 0,
   val owner: String? = null,
   val dueDate: Date? = null,
   val followUpDate: Date? = null
-) : TaskEvent("attribute-update")
+) : TaskEngineEvent("attribute-update")
 
 /**
  * Changes of task assignment.

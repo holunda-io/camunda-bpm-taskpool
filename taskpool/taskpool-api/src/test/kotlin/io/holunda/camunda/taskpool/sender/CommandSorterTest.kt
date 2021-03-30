@@ -26,7 +26,9 @@ class CommandSorterTest {
     description = "task description",
     owner = null,
     dueDate = Date(1234567890L),
-    priority = 0
+    priority = 0,
+    sourceReference = makeProcessReference(),
+    taskDefinitionKey = "task-definition-key-abcde"
   )
 
   val completeTaskCommand = CompleteTaskCommand(
