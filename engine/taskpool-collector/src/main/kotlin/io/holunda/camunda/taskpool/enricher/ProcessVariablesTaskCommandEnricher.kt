@@ -2,7 +2,9 @@ package io.holunda.camunda.taskpool.enricher
 
 import io.holunda.camunda.taskpool.api.task.*
 import io.holunda.camunda.taskpool.callInProcessEngineContext
+import mu.KLogging
 import org.camunda.bpm.engine.RuntimeService
+import org.camunda.bpm.engine.variable.Variables.createVariables
 
 /**
  * Enriches commands with process variables.
@@ -15,10 +17,18 @@ open class ProcessVariablesTaskCommandEnricher(
   private val processVariablesCorrelator: ProcessVariablesCorrelator,
 ) : VariablesEnricher {
 
+  companion object : KLogging()
+
   override fun <T : TaskIdentityWithPayloadAndCorrelations> enrich(command: T): T {
 
     val variablesTyped = callInProcessEngineContext(command.isHistoric()) {
-      runtimeService.getVariablesTyped(command.sourceReference.executionId)
+      val execution = runtimeService.createExecutionQuery().executionId(command.sourceReference.executionId).singleResult()
+      if (execution != null) {
+        runtimeService.getVariablesTyped(command.sourceReference.executionId)
+      } else {
+        logger.debug { "ENRICHER-004: Could not enrich variables from running execution ${command.sourceReference.executionId}, since it doesn't exist (anymore)." }
+        createVariables()
+      }
     }
 
     // Payload enrichment
