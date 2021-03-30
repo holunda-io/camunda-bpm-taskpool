@@ -57,7 +57,7 @@ data class ProcessDefinitionSenderProperties(
    */
   val enabled: Boolean = false,
   /**
-   * Sender type, defaults to <code>tx</code>
+   * Sender type, defaults to <code>simple</code>
    */
   val type: SenderType = SenderType.simple,
 )
@@ -69,7 +69,19 @@ data class ProcessInstanceSenderProperties(
    */
   val enabled: Boolean = true,
   /**
-   * Sender type, defaults to <code>tx</code>
+   * Sender type, defaults to <code>simple</code>
+   */
+  val type: SenderType = SenderType.simple,
+)
+
+@ConstructorBinding
+data class ProcessVariableSenderProperties(
+  /**
+   * Value to control the process variable sending.
+   */
+  val enabled: Boolean = true,
+  /**
+   * Sender type, defaults to <code>simple</code>
    */
   val type: SenderType = SenderType.simple,
 )

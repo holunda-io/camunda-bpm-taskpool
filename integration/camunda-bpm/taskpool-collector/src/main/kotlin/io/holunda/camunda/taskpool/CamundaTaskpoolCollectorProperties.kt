@@ -33,7 +33,13 @@ class CamundaTaskpoolCollectorProperties(
    * Process instance collector properties.
    */
   @NestedConfigurationProperty
-  var processInstance: CamundaProcessInstanceCollectorProperties = CamundaProcessInstanceCollectorProperties()
+  var processInstance: CamundaProcessInstanceCollectorProperties = CamundaProcessInstanceCollectorProperties(),
+
+  /**
+   * Process variable collector properties.
+   */
+  @NestedConfigurationProperty
+  var processVariable: CamundaProcessVariableProperties = CamundaProcessVariableProperties()
 )
 
 /**
@@ -49,6 +55,14 @@ data class CamundaTaskCollectorProperties(
   val enricher: TaskCollectorEnricherProperties = TaskCollectorEnricherProperties(),
   /**
    * Flag to enable or disable the collector.
+   */
+  val enabled: Boolean = true
+)
+
+@ConstructorBinding
+data class CamundaProcessVariableProperties(
+  /**
+   * Enabled by default.
    */
   val enabled: Boolean = true
 )
@@ -104,7 +118,7 @@ data class CamundaProcessDefinitionCollectorProperties(
 data class CamundaProcessInstanceCollectorProperties(
 
   /**
-   * Disable by default.
+   * Enabled by default.
    */
-  val enabled: Boolean = false
+  val enabled: Boolean = true
 )

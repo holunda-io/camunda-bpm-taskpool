@@ -7,35 +7,39 @@ nav:
     - 'Features': introduction/features.md
     - 'Solution Architecture': introduction/solution-architecture.md
     - 'Further Outlook': introduction/further-outlook.md
-  - 'User Guide':
-    - 'Components':
-      - 'Overview': user-guide/components/index.md
-      - 'Engine Components':
-        - 'Camunda Engine Taskpool Support SpringBoot Starter': user-guide/components/engine-starter.md
-        - 'Camunda Engine Interaction Client': user-guide/components/engine-interaction-client.md
-      - 'Core Components':
-        - 'Taskpool Collector': user-guide/components/engine-taskpool-collector.md
-        - 'Datapool Collector': user-guide/components/engine-datapool-collector.md
-        - 'Taskpool Core': user-guide/components/core-taskpool.md
-        - 'Datapool Core': user-guide/components/core-datapool.md
-      - 'View Components':
-        - 'In-Memory View': user-guide/components/view-simple.md
-        - 'Mongo View': user-guide/components/view-mongo.md
-    - 'Integration Guide': user-guide/integration-guide.md
-    - 'Example Application':
-      - 'Example Overview': user-guide/example-application.md
-      - 'Example Components':
-        - 'Example Components Overview': user-guide/example-components/index.md
-        - 'Process Application Frontend': user-guide/example-components/pa-frontend.md
-        - 'Process Application Backend': user-guide/example-components/pa-backend.md
-        - 'User Management': user-guide/example-components/user-management.md
-        - 'Process Platform Frontend': user-guide/example-components/pp-frontend.md
-        - 'Process Platform Backend': user-guide/example-components/pp-backend.md
-      - 'Usage Scenarios':
-        - 'Usage Scenarios Overview': user-guide/scenarios/index.md
-        - 'Single Node': user-guide/scenarios/single-node.md
-        - 'Distributed using Axon Server': user-guide/scenarios/distributed-axon-server.md
-        - 'Distributed without Axon Server': user-guide/scenarios/distributed-no-axon-server.md
+  - 'Integration Guide': integration/index.md
+  - 'Reference Guide':
+    - 'Overview': reference-guide/components/index.md
+    - 'Process Engine Integration Components':
+      - 'Camunda BPM Engine Interaction Client': reference-guide/components/camunda-interaction-client.md
+      - 'Camunda BPM Engine Taskpool Collector': reference-guide/components/camunda-taskpool-collector.md
+      - 'Camunda BPM Engine Taskpool SpringBoot Starter': reference-guide/components/camunda-starter.md
+      - 'Taskpool Sender': reference-guide/components/common-taskpool-sender.md
+      - 'Datapool Sender': reference-guide/components/common-datapool-sender.md
+    - 'Core Components':
+      - 'Taskpool Core': reference-guide/components/core-taskpool.md
+      - 'Datapool Core': reference-guide/components/core-datapool.md
+    - 'View Components':
+      - 'In-Memory View': reference-guide/components/view-simple.md
+      - 'Mongo DB View': reference-guide/components/view-mongo.md
+    - 'Other Components':
+      - 'Form URL Resolver': reference-guide/components/other-form-url-resolver.md
+      - 'Tasklist URL Resolver': reference-guide/components/other-tasklist-url-resolver.md
+      - 'Variable Serializer': reference-guide/components/other-variable-serializer.md
+  - 'Example Application':
+    - 'Overview': examples/example-application.md
+    - 'Example Components':
+      - 'Example Components Overview': examples/example-components/index.md
+      - 'Process Application Frontend': examples/example-components/pa-frontend.md
+      - 'Process Application Backend': examples/example-components/pa-backend.md
+      - 'User Management': examples/example-components/user-management.md
+      - 'Process Platform Frontend': examples/example-components/pp-frontend.md
+      - 'Process Platform Backend': examples/example-components/pp-backend.md
+    - 'Distribution Scenarios':
+      - 'Scenarios Overview': examples/scenarios/index.md
+      - 'Single Node': examples/scenarios/single-node.md
+      - 'Distributed using Axon Server': examples/scenarios/distributed-axon-server.md
+      - 'Distributed without Axon Server': examples/scenarios/distributed-no-axon-server.md
   - 'Developer Guide':
     - 'Contribution': developer-guide/contribution.md
     - 'Project Setup': developer-guide/project-setup.md

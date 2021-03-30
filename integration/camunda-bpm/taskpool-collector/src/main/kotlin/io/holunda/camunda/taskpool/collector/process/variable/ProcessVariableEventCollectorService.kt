@@ -1,12 +1,16 @@
-package io.holunda.camunda.taskpool.collector.variable
+package io.holunda.camunda.taskpool.collector.process.variable
 
 import io.holunda.camunda.taskpool.CamundaTaskpoolCollectorProperties
+import io.holunda.camunda.taskpool.api.process.variable.ProcessVariableCommand
+import io.holunda.camunda.taskpool.api.process.variable.UpdateProcessVariableCommand
 import io.holunda.camunda.taskpool.collector.sourceReference
+import io.holunda.camunda.taskpool.sender.gateway.CommandListGateway
 import mu.KLogging
 import org.camunda.bpm.engine.RepositoryService
 import org.camunda.bpm.engine.impl.history.event.HistoricVariableUpdateEventEntity
 import org.camunda.bpm.engine.impl.history.event.HistoryEventTypes
 import org.camunda.bpm.engine.impl.persistence.entity.HistoricDetailVariableInstanceUpdateEntity
+import org.camunda.bpm.engine.impl.persistence.entity.HistoricVariableInstanceEntity
 import org.springframework.context.event.EventListener
 import org.springframework.core.annotation.Order
 import org.springframework.stereotype.Component
@@ -42,6 +46,7 @@ class ProcessVariableEventCollectorService(
   fun create(variableEvent: HistoricVariableUpdateEventEntity) {
     val sourceReference = variableEvent.sourceReference(repositoryService, collectorProperties.applicationName)
     logger.debug { "Created variable ${variableEvent.variableName} for source ref: $sourceReference" }
+    logger.debug { "Create event was $variableEvent" }
   }
 
   /**
@@ -51,7 +56,19 @@ class ProcessVariableEventCollectorService(
   @Order(ORDER)
   @EventListener(condition = "#variableEvent.eventType.equals('update')")
   fun update(variableEvent: HistoricVariableUpdateEventEntity) {
-    logger.debug { "Update variable $variableEvent" }
+
+    logger.debug { "Update event was $variableEvent" }
+
+    val command = UpdateProcessVariableCommand(
+      variableInstanceId = variableEvent.variableInstanceId,
+      variableName = variableEvent.variableName,
+      revision = variableEvent.revision,
+      scopeActivityInstanceId = variableEvent.scopeActivityInstanceId,
+      sourceReference = variableEvent.sourceReference(repositoryService, collectorProperties.applicationName),
+      value = HistoricVariableInstanceEntity(variableEvent).getTypedValue(true),
+    )
+
+    logger.debug { "Command $command" }
   }
 
   /**
@@ -61,7 +78,7 @@ class ProcessVariableEventCollectorService(
   @Order(ORDER)
   @EventListener(condition = "#variableEvent.eventType.equals('update-detail')")
   fun updateDetail(variableEvent: HistoricDetailVariableInstanceUpdateEntity) {
-    logger.debug { "Created variable $variableEvent" }
+    logger.debug { "Update detail variable $variableEvent" }
   }
 
   /**
@@ -71,7 +88,7 @@ class ProcessVariableEventCollectorService(
   @Order(ORDER)
   @EventListener(condition = "#variableEvent.eventType.equals('delete')")
   fun delete(variableEvent: HistoricVariableUpdateEventEntity) {
-    logger.debug { "Created variable $variableEvent" }
+    logger.debug { "Delete variable $variableEvent" }
   }
 
   /**
@@ -81,7 +98,32 @@ class ProcessVariableEventCollectorService(
   @Order(ORDER)
   @EventListener(condition = "#variableEvent.eventType.equals('migrate')")
   fun migrate(variableEvent: HistoricVariableUpdateEventEntity) {
-    logger.debug { "Update variable $variableEvent" }
+    logger.debug { "Migrate variable $variableEvent" }
   }
 
 }
+
+// FIXME: move to enricher
+@Component
+class ProcessVariableEnricherService(
+  private val commandListGateway: CommandListGateway,
+  private val properties: CamundaTaskpoolCollectorProperties
+) {
+  companion object : KLogging()
+
+  /**
+   * Reacts on incoming process variable commands.
+   * @param command command about process variable to send.
+   */
+  @EventListener
+  fun handle(command: ProcessVariableCommand) {
+    if (properties.processVariable.enabled) {
+      commandListGateway.sendToGateway(listOf(command))
+      logger.debug { "Sending update about process variable ${command.variableName}." }
+    } else {
+      logger.debug { "Process variable collecting has been disabled by property, skipping ${command.variableName}." }
+    }
+  }
+}
+
+

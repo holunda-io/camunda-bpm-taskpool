@@ -248,9 +248,9 @@ TIP: If you want to implement a custom command sending, please provide your own 
 The Spring event listeners receiving events from the Camunda Engine plugin are called before the engine commits the transaction.
 Since all processing inside collector component and enricher is performed synchronously, the sender must waits until transaction to
 be successfully committed before sending any commands to the Command Gateway. Otherwise, on any error
-the transaction would be rolled back and the command would create an inconsistency between the taskpool and the engine.
+the transaction would be rolled-back and the command would create an inconsistency between the taskpool and the engine.
 
-Depending on your deployment scenario, you may want to control the exact point in time when the commands are send to command gateway.
+Depending on your deployment scenario, you may want to control the exact point in time when the commands are sent to command gateway.
 The property `camunda.taskpool.collector.task.sender.send-within-transaction` is designed to influence this. If set to `true`, the commands
 are sent _before_ the process engine transaction is committed, otherwise commands are sent _after_ the process engine transaction is committed.
 
@@ -279,18 +279,3 @@ Here is an example, how such a handler may look like:
   }
 
 ```
-
-### Configuration properties overview
-
-.Title
-|###
-|Name |Purpose |Default
-
-|Cell in column 1, row 1
-|Cell in column 2, row 1
-|Cell in column 3, row 1
-
-|Cell in column 1, row 2
-|Cell in column 2, row 2
-|Cell in column 3, row 2
-|###

@@ -15,7 +15,7 @@
 
   <modules>
     <module>datapool-sender</module>
-    <module>property-url-resolver</module>
+    <module>form-url-resolver</module>
     <module>tasklist-url-resolver</module>
     <module>taskpool-sender</module>
     <module>variable-serializer</module>
