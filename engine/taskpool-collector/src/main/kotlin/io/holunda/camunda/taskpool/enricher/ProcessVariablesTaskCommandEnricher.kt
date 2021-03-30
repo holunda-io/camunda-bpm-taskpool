@@ -1,14 +1,11 @@
 package io.holunda.camunda.taskpool.enricher
 
-import io.holunda.camunda.taskpool.api.task.CreateTaskCommand
-import io.holunda.camunda.taskpool.api.task.TaskIdentityWithPayloadAndCorrelations
-import io.holunda.camunda.taskpool.api.task.UpdateAssignmentTaskCommand
+import io.holunda.camunda.taskpool.api.task.*
+import io.holunda.camunda.taskpool.callInProcessEngineContext
 import org.camunda.bpm.engine.RuntimeService
-import org.camunda.bpm.engine.impl.RuntimeServiceImpl
-import org.camunda.bpm.engine.variable.Variables.createVariables
 
 /**
- * Enriches commands with process variables from the VariableContext.
+ * Enriches commands with process variables.
  * @param runtimeService Camunda API to access the execution.
  * @param processVariablesFilter filter to whitelist or blacklist the variables which should be added to the task.
  */
@@ -20,7 +17,9 @@ open class ProcessVariablesTaskCommandEnricher(
 
   override fun <T : TaskIdentityWithPayloadAndCorrelations> enrich(command: T): T {
 
-    val variablesTyped = runtimeService.getVariablesTyped(command.sourceReference.executionId)
+    val variablesTyped = callInProcessEngineContext(command.isHistoric()) {
+      runtimeService.getVariablesTyped(command.sourceReference.executionId)
+    }
 
     // Payload enrichment
     command.payload.putAllTyped(
@@ -28,7 +27,7 @@ open class ProcessVariablesTaskCommandEnricher(
         command.sourceReference.definitionKey,
         command.taskDefinitionKey,
         variablesTyped
-        )
+      )
     )
 
     // Correlations
@@ -40,10 +39,23 @@ open class ProcessVariablesTaskCommandEnricher(
       )
     )
 
-
     // Mark as enriched
     command.enriched = true
     return command
   }
 }
+
+/**
+ * Checks if the command is created from a historic Camunda event.
+ */
+fun Any.isHistoric(): Boolean =
+  when (this) {
+    is CreateTaskCommand, is DeleteTaskCommand, is CompleteTaskCommand, is AssignTaskCommand -> false
+    is UpdateAttributeTaskCommand, is UpdateAssignmentTaskCommand -> true
+    else -> throw IllegalArgumentException("Unexpected command received: '$this'")
+  }
+
+
+
+
 

@@ -1,5 +1,6 @@
 package io.holunda.camunda.taskpool
 
+import org.camunda.bpm.engine.context.ProcessEngineContext
 import org.camunda.bpm.engine.impl.cfg.ProcessEngineConfigurationImpl
 import org.camunda.bpm.engine.impl.interceptor.Command
 import org.camunda.bpm.engine.impl.persistence.entity.IdentityLinkEntity
@@ -23,3 +24,15 @@ fun ProcessDefinitionEntity.candidateUsers() = this.candidateLinks().filter { it
  */
 fun ProcessDefinitionEntity.candidateGroups() = this.candidateLinks().filter { it.isGroup }.map { it.groupId }.toSet()
 
+fun <T : Any> callInProcessEngineContext(newContext: Boolean, call: () -> T): T {
+  return if (newContext) {
+    try {
+      ProcessEngineContext.requiresNew();
+      call.invoke()
+    } finally {
+      ProcessEngineContext.clear();
+    }
+  } else {
+    call.invoke()
+  }
+}

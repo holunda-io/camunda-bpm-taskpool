@@ -59,7 +59,7 @@ class TaskEventCollectorService(
    */
   @Order(ORDER)
   @EventListener(condition = "#task.eventName.equals('complete')")
-  fun complete(task: DelegateTask) =
+  fun complete(task: DelegateTask): CompleteTaskCommand =
     CompleteTaskCommand(
       id = task.id,
       eventName = task.eventName
@@ -70,7 +70,7 @@ class TaskEventCollectorService(
    */
   @Order(ORDER)
   @EventListener(condition = "#task.eventName.equals('assignment')")
-  fun assign(task: DelegateTask) =
+  fun assign(task: DelegateTask): AssignTaskCommand =
     AssignTaskCommand(
       id = task.id,
       assignee = task.assignee,
@@ -83,7 +83,7 @@ class TaskEventCollectorService(
    */
   @Order(ORDER)
   @EventListener(condition = "#task.eventName.equals('delete')")
-  fun delete(task: DelegateTask) =
+  fun delete(task: DelegateTask): DeleteTaskCommand =
     DeleteTaskCommand(
       id = task.id,
       deleteReason = task.deleteReason,
@@ -91,7 +91,7 @@ class TaskEventCollectorService(
     )
 
   /**
-   * Fires update command.
+   * Fires update historic command.
    * The following attributes of the update event are skipped:
    * <ul>
    *     <li>parentTaskId</li>
@@ -117,7 +117,7 @@ class TaskEventCollectorService(
     }
 
   /**
-   * Fires update assignment command.
+   * Fires update assignment historic command.
    */
   @Order(ORDER)
   @EventListener
