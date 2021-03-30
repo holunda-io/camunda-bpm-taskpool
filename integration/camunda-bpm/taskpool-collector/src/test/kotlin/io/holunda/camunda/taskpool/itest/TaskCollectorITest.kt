@@ -3,10 +3,8 @@ package io.holunda.camunda.taskpool.itest
 import io.holunda.camunda.taskpool.api.task.*
 import io.holunda.camunda.taskpool.api.task.CamundaTaskEventType.Companion.CREATE
 import io.holunda.camunda.taskpool.sender.gateway.CommandListGateway
-import io.holunda.camunda.taskpool.sender.task.EngineTaskCommandSender
 import org.awaitility.Awaitility.await
 import org.awaitility.Awaitility.waitAtMost
-import org.axonframework.commandhandling.gateway.CommandGateway
 import org.camunda.bpm.engine.RepositoryService
 import org.camunda.bpm.engine.RuntimeService
 import org.camunda.bpm.engine.TaskService
@@ -277,7 +275,18 @@ class TaskCollectorITest {
       description = null,
       dueDate = now,
       owner = null,
-      priority = 50
+      priority = 50,
+      taskDefinitionKey = taskDefinitionKey,
+      sourceReference = ProcessReference(
+        instanceId = instance.id,
+        executionId = task().executionId,
+        definitionId = task().processDefinitionId,
+        name = "My Process",
+        definitionKey = processId,
+        applicationName = "collector-test"
+      ),
+      enriched = true,
+      payload = Variables.putValue("key", Variables.stringValue("value"))
     )
 
     // set due date to now

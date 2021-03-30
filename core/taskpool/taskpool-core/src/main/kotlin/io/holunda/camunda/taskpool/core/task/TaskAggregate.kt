@@ -367,14 +367,17 @@ class TaskAggregate() {
     AggregateLifecycle.apply(
       TaskAttributeUpdatedEngineEvent(
         id = this.id,
-        taskDefinitionKey = this.taskDefinitionKey,
-        sourceReference = this.sourceReference,
+        taskDefinitionKey = command.taskDefinitionKey,
+        sourceReference = command.sourceReference,
         name = command.name,
         description = command.description,
         priority = command.priority,
         owner = command.owner,
         dueDate = command.dueDate,
-        followUpDate = command.followUpDate
+        followUpDate = command.followUpDate,
+        businessKey = this.businessKey,
+        correlations = if (command.enriched) { command.correlations } else { this.correlations },
+        payload = if (command.enriched) { command.payload } else { this.payload }
       ))
   }
 

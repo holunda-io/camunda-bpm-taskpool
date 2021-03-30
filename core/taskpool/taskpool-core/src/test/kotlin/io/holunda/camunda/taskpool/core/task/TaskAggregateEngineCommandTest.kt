@@ -531,7 +531,7 @@ class TaskAggregateEngineCommandTest {
   }
 
   @Test
-  fun `should update task attributes`() {
+  fun `should update task attributes with enriched command`() {
     fixture
       .given(
         TaskCreatedEngineEvent(
@@ -559,7 +559,12 @@ class TaskAggregateEngineCommandTest {
           dueDate = now,
           followUpDate = now2,
           owner = "gonzo",
-          priority = 13
+          priority = 13,
+          taskDefinitionKey = "foo",
+          sourceReference = processReference,
+          enriched = true,
+          payload = Variables.createVariables().putValueTyped("key", stringValue("another")),
+          correlations = newCorrelations().addCorrelation("Request2", "business678")
         )
       )
       .expectEvents(
@@ -567,113 +572,174 @@ class TaskAggregateEngineCommandTest {
           id = "4711",
           taskDefinitionKey = "foo",
           sourceReference = processReference,
-
           name = "New name",
           description = "New description",
           dueDate = now,
           followUpDate = now2,
+          businessKey = "business123",
           owner = "gonzo",
-          priority = 13
+          priority = 13,
+          payload = Variables.createVariables().putValueTyped("key", stringValue("another")),
+          correlations = newCorrelations().addCorrelation("Request2", "business678")
         )
       )
   }
 
-  @Test
-  fun `should not update completed task`() {
-    fixture
-      .given(
-        TaskCreatedEngineEvent(
-          id = "4711",
-          name = "Foo",
-          createTime = now,
-          owner = "kermit",
-          taskDefinitionKey = "foo",
-          formKey = "some",
-          businessKey = "business123",
-          sourceReference = processReference,
-          candidateUsers = setOf("kermit", "gonzo"),
-          candidateGroups = setOf("muppets"),
-          assignee = "kermit",
-          priority = 51,
-          description = "Funky task",
-          payload = Variables.createVariables().putValueTyped("key", stringValue("value")),
-          correlations = newCorrelations().addCorrelation("Request", "business123")
-        ),
-        TaskCompletedEngineEvent(
-          id = "4711",
-          name = "Foo",
-          createTime = now,
-          owner = "kermit",
-          taskDefinitionKey = "foo",
-          formKey = "some",
-          businessKey = "business123",
-          sourceReference = processReference,
-          followUpDate = now2,
-          dueDate = now,
-          candidateUsers = setOf("kermit", "gonzo"),
-          candidateGroups = setOf("muppets"),
-          assignee = "kermit",
-          priority = 51,
-          description = "Funky task",
-          payload = Variables.createVariables().putValueTyped("another", stringValue("some1")),
-          correlations = newCorrelations().addCorrelation("Request", "business789")
-        ))
-      .`when`(
-        UpdateAttributeTaskCommand(
-          id = "4711",
-
-          name = "New name",
-          description = "New description",
-          dueDate = now,
-          followUpDate = now2,
-          owner = "gonzo",
-          priority = 13
+    @Test
+    fun `should update task attributes with not-enriched command`() {
+      fixture
+        .given(
+          TaskCreatedEngineEvent(
+            id = "4711",
+            name = "Foo",
+            createTime = now,
+            owner = "kermit",
+            taskDefinitionKey = "foo",
+            formKey = "some",
+            businessKey = "business123",
+            sourceReference = processReference,
+            candidateUsers = setOf("kermit", "gonzo"),
+            candidateGroups = setOf("muppets"),
+            assignee = "kermit",
+            priority = 51,
+            description = "Funky task",
+            payload = Variables.createVariables().putValueTyped("key", stringValue("value")),
+            correlations = newCorrelations().addCorrelation("Request", "business123")
+          ))
+        .`when`(
+          UpdateAttributeTaskCommand(
+            id = "4711",
+            name = "New name",
+            description = "New description",
+            dueDate = now,
+            followUpDate = now2,
+            owner = "gonzo",
+            priority = 13,
+            taskDefinitionKey = "foo",
+            sourceReference = processReference,
+            enriched = false,
+            payload = Variables.createVariables().putValueTyped("key", stringValue("another")),
+            correlations = newCorrelations().addCorrelation("Request2", "business678")
+          )
         )
-      ).expectNoEvents()
-  }
-
-  @Test
-  fun `should not update deleted task`() {
-    fixture
-      .given(
-        TaskCreatedEngineEvent(
-          id = "4711",
-          name = "Foo",
-          createTime = now,
-          owner = "kermit",
-          taskDefinitionKey = "foo",
-          formKey = "some",
-          businessKey = "business123",
-          sourceReference = processReference,
-          candidateUsers = setOf("kermit", "gonzo"),
-          candidateGroups = setOf("muppets"),
-          assignee = "kermit",
-          priority = 51,
-          description = "Funky task",
-          payload = Variables.createVariables().putValueTyped("key", stringValue("value")),
-          correlations = newCorrelations().addCorrelation("Request", "business123")
-        ),
-        TaskDeletedEngineEvent(
-          id = "4711",
-          taskDefinitionKey = "foo",
-          formKey = "some",
-          businessKey = "business123",
-          sourceReference = processReference,
-          deleteReason = "deleted"
-        ))
-      .`when`(
-        UpdateAttributeTaskCommand(
-          id = "4711",
-
-          name = "New name",
-          description = "New description",
-          dueDate = now,
-          followUpDate = now2,
-          owner = "gonzo",
-          priority = 13
+        .expectEvents(
+          TaskAttributeUpdatedEngineEvent(
+            id = "4711",
+            taskDefinitionKey = "foo",
+            sourceReference = processReference,
+            name = "New name",
+            description = "New description",
+            dueDate = now,
+            followUpDate = now2,
+            businessKey = "business123",
+            owner = "gonzo",
+            priority = 13,
+            // the updated values are ignored, because enriched is set to false!
+            payload = Variables.createVariables().putValueTyped("key", stringValue("value")),
+            correlations = newCorrelations().addCorrelation("Request", "business123")
+          )
         )
-      ).expectNoEvents()
-  }
 
+    }
+
+    @Test
+    fun `should not update completed task`() {
+      fixture
+        .given(
+          TaskCreatedEngineEvent(
+            id = "4711",
+            name = "Foo",
+            createTime = now,
+            owner = "kermit",
+            taskDefinitionKey = "foo",
+            formKey = "some",
+            businessKey = "business123",
+            sourceReference = processReference,
+            candidateUsers = setOf("kermit", "gonzo"),
+            candidateGroups = setOf("muppets"),
+            assignee = "kermit",
+            priority = 51,
+            description = "Funky task",
+            payload = Variables.createVariables().putValueTyped("key", stringValue("value")),
+            correlations = newCorrelations().addCorrelation("Request", "business123")
+          ),
+          TaskCompletedEngineEvent(
+            id = "4711",
+            name = "Foo",
+            createTime = now,
+            owner = "kermit",
+            taskDefinitionKey = "foo",
+            formKey = "some",
+            businessKey = "business123",
+            sourceReference = processReference,
+            followUpDate = now2,
+            dueDate = now,
+            candidateUsers = setOf("kermit", "gonzo"),
+            candidateGroups = setOf("muppets"),
+            assignee = "kermit",
+            priority = 51,
+            description = "Funky task",
+            payload = Variables.createVariables().putValueTyped("another", stringValue("some1")),
+            correlations = newCorrelations().addCorrelation("Request", "business789")
+          ))
+        .`when`(
+          UpdateAttributeTaskCommand(
+            id = "4711",
+
+            name = "New name",
+            description = "New description",
+            dueDate = now,
+            followUpDate = now2,
+            owner = "gonzo",
+            priority = 13,
+            sourceReference = processReference,
+            taskDefinitionKey = "foo"
+          )
+        ).expectNoEvents()
+    }
+
+    @Test
+    fun `should not update deleted task`() {
+      fixture
+        .given(
+          TaskCreatedEngineEvent(
+            id = "4711",
+            name = "Foo",
+            createTime = now,
+            owner = "kermit",
+            taskDefinitionKey = "foo",
+            formKey = "some",
+            businessKey = "business123",
+            sourceReference = processReference,
+            candidateUsers = setOf("kermit", "gonzo"),
+            candidateGroups = setOf("muppets"),
+            assignee = "kermit",
+            priority = 51,
+            description = "Funky task",
+            payload = Variables.createVariables().putValueTyped("key", stringValue("value")),
+            correlations = newCorrelations().addCorrelation("Request", "business123")
+          ),
+          TaskDeletedEngineEvent(
+            id = "4711",
+            taskDefinitionKey = "foo",
+            formKey = "some",
+            businessKey = "business123",
+            sourceReference = processReference,
+            deleteReason = "deleted"
+          ))
+        .`when`(
+          UpdateAttributeTaskCommand(
+            id = "4711",
+            name = "New name",
+            description = "New description",
+            dueDate = now,
+            followUpDate = now2,
+            owner = "gonzo",
+            priority = 13,
+            taskDefinitionKey = "foo",
+            sourceReference = processReference,
+          )
+        ).expectNoEvents()
+    }
 
 }

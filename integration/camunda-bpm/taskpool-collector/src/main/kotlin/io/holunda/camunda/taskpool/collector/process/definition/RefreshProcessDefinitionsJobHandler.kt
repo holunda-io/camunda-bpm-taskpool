@@ -1,6 +1,7 @@
 package io.holunda.camunda.taskpool.collector.process.definition
 
 import io.holunda.camunda.taskpool.sender.process.definition.ProcessDefinitionCommandSender
+import io.holunda.camunda.taskpool.sender.gateway.CommandListGateway
 import mu.KLogging
 import org.camunda.bpm.engine.impl.interceptor.Command
 import org.camunda.bpm.engine.impl.interceptor.CommandContext

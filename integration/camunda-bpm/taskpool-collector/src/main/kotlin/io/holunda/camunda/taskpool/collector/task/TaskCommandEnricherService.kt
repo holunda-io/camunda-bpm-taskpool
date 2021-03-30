@@ -27,17 +27,12 @@ class TaskCommandEnricherService(
   fun enrichAndSend(command: EngineTaskCommand) {
     if (collectorProperties.task.enabled) {
       // enrich and send
-      engineTaskCommandSender.send(enrich(command))
+      engineTaskCommandSender.send(when (command) {
+        is TaskIdentityWithPayloadAndCorrelations -> enricher.enrich(command)
+        else -> command
+      })
     } else {
       logger.debug("Task command collecting is disabled by property, would have enriched and sent command $command.")
     }
-  }
-
-  /**
-   * Enriches the command, if possible.
-   */
-  private fun enrich(command: EngineTaskCommand): EngineTaskCommand = when (command) {
-    is TaskIdentityWithPayloadAndCorrelations -> enricher.enrich(command)
-    else -> command
   }
 }

@@ -163,15 +163,56 @@ data class UpdateAttributeTaskCommand(
 
   override val order: Int = ORDER_TASK_ATTRIBUTE_UPDATE,
   override val eventName: String = ATTRIBUTES,
-
+  /**
+   * Source reference, indicating why this task exists.
+   */
+  override val sourceReference: SourceReference,
+  /**
+   * Task definition key aka task type.
+   */
+  override val taskDefinitionKey: String,
+  /**
+   * Business key of the underlying process instance. Will be ignored, since there is neither a reason to change a business key nor a easy way to get the changed one.
+   */
+  override val businessKey: String? = null,
+  /**
+   * Task payload.
+   */
+  override val payload: VariableMap = Variables.createVariables(),
+  /**
+   * Task correlations.
+   */
+  override val correlations: CorrelationMap = newCorrelations(),
+  /**
+   * Enrichment flag.
+   */
+  override var enriched: Boolean = false,
+  /**
+   * Optional task name.
+   */
   val description: String?,
+  /**
+   * Optional task due date.
+   */
   val dueDate: Date? = null,
+  /**
+   * Optional task follow-up date.
+   */
   val followUpDate: Date? = null,
+  /**
+   * Optional task name.
+   */
   val name: String?,
+  /**
+   * Optional task owner (assignee).
+   */
   val owner: String?,
-  val priority: Int?
+  /**
+   * Optional task priority.
+   */
+  val priority: Int?,
 
-) : EngineTaskCommand
+) : TaskIdentityWithPayloadAndCorrelations, EngineTaskCommand
 
 
 /**
