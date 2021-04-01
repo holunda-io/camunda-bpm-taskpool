@@ -30,11 +30,11 @@ class SenderPropertiesExtendedTest {
         assertThat(it.getBean(SenderProperties::class.java)).isNotNull
         val props: SenderProperties = it.getBean(SenderProperties::class.java)
 
-        assertThat(props.enabled).isFalse
+        assertThat(props.enabled).isTrue
 
         assertThat(props.processDefinition.enabled).isFalse
-        assertThat(props.processInstance.enabled).isFalse
-        assertThat(props.task.enabled).isFalse
+        assertThat(props.processInstance.enabled).isTrue
+        assertThat(props.task.enabled).isTrue
 
         assertThat(props.task.type).isEqualTo(SenderType.tx)
         assertThat(props.task.sendWithinTransaction).isFalse
@@ -51,7 +51,7 @@ class SenderPropertiesExtendedTest {
         "polyflow.integration.sender.enabled=true",
         "polyflow.integration.sender.process-definition.enabled=true",
         "polyflow.integration.sender.process-instance.enabled=true",
-        "polyflow.integration.sender.task.enabled=true",
+        "polyflow.integration.sender.task.enabled=false",
         "polyflow.integration.sender.task.type=custom",
         "polyflow.integration.sender.task.send-within-transaction=true"
       ).run {
@@ -63,7 +63,7 @@ class SenderPropertiesExtendedTest {
 
         assertThat(props.processDefinition.enabled).isTrue
         assertThat(props.processInstance.enabled).isTrue
-        assertThat(props.task.enabled).isTrue
+        assertThat(props.task.enabled).isFalse
 
         assertThat(props.task.type).isEqualTo(SenderType.custom)
         assertThat(props.task.sendWithinTransaction).isTrue

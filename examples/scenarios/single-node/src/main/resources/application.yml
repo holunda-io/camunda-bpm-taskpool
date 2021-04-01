@@ -36,39 +36,48 @@ camunda:
       schema-update: true
     webapp:
       index-redirect-enabled: false
-  taskpool:
+
+polyflow:
+  integration:
     collector:
-      tasklist-url: http://localhost:${server.port}/taskpool/tasks
-      application-name: ${spring.application.name}  # default
-      send-commands-enabled: true
-      process-instance:
-        enabled: true
-      process-definition:
-        enabled: true
-      task:
-        enabled: true
-        enricher:
-          type: processVariables
-        sender:
-          type: tx
-          send-within-transaction: true             # Must be set to true in single node scenario.
-    dataentry:
-      sender:
-        enabled: true
-        type: simple
-        applicationName: ${spring.application.name}   # default
+      camunda:
+        application-name: ${spring.application.name}  # default
+        process-instance:
+          enabled: true
+        process-definition:
+          enabled: true
+        task:
+          enabled: true
+          enricher:
+            type: processVariables
+
     form-url-resolver:
-      defaultApplicationTemplate: "http://localhost:${server.port}/${applicationName}"
-      defaultTaskTemplate:  "tasks/${formKey}/${id}?userId=%userId%"
-      defaultProcessTemplate: "${formKey}?userId=%userId%"
+      default-application-template: "http://localhost:${server.port}/${applicationName}"
+      default-task-template:  "tasks/${formKey}/${id}?userId=%userId%"
+      default-process-template: "${formKey}?userId=%userId%"
       applications:
         example-process-approval:
           url: "http://localhost:${server.port}/${spring.application.name}"
           processes:
             process_approve_request: "start?userId=%userId%"
-          bos:
+          data-entries:
             io.holunda.camunda.taskpool.example.ApprovalRequest: "approval-request/${entryId}?userId=%userId%"
-
+    sender:
+      enabled: true
+      data-entry:
+        enabled: true
+        type: simple
+        application-name: ${spring.application.name}  # default
+      process-definition:
+        enabled: true
+      process-instance:
+        enabled: true
+      task:
+        enabled: true
+        type: tx
+        send-within-transaction: true # Must be set to true in single node scenario.
+    tasklist:
+      tasklist-url: http://localhost:${server.port}/taskpool/tasks
 
 logging.level:
   io.holunda.camunda:

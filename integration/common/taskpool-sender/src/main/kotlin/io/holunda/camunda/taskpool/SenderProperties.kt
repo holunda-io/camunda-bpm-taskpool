@@ -13,7 +13,7 @@ data class SenderProperties(
   /**
    * Global value to control the command gateway.
    */
-  var enabled: Boolean = false,
+  var enabled: Boolean = true,
   /**
    * Sending tasks.
    */
@@ -37,7 +37,7 @@ data class TaskSenderProperties(
   /**
    * Value to control the task sending.
    */
-  val enabled: Boolean = false,
+  val enabled: Boolean = true,
   /**
    * Sender type, defaults to <code>tx</code>
    */
@@ -67,7 +67,7 @@ data class ProcessInstanceSenderProperties(
   /**
    * Value to control the process instance sending.
    */
-  val enabled: Boolean = false,
+  val enabled: Boolean = true,
   /**
    * Sender type, defaults to <code>tx</code>
    */

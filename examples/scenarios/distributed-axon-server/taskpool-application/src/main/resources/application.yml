@@ -10,19 +10,19 @@ spring:
 #  events: jackson
 #  messages: jackson
 
-camunda:
-  taskpool:
+polyflow:
+  integration:
     form-url-resolver:
-      defaultTaskTemplate:  "tasks/${formKey}/${id}?userId=%userId%"
-      defaultProcessTemplate: "${formKey}?userId=%userId%"
-      defaultBoTemplate: "${entryType}/${entryId}?userId=%userId%"
-      defaultApplicationTemplate: "http://localhost:${server.port}/${applicationName}"
+      default-task-template:  "tasks/${formKey}/${id}?userId=%userId%"
+      default-process-template: "${formKey}?userId=%userId%"
+      default-data-entry-template: "${entryType}/${entryId}?userId=%userId%"
+      default-application-template: "http://localhost:${server.port}/${applicationName}"
       applications:
         example-process-approval:
           url: "http://localhost:8080/example-process-approval"
           processes:
             process_approve_request: "start?userId=%userId%"
-          bos:
+          data-entries:
             io.holunda.camunda.taskpool.example.ApprovalRequest: "approval-request/${entryId}?userId=%userId%"
 
 logging.level.io.holunda.camunda.taskpool:
