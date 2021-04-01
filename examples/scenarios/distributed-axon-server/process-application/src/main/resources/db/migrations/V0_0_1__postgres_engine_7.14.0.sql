@@ -40,6 +40,12 @@ values ('history.cleanup.job.lock', '0', 1);
 insert into ACT_GE_PROPERTY
 values ('startup.lock', '0', 1);
 
+insert into ACT_GE_PROPERTY
+values ('telemetry.lock', '0', 1);
+
+insert into ACT_GE_PROPERTY
+values ('installationId.lock', '0', 1);
+
 create table ACT_GE_BYTEARRAY (
     ID_ varchar(64),
     REV_ integer,
@@ -63,7 +69,7 @@ create table ACT_GE_SCHEMA_LOG (
 );
 
 insert into ACT_GE_SCHEMA_LOG
-values ('0', CURRENT_TIMESTAMP, '7.13.0');
+values ('0', CURRENT_TIMESTAMP, '7.14.0');
 
 create table ACT_RE_DEPLOYMENT (
     ID_ varchar(64),
@@ -210,6 +216,7 @@ create table ACT_RU_VARIABLE (
     CASE_EXECUTION_ID_ varchar(64),
     CASE_INST_ID_ varchar(64),
     TASK_ID_ varchar(64),
+    BATCH_ID_ varchar(64),
     BYTEARRAY_ID_ varchar(64),
     DOUBLE_ double precision,
     LONG_ bigint,
@@ -334,13 +341,17 @@ create index ACT_IDX_EXEC_BUSKEY on ACT_RU_EXECUTION(BUSINESS_KEY_);
 create index ACT_IDX_EXEC_TENANT_ID on ACT_RU_EXECUTION(TENANT_ID_);
 create index ACT_IDX_TASK_CREATE on ACT_RU_TASK(CREATE_TIME_);
 create index ACT_IDX_TASK_ASSIGNEE on ACT_RU_TASK(ASSIGNEE_);
+create index ACT_IDX_TASK_OWNER on ACT_RU_TASK(OWNER_);
 create index ACT_IDX_TASK_TENANT_ID on ACT_RU_TASK(TENANT_ID_);
 create index ACT_IDX_IDENT_LNK_USER on ACT_RU_IDENTITYLINK(USER_ID_);
 create index ACT_IDX_IDENT_LNK_GROUP on ACT_RU_IDENTITYLINK(GROUP_ID_);
 create index ACT_IDX_EVENT_SUBSCR_CONFIG_ on ACT_RU_EVENT_SUBSCR(CONFIGURATION_);
 create index ACT_IDX_EVENT_SUBSCR_TENANT_ID on ACT_RU_EVENT_SUBSCR(TENANT_ID_);
+
 create index ACT_IDX_VARIABLE_TASK_ID on ACT_RU_VARIABLE(TASK_ID_);
 create index ACT_IDX_VARIABLE_TENANT_ID on ACT_RU_VARIABLE(TENANT_ID_);
+create index ACT_IDX_VARIABLE_TASK_NAME_TYPE on ACT_RU_VARIABLE(TASK_ID_, NAME_, TYPE_);
+
 create index ACT_IDX_INC_CONFIGURATION on ACT_RU_INCIDENT(CONFIGURATION_);
 create index ACT_IDX_INC_TENANT_ID on ACT_RU_INCIDENT(TENANT_ID_);
 -- CAM-5914
@@ -527,6 +538,12 @@ alter table ACT_RU_EXT_TASK
     add constraint ACT_FK_EXT_TASK_ERROR_DETAILS
     foreign key (ERROR_DETAILS_ID_)
     references ACT_GE_BYTEARRAY (ID_);
+
+create index ACT_IDX_BATCH_ID ON ACT_RU_VARIABLE(BATCH_ID_);
+alter table ACT_RU_VARIABLE
+    add constraint ACT_FK_VAR_BATCH
+    foreign key (BATCH_ID_)
+    references ACT_RU_BATCH (ID_);
 
 -- indexes for deadlock problems - https://app.camunda.com/jira/browse/CAM-2567 --
 create index ACT_IDX_INC_CAUSEINCID on ACT_RU_INCIDENT(CAUSE_INCIDENT_ID_);
@@ -804,7 +821,7 @@ create table ACT_HI_ACTINST (
     CALL_CASE_INST_ID_ varchar(64),
     ACT_NAME_ varchar(255),
     ACT_TYPE_ varchar(255) not null,
-    ASSIGNEE_ varchar(64),
+    ASSIGNEE_ varchar(255),
     START_TIME_ timestamp not null,
     END_TIME_ timestamp,
     DURATION_ bigint,
@@ -1147,6 +1164,8 @@ create index ACT_IDX_HI_INCIDENT_PROC_DEF_KEY on ACT_HI_INCIDENT(PROC_DEF_KEY_);
 create index ACT_IDX_HI_INCIDENT_ROOT_PI on ACT_HI_INCIDENT(ROOT_PROC_INST_ID_);
 create index ACT_IDX_HI_INCIDENT_PROCINST on ACT_HI_INCIDENT(PROC_INST_ID_);
 create index ACT_IDX_HI_INCIDENT_RM_TIME on ACT_HI_INCIDENT(REMOVAL_TIME_);
+create index ACT_IDX_HI_INCIDENT_CREATE_TIME on ACT_HI_INCIDENT(CREATE_TIME_);
+create index ACT_IDX_HI_INCIDENT_END_TIME on ACT_HI_INCIDENT(END_TIME_);
 
 create index ACT_IDX_HI_JOB_LOG_ROOT_PI on ACT_HI_JOB_LOG(ROOT_PROC_INST_ID_);
 create index ACT_IDX_HI_JOB_LOG_PROCINST on ACT_HI_JOB_LOG(PROCESS_INSTANCE_ID_);
