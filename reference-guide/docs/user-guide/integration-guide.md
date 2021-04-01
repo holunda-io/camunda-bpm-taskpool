@@ -1,0 +1,74 @@
+---
+
+title: Integration Guide
+---
+
+## Integration Guide
+
+This guide is describing steps required to configure an existing Camunda Spring Boot Process Application and
+connect to existing Process Platform.
+
+### Configure your existing process application
+
+Apart from the example application, you might be interested in integrating task pool into your existing
+application. To do so, you need to enable your Camunda BPM process engine to use the library.
+For doing so, add the `camunda-bpm-taskpool-engine-springboot-starter` library. In Maven, add the following dependency
+to your `pom.xml` :
+
+```xml
+<dependency>
+  <groupId>io.holunda.taskpool</groupId>
+  <artifactId>camunda-bpm-taskpool-engine-springboot-starter</artifactId>
+  <version>${camunda-bpm-taskpool.version}</version>
+</dependency>
+```
+
+Now, find your SpringBoot application class and add an additional annotation to it:
+
+
+```java
+@SpringBootApplication
+@EnableTaskpoolEngineSupport
+public class MyApplication {
+
+  public static void main(String... args) {
+    SpringApplication.run(MyApplication.class, args);
+  }
+}
+```
+
+Finally, add the following block to your `application.yml`:
+
+
+```yaml
+camunda:
+  bpm:
+    default-serialization-format: application/json
+    history-level: full
+polyflow:
+  taskpool:
+    collector:
+      tasklist-url: http://localhost:8081/tasklist/
+      process:
+        enabled: true
+      enricher:
+        application-name: ${spring.application.name}  # default
+        type: processVariables
+      sender:
+        enabled: true
+        type: tx
+    dataentry:
+      sender:
+        enabled: true
+        type: simple
+        applicationName: ${spring.application.name}  # default
+    form-url-resolver:
+      defaultTaskTemplate:  "/tasks/${formKey}/${id}?userId=%userId%"
+      defaultApplicationTemplate: "http://localhost:${server.port}/${applicatioName}"
+      defaultProcessTemplate: "/${formKey}?userId=%userId%"
+
+```
+
+Now, start your process engine. If you run into a user task, you should see on the console how this is passed to task pool.
+
+For more details on the configuration of different options, please consult the link:../components/[Taskpool Components] sections.

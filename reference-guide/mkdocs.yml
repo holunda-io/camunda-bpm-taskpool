@@ -1,0 +1,48 @@
+site_name: Polyflow
+theme: readthedocs
+nav:
+  - 'Home': index.md
+  - 'Introduction':
+    - 'Motivation': introduction/motivation.md
+    - 'Features': introduction/features.md
+    - 'Solution Architecture': introduction/solution-architecture.md
+    - 'Further Outlook': introduction/further-outlook.md
+  - 'User Guide':
+    - 'Components':
+      - 'Overview': user-guide/components/index.md
+      - 'Engine Components':
+        - 'Camunda Engine Taskpool Support SpringBoot Starter': user-guide/components/engine-starter.md
+        - 'Camunda Engine Interaction Client': user-guide/components/engine-interaction-client.md
+      - 'Core Components':
+        - 'Taskpool Collector': user-guide/components/engine-taskpool-collector.md
+        - 'Datapool Collector': user-guide/components/engine-datapool-collector.md
+        - 'Taskpool Core': user-guide/components/core-taskpool.md
+        - 'Datapool Core': user-guide/components/core-datapool.md
+      - 'View Components':
+        - 'In-Memory View': user-guide/components/view-simple.md
+        - 'Mongo View': user-guide/components/view-mongo.md
+    - 'Integration Guide': user-guide/integration-guide.md
+    - 'Example Application':
+      - 'Example Overview': user-guide/example-application.md
+      - 'Example Components':
+        - 'Example Components Overview': user-guide/example-components/index.md
+        - 'Process Application Frontend': user-guide/example-components/pa-frontend.md
+        - 'Process Application Backend': user-guide/example-components/pa-backend.md
+        - 'User Management': user-guide/example-components/user-management.md
+        - 'Process Platform Frontend': user-guide/example-components/pp-frontend.md
+        - 'Process Platform Backend': user-guide/example-components/pp-backend.md
+      - 'Usage Scenarios':
+        - 'Usage Scenarios Overview': user-guide/scenarios/index.md
+        - 'Single Node': user-guide/scenarios/single-node.md
+        - 'Distributed using Axon Server': user-guide/scenarios/distributed-axon-server.md
+        - 'Distributed without Axon Server': user-guide/scenarios/distributed-no-axon-server.md
+  - 'Developer Guide':
+    - 'Contribution': developer-guide/contribution.md
+    - 'Project Setup': developer-guide/project-setup.md
+
+plugins:
+  - search
+  - git-committers:
+      repository: holunda-io/camunda-bpm-taskpool
+      branch: master
+      token: !!python/object/apply:os.getenv ["MKDOCS_GIT_COMMITTERS_APIKEY"]
