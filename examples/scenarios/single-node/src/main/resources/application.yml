@@ -39,12 +39,17 @@ camunda:
 
 polyflow:
   integration:
+    client:
+      camunda:
+        application-name: ${spring.application.name}  # default
     collector:
       camunda:
         application-name: ${spring.application.name}  # default
         process-instance:
           enabled: true
         process-definition:
+          enabled: true
+        process-variable:
           enabled: true
         task:
           enabled: true
@@ -72,6 +77,8 @@ polyflow:
         enabled: true
       process-instance:
         enabled: true
+      process-variable:
+        enabled: true
       task:
         enabled: true
         type: tx
@@ -83,10 +90,11 @@ logging.level:
   io.holunda.camunda:
     taskpool:
       collector:
-        variable: DEBUG
-      sender: WARN
+        process:
+          variable: DEBUG
+      sender: INFO
       core: WARN
-      view.simple: WARN
+      view.simple: INFO
     datapool:
       sender: INFO
 

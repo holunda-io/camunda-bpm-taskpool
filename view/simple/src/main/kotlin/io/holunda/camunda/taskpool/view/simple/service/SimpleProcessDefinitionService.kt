@@ -18,7 +18,7 @@ import java.util.concurrent.ConcurrentHashMap
  */
 @Component
 @ProcessingGroup(SimpleServiceViewProcessingGroup.PROCESSING_GROUP)
-class ProcessDefinitionSimpleService(
+class SimpleProcessDefinitionService(
   private val queryUpdateEmitter: QueryUpdateEmitter
 ) : ProcessDefinitionApi {
 

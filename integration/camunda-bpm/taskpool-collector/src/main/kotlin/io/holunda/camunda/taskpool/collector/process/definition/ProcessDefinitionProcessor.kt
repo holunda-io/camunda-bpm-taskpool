@@ -5,6 +5,7 @@ import io.holunda.camunda.taskpool.collector.CamundaTaskpoolCollectorProperties
 import io.holunda.camunda.taskpool.sender.process.definition.ProcessDefinitionCommandSender
 import mu.KLogging
 import org.axonframework.eventhandling.EventHandler
+import org.springframework.context.event.EventListener
 import org.springframework.stereotype.Component
 
 /**
@@ -17,7 +18,7 @@ class ProcessDefinitionProcessor(
 ) {
   companion object : KLogging()
 
-  @EventHandler
+  @EventListener
   fun process(command: ProcessDefinitionCommand) {
     if (properties.processDefinition.enabled) {
       processDefinitionCommandSender.send(command)

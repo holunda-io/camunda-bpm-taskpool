@@ -33,7 +33,7 @@ import java.util.concurrent.ConcurrentHashMap
  */
 @Component
 @ProcessingGroup(SimpleServiceViewProcessingGroup.PROCESSING_GROUP)
-class DataEntrySimpleService(
+class SimpleDataEntryService(
   private val queryUpdateEmitter: QueryUpdateEmitter
 ) : DataEntryApi {
 
@@ -51,7 +51,7 @@ class DataEntrySimpleService(
 
     val entryId = dataIdentityString(entryType = event.entryType, entryId = event.entryId)
     dataEntries[entryId] = event.toDataEntry()
-    val revision = revisionSupport.updateRevision(entryId, RevisionValue.fromMetaData(metaData))
+    revisionSupport.updateRevision(entryId, RevisionValue.fromMetaData(metaData))
     logger.debug { "SIMPLE-VIEW-31: Business data entry created $event." }
     updateDataEntryQuery(entryId)
   }
@@ -167,58 +167,3 @@ class DataEntrySimpleService(
     )
   }
 }
-
-
-/**
- * Event to entry for an update, if an optional entry exists.
- */
-fun DataEntryUpdatedEvent.toDataEntry(oldEntry: DataEntry?) = if (oldEntry == null) {
-  DataEntry(
-    entryType = this.entryType,
-    entryId = this.entryId,
-    payload = this.payload,
-    correlations = this.correlations,
-    name = this.name,
-    applicationName = this.applicationName,
-    type = this.type,
-    description = this.description,
-    state = this.state,
-    formKey = this.formKey,
-    authorizedUsers = applyUserAuthorization(listOf(), this.authorizations),
-    authorizedGroups = applyGroupAuthorization(listOf(), this.authorizations),
-    protocol = addModification(listOf(), this.updateModification, this.state)
-  )
-} else {
-  oldEntry.copy(
-    payload = this.payload,
-    correlations = this.correlations,
-    name = this.name,
-    applicationName = this.applicationName,
-    type = this.type,
-    description = this.description,
-    state = this.state,
-    formKey = this.formKey,
-    authorizedUsers = applyUserAuthorization(oldEntry.authorizedUsers, this.authorizations),
-    authorizedGroups = applyGroupAuthorization(oldEntry.authorizedGroups, this.authorizations),
-    protocol = addModification(oldEntry.protocol, this.updateModification, this.state)
-  )
-}
-
-/**
- * Event to entry.
- */
-fun DataEntryCreatedEvent.toDataEntry() = DataEntry(
-  entryType = this.entryType,
-  entryId = this.entryId,
-  payload = this.payload,
-  correlations = this.correlations,
-  name = this.name,
-  applicationName = this.applicationName,
-  type = this.type,
-  description = this.description,
-  state = this.state,
-  formKey = this.formKey,
-  authorizedUsers = applyUserAuthorization(listOf(), this.authorizations),
-  authorizedGroups = applyGroupAuthorization(listOf(), this.authorizations),
-  protocol = addModification(listOf(), this.createModification, this.state)
-)

@@ -23,7 +23,7 @@ import java.util.concurrent.ConcurrentHashMap
  */
 @Component
 @ProcessingGroup(SimpleServiceViewProcessingGroup.PROCESSING_GROUP)
-class ProcessInstanceSimpleService(
+class SimpleProcessInstanceService(
   val queryUpdateEmitter: QueryUpdateEmitter
 ) : ProcessInstanceApi {
 
@@ -119,49 +119,4 @@ class ProcessInstanceSimpleService(
       )
     )
   }
-
 }
-
-/**
- * Converts event to view model.
- */
-fun ProcessInstanceStartedEvent.toProcessInstance(): ProcessInstance = ProcessInstance(
-  processInstanceId = this.processInstanceId,
-  sourceReference = this.sourceReference,
-  businessKey = this.businessKey,
-  superInstanceId = this.superInstanceId,
-  startActivityId = this.startActivityId,
-  startUserId = this.startUserId,
-  state = ProcessInstanceState.RUNNING
-)
-
-/**
- * Converts event to view model.
- * @param processInstance an old version of the view model.
- */
-fun ProcessInstanceEndedEvent.toProcessInstance(processInstance: ProcessInstance?): ProcessInstance = ProcessInstance(
-  processInstanceId = this.processInstanceId,
-  sourceReference = this.sourceReference,
-  businessKey = this.businessKey,
-  superInstanceId = this.superInstanceId,
-  endActivityId = this.endActivityId,
-  startActivityId = processInstance?.startActivityId,
-  startUserId = processInstance?.startUserId,
-  state = ProcessInstanceState.FINISHED
-)
-
-/**
- * Converts event to view model.
- * @param processInstance an old version of the view model.
- */
-fun ProcessInstanceCancelledEvent.toProcessInstance(processInstance: ProcessInstance?): ProcessInstance = ProcessInstance(
-  processInstanceId = this.processInstanceId,
-  sourceReference = this.sourceReference,
-  businessKey = this.businessKey,
-  superInstanceId = this.superInstanceId,
-  endActivityId = this.endActivityId,
-  deleteReason = this.deleteReason,
-  startActivityId = processInstance?.startActivityId,
-  startUserId = processInstance?.startUserId,
-  state = ProcessInstanceState.CANCELLED
-)

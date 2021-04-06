@@ -49,7 +49,6 @@ class SenderConfiguration(private val senderProperties: SenderProperties) {
    * Create a command list gateway, if none is provided.
    */
   @Bean
-  @ConditionalOnBean(CommandGateway::class)
   @ConditionalOnMissingBean(CommandListGateway::class)
   fun defaultCommandListGateway(
     commandGateway: CommandGateway,
@@ -103,9 +102,9 @@ class SenderConfiguration(private val senderProperties: SenderProperties) {
    */
   @Bean
   @ConditionalOnExpression("'\${polyflow.integration.sender.process-variable.type}' != 'custom'")
-  fun processVariableCommandSender(commandListGateway: CommandListGateway): ProcessVariableCommandSender =
+  fun processVariableCommandSender(commandListGateway: CommandListGateway, objectMapper: ObjectMapper): ProcessVariableCommandSender =
     when (senderProperties.processVariable.type) {
-      SenderType.simple -> SimpleProcessVariableCommandSender(commandListGateway, senderProperties)
+      SenderType.simple -> SimpleProcessVariableCommandSender(commandListGateway, senderProperties, objectMapper)
       else -> throw IllegalStateException("Could not initialize sender, used unknown ${senderProperties.processVariable.type} type.")
     }
 

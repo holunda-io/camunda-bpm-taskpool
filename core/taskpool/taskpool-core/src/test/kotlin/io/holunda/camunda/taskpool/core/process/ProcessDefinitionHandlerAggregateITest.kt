@@ -1,17 +1,12 @@
 package io.holunda.camunda.taskpool.core.process
 
-import io.holunda.camunda.taskpool.api.business.addCorrelation
-import io.holunda.camunda.taskpool.api.business.newCorrelations
 import io.holunda.camunda.taskpool.api.process.definition.ProcessDefinitionRegisteredEvent
 import io.holunda.camunda.taskpool.api.process.definition.RegisterProcessDefinitionCommand
-import io.holunda.camunda.taskpool.api.task.CreateTaskCommand
-import io.holunda.camunda.taskpool.api.task.TaskCreatedEngineEvent
 import io.holunda.camunda.taskpool.core.EnableTaskPool
 import org.assertj.core.api.Assertions.assertThat
 import org.axonframework.commandhandling.gateway.CommandGateway
 import org.axonframework.eventhandling.EventBus
 import org.axonframework.eventhandling.EventMessage
-import org.camunda.bpm.engine.variable.Variables
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith

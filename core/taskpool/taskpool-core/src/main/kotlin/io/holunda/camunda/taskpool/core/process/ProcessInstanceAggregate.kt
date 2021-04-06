@@ -32,7 +32,7 @@ class ProcessInstanceAggregate() {
    * Finish instance handler.
    */
   @CommandHandler
-  fun end(cmd: FinishProcessInstanceCommand) {
+  fun finish(cmd: FinishProcessInstanceCommand) {
     AggregateLifecycle.apply(ProcessInstanceEndedEvent(
       processInstanceId = cmd.processInstanceId,
       sourceReference = cmd.sourceReference,

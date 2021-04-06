@@ -1,6 +1,9 @@
 package io.holunda.camunda.taskpool.collector.process.variable
 
+import io.holunda.camunda.taskpool.api.process.variable.CreateProcessVariableCommand
+import io.holunda.camunda.taskpool.api.process.variable.DeleteProcessVariableCommand
 import io.holunda.camunda.taskpool.api.process.variable.UpdateProcessVariableCommand
+import io.holunda.camunda.taskpool.api.process.variable.TypedValueProcessVariableValue
 import io.holunda.camunda.taskpool.collector.CamundaTaskpoolCollectorProperties
 import io.holunda.camunda.taskpool.sourceReference
 import mu.KLogging
@@ -40,11 +43,15 @@ class ProcessVariableEventCollectorService(
    */
   @Order(ORDER)
   @EventListener(condition = "#variableEvent.eventType.equals('create')")
-  fun create(variableEvent: HistoricVariableUpdateEventEntity) {
-    val sourceReference = variableEvent.sourceReference(repositoryService, collectorProperties.applicationName)
-    logger.debug { "Created variable ${variableEvent.variableName} for source ref: $sourceReference" }
-    logger.debug { "Create event was $variableEvent" }
-  }
+  fun create(variableEvent: HistoricVariableUpdateEventEntity) =
+    CreateProcessVariableCommand(
+      variableInstanceId = variableEvent.variableInstanceId,
+      variableName = variableEvent.variableName,
+      revision = variableEvent.revision,
+      scopeActivityInstanceId = variableEvent.scopeActivityInstanceId,
+      sourceReference = variableEvent.sourceReference(repositoryService, collectorProperties.applicationName),
+      value = TypedValueProcessVariableValue(HistoricVariableInstanceEntity(variableEvent).getTypedValue(true)),
+    )
 
   /**
    * Fires update process variable command.
@@ -52,31 +59,15 @@ class ProcessVariableEventCollectorService(
    */
   @Order(ORDER)
   @EventListener(condition = "#variableEvent.eventType.equals('update')")
-  fun update(variableEvent: HistoricVariableUpdateEventEntity) {
-
-    logger.debug { "Update event was $variableEvent" }
-
-    val command = UpdateProcessVariableCommand(
+  fun update(variableEvent: HistoricVariableUpdateEventEntity) =
+    UpdateProcessVariableCommand(
       variableInstanceId = variableEvent.variableInstanceId,
       variableName = variableEvent.variableName,
       revision = variableEvent.revision,
       scopeActivityInstanceId = variableEvent.scopeActivityInstanceId,
       sourceReference = variableEvent.sourceReference(repositoryService, collectorProperties.applicationName),
-      value = HistoricVariableInstanceEntity(variableEvent).getTypedValue(true),
+      value = TypedValueProcessVariableValue(HistoricVariableInstanceEntity(variableEvent).getTypedValue(true)),
     )
-
-    logger.debug { "Command $command" }
-  }
-
-  /**
-   * Fires update detail process variable command.
-   * See [HistoryEventTypes.VARIABLE_INSTANCE_UPDATE]
-   */
-  @Order(ORDER)
-  @EventListener(condition = "#variableEvent.eventType.equals('update-detail')")
-  fun updateDetail(variableEvent: HistoricDetailVariableInstanceUpdateEntity) {
-    logger.debug { "Update detail variable $variableEvent" }
-  }
 
   /**
    * Fires delete process variable command.
@@ -84,9 +75,13 @@ class ProcessVariableEventCollectorService(
    */
   @Order(ORDER)
   @EventListener(condition = "#variableEvent.eventType.equals('delete')")
-  fun delete(variableEvent: HistoricVariableUpdateEventEntity) {
-    logger.debug { "Delete variable $variableEvent" }
-  }
+  fun delete(variableEvent: HistoricVariableUpdateEventEntity) =
+    DeleteProcessVariableCommand(
+      variableInstanceId = variableEvent.variableInstanceId,
+      variableName = variableEvent.variableName,
+      scopeActivityInstanceId = variableEvent.scopeActivityInstanceId,
+      sourceReference = variableEvent.sourceReference(repositoryService, collectorProperties.applicationName),
+    )
 
   /**
    * Fires migrate process variable command.
@@ -95,7 +90,18 @@ class ProcessVariableEventCollectorService(
   @Order(ORDER)
   @EventListener(condition = "#variableEvent.eventType.equals('migrate')")
   fun migrate(variableEvent: HistoricVariableUpdateEventEntity) {
-    logger.debug { "Migrate variable $variableEvent" }
+    logger.trace { "Migrate variable $variableEvent" }
   }
+
+  /**
+   * Fires update detail process variable command.
+   * See [HistoryEventTypes.VARIABLE_INSTANCE_UPDATE_DETAIL]
+   */
+  @Order(ORDER)
+  @EventListener(condition = "#variableEvent.eventType.equals('update-detail')")
+  fun updateDetail(variableEvent: HistoricDetailVariableInstanceUpdateEntity) {
+    logger.trace { "Update detail variable $variableEvent" }
+  }
+
 }
 

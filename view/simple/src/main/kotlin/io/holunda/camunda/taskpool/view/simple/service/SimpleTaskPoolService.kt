@@ -25,7 +25,7 @@ import java.util.concurrent.ConcurrentHashMap
 
 @Component
 @ProcessingGroup(SimpleServiceViewProcessingGroup.PROCESSING_GROUP)
-class TaskPoolService(
+class SimpleTaskPoolService(
   private val queryUpdateEmitter: QueryUpdateEmitter
 ) : TaskApi {
 

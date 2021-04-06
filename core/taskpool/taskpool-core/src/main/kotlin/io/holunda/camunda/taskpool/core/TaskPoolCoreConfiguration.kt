@@ -1,6 +1,7 @@
 package io.holunda.camunda.taskpool.core
 
 import io.holunda.camunda.taskpool.core.process.ProcessDefinitionAggregate
+import io.holunda.camunda.taskpool.core.process.ProcessVariableAggregate
 import io.holunda.camunda.taskpool.core.task.TaskAggregate
 import org.axonframework.eventsourcing.EventSourcingRepository
 import org.axonframework.eventsourcing.eventstore.EventStore
@@ -32,6 +33,14 @@ class TaskPoolCoreConfiguration {
       .build()
   }
 
+  @Bean
+  fun processVariableAggregateRepository(eventStore: EventStore): EventSourcingRepository<ProcessVariableAggregate> {
+    return EventSourcingRepository
+      .builder(ProcessVariableAggregate::class.java)
+      .eventStore(eventStore)
+      .build()
+  }
+
 }
 
 /**
@@ -45,3 +54,12 @@ fun <T: Any> EventSourcingRepository<T>.loadOptional(id: String): Optional<Aggre
     } catch (e: AggregateNotFoundException) {
       Optional.empty()
     }
+
+fun <T> Optional<T>.ifPresentOrElse(presentConsumer: (T) -> Unit, missingCallback: () -> Unit) {
+  if (this.isPresent) {
+    presentConsumer(this.get())
+  } else {
+    missingCallback()
+  }
+}
+

@@ -68,12 +68,3 @@ data class DataEntry(
     dataIdentityString(entryType, entryId)
   }
 }
-
-fun addModification(modifications: List<ProtocolEntry>, modification: Modification, state: DataEntryState) =
-  modifications.plus(ProtocolEntry(
-    time = Date.from(modification.time.toInstant()),
-    username = modification.username,
-    logMessage = modification.log,
-    logDetails = modification.logNotes,
-    state = state
-  ))

@@ -31,6 +31,10 @@
       <groupId>io.holunda.polyflow</groupId>
       <artifactId>polyflow-example-users</artifactId>
     </dependency>
+    <dependency>
+      <groupId>io.holunda.polyflow</groupId>
+      <artifactId>polyflow-tasklist-url-resolver</artifactId>
+    </dependency>
 
     <dependency>
       <groupId>io.holixon</groupId>
