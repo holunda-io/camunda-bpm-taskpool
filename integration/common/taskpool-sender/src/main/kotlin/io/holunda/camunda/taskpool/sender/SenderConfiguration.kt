@@ -1,4 +1,4 @@
-package io.holunda.camunda.taskpool
+package io.holunda.camunda.taskpool.sender
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
@@ -7,6 +7,8 @@ import io.holunda.camunda.taskpool.sender.process.definition.ProcessDefinitionCo
 import io.holunda.camunda.taskpool.sender.process.definition.SimpleProcessDefinitionCommandSender
 import io.holunda.camunda.taskpool.sender.process.instance.ProcessInstanceCommandSender
 import io.holunda.camunda.taskpool.sender.process.instance.SimpleProcessInstanceCommandSender
+import io.holunda.camunda.taskpool.sender.process.variable.ProcessVariableCommandSender
+import io.holunda.camunda.taskpool.sender.process.variable.SimpleProcessVariableCommandSender
 import io.holunda.camunda.taskpool.sender.task.EngineTaskCommandSender
 import io.holunda.camunda.taskpool.sender.task.SimpleEngineTaskCommandSender
 import io.holunda.camunda.taskpool.sender.task.TxAwareAccumulatingEngineTaskCommandSender
@@ -27,7 +29,7 @@ import javax.annotation.PostConstruct
 @Configuration
 @ComponentScan
 @EnableConfigurationProperties(SenderProperties::class)
-class SenderConfiguration(private val properties: SenderProperties) {
+class SenderConfiguration(private val senderProperties: SenderProperties) {
 
   private val logger: Logger = LoggerFactory.getLogger(SenderConfiguration::class.java)
   /**
@@ -57,7 +59,7 @@ class SenderConfiguration(private val properties: SenderProperties) {
   ): CommandListGateway
     = AxonCommandListGateway(
     commandGateway = commandGateway,
-    properties = senderProperties,
+    senderProperties = senderProperties,
     commandSuccessHandler = commandSuccessHandler,
     commandErrorHandler = commandErrorHandler
   )
@@ -68,10 +70,10 @@ class SenderConfiguration(private val properties: SenderProperties) {
   @Bean
   @ConditionalOnExpression("'\${polyflow.integration.sender.task.type}' != 'custom'")
   fun taskCommandSender(commandListGateway: CommandListGateway, accumulator: EngineTaskCommandAccumulator): EngineTaskCommandSender =
-    when (properties.task.type) {
-      SenderType.tx -> TxAwareAccumulatingEngineTaskCommandSender(commandListGateway, accumulator, properties.task.sendWithinTransaction)
-      SenderType.simple -> SimpleEngineTaskCommandSender(commandListGateway)
-      else -> throw IllegalStateException("Could not initialize sender, used unknown ${properties.task.type} type.")
+    when (senderProperties.task.type) {
+      SenderType.tx -> TxAwareAccumulatingEngineTaskCommandSender(commandListGateway, accumulator, senderProperties)
+      SenderType.simple -> SimpleEngineTaskCommandSender(commandListGateway, senderProperties)
+      else -> throw IllegalStateException("Could not initialize sender, used unknown ${senderProperties.task.type} type.")
     }
 
   /**
@@ -80,9 +82,9 @@ class SenderConfiguration(private val properties: SenderProperties) {
   @Bean
   @ConditionalOnExpression("'\${polyflow.integration.sender.process-definition.type}' != 'custom'")
   fun processDefinitionCommandSender(commandListGateway: CommandListGateway): ProcessDefinitionCommandSender =
-    when (properties.processDefinition.type) {
-      SenderType.simple -> SimpleProcessDefinitionCommandSender(commandListGateway)
-      else -> throw IllegalStateException("Could not initialize sender, used unknown ${properties.processDefinition.type} type.")
+    when (senderProperties.processDefinition.type) {
+      SenderType.simple -> SimpleProcessDefinitionCommandSender(commandListGateway, senderProperties)
+      else -> throw IllegalStateException("Could not initialize sender, used unknown ${senderProperties.processDefinition.type} type.")
     }
 
   /**
@@ -91,9 +93,20 @@ class SenderConfiguration(private val properties: SenderProperties) {
   @Bean
   @ConditionalOnExpression("'\${polyflow.integration.sender.process-instance.type}' != 'custom'")
   fun processInstanceCommandSender(commandListGateway: CommandListGateway): ProcessInstanceCommandSender =
-    when (properties.processInstance.type) {
-      SenderType.simple -> SimpleProcessInstanceCommandSender(commandListGateway)
-      else -> throw IllegalStateException("Could not initialize sender, used unknown ${properties.processInstance.type} type.")
+    when (senderProperties.processInstance.type) {
+      SenderType.simple -> SimpleProcessInstanceCommandSender(commandListGateway, senderProperties)
+      else -> throw IllegalStateException("Could not initialize sender, used unknown ${senderProperties.processInstance.type} type.")
+    }
+
+  /**
+   * Create command sender for process instances.
+   */
+  @Bean
+  @ConditionalOnExpression("'\${polyflow.integration.sender.process-variable.type}' != 'custom'")
+  fun processVariableCommandSender(commandListGateway: CommandListGateway): ProcessVariableCommandSender =
+    when (senderProperties.processVariable.type) {
+      SenderType.simple -> SimpleProcessVariableCommandSender(commandListGateway, senderProperties)
+      else -> throw IllegalStateException("Could not initialize sender, used unknown ${senderProperties.processVariable.type} type.")
     }
 
   /**
@@ -101,20 +114,25 @@ class SenderConfiguration(private val properties: SenderProperties) {
    */
   @PostConstruct
   fun printSenderConfiguration() {
-    if (properties.task.enabled) {
+    if (senderProperties.task.enabled) {
       logger.info("SENDER-011: Taskpool task commands will be distributed over command bus.")
     } else {
       logger.info("SENDER-012: Taskpool task command distribution is disabled by property.")
     }
-    if (properties.processDefinition.enabled) {
+    if (senderProperties.processDefinition.enabled) {
       logger.info("SENDER-013: Taskpool process definition commands will be distributed over command bus.")
     } else {
       logger.info("SENDER-014: Taskpool process definition command distribution is disabled by property.")
     }
-    if (properties.processInstance.enabled) {
+    if (senderProperties.processInstance.enabled) {
       logger.info("SENDER-015: Taskpool process instance commands will be distributed over command bus.")
     } else {
       logger.info("SENDER-016: Taskpool process instance command distribution is disabled by property.")
+    }
+    if (senderProperties.processVariable.enabled) {
+      logger.info("SENDER-017: Taskpool process variable commands will be distributed over command bus.")
+    } else {
+      logger.info("SENDER-018: Taskpool process variable command distribution is disabled by property.")
     }
   }
 
@@ -123,14 +141,14 @@ class SenderConfiguration(private val properties: SenderProperties) {
    */
   @Bean
   @ConditionalOnMissingBean(CommandSuccessHandler::class)
-  fun loggingTaskCommandSuccessHandler(): CommandSuccessHandler = LoggingTaskCommandSuccessHandler(LoggerFactory.getLogger(EngineTaskCommandSender::class.java))
+  fun loggingTaskCommandSuccessHandler(): CommandSuccessHandler = LoggingTaskCommandSuccessHandler(logger)
 
   /**
    * Default logging handler.
    */
   @Bean
   @ConditionalOnMissingBean(CommandErrorHandler::class)
-  fun loggingTaskCommandErrorHandler(): CommandErrorHandler = LoggingTaskCommandErrorHandler(LoggerFactory.getLogger(EngineTaskCommandSender::class.java))
+  fun loggingTaskCommandErrorHandler(): CommandErrorHandler = LoggingTaskCommandErrorHandler(logger)
 
 
 }

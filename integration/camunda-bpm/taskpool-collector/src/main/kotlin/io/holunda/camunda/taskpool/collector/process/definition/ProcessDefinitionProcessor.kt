@@ -1,24 +1,28 @@
 package io.holunda.camunda.taskpool.collector.process.definition
 
-import io.holunda.camunda.taskpool.CamundaTaskpoolCollectorProperties
 import io.holunda.camunda.taskpool.api.process.definition.ProcessDefinitionCommand
+import io.holunda.camunda.taskpool.collector.CamundaTaskpoolCollectorProperties
 import io.holunda.camunda.taskpool.sender.process.definition.ProcessDefinitionCommandSender
 import mu.KLogging
+import org.axonframework.eventhandling.EventHandler
 import org.springframework.stereotype.Component
 
+/**
+ * Processes commands sent via Spring Eventing and delegates them to taskpool command sender.
+ */
 @Component
-class ProcessDefinitionProcessorService(
+class ProcessDefinitionProcessor(
   private val processDefinitionCommandSender: ProcessDefinitionCommandSender,
   private val properties: CamundaTaskpoolCollectorProperties
 ) {
-  companion object: KLogging()
+  companion object : KLogging()
 
-  fun send(command: ProcessDefinitionCommand) {
+  @EventHandler
+  fun process(command: ProcessDefinitionCommand) {
     if (properties.processDefinition.enabled) {
-      logger.debug { "Sending update about process definition ${command.processDefinitionId}." }
       processDefinitionCommandSender.send(command)
     } else {
-      logger.debug { "Process definition collecting has been disabled by property, skipping ${command.processDefinitionId}." }
+      logger.debug { "COLLECTOR-005: Process definition collecting has been disabled by property, skipping ${command.processDefinitionId}." }
     }
   }
 }

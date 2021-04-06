@@ -6,7 +6,6 @@ import io.holunda.camunda.datapool.projector.DataEntryProjectionSupplier
 import io.holunda.camunda.datapool.projector.DataEntryProjector
 import io.holunda.camunda.taskpool.api.business.*
 import io.holunda.camunda.variable.serializer.serialize
-import org.axonframework.commandhandling.CommandResultMessage
 import org.axonframework.commandhandling.GenericCommandMessage
 import org.axonframework.commandhandling.gateway.CommandGateway
 import org.axonframework.messaging.MetaData
@@ -103,24 +102,3 @@ class SimpleDataEntryCommandSender(
   }
 }
 
-/**
- * Success handler, logging.
- */
-class LoggingCommandSuccessHandler(private val logger: Logger) : DataEntryCommandSuccessHandler {
-
-  override fun apply(commandMessage: Any, commandResultMessage: CommandResultMessage<out Any?>) {
-    if (logger.isDebugEnabled) {
-      logger.debug("Successfully submitted command $commandMessage, $commandResultMessage")
-    }
-  }
-}
-
-/**
- * Error handler, logging the error.
- */
-class LoggingCommandErrorHandler(private val logger: Logger) : DataEntryCommandErrorHandler {
-
-  override fun apply(commandMessage: Any, commandResultMessage: CommandResultMessage<out Any?>) {
-    logger.error("SENDER-006: Sending command $commandMessage resulted in error", commandResultMessage.exceptionResult())
-  }
-}

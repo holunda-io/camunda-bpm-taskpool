@@ -1,5 +1,6 @@
 package io.holunda.camunda.taskpool.collector.task.enricher
 
+import io.holunda.camunda.taskpool.filterKeys
 import org.camunda.bpm.engine.variable.VariableMap
 
 /**

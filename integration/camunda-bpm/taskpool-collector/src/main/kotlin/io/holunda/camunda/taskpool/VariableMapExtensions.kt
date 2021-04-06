@@ -1,4 +1,4 @@
-package io.holunda.camunda.taskpool.collector.task.enricher
+package io.holunda.camunda.taskpool
 
 import org.camunda.bpm.engine.variable.VariableMap
 import org.camunda.bpm.engine.variable.Variables

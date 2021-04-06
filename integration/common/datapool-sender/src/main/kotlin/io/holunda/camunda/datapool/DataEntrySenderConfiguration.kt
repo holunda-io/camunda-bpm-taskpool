@@ -18,11 +18,9 @@ import org.springframework.context.annotation.Configuration
 @ComponentScan
 @Configuration
 @EnableConfigurationProperties(DataEntrySenderProperties::class)
-class DataEntrySenderConfiguration {
-
-  @Autowired
-  lateinit var properties: DataEntrySenderProperties
-
+class DataEntrySenderConfiguration(
+  val properties: DataEntrySenderProperties
+) {
   /**
    * Default handler.
    */
@@ -49,12 +47,12 @@ class DataEntrySenderConfiguration {
   ): DataEntryCommandSender {
     return when (properties.type) {
       DataEntrySenderType.simple -> SimpleDataEntryCommandSender(
-        gateway,
-        properties,
-        dataEntryProjector,
-        dataEntryCommandSuccessHandler,
-        dataEntryCommandErrorHandler,
-        objectMapper
+        gateway = gateway,
+        properties = properties,
+        dataEntryProjector = dataEntryProjector,
+        successHandler = dataEntryCommandSuccessHandler,
+        errorHandler = dataEntryCommandErrorHandler,
+        objectMapper = objectMapper
       )
       else -> throw IllegalStateException("Could not initialize sender, used unknown ${properties.type} type.")
     }

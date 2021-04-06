@@ -36,7 +36,7 @@ Spring eventing.
 
 ### Architecture
 
-image::{{baseUrl('assets/media/collector-building-blocks.png')}}["Taskpool collector building blocks"]
+![Taskpool collector building blocks](/img/collector-building-blocks.png)
 
 The Taskpool Collector consists of several components which can be devided into the following groups:
 
@@ -277,5 +277,27 @@ Here is an example, how such a handler may look like:
       logger.info { "<------------------- END ----------------------->" }
     }
   }
-
 ```
+
+
+### Message codes
+
+> Please note that the logger root hierarchy is `io.holunda.camunda.taskpool.collector`
+
+Message Code  | Severity  | Logger*  | Description   | Meaning
+--- | --- | :--- | :--- | :--- 
+`COLLECTOR-001` | `INFO`     |   | Task commands will be collected. | 
+`COLLECTOR-002` | `INFO`     |   | Task commands not be collected.   | 
+`COLLECTOR-005` | `DEBUG`    | `.process.definition`  | Process definition collecting has been disabled by property, skipping ${command.processDefinitionId}. |
+`COLLECTOR-006` | `DEBUG`    | `.process.instance`  | Process instance collecting has been disabled by property, skipping ${command.processInstanceId}. |
+`COLLECTOR-007` | `DEBUG`    | `.process.variable`  | Process variable collecting has been disabled by property, skipping ${command.processInstanceId}. |
+`COLLECTOR-008` | `DEBUG`    | `.task`  | Task command collecting is disabled by property, would have enriched and sent command $command. |
+`ENRICHER-001`  | `INFO`     |   | Task commands will be enriched with process variables.   |
+`ENRICHER-002`  | `INFO`     |   | Task commands will not be enriched.   |
+`ENRICHER-003`  | `INFO`     |   | Task commands will be enriched by a custom enricher.   |
+`ENRICHER-004`  | `DEBUG`    | `.task.enricher`   | Could not enrich variables from running execution ${command.sourceReference.executionId}, since it doesn't exist (anymore).   |
+
+
+
+
+

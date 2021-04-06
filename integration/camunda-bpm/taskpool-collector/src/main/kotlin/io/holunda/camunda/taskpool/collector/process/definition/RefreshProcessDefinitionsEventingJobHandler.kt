@@ -1,7 +1,5 @@
 package io.holunda.camunda.taskpool.collector.process.definition
 
-import io.holunda.camunda.taskpool.sender.process.definition.ProcessDefinitionCommandSender
-import io.holunda.camunda.taskpool.sender.gateway.CommandListGateway
 import mu.KLogging
 import org.camunda.bpm.engine.impl.interceptor.Command
 import org.camunda.bpm.engine.impl.interceptor.CommandContext
@@ -10,7 +8,7 @@ import org.camunda.bpm.engine.impl.jobexecutor.JobHandlerConfiguration
 import org.camunda.bpm.engine.impl.persistence.entity.ExecutionEntity
 import org.camunda.bpm.engine.impl.persistence.entity.JobEntity
 import org.camunda.bpm.engine.impl.persistence.entity.MessageEntity
-import org.springframework.context.annotation.Lazy
+import org.springframework.context.ApplicationEventPublisher
 import org.springframework.stereotype.Component
 
 /**
@@ -22,8 +20,7 @@ import org.springframework.stereotype.Component
 @Component
 class RefreshProcessDefinitionsJobHandler(
   private val processDefinitionService: ProcessDefinitionService,
-  @Lazy
-  private val processDefinitionProcessorService: ProcessDefinitionProcessorService
+  private val applicationEventPublisher: ApplicationEventPublisher
 ) : JobHandler<RefreshProcessDefinitionsJobConfiguration> {
 
   companion object : KLogging() {
@@ -41,11 +38,8 @@ class RefreshProcessDefinitionsJobHandler(
     )
     // send to the task pool core.
     logger.info { "EVENTING-022: Registering ${commands.size} new process definitions." }
-    commands.forEach {
-      processDefinitionProcessorService.send(it)
-    }
+    commands.forEach { applicationEventPublisher.publishEvent(it) }
   }
-
 
   override fun newConfiguration(canonicalString: String) = RefreshProcessDefinitionsJobConfiguration(canonicalString)
   override fun onDelete(configuration: RefreshProcessDefinitionsJobConfiguration, jobEntity: JobEntity) {}

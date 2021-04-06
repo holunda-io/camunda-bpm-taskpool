@@ -1,39 +1,26 @@
----
-title: Datapool Collector
-pageId: engine-datapool-collector
----
-
-## Datapool Collector
+## Taskpool Sender
 
 
 ### Purpose
-Datapool collector is a component usually deployed as a part of the process application (but not necessary) that
-is responsible for collecting the Business Data Events fired by the application in order to allow for creation of
-a business data projection. In doing so, it collects and transmits it to Datapool Core.
 
 ### Features
- * Provides an API to submit arbitrary changes of business entities
- * Provides an API to track changes (aka. Audit Log)
- * Authorization on business entries
- * Transmission of business entries commands
 
 ### Usage and configuration
 
-
 ```xml
-    <dependency>
-      <groupId>io.holunda.taskpool</groupId>
-      <artifactId>camunda-bpm-datapool-collector</artifactId>
-      <version>${camunda-taskpool.version}</version>
-    </dependency>
+<dependency>
+  <groupId>io.holunda.polyflow</groupId>
+  <artifactId>polyflow-taskpool-sender</artifactId>
+  <version>${camunda-taskpool.version}</version>
+</dependency>
 ```
 
-Then activate the datapool collector by providing the annotation on any Spring Configuration:
+Then activate the taskpool sender by providing the annotation on any Spring Configuration:
 
 ```java
 
 @Configuration
-@EnableDataEntryCollector
+@EnableTaskpoolSender
 class MyDataEntryCollectorConfiguration {
 
 }
@@ -42,45 +29,31 @@ class MyDataEntryCollectorConfiguration {
 
 ### Command transmission
 
-In order to control sending of commands to command gateway, the command sender activation property
-`camunda.taskpool.dataentry.sender.enabled` (default is `true`) is available. If disabled, the command sender
-will log any command instead of sending it to the command gateway.
-
-In addition you can control by the property `camunda.taskpool.dataentry.sender.type` if you want to use the default command sender or provide your own implementation.
-The default provided command sender (type: `simple`) just sends the commands synchronously using Axon Command Bus.
-
-TIP: If you want to implement a custom command sending, please provide your own implementation of the interface `DataEntryCommandSender`
-(register a Spring Component of the type) and set the property `camunda.taskpool.dataentry.sender.type` to `custom`.
-
 #### Handling command transmission
 
-The commands sent by the `Datapool Collector` are received by Command Handlers. The latter may accept or reject commands, depending
-on the state of the aggregate and other components. The `SimpleDataEntryCommandSender` is informed about the command outcome. By default, it will log the outcome
-to console (success is logged in `DEBUG` log level, errors are using `ERROR` log level).
+### Message codes
 
-In some situations it is required to take care of command outcome. A prominent example is to include a metric for command dispatching errors into monitoring. For doing so,
-it is possible to provide own handlers for success and error command outcome.
+> Please note that the logger root hierarchy is `io.holunda.camunda.taskpool.sender`
 
-For Data Entry Command Sender (as a part of `Datapool Collector`) please provide a Spring Bean implementing the `io.holunda.camunda.datapool.sender.DataEntryCommandSuccessHandler`
- and `io.holunda.camunda.datapool.sender.DataEntryCommandErrorHandler` accordingly.
+Message Code  | Severity  | Logger*  | Description   | Meaning                
+--- | --- | :--- | :--- | :--- 
+`SENDER-001` | `DEBUG`     | `.gateway`  | Sending command over gateway disabled by property. Would have sent command `payload`. | Sending of any commands is disabled.  
+`SENDER-002` | `DEBUG`     | `.gateway`  | Successfully submitted command `payload`.   | Logging the successfully sent command.  
+`SENDER-003`    | `ERROR`     | `.gateway`  | Sending command $commandMessage resulted in error   |  Error sending command.  
+`SENDER-004`    | `DEBUG`     | `.task`     | Process task sending is disabled by property. Would have sent $command. |  
+`SENDER-005`    | `DEBUG`     | `.task`     | Handling ${taskCommands.size} commands for task $taskId using command accumulator $accumulatorName |  
+`SENDER-006`    | `DEBUG`     | `.task`     | Handling ${taskCommands.size} commands for task $taskId using command accumulator $accumulatorName |  
+`SENDER-007`    | `DEBUG`     | `.process.definition`     | Process definition sending is disabled by property. Would have sent $command. |  
+`SENDER-007`    | `DEBUG`     | `.process.instance`     | Process instance sending is disabled by property. Would have sent $command. |  
+`SENDER-009`    | `DEBUG`     | `.process.variable`     | Process variable sending is disabled by property. Would have sent $command. |  
+`SENDER-011`    | `INFO`      |                  | Taskpool task commands will be distributed over command bus.  | 
+`SENDER-012`    | `INFO`      |                  | Taskpool task command distribution is disabled by property.  | 
+`SENDER-013`    | `INFO`      |                  | Taskpool process definition commands will be distributed over command bus.  | 
+`SENDER-014`    | `INFO`      |                  | Taskpool process definition command distribution is disabled by property.  | 
+`SENDER-015`    | `INFO`      |                  | Taskpool process instance commands will be distributed over command bus.  | 
+`SENDER-016`    | `INFO`      |                  | Taskpool process instance command distribution is disabled by property.  | 
+`SENDER-017`    | `INFO`      |                  | Taskpool process variable commands will be distributed over command bus.  | 
+`SENDER-018`    | `INFO`      |                  | Taskpool process variable command distribution is disabled by property.  | 
 
 
-```kotlin
-  @Bean
-  @Primary
-  fun dataEntryCommandSuccessHandler() = object: DataEntryCommandResultHandler {
-    override fun apply(commandMessage: Any, commandResultMessage: CommandResultMessage<out Any?>) {
-      // do something here
-      logger.info { "Success" }
-    }
-  }
 
-  @Bean
-  @Primary
-  fun dataEntryCommandErrorHandler() = object: DataEntryCommandErrorHandler {
-    override fun apply(commandMessage: Any, commandResultMessage: CommandResultMessage<out Any?>) {
-      // do something here
-      logger.error { "Error" }
-    }
-  }
-```

@@ -1,21 +1,26 @@
 package io.holunda.camunda.taskpool.sender.task
 
 import io.holunda.camunda.taskpool.api.task.EngineTaskCommand
+import io.holunda.camunda.taskpool.sender.SenderProperties
 import io.holunda.camunda.taskpool.sender.gateway.CommandListGateway
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
+import mu.KLogging
 
 /**
  * Sends commands using the gateway.
  */
-class SimpleEngineTaskCommandSender(
-  private val commandListGateway: CommandListGateway
+internal class SimpleEngineTaskCommandSender(
+  private val commandListGateway: CommandListGateway,
+  private val senderProperties: SenderProperties
 ) : EngineTaskCommandSender {
 
-  private val logger: Logger = LoggerFactory.getLogger(EngineTaskCommandSender::class.java)
+  companion object : KLogging()
 
   override fun send(command: EngineTaskCommand) {
-    commandListGateway.sendToGateway(listOf(command))
+    if (senderProperties.task.enabled) {
+      commandListGateway.sendToGateway(listOf(command))
+    } else {
+      logger.debug { "SENDER-004: Process task sending is disabled by property. Would have sent $command." }
+    }
   }
 
 }

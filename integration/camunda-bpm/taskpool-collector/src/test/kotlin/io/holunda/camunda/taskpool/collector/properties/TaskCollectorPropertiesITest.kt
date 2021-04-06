@@ -1,6 +1,6 @@
 package io.holunda.camunda.taskpool.collector.properties
 
-import io.holunda.camunda.taskpool.CamundaTaskpoolCollectorProperties
+import io.holunda.camunda.taskpool.collector.CamundaTaskpoolCollectorProperties
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.junit.runner.RunWith

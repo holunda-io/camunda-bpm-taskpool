@@ -1,5 +1,6 @@
 package io.holunda.camunda.taskpool
 
+import io.holunda.camunda.taskpool.sender.SenderConfiguration
 import org.springframework.context.annotation.Import
 
 /**

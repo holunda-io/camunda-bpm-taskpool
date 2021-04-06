@@ -1,9 +1,8 @@
 package io.holunda.camunda.taskpool.collector.process.definition
 
-import io.holunda.camunda.taskpool.CamundaTaskpoolCollectorProperties
 import io.holunda.camunda.taskpool.api.process.definition.RegisterProcessDefinitionCommand
-import io.holunda.camunda.taskpool.candidateGroups
-import io.holunda.camunda.taskpool.candidateUsers
+import io.holunda.camunda.taskpool.asCommand
+import io.holunda.camunda.taskpool.collector.CamundaTaskpoolCollectorProperties
 import io.holunda.camunda.taskpool.executeInCommandContext
 import org.camunda.bpm.engine.FormService
 import org.camunda.bpm.engine.RepositoryService
@@ -47,12 +46,10 @@ class ProcessDefinitionService(
     val newDefinitions: List<ProcessDefinitionEntity> = query.list()
       .filter { returnAll || !processDefinitions.map { def -> def.id }.contains(it.id) }
       .filterIsInstance<ProcessDefinitionEntity>()
-
     if (returnAll) {
       this.processDefinitions.clear()
     }
     this.processDefinitions.addAll(newDefinitions)
-
     return newDefinitions.map { it.asCommand(applicationName = collectorProperties.applicationName, formKey = formService.getStartFormKey(it.id)) }
   }
 
@@ -78,21 +75,6 @@ class ProcessDefinitionService(
     }.commands
   }
 
-
-  private fun ProcessDefinitionEntity.asCommand(applicationName: String, formKey: String?) =
-    RegisterProcessDefinitionCommand(
-      processDefinitionId = this.id,
-      processDefinitionKey = this.key,
-      processDefinitionVersion = this.version,
-      processName = this.name ?: this.key,
-      processVersionTag = this.versionTag,
-      processDescription = this.description,
-      startableFromTasklist = this.isStartableInTasklist,
-      applicationName = applicationName,
-      formKey = formKey,
-      candidateStarterUsers = this.candidateUsers(),
-      candidateStarterGroups = this.candidateGroups()
-    )
 
   /**
    * Result encapsulated in a type to avoid type erasure.

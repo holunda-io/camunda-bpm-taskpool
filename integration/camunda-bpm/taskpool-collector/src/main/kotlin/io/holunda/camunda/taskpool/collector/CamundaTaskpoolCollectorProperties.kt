@@ -1,4 +1,4 @@
-package io.holunda.camunda.taskpool
+package io.holunda.camunda.taskpool.collector
 
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.context.properties.ConfigurationProperties

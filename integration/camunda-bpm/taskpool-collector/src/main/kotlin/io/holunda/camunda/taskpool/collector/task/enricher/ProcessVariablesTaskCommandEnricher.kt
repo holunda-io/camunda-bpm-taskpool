@@ -4,6 +4,7 @@ import io.holunda.camunda.taskpool.api.task.TaskIdentityWithPayloadAndCorrelatio
 import io.holunda.camunda.taskpool.collector.task.VariablesEnricher
 import io.holunda.camunda.taskpool.api.task.*
 import io.holunda.camunda.taskpool.callInProcessEngineContext
+import io.holunda.camunda.taskpool.putAllTyped
 import mu.KLogging
 import org.camunda.bpm.engine.RuntimeService
 import org.camunda.bpm.engine.variable.Variables.createVariables

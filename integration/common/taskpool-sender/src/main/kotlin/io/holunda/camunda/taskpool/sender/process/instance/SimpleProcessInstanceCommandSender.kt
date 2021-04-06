@@ -1,16 +1,25 @@
 package io.holunda.camunda.taskpool.sender.process.instance
 
-import io.holunda.camunda.taskpool.api.process.definition.ProcessDefinitionCommand
+import io.holunda.camunda.taskpool.api.process.instance.ProcessInstanceCommand
+import io.holunda.camunda.taskpool.sender.SenderProperties
 import io.holunda.camunda.taskpool.sender.gateway.CommandListGateway
+import mu.KLogging
 
 /**
  * Simple sender for process definition commands
  */
-class SimpleProcessInstanceCommandSender(
-  private val commandListGateway: CommandListGateway
+internal class SimpleProcessInstanceCommandSender(
+  private val commandListGateway: CommandListGateway,
+  private val senderProperties: SenderProperties
 ) : ProcessInstanceCommandSender {
 
-  override fun send(command: ProcessDefinitionCommand) {
-    commandListGateway.sendToGateway(listOf(command))
+  companion object : KLogging()
+
+  override fun send(command: ProcessInstanceCommand) {
+    if (senderProperties.processInstance.enabled) {
+      commandListGateway.sendToGateway(listOf(command))
+    } else {
+      logger.debug { "SENDER-008: Process instance sending is disabled by property. Would have sent $command." }
+    }
   }
 }

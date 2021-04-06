@@ -1,18 +1,16 @@
 package io.holunda.camunda.taskpool.sender.gateway
 
-import io.holunda.camunda.taskpool.SenderProperties
-import org.axonframework.commandhandling.CommandResultMessage
+import io.holunda.camunda.taskpool.sender.SenderProperties
 import org.axonframework.commandhandling.gateway.CommandGateway
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import org.springframework.stereotype.Component
 
 /**
  * Sends  a list commands via AXON command gateway one-by-one, only if the sender property is enabled.
  */
 internal class AxonCommandListGateway(
   private val commandGateway: CommandGateway,
-  private val properties: SenderProperties,
+  private val senderProperties: SenderProperties,
   private val commandSuccessHandler: CommandSuccessHandler,
   private val commandErrorHandler: CommandErrorHandler
 ) : CommandListGateway {
@@ -28,7 +26,7 @@ internal class AxonCommandListGateway(
       val nextCommand = commands.first()
       val remainingCommands = commands.subList(1, commands.size)
 
-      if (properties.enabled) {
+      if (senderProperties.enabled) {
         commandGateway.send<Any, Any?>(nextCommand) { commandMessage, commandResultMessage ->
           if (commandResultMessage.isExceptional) {
             commandErrorHandler.apply(commandMessage, commandResultMessage)
@@ -38,34 +36,12 @@ internal class AxonCommandListGateway(
           sendToGateway(remainingCommands)
         }
       } else {
-        logger.debug("SENDER-003: Sending command over gateway disabled by property. Would have sent command $nextCommand")
+        logger.debug("SENDER-001: Sending command over gateway disabled by property. Would have sent command $nextCommand")
         sendToGateway(remainingCommands)
       }
     }
   }
 
-}
-
-/**
- * Error handler, logging the error.
- */
-open class LoggingTaskCommandErrorHandler(private val logger: Logger) : CommandErrorHandler {
-
-  override fun apply(commandMessage: Any, commandResultMessage: CommandResultMessage<out Any?>) {
-    logger.error("SENDER-006: Sending command $commandMessage resulted in error", commandResultMessage.exceptionResult())
-  }
-}
-
-/**
- * Logs success.
- */
-open class LoggingTaskCommandSuccessHandler(private val logger: Logger) : CommandSuccessHandler {
-
-  override fun apply(commandMessage: Any, commandResultMessage: CommandResultMessage<out Any?>) {
-    if (logger.isDebugEnabled) {
-      logger.debug("SENDER-004: Successfully submitted command $commandMessage")
-    }
-  }
 }
 
 

@@ -1,4 +1,4 @@
-package io.holunda.camunda.taskpool
+package io.holunda.camunda.taskpool.sender
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.context.properties.ConstructorBinding
@@ -29,6 +29,12 @@ data class SenderProperties(
    */
   @NestedConfigurationProperty
   val processInstance: ProcessInstanceSenderProperties = ProcessInstanceSenderProperties(),
+  /**
+   * Sending process instances.
+   */
+  @NestedConfigurationProperty
+  val processVariable: ProcessVariableSenderProperties = ProcessVariableSenderProperties(),
+
 )
 
 

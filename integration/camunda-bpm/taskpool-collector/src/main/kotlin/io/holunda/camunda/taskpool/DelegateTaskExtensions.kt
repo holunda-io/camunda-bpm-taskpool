@@ -1,4 +1,4 @@
-package io.holunda.camunda.taskpool.collector
+package io.holunda.camunda.taskpool
 
 import io.holunda.camunda.taskpool.api.task.CaseReference
 import io.holunda.camunda.taskpool.api.task.ProcessReference

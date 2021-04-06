@@ -1,10 +1,8 @@
 package io.holunda.camunda.taskpool.collector.process.variable
 
-import io.holunda.camunda.taskpool.CamundaTaskpoolCollectorProperties
-import io.holunda.camunda.taskpool.api.process.variable.ProcessVariableCommand
 import io.holunda.camunda.taskpool.api.process.variable.UpdateProcessVariableCommand
-import io.holunda.camunda.taskpool.collector.sourceReference
-import io.holunda.camunda.taskpool.sender.gateway.CommandListGateway
+import io.holunda.camunda.taskpool.collector.CamundaTaskpoolCollectorProperties
+import io.holunda.camunda.taskpool.sourceReference
 import mu.KLogging
 import org.camunda.bpm.engine.RepositoryService
 import org.camunda.bpm.engine.impl.history.event.HistoricVariableUpdateEventEntity
@@ -16,8 +14,7 @@ import org.springframework.core.annotation.Order
 import org.springframework.stereotype.Component
 
 /**
- *
- *
+ * Collects process variable events from camunda and create corresponding process variable commands.
  * <code>
  *  VARIABLE_INSTANCE_CREATE("variable-instance", "create"),
  *  VARIABLE_INSTANCE_UPDATE("variable-instance", "update"),
@@ -28,8 +25,8 @@ import org.springframework.stereotype.Component
  */
 @Component
 class ProcessVariableEventCollectorService(
-        private val collectorProperties: CamundaTaskpoolCollectorProperties,
-        private val repositoryService: RepositoryService
+  private val collectorProperties: CamundaTaskpoolCollectorProperties,
+  private val repositoryService: RepositoryService
 ) {
 
   companion object : KLogging() {
@@ -100,30 +97,5 @@ class ProcessVariableEventCollectorService(
   fun migrate(variableEvent: HistoricVariableUpdateEventEntity) {
     logger.debug { "Migrate variable $variableEvent" }
   }
-
 }
-
-// FIXME: move to enricher
-@Component
-class ProcessVariableEnricherService(
-  private val commandListGateway: CommandListGateway,
-  private val properties: CamundaTaskpoolCollectorProperties
-) {
-  companion object : KLogging()
-
-  /**
-   * Reacts on incoming process variable commands.
-   * @param command command about process variable to send.
-   */
-  @EventListener
-  fun handle(command: ProcessVariableCommand) {
-    if (properties.processVariable.enabled) {
-      commandListGateway.sendToGateway(listOf(command))
-      logger.debug { "Sending update about process variable ${command.variableName}." }
-    } else {
-      logger.debug { "Process variable collecting has been disabled by property, skipping ${command.variableName}." }
-    }
-  }
-}
-
 

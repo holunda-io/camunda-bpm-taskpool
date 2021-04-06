@@ -1,9 +1,9 @@
 package io.holunda.camunda.taskpool.sender.gateway
 
-import io.holunda.camunda.taskpool.SenderProperties
 import io.holunda.camunda.taskpool.api.task.AssignTaskCommand
 import io.holunda.camunda.taskpool.api.task.CreateTaskCommand
 import io.holunda.camunda.taskpool.api.task.ProcessReference
+import io.holunda.camunda.taskpool.sender.SenderProperties
 import mu.KLogging
 import org.axonframework.commandhandling.CommandCallback
 import org.axonframework.commandhandling.GenericCommandMessage
@@ -32,7 +32,7 @@ class AxonCommandListGatewayTest {
   fun `should not send commands if disabled by property`() {
     val wrapper = AxonCommandListGateway(
       commandGateway = commandGateway,
-      properties = SenderProperties(enabled = false),
+      senderProperties = SenderProperties(enabled = false),
       commandErrorHandler = LoggingTaskCommandErrorHandler(logger),
       commandSuccessHandler = LoggingTaskCommandSuccessHandler(logger)
     )
@@ -46,7 +46,7 @@ class AxonCommandListGatewayTest {
   fun `should send commands in sequence`() {
     val wrapper = AxonCommandListGateway(
       commandGateway = commandGateway,
-      properties = SenderProperties(enabled = true),
+      senderProperties = SenderProperties(enabled = true),
       commandErrorHandler = LoggingTaskCommandErrorHandler(logger),
       commandSuccessHandler = LoggingTaskCommandSuccessHandler(logger)
     )

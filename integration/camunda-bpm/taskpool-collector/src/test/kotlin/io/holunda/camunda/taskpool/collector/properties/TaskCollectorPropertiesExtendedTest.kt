@@ -1,9 +1,14 @@
 package io.holunda.camunda.taskpool.collector.properties
 
-import io.holunda.camunda.taskpool.CamundaTaskpoolCollectorConfiguration
-import io.holunda.camunda.taskpool.CamundaTaskpoolCollectorProperties
-import io.holunda.camunda.taskpool.TaskCollectorEnricherType
+import com.nhaarman.mockitokotlin2.mock
+import io.holunda.camunda.taskpool.collector.CamundaTaskpoolCollectorConfiguration
+import io.holunda.camunda.taskpool.collector.CamundaTaskpoolCollectorProperties
+import io.holunda.camunda.taskpool.collector.TaskCollectorEnricherType
 import io.holunda.camunda.taskpool.collector.task.VariablesEnricher
+import io.holunda.camunda.taskpool.sender.process.definition.ProcessDefinitionCommandSender
+import io.holunda.camunda.taskpool.sender.process.instance.ProcessInstanceCommandSender
+import io.holunda.camunda.taskpool.sender.process.variable.ProcessVariableCommandSender
+import io.holunda.camunda.taskpool.sender.task.EngineTaskCommandSender
 import org.assertj.core.api.Assertions.assertThat
 import org.axonframework.commandhandling.gateway.CommandGateway
 import org.axonframework.eventhandling.EventBus
@@ -33,7 +38,8 @@ class TaskCollectorPropertiesExtendedTest {
 
         assertThat(props.applicationName).isEqualTo("my-test-application")
         assertThat(props.processDefinition.enabled).isFalse
-        assertThat(props.processInstance.enabled).isFalse
+        assertThat(props.processInstance.enabled).isTrue
+        assertThat(props.processVariable.enabled).isTrue
         assertThat(props.task.enabled).isTrue
         assertThat(props.task.enricher.type).isEqualTo(TaskCollectorEnricherType.processVariables)
       }
@@ -47,9 +53,9 @@ class TaskCollectorPropertiesExtendedTest {
       .withPropertyValues(
         "spring.application.name=my-test-application",
         "polyflow.integration.collector.camunda.applicationName=another-than-spring",
-        "polyflow.integration.collector.camunda.send-commands-enabled=true",
         "polyflow.integration.collector.camunda.process-definition.enabled=true",
-        "polyflow.integration.collector.camunda.process-instance.enabled=true",
+        "polyflow.integration.collector.camunda.process-instance.enabled=false",
+        "polyflow.integration.collector.camunda.process-variable.enabled=false",
         "polyflow.integration.collector.camunda.task.enabled=true",
         "polyflow.integration.collector.camunda.task.enricher.type=custom",
       ).run {
@@ -60,7 +66,8 @@ class TaskCollectorPropertiesExtendedTest {
         assertThat(props.applicationName).isEqualTo("another-than-spring")
 
         assertThat(props.processDefinition.enabled).isTrue
-        assertThat(props.processInstance.enabled).isTrue
+        assertThat(props.processInstance.enabled).isFalse
+        assertThat(props.processVariable.enabled).isFalse
         assertThat(props.task.enabled).isTrue
 
         assertThat(props.task.enricher.type).isEqualTo(TaskCollectorEnricherType.custom)
@@ -84,9 +91,21 @@ class TaskCollectorPropertiesExtendedTest {
     fun eventSerializer(): Serializer = XStreamSerializer.builder().build()
 
     @Bean
-    fun eventBus(): EventBus = mock(EventBus::class.java)
+    fun eventBus(): EventBus = mock()
 
     @Bean
-    fun commandGateway(): CommandGateway = mock(CommandGateway::class.java)
+    fun commandGateway(): CommandGateway = mock()
+
+    @Bean
+    fun processDefinitionCommandSender(): ProcessDefinitionCommandSender = mock()
+
+    @Bean
+    fun processInstanceCommandSender(): ProcessInstanceCommandSender = mock()
+
+    @Bean
+    fun processVariableCommandSender(): ProcessVariableCommandSender = mock()
+
+    @Bean
+    fun engineTaskCommandSender(): EngineTaskCommandSender = mock()
   }
 }

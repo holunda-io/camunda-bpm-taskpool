@@ -1,4 +1,4 @@
-package io.holunda.camunda.taskpool
+package io.holunda.camunda.taskpool.collector
 
 import io.holunda.camunda.taskpool.collector.task.VariablesEnricher
 import io.holunda.camunda.taskpool.collector.task.enricher.EmptyTaskCommandEnricher
@@ -16,7 +16,7 @@ import org.springframework.context.annotation.Configuration
 import javax.annotation.PostConstruct
 
 /**
- * Configuration of task collect.
+ * Configuration of collector.
  */
 @Configuration
 @ComponentScan

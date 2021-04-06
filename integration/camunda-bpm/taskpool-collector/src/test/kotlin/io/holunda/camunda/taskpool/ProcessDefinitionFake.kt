@@ -2,7 +2,7 @@ package io.holunda.camunda.taskpool
 
 import org.camunda.bpm.engine.repository.ProcessDefinition
 
-public class ProcessDefinitionFake internal constructor(
+class ProcessDefinitionFake internal constructor(
   private val id: String,
   private val category: String?,
   private val name: String?,

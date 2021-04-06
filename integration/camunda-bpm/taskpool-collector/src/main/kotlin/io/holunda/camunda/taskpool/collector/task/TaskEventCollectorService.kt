@@ -1,9 +1,9 @@
 package io.holunda.camunda.taskpool.collector.task
 
-import io.holunda.camunda.taskpool.CamundaTaskpoolCollectorProperties
 import io.holunda.camunda.taskpool.api.task.*
-import io.holunda.camunda.taskpool.collector.formKey
-import io.holunda.camunda.taskpool.collector.sourceReference
+import io.holunda.camunda.taskpool.collector.CamundaTaskpoolCollectorProperties
+import io.holunda.camunda.taskpool.formKey
+import io.holunda.camunda.taskpool.sourceReference
 import org.camunda.bpm.engine.RepositoryService
 import org.camunda.bpm.engine.delegate.DelegateTask
 import org.camunda.bpm.engine.impl.history.event.HistoricIdentityLinkLogEventEntity
