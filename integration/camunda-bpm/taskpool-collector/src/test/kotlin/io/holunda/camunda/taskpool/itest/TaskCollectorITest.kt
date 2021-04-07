@@ -22,6 +22,7 @@ import org.mockito.Mockito.reset
 import org.mockito.Mockito.verify
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.stereotype.Component
 import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.ActiveProfiles
@@ -54,7 +55,7 @@ class TaskCollectorITest {
   @Autowired
   lateinit var commandExecutor: CommandExecutor
 
-  @Autowired
+  @MockBean
   lateinit var commandListGateway: CommandListGateway
 
   /**
