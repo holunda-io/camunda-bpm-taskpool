@@ -2,8 +2,10 @@ package io.holunda.camunda.taskpool.collector.process.variable
 
 import io.holunda.camunda.taskpool.api.process.variable.ProcessVariableCommand
 import io.holunda.camunda.taskpool.collector.CamundaTaskpoolCollectorProperties
+import io.holunda.camunda.taskpool.collector.task.enricher.ProcessVariablesFilter
 import io.holunda.camunda.taskpool.sender.process.variable.ProcessVariableCommandSender
 import mu.KLogging
+import org.camunda.bpm.engine.variable.Variables.createVariables
 import org.springframework.context.event.EventListener
 import org.springframework.stereotype.Component
 
@@ -13,7 +15,8 @@ import org.springframework.stereotype.Component
 @Component
 class ProcessVariableProcessor(
   private val processVariableCommandSender: ProcessVariableCommandSender,
-  private val properties: CamundaTaskpoolCollectorProperties
+  private val properties: CamundaTaskpoolCollectorProperties,
+  private val processVariablesFilter: ProcessVariablesFilter
 ) {
   companion object : KLogging()
 
@@ -23,10 +26,20 @@ class ProcessVariableProcessor(
    */
   @EventListener
   fun handle(command: ProcessVariableCommand) {
-    if (properties.processVariable.enabled) {
-      processVariableCommandSender.send(command)
-    } else {
-      logger.debug { "COLLECTOR-007: Process variable collecting has been disabled by property, skipping ${command.variableName}." }
+
+    val isIncluded = processVariablesFilter.isIncluded(
+      processDefinitionKey = command.sourceReference.definitionKey,
+      command.variableName
+    )
+
+    // TODO: implement a variable value transformer. See #310
+
+    if (isIncluded) {
+      if (properties.processVariable.enabled) {
+        processVariableCommandSender.send(command)
+      } else {
+        logger.debug { "COLLECTOR-007: Process variable collecting has been disabled by property, skipping ${command.variableName}." }
+      }
     }
   }
 }

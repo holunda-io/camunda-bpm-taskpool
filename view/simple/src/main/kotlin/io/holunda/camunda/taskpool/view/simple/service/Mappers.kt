@@ -115,7 +115,8 @@ fun ProcessVariableCreatedEvent.toProcessVariable(): ProcessVariable = ProcessVa
   variableName = this.variableName,
   variableInstanceId = this.variableInstanceId,
   sourceReference = this.sourceReference,
-  scopeActivityInstanceId = this.scopeActivityInstanceId
+  scopeActivityInstanceId = this.scopeActivityInstanceId,
+  value = this.value
 )
 
 /**
@@ -125,6 +126,7 @@ fun ProcessVariableUpdatedEvent.toProcessVariable(processVariable: ProcessVariab
   variableName = this.variableName,
   variableInstanceId = this.variableInstanceId,
   sourceReference = this.sourceReference,
-  scopeActivityInstanceId = this.scopeActivityInstanceId
+  scopeActivityInstanceId = this.scopeActivityInstanceId,
+  value = this.value
 )
 

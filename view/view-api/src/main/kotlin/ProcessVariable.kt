@@ -1,5 +1,6 @@
 package io.holunda.camunda.taskpool.view
 
+import io.holunda.camunda.taskpool.api.process.variable.ProcessVariableValue
 import io.holunda.camunda.taskpool.api.task.SourceReference
 
 /**
@@ -10,4 +11,5 @@ data class ProcessVariable(
   val variableInstanceId: String,
   val sourceReference: SourceReference,
   val scopeActivityInstanceId: String,
+  val value: ProcessVariableValue
 )

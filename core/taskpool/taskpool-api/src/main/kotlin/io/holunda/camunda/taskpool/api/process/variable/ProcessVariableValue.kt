@@ -11,13 +11,16 @@ interface ProcessVariableValue {
   val value: Any
 }
 
+/**
+ * Implementation of the process variable value, where the value itself is represented by Camunda's typed value.
+ */
 data class TypedValueProcessVariableValue(override val value: TypedValue)
   : ProcessVariableValue {
   override val type: ProcessVariableValueType = ProcessVariableValueType.TYPE_VALUE
 }
 
 /**
- * Implementation of the process variable value, where the value itself is represented by a native class.
+ * Implementation of the process variable value, where the value itself is represented by a 'primitive' class.
  */
 data class PrimitiveProcessVariableValue(
   override val value: Any
@@ -34,6 +37,9 @@ data class ObjectProcessVariableValue(
   override val type: ProcessVariableValueType = ProcessVariableValueType.OBJECT
 }
 
+/**
+ * Type of process variable.
+ */
 enum class ProcessVariableValueType {
   /**
    * Un-serialized version referencing concrete classes not available in the framework.
