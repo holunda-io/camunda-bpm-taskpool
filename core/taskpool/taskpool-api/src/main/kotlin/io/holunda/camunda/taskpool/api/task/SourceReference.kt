@@ -110,3 +110,36 @@ data class CaseReference(
   override val tenantId: String? = null
 ) : SourceReference
 
+/**
+ * The source of the task is no workflow engine
+ */
+data class GenericReference(
+  /**
+   * Process instance id.
+   */
+  override val instanceId: String,
+  /**
+   * Process execution id.
+   */
+  override val executionId: String,
+  /**
+   * Process definition id.
+   */
+  override val definitionId: String,
+  /**
+   * Process definition key (id without the version)
+   */
+  override val definitionKey: String,
+  /**
+   * Process name.
+   */
+  override val name: String,
+  /**
+   * Application / Domain name (e.g. use spring.application.name )
+   */
+  override val applicationName: String,
+  /**
+   * Optional Camunda tenant id.
+   */
+  override val tenantId: String? = null
+) : SourceReference
