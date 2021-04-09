@@ -16,7 +16,7 @@ internal class SimpleProcessInstanceCommandSender(
   companion object : KLogging()
 
   override fun send(command: ProcessInstanceCommand) {
-    if (senderProperties.processInstance.enabled) {
+    if (senderProperties.enabled && senderProperties.processInstance.enabled) {
       commandListGateway.sendToGateway(listOf(command))
     } else {
       logger.debug { "SENDER-008: Process instance sending is disabled by property. Would have sent $command." }

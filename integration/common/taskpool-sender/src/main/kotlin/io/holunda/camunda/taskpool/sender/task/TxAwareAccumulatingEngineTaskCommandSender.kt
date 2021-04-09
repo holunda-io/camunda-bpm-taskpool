@@ -71,17 +71,16 @@ internal class TxAwareAccumulatingEngineTaskCommandSender(
 
   private fun send() {
     // iterate over messages and send them
-    taskCommands.get().forEach { (taskId: String, taskCommands: MutableList<EngineTaskCommand>) ->
+    taskCommands.get().forEach { (taskId, taskCommands) ->
       val accumulatorName = engineTaskCommandAccumulator::class.simpleName
       logger.debug("SENDER-005: Handling ${taskCommands.size} commands for task $taskId using command accumulator $accumulatorName")
       val commands = engineTaskCommandAccumulator.invoke(taskCommands)
       // handle messages for every task
-      if (senderProperties.enabled) {
+      if (senderProperties.enabled && senderProperties.task.enabled) {
         commandListGateway.sendToGateway(commands)
       } else {
         logger.debug { "SENDER-004: Process task sending is disabled by property. Would have sent $commands." }
       }
     }
   }
-
 }

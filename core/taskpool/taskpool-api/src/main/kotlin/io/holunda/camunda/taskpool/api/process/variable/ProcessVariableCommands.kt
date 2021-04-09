@@ -6,48 +6,54 @@ import org.camunda.bpm.engine.variable.VariableMap
 import org.camunda.bpm.engine.variable.Variables.createVariables
 
 /**
- * Represents a command on process variable.
+ * Represents a change of process variables of a given process execution.
  */
-interface ProcessVariableCommand {
-  val sourceReference: SourceReference
+data class ChangeProcessVariablesForExecutionCommand(
+  val sourceReference: SourceReference,
+  val variableChanges: List<ProcessVariableChange>
+) {
+  @TargetAggregateIdentifier
+  val processInstanceId: String = sourceReference.instanceId
+}
+
+/**
+ * Variable change.
+ */
+interface ProcessVariableChange {
   val variableName: String
   val variableInstanceId: String
+  val revision: Int
   val scopeActivityInstanceId: String
 }
 
 /**
- * Creates a new process variable.
+ * Change exposing the creating of variable.
  */
-data class CreateProcessVariableCommand(
-  @TargetAggregateIdentifier
+data class ProcessVariableCreate(
   override val variableInstanceId: String,
   override val variableName: String,
-  override val sourceReference: SourceReference,
+  override val revision: Int,
   override val scopeActivityInstanceId: String,
   val value: ProcessVariableValue,
-  val revision: Int
-): ProcessVariableCommand
+) : ProcessVariableChange
 
 /**
- * Updates existing process variable.
+ * Change exposing the updating of the variable.
  */
-data class UpdateProcessVariableCommand(
-  @TargetAggregateIdentifier
+data class ProcessVariableUpdate(
   override val variableInstanceId: String,
   override val variableName: String,
-  override val sourceReference: SourceReference,
+  override val revision: Int,
   override val scopeActivityInstanceId: String,
   val value: ProcessVariableValue,
-  val revision: Int
-): ProcessVariableCommand
+) : ProcessVariableChange
 
 /**
- * Deletes a new process variable.
+ * Change exposing the deleting of variable.
  */
-data class DeleteProcessVariableCommand(
-  @TargetAggregateIdentifier
+data class ProcessVariableDelete(
   override val variableInstanceId: String,
   override val variableName: String,
-  override val sourceReference: SourceReference,
+  override val revision: Int,
   override val scopeActivityInstanceId: String
-): ProcessVariableCommand
+) : ProcessVariableChange

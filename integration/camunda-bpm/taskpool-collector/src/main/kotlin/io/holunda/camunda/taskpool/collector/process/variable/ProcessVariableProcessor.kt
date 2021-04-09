@@ -1,11 +1,10 @@
 package io.holunda.camunda.taskpool.collector.process.variable
 
-import io.holunda.camunda.taskpool.api.process.variable.ProcessVariableCommand
 import io.holunda.camunda.taskpool.collector.CamundaTaskpoolCollectorProperties
 import io.holunda.camunda.taskpool.collector.task.enricher.ProcessVariablesFilter
 import io.holunda.camunda.taskpool.sender.process.variable.ProcessVariableCommandSender
+import io.holunda.camunda.taskpool.sender.process.variable.SingleProcessVariableCommand
 import mu.KLogging
-import org.camunda.bpm.engine.variable.Variables.createVariables
 import org.springframework.context.event.EventListener
 import org.springframework.stereotype.Component
 
@@ -25,7 +24,7 @@ class ProcessVariableProcessor(
    * @param command command about process variable to send.
    */
   @EventListener
-  fun handle(command: ProcessVariableCommand) {
+  fun handle(command: SingleProcessVariableCommand) {
 
     val isIncluded = processVariablesFilter.isIncluded(
       processDefinitionKey = command.sourceReference.definitionKey,

@@ -1,10 +1,10 @@
 package io.holunda.camunda.taskpool.collector.process.variable
 
-import io.holunda.camunda.taskpool.api.process.variable.CreateProcessVariableCommand
-import io.holunda.camunda.taskpool.api.process.variable.DeleteProcessVariableCommand
-import io.holunda.camunda.taskpool.api.process.variable.UpdateProcessVariableCommand
 import io.holunda.camunda.taskpool.api.process.variable.TypedValueProcessVariableValue
 import io.holunda.camunda.taskpool.collector.CamundaTaskpoolCollectorProperties
+import io.holunda.camunda.taskpool.sender.process.variable.CreateSingleProcessVariableCommand
+import io.holunda.camunda.taskpool.sender.process.variable.DeleteSingleProcessVariableCommand
+import io.holunda.camunda.taskpool.sender.process.variable.UpdateSingleProcessVariableCommand
 import io.holunda.camunda.taskpool.sourceReference
 import mu.KLogging
 import org.camunda.bpm.engine.RepositoryService
@@ -44,7 +44,7 @@ class ProcessVariableEventCollectorService(
   @Order(ORDER)
   @EventListener(condition = "#variableEvent.eventType.equals('create')")
   fun create(variableEvent: HistoricVariableUpdateEventEntity) =
-    CreateProcessVariableCommand(
+    CreateSingleProcessVariableCommand(
       variableInstanceId = variableEvent.variableInstanceId,
       variableName = variableEvent.variableName,
       revision = variableEvent.revision,
@@ -60,7 +60,7 @@ class ProcessVariableEventCollectorService(
   @Order(ORDER)
   @EventListener(condition = "#variableEvent.eventType.equals('update')")
   fun update(variableEvent: HistoricVariableUpdateEventEntity) =
-    UpdateProcessVariableCommand(
+    UpdateSingleProcessVariableCommand(
       variableInstanceId = variableEvent.variableInstanceId,
       variableName = variableEvent.variableName,
       revision = variableEvent.revision,
@@ -76,9 +76,10 @@ class ProcessVariableEventCollectorService(
   @Order(ORDER)
   @EventListener(condition = "#variableEvent.eventType.equals('delete')")
   fun delete(variableEvent: HistoricVariableUpdateEventEntity) =
-    DeleteProcessVariableCommand(
+    DeleteSingleProcessVariableCommand(
       variableInstanceId = variableEvent.variableInstanceId,
       variableName = variableEvent.variableName,
+      revision = variableEvent.revision,
       scopeActivityInstanceId = variableEvent.scopeActivityInstanceId,
       sourceReference = variableEvent.sourceReference(repositoryService, collectorProperties.applicationName),
     )

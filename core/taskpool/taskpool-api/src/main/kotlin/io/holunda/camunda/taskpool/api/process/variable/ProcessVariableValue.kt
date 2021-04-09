@@ -45,15 +45,14 @@ enum class ProcessVariableValueType {
    * Un-serialized version referencing concrete classes not available in the framework.
    */
   TYPE_VALUE,
-
   /**
    * Some of the types are native to serialize. These are:
    * - Numbers (Integer, Float, Double)
+   * - Boolean
    * - String
    * - Date
    */
   PRIMITIVE,
-
   /**
    * Everything else is an object.
    */

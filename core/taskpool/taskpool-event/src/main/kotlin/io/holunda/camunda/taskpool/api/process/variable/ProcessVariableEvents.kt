@@ -4,37 +4,10 @@ import io.holunda.camunda.taskpool.api.task.SourceReference
 import org.axonframework.serialization.Revision
 
 /**
- * Variable has been created.
+ * Variable has been changed.
  */
 @Revision("1")
-data class ProcessVariableCreatedEvent(
+data class ProcessVariablesChangedEvent(
   val sourceReference: SourceReference,
-  val variableName: String,
-  val variableInstanceId: String,
-  val scopeActivityInstanceId: String,
-  val value: ProcessVariableValue
+  val variableChanges: List<ProcessVariableChange>
 )
-
-/**
- * Variable has been updated.
- */
-@Revision("1")
-data class ProcessVariableUpdatedEvent(
-  val sourceReference: SourceReference,
-  val variableName: String,
-  val variableInstanceId: String,
-  val scopeActivityInstanceId: String,
-  val value: ProcessVariableValue
-)
-
-/**
- * Variable has been deleted.
- */
-@Revision("1")
-data class ProcessVariableDeletedEvent(
-  val sourceReference: SourceReference,
-  val variableName: String,
-  val variableInstanceId: String,
-  val scopeActivityInstanceId: String,
-)
-

@@ -89,7 +89,13 @@ data class ProcessVariableSenderProperties(
   /**
    * Sender type, defaults to <code>simple</code>
    */
-  val type: SenderType = SenderType.simple,
+  val type: SenderType = SenderType.tx,
+  /**
+   * This flag controls if the tasks are sent within an open transaction (value true, before commit)
+   * or not (value false, default, after commit). This setting is required if you move the command bus
+   * and the command handling on the engine side.
+   */
+  val sendWithinTransaction: Boolean = false
 )
 
 /**

@@ -1,4 +1,4 @@
-package io.holunda.camunda.taskpool.view.query.process
+package io.holunda.camunda.taskpool.view.query.process.variable
 
 import io.holunda.camunda.taskpool.view.ProcessVariable
 

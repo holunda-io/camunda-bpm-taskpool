@@ -9,6 +9,7 @@ import io.holunda.camunda.taskpool.sender.process.instance.ProcessInstanceComman
 import io.holunda.camunda.taskpool.sender.process.instance.SimpleProcessInstanceCommandSender
 import io.holunda.camunda.taskpool.sender.process.variable.ProcessVariableCommandSender
 import io.holunda.camunda.taskpool.sender.process.variable.SimpleProcessVariableCommandSender
+import io.holunda.camunda.taskpool.sender.process.variable.TxAwareAccumulatingProcessVariableCommandSender
 import io.holunda.camunda.taskpool.sender.task.EngineTaskCommandSender
 import io.holunda.camunda.taskpool.sender.task.SimpleEngineTaskCommandSender
 import io.holunda.camunda.taskpool.sender.task.TxAwareAccumulatingEngineTaskCommandSender
@@ -17,7 +18,6 @@ import io.holunda.camunda.taskpool.sender.task.accumulator.ProjectingCommandAccu
 import org.axonframework.commandhandling.gateway.CommandGateway
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.context.properties.EnableConfigurationProperties
@@ -72,7 +72,7 @@ class SenderConfiguration(private val senderProperties: SenderProperties) {
     when (senderProperties.task.type) {
       SenderType.tx -> TxAwareAccumulatingEngineTaskCommandSender(commandListGateway, accumulator, senderProperties)
       SenderType.simple -> SimpleEngineTaskCommandSender(commandListGateway, senderProperties)
-      else -> throw IllegalStateException("Could not initialize sender, used unknown ${senderProperties.task.type} type.")
+      else -> throw IllegalStateException("Could not initialize task sender, used unknown ${senderProperties.task.type} type.")
     }
 
   /**
@@ -83,7 +83,7 @@ class SenderConfiguration(private val senderProperties: SenderProperties) {
   fun processDefinitionCommandSender(commandListGateway: CommandListGateway): ProcessDefinitionCommandSender =
     when (senderProperties.processDefinition.type) {
       SenderType.simple -> SimpleProcessDefinitionCommandSender(commandListGateway, senderProperties)
-      else -> throw IllegalStateException("Could not initialize sender, used unknown ${senderProperties.processDefinition.type} type.")
+      else -> throw IllegalStateException("Could not initialize definition sender, used unknown ${senderProperties.processDefinition.type} type.")
     }
 
   /**
@@ -94,7 +94,7 @@ class SenderConfiguration(private val senderProperties: SenderProperties) {
   fun processInstanceCommandSender(commandListGateway: CommandListGateway): ProcessInstanceCommandSender =
     when (senderProperties.processInstance.type) {
       SenderType.simple -> SimpleProcessInstanceCommandSender(commandListGateway, senderProperties)
-      else -> throw IllegalStateException("Could not initialize sender, used unknown ${senderProperties.processInstance.type} type.")
+      else -> throw IllegalStateException("Could not initialize instance sender, used unknown ${senderProperties.processInstance.type} type.")
     }
 
   /**
@@ -105,7 +105,8 @@ class SenderConfiguration(private val senderProperties: SenderProperties) {
   fun processVariableCommandSender(commandListGateway: CommandListGateway, objectMapper: ObjectMapper): ProcessVariableCommandSender =
     when (senderProperties.processVariable.type) {
       SenderType.simple -> SimpleProcessVariableCommandSender(commandListGateway, senderProperties, objectMapper)
-      else -> throw IllegalStateException("Could not initialize sender, used unknown ${senderProperties.processVariable.type} type.")
+      SenderType.tx -> TxAwareAccumulatingProcessVariableCommandSender(commandListGateway, senderProperties, objectMapper)
+      else -> throw IllegalStateException("Could not initialize variable sender, used unknown ${senderProperties.processVariable.type} type.")
     }
 
   /**

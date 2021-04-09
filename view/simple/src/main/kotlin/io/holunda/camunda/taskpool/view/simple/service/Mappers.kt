@@ -6,8 +6,10 @@ import io.holunda.camunda.taskpool.api.business.DataEntryUpdatedEvent
 import io.holunda.camunda.taskpool.api.process.instance.ProcessInstanceCancelledEvent
 import io.holunda.camunda.taskpool.api.process.instance.ProcessInstanceEndedEvent
 import io.holunda.camunda.taskpool.api.process.instance.ProcessInstanceStartedEvent
-import io.holunda.camunda.taskpool.api.process.variable.ProcessVariableCreatedEvent
-import io.holunda.camunda.taskpool.api.process.variable.ProcessVariableUpdatedEvent
+import io.holunda.camunda.taskpool.api.process.variable.ProcessVariableCreate
+import io.holunda.camunda.taskpool.api.process.variable.ProcessVariableUpdate
+import io.holunda.camunda.taskpool.api.process.variable.ProcessVariablesChangedEvent
+import io.holunda.camunda.taskpool.api.task.SourceReference
 import io.holunda.camunda.taskpool.view.*
 
 /**
@@ -109,24 +111,26 @@ fun ProcessInstanceCancelledEvent.toProcessInstance(processInstance: ProcessInst
 )
 
 /**
- * Converts event to view model.
+ * Converts event to view model, only used if the real process instance is missing.
  */
-fun ProcessVariableCreatedEvent.toProcessVariable(): ProcessVariable = ProcessVariable(
+fun ProcessVariablesChangedEvent.toProcessInstance(): ProcessInstance = ProcessInstance(
+  processInstanceId = this.sourceReference.instanceId,
+  sourceReference = this.sourceReference,
+  state = ProcessInstanceState.RUNNING
+)
+
+fun ProcessVariableCreate.toProcessVariable(source: SourceReference) = ProcessVariable(
   variableName = this.variableName,
   variableInstanceId = this.variableInstanceId,
-  sourceReference = this.sourceReference,
+  sourceReference = source,
   scopeActivityInstanceId = this.scopeActivityInstanceId,
   value = this.value
 )
 
-/**
- * Converts event to view model.
- */
-fun ProcessVariableUpdatedEvent.toProcessVariable(processVariable: ProcessVariable? = null): ProcessVariable = ProcessVariable(
+fun ProcessVariableUpdate.toProcessVariable(source: SourceReference) = ProcessVariable(
   variableName = this.variableName,
   variableInstanceId = this.variableInstanceId,
-  sourceReference = this.sourceReference,
+  sourceReference = source,
   scopeActivityInstanceId = this.scopeActivityInstanceId,
   value = this.value
 )
-

@@ -1,10 +1,7 @@
 package io.holunda.camunda.taskpool.sender.process.variable
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import io.holunda.camunda.taskpool.api.process.variable.CreateProcessVariableCommand
-import io.holunda.camunda.taskpool.api.process.variable.ObjectProcessVariableValue
-import io.holunda.camunda.taskpool.api.process.variable.TypedValueProcessVariableValue
-import io.holunda.camunda.taskpool.api.process.variable.UpdateProcessVariableCommand
+import io.holunda.camunda.taskpool.api.process.variable.*
 import io.holunda.camunda.taskpool.api.task.ProcessReference
 import io.holunda.camunda.taskpool.configureTaskpoolJacksonObjectMapper
 import io.holunda.camunda.taskpool.sender.SenderProperties
@@ -43,7 +40,7 @@ class SimpleProcessVariableTest {
     val variables = createVariables()
       .putValueTyped("complex", ObjectVariableBuilderImpl(value).serializationDataFormat(Variables.SerializationDataFormats.JSON).create())
 
-    val cmd = CreateProcessVariableCommand(
+    val cmd = CreateSingleProcessVariableCommand(
       variableInstanceId = UUID.randomUUID().toString(),
       variableName = "complex",
       sourceReference = ProcessReference(
@@ -61,11 +58,15 @@ class SimpleProcessVariableTest {
     simpleProcessVariableCommandSender.send(cmd)
 
     assertThat(store).hasSize(1)
-    assertThat(store[0]).isInstanceOf(CreateProcessVariableCommand::class.java)
-    val command = store[0] as CreateProcessVariableCommand
-    assertThat(command.value).isInstanceOf(ObjectProcessVariableValue::class.java)
-    assertThat(command.value.value).isInstanceOf(Map::class.java)
-    assertThat(command.value.value as Map<String, Any>).containsExactlyInAnyOrderEntriesOf(mapOf("prop1" to "value1", "prop2" to 67))
+    assertThat(store[0]).isInstanceOf(ChangeProcessVariablesForExecutionCommand::class.java)
+    val command = store[0] as ChangeProcessVariablesForExecutionCommand
+    assertThat(command.variableChanges).hasSize(1)
+    assertThat(command.variableChanges[0]).isInstanceOf(ProcessVariableCreate::class.java)
+
+    val change = command.variableChanges[0] as ProcessVariableCreate
+    assertThat(change.value).isInstanceOf(ObjectProcessVariableValue::class.java)
+    assertThat(change.value.value).isInstanceOf(Map::class.java)
+    assertThat(change.value.value as Map<String, Any>).containsExactlyInAnyOrderEntriesOf(mapOf("prop1" to "value1", "prop2" to 67))
   }
 
 
@@ -77,7 +78,7 @@ class SimpleProcessVariableTest {
     val variables = createVariables()
       .putValueTyped("complex", ObjectVariableBuilderImpl(value).serializationDataFormat(Variables.SerializationDataFormats.JSON).create())
 
-    val cmd = UpdateProcessVariableCommand(
+    val cmd = UpdateSingleProcessVariableCommand(
       variableInstanceId = UUID.randomUUID().toString(),
       variableName = "complex",
       sourceReference = ProcessReference(
@@ -95,11 +96,16 @@ class SimpleProcessVariableTest {
     simpleProcessVariableCommandSender.send(cmd)
 
     assertThat(store).hasSize(1)
-    assertThat(store[0]).isInstanceOf(UpdateProcessVariableCommand::class.java)
-    val command = store[0] as UpdateProcessVariableCommand
-    assertThat(command.value).isInstanceOf(ObjectProcessVariableValue::class.java)
-    assertThat(command.value.value).isInstanceOf(Map::class.java)
-    assertThat(command.value.value as Map<String, Any>).containsExactlyInAnyOrderEntriesOf(mapOf("prop1" to "value1", "prop2" to 67))
+    assertThat(store[0]).isInstanceOf(ChangeProcessVariablesForExecutionCommand::class.java)
+    val command = store[0] as ChangeProcessVariablesForExecutionCommand
+    assertThat(command.variableChanges).hasSize(1)
+    assertThat(command.variableChanges[0]).isInstanceOf(ProcessVariableUpdate::class.java)
+
+    val change = command.variableChanges[0] as ProcessVariableUpdate
+
+    assertThat(change.value).isInstanceOf(ObjectProcessVariableValue::class.java)
+    assertThat(change.value.value).isInstanceOf(Map::class.java)
+    assertThat(change.value.value as Map<String, Any>).containsExactlyInAnyOrderEntriesOf(mapOf("prop1" to "value1", "prop2" to 67))
   }
 
 }

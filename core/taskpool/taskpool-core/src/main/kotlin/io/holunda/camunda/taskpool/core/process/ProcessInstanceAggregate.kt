@@ -1,6 +1,8 @@
 package io.holunda.camunda.taskpool.core.process
 
 import io.holunda.camunda.taskpool.api.process.instance.*
+import io.holunda.camunda.taskpool.api.process.variable.ChangeProcessVariablesForExecutionCommand
+import io.holunda.camunda.taskpool.api.process.variable.ProcessVariablesChangedEvent
 import org.axonframework.commandhandling.CommandHandler
 import org.axonframework.eventsourcing.EventSourcingHandler
 import org.axonframework.modelling.command.AggregateIdentifier
@@ -17,7 +19,7 @@ class ProcessInstanceAggregate() {
    * Create instance handler.
    */
   @CommandHandler
-  constructor(cmd: StartProcessInstanceCommand): this() {
+  constructor(cmd: StartProcessInstanceCommand) : this() {
     AggregateLifecycle.apply(ProcessInstanceStartedEvent(
       processInstanceId = cmd.processInstanceId,
       sourceReference = cmd.sourceReference,
@@ -79,11 +81,31 @@ class ProcessInstanceAggregate() {
     ))
   }
 
+
+  /**
+   * Process variables of an execution of this process instance has changed.
+   *
+   * No [CommandHandler] annotation, see [ProcessInstanceVariablesChangeHandler].
+   */
+  fun changeVariables(cmd: ChangeProcessVariablesForExecutionCommand) {
+    AggregateLifecycle.apply(ProcessVariablesChangedEvent(
+      sourceReference = cmd.sourceReference,
+      variableChanges = cmd.variableChanges
+    ))
+  }
+
   /**
    * Set process instance id..
    */
   @EventSourcingHandler
   fun on(event: ProcessInstanceStartedEvent) {
     this.processInstanceId = event.processInstanceId
+  }
+
+  @EventSourcingHandler
+  fun on(event: ProcessVariablesChangedEvent) {
+    if (!this::processInstanceId.isInitialized) {
+      this.processInstanceId = event.sourceReference.instanceId
+    }
   }
 }

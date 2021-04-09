@@ -133,6 +133,7 @@ class ProcessInstanceAggregateTest {
         command.endActivityId
       ))
   }
+
   @Test
   fun `should react on instance cancel`() {
 

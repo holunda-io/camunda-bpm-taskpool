@@ -33,7 +33,7 @@ class SenderPropertiesExtendedTest {
         assertThat(props.processInstance.enabled).isTrue
         assertThat(props.processInstance.type).isEqualTo(SenderType.simple)
         assertThat(props.processVariable.enabled).isTrue
-        assertThat(props.processVariable.type).isEqualTo(SenderType.simple)
+        assertThat(props.processVariable.type).isEqualTo(SenderType.tx)
         assertThat(props.task.enabled).isTrue
         assertThat(props.task.type).isEqualTo(SenderType.tx)
         assertThat(props.task.sendWithinTransaction).isFalse
@@ -50,6 +50,7 @@ class SenderPropertiesExtendedTest {
         "polyflow.integration.sender.process-definition.enabled=true",
         "polyflow.integration.sender.process-instance.enabled=false",
         "polyflow.integration.sender.process-variable.enabled=false",
+        "polyflow.integration.sender.process-variable.type=simple",
         "polyflow.integration.sender.task.enabled=false",
         "polyflow.integration.sender.task.type=custom",
         "polyflow.integration.sender.task.send-within-transaction=true"
@@ -63,6 +64,7 @@ class SenderPropertiesExtendedTest {
         assertThat(props.processDefinition.enabled).isTrue
         assertThat(props.processInstance.enabled).isFalse
         assertThat(props.processVariable.enabled).isFalse
+        assertThat(props.processVariable.type).isEqualTo(SenderType.simple)
         assertThat(props.task.enabled).isFalse
         assertThat(props.task.type).isEqualTo(SenderType.custom)
         assertThat(props.task.sendWithinTransaction).isTrue

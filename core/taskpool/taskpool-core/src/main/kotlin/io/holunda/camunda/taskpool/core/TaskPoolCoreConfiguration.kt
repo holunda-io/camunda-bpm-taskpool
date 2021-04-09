@@ -1,7 +1,7 @@
 package io.holunda.camunda.taskpool.core
 
 import io.holunda.camunda.taskpool.core.process.ProcessDefinitionAggregate
-import io.holunda.camunda.taskpool.core.process.ProcessVariableAggregate
+import io.holunda.camunda.taskpool.core.process.ProcessInstanceAggregate
 import io.holunda.camunda.taskpool.core.task.TaskAggregate
 import org.axonframework.eventsourcing.EventSourcingRepository
 import org.axonframework.eventsourcing.eventstore.EventStore
@@ -34,9 +34,9 @@ class TaskPoolCoreConfiguration {
   }
 
   @Bean
-  fun processVariableAggregateRepository(eventStore: EventStore): EventSourcingRepository<ProcessVariableAggregate> {
+  fun processInstanceAggregateRepository(eventStore: EventStore): EventSourcingRepository<ProcessInstanceAggregate> {
     return EventSourcingRepository
-      .builder(ProcessVariableAggregate::class.java)
+      .builder(ProcessInstanceAggregate::class.java)
       .eventStore(eventStore)
       .build()
   }
@@ -48,12 +48,12 @@ class TaskPoolCoreConfiguration {
  * @param id aggregate identifier.
  * @return Optional result, if found.
  */
-fun <T: Any> EventSourcingRepository<T>.loadOptional(id: String): Optional<Aggregate<T>> =
-    try {
-      Optional.of(this.load(id))
-    } catch (e: AggregateNotFoundException) {
-      Optional.empty()
-    }
+fun <T : Any> EventSourcingRepository<T>.loadOptional(id: String): Optional<Aggregate<T>> =
+  try {
+    Optional.of(this.load(id))
+  } catch (e: AggregateNotFoundException) {
+    Optional.empty()
+  }
 
 fun <T> Optional<T>.ifPresentOrElse(presentConsumer: (T) -> Unit, missingCallback: () -> Unit) {
   if (this.isPresent) {

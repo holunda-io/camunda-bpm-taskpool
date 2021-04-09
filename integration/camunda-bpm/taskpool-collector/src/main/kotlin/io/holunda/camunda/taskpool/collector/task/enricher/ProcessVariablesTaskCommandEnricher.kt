@@ -24,7 +24,7 @@ open class ProcessVariablesTaskCommandEnricher(
 
   override fun <T : TaskIdentityWithPayloadAndCorrelations> enrich(command: T): T {
 
-    val variablesTyped = callInProcessEngineContext(command.isHistoric()) {
+     val variablesTyped = callInProcessEngineContext(command.isHistoric()) {
       val execution = runtimeService.createExecutionQuery().executionId(command.sourceReference.executionId).singleResult()
       if (execution != null) {
         runtimeService.getVariablesTyped(command.sourceReference.executionId)
