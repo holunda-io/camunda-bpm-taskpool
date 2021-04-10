@@ -37,27 +37,26 @@ class ProcessInstanceVariableChangeAggregateITest {
   private lateinit var eventBus: EventBus
 
   private val receivedEvents: MutableList<EventMessage<*>> = mutableListOf()
-  private val processReference = ProcessReference(
-    definitionKey = "process_key",
-    instanceId = "0815",
-    executionId = "12345",
-    definitionId = "76543",
-    name = "My process",
-    applicationName = "myExample"
-  )
+  private lateinit var processReference: ProcessReference
 
   @Before
   fun registerHandler() {
     eventBus.subscribe { messages -> receivedEvents.addAll(messages) }
+    processReference = ProcessReference(
+      definitionKey = "process_key",
+      instanceId = UUID.randomUUID().toString(),
+      executionId = "12345",
+      definitionId = "76543",
+      name = "My process",
+      applicationName = "myExample"
+    )
   }
 
   @Test
   fun `should accept update after create`() {
 
-    val variableInstanceId = UUID.randomUUID().toString()
-
     val create = StartProcessInstanceCommand(
-      "id:1",
+      processReference.instanceId,
       processReference,
       "businessKey-4711",
       "kermit",
@@ -102,8 +101,6 @@ class ProcessInstanceVariableChangeAggregateITest {
 
   @Test
   fun `should accept update without create`() {
-
-    val variableInstanceId = UUID.randomUUID().toString()
 
     val update = ChangeProcessVariablesForExecutionCommand(
       sourceReference = processReference,
