@@ -13,6 +13,9 @@ interface DataIdentity {
    */
   val entryId: EntryId
 
+  /**
+   * Retrieves the identity as a string.
+   */
   fun asString() = dataIdentityString(entryType = entryType, entryId = entryId)
 }
 /**

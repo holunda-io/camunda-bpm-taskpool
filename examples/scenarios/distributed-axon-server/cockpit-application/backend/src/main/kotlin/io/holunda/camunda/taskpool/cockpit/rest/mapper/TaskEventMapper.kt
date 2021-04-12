@@ -22,6 +22,9 @@ import javax.validation.Valid
 )
 abstract class TaskEventMapper {
 
+  /**
+   * Maps to DTO.
+   */
   fun dto(withMetadata: TaskEventWithMetaData) =
     when (withMetadata.event) {
 

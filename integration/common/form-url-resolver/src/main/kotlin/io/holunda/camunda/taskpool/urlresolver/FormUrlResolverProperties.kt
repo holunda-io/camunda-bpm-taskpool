@@ -63,6 +63,9 @@ data class FormUrlResolverProperties(
     return application.url ?: defaultApplicationTemplate
   }
 
+  /**
+   * Represents an application configuration.
+   */
   @ConstructorBinding
   data class Application(
     val url: String? = null,
