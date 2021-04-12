@@ -34,10 +34,11 @@ data class SenderProperties(
    */
   @NestedConfigurationProperty
   val processVariable: ProcessVariableSenderProperties = ProcessVariableSenderProperties(),
-
 )
 
-
+/**
+ * Task sender properties.
+ */
 @ConstructorBinding
 data class TaskSenderProperties(
   /**
@@ -56,6 +57,9 @@ data class TaskSenderProperties(
   val sendWithinTransaction: Boolean = false
 )
 
+/**
+ *  Process definition sender properties.
+ */
 @ConstructorBinding
 data class ProcessDefinitionSenderProperties(
   /**
@@ -68,6 +72,9 @@ data class ProcessDefinitionSenderProperties(
   val type: SenderType = SenderType.simple,
 )
 
+/**
+ * Process instance sender properties.
+ */
 @ConstructorBinding
 data class ProcessInstanceSenderProperties(
   /**
@@ -80,6 +87,9 @@ data class ProcessInstanceSenderProperties(
   val type: SenderType = SenderType.simple,
 )
 
+/**
+ * Process variable sender properties.
+ */
 @ConstructorBinding
 data class ProcessVariableSenderProperties(
   /**

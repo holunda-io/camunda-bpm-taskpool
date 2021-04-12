@@ -18,6 +18,10 @@ class ProcessDefinitionProcessor(
 ) {
   companion object : KLogging()
 
+  /**
+   * Receives the process definition command and pass it over to the sender.
+   * @param command process definition command, delivered by Spring eventing.
+   */
   @EventListener
   fun process(command: ProcessDefinitionCommand) {
     if (properties.processDefinition.enabled) {

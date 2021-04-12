@@ -23,6 +23,9 @@ import org.axonframework.queryhandling.QueryUpdateEmitter
 import org.springframework.stereotype.Component
 import java.util.concurrent.ConcurrentHashMap
 
+/**
+ * Simple in-memory implementation of the Task API.
+ */
 @Component
 @ProcessingGroup(SimpleServiceViewProcessingGroup.PROCESSING_GROUP)
 class SimpleTaskPoolService(

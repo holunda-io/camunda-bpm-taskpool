@@ -15,6 +15,9 @@ class ProcessInstanceVariablesChangeHandler(
   val eventSourcingRepository: EventSourcingRepository<ProcessInstanceAggregate>
 ) {
 
+  /**
+   * Update variables on existing instance aggregate or create a new one, if missed.
+   */
   @CommandHandler
   fun update(command: ChangeProcessVariablesForExecutionCommand) {
     eventSourcingRepository.loadOptional(command.sourceReference.instanceId).ifPresentOrElse(

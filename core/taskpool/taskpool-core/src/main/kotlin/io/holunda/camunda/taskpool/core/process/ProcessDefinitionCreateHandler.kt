@@ -7,11 +7,17 @@ import org.axonframework.commandhandling.CommandHandler
 import org.axonframework.eventsourcing.EventSourcingRepository
 import org.springframework.stereotype.Component
 
+/**
+ * Handler allowing to register existing definition multiple times.
+ */
 @Component
 class CreateProcessDefinitionCommandHandler(
   val eventSourcingRepository: EventSourcingRepository<ProcessDefinitionAggregate>
 ) {
 
+  /**
+   * Submits a register definition command to an existing aggregate or a new aggregate.
+   */
   @CommandHandler
   fun register(command: RegisterProcessDefinitionCommand) {
     eventSourcingRepository.loadOptional(command.processDefinitionId).ifPresentOrElse(

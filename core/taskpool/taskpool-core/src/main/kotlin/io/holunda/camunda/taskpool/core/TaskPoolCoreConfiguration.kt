@@ -12,11 +12,16 @@ import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
 import java.util.*
 
-
+/**
+ * Main configuration of the task pool core.
+ */
 @Configuration
 @ComponentScan
 class TaskPoolCoreConfiguration {
 
+  /**
+   * Provide repository for task aggregates.
+   */
   @Bean
   fun taskAggregateRepository(eventStore: EventStore): EventSourcingRepository<TaskAggregate> {
     return EventSourcingRepository
@@ -25,6 +30,9 @@ class TaskPoolCoreConfiguration {
       .build()
   }
 
+  /**
+   * Provide repository for process definition aggregates.
+   */
   @Bean
   fun processDefinitionAggregateRepository(eventStore: EventStore): EventSourcingRepository<ProcessDefinitionAggregate> {
     return EventSourcingRepository
@@ -33,6 +41,9 @@ class TaskPoolCoreConfiguration {
       .build()
   }
 
+  /**
+   * Provide repository for process instance aggregates.
+   */
   @Bean
   fun processInstanceAggregateRepository(eventStore: EventStore): EventSourcingRepository<ProcessInstanceAggregate> {
     return EventSourcingRepository
@@ -55,6 +66,11 @@ fun <T : Any> EventSourcingRepository<T>.loadOptional(id: String): Optional<Aggr
     Optional.empty()
   }
 
+/**
+ * Extending optional to be able to react on presence and absence with kotlin callback functions.
+ * @param presentConsumer consumer if present.
+ * @param missingCallback callback if absend.
+ */
 fun <T> Optional<T>.ifPresentOrElse(presentConsumer: (T) -> Unit, missingCallback: () -> Unit) {
   if (this.isPresent) {
     presentConsumer(this.get())

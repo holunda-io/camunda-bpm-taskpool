@@ -127,6 +127,9 @@ class SimpleProcessInstanceService(
     updateProcessInstanceQuery(event.processInstanceId)
   }
 
+  /**
+   * Handles process variable change event.
+   */
   @EventHandler
   fun on(event: ProcessVariablesChangedEvent, metaData: MetaData) {
     if (!processInstances.containsKey(event.sourceReference.instanceId)) {

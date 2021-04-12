@@ -10,8 +10,18 @@ interface ProcessVariableFilter : Function<ProcessVariable, Boolean> {
   val type: ProcessVariableFilterType
 }
 
+/**
+ * Filter type.
+ */
 enum class ProcessVariableFilterType {
+  /**
+   * Include variables.
+   */
   INCLUDE,
+
+  /**
+   * Exclude variables.
+   */
   EXCLUDE
 }
 

@@ -119,6 +119,11 @@ fun ProcessVariablesChangedEvent.toProcessInstance(): ProcessInstance = ProcessI
   state = ProcessInstanceState.RUNNING
 )
 
+/**
+ * Converts a process variable change into process variable.
+ * @param source reference of the change
+ * @return process variable
+ */
 fun ProcessVariableCreate.toProcessVariable(source: SourceReference) = ProcessVariable(
   variableName = this.variableName,
   variableInstanceId = this.variableInstanceId,
@@ -127,6 +132,11 @@ fun ProcessVariableCreate.toProcessVariable(source: SourceReference) = ProcessVa
   value = this.value
 )
 
+/**
+ * Converts a process variable change into process variable.
+ * @param source reference of the change
+ * @return process variable
+ */
 fun ProcessVariableUpdate.toProcessVariable(source: SourceReference) = ProcessVariable(
   variableName = this.variableName,
   variableInstanceId = this.variableInstanceId,

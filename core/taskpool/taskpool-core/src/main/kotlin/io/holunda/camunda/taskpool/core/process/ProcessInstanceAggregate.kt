@@ -9,6 +9,9 @@ import org.axonframework.modelling.command.AggregateIdentifier
 import org.axonframework.modelling.command.AggregateLifecycle
 import org.axonframework.spring.stereotype.Aggregate
 
+/**
+ * Aggregate representing the process instance.
+ */
 @Aggregate
 class ProcessInstanceAggregate() {
 
@@ -95,13 +98,16 @@ class ProcessInstanceAggregate() {
   }
 
   /**
-   * Set process instance id..
+   * Set process instance id.
    */
   @EventSourcingHandler
   fun on(event: ProcessInstanceStartedEvent) {
     this.processInstanceId = event.processInstanceId
   }
 
+  /**
+   * Set process instance id on variable change, if we missed the instance creation.
+   */
   @EventSourcingHandler
   fun on(event: ProcessVariablesChangedEvent) {
     if (!this::processInstanceId.isInitialized) {

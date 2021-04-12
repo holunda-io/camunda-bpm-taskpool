@@ -4,6 +4,9 @@ import io.holunda.camunda.taskpool.view.ProcessVariable
 import io.holunda.camunda.taskpool.view.query.process.variable.ProcessVariableFilter
 import io.holunda.camunda.taskpool.view.query.process.variable.ProcessVariableFilterType
 
+/**
+ * Filter to query for a list of variables. Every variable present in the list matches the filter.
+ */
 data class ProcessVariableOneOf(
   val processVariableNames: Set<String>
 ) : ProcessVariableFilter {

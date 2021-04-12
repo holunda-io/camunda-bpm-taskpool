@@ -26,6 +26,9 @@ import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
 import javax.annotation.PostConstruct
 
+/**
+ * Main configuration of the taskpool sender component.
+ */
 @Configuration
 @ComponentScan
 @EnableConfigurationProperties(SenderProperties::class)

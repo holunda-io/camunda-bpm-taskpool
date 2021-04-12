@@ -44,7 +44,6 @@ class CamundaTaskpoolCollectorProperties(
 
 /**
  * Task collector properties.
- * No constructor binding because of application name.
  */
 @ConstructorBinding
 data class CamundaTaskCollectorProperties(
@@ -59,6 +58,9 @@ data class CamundaTaskCollectorProperties(
   val enabled: Boolean = true
 )
 
+/**
+ * Process variable properties.
+ */
 @ConstructorBinding
 data class CamundaProcessVariableProperties(
   /**

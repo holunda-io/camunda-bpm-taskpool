@@ -23,6 +23,10 @@ class TaskCommandProcessor(
 ) {
   private val logger: Logger = LoggerFactory.getLogger(TaskCommandProcessor::class.java)
 
+  /**
+   * Receives engine task command and delivers it to the sender.
+   * @param command engine task command delivered by Spring Eventing.
+   */
   @EventListener
   fun process(command: EngineTaskCommand) {
     if (collectorProperties.task.enabled) {
