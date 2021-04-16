@@ -14,7 +14,9 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 import org.springframework.web.servlet.resource.PathResourceResolver
 import java.util.concurrent.TimeUnit
 
-
+/**
+ * Collection of constants.
+ */
 object Web {
 
   const val BASE_PATH = "taskpool"
@@ -29,6 +31,9 @@ object Web {
   val STATIC_RESOURCES_SHORT_CACHE = arrayOf("$BASE_PATH/**/*.png", "$BASE_PATH/**/*.jpg", "$BASE_PATH/*.ico", "$BASE_PATH/*.json")
 }
 
+/**
+ * General Single-Page-Application configuration.
+ */
 @Configuration
 class TasklistSPAConfiguration : WebMvcConfigurer {
 

@@ -4,12 +4,12 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>io.holunda.taskpool</groupId>
-    <artifactId>taskpool-example-cockpit-root</artifactId>
-    <version>2.1.7-SNAPSHOT</version>
+    <groupId>io.holunda.polyflow</groupId>
+    <artifactId>polyflow-example-cockpit-root</artifactId>
+    <version>3.0.0-SNAPSHOT</version>
   </parent>
 
-  <artifactId>taskpool-example-cockpit</artifactId>
+  <artifactId>polyflow-example-cockpit</artifactId>
   <name>examples/${project.artifactId}</name>
 
   <properties>
@@ -27,8 +27,8 @@
       <artifactId>axon-spring-boot-starter</artifactId>
     </dependency>
     <dependency>
-      <groupId>io.holunda.taskpool</groupId>
-      <artifactId>taskpool-example-cockpit-backend</artifactId>
+      <groupId>io.holunda.polyflow</groupId>
+      <artifactId>polyflow-example-cockpit-backend</artifactId>
       <version>${project.version}</version>
     </dependency>
   </dependencies>
@@ -57,8 +57,8 @@
       </activation>
       <dependencies>
         <dependency>
-          <groupId>io.holunda.taskpool</groupId>
-          <artifactId>taskpool-example-cockpit-frontend</artifactId>
+          <groupId>io.holunda.polyflow</groupId>
+          <artifactId>polyflow-example-cockpit-frontend</artifactId>
           <version>${project.version}</version>
         </dependency>
       </dependencies>

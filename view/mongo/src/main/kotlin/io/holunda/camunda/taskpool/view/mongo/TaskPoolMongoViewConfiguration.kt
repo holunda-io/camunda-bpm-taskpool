@@ -18,7 +18,9 @@ import org.springframework.data.mongodb.core.convert.MappingMongoConverter
 import org.springframework.data.mongodb.repository.config.EnableReactiveMongoRepositories
 import javax.annotation.PostConstruct
 
-
+/**
+ * Main configuration of the Mongo-DB based view.
+ */
 @Configuration
 @ComponentScan
 @EnableReactiveMongoRepositories
@@ -28,11 +30,17 @@ class TaskPoolMongoViewConfiguration {
 
   companion object : KLogging()
 
+  /**
+   * Report initialization.
+   */
   @PostConstruct
   fun info() {
     logger.info { "VIEW-MONGO-001: Initialized mongo view" }
   }
 
+  /**
+   * Axon Mongo template configuration.
+   */
   @Bean
   fun configureAxonMongoTemplate(databaseFactory: MongoDatabaseFactory): MongoTemplate =
     DefaultMongoTemplate
@@ -45,6 +53,9 @@ class TaskPoolMongoViewConfiguration {
       .snapshotEventsCollectionName("snapshots")
       .build()
 
+  /**
+   * Axon Mongo Token store configuration.
+   */
   @Bean
   fun configureAxonMongoTokenStore(mongoTemplate: MongoTemplate): TokenStore =
     MongoTokenStore
@@ -53,6 +64,9 @@ class TaskPoolMongoViewConfiguration {
       .serializer(XStreamSerializer.builder().build())
       .build()
 
+  /**
+   * Mongo Type Mapping.
+   */
   @Autowired
   fun configureMongoTypeMapping(converter: MappingMongoConverter) {
     // replace "." with ":" (relevant for correlation)

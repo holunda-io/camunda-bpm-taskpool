@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: Foo
+
+polyflow:
+  integration:
+    camunda:
+      #
+      #      application-name property is disabled, to make sure that the defaulting to spring application name works.
+      #
+      task:
+        sender:
+          enabled: true
+          type: tx
+        enricher:
+          type: processVariables
+    dataentry:
+      sender:
+        enabled: true
+        type: simple
+    url-resolver:
+      default: "tasks/${formKey}/id/${id}"

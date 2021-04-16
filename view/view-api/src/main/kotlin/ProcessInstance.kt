@@ -52,12 +52,3 @@ data class ProcessInstance(
 )
 
 
-/**
- * Process instance state.
- */
-enum class ProcessInstanceState {
-  RUNNING,
-  FINISHED,
-  CANCELLED,
-  SUSPENDED
-}

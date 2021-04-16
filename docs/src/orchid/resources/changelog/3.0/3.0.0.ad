@@ -1,0 +1,16 @@
+---
+version: 3.0.0
+---
+
+== Features
+
+== Breaking Changes
+
+* Artifact rename to polyflow name scheme, fix #299
+
+== Bugfixes
+
+== Examples
+
+== Docs
+

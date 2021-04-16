@@ -15,11 +15,11 @@ import org.mockito.Mockito
 open class TaskPoolStage<SELF : TaskPoolStage<SELF>> : Stage<SELF>() {
 
   @ScenarioState
-  lateinit var testee: TaskPoolService
+  lateinit var testee: SimpleTaskPoolService
 
   @BeforeScenario
   fun init() {
-    testee = TaskPoolService(Mockito.mock(QueryUpdateEmitter::class.java))
+    testee = SimpleTaskPoolService(Mockito.mock(QueryUpdateEmitter::class.java))
   }
 
   open fun task_created_event_is_received(event: TaskCreatedEngineEvent): SELF {

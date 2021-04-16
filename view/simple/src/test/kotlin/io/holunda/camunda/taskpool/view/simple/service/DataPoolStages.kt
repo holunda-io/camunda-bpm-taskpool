@@ -17,11 +17,11 @@ import org.mockito.Mockito
 class DataPoolStage<SELF : DataPoolStage<SELF>> : Stage<SELF>() {
 
   @ScenarioState
-  lateinit var testee: DataEntrySimpleService
+  lateinit var testee: SimpleDataEntryService
 
   @BeforeScenario
   fun init() {
-    testee = DataEntrySimpleService(Mockito.mock(QueryUpdateEmitter::class.java))
+    testee = SimpleDataEntryService(Mockito.mock(QueryUpdateEmitter::class.java))
   }
 
   fun data_entry_created_event(event: DataEntryCreatedEvent): SELF {

@@ -4,13 +4,13 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>io.holunda.taskpool</groupId>
-    <artifactId>taskpool-examples-root</artifactId>
-    <version>2.1.7-SNAPSHOT</version>
+    <groupId>io.holunda.polyflow</groupId>
+    <artifactId>polyflow-examples-parent</artifactId>
+    <version>3.0.0-SNAPSHOT</version>
     <relativePath>../../pom.xml</relativePath>
   </parent>
 
-  <artifactId>taskpool-example-process-backend</artifactId>
+  <artifactId>polyflow-example-process-backend</artifactId>
   <name>examples/${project.artifactId}</name>
 
   <properties>
@@ -24,25 +24,22 @@
 
   <dependencies>
     <dependency>
-      <groupId>io.holunda.taskpool</groupId>
-      <artifactId>camunda-bpm-taskpool-engine-springboot-starter</artifactId>
-      <version>${project.version}</version>
+      <groupId>io.holunda.polyflow</groupId>
+      <artifactId>polyflow-camunda-bpm-springboot-starter</artifactId>
     </dependency>
+    <dependency>
+      <groupId>io.holunda.polyflow</groupId>
+      <artifactId>polyflow-example-users</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.holunda.polyflow</groupId>
+      <artifactId>polyflow-tasklist-url-resolver</artifactId>
+    </dependency>
+
     <dependency>
       <groupId>io.holixon</groupId>
       <artifactId>axon-gateway-spring-boot-starter</artifactId>
     </dependency>
-    <dependency>
-      <groupId>io.holunda.taskpool</groupId>
-      <artifactId>taskpool-example-users</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <!--
-    <dependency>
-      <groupId>io.holunda.taskpool</groupId>
-      <artifactId>camunda-bpm-taskpool-view-simple</artifactId>
-    </dependency>
-    -->
 
     <!-- SpringBoot -->
     <dependency>

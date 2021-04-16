@@ -4,12 +4,12 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>io.holunda.taskpool</groupId>
-    <artifactId>taskpool-example-scenario-root</artifactId>
-    <version>2.1.7-SNAPSHOT</version>
+    <groupId>io.holunda.polyflow</groupId>
+    <artifactId>polyflow-example-scenario-root</artifactId>
+    <version>3.0.0-SNAPSHOT</version>
   </parent>
 
-  <artifactId>taskpool-example-scenario-single-node</artifactId>
+  <artifactId>polyflow-example-scenario-single-node</artifactId>
   <name>examples/${project.artifactId}</name>
 
   <properties>
@@ -18,48 +18,38 @@
 
   <dependencies>
     <!-- Frontends see below in the profile-->
-
     <!-- Core -->
     <dependency>
-      <groupId>io.holunda.taskpool</groupId>
-      <artifactId>camunda-bpm-taskpool-core</artifactId>
+      <groupId>io.holunda.polyflow</groupId>
+      <artifactId>polyflow-taskpool-core</artifactId>
     </dependency>
     <dependency>
-      <groupId>io.holunda.taskpool</groupId>
-      <artifactId>camunda-bpm-datapool-core</artifactId>
+      <groupId>io.holunda.polyflow</groupId>
+      <artifactId>polyflow-datapool-core</artifactId>
     </dependency>
 
     <!-- Tasklist -->
     <dependency>
-      <groupId>io.holunda.taskpool</groupId>
-      <artifactId>taskpool-example-tasklist-api</artifactId>
-      <version>${project.version}</version>
+      <groupId>io.holunda.polyflow</groupId>
+      <artifactId>polyflow-example-tasklist-api</artifactId>
     </dependency>
     <dependency>
-      <groupId>io.holunda.taskpool</groupId>
-      <artifactId>taskpool-example-tasklist-backend</artifactId>
-      <version>${project.version}</version>
+      <groupId>io.holunda.polyflow</groupId>
+      <artifactId>polyflow-example-tasklist-backend</artifactId>
     </dependency>
     <dependency>
-      <groupId>io.holunda.taskpool</groupId>
-      <artifactId>taskpool-property-taskurl-resolver</artifactId>
-      <version>${project.version}</version>
+      <groupId>io.holunda.polyflow</groupId>
+      <artifactId>polyflow-form-url-resolver</artifactId>
     </dependency>
     <dependency>
-      <groupId>io.holunda.taskpool</groupId>
-      <artifactId>taskpool-example-users</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>io.holunda.taskpool</groupId>
-      <artifactId>camunda-bpm-taskpool-view-simple</artifactId>
+      <groupId>io.holunda.polyflow</groupId>
+      <artifactId>polyflow-view-simple</artifactId>
     </dependency>
 
     <!-- Process application -->
     <dependency>
-      <groupId>io.holunda.taskpool</groupId>
-      <artifactId>taskpool-example-process-backend</artifactId>
-      <version>${project.version}</version>
+      <groupId>io.holunda.polyflow</groupId>
+      <artifactId>polyflow-example-process-backend</artifactId>
       <exclusions>
         <exclusion>
           <groupId>org.axonframework</groupId>
@@ -82,8 +72,8 @@
         <configuration>
           <requiresUnpack>
             <dependency>
-              <groupId>io.holunda.taskpool</groupId>
-              <artifactId>taskpool-example-process-backend</artifactId>
+              <groupId>io.holunda.polyflow</groupId>
+              <artifactId>polyflow-example-process-backend</artifactId>
             </dependency>
           </requiresUnpack>
         </configuration>
@@ -101,14 +91,12 @@
       </activation>
       <dependencies>
         <dependency>
-          <groupId>io.holunda.taskpool</groupId>
-          <artifactId>taskpool-example-process-forms</artifactId>
-          <version>${project.version}</version>
+          <groupId>io.holunda.polyflow</groupId>
+          <artifactId>polyflow-example-process-forms</artifactId>
         </dependency>
         <dependency>
-          <groupId>io.holunda.taskpool</groupId>
-          <artifactId>taskpool-example-tasklist-angular</artifactId>
-          <version>${project.version}</version>
+          <groupId>io.holunda.polyflow</groupId>
+          <artifactId>polyflow-example-tasklist-angular</artifactId>
         </dependency>
       </dependencies>
     </profile>
@@ -127,6 +115,7 @@
         </dependency>
       </dependencies>
     </profile>
+
     <profile>
       <id>camunda-ee</id>
       <activation>

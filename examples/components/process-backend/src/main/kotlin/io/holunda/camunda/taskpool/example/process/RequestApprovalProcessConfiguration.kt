@@ -1,17 +1,18 @@
 package io.holunda.camunda.taskpool.example.process
 
-import io.holunda.camunda.taskpool.EnableTaskpoolEngineSupport
-import io.holunda.camunda.taskpool.enricher.*
-import io.holunda.camunda.taskpool.example.process.process.RequestApprovalProcess
-import io.holunda.camunda.taskpool.example.process.service.BusinessDataEntry
-import io.holunda.camunda.taskpool.example.users.EnableExampleUsers
 import io.holixon.axon.gateway.configuration.query.EnableRevisionAwareQueryGateway
+import io.holunda.camunda.taskpool.EnableTaskpoolEngineSupport
+import io.holunda.camunda.taskpool.collector.task.enricher.*
+import io.holunda.camunda.taskpool.example.process.process.RequestApprovalProcess
+import io.holunda.camunda.taskpool.example.process.process.RequestApprovalProcess.Variables.AMOUNT
 import io.holunda.camunda.taskpool.example.process.process.RequestApprovalProcess.Variables.APPLICANT
 import io.holunda.camunda.taskpool.example.process.process.RequestApprovalProcess.Variables.COMMENT
 import io.holunda.camunda.taskpool.example.process.process.RequestApprovalProcess.Variables.ORIGINATOR
 import io.holunda.camunda.taskpool.example.process.process.RequestApprovalProcess.Variables.REQUEST_ID
-import io.holunda.camunda.taskpool.sender.gateway.LoggingTaskCommandErrorHandler
+import io.holunda.camunda.taskpool.example.process.service.BusinessDataEntry
+import io.holunda.camunda.taskpool.example.users.EnableExampleUsers
 import io.holunda.camunda.taskpool.sender.gateway.CommandErrorHandler
+import io.holunda.camunda.taskpool.sender.gateway.LoggingTaskCommandErrorHandler
 import mu.KLogging
 import org.axonframework.commandhandling.CommandResultMessage
 import org.camunda.bpm.spring.boot.starter.annotation.EnableProcessApplication
@@ -30,28 +31,41 @@ class RequestApprovalProcessConfiguration {
 
   @Bean
   fun processVariablesFilter(): ProcessVariablesFilter = ProcessVariablesFilter(
-
-    // define a variable filter for every process
+    // define a variable filter for every task inside the process
     TaskVariableFilter(
       RequestApprovalProcess.KEY,
       FilterType.INCLUDE,
       mapOf(
-
         // define a variable filter for every task
         RequestApprovalProcess.Elements.APPROVE_REQUEST to
           listOf(
-            REQUEST_ID.name,
             ORIGINATOR.name
           ),
-
         // and again
         RequestApprovalProcess.Elements.AMEND_REQUEST to
           listOf(
-            REQUEST_ID.name,
             COMMENT.name,
             APPLICANT.name
           )
-      ))
+      )
+    ),
+    // define a variable filter for the entire process
+    ProcessVariableFilter(
+      RequestApprovalProcess.KEY,
+      FilterType.INCLUDE,
+      listOf(
+        REQUEST_ID.name
+      )
+    ),
+    // or even across processes
+    ProcessVariableFilter(
+      null,
+      FilterType.EXCLUDE,
+      listOf(
+        AMOUNT.name
+      )
+    )
+
   )
 
   @Bean

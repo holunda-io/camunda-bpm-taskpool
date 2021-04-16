@@ -11,10 +11,7 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v1
-      - name: Set up JDK
-        uses: actions/setup-java@v1
-        with:
-          java-version: 11.0.5
+
       - name: Cache .m2
         uses: actions/cache@v1
         with:
@@ -22,29 +19,44 @@ jobs:
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-maven
+
+      # Get GPG private key into GPG
+      - name: Import GPG Owner Trust
+        run: echo ${{ secrets.GPG_OWNERTRUST }} | base64 --decode | gpg --import-ownertrust
+      - name: Import GPG key
+        run: echo ${{ secrets.GPG_SECRET_KEYS }} | base64 --decode | gpg --import --no-tty --batch --yes
+
+      # Setup JDK and Maven
+      - name: Set up JDK 11
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11.0.5
+          server-id: ossrh
+          server-username: OSS_CENTRAL_USERNAME # env variable for Maven Central
+          server-password: OSS_CENTRAL_PASSWORD # env variable for Maven Central
+
       - name: Prepare Maven Wrapper
         run: chmod +x ./mvnw
+
       - name: Build with Maven
         run: ./mvnw clean verify -U -B -T4
+
       - name: Prepare I-Tests
         run: mkdir -p target/jgiven-reports/json
+
       - name: Run I-Tests with Maven
-        run: ./mvnw integration-test failsafe:verify -Pitest -DskipFrontend -B -T4
-      - name: Import GPG Owner Trust
-        run: echo ${{secrets.GPG_OWNERTRUST}} | base64 --decode | gpg --import-ownertrust
-      - name: Import GPG key
-        run: echo ${{secrets.GPG_SECRET_KEYS}} | base64 --decode | gpg --import --no-tty --batch --yes
-      - name: Clean settings.xml
-        run: rm -rf ~/.m2/settings.xml
-      - name: Create settings.xml
-        uses: s4u/maven-settings-action@v1
-        with:
-          servers: '[{"id": "ossrh", "username": "${{secrets.SONATYPE_USERNAME}}", "password": "${{secrets.SONATYPE_PASSWORD}}"}]'
+        run: ./mvnw integration-test failsafe:verify -Pitest -DskipFrontend -DskipExamples -B -T4
+
       - name: Deploy a new version to central
         run: ./mvnw clean deploy -B -DskipTests -DskipExamples -Prelease -Dgpg.keyname=${{secrets.GPG_KEYNAME}} -Dgpg.passphrase=${{secrets.GPG_PASSPHRASE}}
+        env:
+          OSS_CENTRAL_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
+          OSS_CENTRAL_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
+
       - name: Upolad coverage information
         uses: codecov/codecov-action@v1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
+
       - name: Build and deploy site docs
         run: ./mvnw -Pdeploy-docs -f docs -DgithubToken=${{secrets.GITHUB_TOKEN}}

@@ -4,9 +4,9 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>io.holunda.taskpool</groupId>
-    <artifactId>taskpool-example-scenario-distributed-axon-server</artifactId>
-    <version>2.1.7-SNAPSHOT</version>
+    <groupId>io.holunda.polyflow</groupId>
+    <artifactId>polyflow-example-scenario-distributed-axon-server</artifactId>
+    <version>3.0.0-SNAPSHOT</version>
   </parent>
 
   <artifactId>example-distributed-axon-server-process-application</artifactId>
@@ -18,9 +18,8 @@
 
   <dependencies>
     <dependency>
-      <groupId>io.holunda.taskpool</groupId>
-      <artifactId>taskpool-example-process-backend</artifactId>
-      <version>${project.version}</version>
+      <groupId>io.holunda.polyflow</groupId>
+      <artifactId>polyflow-example-process-backend</artifactId>
     </dependency>
 
     <!-- DB and Flyway -->
@@ -53,8 +52,8 @@
         <configuration>
           <requiresUnpack>
             <dependency>
-              <groupId>io.holunda.taskpool</groupId>
-              <artifactId>taskpool-example-process-backend</artifactId>
+              <groupId>io.holunda.polyflow</groupId>
+              <artifactId>polyflow-example-process-backend</artifactId>
             </dependency>
           </requiresUnpack>
         </configuration>
@@ -72,9 +71,8 @@
       </activation>
       <dependencies>
         <dependency>
-          <groupId>io.holunda.taskpool</groupId>
-          <artifactId>taskpool-example-process-forms</artifactId>
-          <version>${project.version}</version>
+          <groupId>io.holunda.polyflow</groupId>
+          <artifactId>polyflow-example-process-forms</artifactId>
         </dependency>
       </dependencies>
     </profile>

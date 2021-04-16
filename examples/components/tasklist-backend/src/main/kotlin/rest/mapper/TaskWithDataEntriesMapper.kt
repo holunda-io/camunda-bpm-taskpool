@@ -15,6 +15,9 @@ import java.time.ZoneOffset
 import java.util.*
 import javax.validation.Valid
 
+/**
+ * DTO mapper.
+ */
 @Mapper(
   componentModel = "spring",
   unmappedTargetPolicy = ReportingPolicy.ERROR

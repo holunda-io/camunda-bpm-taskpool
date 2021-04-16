@@ -1,0 +1,28 @@
+spring:
+  application.name: collector-test
+camunda:
+  bpm:
+    default-serialization-format: application/json
+    authorization:
+      enabled: false
+    id-generator: strong
+    history-level: full
+    metrics:
+      enabled: false
+      db-reporter-activate: false
+
+polyflow:
+  intgegration:
+    collector:
+      camunda:
+        task:
+          enabled: true
+        process-instance:
+          enabled: false
+        process-definition:
+          enabled: false
+
+logging.level.io.holunda.camunda.taskpool:
+  sender: DEBUG
+  core: WARN
+  view.simple: DEBUG
