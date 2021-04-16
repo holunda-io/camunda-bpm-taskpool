@@ -38,7 +38,7 @@
     <camunda-bpm-assert.version>8.0.0</camunda-bpm-assert.version>
     <camunda-bpm-mockito.version>4.13.0</camunda-bpm-mockito.version>
     <camunda-bpm-data.version>1.2.0</camunda-bpm-data.version>
-    <version.camunda.spin>1.10.0</version.camunda.spin>
+    <version.camunda.spin>1.10.1</version.camunda.spin>
 
     <springboot.version>2.4.3</springboot.version>
 
