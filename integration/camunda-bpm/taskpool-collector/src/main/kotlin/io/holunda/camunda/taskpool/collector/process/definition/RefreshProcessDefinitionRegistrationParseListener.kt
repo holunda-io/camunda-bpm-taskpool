@@ -18,4 +18,5 @@ class RefreshProcessDefinitionRegistrationParseListener(
     // to handle this deployment asynchronous.
     processEngineConfiguration.executeInCommandContext(RefreshProcessDefinitionsJobCommand(processDefinitionKey = processDefinition.key))
   }
+
 }

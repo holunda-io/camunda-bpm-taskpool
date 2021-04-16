@@ -111,16 +111,6 @@
       <modules>
         <module>docs</module>
       </modules>
-      <pluginRepositories>
-        <pluginRepository>
-          <id>jcenter</id>
-          <name>JCenter</name>
-          <url>https://jcenter.bintray.com/</url>
-          <releases>
-            <enabled>true</enabled>
-          </releases>
-        </pluginRepository>
-      </pluginRepositories>
     </profile>
 
     <!-- Examples are included only if this profile is enabled -->
