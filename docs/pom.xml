@@ -12,7 +12,7 @@
   <artifactId>polyflow-docs</artifactId>
 
   <properties>
-    <orchid.version>0.18.2</orchid.version>
+    <orchid.version>0.21.1</orchid.version>
     <baseUrl>http://localhost:8081/</baseUrl>
   </properties>
 
