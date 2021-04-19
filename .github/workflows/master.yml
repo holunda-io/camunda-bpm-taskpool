@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - release/*
 
 jobs:
   build:
@@ -48,7 +49,7 @@ jobs:
         run: ./mvnw integration-test failsafe:verify -Pitest -DskipFrontend -DskipExamples -B -T4
 
       - name: Deploy a new version to central
-        run: ./mvnw clean deploy -B -DskipTests -DskipExamples -Prelease -Dgpg.keyname=${{secrets.GPG_KEYNAME}} -Dgpg.passphrase=${{secrets.GPG_PASSPHRASE}}
+        run: ./mvnw clean deploy -B -DskipTests -DskipExamples -Prelease -Dgpg.keyname=${{secrets.GPG_KEYNAME}} -Dgpg.passphrase="${{secrets.GPG_PASSPHRASE}}"
         env:
           OSS_CENTRAL_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
           OSS_CENTRAL_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}

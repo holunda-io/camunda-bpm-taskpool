@@ -14,6 +14,6 @@ data class CamundaEngineClientProperties(
    * As Default, spring.application.name will be used
    */
   @Value("\${spring.application.name}")
-  val applicationName: String
+  var applicationName: String
 )
 

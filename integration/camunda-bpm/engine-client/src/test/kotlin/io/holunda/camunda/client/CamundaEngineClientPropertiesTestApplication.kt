@@ -5,6 +5,6 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 
 @SpringBootApplication
 @EnableConfigurationProperties(CamundaEngineClientProperties::class)
-class PropertiesTestApplication {
+class CamundaEngineClientPropertiesTestApplication {
 
 }

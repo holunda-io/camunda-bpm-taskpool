@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: Foo
+
+axon:
+  axonserver:
+    enabled: false
