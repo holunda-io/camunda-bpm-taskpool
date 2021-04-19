@@ -16,7 +16,7 @@
   <properties>
     <camunda-bpm.version>7.15.0</camunda-bpm.version>
     <camunda-bpm-assert.version>10.0.0</camunda-bpm-assert.version>
-    <camunda-bpm-mockito.version>4.13.0</camunda-bpm-mockito.version>
+    <camunda-bpm-mockito.version>5.15.0</camunda-bpm-mockito.version>
   </properties>
 
   <modules>
