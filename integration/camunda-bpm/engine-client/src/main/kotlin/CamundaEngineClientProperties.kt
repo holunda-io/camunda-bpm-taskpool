@@ -1,14 +1,19 @@
 package io.holunda.camunda.client
 
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.context.properties.ConfigurationProperties
-import org.springframework.boot.context.properties.ConstructorBinding
 
 /**
  * Properties to configure Camunda to receive interaction commands via Axon.
  */
-@ConstructorBinding
 @ConfigurationProperties("polyflow.integration.client.camunda")
 data class CamundaEngineClientProperties(
-  val applicationName: String
+
+  /**
+   * Denotes the (logical) name of the process application.
+   * As Default, spring.application.name will be used
+   */
+  @Value("\${spring.application.name}")
+  var applicationName: String
 )
 

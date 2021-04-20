@@ -14,7 +14,7 @@ import org.springframework.test.context.junit4.SpringRunner
 @SpringBootTest(classes = [PropertiesTestApplication::class], webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @ActiveProfiles("properties-itest")
 @PropertySource
-class TaskCollectorPropertiesITest {
+class CamundaTaskpoolCollectorPropertiesITest {
 
   @Autowired
   lateinit var props: CamundaTaskpoolCollectorProperties
