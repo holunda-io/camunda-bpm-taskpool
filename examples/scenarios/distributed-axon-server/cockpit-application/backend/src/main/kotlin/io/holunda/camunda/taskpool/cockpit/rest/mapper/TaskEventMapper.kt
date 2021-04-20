@@ -49,6 +49,9 @@ abstract class TaskEventMapper {
     }
 
 
+  /**
+   * Maps to DTO.
+   */
   @Mappings(
     Mapping(target = "task.id", source = "task.id"),
     Mapping(target = "task.formKey", source = "task.formKey"),
@@ -76,7 +79,9 @@ abstract class TaskEventMapper {
   )
   abstract fun dto(task: TaskCreatedEngineEvent, instant: Instant?): TaskEventDto
 
-
+  /**
+   * Maps to DTO.
+   */
   @Mappings(
     Mapping(target = "task.id", source = "task.id"),
     Mapping(target = "task.formKey", source = "task.formKey"),
@@ -194,6 +199,9 @@ abstract class TaskEventMapper {
   )
   abstract fun dto(task: TaskCompletedEngineEvent, instant: Instant?): TaskEventDto
 
+  /**
+   * Maps to DTO.
+   */
   @Mappings(
     Mapping(target = "task.id", source = "task.id"),
     Mapping(target = "task.formKey", ignore = true),
@@ -221,6 +229,9 @@ abstract class TaskEventMapper {
   )
   abstract fun dto(task: TaskClaimedEvent, instant: Instant?): TaskEventDto
 
+  /**
+   * Maps to DTO.
+   */
   @Mappings(
     Mapping(target = "task.id", source = "task.id"),
     Mapping(target = "task.formKey", ignore = true),
@@ -248,6 +259,9 @@ abstract class TaskEventMapper {
   )
   abstract fun dto(task: TaskUnclaimedEvent, instant: Instant?): TaskEventDto
 
+  /**
+   * Maps to DTO.
+   */
   @Mappings(
     Mapping(target = "task.id", source = "task.id"),
     Mapping(target = "task.formKey", ignore = true),
@@ -275,6 +289,9 @@ abstract class TaskEventMapper {
   )
   abstract fun dto(task: TaskUndeferredEvent, instant: Instant?): TaskEventDto
 
+  /**
+   * Maps to DTO.
+   */
   @Mappings(
     Mapping(target = "task.id", source = "task.id"),
     Mapping(target = "task.formKey", ignore = true),
@@ -302,6 +319,9 @@ abstract class TaskEventMapper {
   )
   abstract fun dto(task: TaskDeferredEvent, instant: Instant?): TaskEventDto
 
+  /**
+   * Maps to DTO.
+   */
   @Mappings(
     Mapping(target = "task.id", source = "task.id"),
     Mapping(target = "task.taskDefinitionKey", source = "task.taskDefinitionKey"),
@@ -328,6 +348,9 @@ abstract class TaskEventMapper {
   )
   abstract fun dto(task: TaskToBeCompletedEvent, instant: Instant?): TaskEventDto
 
+  /**
+   * Maps to DTO.
+   */
   @Mappings(
     Mapping(target = "task.id", source = "task.id"),
     Mapping(target = "task.formKey", ignore = true),
@@ -354,6 +377,9 @@ abstract class TaskEventMapper {
   )
   abstract fun dto(task: TaskCandidateGroupChanged, instant: Instant?): TaskEventDto
 
+  /**
+   * Maps to DTO.
+   */
   @Mappings(
     Mapping(target = "task.id", source = "task.id"),
     Mapping(target = "task.formKey", ignore = true),

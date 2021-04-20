@@ -39,6 +39,9 @@ interface TaskWithDataEntriesRepositoryExtension {
   fun findAllFilteredForUser(user: User, criteria: List<Criterion>, pageable: Pageable? = null): Flux<TaskWithDataEntriesDocument>
 }
 
+/**
+ * Repository extension.
+ */
 open class TaskWithDataEntriesRepositoryExtensionImpl(
   private val mongoTemplate: ReactiveMongoTemplate
 ) : TaskWithDataEntriesRepositoryExtension {
@@ -124,7 +127,9 @@ open class TaskWithDataEntriesRepositoryExtensionImpl(
   }
 }
 
-
+/**
+ * Value converter for criteria.
+ */
 fun value(criterion: Criterion): Any =
   when (criterion.name) {
     "priority" -> criterion.value.toInt()
@@ -132,7 +137,9 @@ fun value(criterion: Criterion): Any =
     else -> criterion.value
   }
 
-
+/**
+ * Document for task with data entries.
+ */
 @Document(collection = TaskDocument.COLLECTION)
 @TypeAlias("task")
 data class TaskWithDataEntriesDocument(

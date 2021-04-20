@@ -35,6 +35,9 @@ data class DataEntryDocument(
   }
 }
 
+/**
+ * Element from the protocol.
+ */
 data class ProtocolElement(
   val time: Date,
   val statusType: String,

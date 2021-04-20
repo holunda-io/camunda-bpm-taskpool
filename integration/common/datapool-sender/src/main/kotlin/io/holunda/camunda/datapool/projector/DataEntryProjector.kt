@@ -8,5 +8,9 @@ import org.springframework.stereotype.Component
  */
 @Component
 class DataEntryProjector(private val suppliers: List<DataEntryProjectionSupplier>) {
-  fun getProjection(entryType: EntryType) = suppliers.find { it.entryType == entryType }
+  /**
+   * Retrieve a list of projection suppliers for a given entry type.
+   * @return a projection supplier if registered for this entry type, or null.
+   */
+  fun getProjection(entryType: EntryType): DataEntryProjectionSupplier? = suppliers.find { it.entryType == entryType }
 }

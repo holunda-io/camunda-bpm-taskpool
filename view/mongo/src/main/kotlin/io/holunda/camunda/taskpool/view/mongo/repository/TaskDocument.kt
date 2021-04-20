@@ -8,6 +8,9 @@ import org.springframework.data.mongodb.core.index.Indexed
 import org.springframework.data.mongodb.core.mapping.Document
 import java.util.*
 
+/**
+ * Task document.
+ */
 @Document(collection = TaskDocument.COLLECTION)
 @TypeAlias("task")
 data class TaskDocument(
@@ -45,6 +48,10 @@ data class TaskDocument(
     const val COLLECTION = "tasks"
   }
 }
+
+/**
+ * Reference.
+ */
 sealed class ReferenceDocument {
   companion object {
     const val CASE = "case"
@@ -60,6 +67,9 @@ sealed class ReferenceDocument {
   abstract val tenantId: String?
 }
 
+/**
+ * Case reference.
+ */
 @Document(collection = "sources")
 @TypeAlias(ReferenceDocument.CASE)
 data class CaseReferenceDocument(
@@ -87,6 +97,9 @@ data class CaseReferenceDocument(
     )
 }
 
+/**
+ * Process reference.
+ */
 @Document(collection = "sources")
 @TypeAlias(ReferenceDocument.PROCESS)
 data class ProcessReferenceDocument(

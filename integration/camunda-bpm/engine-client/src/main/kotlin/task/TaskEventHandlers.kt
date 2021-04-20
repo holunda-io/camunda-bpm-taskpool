@@ -8,6 +8,9 @@ import org.camunda.bpm.engine.ProcessEngineException
 import org.camunda.bpm.engine.TaskService
 import org.springframework.stereotype.Component
 
+/**
+ * Handles task events controls Camunda Task Service.
+ */
 @Component
 class TaskEventHandlers(
   private val taskService: TaskService,

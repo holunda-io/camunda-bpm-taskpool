@@ -113,6 +113,9 @@ fun DataEntryDocument.dataEntry() =
     throw IllegalArgumentException("Identity could not be split into entry type and id, because it doesn't contain the '$DATA_IDENTITY_SEPARATOR'. Value was $identity")
   }
 
+/**
+ * Maps the state.
+ */
 fun mapState(state: String?, statusType: String?): DataEntryState = if (state != null) {
   when (statusType) {
     "PRELIMINARY" -> ProcessingType.PRELIMINARY.of(state)
@@ -125,6 +128,9 @@ fun mapState(state: String?, statusType: String?): DataEntryState = if (state !=
   ProcessingType.UNDEFINED.of("")
 }
 
+/**
+ * Creates the document.
+ */
 fun DataEntryCreatedEvent.toDocument() = DataEntryDocument(
   identity = dataIdentityString(entryType = this.entryType, entryId = this.entryId),
   entryType = this.entryType,
@@ -141,6 +147,9 @@ fun DataEntryCreatedEvent.toDocument() = DataEntryDocument(
   statusType = this.state.processingType.name
 )
 
+/**
+ * Creates the document.
+ */
 fun DataEntryUpdatedEvent.toDocument(oldDocument: DataEntryDocument?) = if (oldDocument != null) {
   oldDocument.copy(
     entryType = this.entryType,
@@ -200,6 +209,9 @@ fun TaskWithDataEntriesDocument.taskWithDataEntries() = TaskWithDataEntries(
   dataEntries = this.dataEntries.map { it.dataEntry() }
 )
 
+/**
+ * Creates protocol element.
+ */
 fun ProtocolEntry.toProtocolElement() = ProtocolElement(
   time = this.time,
   statusType = this.state.processingType.name,
@@ -209,6 +221,9 @@ fun ProtocolEntry.toProtocolElement() = ProtocolElement(
   logDetails = this.logDetails
 )
 
+/**
+ * Creates the protocol.
+ */
 fun ProtocolElement.toProtocol() = ProtocolEntry(
   time = this.time,
   state = DataEntryStateImpl(processingType = ProcessingType.valueOf(this.statusType), state = this.state ?: ""),

@@ -25,6 +25,9 @@ class ProcessDefinitionMongoService(
 
   companion object : KLogging()
 
+  /**
+   * On new process definition.
+   */
   @EventHandler
   @Suppress("unused")
   fun on(event: ProcessDefinitionRegisteredEvent, metaData: MetaData) {

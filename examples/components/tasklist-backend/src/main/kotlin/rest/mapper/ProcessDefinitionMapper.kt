@@ -9,12 +9,18 @@ import org.mapstruct.Mappings
 import org.mapstruct.ReportingPolicy
 import org.springframework.beans.factory.annotation.Autowired
 
+/**
+ * REST Mapper for process definitions.
+ */
 @Mapper(
   componentModel = "spring",
   unmappedTargetPolicy = ReportingPolicy.ERROR
 )
 abstract class ProcessDefinitionMapper {
 
+  /**
+   * Maps to DTO.
+   */
   @Mappings(
     Mapping(target = "definitionId", source = "processDefinitionId"),
     Mapping(target = "definitionKey", source = "processDefinitionKey"),
