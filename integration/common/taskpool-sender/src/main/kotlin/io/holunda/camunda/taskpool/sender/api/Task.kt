@@ -5,6 +5,9 @@ import org.camunda.bpm.engine.variable.VariableMap
 import org.camunda.bpm.engine.variable.Variables
 import java.util.*
 
+/**
+ * Represents a task.
+ */
 data class Task (
   /**
    * Task id.
