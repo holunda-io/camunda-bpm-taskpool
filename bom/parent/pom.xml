@@ -26,7 +26,7 @@
     <axon-gateway-extension.version>0.0.4</axon-gateway-extension.version>
 
     <mockito-kotlin.version>2.2.0</mockito-kotlin.version>
-    <awaitability.version>3.1.5</awaitability.version>
+    <awaitability.version>4.0.3</awaitability.version>
 
     <pattern.class.itest>**/*ITest.*</pattern.class.itest>
     <pattern.package.itest>**/itest/**/*.*</pattern.package.itest>
