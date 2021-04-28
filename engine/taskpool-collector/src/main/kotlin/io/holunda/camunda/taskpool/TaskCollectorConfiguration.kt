@@ -9,6 +9,7 @@ import io.holunda.camunda.taskpool.sender.accumulator.EngineTaskCommandAccumulat
 import io.holunda.camunda.taskpool.sender.accumulator.ProjectingCommandAccumulator
 import io.holunda.camunda.taskpool.sender.gateway.*
 import org.camunda.bpm.engine.RuntimeService
+import org.camunda.bpm.engine.TaskService
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression
@@ -51,9 +52,9 @@ class TaskCollectorConfiguration(
    */
   @Bean
   @ConditionalOnExpression("'\${camunda.taskpool.collector.task.enricher.type}' != 'custom'")
-  fun processVariablesEnricher(runtimeService: RuntimeService, filter: ProcessVariablesFilter, correlator: ProcessVariablesCorrelator): VariablesEnricher =
+  fun processVariablesEnricher(runtimeService: RuntimeService, taskService: TaskService, filter: ProcessVariablesFilter, correlator: ProcessVariablesCorrelator): VariablesEnricher =
     when (properties.task.enricher.type) {
-      TaskCollectorEnricherType.processVariables -> ProcessVariablesTaskCommandEnricher(runtimeService, filter, correlator)
+      TaskCollectorEnricherType.processVariables -> ProcessVariablesTaskCommandEnricher(runtimeService, taskService, filter, correlator)
       TaskCollectorEnricherType.no -> EmptyTaskCommandEnricher()
       else -> throw IllegalStateException("Could not initialize task enricher, used unknown ${properties.task.enricher.type} type.")
     }
