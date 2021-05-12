@@ -33,13 +33,12 @@ import java.util.concurrent.ConcurrentHashMap
 @ProcessingGroup(SimpleServiceViewProcessingGroup.PROCESSING_GROUP)
 class SimpleProcessInstanceService(
   val queryUpdateEmitter: QueryUpdateEmitter
-) : ProcessInstanceApi, ProcessVariableApi {
+) : ProcessInstanceApi {
 
   companion object : KLogging()
 
   private val revisionSupport = RevisionSupport()
   private val processInstances = ConcurrentHashMap<String, ProcessInstance>()
-  private val processVariables = ConcurrentHashMap<String, MutableSet<ProcessVariable>>()
 
   /**
    * Query by the state.
@@ -53,18 +52,6 @@ class SimpleProcessInstanceService(
     )
   }
 
-  /**
-   * Query for process variables of a process instance.
-   */
-  @QueryHandler
-  override fun query(query: ProcessVariablesForInstanceQuery): QueryResponseMessage<ProcessVariableQueryResult> {
-    val processInstanceVariables = processVariables.getOrDefault(query.processInstanceId, emptyList())
-    val filtered = processInstanceVariables.filter { query.applyFilter(it) }
-    return QueryResponseMessageResponseType.asQueryResponseMessage(
-      payload = ProcessVariableQueryResult(variables = filtered),
-      metaData = revisionSupport.getRevisionMax(filtered.map { it.sourceReference.instanceId }).toMetaData()
-    )
-  }
 
   /**
    * Handles start of process instance.
@@ -125,28 +112,6 @@ class SimpleProcessInstanceService(
     revisionSupport.updateRevision(event.processInstanceId, RevisionValue.fromMetaData(metaData))
     logger.debug { "SIMPLE-VIEW-45: Process instance was cancelled $event." }
     updateProcessInstanceQuery(event.processInstanceId)
-  }
-
-  /**
-   * Handles process variable change event.
-   */
-  @EventHandler
-  fun on(event: ProcessVariablesChangedEvent, metaData: MetaData) {
-    if (!processInstances.containsKey(event.sourceReference.instanceId)) {
-      // received information about unknown process instance id.
-      processInstances[event.sourceReference.instanceId] = event.toProcessInstance()
-    }
-
-    val toDelete = event.variableChanges.filterIsInstance<ProcessVariableDelete>().map { change -> change.variableInstanceId }
-    processVariables.getOrDefault(event.sourceReference.instanceId, mutableListOf()).apply {
-      this.removeIf { variable -> toDelete.contains(variable.variableInstanceId) }
-      this.addAll(event.variableChanges.filterIsInstance<ProcessVariableCreate>().map { it.toProcessVariable(event.sourceReference) })
-      this.addAll(event.variableChanges.filterIsInstance<ProcessVariableUpdate>().map { it.toProcessVariable(event.sourceReference) })
-    }
-
-    revisionSupport.updateRevision(event.sourceReference.instanceId, RevisionValue.fromMetaData(metaData))
-    logger.debug { "SIMPLE-VIEW-46: Process instance variables has been updated $event." }
-    updateProcessInstanceQuery(event.sourceReference.instanceId)
   }
 
 
