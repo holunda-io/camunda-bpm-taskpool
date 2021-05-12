@@ -66,6 +66,7 @@ class SimpleProcessVariableTest {
     val change = command.variableChanges[0] as ProcessVariableCreate
     assertThat(change.value).isInstanceOf(ObjectProcessVariableValue::class.java)
     assertThat(change.value.value).isInstanceOf(Map::class.java)
+    @Suppress("UNCHECKED_CAST")
     assertThat(change.value.value as Map<String, Any>).containsExactlyInAnyOrderEntriesOf(mapOf("prop1" to "value1", "prop2" to 67))
   }
 
@@ -105,6 +106,7 @@ class SimpleProcessVariableTest {
 
     assertThat(change.value).isInstanceOf(ObjectProcessVariableValue::class.java)
     assertThat(change.value.value).isInstanceOf(Map::class.java)
+    @Suppress("UNCHECKED_CAST")
     assertThat(change.value.value as Map<String, Any>).containsExactlyInAnyOrderEntriesOf(mapOf("prop1" to "value1", "prop2" to 67))
   }
 

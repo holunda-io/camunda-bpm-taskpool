@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Configuration
 import javax.annotation.PostConstruct
 
 /**
- * Configuration fo in-memory taskpool view.
+ * Configuration for in-memory polyflow view.
  */
 @ComponentScan
 @Configuration

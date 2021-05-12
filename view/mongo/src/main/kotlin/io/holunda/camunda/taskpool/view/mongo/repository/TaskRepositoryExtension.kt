@@ -1,0 +1,3 @@
+package io.holunda.camunda.taskpool.view.mongo.repository
+
+interface TaskRepositoryExtension : TaskCountByApplicationRepositoryExtension, TaskUpdatesExtension

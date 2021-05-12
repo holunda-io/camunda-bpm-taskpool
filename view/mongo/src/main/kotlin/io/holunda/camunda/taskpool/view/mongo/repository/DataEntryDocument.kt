@@ -1,17 +1,15 @@
 package io.holunda.camunda.taskpool.view.mongo.repository
 
-import io.holunda.camunda.taskpool.view.mongo.repository.DataEntryDocument.Companion.NAME
+import io.holunda.camunda.taskpool.view.mongo.repository.DataEntryDocument.Companion.COLLECTION
 import org.springframework.data.annotation.Id
 import org.springframework.data.annotation.TypeAlias
 import org.springframework.data.mongodb.core.index.Indexed
 import org.springframework.data.mongodb.core.mapping.Document
-import java.time.OffsetDateTime
-import java.util.*
 
 /**
  * Represents a business data entry as Mongo Document.
  */
-@Document(collection = NAME)
+@Document(collection = COLLECTION)
 @TypeAlias("data-entry")
 data class DataEntryDocument(
   @Id
@@ -31,18 +29,7 @@ data class DataEntryDocument(
   val protocol: List<ProtocolElement> = listOf()
 ) {
   companion object {
-      const val NAME = "data-entries"
+      const val COLLECTION = "data-entries"
   }
 }
 
-/**
- * Element from the protocol.
- */
-data class ProtocolElement(
-  val time: Date,
-  val statusType: String,
-  val state: String?,
-  val username: String?,
-  val logMessage: String?,
-  val logDetails: String?
-)

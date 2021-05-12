@@ -16,7 +16,7 @@ import reactor.core.publisher.Mono
  */
 @Repository
 interface DataEntryRepository :
-  ReactiveMongoRepository<DataEntryDocument, String> {
+  ReactiveMongoRepository<DataEntryDocument, String>, DataEntryUpdateRepository {
 
   /**
    * Reactive finder by identity.
@@ -41,3 +41,4 @@ interface DataEntryRepository :
   fun findAllForUser(@Param("username") username: String, @Param("groupNames") groupNames: Set<String>, pageable: Pageable? = null): Flux<DataEntryDocument>
 
 }
+

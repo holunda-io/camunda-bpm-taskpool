@@ -15,8 +15,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit4.SpringRunner
-import java.time.Instant
-import java.util.*
 
 /**
  * This test makes sure that the process definition handler behaves correctly:
@@ -30,6 +28,7 @@ class ProcessDefinitionHandlerAggregateITest {
 
   @Autowired
   private lateinit var commandGateway: CommandGateway
+
   @Autowired
   private lateinit var eventBus: EventBus
 
@@ -43,7 +42,6 @@ class ProcessDefinitionHandlerAggregateITest {
   @Test
   fun `should accept second register command for the same process definition id`() {
 
-    val now = Date.from(Instant.now())
     val version = 1
     val command = RegisterProcessDefinitionCommand(
       "id:${version}",
@@ -60,8 +58,8 @@ class ProcessDefinitionHandlerAggregateITest {
     )
 
 
-    val result = commandGateway.sendAndWait<String>(command)
-    val result2 = commandGateway.sendAndWait<String>(command.copy(processName = "new name"))
+    commandGateway.sendAndWait<String>(command)
+    commandGateway.sendAndWait<String>(command.copy(processName = "new name"))
 
     assertThat(receivedEvents.size).isEqualTo(2)
     assertThat((receivedEvents[1].payload as ProcessDefinitionRegisteredEvent).processName).isEqualTo("new name")

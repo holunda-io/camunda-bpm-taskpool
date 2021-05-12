@@ -3,7 +3,7 @@ spring:
     mongodb:
       host: localhost
       port: 27017
-      database: tasks-payload
+      database: polyflow
 
 logging.level.io.holunda.camunda.taskpool:
   view.mongo: INFO

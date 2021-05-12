@@ -22,7 +22,7 @@ class FallbackTasklistUrlResolverConfiguration {
       throw IllegalStateException("Either set polyflow.integration.tasklist.tasklist-url property or provide own implementation of TasklistUrlResolver")
     } else {
       object : TasklistUrlResolver {
-        override fun getTasklistUrl(): String = properties.tasklistUrl!!
+        override fun getTasklistUrl(): String = properties.tasklistUrl
       }
     }
   }

@@ -4,6 +4,7 @@ info:
   version: 0.0.1
   description: API for the task list.
 basePath: '/tasklist/rest'
+host: localhost
 tags:
   - name: Task
     description: Operations on tasks.

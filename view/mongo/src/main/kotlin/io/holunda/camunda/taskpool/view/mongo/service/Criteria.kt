@@ -1,6 +1,7 @@
 package io.holunda.camunda.taskpool.view.mongo.service
 
 import io.holunda.camunda.taskpool.view.Task
+import java.time.Instant
 import kotlin.reflect.full.memberProperties
 
 const val EQUALS = "="
@@ -53,6 +54,18 @@ internal fun isTaskAttribute(propertyName: String): Boolean =
  * Criterion.
  */
 sealed class Criterion(open val name: String, open val value: String, open val operator: String) {
+
+  /**
+   * Value converter for criteria.
+   */
+  fun typedValue(): Any =
+    when (this.name) {
+      "priority" -> this.value.toInt()
+      "createTime", "dueDate", "followUpDate" -> Instant.parse(this.value)
+      else -> this.value
+    }
+
+
   override fun equals(other: Any?): Boolean {
     if (this === other) return true
     if (other !is Criterion) return false
@@ -72,6 +85,7 @@ sealed class Criterion(open val name: String, open val value: String, open val o
   }
 
   object EmptyCriterion : Criterion("empty", "no value", "none")
+
   /**
    * Criterion on task.
    */
@@ -80,5 +94,6 @@ sealed class Criterion(open val name: String, open val value: String, open val o
   /**
    * Criterion on data entry.
    */
-  data class DataEntryCriterion(override val name: String, override val value: String, override val operator: String = EQUALS) : Criterion(name, value, operator)
+  data class DataEntryCriterion(override val name: String, override val value: String, override val operator: String = EQUALS) :
+    Criterion(name, value, operator)
 }

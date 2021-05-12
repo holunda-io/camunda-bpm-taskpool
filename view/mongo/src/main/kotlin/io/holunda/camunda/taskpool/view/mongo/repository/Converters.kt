@@ -2,6 +2,7 @@ package io.holunda.camunda.taskpool.view.mongo.repository
 
 import io.holunda.camunda.taskpool.api.business.*
 import io.holunda.camunda.taskpool.api.task.CaseReference
+import io.holunda.camunda.taskpool.api.task.GenericReference
 import io.holunda.camunda.taskpool.api.task.ProcessReference
 import io.holunda.camunda.taskpool.api.task.SourceReference
 import io.holunda.camunda.taskpool.view.ProtocolEntry
@@ -18,6 +19,7 @@ fun Task.taskDocument() = TaskDocument(
   sourceReference = when (val reference = this.sourceReference) {
     is ProcessReference -> ProcessReferenceDocument(reference)
     is CaseReference -> CaseReferenceDocument(reference)
+    is GenericReference -> GenericReferenceDocument(reference)
     else -> throw IllegalArgumentException("Unknown source reference of ${reference::class.java}")
   },
   taskDefinitionKey = this.taskDefinitionKey,
@@ -77,7 +79,7 @@ fun sourceReference(reference: ReferenceDocument): SourceReference =
       applicationName = reference.applicationName,
       tenantId = reference.tenantId
     )
-    is CaseReferenceDocument -> ProcessReference(
+    is CaseReferenceDocument -> CaseReference(
       instanceId = reference.instanceId,
       executionId = reference.executionId,
       definitionId = reference.definitionId,
@@ -86,6 +88,16 @@ fun sourceReference(reference: ReferenceDocument): SourceReference =
       applicationName = reference.applicationName,
       tenantId = reference.tenantId
     )
+    is GenericReferenceDocument -> GenericReference(
+      instanceId = reference.instanceId,
+      executionId = reference.executionId,
+      definitionId = reference.definitionId,
+      definitionKey = reference.definitionKey,
+      name = reference.name,
+      applicationName = reference.applicationName,
+      tenantId = reference.tenantId
+    )
+
   }
 
 /**

@@ -1,7 +1,5 @@
 package io.holunda.camunda.client.task
 
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import io.holunda.camunda.client.CamundaEngineClientProperties
 import io.holunda.camunda.taskpool.api.task.*
 import org.camunda.bpm.engine.TaskService
@@ -12,6 +10,8 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoMoreInteractions
 import java.util.*
 
 @ExtendWith(MockitoExtension::class)

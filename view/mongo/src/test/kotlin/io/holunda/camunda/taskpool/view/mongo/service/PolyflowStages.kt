@@ -1,9 +1,9 @@
 package io.holunda.camunda.taskpool.view.mongo.service
 
-import com.nhaarman.mockitokotlin2.argumentCaptor
-import com.nhaarman.mockitokotlin2.atLeast
-import com.nhaarman.mockitokotlin2.clearInvocations
-import com.nhaarman.mockitokotlin2.verify
+import org.mockito.kotlin.argumentCaptor
+import org.mockito.kotlin.atLeast
+import org.mockito.kotlin.clearInvocations
+import org.mockito.kotlin.verify
 import com.tngtech.jgiven.Stage
 import com.tngtech.jgiven.annotation.*
 import com.tngtech.jgiven.integration.spring.JGivenStage
@@ -23,12 +23,12 @@ import org.springframework.beans.factory.annotation.Autowired
 import java.util.concurrent.TimeUnit
 import java.util.function.Predicate
 
-open class TaskPoolStage<SELF : TaskPoolStage<SELF>> : Stage<SELF>() {
+open class PolyflowStage<SELF : PolyflowStage<SELF>> : Stage<SELF>() {
   companion object : KLogging()
 
   @Autowired
   @ScenarioState
-  lateinit var testee: TaskPoolMongoService
+  lateinit var testee: MongoViewService
 
   @Autowired
   @ScenarioState
@@ -99,7 +99,7 @@ open class TaskPoolStage<SELF : TaskPoolStage<SELF>> : Stage<SELF>() {
 }
 
 @JGivenStage
-class TaskPoolGivenStage<SELF : TaskPoolGivenStage<SELF>> : TaskPoolStage<SELF>() {
+class PolyflowGivenStage<SELF : PolyflowGivenStage<SELF>> : PolyflowStage<SELF>() {
 
   @ProvidedScenarioState(resolution = ScenarioState.Resolution.NAME)
   private lateinit var tasks: List<TaskWithDataEntries>
@@ -127,7 +127,7 @@ class TaskPoolGivenStage<SELF : TaskPoolGivenStage<SELF>> : TaskPoolStage<SELF>(
 }
 
 @JGivenStage
-class TaskPoolWhenStage<SELF : TaskPoolWhenStage<SELF>> : TaskPoolStage<SELF>() {
+class PolyflowWhenStage<SELF : PolyflowWhenStage<SELF>> : PolyflowStage<SELF>() {
 
   @ExpectedScenarioState(resolution = ScenarioState.Resolution.NAME, required = true)
   private lateinit var tasks: List<TaskWithDataEntries>
@@ -146,7 +146,7 @@ class TaskPoolWhenStage<SELF : TaskPoolWhenStage<SELF>> : TaskPoolStage<SELF>() 
 }
 
 @JGivenStage
-class TaskPoolThenStage<SELF : TaskPoolThenStage<SELF>> : TaskPoolStage<SELF>() {
+class PolyflowThenStage<SELF : PolyflowThenStage<SELF>> : PolyflowStage<SELF>() {
 
   @ExpectedScenarioState(resolution = ScenarioState.Resolution.NAME, required = true)
   private lateinit var tasks: List<TaskWithDataEntries>

@@ -28,7 +28,12 @@ import javax.annotation.PostConstruct
 @EntityScan(basePackageClasses = [TaskDocument::class])
 class TaskPoolMongoViewConfiguration {
 
-  companion object : KLogging()
+  companion object : KLogging() {
+    const val COLLECTION_TOKENS = "tracking-tokens"
+    const val COLLECTION_EVENTS = "domain-events"
+    const val COLLECTION_SAGAS = "sagas"
+    const val COLLECTION_SNAPSHOTS = "snapshots"
+  }
 
   /**
    * Report initialization.
@@ -46,11 +51,11 @@ class TaskPoolMongoViewConfiguration {
     DefaultMongoTemplate
       .builder()
       .mongoDatabase(databaseFactory.mongoDatabase)
-      .trackingTokensCollectionName("tracking-tokens")
+      .trackingTokensCollectionName(COLLECTION_TOKENS)
       // these collections are configured, but not used on the client side.
-      .domainEventsCollectionName("domain-events")
-      .sagasCollectionName("sagas")
-      .snapshotEventsCollectionName("snapshots")
+      .domainEventsCollectionName(COLLECTION_EVENTS)
+      .sagasCollectionName(COLLECTION_SAGAS)
+      .snapshotEventsCollectionName(COLLECTION_SNAPSHOTS)
       .build()
 
   /**

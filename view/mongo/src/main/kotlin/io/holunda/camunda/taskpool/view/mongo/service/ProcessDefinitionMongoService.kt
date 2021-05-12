@@ -49,7 +49,7 @@ class ProcessDefinitionMongoService(
     )
 
     processDefinitionRepository.save(entry)
-      .doOnNext { queryUpdateEmitter.emit(ProcessDefinitionsStartableByUserQuery::class.java, { query -> query.applyFilter(entry.toProcessDefitinion()) }, entry) }
+      .doOnNext { queryUpdateEmitter.emit(ProcessDefinitionsStartableByUserQuery::class.java, { query -> query.applyFilter(entry.toProcessDefinition()) }, entry) }
       .block()
   }
 
@@ -64,12 +64,12 @@ class ProcessDefinitionMongoService(
       .map { processesByDefinition ->
         // Find the most current version of each process
         val currentProcessDefinitions = processesByDefinition.map {
-          it.value.maxBy { definition -> definition.processDefinitionVersion }!!
+          it.value.maxByOrNull { definition -> definition.processDefinitionVersion }!!
         }
 
         // Apply filter
         currentProcessDefinitions
-          .map { it.toProcessDefitinion() }
+          .map { it.toProcessDefinition() }
           .filter { query.applyFilter(it) }
       }
       .toFuture()

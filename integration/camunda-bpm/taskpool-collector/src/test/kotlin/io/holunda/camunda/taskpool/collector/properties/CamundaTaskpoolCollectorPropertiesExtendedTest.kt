@@ -1,6 +1,6 @@
 package io.holunda.camunda.taskpool.collector.properties
 
-import com.nhaarman.mockitokotlin2.mock
+import org.mockito.kotlin.mock
 import io.holunda.camunda.taskpool.collector.CamundaTaskpoolCollectorConfiguration
 import io.holunda.camunda.taskpool.collector.CamundaTaskpoolCollectorProperties
 import io.holunda.camunda.taskpool.collector.TaskCollectorEnricherType

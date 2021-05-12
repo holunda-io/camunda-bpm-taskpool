@@ -4,7 +4,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.springframework.data.domain.Sort
 
-class TaskPoolMongoServiceSortTest {
+class PolyflowMongoServiceSortTest {
 
   @Test
   fun `should be unsorted for null, empty or wrong sort`() {

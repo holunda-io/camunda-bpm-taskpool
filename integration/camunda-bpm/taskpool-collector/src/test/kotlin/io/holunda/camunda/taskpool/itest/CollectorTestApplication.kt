@@ -1,6 +1,6 @@
 package io.holunda.camunda.taskpool.itest
 
-import com.nhaarman.mockitokotlin2.mock
+import org.mockito.kotlin.mock
 import io.holunda.camunda.taskpool.EnableCamundaTaskpoolCollector
 import io.holunda.camunda.taskpool.sender.gateway.CommandListGateway
 import org.axonframework.commandhandling.gateway.CommandGateway

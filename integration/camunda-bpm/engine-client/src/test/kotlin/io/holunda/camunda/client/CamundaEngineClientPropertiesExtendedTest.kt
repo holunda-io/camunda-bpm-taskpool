@@ -1,6 +1,6 @@
 package io.holunda.camunda.client
 
-import com.nhaarman.mockitokotlin2.mock
+import org.mockito.kotlin.mock
 import org.assertj.core.api.Assertions
 import org.axonframework.commandhandling.gateway.CommandGateway
 import org.axonframework.eventhandling.EventBus

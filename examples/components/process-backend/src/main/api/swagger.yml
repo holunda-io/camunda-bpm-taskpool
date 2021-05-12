@@ -4,6 +4,7 @@ info:
   version: 0.0.1
   description: API for the example approval process.
 basePath: '/example-process-approval/rest/'
+host: localhost
 tags:
 - name: Request
   description: Operations to manipulate requests.
@@ -24,6 +25,7 @@ paths:
       operationId: getEnvironment
       responses:
         200:
+          description: Environment can be retrieved.
           schema:
             $ref: '#/definitions/Environment'
 

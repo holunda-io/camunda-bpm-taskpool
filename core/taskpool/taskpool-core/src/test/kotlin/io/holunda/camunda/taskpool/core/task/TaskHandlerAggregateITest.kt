@@ -78,8 +78,8 @@ class TaskHandlerAggregateITest {
       correlations = newCorrelations().addCorrelation("Request", "business123")
     )
 
-    val result = commandGateway.sendAndWait<String>(command)
-    val result2 = commandGateway.sendAndWait<String>(command.copy(description = "Changed value"))
+    commandGateway.sendAndWait<String>(command)
+    commandGateway.sendAndWait<String>(command.copy(description = "Changed value"))
 
     assertThat(receivedEvents.size).isEqualTo(2)
     assertThat((receivedEvents[1].payload as TaskCreatedEngineEvent).description).isEqualTo("Changed value")

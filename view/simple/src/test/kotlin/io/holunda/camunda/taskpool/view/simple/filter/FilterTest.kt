@@ -8,12 +8,10 @@ import org.assertj.core.api.Assertions.assertThat
 import org.camunda.bpm.engine.variable.Variables
 import org.junit.Rule
 import org.junit.Test
+import org.junit.jupiter.api.assertThrows
 import org.junit.rules.ExpectedException
 
 class FilterTest {
-
-  @get: Rule
-  val expected = ExpectedException.none()
 
   private val filtersList = listOf("task.name${EQUALS}myName", "task.assignee${EQUALS}kermit", "dataAttr1${EQUALS}value", "dataAttr2${EQUALS}another")
 
@@ -48,14 +46,14 @@ class FilterTest {
 
   @Test
   fun `should classify properties`() {
-    assertThat(isTaskAttribute("task.id")).isTrue()
-    assertThat(isTaskAttribute("task.name")).isTrue()
-    assertThat(isTaskAttribute("task.assignee")).isTrue()
+    assertThat(isTaskAttribute("task.id")).isTrue
+    assertThat(isTaskAttribute("task.name")).isTrue
+    assertThat(isTaskAttribute("task.assignee")).isTrue
 
-    assertThat(isTaskAttribute("task.")).isFalse()
-    assertThat(isTaskAttribute("assignee")).isFalse()
-    assertThat(isTaskAttribute("someOther")).isFalse()
-    assertThat(isTaskAttribute("described")).isFalse()
+    assertThat(isTaskAttribute("task.")).isFalse
+    assertThat(isTaskAttribute("assignee")).isFalse
+    assertThat(isTaskAttribute("someOther")).isFalse
+    assertThat(isTaskAttribute("described")).isFalse
   }
 
   @Test
@@ -71,14 +69,16 @@ class FilterTest {
 
   @Test
   fun `should fail to create criteria`() {
-    expected.expect(IllegalArgumentException::class.java)
-    toCriteria(listOf("$EQUALS$EQUALS"))
+    assertThrows<IllegalArgumentException> {
+      toCriteria(listOf("$EQUALS$EQUALS"))
+    }
   }
 
   @Test
   fun `should fail to create criteria 2`() {
-    expected.expect(IllegalArgumentException::class.java)
-    toCriteria(listOf("${EQUALS}some$EQUALS"))
+    assertThrows<IllegalArgumentException> {
+      toCriteria(listOf("${EQUALS}some$EQUALS"))
+    }
   }
 
   @Test
@@ -92,16 +92,16 @@ class FilterTest {
     val criteria = toCriteria(filtersList)
     val predicates = createTaskPredicates(criteria)
 
-    assertThat(predicates).isNotNull()
+    assertThat(predicates).isNotNull
     assertThat(predicates.taskPredicate).isNotNull
     assertThat(predicates.dataEntriesPredicate).isNotNull
 
-    assertThat(predicates.taskPredicate!!.test(task1.task)).isTrue()
-    assertThat(predicates.taskPredicate!!.test(task2.task)).isTrue()
-    assertThat(predicates.taskPredicate!!.test(task3.task)).isFalse()
-    assertThat(predicates.dataEntriesPredicate!!.test(task3.dataEntries[0].payload)).isFalse()
-    assertThat(predicates.dataEntriesPredicate!!.test(task4.dataEntries[0].payload)).isTrue()
-    assertThat(predicates.dataEntriesPredicate!!.test(task5.dataEntries[0].payload)).isTrue()
+    assertThat(predicates.taskPredicate!!.test(task1.task)).isTrue
+    assertThat(predicates.taskPredicate!!.test(task2.task)).isTrue
+    assertThat(predicates.taskPredicate!!.test(task3.task)).isFalse
+    assertThat(predicates.dataEntriesPredicate!!.test(task3.dataEntries[0].payload)).isFalse
+    assertThat(predicates.dataEntriesPredicate!!.test(task4.dataEntries[0].payload)).isTrue
+    assertThat(predicates.dataEntriesPredicate!!.test(task5.dataEntries[0].payload)).isTrue
   }
 
   @Test

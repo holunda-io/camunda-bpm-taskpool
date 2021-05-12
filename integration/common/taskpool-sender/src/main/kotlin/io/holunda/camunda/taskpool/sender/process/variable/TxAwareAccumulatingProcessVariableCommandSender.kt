@@ -29,9 +29,9 @@ class TxAwareAccumulatingProcessVariableCommandSender(
   @Suppress("RemoveExplicitTypeArguments")
   private val singleProcessVariablesCommands: ThreadLocal<MutableMap<String, MutableList<SingleProcessVariableCommand>>> = ThreadLocal.withInitial { mutableMapOf<String, MutableList<SingleProcessVariableCommand>>() }
 
-  override fun send(singleVariablecommand: SingleProcessVariableCommand) {
+  override fun send(command: SingleProcessVariableCommand) {
     // add command to list
-    singleProcessVariablesCommands.get().getOrPut(singleVariablecommand.sourceReference.instanceId) { mutableListOf() }.add(singleVariablecommand)
+    singleProcessVariablesCommands.get().getOrPut(command.sourceReference.instanceId) { mutableListOf() }.add(command)
 
     // register synchronization only once
     if (!registered.get()) {

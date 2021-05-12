@@ -1,6 +1,5 @@
 package io.holunda.camunda.taskpool.view.mongo.service
 
-import com.nhaarman.mockitokotlin2.*
 import io.holunda.camunda.taskpool.api.task.ProcessReference
 import io.holunda.camunda.taskpool.api.task.TaskAssignedEngineEvent
 import io.holunda.camunda.taskpool.view.mongo.ChangeTrackingMode
@@ -10,19 +9,21 @@ import io.holunda.camunda.taskpool.view.mongo.repository.TaskDocument
 import io.holunda.camunda.taskpool.view.mongo.repository.TaskRepository
 import org.axonframework.messaging.MetaData
 import org.junit.Test
+import org.mockito.kotlin.*
 import reactor.core.publisher.Mono
 import java.util.*
 
 
-class TaskPoolMongoServiceRetryTest {
+class PolyflowMongoServiceRetryTest {
   private val taskRepository: TaskRepository = mock()
 
-  private val taskPoolMongoService: TaskPoolMongoService = TaskPoolMongoService(
+  private val mongoViewService: MongoViewService = MongoViewService(
     properties = TaskPoolMongoViewProperties(changeTrackingMode = ChangeTrackingMode.CHANGE_STREAM),
     taskRepository = taskRepository,
     dataEntryRepository = mock(),
     taskWithDataEntriesRepository = mock(),
     taskChangeTracker = mock(),
+    dataEntryChangeTracker = mock(),
     queryUpdateEmitter = mock(),
     configuration = mock()
   )
@@ -41,14 +42,14 @@ class TaskPoolMongoServiceRetryTest {
     ))
     whenever(taskRepository.findNotDeletedById(taskId)).thenReturn(Mono.defer { results.poll() })
     whenever(taskRepository.save(any<TaskDocument>())).thenAnswer { Mono.just(it.getArgument<TaskDocument>(0)) }
-    taskPoolMongoService.on(TaskAssignedEngineEvent(taskId, processReference, "foo:bar"), MetaData.emptyInstance())
+    mongoViewService.on(TaskAssignedEngineEvent(taskId, processReference, "foo:bar"), MetaData.emptyInstance())
     verify(taskRepository).save(taskDocument)
   }
 
   @Test
   fun `stops retrying after five attempts`() {
     whenever(taskRepository.findNotDeletedById(taskId)).thenReturn(Mono.empty())
-    taskPoolMongoService.on(TaskAssignedEngineEvent(taskId, processReference, "foo:bar"), MetaData.emptyInstance())
+    mongoViewService.on(TaskAssignedEngineEvent(taskId, processReference, "foo:bar"), MetaData.emptyInstance())
     verify(taskRepository, never()).save(any<TaskDocument>())
   }
 }

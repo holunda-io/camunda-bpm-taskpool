@@ -7,7 +7,7 @@ import io.holunda.camunda.taskpool.view.DataEntry
 import io.holunda.camunda.taskpool.view.Task
 import io.holunda.camunda.taskpool.view.TaskWithDataEntries
 import io.holunda.camunda.taskpool.view.auth.User
-import io.holunda.camunda.taskpool.view.mongo.TaskpoolMongoTestApplication
+import io.holunda.camunda.taskpool.view.mongo.PolyflowMongoTestApplication
 import io.holunda.camunda.taskpool.view.mongo.utils.MongoLauncher
 import io.holunda.camunda.taskpool.view.query.task.*
 import org.camunda.bpm.engine.variable.VariableMap
@@ -22,9 +22,9 @@ import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.TestPropertySource
 import java.util.*
 
-@SpringBootTest(classes = [TaskpoolMongoTestApplication::class])
+@SpringBootTest(classes = [PolyflowMongoTestApplication::class])
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-abstract class TaskPoolMongoServiceITestBase : SpringRuleScenarioTest<TaskPoolGivenStage<*>, TaskPoolWhenStage<*>, TaskPoolThenStage<*>>() {
+abstract class PolyflowMongoServiceITestBase : SpringRuleScenarioTest<PolyflowGivenStage<*>, PolyflowWhenStage<*>, PolyflowThenStage<*>>() {
 
   @Test
   fun `a task is created on receiving TaskCreatedEngineEvent`() {
@@ -320,7 +320,7 @@ abstract class TaskPoolMongoServiceITestBase : SpringRuleScenarioTest<TaskPoolGi
   "spring.data.mongodb.database=TaskPoolMongoServiceChangeStreamChangeTrackingITest"
 ])
 @ActiveProfiles("itest-replicated")
-class TaskPoolMongoServiceChangeStreamChangeTrackingITest : TaskPoolMongoServiceITestBase() {
+class PolyflowMongoServiceChangeStreamChangeTrackingITest : PolyflowMongoServiceITestBase() {
   companion object {
     private val mongo = MongoLauncher.MongoInstance(true, "TaskPoolMongoServiceChangeStreamChangeTrackingITest")
 
@@ -348,7 +348,7 @@ class TaskPoolMongoServiceChangeStreamChangeTrackingITest : TaskPoolMongoService
   "spring.data.mongodb.database=TaskPoolMongoServiceEventHandlerChangeTrackingITest"
 ])
 @ActiveProfiles("itest-standalone")
-class TaskPoolMongoServiceEventHandlerChangeTrackingITest : TaskPoolMongoServiceITestBase() {
+class PolyflowMongoServiceEventHandlerChangeTrackingITest : PolyflowMongoServiceITestBase() {
   companion object {
     private val mongo = MongoLauncher.MongoInstance(false, "TaskPoolMongoServiceEventHandlerChangeTrackingITest")
 

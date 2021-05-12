@@ -19,7 +19,7 @@
     <java.version>11</java.version>
     <version.java>${java.version}</version.java>
 
-    <kotlin.version>1.4.20</kotlin.version>
+    <kotlin.version>1.5.0</kotlin.version>
     <kotlin.compiler.jvmTarget>${java.version}</kotlin.compiler.jvmTarget>
     <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
     <kotlin-logging.version>2.0.6</kotlin-logging.version>
@@ -152,6 +152,7 @@
         <plugins>
           <!-- Deploy -->
           <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-deploy-plugin</artifactId>
             <version>2.8.2</version>
             <configuration>

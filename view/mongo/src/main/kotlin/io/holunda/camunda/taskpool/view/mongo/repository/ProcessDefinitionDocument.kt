@@ -1,6 +1,7 @@
 package io.holunda.camunda.taskpool.view.mongo.repository
 
 import io.holunda.camunda.taskpool.view.ProcessDefinition
+import io.holunda.camunda.taskpool.view.mongo.repository.ProcessDefinitionDocument.Companion.COLLECTION
 import org.springframework.data.annotation.Id
 import org.springframework.data.annotation.TypeAlias
 import org.springframework.data.mongodb.core.mapping.Document
@@ -8,7 +9,7 @@ import org.springframework.data.mongodb.core.mapping.Document
 /**
  * Mongo document representing a deployed process definition.
  */
-@Document(collection = "processes")
+@Document(collection = COLLECTION)
 @TypeAlias("process-definition")
 data class ProcessDefinitionDocument(
   @Id
@@ -26,10 +27,14 @@ data class ProcessDefinitionDocument(
   val candidateStarterGroups: Set<String> = setOf()
 ) {
 
+  companion object {
+    const val COLLECTION = "processes"
+  }
+
   /**
    * Creates a projection representation out of document.
    */
-  fun toProcessDefitinion(): ProcessDefinition =
+  fun toProcessDefinition(): ProcessDefinition =
     ProcessDefinition(
       processDefinitionId = this.processDefinitionId,
       processDefinitionKey = this.processDefinitionKey,

@@ -40,14 +40,16 @@ import javax.annotation.PreDestroy
  * Mongo-based projection.
  */
 @Component
-@ProcessingGroup(TaskPoolMongoService.PROCESSING_GROUP)
-class TaskPoolMongoService(
+@ProcessingGroup(MongoViewService.PROCESSING_GROUP)
+class MongoViewService(
   private val properties: TaskPoolMongoViewProperties,
   private val taskRepository: TaskRepository,
   private val dataEntryRepository: DataEntryRepository,
   private val taskWithDataEntriesRepository: TaskWithDataEntriesRepository,
   @Autowired(required = false)
   private val taskChangeTracker: TaskChangeTracker?,
+  @Autowired(required = false)
+  private val dataEntryChangeTracker: DataEntryChangeTracker?,
   private val queryUpdateEmitter: QueryUpdateEmitter,
   private val configuration: EventProcessingConfiguration
 ) : ReactiveTaskApi, ReactiveDataEntryApi {
@@ -58,6 +60,7 @@ class TaskPoolMongoService(
 
   private var taskCountByApplicationSubscription: Disposable? = null
   private var taskUpdateSubscription: Disposable? = null
+  private var dataEntryUpdateSubscription: Disposable? = null
   private var taskWithDataEntriesUpdateSubscription: Disposable? = null
 
   /**
@@ -68,6 +71,7 @@ class TaskPoolMongoService(
     if (properties.changeTrackingMode == ChangeTrackingMode.CHANGE_STREAM) {
 
       requireNotNull(taskChangeTracker) { "Task change tracker must not be null if tracking mode is set to ${ChangeTrackingMode.CHANGE_STREAM}" }
+      requireNotNull(dataEntryChangeTracker) { "Data Entry change tracker must not be null if tracking mode is set to ${ChangeTrackingMode.CHANGE_STREAM}" }
 
       taskCountByApplicationSubscription = taskChangeTracker.trackTaskCountsByApplication()
         .subscribe { queryUpdateEmitter.emit(TaskCountByApplicationQuery::class.java, { true }, it) }
@@ -75,6 +79,8 @@ class TaskPoolMongoService(
         .subscribe { queryUpdateEmitter.emit(TasksForUserQuery::class.java, { query -> query.applyFilter(it) }, it) }
       taskWithDataEntriesUpdateSubscription = taskChangeTracker.trackTaskWithDataEntriesUpdates()
         .subscribe { queryUpdateEmitter.emit(TasksWithDataEntriesForUserQuery::class.java, { query -> query.applyFilter(it) }, it) }
+      dataEntryUpdateSubscription = dataEntryChangeTracker.trackDataEntryUpdates()
+        .subscribe { queryUpdateEmitter.emit(DataEntriesForUserQuery::class.java, { query -> query.applyFilter(it)}, it ) }
     }
   }
 
@@ -87,6 +93,7 @@ class TaskPoolMongoService(
       taskCountByApplicationSubscription?.dispose()
       taskUpdateSubscription?.dispose()
       taskWithDataEntriesUpdateSubscription?.dispose()
+      dataEntryUpdateSubscription?.dispose()
     }
   }
 

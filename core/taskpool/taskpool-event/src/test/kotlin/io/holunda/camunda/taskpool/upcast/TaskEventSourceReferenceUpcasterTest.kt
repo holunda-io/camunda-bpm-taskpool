@@ -47,12 +47,12 @@ class TaskEventSourceReferenceUpcasterTest {
     val eventName: String = clazz.qualifiedName!!
     val xml = generateFakeOldEventXML(clazz)
     val document = SAXReader().read(StringReader(xml))
-    val clazz = org.dom4j.Document::class.java
+    val dataTypeClazz = org.dom4j.Document::class.java
     val serializer = XStreamSerializer.builder().lenientDeserialization().build()
 
     val entry: EventData<Document> = SimpleEventData<Document>(
-      metaData = SimpleSerializedObject(DocumentHelper.createDocument(), clazz, SimpleSerializedType(MetaData::class.java.name, null)),
-      payload = SimpleSerializedObject(document, clazz, SimpleSerializedType(eventName, revisionNumber))
+      metaData = SimpleSerializedObject(DocumentHelper.createDocument(), dataTypeClazz, SimpleSerializedType(MetaData::class.java.name, null)),
+      payload = SimpleSerializedObject(document, dataTypeClazz, SimpleSerializedType(eventName, revisionNumber))
     )
     val eventStream: Stream<IntermediateEventRepresentation> = Stream.of(
       InitialEventRepresentation(

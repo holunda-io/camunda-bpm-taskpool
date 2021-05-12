@@ -5,7 +5,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 /**
  * Configures mongo projection mode.
  */
-@ConfigurationProperties(prefix = "camunda.taskpool.view.mongo")
+@ConfigurationProperties(prefix = "polyflow.view.mongo")
 data class TaskPoolMongoViewProperties(
   /**
    * Tracking mode.

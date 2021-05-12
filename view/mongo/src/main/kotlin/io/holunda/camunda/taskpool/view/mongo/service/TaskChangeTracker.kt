@@ -23,10 +23,10 @@ import javax.annotation.PreDestroy
 /**
  * Observes the change stream on the mongo db and provides `Flux`es of changes for the various result types of queries. Also makes sure that tasks marked as
  * deleted are 'really' deleted shortly after.
- * Only active if `camunda.taskpool.view.mongo.changeTrackingMode` is set to `CHANGE_STREAM`.
+ * Only active if `polyflow.view.mongo.changeTrackingMode` is set to `CHANGE_STREAM`.
  */
 @Component
-@ConditionalOnProperty(prefix = "camunda.taskpool.view.mongo", name = ["changeTrackingMode"], havingValue = "CHANGE_STREAM", matchIfMissing = false)
+@ConditionalOnProperty(prefix = "polyflow.view.mongo", name = ["changeTrackingMode"], havingValue = "CHANGE_STREAM", matchIfMissing = false)
 class TaskChangeTracker(
   private val taskRepository: TaskRepository,
   private val dataEntryRepository: DataEntryRepository
