@@ -29,9 +29,7 @@
     <mockito-kotlin.version>3.2.0</mockito-kotlin.version>
     <pattern.class.itest>**/*ITest.*</pattern.class.itest>
     <pattern.package.itest>**/itest/**/*.*</pattern.package.itest>
-
-    <!-- TODO Update to 1.0.0, see #297 -->
-    <jgiven.version>0.18.0</jgiven.version>
+    <jgiven.version>1.0.0</jgiven.version>
 
   </properties>
 
@@ -248,6 +246,12 @@
       <dependency>
         <groupId>com.tngtech.jgiven</groupId>
         <artifactId>jgiven-spring</artifactId>
+        <version>${jgiven.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>com.tngtech.jgiven</groupId>
+        <artifactId>jgiven-spring-junit4</artifactId>
         <version>${jgiven.version}</version>
         <scope>test</scope>
       </dependency>

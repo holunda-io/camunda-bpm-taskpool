@@ -67,6 +67,11 @@
     </dependency>
     <dependency>
       <groupId>com.tngtech.jgiven</groupId>
+      <artifactId>jgiven-spring-junit4</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.tngtech.jgiven</groupId>
       <artifactId>jgiven-html5-report</artifactId>
       <scope>test</scope>
     </dependency>
