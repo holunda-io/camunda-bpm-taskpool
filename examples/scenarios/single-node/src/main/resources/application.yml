@@ -10,7 +10,7 @@ spring:
     show-sql: false
     open-in-view: false
   h2:
-    console:DataEntryController
+    console:
       enabled: true
       path: /h2-console
   groovy:
