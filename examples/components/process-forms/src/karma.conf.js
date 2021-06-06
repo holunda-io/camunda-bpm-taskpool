@@ -14,30 +14,31 @@ module.exports = function (config) {
       require('karma-jasmine'),
       require('karma-chrome-launcher'),
       require('karma-jasmine-html-reporter'),
-      require('karma-coverage-istanbul-reporter'),
-      require('@angular-devkit/build-angular/plugins/karma'),
-      require('karma-remap-istanbul'),
-      require('@angular-devkit/build-angular'),
-      require('karma-jasmine-html-reporter'),
       require('karma-junit-reporter'),
+      require('karma-coverage'),
+      require('@angular-devkit/build-angular/plugins/karma')
     ],
     client: {
+      jasmine: {
+        // you can add configuration options for Jasmine here
+        // the possible options are listed at https://jasmine.github.io/api/edge/Configuration.html
+        // for example, you can disable the random execution with `random: false`
+        // or set a specific seed with `seed: 4321`
+      },
       clearContext: false // leave Jasmine Spec Runner output visible in browser
     },
     coverageReporter: {
-      type: 'in-memory'
-    },
-    coverageIstanbulReporter: {
-      reports: ['html', 'lcovonly'],
-      fixWebpackSourcePaths: true,
-      dir: path.join(__dirname, 'target/coverage')
+      dir: require('path').join(__dirname, '../target/coverage'),
+      subdir: '.',
+      reporters: [
+        { type: 'html' },
+        { type: 'lcovonly' },
+        { type: 'text-summary' }
+      ]
     },
     junitReporter: {
       title: 'process-forms',
       outputDir: path.join(__dirname, 'target/surefire-reports')
-    },
-    angularCli: {
-      environment: 'dev'
     },
     customLaunchers: {
       ChromeHeadless: {
@@ -52,7 +53,7 @@ module.exports = function (config) {
     },
     browserNoActivityTimeout: 120000,
     browserDisconnectTolerance: 2,
-    reporters: ['progress', 'junit', 'coverage-istanbul', 'kjhtml'],
+    reporters: ['progress', 'junit', 'coverage', 'kjhtml'],
     port: 9876,
     colors: true,
     logLevel: config.LOG_INFO,
