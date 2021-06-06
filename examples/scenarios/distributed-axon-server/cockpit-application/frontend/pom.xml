@@ -165,8 +165,8 @@
                 </goals>
                 <phase>initialize</phase>
                 <configuration>
-                  <npmVersion>${npm.version}</npmVersion>
-                  <nodeVersion>${node.version}</nodeVersion>
+                  <npmVersion>6.14.8</npmVersion>
+                  <nodeVersion>v10.22.0</nodeVersion>
                 </configuration>
               </execution>
             </executions>
