@@ -1,8 +1,8 @@
-import {Action, MetaReducer} from '@ngrx/store';
-import {storeFreeze} from 'ngrx-store-freeze';
-import {localStorageSync} from 'ngrx-store-localstorage';
+import { Action, ActionReducer, MetaReducer } from '@ngrx/store';
+import { storeFreeze } from 'ngrx-store-freeze';
+import { localStorageSync } from 'ngrx-store-localstorage';
 
-function storeLogger(reducer) {
+export function storeLogger(reducer: ActionReducer<any>): ActionReducer<any> {
   return (state, action: any): any => {
     const result = reducer(state, action);
     console.groupCollapsed(action.type);
@@ -15,7 +15,7 @@ function storeLogger(reducer) {
   };
 }
 
-function storePersist<T, V extends Action>(): MetaReducer<T, V> {
+export function storePersist(reducer: ActionReducer<any>): ActionReducer<any> {
   return localStorageSync({
     keys: [
       {
@@ -26,14 +26,14 @@ function storePersist<T, V extends Action>(): MetaReducer<T, V> {
       }
     ],
     rehydrate: true
-  });
+  })(reducer);
 }
 
 export function metaReducers<T, V extends Action>(env): MetaReducer<T, V>[] {
   return env.production ? [
-    storePersist()
+    storePersist
   ] : [
-    storePersist(),
+    storePersist,
     storeLogger,
     storeFreeze
   ];
