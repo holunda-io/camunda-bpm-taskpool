@@ -31,7 +31,7 @@ describe('DataEntryEffects', () => {
       {name: 'foo', description: '', url: '', type: 'type', payload: {}, currentState: 'MY STATE', currentStateType: '', protocol: []},
       {name: 'bar', description: '', url: '', type: 'type2', payload: {}, currentState: 'MY STATE2', currentStateType: '', protocol: []}
     ];
-    const serviceSpy = spyOn(workpieceService, 'getBosResponse').and.returnValue(of({body: dataEntriesDtos, headers: {}}));
+    const serviceSpy = spyOn(workpieceService, 'getBosResponse').and.returnValue(of({body: dataEntriesDtos, headers: {}} as any));
 
     // when:
     effectsFor(action).loadDataEntries$.subscribe((newAction) => {
