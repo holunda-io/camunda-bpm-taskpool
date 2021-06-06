@@ -1,6 +1,6 @@
 import { Action, ActionReducer, MetaReducer } from '@ngrx/store';
-
 import { localStorageSync } from 'ngrx-store-localstorage';
+
 
 export function storeLogger(reducer: ActionReducer<any>): ActionReducer<any> {
   return (state, action: any): any => {
@@ -29,7 +29,7 @@ export function storePersist(reducer: ActionReducer<any>): ActionReducer<any> {
   })(reducer);
 }
 
-export function metaReducers<T, V extends Action>(env): MetaReducer<T, V>[] {
+export function metaReducers<T, V extends Action>(env): MetaReducer<any>[] {
   return env.production ? [
     storePersist
   ] : [storePersist, storeLogger];
