@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+
+
+
+<meta charset="utf-8"/>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+<meta name="generator" content="Orchid 0.18.2-SNAPSHOT"/>
+<link rel="icon" href="https://www.holunda.io/camunda-bpm-taskpool/favicon.ico">
+
+
+<meta name="robots" content="index, follow">
+
+
+
+<title>Datapool Collector</title>
+
+
+<meta name="description" content="A component for pooling user tasks with business data for high performance queries.">
+
+
+
+<link rel="prev" href="https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/components/engine-taskpool-collector">
+
+
+<link rel="next" href="https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/components/core-taskpool">
+
+
+<script>
+    window.site = {"orchidVersion":"0.18.2-SNAPSHOT","baseUrl":"https://www.holunda.io/camunda-bpm-taskpool","environment":"debug","version":"3.0.0"};
+</script>
+
+
+
+
+
+<!-- start:debug info -->
+
+<!-- THEME -->
+<!-- Type: BsDoc -->
+<!-- Class: com.eden.orchid.bsdoc.BSDocTheme -->
+
+<!-- PAGE -->
+<!-- Type: wiki -->
+<!-- Class: com.eden.orchid.wiki.pages.WikiPage -->
+<!-- Layout: geopattern2, index -->
+<!-- Resolved Layout: templates/layouts/geopattern2.peb -->
+<!-- Page Template: wiki, page -->
+<!-- Resolved Page Template: templates/pages/page.peb -->
+
+<!-- RESOURCE -->
+<!-- Class: com.eden.orchid.api.resources.resource.FileResource -->
+<!-- Source Filename: wiki/user-guide/components/engine-datapool-collector.ad -->
+
+<!-- COMPLETE PAGE CONFIGURATION -->
+<script>
+    window.allData = {"reference":{"path":"wiki/user-guide/components","baseUrl":"https://www.holunda.io/camunda-bpm-taskpool","fileName":"engine-datapool-collector","extension":"html","usePrettyUrl":true,"link":"https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/components/engine-datapool-collector"},"next":{"path":"wiki/user-guide/components","baseUrl":"https://www.holunda.io/camunda-bpm-taskpool","fileName":"core-taskpool","extension":"html","usePrettyUrl":true,"link":"https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/components/core-taskpool"},"previous":{"path":"wiki/user-guide/components","baseUrl":"https://www.holunda.io/camunda-bpm-taskpool","fileName":"engine-taskpool-collector","extension":"html","usePrettyUrl":true,"link":"https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/components/engine-taskpool-collector"},"description":"","title":"Datapool Collector"};
+</script>
+
+<!-- end:debug info -->
+
+
+
+
+    <!-- start:inject components -->
+    
+    <!-- end:inject components -->
+
+
+
+    <!-- start:inject components -->
+    
+    <!-- end:inject components -->
+
+
+
+
+
+<!-- start:inject styles -->
+<link rel="stylesheet" type="text/css" href="https://netdna.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css"  />
+<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"  />
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/github-fork-ribbon-css/0.2.0/gh-fork-ribbon.min.css"  />
+<link rel="stylesheet" type="text/css" href="https://www.holunda.io/camunda-bpm-taskpool/BsDoc/b5276d0/assets/css/bsdoc.css"  />
+<link rel="stylesheet" type="text/css" href="https://www.holunda.io/camunda-bpm-taskpool/BsDoc/b5276d0/assets/css/orchidSearch.css"  />
+<link rel="stylesheet" type="text/css" href="https://www.holunda.io/camunda-bpm-taskpool/assets/css/menu.css"  />
+<link rel="stylesheet" type="text/css" href="https://www.holunda.io/camunda-bpm-taskpool/assets/css/asciidoc-admonitionblock.css"  />
+<link rel="stylesheet" type="text/css" href="https://rawgit.com/PrismJS/prism-themes/master/themes/prism-darcula.css"  />
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/plugins/line-numbers/prism-line-numbers.min.css"  />
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/plugins/line-highlight/prism-line-highlight.min.css"  />
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/plugins/toolbar/prism-toolbar.min.css"  />
+<!-- end:inject styles -->
+
+
+</head>
+<body>
+
+
+
+
+<a class="github-fork-ribbon right-top"
+   href="https://github.com/holunda-io/camunda-bpm-taskpool"
+   title="Fork me on GitHub">Fork me on GitHub</a>
+
+
+<header class="navbar navbar-fixed-top bs-docs-nav">
+    <div class="container">
+        <div class="navbar-header" role="banner">
+            <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="https://www.holunda.io/camunda-bpm-taskpool">BPM Taskpool</a>
+        </div>
+        <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
+            <ul class="nav navbar-nav navbar-right">
+                
+                    
+                        <li class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">Introduction<span class="caret"></span></a>
+                            <ul class="dropdown-menu scrollable-menu">
+                                
+                                    <li><a href="https://www.holunda.io/camunda-bpm-taskpool/wiki/introduction/motivation">Motivation</a></li>
+                                
+                                    <li><a href="https://www.holunda.io/camunda-bpm-taskpool/wiki/introduction/features">Features</a></li>
+                                
+                                    <li><a href="https://www.holunda.io/camunda-bpm-taskpool/wiki/introduction/solution">Solution Architecture</a></li>
+                                
+                                    <li><a href="https://www.holunda.io/camunda-bpm-taskpool/wiki/introduction/further-outlook">Further outlook</a></li>
+                                
+                            </ul>
+                        </li>
+                    
+                
+                    
+                        <li class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">User Guide<span class="caret"></span></a>
+                            <ul class="dropdown-menu scrollable-menu">
+                                
+                                    <li><a href="https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/example">Example Application</a></li>
+                                
+                                    <li><a href="https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/example-components">Example Components</a></li>
+                                
+                                    <li><a href="https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/scenarios">Usage Scenarios</a></li>
+                                
+                                    <li><a href="https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/integration-guide">Integration Guide</a></li>
+                                
+                                    <li><a href="https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/components">Taskpool Components</a></li>
+                                
+                            </ul>
+                        </li>
+                    
+                
+                    
+                        <li class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">Developer Guide<span class="caret"></span></a>
+                            <ul class="dropdown-menu scrollable-menu">
+                                
+                                    <li><a href="https://www.holunda.io/camunda-bpm-taskpool/wiki/developer-guide/contribution">Contribution</a></li>
+                                
+                                    <li><a href="https://www.holunda.io/camunda-bpm-taskpool/wiki/developer-guide/project-setup">Project Setup</a></li>
+                                
+                            </ul>
+                        </li>
+                    
+                
+                    
+                        <li class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">Explore<span class="caret"></span></a>
+                            <ul class="dropdown-menu scrollable-menu">
+                                
+                                    <li><a href="https://www.holunda.io/camunda-bpm-taskpool/changelog">Changelog</a></li>
+                                
+                                    <li><a href="https://www.holunda.io/camunda-bpm-taskpool/license">License</a></li>
+                                
+                                    <li><a href="https://www.holunda.io/camunda-bpm-taskpool/readme">Project Readme</a></li>
+                                
+                            </ul>
+                        </li>
+                    
+                
+            </ul>
+        </nav>
+    </div>
+</header>
+
+
+<div id="top"></div>
+
+
+    <div class="bs-docs-header" id="jumbotron">
+        <div class="container">
+            <h1 class="home-title">Datapool Collector</h1>
+        </div>
+    </div>
+
+
+<div class="container bs-docs-container">
+    <div class="row">
+        <div class="col-md-9" role="main">
+        <nav aria-label="breadcrumb">
+    <ul class="breadcrumb">
+    
+    
+        <li class="breadcrumb-item"><a href="https://www.holunda.io/camunda-bpm-taskpool/wiki">Wiki</a></li>
+    
+    
+    
+        <li class="breadcrumb-item"><a href="https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide">User Guide</a></li>
+    
+    
+    
+        <li class="breadcrumb-item active" aria-current="page">Datapool Collector</li>
+    
+    
+    </ul>
+</nav>
+        
+
+        
+        
+            
+    <!-- start:inject components -->
+    
+        
+            
+        
+            
+                
+                    
+                        <div class="sect1">
+<h2 id="_datapool_collector">Datapool Collector</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_purpose">Purpose</h3>
+<div class="paragraph">
+<p>Datapool collector is a component usually deployed as a part of the process application (but not necessary) that
+is responsible for collecting the Business Data Events fired by the application in order to allow for creation of
+a business data projection. In doing so, it collects and transmits it to Datapool Core.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_features">Features</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Provides an API to submit arbitrary changes of business entities</p>
+</li>
+<li>
+<p>Provides an API to track changes (aka. Audit Log)</p>
+</li>
+<li>
+<p>Authorization on business entries</p>
+</li>
+<li>
+<p>Transmission of business entries commands</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_usage_and_configuration">Usage and configuration</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">    &lt;dependency&gt;
+      &lt;groupId&gt;io.holunda.taskpool&lt;/groupId&gt;
+      &lt;artifactId&gt;camunda-bpm-datapool-collector&lt;/artifactId&gt;
+      &lt;version&gt;${camunda-taskpool.version}&lt;/version&gt;
+    &lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Then activate the datapool collector by providing the annotation on any Spring Configuration:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">@Configuration
+@EnableDataEntryCollector
+class MyDataEntryCollectorConfiguration {
+
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_command_transmission">Command transmission</h3>
+<div class="paragraph">
+<p>In order to control sending of commands to command gateway, the command sender activation property
+<code>camunda.taskpool.dataentry.sender.enabled</code> (default is <code>true</code>) is available. If disabled, the command sender
+will log any command instead of sending it to the command gateway.</p>
+</div>
+<div class="paragraph">
+<p>In addition you can control by the property <code>camunda.taskpool.dataentry.sender.type</code> if you want to use the default command sender or provide your own implementation.
+The default provided command sender (type: <code>simple</code>) just sends the commands synchronously using Axon Command Bus.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Tip</div>
+</td>
+<td class="content">
+If you want to implement a custom command sending, please provide your own implementation of the interface <code>DataEntryCommandSender</code>
+(register a Spring Component of the type) and set the property <code>camunda.taskpool.dataentry.sender.type</code> to <code>custom</code>.
+</td>
+</tr>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_handling_command_transmission">Handling command transmission</h4>
+<div class="paragraph">
+<p>The commands sent by the <code>Datapool Collector</code> are received by Command Handlers. The latter may accept or reject commands, depending
+on the state of the aggregate and other components. The <code>SimpleDataEntryCommandSender</code> is informed about the command outcome. By default, it will log the outcome
+to console (success is logged in <code>DEBUG</code> log level, errors are using <code>ERROR</code> log level).</p>
+</div>
+<div class="paragraph">
+<p>In some situations it is required to take care of command outcome. A prominent example is to include a metric for command dispatching errors into monitoring. For doing so,
+it is possible to provide own handlers for success and error command outcome.</p>
+</div>
+<div class="paragraph">
+<p>For Data Entry Command Sender (as a part of <code>Datapool Collector</code>) please provide a Spring Bean implementing the <code>io.holunda.camunda.datapool.sender.DataEntryCommandSuccessHandler</code>
+ and <code>io.holunda.camunda.datapool.sender.DataEntryCommandErrorHandler</code> accordingly.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-kotlin" data-lang="kotlin">  @Bean
+  @Primary
+  fun dataEntryCommandSuccessHandler() = object: DataEntryCommandResultHandler {
+    override fun apply(commandMessage: Any, commandResultMessage: CommandResultMessage&lt;out Any?&gt;) {
+      // do something here
+      logger.info { "Success" }
+    }
+  }
+
+  @Bean
+  @Primary
+  fun dataEntryCommandErrorHandler() = object: DataEntryCommandErrorHandler {
+    override fun apply(commandMessage: Any, commandResultMessage: CommandResultMessage&lt;out Any?&gt;) {
+      // do something here
+      logger.error { "Error" }
+    }
+  }</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+                    
+                
+            
+        
+    
+    <!-- end:inject components -->
+
+
+        
+        </div>
+
+        <!-- Page navigation
+        =========================================== -->
+        <div class="col-md-3" role="complementary">
+        <div class="bs-docs-sidebar hidden-print" id="bs-docs-sidebar">
+    <section id="search" >
+        <form data-orchid-search="">
+            <div class="input-group">
+                <input type="text" name="query" id="query" class="form-control" placeholder="Search&hellip;">
+                <span class="input-group-btn"><button type="submit" class="btn btn-default">Go</button></span>
+            </div>
+        </form>
+        <div id="search-results" data-orchid-search-results style="display: none;">
+            <b>Search Results</b>
+            <ul></ul>
+        </div>
+        <div id="search-progress" data-orchid-search-progress style="display: none;">
+            <div class="loader">Loading...</div>
+        </div>
+    </section>
+
+    <ul class="nav bs-docs-sidenav">
+        
+        
+            
+                
+                    <li><a class="divider-subheader">In This Page</a></li>
+                
+            
+        
+        
+            
+                <li class="has-children ">
+                    <a>Datapool Collector</a>
+                    <ul class="nav">
+                        
+                        
+                            
+                                <li class="">
+                                    <a href="#_purpose">Purpose</a>
+                                </li>
+                            
+                        
+                            
+                                <li class="">
+                                    <a href="#_features">Features</a>
+                                </li>
+                            
+                        
+                            
+                                <li class="">
+                                    <a href="#_usage_and_configuration">Usage and configuration</a>
+                                </li>
+                            
+                        
+                            
+                                <li class="">
+                                    <a href="#_command_transmission">Command transmission</a>
+                                </li>
+                            
+                        
+                    </ul>
+                </li>
+            
+        
+        
+            
+                
+                    <li><a class="divider-subheader">User Guide</a></li>
+                
+            
+        
+        
+            
+                
+                    <li class=""><a href="https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/example">Example Application</a></li>
+                
+            
+        
+        
+            
+                <li class="has-children ">
+                    <a>Example Components</a>
+                    <ul class="nav">
+                        
+                        <li>
+                            <a href="https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/example-components">Overview</a>
+                        </li>
+                        
+                        
+                            
+                                <li class="">
+                                    <a href="https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/example-components/pa-frontend">Process Application Frontend</a>
+                                </li>
+                            
+                        
+                            
+                                <li class="">
+                                    <a href="https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/example-components/pa-backend">Process Application Backend</a>
+                                </li>
+                            
+                        
+                            
+                                <li class="">
+                                    <a href="https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/example-components/user-management">User Management</a>
+                                </li>
+                            
+                        
+                            
+                                <li class="">
+                                    <a href="https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/example-components/pp-frontend">Process Platform Frontend</a>
+                                </li>
+                            
+                        
+                            
+                                <li class="">
+                                    <a href="https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/example-components/pp-backend">Process Platform Backend</a>
+                                </li>
+                            
+                        
+                    </ul>
+                </li>
+            
+        
+        
+            
+                <li class="has-children ">
+                    <a>Usage Scenarios</a>
+                    <ul class="nav">
+                        
+                        <li>
+                            <a href="https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/scenarios">Overview</a>
+                        </li>
+                        
+                        
+                            
+                                <li class="">
+                                    <a href="https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/scenarios/single-node">Scenario for running on a single node</a>
+                                </li>
+                            
+                        
+                            
+                                <li class="">
+                                    <a href="https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/scenarios/distributed-axon-server">Distributed Scenario using Axon Server</a>
+                                </li>
+                            
+                        
+                            
+                                <li class="">
+                                    <a href="https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/scenarios/distributed-no-axon-server">Scenario without Axon Server</a>
+                                </li>
+                            
+                        
+                    </ul>
+                </li>
+            
+        
+        
+            
+                
+                    <li class=""><a href="https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/integration-guide">Integration Guide</a></li>
+                
+            
+        
+        
+            
+                <li class="has-children active">
+                    <a>Taskpool Components</a>
+                    <ul class="nav">
+                        
+                        <li>
+                            <a href="https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/components">Overview</a>
+                        </li>
+                        
+                        
+                            
+                                <li class="">
+                                    <a href="https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/components/engine-starter">Camunda Engine Taskpool Support SpringBoot Starter</a>
+                                </li>
+                            
+                        
+                            
+                                <li class="">
+                                    <a href="https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/components/engine-interaction-client">Camunda Engine Interaction Client</a>
+                                </li>
+                            
+                        
+                            
+                                <li class="">
+                                    <a href="https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/components/engine-taskpool-collector">Taskpool Collector</a>
+                                </li>
+                            
+                        
+                            
+                                <li class="active">
+                                    <a href="https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/components/engine-datapool-collector">Datapool Collector</a>
+                                </li>
+                            
+                        
+                            
+                                <li class="">
+                                    <a href="https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/components/core-taskpool">Taskpool Core</a>
+                                </li>
+                            
+                        
+                            
+                                <li class="">
+                                    <a href="https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/components/core-datapool">Datapool Core</a>
+                                </li>
+                            
+                        
+                            
+                                <li class="">
+                                    <a href="https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/components/view-simple">In-Memory View</a>
+                                </li>
+                            
+                        
+                            
+                                <li class="">
+                                    <a href="https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/components/view-mongo">Mongo View</a>
+                                </li>
+                            
+                        
+                    </ul>
+                </li>
+            
+        
+    </ul>
+
+    
+    <!-- start:inject components -->
+    
+    <!-- end:inject components -->
+
+
+
+    <a class="back-to-top" href="#top">
+        <i class="glyphicon glyphicon-chevron-up"></i> Back to top
+    </a>
+</div>
+
+        </div>
+    </div>
+</div>
+
+
+<div id="footer">
+    <div class="container bs-docs-container">
+    <footer class="bs-docs-footer" role="contentinfo">
+    <div class="row">
+        <div class="col-xs-12">
+            <nav aria-label="navigateClasses">
+                <ul class="pager">
+                    
+                        <li class="previous">
+                            <a href="https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/components/engine-taskpool-collector">
+                                <span aria-hidden="true">&larr;</span>
+                                <span>Taskpool Collector</span>
+                            </a>
+                        </li>
+                    
+
+                    
+                        <li class="next">
+                            <a href="https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/components/core-taskpool">
+                                <span>Taskpool Core</span>
+                                <span aria-hidden="true">&rarr;</span>
+                            </a>
+                        </li>
+                    
+                </ul>
+            </nav>
+        </div>
+    </div>
+    <div class="icons">
+    
+    
+        <a href="https://www.holunda.io/camunda-bpm-taskpool/" class="fa fas fa-home"></a>
+    
+        <a href="https://github.com/holunda-io/camunda-bpm-taskpool" class="fa fa-github"></a>
+    
+        <a href="https://twitter.com/holisticon" class="fa fa-twitter"></a>
+    
+    
+    </div>
+    <br>
+    <p>
+    Documentation template based on the
+    <a href="https://github.com/mistic100/jekyll-bootstrap-doc">Jekyll Bootstrap Doc</a>
+    Jekyll theme by the <a href="https://getbootstrap.com">Bootstrap team</a>. Site created with
+    <a href="https://orchid.run">Orchid</a>.
+</p>
+
+
+</footer>
+    </div>
+</div>
+
+
+<!-- start:inject scripts -->
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script  src="https://netdna.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.3.0/bootbox.min.js"></script>
+<script  src="https://www.holunda.io/camunda-bpm-taskpool/BsDoc/b5276d0/assets/js/bsdoc.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/prism.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-yaml.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-java.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-json.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-kotlin.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-markdown.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/plugins/line-numbers/prism-line-numbers.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/plugins/line-highlight/prism-line-highlight.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/plugins/toolbar/prism-toolbar.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/plugins/show-language/prism-show-language.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js"></script>
+<!-- end:inject scripts -->
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+
+<script>
+    $(function () {
+        window.colors = ['#16480c', '#000000'];
+                  
+    
+        geopattern('Datapool Collector');
+    
+
+        buildNav();
+    });
+</script>
+
+</body>
+</html>

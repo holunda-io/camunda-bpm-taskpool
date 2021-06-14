@@ -1,0 +1,31 @@
+{
+  "ownKey": "home",
+  "ownPages": [
+    {
+      "reference": {
+        "path": "",
+        "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+        "fileName": "",
+        "extension": "html",
+        "usePrettyUrl": true,
+        "link": "https://www.holunda.io/camunda-bpm-taskpool"
+      },
+      "description": "",
+      "title": "Home",
+      "content": "<h2 id=\"why-should-i-use-this\"><a href=\"#why-should-i-use-this\" id=\"why-should-i-use-this\" class=\"anchor\"><\/a>Why should I use this?<\/h2>\n<ul>\n<li>Are you building a process application or process platform containing multiple process applications\nusing Camunda BPM Engine?<\/li>\n<li>Are you building a custom task list for your existing application using\nCamunda BPM Engine?<\/li>\n<li>Are you trying to solve performance issues with your task list?<\/li>\n<li>Are you building an archive view for the business objects processed by your processes?<\/li>\n<li>Are you interested in an audit log for any changes performed during the execution of the business process?<\/li>\n<\/ul>\n<p>If you can answer one of the previous questions with yes, the taskpool / datapool library might help you.<\/p>\n<h2 id=\"how-to-start\"><a href=\"#how-to-start\" id=\"how-to-start\" class=\"anchor\"><\/a>How to start?<\/h2>\n<p>We provide documentation for different people and different tasks. A good starting point is the\n<a href=\"./wiki/introduction\">Introduction<\/a>. You might want to look at <a href=\"./wiki/user-guide\">User Guide<\/a> containing\na <a href=\"./wiki/user-guide/example\">Working Example<\/a> and details about <a href=\"./wiki/user-guide/scenarios\">Usage Scenarios<\/a>.<\/p>\n<h2 id=\"get-in-touch\"><a href=\"#get-in-touch\" id=\"get-in-touch\" class=\"anchor\"><\/a>Get in touch<\/h2>\n<p>If you are missing a feature, have a question regarding usage or deployment, you should definitely get in touch\nwith us. There are various ways to do so:<\/p>\n<ul>\n<li><a href=\"https://gitter.im/holunda-io/camunda-bpm-taskpool?utm_source=badge&amp;utm_medium=badge&amp;utm_campaign=pr-badge\"><img src=\"https://badges.gitter.im/holunda-io/camunda-bpm-taskpool.svg\" alt=\"Gitter\" /><\/a><\/li>\n<li><a href=\"https://holunda.slack.com/messages/taskpool/\">Slack<\/a><\/li>\n<li><a href=\"https://github.com/holunda-io/camunda-bpm-taskpool/issues\">Github Issues<\/a><\/li>\n<li><a href=\"/wiki/developer-guide\">Developer Guide<\/a><\/li>\n<\/ul>\n"
+    },
+    {
+      "reference": {
+        "path": "",
+        "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+        "fileName": "404",
+        "extension": "html",
+        "usePrettyUrl": false,
+        "link": "https://www.holunda.io/camunda-bpm-taskpool/404.html"
+      },
+      "description": "",
+      "title": "Not Found",
+      "content": ""
+    }
+  ]
+}

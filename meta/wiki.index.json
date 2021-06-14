@@ -1,0 +1,942 @@
+{
+  "ownKey": "wiki",
+  "childrenPages": {"wiki": {
+    "ownKey": "wiki",
+    "childrenPages": {
+      "developer-guide": {
+        "ownKey": "developer-guide",
+        "childrenPages": {
+          "contribution": {
+            "ownKey": "contribution",
+            "ownPages": [{
+              "reference": {
+                "path": "wiki/developer-guide",
+                "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                "fileName": "contribution",
+                "extension": "html",
+                "usePrettyUrl": true,
+                "link": "https://www.holunda.io/camunda-bpm-taskpool/wiki/developer-guide/contribution"
+              },
+              "next": {
+                "path": "wiki/developer-guide",
+                "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                "fileName": "project-setup",
+                "extension": "html",
+                "usePrettyUrl": true,
+                "link": "https://www.holunda.io/camunda-bpm-taskpool/wiki/developer-guide/project-setup"
+              },
+              "description": "",
+              "title": "Contribution",
+              "content": "<div class=\"sect1\">\n<h2 id=\"_contribution\">Contribution<\/h2>\n<div class=\"sectionbody\">\n<div class=\"paragraph\">\n<p>There are several ways in which you may contribute to this project.<\/p>\n<\/div>\n<div class=\"ulist\">\n<ul>\n<li>\n<p><a href=\"https://github.com/holunda-io/camunda-bpm-taskpool/issues\">File issues<\/a><\/p>\n<\/li>\n<li>\n<p>Submit a pull requests<\/p>\n<\/li>\n<\/ul>\n<\/div>\n<div class=\"sect2\">\n<h3 id=\"_found_a_bug_or_missing_feature\">Found a bug or missing feature?<\/h3>\n<div class=\"paragraph\">\n<p>Please <a href=\"https://github.com/holunda-io/camunda-bpm-taskpool/issues\">file an issue<\/a> in our\nissue tracking system.<\/p>\n<\/div>\n<\/div>\n<div class=\"sect2\">\n<h3 id=\"_submit_a_pull_request\">Submit a Pull Request<\/h3>\n<div class=\"paragraph\">\n<p>If you found a solution to an <a href=\"https://github.com/holuda-io/camunda-bpm-taskpool/issues\">open issue<\/a>\nand implemented it, we would be happy to add your contribution in the code base. For doing so,\nplease create a pull request. Prior to that, please make sure you<\/p>\n<\/div>\n<div class=\"ulist\">\n<ul>\n<li>\n<p>rebase against the <code>develop<\/code> branch<\/p>\n<\/li>\n<li>\n<p>stick to project coding conventions<\/p>\n<\/li>\n<li>\n<p>added test cases for the problem you are solving<\/p>\n<\/li>\n<li>\n<p>added docs, describing the change<\/p>\n<\/li>\n<li>\n<p>generally comply with codeacy report<\/p>\n<\/li>\n<\/ul>\n<\/div>\n<\/div>\n<\/div>\n<\/div>"
+            }]
+          },
+          "project-setup": {
+            "ownKey": "project-setup",
+            "ownPages": [{
+              "reference": {
+                "path": "wiki/developer-guide",
+                "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                "fileName": "project-setup",
+                "extension": "html",
+                "usePrettyUrl": true,
+                "link": "https://www.holunda.io/camunda-bpm-taskpool/wiki/developer-guide/project-setup"
+              },
+              "previous": {
+                "path": "wiki/developer-guide",
+                "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                "fileName": "contribution",
+                "extension": "html",
+                "usePrettyUrl": true,
+                "link": "https://www.holunda.io/camunda-bpm-taskpool/wiki/developer-guide/contribution"
+              },
+              "description": "",
+              "title": "Project Setup",
+              "content": "<div class=\"sect1\">\n<h2 id=\"_project_setup\">Project Setup<\/h2>\n<div class=\"sectionbody\">\n<div class=\"paragraph\">\n<p>If you are interested in developing and building the project please follow the following instruction.<\/p>\n<\/div>\n<div class=\"sect2\">\n<h3 id=\"_version_control\">Version control<\/h3>\n<div class=\"paragraph\">\n<p>To get sources of the project, please execute:<\/p>\n<\/div>\n<div class=\"listingblock\">\n<div class=\"content\">\n<pre class=\"highlight\"><code class=\"language-bash\" data-lang=\"bash\">git clone https://github.com/holunda-io/camunda-bpm-taskpool.git\ncd camunda-bpm-taskpool<\/code><\/pre>\n<\/div>\n<\/div>\n<div class=\"paragraph\">\n<p>We are using gitflow in our git SCM. That means that you should start from <code>develop<\/code> branch,\ncreate a <code>feature/&lt;name&gt;<\/code> out of it and once it is completed create a pull request containing\nit. Please squash your commits before submitting and use semantic commit messages, if possible.<\/p>\n<\/div>\n<\/div>\n<div class=\"sect2\">\n<h3 id=\"_project_build\">Project Build<\/h3>\n<div class=\"paragraph\">\n<p>Perform the following steps to get a development setup up and running.<\/p>\n<\/div>\n<div class=\"listingblock\">\n<div class=\"content\">\n<pre class=\"highlight\"><code class=\"language-bash\" data-lang=\"bash\">./mvnw clean install<\/code><\/pre>\n<\/div>\n<\/div>\n<\/div>\n<div class=\"sect2\">\n<h3 id=\"_integration_tests\">Integration Tests<\/h3>\n<div class=\"paragraph\">\n<p>By default, the build command will ignore the run of <code>failsafe<\/code> Maven plugin executing the integration tests\n(usual JUnit tests with class names ending with ITest). In order to run integration tests, please\ncall from your command line:<\/p>\n<\/div>\n<div class=\"listingblock\">\n<div class=\"content\">\n<pre class=\"highlight\"><code class=\"language-bash\" data-lang=\"bash\">./mvnw integration-test failsafe:verify -Pitest -DskipFrontend<\/code><\/pre>\n<\/div>\n<\/div>\n<\/div>\n<div class=\"sect2\">\n<h3 id=\"_project_build_modes_and_profiles\">Project build modes and profiles<\/h3>\n<div class=\"sect3\">\n<h4 id=\"_camunda_version\">Camunda Version<\/h4>\n<div class=\"paragraph\">\n<p>You can choose the used Camunda version by specifying the profile <code>camunda-ee<\/code> or <code>camunda-ce<\/code>. The default\nversion is a Community Edition. Specify <code>-Pcamunda-ee<\/code> to switch to Camunda Enterprise edition. This will\nrequire a valid Camunda license. You can put it into a file <code>~/.camunda/license.txt<\/code> and it will be detected\nautomatically.<\/p>\n<\/div>\n<\/div>\n<div class=\"sect3\">\n<h4 id=\"_skip_frontend\">Skip Frontend<\/h4>\n<div class=\"admonitionblock tip\">\n<table>\n<tr>\n<td class=\"icon\">\n<div class=\"title\">Tip<\/div>\n<\/td>\n<td class=\"content\">\nComponents for production use of camunda-bpm-taskpool are backend components only. Frontend components are only\ncreated for examples and demonstration purpose.\n<\/td>\n<\/tr>\n<\/table>\n<\/div>\n<div class=\"paragraph\">\n<p>If you are interested in backend only, specify the <code>-DskipFrontend<\/code> switch. This will accelerate the build\nsignificantly.<\/p>\n<\/div>\n<\/div>\n<div class=\"sect3\">\n<h4 id=\"_sql_scripts\">SQL scripts<\/h4>\n<div class=\"paragraph\">\n<p>The project uses <a href=\"https://flywaydb.org/\">Flyway<\/a> for versioning of database changes. In doing so we provide the\nrequired SQL scripts for initialization of required database objects (including Camunda BPM schema, Axon schema and\nsome example schema). If you change any of those you will need to create SQL scripts describing your change.\nFor doing so, you can re-generate the scripts running:<\/p>\n<\/div>\n<div class=\"listingblock\">\n<div class=\"content\">\n<pre class=\"highlight\"><code class=\"language-bash\" data-lang=\"bash\">./mvnw -Pgenerate-sql<\/code><\/pre>\n<\/div>\n<\/div>\n<div class=\"admonitionblock note\">\n<table>\n<tr>\n<td class=\"icon\">\n<div class=\"title\">Note<\/div>\n<\/td>\n<td class=\"content\">\nThe existing scripts must not be replaced or changed, but new additional scripts needs to added.\n<\/td>\n<\/tr>\n<\/table>\n<\/div>\n<\/div>\n<div class=\"sect3\">\n<h4 id=\"_documentation\">Documentation<\/h4>\n<div class=\"paragraph\">\n<p>We are using Orchid for generation of a static site documentation and rely on AsciiDoc as much as possible.<\/p>\n<\/div>\n<div class=\"admonitionblock tip\">\n<table>\n<tr>\n<td class=\"icon\">\n<div class=\"title\">Tip<\/div>\n<\/td>\n<td class=\"content\">\nIf you want to develop your docs in 'live' mode, run <code>./mvnw -f docs -Pserve-docs<\/code> and access\nthe <a href=\"http://localhost:8080/\" class=\"bare\">http://localhost:8080/<\/a> from your browser.\n<\/td>\n<\/tr>\n<\/table>\n<\/div>\n<div class=\"paragraph\">\n<p>For creation of documentation, please run:<\/p>\n<\/div>\n<div class=\"listingblock\">\n<div class=\"content\">\n<pre class=\"highlight\"><code class=\"language-bash\" data-lang=\"bash\">./mvnw -f docs orchid:build<\/code><\/pre>\n<\/div>\n<\/div>\n<div class=\"admonitionblock warning\">\n<table>\n<tr>\n<td class=\"icon\">\n<div class=\"title\">Warning<\/div>\n<\/td>\n<td class=\"content\">\nThis operation requires special permissions. You need to replace <code>GITHUB_TOKEN<\/code> by the token of\nthe github pages repository, allowing to publish the pages.\n<\/td>\n<\/tr>\n<\/table>\n<\/div>\n<div class=\"paragraph\">\n<p>In order to publish documentation to github pages, please run from command line<\/p>\n<\/div>\n<div class=\"listingblock\">\n<div class=\"content\">\n<pre class=\"highlight\"><code class=\"language-bash\" data-lang=\"bash\">./mvnw -f docs -Pdeploy-docs -DgithubToken=GITHUB_TOKEN<\/code><\/pre>\n<\/div>\n<\/div>\n<\/div>\n<div class=\"sect3\">\n<h4 id=\"_examples\">Examples<\/h4>\n<div class=\"paragraph\">\n<p>Taskpool provides a series of examples demonstrating different features of the library. By default, the examples are\nbuilt during the project build. If you want to skip the examples, please add the following parameter to your command\nline or disable the <code>examples<\/code> module in your IDE.<\/p>\n<\/div>\n<div class=\"listingblock\">\n<div class=\"content\">\n<pre class=\"highlight\"><code class=\"language-bash\" data-lang=\"bash\">./mvnw clean package -DskipExamples<\/code><\/pre>\n<\/div>\n<\/div>\n<\/div>\n<\/div>\n<div class=\"sect2\">\n<h3 id=\"_local_start\">Local Start<\/h3>\n<div class=\"admonitionblock important\">\n<table>\n<tr>\n<td class=\"icon\">\n<div class=\"title\">Important<\/div>\n<\/td>\n<td class=\"content\">\nIf you want to run examples locally, you will need <code>docker<\/code> and <code>docker-compose<\/code>.\n<\/td>\n<\/tr>\n<\/table>\n<\/div>\n<div class=\"sect3\">\n<h4 id=\"_pre_requirements\">Pre-requirements<\/h4>\n<div class=\"paragraph\">\n<p>Before starting the example applications, make sure the required infrastructure is set up and running.\nPlease run the following from your command line:<\/p>\n<\/div>\n<div class=\"listingblock\">\n<div class=\"content\">\n<pre class=\"highlight\"><code class=\"language-bash\" data-lang=\"bash\">./.docker/setup.sh<\/code><\/pre>\n<\/div>\n<\/div>\n<div class=\"paragraph\">\n<p>This will create required docker volumes and network.<\/p>\n<\/div>\n<\/div>\n<div class=\"sect3\">\n<h4 id=\"_start_containers\">Start containers<\/h4>\n<div class=\"paragraph\">\n<p>In order to operate, the distributed example applications will require several containers. These are:<\/p>\n<\/div>\n<div class=\"ulist\">\n<ul>\n<li>\n<p>Axon Server<\/p>\n<\/li>\n<li>\n<p>PostgreSQL Database<\/p>\n<\/li>\n<li>\n<p>Mongo Database (if used in projection)<\/p>\n<\/li>\n<\/ul>\n<\/div>\n<div class=\"paragraph\">\n<p>Please start the required containers executing the corresponding command from <code>examples/scenarios/distributed-axon-server<\/code>:<\/p>\n<\/div>\n<div class=\"listingblock\">\n<div class=\"content\">\n<pre class=\"highlight\"><code class=\"language-bash\" data-lang=\"bash\">cd ./examples/scenarios/distributed-axon-server\ndocker-compose up<\/code><\/pre>\n<\/div>\n<\/div>\n<\/div>\n<div class=\"sect3\">\n<h4 id=\"_starting_application_distributed_scenario\">Starting application (distributed scenario)<\/h4>\n<div class=\"paragraph\">\n<p>For the distributed scenario, the containers from the previous section needs to be started.\nTo start applications, either use your IDE and create two run configurations for the classes (in this order):<\/p>\n<\/div>\n<div class=\"ulist\">\n<ul>\n<li>\n<p><code>io.holunda.camunda.taskpool.example.process.ExampleTaskpoolApplicationDistributedWithAxonServer<\/code><\/p>\n<\/li>\n<li>\n<p><code>io.holunda.camunda.taskpool.example.process.ExampleProcessApplicationDistributedWithAxonServer<\/code><\/p>\n<\/li>\n<\/ul>\n<\/div>\n<div class=\"paragraph\">\n<p>Alternatively, you can run them from the command line:<\/p>\n<\/div>\n<div class=\"listingblock\">\n<div class=\"content\">\n<pre class=\"highlight\"><code class=\"language-bash\" data-lang=\"bash\">./mvnw spring-boot:run -f examples/scenarios/distributed-axon-server/taskpool-application\n./mvnw spring-boot:run -f examples/scenarios/distributed-axon-server/process-application<\/code><\/pre>\n<\/div>\n<\/div>\n<\/div>\n<\/div>\n<div class=\"sect2\">\n<h3 id=\"_continuous_integration\">Continuous Integration<\/h3>\n<div class=\"paragraph\">\n<p>Travis CI is building all branches on commit hook. In addition, a private-hosted Jenkins CI\nis used to build the releases.<\/p>\n<\/div>\n<\/div>\n<div class=\"sect2\">\n<h3 id=\"_release_management\">Release Management<\/h3>\n<div class=\"paragraph\">\n<p>Release management has been set-up for use of Sonatype Nexus (= Maven Central)<\/p>\n<\/div>\n<div class=\"sect3\">\n<h4 id=\"_what_modules_get_deployed_to_repository\">What modules get deployed to repository<\/h4>\n<div class=\"paragraph\">\n<p>Every module is enabled by default. If you want to change this, please provide the property<\/p>\n<\/div>\n<div class=\"listingblock\">\n<div class=\"content\">\n<pre class=\"highlight\"><code class=\"language-xml\" data-lang=\"xml\">&lt;maven.deploy.skip&gt;true&lt;/maven.deploy.skip&gt;<\/code><\/pre>\n<\/div>\n<\/div>\n<div class=\"paragraph\">\n<p>inside the corresponding <code>pom.xml<\/code>. Currently, all examples are <em>EXCLUDED<\/em> from publication into Maven Central.<\/p>\n<\/div>\n<\/div>\n<div class=\"sect3\">\n<h4 id=\"_trigger_new_release\">Trigger new release<\/h4>\n<div class=\"admonitionblock warning\">\n<table>\n<tr>\n<td class=\"icon\">\n<div class=\"title\">Warning<\/div>\n<\/td>\n<td class=\"content\">\nThis operation requires special permissions.\n<\/td>\n<\/tr>\n<\/table>\n<\/div>\n<div class=\"paragraph\">\n<p>We use gitflow for development (see <a href=\"http://nvie.com/posts/a-successful-git-branching-model/\">A successful git branching model<\/a>\nfor more details). You could use gitflow with native git commands, but then you would have\nto change the versions in the poms manually. Therefore we use the\n<a href=\"https://github.com/aleksandr-m/gitflow-maven-plugin/\">mvn gitflow plugin<\/a>, which handles this and other\nthings nicely.<\/p>\n<\/div>\n<div class=\"paragraph\">\n<p>You can build a release with:<\/p>\n<\/div>\n<div class=\"listingblock\">\n<div class=\"content\">\n<pre class=\"highlight\"><code class=\"language-sh\" data-lang=\"sh\">./mvnw gitflow:release-start\n./mvnw gitflow:release-finish<\/code><\/pre>\n<\/div>\n<\/div>\n<div class=\"paragraph\">\n<p>This will update the versions in the <code>pom.xml<\/code> s accordingly and push the release tag to the <code>master<\/code> branch\nand update the <code>develop<\/code> branch for the new development version.<\/p>\n<\/div>\n<\/div>\n<div class=\"sect3\">\n<h4 id=\"_trigger_a_deploy\">Trigger a deploy<\/h4>\n<div class=\"admonitionblock warning\">\n<table>\n<tr>\n<td class=\"icon\">\n<div class=\"title\">Warning<\/div>\n<\/td>\n<td class=\"content\">\nThis operation requires special permissions.\n<\/td>\n<\/tr>\n<\/table>\n<\/div>\n<div class=\"paragraph\">\n<p>Currently, CI allows for deployment of artifacts to Maven Central and is executed using github actions.\nThis means, that a push to <code>master<\/code> branch will start the corresponding build job, and if successful the\nartifacts will get into <code>Staging Repositories<\/code> of OSS Sonatype without manual intervention.<\/p>\n<\/div>\n<\/div>\n<div class=\"sect3\">\n<h4 id=\"_run_deploy_from_local_machine\">Run deploy from local machine<\/h4>\n<div class=\"admonitionblock warning\">\n<table>\n<tr>\n<td class=\"icon\">\n<div class=\"title\">Warning<\/div>\n<\/td>\n<td class=\"content\">\nThis operation requires special permissions.\n<\/td>\n<\/tr>\n<\/table>\n<\/div>\n<div class=\"paragraph\">\n<p>If you still want to execute the the deployment from your local machine, you need to have GPG keys at place and\nto execute the following command on the <code>master<\/code> branch:<\/p>\n<\/div>\n<div class=\"listingblock\">\n<div class=\"content\">\n<pre class=\"highlight\"><code class=\"language-sh\" data-lang=\"sh\">export GPG_KEYNAME=\"&lt;keyname&gt;\"\nexport GPG_PASSPHRASE=\"&lt;secret&gt;\"\n./mvnw clean deploy -B -DskipTests -DskipExamples -Prelease -Dgpg.keyname=$GPG_KEYNAME -Dgpg.passphrase=$GPG_PASSPHRASE<\/code><\/pre>\n<\/div>\n<\/div>\n<\/div>\n<div class=\"sect3\">\n<h4 id=\"_release_to_public_repositories\">Release to public repositories<\/h4>\n<div class=\"admonitionblock warning\">\n<table>\n<tr>\n<td class=\"icon\">\n<div class=\"title\">Warning<\/div>\n<\/td>\n<td class=\"content\">\nThis operation requires special permissions.\n<\/td>\n<\/tr>\n<\/table>\n<\/div>\n<div class=\"paragraph\">\n<p>The deploy job will publish the artifacts to Nexus OSS staging repositories. Don&#8217;t forget to close and release the\nrepository to enable it&#8217;s sync with Maven Central.<\/p>\n<\/div>\n<\/div>\n<\/div>\n<\/div>\n<\/div>"
+            }]
+          }
+        },
+        "ownPages": [
+          {
+            "reference": {
+              "path": "wiki",
+              "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+              "fileName": "developer-guide",
+              "extension": "html",
+              "usePrettyUrl": true,
+              "link": "https://www.holunda.io/camunda-bpm-taskpool/wiki/developer-guide"
+            },
+            "description": "",
+            "title": "Developer Guide",
+            "content": "<html>\n <head><\/head>\n <body>\n  <h2><a href=\"#\" class=\"anchor\"><\/a><\/h2> \n  <p><a href=\"https://www.holunda.io/camunda-bpm-taskpool/wiki/developer-guide/contribution\">Contribution<\/a><\/p> \n  <p><a href=\"https://www.holunda.io/camunda-bpm-taskpool/wiki/developer-guide/project-setup\">Project Setup<\/a><\/p> \n <\/body>\n<\/html>\n"
+          },
+          {
+            "reference": {
+              "path": "wiki/developer-guide",
+              "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+              "fileName": "book",
+              "extension": "pdf",
+              "usePrettyUrl": false,
+              "link": "https://www.holunda.io/camunda-bpm-taskpool/wiki/developer-guide/book.pdf"
+            },
+            "description": "",
+            "title": "Developer Guide Book",
+            "content": ""
+          }
+        ]
+      },
+      "user-guide": {
+        "ownKey": "user-guide",
+        "childrenPages": {
+          "components": {
+            "ownKey": "components",
+            "childrenPages": {
+              "engine-interaction-client": {
+                "ownKey": "engine-interaction-client",
+                "ownPages": [{
+                  "reference": {
+                    "path": "wiki/user-guide/components",
+                    "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                    "fileName": "engine-interaction-client",
+                    "extension": "html",
+                    "usePrettyUrl": true,
+                    "link": "https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/components/engine-interaction-client"
+                  },
+                  "next": {
+                    "path": "wiki/user-guide/components",
+                    "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                    "fileName": "engine-taskpool-collector",
+                    "extension": "html",
+                    "usePrettyUrl": true,
+                    "link": "https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/components/engine-taskpool-collector"
+                  },
+                  "previous": {
+                    "path": "wiki/user-guide/components",
+                    "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                    "fileName": "engine-starter",
+                    "extension": "html",
+                    "usePrettyUrl": true,
+                    "link": "https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/components/engine-starter"
+                  },
+                  "description": "",
+                  "title": "Camunda Engine Interaction Client",
+                  "content": "<div class=\"sect1\">\n<h2 id=\"_camunda_engine_interaction_client\">Camunda Engine Interaction Client<\/h2>\n<div class=\"sectionbody\">\n<div class=\"sect2\">\n<h3 id=\"_purpose\">Purpose<\/h3>\n<div class=\"paragraph\">\n<p>This component performs changes delivered by Camunda Interaction Events on Camunda BPM engine.\nThe following Camunda Interaction Events are supported:<\/p>\n<\/div>\n<div class=\"ulist\">\n<ul>\n<li>\n<p>Claim User Task<\/p>\n<\/li>\n<li>\n<p>Unclaim User Task<\/p>\n<\/li>\n<li>\n<p>Defer User Task<\/p>\n<\/li>\n<li>\n<p>Undefer User Task<\/p>\n<\/li>\n<li>\n<p>Complete User Task<\/p>\n<\/li>\n<\/ul>\n<\/div>\n<\/div>\n<\/div>\n<\/div>"
+                }]
+              },
+              "engine-taskpool-collector": {
+                "ownKey": "engine-taskpool-collector",
+                "ownPages": [{
+                  "reference": {
+                    "path": "wiki/user-guide/components",
+                    "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                    "fileName": "engine-taskpool-collector",
+                    "extension": "html",
+                    "usePrettyUrl": true,
+                    "link": "https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/components/engine-taskpool-collector"
+                  },
+                  "next": {
+                    "path": "wiki/user-guide/components",
+                    "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                    "fileName": "engine-datapool-collector",
+                    "extension": "html",
+                    "usePrettyUrl": true,
+                    "link": "https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/components/engine-datapool-collector"
+                  },
+                  "previous": {
+                    "path": "wiki/user-guide/components",
+                    "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                    "fileName": "engine-interaction-client",
+                    "extension": "html",
+                    "usePrettyUrl": true,
+                    "link": "https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/components/engine-interaction-client"
+                  },
+                  "description": "",
+                  "title": "Taskpool Collector",
+                  "content": "<div class=\"sect1\">\n<h2 id=\"_taskpool_collector\">Taskpool Collector<\/h2>\n<div class=\"sectionbody\">\n<div class=\"sect2\">\n<h3 id=\"_purpose\">Purpose<\/h3>\n<div class=\"paragraph\">\n<p>Taskpool Collector is a component deployed as a part of the process application\n(aside with Camunda BPM Engine) that is responsible for collecting information from\nthe Camunda BPM Engine. It detects the <em>intent<\/em> of the operations executed inside the engine\nand creates the corresponding commands for the taskpool. The commands are enriched with data and transmitted to\nother taskpool components (via Axon Command Bus).<\/p>\n<\/div>\n<div class=\"paragraph\">\n<p>In the following description, we use the terms <em>event<\/em> and <em>command<\/em>. Event denotes an entity\nreceived from Camunda BPM Engine (from delegate event listener or from history event listener)\nwhich is passed over to the Taskpool Collector using internal Spring eventing mechanism. The Taskpool\nCollector converts the series of such events into a Taskpool Command - an entity carrying an intent\nof change inside of the taskpool core. Please note that <em>event<\/em> has another meaning in CQRS/ES systems\nand other components of the taskpool, but in the context of Taskpool collector an event alway originates from\nSpring eventing.<\/p>\n<\/div>\n<\/div>\n<div class=\"sect2\">\n<h3 id=\"_features\">Features<\/h3>\n<div class=\"ulist\">\n<ul>\n<li>\n<p>Collection of process definitions<\/p>\n<\/li>\n<li>\n<p>Collection of process instance events<\/p>\n<\/li>\n<li>\n<p>Collection of process variable change events<\/p>\n<\/li>\n<li>\n<p>Collection of task events and history events<\/p>\n<\/li>\n<li>\n<p>Creation of task engine commands<\/p>\n<\/li>\n<li>\n<p>Enrichment of task engine commands with process variables<\/p>\n<\/li>\n<li>\n<p>Attachment of correlation information to task engine commands<\/p>\n<\/li>\n<li>\n<p>Transmission of commands to Axon command bus<\/p>\n<\/li>\n<li>\n<p>Provision of properties for process application<\/p>\n<\/li>\n<\/ul>\n<\/div>\n<\/div>\n<div class=\"sect2\">\n<h3 id=\"_architecture\">Architecture<\/h3>\n<div class=\"imageblock\">\n<div class=\"content\">\n<img src=\"https://www.holunda.io/camunda-bpm-taskpool/assets/media/collector-building-blocks.png\" alt=\"Taskpool collector building blocks\">\n<\/div>\n<\/div>\n<div class=\"paragraph\">\n<p>The Taskpool Collector consists of several components which can be devided into the following groups:<\/p>\n<\/div>\n<div class=\"ulist\">\n<ul>\n<li>\n<p>Event collectors receive are responsible for gathering information and form commands<\/p>\n<\/li>\n<li>\n<p>Processors performs the command enrichment with payload and data correlation<\/p>\n<\/li>\n<li>\n<p>Command senders are responsible for accumulating commands and sending them to Command Gateway<\/p>\n<\/li>\n<\/ul>\n<\/div>\n<\/div>\n<div class=\"sect2\">\n<h3 id=\"_usage_and_configuration\">Usage and configuration<\/h3>\n<div class=\"paragraph\">\n<p>In order to enable collector component, include the Maven dependency to your process application:<\/p>\n<\/div>\n<div class=\"listingblock\">\n<div class=\"content\">\n<pre class=\"highlight\"><code class=\"language-xml\" data-lang=\"xml\">&lt;dependency&gt;\n  &lt;groupId&gt;io.holunda.taskpool&lt;groupId&gt;\n  &lt;artifactId&gt;camunda-bpm-taskpool-collector&lt;/artifactId&gt;\n  &lt;version&gt;${camunda-taskpool.version}&lt;/version&gt;\n&lt;dependency&gt;<\/code><\/pre>\n<\/div>\n<\/div>\n<div class=\"paragraph\">\n<p>Then activate the taskpool collector by providing the annotation on any Spring Configuration:<\/p>\n<\/div>\n<div class=\"listingblock\">\n<div class=\"content\">\n<pre class=\"highlight\"><code class=\"language-java\" data-lang=\"java\">@Configuration\n@EnableTaskpoolCollector\nclass MyProcessApplicationConfiguration {\n\n}<\/code><\/pre>\n<\/div>\n<\/div>\n<\/div>\n<div class=\"sect2\">\n<h3 id=\"_event_collection\">Event collection<\/h3>\n<div class=\"paragraph\">\n<p>Taskpool Collector registers Spring Event Listener to the following events, fired by Camunda Eventing Engine Plugin:<\/p>\n<\/div>\n<div class=\"ulist\">\n<ul>\n<li>\n<p><code>DelegateTask<\/code> events:<\/p>\n<div class=\"ulist\">\n<ul>\n<li>\n<p>create<\/p>\n<\/li>\n<li>\n<p>assign<\/p>\n<\/li>\n<li>\n<p>delete<\/p>\n<\/li>\n<li>\n<p>complete<\/p>\n<\/li>\n<\/ul>\n<\/div>\n<\/li>\n<li>\n<p><code>HistoryEvent<\/code> events:<\/p>\n<div class=\"ulist\">\n<ul>\n<li>\n<p>HistoricTaskInstanceEvent<\/p>\n<\/li>\n<li>\n<p>HistoricIdentityLinkLogEvent<\/p>\n<\/li>\n<li>\n<p>HistoricProcessInstanceEventEntity<\/p>\n<\/li>\n<li>\n<p>HistoricVariableUpdateEventEntity<\/p>\n<\/li>\n<li>\n<p>HistoricDetailVariableInstanceUpdateEntity<\/p>\n<\/li>\n<\/ul>\n<\/div>\n<\/li>\n<\/ul>\n<\/div>\n<div class=\"paragraph\">\n<p>The events are transformed into corresponding commands and passed over to the processor layer.<\/p>\n<\/div>\n<\/div>\n<div class=\"sect2\">\n<h3 id=\"_task_commands_enrichment\">Task commands enrichment<\/h3>\n<div class=\"paragraph\">\n<p>Alongside with attributes received from the Camunda BPM engine, the engine task commands\ncan be enriched with additional attributes.<\/p>\n<\/div>\n<div class=\"paragraph\">\n<p>There are three enrichment modes available controlled by the <code>camunda.taskpool.task.collector.enricher.type<\/code> property:<\/p>\n<\/div>\n<div class=\"ulist\">\n<ul>\n<li>\n<p><code>no<\/code>: No enrichment takes place<\/p>\n<\/li>\n<li>\n<p><code>process-variables<\/code>: Enrichment of engine task commands with process variables<\/p>\n<\/li>\n<li>\n<p><code>custom<\/code>: User provides own implementation<\/p>\n<\/li>\n<\/ul>\n<\/div>\n<div class=\"sect3\">\n<h4 id=\"_process_variable_enrichment\">Process variable enrichment<\/h4>\n<div class=\"paragraph\">\n<p>In particular cases, the data enclosed into task attibutes is not sufficient for the task list or other user-related components. The information may be available as process variables and need to be attached to the task in the taskpool. This is where <em>Process Variable Task Enricher<\/em> can be used. For this purpose, active it setting the property <code>camunda.taskpool.collector.task.enricher.type<\/code> to <code>process-variables<\/code> and the enricher will\nput process variables into the task payload.<\/p>\n<\/div>\n<div class=\"paragraph\">\n<p>You can control what variables will be put into task command payload by providing the Process Variables Filter.\nThe <code>ProcessVariablesFilter<\/code> is a Spring bean holding a list of individual <code>VariableFilter<\/code> - at most one per\nprocess definition key and optionally one without process definition key (a global filter). If the filter is not provded,\na default filter is used which is an empty <code>EXCLUDE<\/code> filter, resulting in all process variables being attached to the user task.<\/p>\n<\/div>\n<div class=\"paragraph\">\n<p>A <code>VariableFilter<\/code> can be of the following type:<\/p>\n<\/div>\n<div class=\"ulist\">\n<ul>\n<li>\n<p><code>TaskVariableFilter<\/code>:<\/p>\n<div class=\"ulist\">\n<ul>\n<li>\n<p><code>INCLUDE<\/code>: task-level include filter, denoting a list of variables to be added for the task defined in the filter.<\/p>\n<\/li>\n<li>\n<p><code>EXCLUDE<\/code>: task-level exclude filter, denoting a list of variables to be ignored for the task defined in the filter. All other variables are included.<\/p>\n<\/li>\n<\/ul>\n<\/div>\n<\/li>\n<li>\n<p><code>ProcessVariableFilter<\/code> with process definition key:<\/p>\n<div class=\"ulist\">\n<ul>\n<li>\n<p><code>INCLUDE<\/code>: process-level include filter, denoting a list of variables to be added for all tasks of the process.<\/p>\n<\/li>\n<li>\n<p><code>EXCLUDE<\/code>: process-level exclude filter, denoting a list of variables to be ignored for all tasks of the process.<\/p>\n<\/li>\n<\/ul>\n<\/div>\n<\/li>\n<li>\n<p><code>ProcessVariableFilter<\/code> <em>without<\/em> process definition key:<\/p>\n<div class=\"ulist\">\n<ul>\n<li>\n<p><code>INCLUDE<\/code>: global include filter, denoting a list of variables to be added for all tasks of all processes for which no dedicated <code>ProcessVariableFilter<\/code> is defined.<\/p>\n<\/li>\n<li>\n<p><code>EXCLUDE<\/code>: global exclude filter, denoting a list of variables to be ignored for all tasks of all processes for which no dedicated <code>ProcessVariableFilter<\/code> is defined.<\/p>\n<\/li>\n<\/ul>\n<\/div>\n<\/li>\n<\/ul>\n<\/div>\n<div class=\"paragraph\">\n<p>Here is an example, how the process variable filter can configure the enrichment:<\/p>\n<\/div>\n<div class=\"listingblock\">\n<div class=\"content\">\n<pre class=\"highlight\"><code class=\"language-java\" data-lang=\"java\">  @Configuration\n  public class MyTaskCollectorConfiguration {\n\n    @Bean\n    public ProcessVariablesFilter myProcessVariablesFilter() {\n\n      return new ProcessVariablesFilter(\n        // define a variable filter for every process\n        new VariableFilter[]{\n          // define for every process definition\n          // either a TaskVariableFilter or ProcessVariableFilter\n          new TaskVariableFilter(\n            ProcessApproveRequest.KEY,\n            // filter type\n            FilterType.INCLUDE,\n            ImmutableMap.&lt;String, List&lt;String&gt;&gt;builder()\n              // define a variable filter for every task of the process\n              .put(ProcessApproveRequest.Elements.APPROVE_REQUEST, Lists.newArrayList(\n                ProcessApproveRequest.Variables.REQUEST_ID,\n                ProcessApproveRequest.Variables.ORIGINATOR)\n              )\n              // and again\n              .put(ProcessApproveRequest.Elements.AMEND_REQUEST, Lists.newArrayList(\n                ProcessApproveRequest.Variables.REQUEST_ID,\n                ProcessApproveRequest.Variables.COMMENT,\n                ProcessApproveRequest.Variables.APPLICANT)\n              ).build()\n          ),\n          // optionally add a global filter for all processes\n          // for that no individual filter was created\n          new ProcessVariableFilter(FilterType.INCLUDE,\n            Lists.newArrayList(CommonProcessVariables.CUSTOMER_ID))\n        }\n      );\n    }\n\n  }<\/code><\/pre>\n<\/div>\n<\/div>\n<div class=\"admonitionblock tip\">\n<table>\n<tr>\n<td class=\"icon\">\n<div class=\"title\">Tip<\/div>\n<\/td>\n<td class=\"content\">\nIf you want to implement a custom enrichment, please provide your own implementation of the interface <code>VariablesEnricher<\/code>\n(register a Spring Component of the type) and set the property <code>camunda.taskpool.collector.task.enricher.type<\/code> to <code>custom<\/code>.\n<\/td>\n<\/tr>\n<\/table>\n<\/div>\n<\/div>\n<\/div>\n<div class=\"sect2\">\n<h3 id=\"_data_correlation\">Data Correlation<\/h3>\n<div class=\"paragraph\">\n<p>Apart from task payload attached by the enricher, the so-called <em>Correlation<\/em> with data entries can\nbe configured. The data correlation allows to attach one or several references (that is a pair of values <code>entryType<\/code> and <code>entryId<\/code>) of\nbusiness data entry(ies) to a task. In the projection (which is used for querying of tasks) this correlations is be resolved and the\ninformation from business data events can be shown together with task information.<\/p>\n<\/div>\n<div class=\"paragraph\">\n<p>The correlation to data events can be configured by providing a <code>ProcessVariablesCorrelator<\/code> bean. Here is\nan example how this can be done:<\/p>\n<\/div>\n<div class=\"listingblock\">\n<div class=\"content\">\n<pre class=\"highlight\"><code class=\"language-kotlin\" data-lang=\"kotlin\">@Bean\nfun processVariablesCorrelator() = ProcessVariablesCorrelator(\n\n  ProcessVariableCorrelation(ProcessApproveRequest.KEY, <b class=\"conum\">(1)<\/b>\n    mapOf(\n      ProcessApproveRequest.Elements.APPROVE_REQUEST to mapOf( <b class=\"conum\">(2)<\/b>\n        ProcessApproveRequest.Variables.REQUEST_ID to BusinessDataEntry.REQUEST\n      )\n    ),\n    mapOf(ProcessApproveRequest.Variables.REQUEST_ID to BusinessDataEntry.REQUEST) <b class=\"conum\">(3)<\/b>\n  )\n)<\/code><\/pre>\n<\/div>\n<\/div>\n<div class=\"colist arabic\">\n<ol>\n<li>\n<p>define correlation for every process<\/p>\n<\/li>\n<li>\n<p>define a correlation for every task needed<\/p>\n<\/li>\n<li>\n<p>define a correlation globally (for the whole process)<\/p>\n<\/li>\n<\/ol>\n<\/div>\n<div class=\"paragraph\">\n<p>The process variable correlator holds a list of process variable correlations - one for every process\ndefinition key. Every <code>ProcessVariableCorrelation<\/code> configures for all tasks or for an individual taskby providing a so-called correlation\nmap. A correlation map is keyed by the name of a process variable inside Camunda Process Engine and holds the type of business data entry as value.<\/p>\n<\/div>\n<div class=\"paragraph\">\n<p>Here is an example. Imagine the process instance is storing the id of an approval request in a process variable called\n<code>varRequestId<\/code>. The system responsible for storing approval requests fires data entry events supplying the\ndata and using the entry type <code>io.my.approvalRequest<\/code> and the id of the request as <code>entryId<\/code>. In order to\ncreate a correlation in task <code>task_approve_request<\/code> of the <code>process_approval_process<\/code> we would provide the following configuration\nof the correlator:<\/p>\n<\/div>\n<div class=\"listingblock\">\n<div class=\"content\">\n<pre class=\"highlight\"><code class=\"language-kotlin\" data-lang=\"kotlin\">@Bean\nfun processVariablesCorrelator() = ProcessVariablesCorrelator(\n\n  ProcessVariableCorrelation(\"process_approval_process\",\n    mapOf(\n      \"task_approve_request\" to mapOf(\n        \"varRequestId\" to \"io.my.approvalRequest\" // process variable 'varRequestId' holds the id of a data entry of type 'io.my.approvalRequest'\n      )\n    )\n  )\n)<\/code><\/pre>\n<\/div>\n<\/div>\n<div class=\"paragraph\">\n<p>If the process instance now contains the approval request id <code>\"4711\"<\/code> in the process variable <code>varRequestId<\/code>\nand the process reaches the task <code>task_approve_request<\/code>, the task will get the following correlation created\n(here written in JSON):<\/p>\n<\/div>\n<div class=\"listingblock\">\n<div class=\"content\">\n<pre class=\"highlight\"><code class=\"language-json\" data-lang=\"json\">\"correlations\": [\n  { \"entryType\": \"approvalRequest\", \"entryId\": \"4711\" }\n]<\/code><\/pre>\n<\/div>\n<\/div>\n<\/div>\n<div class=\"sect2\">\n<h3 id=\"_command_aggregation\">Command aggregation<\/h3>\n<div class=\"paragraph\">\n<p>In order to control sending of commands to command sender, the command sender activation property\n<code>camunda.taskpool.collector.task.enabled<\/code> is available. If disabled, the command sender\nwill log any command instead of aggregating sending it to the command gateway.<\/p>\n<\/div>\n<div class=\"paragraph\">\n<p>In addition you can control by the property <code>camunda.taskpool.collector.task.sender.type<\/code> if you want to use the default command sender or provide your own implementation.\nThe default provided command sender (type: <code>tx<\/code>) is collects all task commands during one transaction, group them by task id\nand accumulates by creating one command reflecting the intent of the task operation. It uses Axon Command Bus (encapsulated\nby the <code>AxonCommandListGateway<\/code> for sending the result over to the Axon command gateway.<\/p>\n<\/div>\n<div class=\"admonitionblock tip\">\n<table>\n<tr>\n<td class=\"icon\">\n<div class=\"title\">Tip<\/div>\n<\/td>\n<td class=\"content\">\nIf you want to implement a custom command sending, please provide your own implementation of the interface <code>EngineTaskCommandSender<\/code>\n(register a Spring Component of the type) and set the property <code>camunda.taskpool.collector.task.sender.type<\/code> to <code>custom<\/code>.\n<\/td>\n<\/tr>\n<\/table>\n<\/div>\n<div class=\"paragraph\">\n<p>The Spring event listeners receiving events from the Camunda Engine plugin are called before the engine commits the transaction.\nSince all processing inside collector component and enricher is performed synchronously, the sender must waits until transaction to\nbe successfully committed before sending any commands to the Command Gateway. Otherwise, on any error\nthe transaction would be rolled back and the command would create an inconsistency between the taskpool and the engine.<\/p>\n<\/div>\n<div class=\"paragraph\">\n<p>Depending on your deployment scenario, you may want to control the exact point in time when the commands are send to command gateway.\nThe property <code>camunda.taskpool.collector.task.sender.send-within-transaction<\/code> is designed to influence this. If set to <code>true<\/code>, the commands\nare sent <em>before<\/em> the process engine transaction is committed, otherwise commands are sent <em>after<\/em> the process engine transaction is committed.<\/p>\n<\/div>\n<div class=\"admonitionblock warning\">\n<table>\n<tr>\n<td class=\"icon\">\n<div class=\"title\">Warning<\/div>\n<\/td>\n<td class=\"content\">\nNever send commands over remote messaging before the transaction is committed, since you may produce unexpected results if Camunda fails\nto commit the transaction.\n<\/td>\n<\/tr>\n<\/table>\n<\/div>\n<div class=\"sect3\">\n<h4 id=\"_handling_command_transmission\">Handling command transmission<\/h4>\n<div class=\"paragraph\">\n<p>The commands sent via gateway (e.g. <code>AxonCommandListGateway<\/code>) are received by Command Handlers. The latter may accept or reject commands, depending\non the state of the aggregate and other components. The <code>AxonCommandListGateway<\/code> is informed about the command outcome. By default, it will log the outcome\nto console (success is logged in <code>DEBUG<\/code> log level, errors are using <code>ERROR<\/code> log level).<\/p>\n<\/div>\n<div class=\"paragraph\">\n<p>In some situations it is required to take care of command outcome. A prominent example is to include a metric for command dispatching errors into monitoring. For doing so, it is possible to provide own handlers for success and error command outcome. For this purpose, please provide a Spring Bean implementing the <code>CommandSuccessHandler`and `CommandErrorHandler<\/code> accordingly.<\/p>\n<\/div>\n<div class=\"paragraph\">\n<p>Here is an example, how such a handler may look like:<\/p>\n<\/div>\n<div class=\"listingblock\">\n<div class=\"content\">\n<pre class=\"highlight\"><code class=\"language-kotlin\" data-lang=\"kotlin\">  @Bean\n  @Primary\n  fun taskCommandErrorHandler(): TaskCommandErrorHandler = object : LoggingTaskCommandErrorHandler(logger) {\n    override fun apply(commandMessage: Any, commandResultMessage: CommandResultMessage&lt;out Any?&gt;) {\n      logger.info { \"&lt;--------- CUSTOM ERROR HANDLER REPORT ---------&gt;\" }\n      super.apply(commandMessage, commandResultMessage)\n      logger.info { \"&lt;------------------- END -----------------------&gt;\" }\n    }\n  }<\/code><\/pre>\n<\/div>\n<\/div>\n<\/div>\n<\/div>\n<div class=\"sect2\">\n<h3 id=\"_configuration_properties_overview\">Configuration properties overview<\/h3>\n<table class=\"tableblock frame-all grid-all stretch\">\n<caption class=\"title\">Table 1. Title<\/caption>\n<colgroup>\n<col style=\"width: 33.3333%;\">\n<col style=\"width: 33.3333%;\">\n<col style=\"width: 33.3334%;\">\n<\/colgroup>\n<thead>\n<tr>\n<th class=\"tableblock halign-left valign-top\">Name<\/th>\n<th class=\"tableblock halign-left valign-top\">Purpose<\/th>\n<th class=\"tableblock halign-left valign-top\">Default<\/th>\n<\/tr>\n<\/thead>\n<tbody>\n<tr>\n<td class=\"tableblock halign-left valign-top\"><p class=\"tableblock\">Cell in column 1, row 1<\/p><\/td>\n<td class=\"tableblock halign-left valign-top\"><p class=\"tableblock\">Cell in column 2, row 1<\/p><\/td>\n<td class=\"tableblock halign-left valign-top\"><p class=\"tableblock\">Cell in column 3, row 1<\/p><\/td>\n<\/tr>\n<tr>\n<td class=\"tableblock halign-left valign-top\"><p class=\"tableblock\">Cell in column 1, row 2<\/p><\/td>\n<td class=\"tableblock halign-left valign-top\"><p class=\"tableblock\">Cell in column 2, row 2<\/p><\/td>\n<td class=\"tableblock halign-left valign-top\"><p class=\"tableblock\">Cell in column 3, row 2<\/p><\/td>\n<\/tr>\n<\/tbody>\n<\/table>\n<\/div>\n<\/div>\n<\/div>"
+                }]
+              },
+              "engine-starter": {
+                "ownKey": "engine-starter",
+                "ownPages": [{
+                  "reference": {
+                    "path": "wiki/user-guide/components",
+                    "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                    "fileName": "engine-starter",
+                    "extension": "html",
+                    "usePrettyUrl": true,
+                    "link": "https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/components/engine-starter"
+                  },
+                  "next": {
+                    "path": "wiki/user-guide/components",
+                    "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                    "fileName": "engine-interaction-client",
+                    "extension": "html",
+                    "usePrettyUrl": true,
+                    "link": "https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/components/engine-interaction-client"
+                  },
+                  "previous": {
+                    "path": "wiki/user-guide",
+                    "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                    "fileName": "components",
+                    "extension": "html",
+                    "usePrettyUrl": true,
+                    "link": "https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/components"
+                  },
+                  "description": "",
+                  "title": "Camunda Engine Taskpool Support SpringBoot Starter",
+                  "content": "<div class=\"sect1\">\n<h2 id=\"_camunda_engine_taskpool_support_springboot_starter\">Camunda Engine Taskpool Support SpringBoot Starter<\/h2>\n<div class=\"sectionbody\">\n<div class=\"sect2\">\n<h3 id=\"_purpose\">Purpose<\/h3>\n<div class=\"paragraph\">\n<p>The Camunda Engine Taskpool Support SpringBoot Starter is a convenience module providing a single\nmodule dependency to be included in the process application. It includes all process application\nmodules and provides meaningful defaults for their options.<\/p>\n<\/div>\n<\/div>\n<div class=\"sect2\">\n<h3 id=\"_configuration\">Configuration<\/h3>\n<div class=\"paragraph\">\n<p>In order to enable the starter, please put the following annotation on any <code>@Configuration<\/code> annotated\nclass of your SpringBoot application.<\/p>\n<\/div>\n<div class=\"listingblock\">\n<div class=\"content\">\n<pre class=\"highlight\"><code class=\"language-java\" data-lang=\"java\">@SpringBootApplication\n@EnableProcessApplication\n@EnableTaskpoolEngineSupport <b class=\"conum\">(1)<\/b>\npublic class MyApplication {\n\n  public static void main(String... args) {\n    SpringApplication.run(MyApplication.class, args);\n  }\n}<\/code><\/pre>\n<\/div>\n<\/div>\n<div class=\"colist arabic\">\n<ol>\n<li>\n<p>Annotation to enable the engine support.<\/p>\n<\/li>\n<\/ol>\n<\/div>\n<div class=\"paragraph\">\n<p>The <code>@EnableTaskpoolEngineSupport<\/code> annotation has the same effect as the following block of annotations:<\/p>\n<\/div>\n<div class=\"listingblock\">\n<div class=\"content\">\n<pre class=\"highlight\"><code class=\"language-java\" data-lang=\"java\">@EnableCamundaSpringEventing\n@EnableCamundaEngineClient\n@EnableTaskCollector\n@EnableDataEntryCollector\npublic class MyApplication {\n  //...\n}<\/code><\/pre>\n<\/div>\n<\/div>\n<\/div>\n<\/div>\n<\/div>"
+                }]
+              },
+              "core-taskpool": {
+                "ownKey": "core-taskpool",
+                "ownPages": [{
+                  "reference": {
+                    "path": "wiki/user-guide/components",
+                    "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                    "fileName": "core-taskpool",
+                    "extension": "html",
+                    "usePrettyUrl": true,
+                    "link": "https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/components/core-taskpool"
+                  },
+                  "next": {
+                    "path": "wiki/user-guide/components",
+                    "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                    "fileName": "core-datapool",
+                    "extension": "html",
+                    "usePrettyUrl": true,
+                    "link": "https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/components/core-datapool"
+                  },
+                  "previous": {
+                    "path": "wiki/user-guide/components",
+                    "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                    "fileName": "engine-datapool-collector",
+                    "extension": "html",
+                    "usePrettyUrl": true,
+                    "link": "https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/components/engine-datapool-collector"
+                  },
+                  "description": "",
+                  "title": "Taskpool Core",
+                  "content": "<div class=\"sect1\">\n<h2 id=\"_taskpool_core\">Taskpool Core<\/h2>\n<div class=\"sectionbody\">\n<div class=\"sect2\">\n<h3 id=\"_purpose\">Purpose<\/h3>\n<div class=\"paragraph\">\n<p>The component is responsible for maintaining and storing the consistent state of the taskpool\ncore concepts:<\/p>\n<\/div>\n<div class=\"ulist\">\n<ul>\n<li>\n<p>Task (represents a user task instance)<\/p>\n<\/li>\n<li>\n<p>Process Definition (represents a process definition)<\/p>\n<\/li>\n<\/ul>\n<\/div>\n<div class=\"paragraph\">\n<p>The component receives all commands and emits events, if changes are performed on underlying entities.\nThe event stream is used to store all changes (purely event-sourced) and should be used by all other\nparties interested in changes.<\/p>\n<\/div>\n<\/div>\n<\/div>\n<\/div>"
+                }]
+              },
+              "view-mongo": {
+                "ownKey": "view-mongo",
+                "ownPages": [{
+                  "reference": {
+                    "path": "wiki/user-guide/components",
+                    "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                    "fileName": "view-mongo",
+                    "extension": "html",
+                    "usePrettyUrl": true,
+                    "link": "https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/components/view-mongo"
+                  },
+                  "previous": {
+                    "path": "wiki/user-guide/components",
+                    "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                    "fileName": "view-simple",
+                    "extension": "html",
+                    "usePrettyUrl": true,
+                    "link": "https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/components/view-simple"
+                  },
+                  "description": "",
+                  "title": "Mongo View",
+                  "content": "<div class=\"sect1\">\n<h2 id=\"_mongo_view\">Mongo View<\/h2>\n<div class=\"sectionbody\">\n<div class=\"sect2\">\n<h3 id=\"_purpose\">Purpose<\/h3>\n<div class=\"paragraph\">\n<p>The Mongo View is component responsible for creating read-projections of tasks and business data entries. It implements\nthe Taskpool and Datapool View API and persists the projection as document collections in a Mongo database.<\/p>\n<\/div>\n<\/div>\n<div class=\"sect2\">\n<h3 id=\"_features\">Features<\/h3>\n<div class=\"ulist\">\n<ul>\n<li>\n<p>stores JSON document representation of enriched tasks, process definitions and business data entries<\/p>\n<\/li>\n<li>\n<p>provides single query API<\/p>\n<\/li>\n<li>\n<p>provides subscription query API (reactive)<\/p>\n<\/li>\n<li>\n<p>switchable subscription query API (AxonServer or MongoDB ChangeStream)<\/p>\n<\/li>\n<\/ul>\n<\/div>\n<\/div>\n<div class=\"sect2\">\n<h3 id=\"_configuration_options\">Configuration options<\/h3>\n<div class=\"paragraph\">\n<p>In order to activate the Mongo implementation, please include the following dependency on your classpath:<\/p>\n<\/div>\n<div class=\"listingblock\">\n<div class=\"content\">\n<pre class=\"highlight\"><code class=\"language-xml\" data-lang=\"xml\">&lt;dependency&gt;\n  &lt;groupId&gt;io.holunda.taskpool&lt;/groupId&gt;\n  &lt;artifactId&gt;camunda-bpm-taskpool-view-mongo&lt;/artifactId&gt;\n  &lt;version&gt;${taskpool.version}&lt;/version&gt;\n&lt;/dependency&gt;<\/code><\/pre>\n<\/div>\n<\/div>\n<div class=\"paragraph\">\n<p>The implementation relies on Spring Data Mongo and needs to activate those. Please add\nthe following annotation to any class marked as Spring Configuration loaded during initialization:<\/p>\n<\/div>\n<div class=\"listingblock\">\n<div class=\"content\">\n<pre class=\"highlight\"><code class=\"language-java\" data-lang=\"java\">@Configuration\n@EnableTaskPoolMongoView\n@Import({\n    org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration.class,\n    org.springframework.boot.autoconfigure.mongo.MongoReactiveAutoConfiguration.class,\n    org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration.class,\n    org.springframework.boot.autoconfigure.data.mongo.MongoReactiveDataAutoConfiguration.class\n  })\npublic class MyViewConfiguration {\n\n}<\/code><\/pre>\n<\/div>\n<\/div>\n<div class=\"paragraph\">\n<p>In addition, configure a Mongo connection to database called <code>tasks-payload<\/code> using <code>application.properties<\/code> or\n<code>application.yaml<\/code>:<\/p>\n<\/div>\n<div class=\"listingblock\">\n<div class=\"content\">\n<pre class=\"highlight\"><code class=\"language-yml\" data-lang=\"yml\">spring:\n  data:\n    mongodb:\n      database: tasks-payload\n      host: localhost\n      port: 27017<\/code><\/pre>\n<\/div>\n<\/div>\n<div class=\"paragraph\">\n<p>The view implementation provides runtime details using standard logging facility. If you\nwant to increase the logging level, please setup it e.g. in your <code>application.yaml<\/code>:<\/p>\n<\/div>\n<div class=\"listingblock\">\n<div class=\"content\">\n<pre class=\"highlight\"><code class=\"language-yml\" data-lang=\"yml\">logging.level.io.holunda.camunda.taskpool.view.mongo: DEBUG<\/code><\/pre>\n<\/div>\n<\/div>\n<div class=\"paragraph\">\n<p>Depending on your setup, you might want to use Axon Query Bus for subscription queries or not. MongoDB provides\na change stream if run in a replication set. Using the property <code>camunda.taskpool.view.mongo.change-tracking-mode<\/code>\nyou can control, whether you use subscription query based on Axon Query Bus (value <code>EVENT_HANDLER<\/code>, default) or based\non Mongo Change Stream (value <code>CHANGE_STREAM<\/code>). If you are not interested in publication of any subscription queries\nyou might choose to disable it by setting the option to value <code>NONE<\/code>.<\/p>\n<\/div>\n<\/div>\n<div class=\"sect2\">\n<h3 id=\"_collections\">Collections<\/h3>\n<div class=\"paragraph\">\n<p>The Mongo View uses several collections to store the results. These are:<\/p>\n<\/div>\n<div class=\"ulist\">\n<ul>\n<li>\n<p>data-entries: collection for business data entries<\/p>\n<\/li>\n<li>\n<p>processes: collection for process definitions<\/p>\n<\/li>\n<li>\n<p>tasks: collection for user tasks<\/p>\n<\/li>\n<li>\n<p>tracking-tokens: collection for Axon Tracking Tokens<\/p>\n<\/li>\n<\/ul>\n<\/div>\n<div class=\"sect3\">\n<h4 id=\"_data_entries_collection\">Data Entries Collection<\/h4>\n<div class=\"paragraph\">\n<p>The data entries collection stores the business data entries in a uniform Datapool format.\nHere is an example:<\/p>\n<\/div>\n<div class=\"listingblock\">\n<div class=\"content\">\n<pre class=\"highlight\"><code class=\"language-json\" data-lang=\"json\">{\n    \"_id\" : \"io.holunda.camunda.taskpool.example.ApprovalRequest#2db47ced-83d4-4c74-a644-44dd738935f8\",\n    \"entryType\" : \"io.holunda.camunda.taskpool.example.ApprovalRequest\",\n    \"payload\" : {\n        \"amount\" : \"900.00\",\n        \"subject\" : \"Advanced training\",\n        \"currency\" : \"EUR\",\n        \"id\" : \"2db47ced-83d4-4c74-a644-44dd738935f8\",\n        \"applicant\" : \"hulk\"\n    },\n    \"correlations\" : {},\n    \"type\" : \"Approval Request\",\n    \"name\" : \"AR 2db47ced-83d4-4c74-a644-44dd738935f8\",\n    \"applicationName\" : \"example-process-approval\",\n    \"description\" : \"Advanced training\",\n    \"state\" : \"Submitted\",\n    \"statusType\" : \"IN_PROGRESS\",\n    \"authorizedUsers\" : [\n        \"gonzo\",\n        \"hulk\"\n    ],\n    \"authorizedGroups\" : [],\n    \"protocol\" : [\n        {\n            \"time\" : ISODate(\"2019-08-21T09:12:54.779Z\"),\n            \"statusType\" : \"PRELIMINARY\",\n            \"state\" : \"Draft\",\n            \"username\" : \"gonzo\",\n            \"logMessage\" : \"Draft created.\",\n            \"logDetails\" : \"Request draft on behalf of hulk created.\"\n        },\n        {\n            \"time\" : ISODate(\"2019-08-21T09:12:55.060Z\"),\n            \"statusType\" : \"IN_PROGRESS\",\n            \"state\" : \"Submitted\",\n            \"username\" : \"gonzo\",\n            \"logMessage\" : \"New approval request submitted.\"\n        }\n    ]\n}<\/code><\/pre>\n<\/div>\n<\/div>\n<\/div>\n<div class=\"sect3\">\n<h4 id=\"_tasks_collections\">Tasks Collections<\/h4>\n<div class=\"paragraph\">\n<p>Tasks are stored in the following format (an example):<\/p>\n<\/div>\n<div class=\"listingblock\">\n<div class=\"content\">\n<pre class=\"highlight\"><code class=\"language-json\" data-lang=\"json\">{\n    \"_id\" : \"dc1abe54-c3f3-11e9-86e8-4ab58cfe8f17\",\n    \"sourceReference\" : {\n        \"_id\" : \"dc173bca-c3f3-11e9-86e8-4ab58cfe8f17\",\n        \"executionId\" : \"dc1a9742-c3f3-11e9-86e8-4ab58cfe8f17\",\n        \"definitionId\" : \"process_approve_request:1:91f2ff26-a64b-11e9-b117-3e6d125b91e2\",\n        \"definitionKey\" : \"process_approve_request\",\n        \"name\" : \"Request Approval\",\n        \"applicationName\" : \"example-process-approval\",\n        \"_class\" : \"process\"\n    },\n    \"taskDefinitionKey\" : \"user_approve_request\",\n    \"payload\" : {\n        \"request\" : \"2db47ced-83d4-4c74-a644-44dd738935f8\",\n        \"originator\" : \"gonzo\"\n    },\n    \"correlations\" : {\n        \"io:holunda:camunda:taskpool:example:ApprovalRequest\" : \"2db47ced-83d4-4c74-a644-44dd738935f8\",\n        \"io:holunda:camunda:taskpool:example:User\" : \"gonzo\"\n    },\n    \"dataEntriesRefs\" : [\n        \"io.holunda.camunda.taskpool.example.ApprovalRequest#2db47ced-83d4-4c74-a644-44dd738935f8\",\n        \"io.holunda.camunda.taskpool.example.User#gonzo\"\n    ],\n    \"businessKey\" : \"2db47ced-83d4-4c74-a644-44dd738935f8\",\n    \"name\" : \"Approve Request\",\n    \"description\" : \"Please approve request 2db47ced-83d4-4c74-a644-44dd738935f8 from gonzo on behalf of hulk.\",\n    \"formKey\" : \"approve-request\",\n    \"priority\" : 23,\n    \"createTime\" : ISODate(\"2019-08-21T09:12:54.872Z\"),\n    \"candidateUsers\" : [\n        \"fozzy\",\n        \"gonzo\"\n    ],\n    \"candidateGroups\" : [],\n    \"dueDate\" : ISODate(\"2019-06-26T07:55:00.000Z\"),\n    \"followUpDate\" : ISODate(\"2023-06-26T07:55:00.000Z\"),\n    \"deleted\" : false\n}<\/code><\/pre>\n<\/div>\n<\/div>\n<\/div>\n<div class=\"sect3\">\n<h4 id=\"_process_collection\">Process Collection<\/h4>\n<div class=\"paragraph\">\n<p>Process definition collection allows for storage of startable process definitions, deployed in a Camunda Engine.\nThis information is in particular interesting, if you are building a process-starter component and want to react\ndynamically on processes deployed in your landscape.<\/p>\n<\/div>\n<div class=\"listingblock\">\n<div class=\"content\">\n<pre class=\"highlight\"><code class=\"language-json\" data-lang=\"json\">{\n    \"_id\" : \"process_approve_request:1:91f2ff26-a64b-11e9-b117-3e6d125b91e2\",\n    \"processDefinitionKey\" : \"process_approve_request\",\n    \"processDefinitionVersion\" : 1,\n    \"applicationName\" : \"example-process-approval\",\n    \"processName\" : \"Request Approval\",\n    \"processDescription\" : \"This is a wonderful process.\",\n    \"formKey\" : \"start-approval\",\n    \"startableFromTasklist\" : true,\n    \"candidateStarterUsers\" : [],\n    \"candidateStarterGroups\" : [\n        \"muppetshow\",\n        \"avengers\"\n    ]\n}<\/code><\/pre>\n<\/div>\n<\/div>\n<\/div>\n<div class=\"sect3\">\n<h4 id=\"_tracking_token_collection\">Tracking Token Collection<\/h4>\n<div class=\"paragraph\">\n<p>The Axon Tracking Token reflects the index of the event processed by the Mongo View and is stored in the\nfollowing format:<\/p>\n<\/div>\n<div class=\"listingblock\">\n<div class=\"content\">\n<pre class=\"highlight\"><code class=\"language-json\" data-lang=\"json\">{\n    \"_id\" : ObjectId(\"5d2b45d6a9ca33042abea23b\"),\n    \"processorName\" : \"io.holunda.camunda.taskpool.view.mongo.service\",\n    \"segment\" : 0,\n    \"owner\" : \"18524@blackstar\",\n    \"timestamp\" : NumberLong(1566379093564),\n    \"token\" : { \"$binary\" : \"PG9yZy5heG9uZnJhbWV3b3JrLmV2ZW50aGFuZGxpbmcuR2xvYmFsU2VxdWVuY2VUcmFja2luZ1Rva2VuPjxnbG9iYWxJbmRleD40NDwvZ2xvYmFsSW5kZXg+PC9vcmcuYXhvbmZyYW1ld29yay5ldmVudGhhbmRsaW5nLkdsb2JhbFNlcXVlbmNlVHJhY2tpbmdUb2tlbj4=\", \"$type\" : \"00\" },\n    \"tokenType\" : \"org.axonframework.eventhandling.GlobalSequenceTrackingToken\"\n}<\/code><\/pre>\n<\/div>\n<\/div>\n<\/div>\n<\/div>\n<\/div>\n<\/div>"
+                }]
+              },
+              "engine-datapool-collector": {
+                "ownKey": "engine-datapool-collector",
+                "ownPages": [{
+                  "reference": {
+                    "path": "wiki/user-guide/components",
+                    "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                    "fileName": "engine-datapool-collector",
+                    "extension": "html",
+                    "usePrettyUrl": true,
+                    "link": "https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/components/engine-datapool-collector"
+                  },
+                  "next": {
+                    "path": "wiki/user-guide/components",
+                    "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                    "fileName": "core-taskpool",
+                    "extension": "html",
+                    "usePrettyUrl": true,
+                    "link": "https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/components/core-taskpool"
+                  },
+                  "previous": {
+                    "path": "wiki/user-guide/components",
+                    "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                    "fileName": "engine-taskpool-collector",
+                    "extension": "html",
+                    "usePrettyUrl": true,
+                    "link": "https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/components/engine-taskpool-collector"
+                  },
+                  "description": "",
+                  "title": "Datapool Collector",
+                  "content": "<div class=\"sect1\">\n<h2 id=\"_datapool_collector\">Datapool Collector<\/h2>\n<div class=\"sectionbody\">\n<div class=\"sect2\">\n<h3 id=\"_purpose\">Purpose<\/h3>\n<div class=\"paragraph\">\n<p>Datapool collector is a component usually deployed as a part of the process application (but not necessary) that\nis responsible for collecting the Business Data Events fired by the application in order to allow for creation of\na business data projection. In doing so, it collects and transmits it to Datapool Core.<\/p>\n<\/div>\n<\/div>\n<div class=\"sect2\">\n<h3 id=\"_features\">Features<\/h3>\n<div class=\"ulist\">\n<ul>\n<li>\n<p>Provides an API to submit arbitrary changes of business entities<\/p>\n<\/li>\n<li>\n<p>Provides an API to track changes (aka. Audit Log)<\/p>\n<\/li>\n<li>\n<p>Authorization on business entries<\/p>\n<\/li>\n<li>\n<p>Transmission of business entries commands<\/p>\n<\/li>\n<\/ul>\n<\/div>\n<\/div>\n<div class=\"sect2\">\n<h3 id=\"_usage_and_configuration\">Usage and configuration<\/h3>\n<div class=\"listingblock\">\n<div class=\"content\">\n<pre class=\"highlight\"><code class=\"language-xml\" data-lang=\"xml\">    &lt;dependency&gt;\n      &lt;groupId&gt;io.holunda.taskpool&lt;/groupId&gt;\n      &lt;artifactId&gt;camunda-bpm-datapool-collector&lt;/artifactId&gt;\n      &lt;version&gt;${camunda-taskpool.version}&lt;/version&gt;\n    &lt;/dependency&gt;<\/code><\/pre>\n<\/div>\n<\/div>\n<div class=\"paragraph\">\n<p>Then activate the datapool collector by providing the annotation on any Spring Configuration:<\/p>\n<\/div>\n<div class=\"listingblock\">\n<div class=\"content\">\n<pre class=\"highlight\"><code class=\"language-java\" data-lang=\"java\">@Configuration\n@EnableDataEntryCollector\nclass MyDataEntryCollectorConfiguration {\n\n}<\/code><\/pre>\n<\/div>\n<\/div>\n<\/div>\n<div class=\"sect2\">\n<h3 id=\"_command_transmission\">Command transmission<\/h3>\n<div class=\"paragraph\">\n<p>In order to control sending of commands to command gateway, the command sender activation property\n<code>camunda.taskpool.dataentry.sender.enabled<\/code> (default is <code>true<\/code>) is available. If disabled, the command sender\nwill log any command instead of sending it to the command gateway.<\/p>\n<\/div>\n<div class=\"paragraph\">\n<p>In addition you can control by the property <code>camunda.taskpool.dataentry.sender.type<\/code> if you want to use the default command sender or provide your own implementation.\nThe default provided command sender (type: <code>simple<\/code>) just sends the commands synchronously using Axon Command Bus.<\/p>\n<\/div>\n<div class=\"admonitionblock tip\">\n<table>\n<tr>\n<td class=\"icon\">\n<div class=\"title\">Tip<\/div>\n<\/td>\n<td class=\"content\">\nIf you want to implement a custom command sending, please provide your own implementation of the interface <code>DataEntryCommandSender<\/code>\n(register a Spring Component of the type) and set the property <code>camunda.taskpool.dataentry.sender.type<\/code> to <code>custom<\/code>.\n<\/td>\n<\/tr>\n<\/table>\n<\/div>\n<div class=\"sect3\">\n<h4 id=\"_handling_command_transmission\">Handling command transmission<\/h4>\n<div class=\"paragraph\">\n<p>The commands sent by the <code>Datapool Collector<\/code> are received by Command Handlers. The latter may accept or reject commands, depending\non the state of the aggregate and other components. The <code>SimpleDataEntryCommandSender<\/code> is informed about the command outcome. By default, it will log the outcome\nto console (success is logged in <code>DEBUG<\/code> log level, errors are using <code>ERROR<\/code> log level).<\/p>\n<\/div>\n<div class=\"paragraph\">\n<p>In some situations it is required to take care of command outcome. A prominent example is to include a metric for command dispatching errors into monitoring. For doing so,\nit is possible to provide own handlers for success and error command outcome.<\/p>\n<\/div>\n<div class=\"paragraph\">\n<p>For Data Entry Command Sender (as a part of <code>Datapool Collector<\/code>) please provide a Spring Bean implementing the <code>io.holunda.camunda.datapool.sender.DataEntryCommandSuccessHandler<\/code>\n and <code>io.holunda.camunda.datapool.sender.DataEntryCommandErrorHandler<\/code> accordingly.<\/p>\n<\/div>\n<div class=\"listingblock\">\n<div class=\"content\">\n<pre class=\"highlight\"><code class=\"language-kotlin\" data-lang=\"kotlin\">  @Bean\n  @Primary\n  fun dataEntryCommandSuccessHandler() = object: DataEntryCommandResultHandler {\n    override fun apply(commandMessage: Any, commandResultMessage: CommandResultMessage&lt;out Any?&gt;) {\n      // do something here\n      logger.info { \"Success\" }\n    }\n  }\n\n  @Bean\n  @Primary\n  fun dataEntryCommandErrorHandler() = object: DataEntryCommandErrorHandler {\n    override fun apply(commandMessage: Any, commandResultMessage: CommandResultMessage&lt;out Any?&gt;) {\n      // do something here\n      logger.error { \"Error\" }\n    }\n  }<\/code><\/pre>\n<\/div>\n<\/div>\n<\/div>\n<\/div>\n<\/div>\n<\/div>"
+                }]
+              },
+              "view-simple": {
+                "ownKey": "view-simple",
+                "ownPages": [{
+                  "reference": {
+                    "path": "wiki/user-guide/components",
+                    "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                    "fileName": "view-simple",
+                    "extension": "html",
+                    "usePrettyUrl": true,
+                    "link": "https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/components/view-simple"
+                  },
+                  "next": {
+                    "path": "wiki/user-guide/components",
+                    "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                    "fileName": "view-mongo",
+                    "extension": "html",
+                    "usePrettyUrl": true,
+                    "link": "https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/components/view-mongo"
+                  },
+                  "previous": {
+                    "path": "wiki/user-guide/components",
+                    "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                    "fileName": "core-datapool",
+                    "extension": "html",
+                    "usePrettyUrl": true,
+                    "link": "https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/components/core-datapool"
+                  },
+                  "description": "",
+                  "title": "In-Memory View",
+                  "content": "<div class=\"sect1\">\n<h2 id=\"_in_memory_view\">In-Memory View<\/h2>\n<div class=\"sectionbody\">\n<div class=\"paragraph\">\n<p>The In-Memory View is component responsible for creating read-projections of tasks and business data entries. It implements\nthe Taskpool and Datapool View API and persists the projection in memory. The projection is transient and relies on event\nreplay on every application start. It is good for demonstration purposes if the number of events is manageable small,\nbut will fail to delivery high performance results on a large number of items.<\/p>\n<\/div>\n<div class=\"sect2\">\n<h3 id=\"_features\">Features<\/h3>\n<div class=\"ulist\">\n<ul>\n<li>\n<p>uses concurrent hash maps to store the read model<\/p>\n<\/li>\n<li>\n<p>provides single query API<\/p>\n<\/li>\n<li>\n<p>provides subscription query API (reactive)<\/p>\n<\/li>\n<li>\n<p>relies on event replay and transient token store<\/p>\n<\/li>\n<\/ul>\n<\/div>\n<\/div>\n<div class=\"sect2\">\n<h3 id=\"_configuration_options\">Configuration options<\/h3>\n<div class=\"paragraph\">\n<p>In order to activate the in-memory implementation, please include the following dependency on your classpath:<\/p>\n<\/div>\n<div class=\"listingblock\">\n<div class=\"content\">\n<pre class=\"highlight\"><code class=\"language-xml\" data-lang=\"xml\">&lt;dependency&gt;\n  &lt;groupId&gt;io.holunda.taskpool&lt;/groupId&gt;\n  &lt;artifactId&gt;camunda-bpm-taskpool-view-simple&lt;/artifactId&gt;\n  &lt;version&gt;${taskpool.version}&lt;/version&gt;\n&lt;/dependency&gt;<\/code><\/pre>\n<\/div>\n<\/div>\n<div class=\"paragraph\">\n<p>Then, add the following annotation to any class marked as Spring Configuration\nloaded during initialization:<\/p>\n<\/div>\n<div class=\"listingblock\">\n<div class=\"content\">\n<pre class=\"highlight\"><code class=\"language-java\" data-lang=\"java\">@Configuration\n@EnableTaskPoolSimpleView\npublic class MyViewConfiguration {\n\n}<\/code><\/pre>\n<\/div>\n<\/div>\n<div class=\"paragraph\">\n<p>The view implementation provides runtime details using standard logging facility. If you\nwant to increase the logging level, please setup it e.g. in your <code>application.yaml<\/code>:<\/p>\n<\/div>\n<div class=\"listingblock\">\n<div class=\"content\">\n<pre class=\"highlight\"><code class=\"language-yml\" data-lang=\"yml\">logging.level.io.holunda.camunda.taskpool.view.simple: DEBUG<\/code><\/pre>\n<\/div>\n<\/div>\n<\/div>\n<\/div>\n<\/div>"
+                }]
+              },
+              "core-datapool": {
+                "ownKey": "core-datapool",
+                "ownPages": [{
+                  "reference": {
+                    "path": "wiki/user-guide/components",
+                    "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                    "fileName": "core-datapool",
+                    "extension": "html",
+                    "usePrettyUrl": true,
+                    "link": "https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/components/core-datapool"
+                  },
+                  "next": {
+                    "path": "wiki/user-guide/components",
+                    "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                    "fileName": "view-simple",
+                    "extension": "html",
+                    "usePrettyUrl": true,
+                    "link": "https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/components/view-simple"
+                  },
+                  "previous": {
+                    "path": "wiki/user-guide/components",
+                    "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                    "fileName": "core-taskpool",
+                    "extension": "html",
+                    "usePrettyUrl": true,
+                    "link": "https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/components/core-taskpool"
+                  },
+                  "description": "",
+                  "title": "Datapool Core",
+                  "content": "<div class=\"sect1\">\n<h2 id=\"_datapool_core\">Datapool Core<\/h2>\n<div class=\"sectionbody\">\n<div class=\"sect2\">\n<h3 id=\"_purpose\">Purpose<\/h3>\n<div class=\"paragraph\">\n<p>The component is responsible for maintaining and storing the consistent state of the datapool\ncore concept of Business Data Entry.<\/p>\n<\/div>\n<div class=\"paragraph\">\n<p>The component receives all commands and emits events, if changes are performed on underlying entities.\nThe event stream is used to store all changes (purely event-sourced) and should be used by all other\nparties interested in changes.<\/p>\n<\/div>\n<\/div>\n<div class=\"sect2\">\n<h3 id=\"_configuration\">Configuration<\/h3>\n<div class=\"sect3\">\n<h4 id=\"_component_activation\">Component activation<\/h4>\n<div class=\"paragraph\">\n<p>In order to activate Datapool Core component, please include the following dependency to your application<\/p>\n<\/div>\n<div class=\"listingblock\">\n<div class=\"content\">\n<pre class=\"highlight\"><code class=\"language-xml\" data-lang=\"xml\">&lt;dependency&gt;\n  &lt;groupId&gt;io.holunda.taskpool&lt;/groupId&gt;\n  &lt;artifactId&gt;camunda-bpm-datapool-core&lt;/artifactId&gt;\n  &lt;version&gt;${taskpool.version}&lt;/version&gt;\n&lt;/dependency&gt;<\/code><\/pre>\n<\/div>\n<\/div>\n<div class=\"paragraph\">\n<p>and activate its configuration by adding the following to a Spring configuration:<\/p>\n<\/div>\n<div class=\"listingblock\">\n<div class=\"content\">\n<pre class=\"highlight\"><code class=\"language-kotlin\" data-lang=\"kotlin\">@Configuration\n@EnableDataPool\nclass MyConfiguration<\/code><\/pre>\n<\/div>\n<\/div>\n<\/div>\n<div class=\"sect3\">\n<h4 id=\"_revision_aware_projection\">Revision-Aware Projection<\/h4>\n<div class=\"paragraph\">\n<p>The in-memory data entry projection is supporting revision-aware projection queries. To activate this, you need\nto activate the correlation of revision attributes between your data entries commands and the data entry events. To do so, please\nactivate the correlation provider by putting the following code snippet in the application containing the Datapool Core Component:<\/p>\n<\/div>\n<div class=\"listingblock\">\n<div class=\"content\">\n<pre class=\"highlight\"><code class=\"language-kotlin\" data-lang=\"kotlin\">@Configuration\n@EnableDataPool\nclass MyConfiguration {\n\n  @Bean\n  fun revisionAwareCorrelationDataProvider(): CorrelationDataProvider {\n    return MultiCorrelationDataProvider&lt;CommandMessage&lt;Any&gt;&gt;(\n      listOf(\n        MessageOriginProvider(),\n        SimpleCorrelationDataProvider(RevisionValue.REVISION_KEY)\n      )\n    )\n  }\n\n}<\/code><\/pre>\n<\/div>\n<\/div>\n<div class=\"paragraph\">\n<p>By doing so, if a command is sending revision information, it will be passed to the resulting event and will be received by the projection, so the\nlatter will deliver revision information in query results. The use of <code>RevisionAwareQueryGateway<\/code> will allow to query for specific revisions in the data entry\nprojection, see documentation of <code>axon-gateway-extension<\/code> project.<\/p>\n<\/div>\n<\/div>\n<\/div>\n<\/div>\n<\/div>"
+                }]
+              }
+            },
+            "ownPages": [{
+              "reference": {
+                "path": "wiki/user-guide",
+                "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                "fileName": "components",
+                "extension": "html",
+                "usePrettyUrl": true,
+                "link": "https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/components"
+              },
+              "next": {
+                "path": "wiki/user-guide/components",
+                "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                "fileName": "engine-starter",
+                "extension": "html",
+                "usePrettyUrl": true,
+                "link": "https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/components/engine-starter"
+              },
+              "previous": {
+                "path": "wiki/user-guide",
+                "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                "fileName": "integration-guide",
+                "extension": "html",
+                "usePrettyUrl": true,
+                "link": "https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/integration-guide"
+              },
+              "description": "",
+              "title": "Taskpool Components",
+              "content": "<div class=\"sect1\">\n<h2 id=\"_components_overview\">Components Overview<\/h2>\n<div class=\"sectionbody\">\n<div class=\"paragraph\">\n<p>We decided to build a library as a collection of loose-coupled components which can be used during the construction\nof the process automation solution. In doing so, we provide <em>Process Engine Components<\/em> which are intended to be deployed as\na part of the process application. In addition, we provide <em>Process Platform Components<\/em> which serve as a building blocks\nfor the process platform.<\/p>\n<\/div>\n<div class=\"sect2\">\n<h3 id=\"_process_engine_components\">Process Engine Components<\/h3>\n<div class=\"paragraph\">\n<p>Process Engine Components are designed to be a part of process application deployment\nand react on engine changes / interact with the engine. These are:<\/p>\n<\/div>\n<div class=\"ulist\">\n<ul>\n<li>\n<p><a href=\"engine-starter\">Camunda Engine Taskpool Support SpringBoot Starter<\/a><\/p>\n<\/li>\n<li>\n<p><a href=\"engine-interaction-client\">Camunda Engine Interaction Client<\/a><\/p>\n<\/li>\n<li>\n<p><a href=\"engine-taskpool-collector\">Taskpool Collector<\/a><\/p>\n<\/li>\n<li>\n<p><a href=\"engine-datapool-collector\">Datapool Collector<\/a><\/p>\n<\/li>\n<\/ul>\n<\/div>\n<\/div>\n<div class=\"sect2\">\n<h3 id=\"_process_platform_components\">Process Platform Components<\/h3>\n<div class=\"paragraph\">\n<p>Process Platform Components are designed to build a process platform.<\/p>\n<\/div>\n<div class=\"sect3\">\n<h4 id=\"_core_components\">Core Components<\/h4>\n<div class=\"paragraph\">\n<p>Core Components are responsible for the processing of engine commands and form an event stream\nconsumed by the view components. Depending on the scenario, they can be deployed either within the\nprocess application, process platform or even completely separately.<\/p>\n<\/div>\n<div class=\"ulist\">\n<ul>\n<li>\n<p><a href=\"core-taskpool\">Taskpool Core<\/a><\/p>\n<\/li>\n<li>\n<p><a href=\"core-datapool\">Datapool Core<\/a><\/p>\n<\/li>\n<\/ul>\n<\/div>\n<\/div>\n<div class=\"sect3\">\n<h4 id=\"_view_components\">View Components<\/h4>\n<div class=\"paragraph\">\n<p>View Components are responsible for creation of a unified read-only projection of tasks and business data items.\nThey are typically deployed as a part of the process platform.<\/p>\n<\/div>\n<div class=\"ulist\">\n<ul>\n<li>\n<p><a href=\"view-simple\">In-Memory View<\/a><\/p>\n<\/li>\n<li>\n<p><a href=\"view-mongo\">Mongo View<\/a><\/p>\n<\/li>\n<\/ul>\n<\/div>\n<\/div>\n<\/div>\n<\/div>\n<\/div>"
+            }]
+          },
+          "example-components": {
+            "ownKey": "example-components",
+            "childrenPages": {
+              "pp-backend": {
+                "ownKey": "pp-backend",
+                "ownPages": [{
+                  "reference": {
+                    "path": "wiki/user-guide/example-components",
+                    "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                    "fileName": "pp-backend",
+                    "extension": "html",
+                    "usePrettyUrl": true,
+                    "link": "https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/example-components/pp-backend"
+                  },
+                  "next": {
+                    "path": "wiki/user-guide",
+                    "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                    "fileName": "scenarios",
+                    "extension": "html",
+                    "usePrettyUrl": true,
+                    "link": "https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/scenarios"
+                  },
+                  "previous": {
+                    "path": "wiki/user-guide/example-components",
+                    "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                    "fileName": "pp-frontend",
+                    "extension": "html",
+                    "usePrettyUrl": true,
+                    "link": "https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/example-components/pp-frontend"
+                  },
+                  "description": "",
+                  "title": "Process Platform Backend",
+                  "content": "<div class=\"sect1\">\n<h2 id=\"_process_platform_backend\">Process Platform Backend<\/h2>\n<div class=\"sectionbody\">\n<div class=\"paragraph\">\n<p>The purpose of the example process platform backend is to demonstrate how <em>process agnostic<\/em> parts of the\nprocess solution can be implemented.<\/p>\n<\/div>\n<\/div>\n<\/div>"
+                }]
+              },
+              "user-management": {
+                "ownKey": "user-management",
+                "ownPages": [{
+                  "reference": {
+                    "path": "wiki/user-guide/example-components",
+                    "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                    "fileName": "user-management",
+                    "extension": "html",
+                    "usePrettyUrl": true,
+                    "link": "https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/example-components/user-management"
+                  },
+                  "next": {
+                    "path": "wiki/user-guide/example-components",
+                    "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                    "fileName": "pp-frontend",
+                    "extension": "html",
+                    "usePrettyUrl": true,
+                    "link": "https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/example-components/pp-frontend"
+                  },
+                  "previous": {
+                    "path": "wiki/user-guide/example-components",
+                    "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                    "fileName": "pa-backend",
+                    "extension": "html",
+                    "usePrettyUrl": true,
+                    "link": "https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/example-components/pa-backend"
+                  },
+                  "description": "",
+                  "title": "User Management",
+                  "content": "<div class=\"sect1\">\n<h2 id=\"_user_management\">User Management<\/h2>\n<div class=\"sectionbody\">\n<div class=\"paragraph\">\n<p>Usually, a central user management like a Single-Sign-On (SSO) is a part deployed into the process application\nlandscape. This is responsible for authentication and authorization of the user and is required to control the\nrole-based access to user tasks.<\/p>\n<\/div>\n<div class=\"paragraph\">\n<p>In our example application, we <em>disable any security checks<\/em> to avoid the unneeded complexity. In doing so, we\nimplemented a trivial user store holding some pre-defined users used in example components and allow to simply\nswitch users from the frontend by choosing a different user from the drop-down list.<\/p>\n<\/div>\n<div class=\"paragraph\">\n<p>It is integrated with the example frontends by passing around the user id along with the requests and provide a way\nto resolve the user by that id. Technically speaking, the user id can be used to retrieve the permissions of the user\nand check them in the backend.<\/p>\n<\/div>\n<\/div>\n<\/div>"
+                }]
+              },
+              "pa-frontend": {
+                "ownKey": "pa-frontend",
+                "ownPages": [{
+                  "reference": {
+                    "path": "wiki/user-guide/example-components",
+                    "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                    "fileName": "pa-frontend",
+                    "extension": "html",
+                    "usePrettyUrl": true,
+                    "link": "https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/example-components/pa-frontend"
+                  },
+                  "next": {
+                    "path": "wiki/user-guide/example-components",
+                    "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                    "fileName": "pa-backend",
+                    "extension": "html",
+                    "usePrettyUrl": true,
+                    "link": "https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/example-components/pa-backend"
+                  },
+                  "previous": {
+                    "path": "wiki/user-guide",
+                    "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                    "fileName": "example-components",
+                    "extension": "html",
+                    "usePrettyUrl": true,
+                    "link": "https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/example-components"
+                  },
+                  "description": "",
+                  "title": "Process Application Frontend",
+                  "content": "<div class=\"sect1\">\n<h2 id=\"_process_application_frontend\">Process Application Frontend<\/h2>\n<div class=\"sectionbody\">\n<div class=\"paragraph\">\n<p>The process application backend is implementing the user task forms and business object views for the\nexample application. It is built as a typical Angular Single Page Application (SPA) and provides\nviews for both user tasks and the business object. It communicates with process application backend via\nREST API, defined in the latter.<\/p>\n<\/div>\n<div class=\"paragraph\">\n<p>The user primarily interacts with the process platform which seamless integrate with the process applications.\nUsually, it provides integration points for user-task embedding / UI-composition. Unfortunately,\nthis topic strongly depends on the frontend technology and is not a subject we want to demonstrate\nin this example. For simplicity, we built a very simple example, skipping the UI composition / integration entirely.<\/p>\n<\/div>\n<div class=\"paragraph\">\n<p>The navigation between the process platform and process application is just as simple as a full page\nnavigation of a hyperlink.<\/p>\n<\/div>\n<\/div>\n<\/div>"
+                }]
+              },
+              "pa-backend": {
+                "ownKey": "pa-backend",
+                "ownPages": [{
+                  "reference": {
+                    "path": "wiki/user-guide/example-components",
+                    "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                    "fileName": "pa-backend",
+                    "extension": "html",
+                    "usePrettyUrl": true,
+                    "link": "https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/example-components/pa-backend"
+                  },
+                  "next": {
+                    "path": "wiki/user-guide/example-components",
+                    "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                    "fileName": "user-management",
+                    "extension": "html",
+                    "usePrettyUrl": true,
+                    "link": "https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/example-components/user-management"
+                  },
+                  "previous": {
+                    "path": "wiki/user-guide/example-components",
+                    "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                    "fileName": "pa-frontend",
+                    "extension": "html",
+                    "usePrettyUrl": true,
+                    "link": "https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/example-components/pa-frontend"
+                  },
+                  "description": "",
+                  "title": "Process Application Backend",
+                  "content": "<div class=\"sect1\">\n<h2 id=\"_process_application_backend\">Process Application Backend<\/h2>\n<div class=\"sectionbody\">\n<div class=\"paragraph\">\n<p>The process application backend is implementing the process described in the <a href=\"example\">Example<\/a>.\nIt demonstrates a typical three-tier application, following the Boundary-Control-Entity pattern.<\/p>\n<\/div>\n<div class=\"sect2\">\n<h3 id=\"_boundary\">Boundary<\/h3>\n<div class=\"paragraph\">\n<p>The REST API is defined using OpenAPI specification and is implemented by Spring MVC controllers. It defines of four\nlogical parts:<\/p>\n<\/div>\n<div class=\"ulist\">\n<ul>\n<li>\n<p>Environment Controller<\/p>\n<\/li>\n<li>\n<p>Request Controller<\/p>\n<\/li>\n<li>\n<p>Approve Task Controller<\/p>\n<\/li>\n<li>\n<p>Amend Task Controller<\/p>\n<\/li>\n<\/ul>\n<\/div>\n<\/div>\n<div class=\"sect2\">\n<h3 id=\"_control\">Control<\/h3>\n<div class=\"paragraph\">\n<p>The control tier is implemented using stateless Spring Beans and orchestrated by the Camunda BPM Process.\nTypical <code>JavaDelegate<\/code> and <code>ExecutionListener<\/code> are used as a glue layer. Business services of this layer are\nresponsible for the integration with <code>Datapool Components<\/code> to reflect the status of the <code>Request<\/code> business entity.\nThe Camunda BPM Engine is configured to use the <code>TaskCollector<\/code> to integrate with remaining components of\nthe <code>camunda-bpm-taskpool<\/code>.<\/p>\n<\/div>\n<\/div>\n<div class=\"sect2\">\n<h3 id=\"_entity\">Entity<\/h3>\n<div class=\"paragraph\">\n<p>The entity tier is implemented using Spring Data JPA, using Hibernate entities. Application data\nand process engine data is stored using a RDBMS.<\/p>\n<\/div>\n<\/div>\n<\/div>\n<\/div>"
+                }]
+              },
+              "pp-frontend": {
+                "ownKey": "pp-frontend",
+                "ownPages": [{
+                  "reference": {
+                    "path": "wiki/user-guide/example-components",
+                    "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                    "fileName": "pp-frontend",
+                    "extension": "html",
+                    "usePrettyUrl": true,
+                    "link": "https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/example-components/pp-frontend"
+                  },
+                  "next": {
+                    "path": "wiki/user-guide/example-components",
+                    "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                    "fileName": "pp-backend",
+                    "extension": "html",
+                    "usePrettyUrl": true,
+                    "link": "https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/example-components/pp-backend"
+                  },
+                  "previous": {
+                    "path": "wiki/user-guide/example-components",
+                    "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                    "fileName": "user-management",
+                    "extension": "html",
+                    "usePrettyUrl": true,
+                    "link": "https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/example-components/user-management"
+                  },
+                  "description": "",
+                  "title": "Process Platform Frontend",
+                  "content": "<div class=\"sect1\">\n<h2 id=\"_process_platform_frontend\">Process Platform Frontend<\/h2>\n<div class=\"sectionbody\">\n<div class=\"paragraph\">\n<p>The example process platform frontend provides example implementation of two views:<\/p>\n<\/div>\n<div class=\"ulist\">\n<ul>\n<li>\n<p>Example Tasklist<\/p>\n<\/li>\n<li>\n<p>Example Workpieces List<\/p>\n<\/li>\n<\/ul>\n<\/div>\n<div class=\"sect2\">\n<h3 id=\"_example_tasklist\">Example Tasklist<\/h3>\n<div class=\"paragraph\">\n<p>Example Tasklist is a simple implementation of task inbox for a single user. The it provides the following features:<\/p>\n<\/div>\n<div class=\"ulist\">\n<ul>\n<li>\n<p>Lists tasks in the system for selected user<\/p>\n<\/li>\n<li>\n<p>Allows for switching users (faking different user login for demonstration purposes)<\/p>\n<\/li>\n<li>\n<p>Tasks include information about the process, name, description, create time, due date, priority and assignment.<\/p>\n<\/li>\n<li>\n<p>Tasks include process data (from process instance)<\/p>\n<\/li>\n<li>\n<p>Tasks include correlated business data (correlated via variable from process instance)<\/p>\n<\/li>\n<li>\n<p>The list of tasks is sortable<\/p>\n<\/li>\n<li>\n<p>The list of tasks is pageble (7 items per page)<\/p>\n<\/li>\n<li>\n<p>Allows claiming / unclaiming<\/p>\n<\/li>\n<li>\n<p>Provides a deeplink to the user task form provided by the process application<\/p>\n<\/li>\n<li>\n<p>Allows starting new process instances<\/p>\n<\/li>\n<\/ul>\n<\/div>\n<div class=\"paragraph\">\n<p>Here is, how it looks like showing task descriptions:<\/p>\n<\/div>\n<div class=\"imageblock\">\n<div class=\"content\">\n<img src=\"https://www.holunda.io/camunda-bpm-taskpool/assets/media/example_tasklist_approve_description.png\" alt=\"Task list with task description\">\n<\/div>\n<\/div>\n<div class=\"paragraph\">\n<p>you can optionally show the business data correlated with user task:<\/p>\n<\/div>\n<div class=\"imageblock\">\n<div class=\"content\">\n<img src=\"https://www.holunda.io/camunda-bpm-taskpool/assets/media/example_tasklist_approve_data.png\" alt=\"Task list with task description\">\n<\/div>\n<\/div>\n<\/div>\n<div class=\"sect2\">\n<h3 id=\"_example_workpieces_list\">Example Workpieces List<\/h3>\n<div class=\"paragraph\">\n<p>The example workpieces list is provides a list of business objects / workpieces that are currently processed by\nthe processes even after the process has already been finished. It provides the following features:<\/p>\n<\/div>\n<div class=\"ulist\">\n<ul>\n<li>\n<p>Lists business objects in the system for selected user<\/p>\n<\/li>\n<li>\n<p>Allows for switching users (faking different user login for demonstration purposes)<\/p>\n<\/li>\n<li>\n<p>Business objects include information about the type, status (with sub status), name, details<\/p>\n<\/li>\n<li>\n<p>Business objects include details about contained data<\/p>\n<\/li>\n<li>\n<p>Business objects include audit log with all state changes<\/p>\n<\/li>\n<li>\n<p>The list is pageable (7 items per page)<\/p>\n<\/li>\n<li>\n<p>Business object view<\/p>\n<\/li>\n<li>\n<p>Provides a deeplink to the business object view provided by the process application<\/p>\n<\/li>\n<\/ul>\n<\/div>\n<div class=\"paragraph\">\n<p>Here is, how it looks like showing the audit log:<\/p>\n<\/div>\n<div class=\"imageblock\">\n<div class=\"content\">\n<img src=\"https://www.holunda.io/camunda-bpm-taskpool/assets/media/example_archive_business_object.png\" alt=\"Example Archive View\">\n<\/div>\n<\/div>\n<\/div>\n<\/div>\n<\/div>"
+                }]
+              }
+            },
+            "ownPages": [{
+              "reference": {
+                "path": "wiki/user-guide",
+                "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                "fileName": "example-components",
+                "extension": "html",
+                "usePrettyUrl": true,
+                "link": "https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/example-components"
+              },
+              "next": {
+                "path": "wiki/user-guide/example-components",
+                "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                "fileName": "pa-frontend",
+                "extension": "html",
+                "usePrettyUrl": true,
+                "link": "https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/example-components/pa-frontend"
+              },
+              "previous": {
+                "path": "wiki/user-guide",
+                "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                "fileName": "example",
+                "extension": "html",
+                "usePrettyUrl": true,
+                "link": "https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/example"
+              },
+              "description": "",
+              "title": "Example Components",
+              "content": "<div class=\"sect1\">\n<h2 id=\"_example_components\">Example Components<\/h2>\n<div class=\"sectionbody\">\n<div class=\"paragraph\">\n<p>For demonstration purposes we built several example components and reuse them to demonstrate the <a href=\"../example\">Example<\/a> in\ndifferent <a href=\"../scenarios\">Usage Scenarios<\/a>. These components are not part of a taskpool distribution and serve demonstration\npurposes only. They still show a trivial implementation of components which needs to be implemented by you and are not\npart of the provided library.<\/p>\n<\/div>\n<div class=\"sect2\">\n<h3 id=\"_process_application_example_components\">Process Application Example Components<\/h3>\n<div class=\"paragraph\">\n<p>To show the integration of <code>camunda-bpm-taskpool<\/code> components into a process application, the process discussed in\n<a href=\"../example\">Example<\/a> has been implemented.<\/p>\n<\/div>\n<div class=\"ulist\">\n<ul>\n<li>\n<p><a href=\"pa-frontend\">Process Application Frontend<\/a><\/p>\n<\/li>\n<li>\n<p><a href=\"pa-backend\">Process Application Backend<\/a><\/p>\n<\/li>\n<\/ul>\n<\/div>\n<\/div>\n<div class=\"sect2\">\n<h3 id=\"_process_platform_example_components\">Process Platform Example Components<\/h3>\n<div class=\"paragraph\">\n<p>To show the integration of <code>camunda-bpm-taskpool<\/code> components into a process platform, a simple task list and\na workpieces view (archive view for business objects) has been implemented.<\/p>\n<\/div>\n<div class=\"ulist\">\n<ul>\n<li>\n<p><a href=\"pp-frontend\">Process Platform Frontend<\/a><\/p>\n<\/li>\n<li>\n<p><a href=\"pp-backend\">Process Platform Backend<\/a><\/p>\n<\/li>\n<\/ul>\n<\/div>\n<\/div>\n<div class=\"sect2\">\n<h3 id=\"_shared_example_components\">Shared Example Components<\/h3>\n<div class=\"paragraph\">\n<p>Components used by other example components.<\/p>\n<\/div>\n<div class=\"ulist\">\n<ul>\n<li>\n<p><a href=\"user-management\">User Management<\/a><\/p>\n<\/li>\n<\/ul>\n<\/div>\n<\/div>\n<\/div>\n<\/div>"
+            }]
+          },
+          "integration-guide": {
+            "ownKey": "integration-guide",
+            "ownPages": [{
+              "reference": {
+                "path": "wiki/user-guide",
+                "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                "fileName": "integration-guide",
+                "extension": "html",
+                "usePrettyUrl": true,
+                "link": "https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/integration-guide"
+              },
+              "next": {
+                "path": "wiki/user-guide",
+                "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                "fileName": "components",
+                "extension": "html",
+                "usePrettyUrl": true,
+                "link": "https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/components"
+              },
+              "previous": {
+                "path": "wiki/user-guide/scenarios",
+                "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                "fileName": "distributed-no-axon-server",
+                "extension": "html",
+                "usePrettyUrl": true,
+                "link": "https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/scenarios/distributed-no-axon-server"
+              },
+              "description": "",
+              "title": "Integration Guide",
+              "content": "<div class=\"sect1\">\n<h2 id=\"_integration_guide\">Integration Guide<\/h2>\n<div class=\"sectionbody\">\n<div class=\"paragraph\">\n<p>This guide is describing steps required to configure an existing Camunda Spring Boot Process Application and\nconnect to existing Process Platform.<\/p>\n<\/div>\n<div class=\"sect2\">\n<h3 id=\"_configure_your_existing_process_application\">Configure your existing process application<\/h3>\n<div class=\"paragraph\">\n<p>Apart from the example application, you might be interested in integrating task pool into your existing\napplication. To do so, you need to enable your Camunda BPM process engine to use the library.\nFor doing so, add the <code>camunda-bpm-taskpool-engine-springboot-starter<\/code> library. In Maven, add the following dependency\nto your <code>pom.xml<\/code> :<\/p>\n<\/div>\n<div class=\"listingblock\">\n<div class=\"content\">\n<pre class=\"highlight\"><code class=\"language-xml\" data-lang=\"xml\">&lt;dependency&gt;\n  &lt;groupId&gt;io.holunda.taskpool&lt;/groupId&gt;\n  &lt;artifactId&gt;camunda-bpm-taskpool-engine-springboot-starter&lt;/artifactId&gt;\n  &lt;version&gt;${camunda-bpm-taskpool.version}&lt;/version&gt;\n&lt;/dependency&gt;<\/code><\/pre>\n<\/div>\n<\/div>\n<div class=\"paragraph\">\n<p>Now, find your SpringBoot application class and add an additional annotation to it:<\/p>\n<\/div>\n<div class=\"listingblock\">\n<div class=\"content\">\n<pre class=\"highlight\"><code class=\"language-java\" data-lang=\"java\">@SpringBootApplication\n@EnableTaskpoolEngineSupport\npublic class MyApplication {\n\n  public static void main(String... args) {\n    SpringApplication.run(MyApplication.class, args);\n  }\n}<\/code><\/pre>\n<\/div>\n<\/div>\n<div class=\"paragraph\">\n<p>Finally, add the following block to your <code>application.yml<\/code>:<\/p>\n<\/div>\n<div class=\"listingblock\">\n<div class=\"content\">\n<pre class=\"highlight\"><code class=\"language-yaml\" data-lang=\"yaml\">camunda:\n  bpm:\n    default-serialization-format: application/json\n    history-level: full\n  taskpool:\n    collector:\n      tasklist-url: http://localhost:8081/tasklist/\n      process:\n        enabled: true\n      enricher:\n        application-name: ${spring.application.name}  # default\n        type: processVariables\n      sender:\n        enabled: true\n        type: tx\n    dataentry:\n      sender:\n        enabled: true\n        type: simple\n        applicationName: ${spring.application.name}  # default\n    form-url-resolver:\n      defaultTaskTemplate:  \"/tasks/${formKey}/${id}?userId=%userId%\"\n      defaultApplicationTemplate: \"http://localhost:${server.port}/${applicatioName}\"\n      defaultProcessTemplate: \"/${formKey}?userId=%userId%\"<\/code><\/pre>\n<\/div>\n<\/div>\n<div class=\"paragraph\">\n<p>Now, start your process engine. If you run into a user task, you should see on the console how this is passed to task pool.<\/p>\n<\/div>\n<div class=\"paragraph\">\n<p>For more details on the configuration of different options, please consult the <a href=\"../components/\">Taskpool Components<\/a> sections.<\/p>\n<\/div>\n<\/div>\n<\/div>\n<\/div>"
+            }]
+          },
+          "scenarios": {
+            "ownKey": "scenarios",
+            "childrenPages": {
+              "single-node": {
+                "ownKey": "single-node",
+                "ownPages": [{
+                  "reference": {
+                    "path": "wiki/user-guide/scenarios",
+                    "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                    "fileName": "single-node",
+                    "extension": "html",
+                    "usePrettyUrl": true,
+                    "link": "https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/scenarios/single-node"
+                  },
+                  "next": {
+                    "path": "wiki/user-guide/scenarios",
+                    "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                    "fileName": "distributed-axon-server",
+                    "extension": "html",
+                    "usePrettyUrl": true,
+                    "link": "https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/scenarios/distributed-axon-server"
+                  },
+                  "previous": {
+                    "path": "wiki/user-guide",
+                    "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                    "fileName": "scenarios",
+                    "extension": "html",
+                    "usePrettyUrl": true,
+                    "link": "https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/scenarios"
+                  },
+                  "description": "",
+                  "title": "Scenario for running on a single node",
+                  "content": "<div class=\"sect1\">\n<h2 id=\"_scenario_for_running_on_a_single_node\">Scenario for running on a single node<\/h2>\n<div class=\"sectionbody\">\n<div class=\"paragraph\">\n<p>In a single node scenario, the process application and the process platform components are deployed in a single node.\nIn most production environments this scenario doesn&#8217;t make sense because of poor reliability. Still, it is valid for\ndemonstration purpose and is ideal to play around with components and understand their purpose and interaction between them.<\/p>\n<\/div>\n<div class=\"paragraph\">\n<p>In a single mode scenario the following configuration is used:<\/p>\n<\/div>\n<div class=\"ulist\">\n<ul>\n<li>\n<p>All buses are local (command bus, event bus, query bus)<\/p>\n<\/li>\n<li>\n<p>In-memory H2 is used as a database for:<\/p>\n<div class=\"ulist\">\n<ul>\n<li>\n<p>Camunda BPM Engine<\/p>\n<\/li>\n<li>\n<p>Axon Event Store (JPA-based)<\/p>\n<\/li>\n<li>\n<p>Process Application Datasource<\/p>\n<\/li>\n<\/ul>\n<\/div>\n<\/li>\n<li>\n<p>In-memory transient projection view is used (<code>simple-view<\/code>)<\/p>\n<\/li>\n<\/ul>\n<\/div>\n<div class=\"paragraph\">\n<p>Check the following diagram for more details:<\/p>\n<\/div>\n<div class=\"imageblock\">\n<div class=\"content\">\n<img src=\"https://www.holunda.io/camunda-bpm-taskpool/assets/media/deployment-single.png\" alt=\"Deployment of all component in a single node\">\n<\/div>\n<\/div>\n<div class=\"sect2\">\n<h3 id=\"_running_example\">Running Example<\/h3>\n<div class=\"paragraph\">\n<p>This example demonstrates the usage of the Camunda BPM Taskpool deployed in one single node and is\nbuilt as a SpringBoot application.<\/p>\n<\/div>\n<div class=\"sect3\">\n<h4 id=\"_system_requirements\">System Requirements<\/h4>\n<div class=\"ulist\">\n<ul>\n<li>\n<p>JDK 8<\/p>\n<\/li>\n<\/ul>\n<\/div>\n<\/div>\n<div class=\"sect3\">\n<h4 id=\"_preparations\">Preparations<\/h4>\n<div class=\"paragraph\">\n<p>Before you begin, please build the entire project with <code>./mvnw clean install<\/code> from the command line in the project root directory.<\/p>\n<\/div>\n<\/div>\n<div class=\"sect3\">\n<h4 id=\"_start\">Start<\/h4>\n<div class=\"paragraph\">\n<p>The demo application consists of one Maven module which can be started by running from command line in\nthe <code>examples/scenarios/single-node<\/code> directory using Maven. Alternatively you can start the packaged application using:<\/p>\n<\/div>\n<div class=\"listingblock\">\n<div class=\"content\">\n<pre class=\"highlight\"><code class=\"language-bash\" data-lang=\"bash\">java -jar target/*.jar<\/code><\/pre>\n<\/div>\n<\/div>\n<\/div>\n<div class=\"sect3\">\n<h4 id=\"_useful_urls\">Useful URLs<\/h4>\n<div class=\"ulist\">\n<ul>\n<li>\n<p><a href=\"http://localhost:8080/taskpool/\">http://localhost:8080/taskpool/<\/a><\/p>\n<\/li>\n<li>\n<p><a href=\"http://localhost:8080/swagger-ui/\">http://localhost:8080/swagger-ui/<\/a><\/p>\n<\/li>\n<li>\n<p><a href=\"http://localhost:8080/camunda/app/tasklist/default/\">http://localhost:8080/camunda/app/tasklist/default/<\/a><\/p>\n<\/li>\n<\/ul>\n<\/div>\n<\/div>\n<\/div>\n<\/div>\n<\/div>"
+                }]
+              },
+              "distributed-no-axon-server": {
+                "ownKey": "distributed-no-axon-server",
+                "ownPages": [{
+                  "reference": {
+                    "path": "wiki/user-guide/scenarios",
+                    "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                    "fileName": "distributed-no-axon-server",
+                    "extension": "html",
+                    "usePrettyUrl": true,
+                    "link": "https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/scenarios/distributed-no-axon-server"
+                  },
+                  "next": {
+                    "path": "wiki/user-guide",
+                    "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                    "fileName": "integration-guide",
+                    "extension": "html",
+                    "usePrettyUrl": true,
+                    "link": "https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/integration-guide"
+                  },
+                  "previous": {
+                    "path": "wiki/user-guide/scenarios",
+                    "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                    "fileName": "distributed-axon-server",
+                    "extension": "html",
+                    "usePrettyUrl": true,
+                    "link": "https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/scenarios/distributed-axon-server"
+                  },
+                  "description": "",
+                  "title": "Scenario without Axon Server",
+                  "content": "<div class=\"sect1\">\n<h2 id=\"_scenario_without_axon_server\">Scenario without Axon Server<\/h2>\n<div class=\"sectionbody\">\n<div class=\"paragraph\">\n<p>If you already have another messaging at place, like Kafka or RabbitMQ, you might skip the usage of Axon Server. In doing so,\nyou will be responsible for distribution of events and will need to surrender some features.<\/p>\n<\/div>\n<div class=\"paragraph\">\n<p>This scenario supports:<\/p>\n<\/div>\n<div class=\"ulist\">\n<ul>\n<li>\n<p>distributed task pool / data pool<\/p>\n<\/li>\n<li>\n<p>view must be persistent<\/p>\n<\/li>\n<li>\n<p>direct communication between task list / engines required (addressing, routing)<\/p>\n<\/li>\n<li>\n<p>concurrent access to engines might become a problem (no unit of work guarantees)<\/p>\n<\/li>\n<\/ul>\n<\/div>\n<div class=\"paragraph\">\n<p>The following diagram depicts the distribution of the components and the messaging.<\/p>\n<\/div>\n<div class=\"imageblock\">\n<div class=\"content\">\n<img src=\"https://www.holunda.io/camunda-bpm-taskpool/assets/media/deployment-messaging.png\" alt=\"Deployment of taskpool with other messaging\">\n<\/div>\n<\/div>\n<div class=\"paragraph\">\n<p>The following diagram depicts the task run from Process Application to the end user, consuming it via Tasklist API.<\/p>\n<\/div>\n<div class=\"imageblock\">\n<div class=\"content\">\n<img src=\"https://www.holunda.io/camunda-bpm-taskpool/assets/media/scenario_kafka_messaging_overview.png\" alt=\"Kafka Message Run\">\n<\/div>\n<\/div>\n<div class=\"ulist\">\n<ul>\n<li>\n<p>The <code>CamundaEventingEnginePlugin<\/code> provided with the Taskpool tracks events in the Camunda engine (e.g. the creation, deletion or modification of a User Task) and makes them available as Spring events.<\/p>\n<\/li>\n<li>\n<p>The <code>Taskpool Collector<\/code> component listens to those events. It collects all relevant events that happen in a single transaction and registers a transaction synchronization to process them beforeCommit. Just before the transaction is committed, the collected events are accumulated and sent as Axon Commands through the <code>CommandGateway<\/code>.<\/p>\n<\/li>\n<li>\n<p>The <code>Taskpool Core<\/code> processes those commands and issues Axon Events through the EventGateway which are stored in Axon&#8217;s database tables within the same transaction.<\/p>\n<\/li>\n<li>\n<p>The transaction commit finishes. If anything goes wrong before this point, the transaction rolls back and it is as though nothing ever happened.<\/p>\n<\/li>\n<li>\n<p>In the <code>Axon Kafka Extension<\/code>, a <code>TrackingEventProcessor<\/code> polls for events and sees them as soon as the transaction that created them is committed. It sends each event to Kafka and waits for an acknowledgment from Kafka. If sending fails or times out, the event processor goes into error mode and retries until it succeeds. This can lead to events being published to Kafka more than once but guarantees at-least-once delivery.<\/p>\n<\/li>\n<li>\n<p>Within the Tasklist API, the <code>Axon Kafka Extension<\/code> polls the events from Kafka and another TrackingEventProcessor forwards them to the <code>MongoViewService<\/code> where they are processed to update the Mongo DB accordingly.<\/p>\n<\/li>\n<li>\n<p>When a user queries the Tasklist API for tasks, two things happen: Firstly, the Mongo DB is queried for the current state of tasks for this user and these tasks are returned. Secondly, the Tasklist API subscribes to any changes to the Mongo DB. These changes are filtered for relevance to the user and relevant changes are returned after the current state as an infinite stream until the request is cancelled or interrupted for some reason.<\/p>\n<\/li>\n<\/ul>\n<\/div>\n<div class=\"imageblock\">\n<div class=\"content\">\n<img src=\"https://www.holunda.io/camunda-bpm-taskpool/assets/media/scenario_kafka_messaging_tx_view.png\" alt=\"Kafka Message Transaction Overview\">\n<\/div>\n<\/div>\n<div class=\"sect2\">\n<h3 id=\"_from_process_application_to_kafka\">From Process Application to Kafka<\/h3>\n<div class=\"imageblock\">\n<div class=\"content\">\n<img src=\"https://www.holunda.io/camunda-bpm-taskpool/assets/media/scenario_process_application_to_kafka_detail.png\" alt=\"Process Application to Kafka Messaging\">\n<\/div>\n<\/div>\n<\/div>\n<div class=\"sect2\">\n<h3 id=\"_from_kafka_to_tasklist_api\">From Kafka to Tasklist API<\/h3>\n<div class=\"imageblock\">\n<div class=\"content\">\n<img src=\"https://www.holunda.io/camunda-bpm-taskpool/assets/media/scenario_kafka_to_tasklist_detail.png\" alt=\"Kafka to Tasklist API Messaging\">\n<\/div>\n<\/div>\n<\/div>\n<\/div>\n<\/div>"
+                }]
+              },
+              "distributed-axon-server": {
+                "ownKey": "distributed-axon-server",
+                "ownPages": [{
+                  "reference": {
+                    "path": "wiki/user-guide/scenarios",
+                    "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                    "fileName": "distributed-axon-server",
+                    "extension": "html",
+                    "usePrettyUrl": true,
+                    "link": "https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/scenarios/distributed-axon-server"
+                  },
+                  "next": {
+                    "path": "wiki/user-guide/scenarios",
+                    "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                    "fileName": "distributed-no-axon-server",
+                    "extension": "html",
+                    "usePrettyUrl": true,
+                    "link": "https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/scenarios/distributed-no-axon-server"
+                  },
+                  "previous": {
+                    "path": "wiki/user-guide/scenarios",
+                    "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                    "fileName": "single-node",
+                    "extension": "html",
+                    "usePrettyUrl": true,
+                    "link": "https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/scenarios/single-node"
+                  },
+                  "description": "",
+                  "title": "Distributed Scenario using Axon Server",
+                  "content": "<div class=\"sect1\">\n<h2 id=\"_distributed_scenario_using_axon_server\">Distributed Scenario using Axon Server<\/h2>\n<div class=\"sectionbody\">\n<div class=\"paragraph\">\n<p>A distributed scenario is helpful if you intend to build a central process platform and multiple process applications using it.<\/p>\n<\/div>\n<div class=\"paragraph\">\n<p>In general, this is the main use case for taskpool itself, but the distribution aspects adds technical complexity to the resulting\narchitecture. Especially, following the architecture blueprint of Axon Framework, the three buses (command bus, event bus and\nquery bus) needs to be distributed and act as connecting infrastructure between components.<\/p>\n<\/div>\n<div class=\"paragraph\">\n<p>Axon Server provides an implementation for this requirement leading to a distributed buses and a central event store. It is easy\nto use, easy to configure and easy to run. If you need a HA setup, you will need the enterprise license of Axon Server. Essentially,\nif don&#8217;t have another HA ready-to use messaging, this scenario might be your way to go.<\/p>\n<\/div>\n<div class=\"paragraph\">\n<p>This scenario supports:<\/p>\n<\/div>\n<div class=\"ulist\">\n<ul>\n<li>\n<p>central process platform components (including task pool and data pool)<\/p>\n<\/li>\n<li>\n<p>free choice for projection persistence (can be replayed)<\/p>\n<\/li>\n<li>\n<p>no direct communication between process platform and process application is required (e.g. via REST, since it is routed via command bus)<\/p>\n<\/li>\n<\/ul>\n<\/div>\n<div class=\"paragraph\">\n<p>The following configuration is used in the distributes scenario with Axon Server:<\/p>\n<\/div>\n<div class=\"ulist\">\n<ul>\n<li>\n<p>Bus distribution is provided by Axon Server Connector (command bus, event bus, query bus)<\/p>\n<\/li>\n<li>\n<p>Axon Server is used as Event Store<\/p>\n<\/li>\n<li>\n<p>Postgresql is used as a database for:<\/p>\n<div class=\"ulist\">\n<ul>\n<li>\n<p>Camunda BPM Engine<\/p>\n<\/li>\n<li>\n<p>Process Application Datasource<\/p>\n<\/li>\n<\/ul>\n<\/div>\n<\/li>\n<li>\n<p>Mongo is used as persistence for projection view (<code>mongo-view<\/code>)<\/p>\n<\/li>\n<\/ul>\n<\/div>\n<div class=\"paragraph\">\n<p>The following diagram depicts the distribution of the components and the messaging:<\/p>\n<\/div>\n<div class=\"imageblock\">\n<div class=\"content\">\n<img src=\"https://www.holunda.io/camunda-bpm-taskpool/assets/media/deployment-axon-server.png\" alt=\"Deployment of taskpool with axon server\">\n<\/div>\n<\/div>\n<div class=\"sect2\">\n<h3 id=\"_running_example\">Running Example<\/h3>\n<div class=\"paragraph\">\n<p>This example is demonstrating the usage of the Camunda BPM Taskpool with components distributed with help of Axon Server.\nIt provides two applications for demonstration purposes: the process application and the process platform. Both applications are built as SpringBoot applications.<\/p>\n<\/div>\n<div class=\"sect3\">\n<h4 id=\"_system_requirements\">System Requirements<\/h4>\n<div class=\"ulist\">\n<ul>\n<li>\n<p>JDK 8<\/p>\n<\/li>\n<li>\n<p>Docker<\/p>\n<\/li>\n<li>\n<p>Docker Compose<\/p>\n<\/li>\n<\/ul>\n<\/div>\n<\/div>\n<div class=\"sect3\">\n<h4 id=\"_preparations\">Preparations<\/h4>\n<div class=\"paragraph\">\n<p>Before you begin, please build the entire project with <code>mvn clean install<\/code> from the command line in the project root directory.<\/p>\n<\/div>\n<div class=\"paragraph\">\n<p>You will need some backing services (Axon Server, PostgreSQL, MongoDB) and you can easily start them locally\nby using the provided <code>docker-compose.yml<\/code> file.<\/p>\n<\/div>\n<div class=\"paragraph\">\n<p>Before you start change the directory to <code>examples/scenarios/distributed-axon-server<\/code> and run a preparation script <code>.docker/setup.sh<\/code>.\nYou can do it with the following code from your command line (you need to do it once):<\/p>\n<\/div>\n<div class=\"listingblock\">\n<div class=\"content\">\n<pre class=\"highlight\"><code class=\"language-bash\" data-lang=\"bash\">cd examples/scenarios/distributed-axon-server\n.docker/setup.sh<\/code><\/pre>\n<\/div>\n<\/div>\n<div class=\"paragraph\">\n<p>Now, start required containers. The easiest way to do so is to run:<\/p>\n<\/div>\n<div class=\"listingblock\">\n<div class=\"content\">\n<pre class=\"highlight\"><code class=\"language-bash\" data-lang=\"bash\">docker-compose up -d<\/code><\/pre>\n<\/div>\n<\/div>\n<div class=\"paragraph\">\n<p>To verify it is running, open your browser <a href=\"http://localhost:8024/\">http://localhost:8024/<\/a>. You should see\nthe Axon Server administration console.<\/p>\n<\/div>\n<\/div>\n<div class=\"sect3\">\n<h4 id=\"_start\">Start<\/h4>\n<div class=\"paragraph\">\n<p>The demo application consists of several Maven modules. In order to start the example, you will need to start only two\nof them in the following order:<\/p>\n<\/div>\n<div class=\"olist arabic\">\n<ol class=\"arabic\">\n<li>\n<p>taskpool-application (process platform)<\/p>\n<\/li>\n<li>\n<p>process-application (example process application)<\/p>\n<\/li>\n<\/ol>\n<\/div>\n<div class=\"paragraph\">\n<p>The modules can be started by running from command line in the <code>examples/scenarios/distributed-axon-server<\/code> directory using Maven or start the\npackaged application using:<\/p>\n<\/div>\n<div class=\"listingblock\">\n<div class=\"content\">\n<pre class=\"highlight\"><code class=\"language-bash\" data-lang=\"bash\">java -jar taskpool-application/target/*.jar\njava -jar process-application/target/*.jar<\/code><\/pre>\n<\/div>\n<\/div>\n<\/div>\n<div class=\"sect3\">\n<h4 id=\"_urls\">URLs<\/h4>\n<div class=\"sect4\">\n<h5 id=\"_process_platform\">Process Platform<\/h5>\n<div class=\"ulist\">\n<ul>\n<li>\n<p><a href=\"http://localhost:8081/taskpool/\">http://localhost:8081/taskpool/<\/a><\/p>\n<\/li>\n<li>\n<p><a href=\"http://localhost:8081/swagger-ui/\">http://localhost:8081/swagger-ui/<\/a><\/p>\n<\/li>\n<\/ul>\n<\/div>\n<\/div>\n<div class=\"sect4\">\n<h5 id=\"_process_application\">Process Application<\/h5>\n<div class=\"ulist\">\n<ul>\n<li>\n<p><a href=\"http://localhost:8080/camunda/app/\">http://localhost:8080/camunda/app/<\/a><\/p>\n<\/li>\n<li>\n<p><a href=\"http://localhost:8080/swagger-ui/\">http://localhost:8080/swagger-ui/<\/a><\/p>\n<\/li>\n<\/ul>\n<\/div>\n<\/div>\n<\/div>\n<\/div>\n<\/div>\n<\/div>"
+                }]
+              }
+            },
+            "ownPages": [{
+              "reference": {
+                "path": "wiki/user-guide",
+                "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                "fileName": "scenarios",
+                "extension": "html",
+                "usePrettyUrl": true,
+                "link": "https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/scenarios"
+              },
+              "next": {
+                "path": "wiki/user-guide/scenarios",
+                "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                "fileName": "single-node",
+                "extension": "html",
+                "usePrettyUrl": true,
+                "link": "https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/scenarios/single-node"
+              },
+              "previous": {
+                "path": "wiki/user-guide/example-components",
+                "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                "fileName": "pp-backend",
+                "extension": "html",
+                "usePrettyUrl": true,
+                "link": "https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/example-components/pp-backend"
+              },
+              "description": "",
+              "title": "Usage Scenarios",
+              "content": "<div class=\"sect1\">\n<h2 id=\"_usage_scenarios_overview\">Usage Scenarios Overview<\/h2>\n<div class=\"sectionbody\">\n<div class=\"paragraph\">\n<p>Depending on your requirements and infrastructure available several deployment scenarios of the components is possible.<\/p>\n<\/div>\n<div class=\"paragraph\">\n<p>The simplest setup is to run all components on a single node. A more advanced scenario is to distribute components and connect them.<\/p>\n<\/div>\n<div class=\"paragraph\">\n<p>In doing so, one of the challenging issues for distribution and connecting microservices is a setup of messaging technology\nsupporting required message exchange patterns (MEPs) for a CQRS system. Because of different semantics of commands,\nevents and queries and additional requirements of event-sourced persistence a special implementation of\ncommand bus, event bus and event store is required. In particular, two scenarios can be distinguished: using Axon Server\nor using a different distribution technology.<\/p>\n<\/div>\n<div class=\"paragraph\">\n<p>The provided <a href=\"../example\">Example<\/a> is implemented several times demonstrating the following usage scenarios:<\/p>\n<\/div>\n<div class=\"ulist\">\n<ul>\n<li>\n<p><a href=\"single-node\">Single Node Scenario<\/a><\/p>\n<\/li>\n<li>\n<p><a href=\"distributed-axon-server\">Distributed Scenario using Axon Server<\/a><\/p>\n<\/li>\n<li>\n<p><a href=\"distributed-no-axon-server\">Distributed Scenario without Axon Server<\/a><\/p>\n<\/li>\n<\/ul>\n<\/div>\n<div class=\"paragraph\">\n<p>It is a good idea to understand the single node scenario first and then move on to more elaborated scenarios.<\/p>\n<\/div>\n<\/div>\n<\/div>"
+            }]
+          },
+          "example": {
+            "ownKey": "example",
+            "ownPages": [{
+              "reference": {
+                "path": "wiki/user-guide",
+                "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                "fileName": "example",
+                "extension": "html",
+                "usePrettyUrl": true,
+                "link": "https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/example"
+              },
+              "next": {
+                "path": "wiki/user-guide",
+                "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                "fileName": "example-components",
+                "extension": "html",
+                "usePrettyUrl": true,
+                "link": "https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/example-components"
+              },
+              "description": "",
+              "title": "Example Application",
+              "content": "<div class=\"sect1\">\n<h2 id=\"_example_application\">Example Application<\/h2>\n<div class=\"sectionbody\">\n<div class=\"paragraph\">\n<p>Along with library modules several example modules and applications are provided, demonstrating the main features of the solution.\nThis includes a series of example applications for usage in different <a href=\"../scenarios/\">Usage Scenarios<\/a>. They all share the same\nbusiness process described in the next section.<\/p>\n<\/div>\n<div class=\"sect2\">\n<h3 id=\"_business_context\">Business context<\/h3>\n<div class=\"imageblock\">\n<div class=\"content\">\n<img src=\"https://www.holunda.io/camunda-bpm-taskpool/assets/media/process_approve_request.png\" alt=\"Approval Process\">\n<\/div>\n<\/div>\n<div class=\"paragraph\">\n<p>Take a look on the process model above. Imagine you are building a system that responsible for management of all approval requests\nin the company. Using this system, you can submit requests which then get eventually approved or rejected. Sometimes, the <em>approver<\/em>\ndoesn&#8217;t approve or reject, but returns the request back to the <em>originator<\/em> for correction (that is the person, who submitted the request).\nThen, the <em>originator<\/em> can amend the request and resubmit it or cancel the request.<\/p>\n<\/div>\n<div class=\"paragraph\">\n<p>An approval request is modelled in the following way. The <em>subject<\/em>  describes what the request is about, the <em>applicant<\/em> is the\nperson whom it is about (can be different from <em>originator<\/em>). Finally, the <em>amount<\/em> and <em>currency<\/em> denote the costs of the request.\nAll requests must be stored for compliance purposes.<\/p>\n<\/div>\n<div class=\"paragraph\">\n<p>The request is initially created in <code>DRAFT<\/code> mode. It gets to state <code>IN PROGRESS<\/code> as soon as the process is started and will\neventually get to <code>ACCEPTED<\/code> or <code>REJECTED<\/code> as a final state.<\/p>\n<\/div>\n<div class=\"paragraph\">\n<p>For sample purposes two groups of users are created: The Muppet Show (<code>Kermit<\/code>, <code>Piggy<\/code>, <code>Gonzo<\/code> and <code>Fozzy<\/code>) and The Avengers (<code>Ironman<\/code>,\n<code>Hulk<\/code>).  <code>Gonzo<\/code> and <code>Fozzy<\/code> are responsible for approvals.<\/p>\n<\/div>\n<\/div>\n<div class=\"sect2\">\n<h3 id=\"_process_run\">Process Run<\/h3>\n<div class=\"paragraph\">\n<p>Let&#8217;s play the following run through this process model.<\/p>\n<\/div>\n<div class=\"ulist\">\n<ul>\n<li>\n<p><code>Ironman<\/code> submits an Advanced Training request on behalf of <code>Hulk<\/code><\/p>\n<\/li>\n<li>\n<p>The request costs are provided in wrong currency and <code>Gonzo<\/code> returns the request to <code>Ironman<\/code> for correction (EUR instead of USD)<\/p>\n<\/li>\n<li>\n<p><code>Ironman<\/code> changes the currency to USD and re-submits the request<\/p>\n<\/li>\n<li>\n<p><code>Gonzo<\/code> is out of office, so <code>Fozzy<\/code> takes over and approves the request<\/p>\n<\/li>\n<\/ul>\n<\/div>\n<\/div>\n<div class=\"sect2\">\n<h3 id=\"_running_examples\">Running Examples<\/h3>\n<div class=\"paragraph\">\n<p>To run the example please consult the <a href=\"scenarios\">Usage Scenarios<\/a> section.<\/p>\n<\/div>\n<div class=\"admonitionblock tip\">\n<table>\n<tr>\n<td class=\"icon\">\n<div class=\"title\">Tip<\/div>\n<\/td>\n<td class=\"content\">\nSince the process application includes Camunda BPM engine, you can use the standard Camunda webapps by navigating\nto [<a href=\"http://localhost:8080/camunda/app/\" class=\"bare\">http://localhost:8080/camunda/app/<\/a>](<a href=\"http://localhost:8080/camunda/app/\" class=\"bare\">http://localhost:8080/camunda/app/<\/a>).\nThe default user and password are <code>admin / admin<\/code>.\n<\/td>\n<\/tr>\n<\/table>\n<\/div>\n<\/div>\n<div class=\"sect2\">\n<h3 id=\"_story_board\">Story board<\/h3>\n<div class=\"paragraph\">\n<p>The following storyboard can be used to understand the mechanics behind the provided implementation:<\/p>\n<\/div>\n<div class=\"admonitionblock tip\">\n<table>\n<tr>\n<td class=\"icon\">\n<div class=\"title\">Tip<\/div>\n<\/td>\n<td class=\"content\">\nIn this storyboard, we assume you started the single node scenario and the application runs locally\non <a href=\"http://localhost:8080\" class=\"bare\">http://localhost:8080<\/a>. Please adjust the URLs accordingly, if you started differently.\n<\/td>\n<\/tr>\n<\/table>\n<\/div>\n<div class=\"ulist\">\n<ul>\n<li>\n<p>To start the approval process for a given request open your browser and navigate to the <code>Example Tasklist<\/code>:\n<a href=\"http://localhost:8080/taskpool/\">http://localhost:8080/taskpool/<\/a>. Please note that the selected user is <code>Ironman<\/code>.<\/p>\n<\/li>\n<li>\n<p>Open the menu (<code>Start new&#8230;&#8203;<\/code>) in and select 'Request Approval'. You should see the start form for the example\napproval process.<\/p>\n<\/li>\n<\/ul>\n<\/div>\n<div class=\"imageblock\">\n<div class=\"content\">\n<img src=\"https://www.holunda.io/camunda-bpm-taskpool/assets/media/example_start_form.png\" alt=\"New approval process start form\">\n<\/div>\n<\/div>\n<div class=\"ulist\">\n<ul>\n<li>\n<p>Select <code>Advanced Training<\/code> from one of predefined templates and click <em>Start<\/em>. The start form will disappear and redirect back to\nthe empty <code>Tasklist<\/code>.<\/p>\n<\/li>\n<li>\n<p>Since you are still acting as <code>Ironman<\/code> there are nothing you can do here. Please switch the user to <code>Gonzo<\/code>\nin the top right corner and you should see the user task <code>Approve Request<\/code> from process <code>Request Approval<\/code>.<\/p>\n<\/li>\n<\/ul>\n<\/div>\n<div class=\"imageblock\">\n<div class=\"content\">\n<img src=\"https://www.holunda.io/camunda-bpm-taskpool/assets/media/example_tasklist_approve_description.png\" alt=\"Task list with task description\">\n<\/div>\n<\/div>\n<div class=\"ulist\">\n<ul>\n<li>\n<p>Examine the task details by clicking <em>Data<\/em> tab in <em>Details<\/em> column. You can see the data of the request correlated to\nthe current process instance.<\/p>\n<\/li>\n<\/ul>\n<\/div>\n<div class=\"imageblock\">\n<div class=\"content\">\n<img src=\"https://www.holunda.io/camunda-bpm-taskpool/assets/media/example_tasklist_approve_data.png\" alt=\"Task list with task data\">\n<\/div>\n<\/div>\n<div class=\"ulist\">\n<ul>\n<li>\n<p>Click on the task name and you will see the user task form of the <code>Approve Request<\/code> task. Select the option\n<code>Return request to originator<\/code> and click complete.<\/p>\n<\/li>\n<\/ul>\n<\/div>\n<div class=\"imageblock\">\n<div class=\"content\">\n<img src=\"https://www.holunda.io/camunda-bpm-taskpool/assets/media/example_approve_request.png\" alt=\"Example User Task Form Approve Request\">\n<\/div>\n<\/div>\n<div class=\"ulist\">\n<ul>\n<li>\n<p>Switch to <code>Workpieces<\/code> and you should see the request business object. Examine the approval request by clicking\n<em>Data<\/em>, <em>Audit<\/em> and <em>Description<\/em> tabs in <em>Details<\/em> column.<\/p>\n<\/li>\n<\/ul>\n<\/div>\n<div class=\"imageblock\">\n<div class=\"content\">\n<img src=\"https://www.holunda.io/camunda-bpm-taskpool/assets/media/example_archive_business_object.png\" alt=\"Example Archive View\">\n<\/div>\n<\/div>\n<div class=\"ulist\">\n<ul>\n<li>\n<p>Change user back to <code>Ironman<\/code> and switch back to the <code>Tasklist<\/code> and open the <code>Amend request`task. Change the currency to\n`USD<\/code> and re-submit the request.<\/p>\n<\/li>\n<\/ul>\n<\/div>\n<div class=\"imageblock\">\n<div class=\"content\">\n<img src=\"https://www.holunda.io/camunda-bpm-taskpool/assets/media/example_amend_request.png\" alt=\"Example User Task Form Amend Request\">\n<\/div>\n<\/div>\n<div class=\"ulist\">\n<ul>\n<li>\n<p>Change user back to <code>Fozzy<\/code>, open the <code>Approve Request<\/code> task and approve the request by selecting the appropriate option.<\/p>\n<\/li>\n<li>\n<p>Switch to <code>Workpieces<\/code> and you should still see the request business object, even after the process is finished. Examine the approval\nrequest by clicking <em>Data<\/em>, <em>Audit<\/em> and <em>Description<\/em> tabs in <em>Details<\/em> column.<\/p>\n<\/li>\n<\/ul>\n<\/div>\n<\/div>\n<\/div>\n<\/div>"
+            }]
+          }
+        },
+        "ownPages": [
+          {
+            "reference": {
+              "path": "wiki",
+              "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+              "fileName": "user-guide",
+              "extension": "html",
+              "usePrettyUrl": true,
+              "link": "https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide"
+            },
+            "description": "",
+            "title": "User Guide",
+            "content": "<html>\n <head><\/head>\n <body>\n  <h2 id=\"working-example-application\"><a href=\"#working-example-application\" id=\"working-example-application\" class=\"anchor\"><\/a>Working Example Application<\/h2> \n  <ul> \n   <li><a href=\"https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/example\">Example Overview<\/a><\/li> \n   <li>Example Components \n    <ul> \n     <li><a href=\"https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/example-components\">Example Components Overview<\/a><\/li> \n     <li><a href=\"https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/example-components/pa-frontend\">Process Application Frontend<\/a><\/li> \n     <li><a href=\"https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/example-components/pa-backend\">Process Application Backend<\/a><\/li> \n     <li><a href=\"https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/example-components/user-management\">User Management<\/a><\/li> \n     <li><a href=\"https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/example-components/pp-frontend\">Process Platform Frontend<\/a><\/li> \n     <li><a href=\"https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/example-components/pp-backend\">Process Platform Backend<\/a><\/li> \n    <\/ul> <\/li> \n   <li>Usage Scenarios \n    <ul> \n     <li><a href=\"https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/scenarios\">Usage Scenarios Overview<\/a><\/li> \n     <li><a href=\"https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/scenarios/single-node\">Single Node<\/a><\/li> \n     <li><a href=\"https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/scenarios/distributed-axon-server\">Distributed using Axon Server<\/a><\/li> \n     <li><a href=\"https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/scenarios/distributed-no-axon-server\">Distributed without Axon Server<\/a><\/li> \n    <\/ul> <\/li> \n  <\/ul> \n  <h2 id=\"components\"><a href=\"#components\" id=\"components\" class=\"anchor\"><\/a>Components<\/h2> \n  <ul> \n   <li><a href=\"https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/integration-guide\">Integration Guide<\/a><\/li> \n   <li><a href=\"https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/components\">Components Overview<\/a><\/li> \n   <li>Engine Components \n    <ul> \n     <li><a href=\"https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/components/engine-starter\">Camunda Engine Taskpool Support SpringBoot Starter<\/a><\/li> \n     <li><a href=\"https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/components/engine-interaction-client\">Camunda Engine Interaction Client<\/a><\/li> \n    <\/ul> <\/li> \n   <li>Core Components \n    <ul> \n     <li><a href=\"https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/components/engine-taskpool-collector\">Taskpool Collector<\/a><\/li> \n     <li><a href=\"https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/components/engine-datapool-collector\">Datapool Collector<\/a><\/li> \n     <li><a href=\"https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/components/core-taskpool\">Taskpool Core<\/a><\/li> \n     <li><a href=\"https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/components/core-datapool\">Datapool Core<\/a><\/li> \n    <\/ul> <\/li> \n   <li>View Components \n    <ul> \n     <li><a href=\"https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/components/view-simple\">In-Memory View<\/a><\/li> \n     <li><a href=\"https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/components/view-mongo\">Mongo View<\/a><\/li> \n    <\/ul> <\/li> \n  <\/ul> \n <\/body>\n<\/html>\n"
+          },
+          {
+            "reference": {
+              "path": "wiki/user-guide",
+              "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+              "fileName": "book",
+              "extension": "pdf",
+              "usePrettyUrl": false,
+              "link": "https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/book.pdf"
+            },
+            "description": "",
+            "title": "User Guide Book",
+            "content": ""
+          }
+        ]
+      },
+      "introduction": {
+        "ownKey": "introduction",
+        "childrenPages": {
+          "features": {
+            "ownKey": "features",
+            "ownPages": [{
+              "reference": {
+                "path": "wiki/introduction",
+                "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                "fileName": "features",
+                "extension": "html",
+                "usePrettyUrl": true,
+                "link": "https://www.holunda.io/camunda-bpm-taskpool/wiki/introduction/features"
+              },
+              "next": {
+                "path": "wiki/introduction",
+                "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                "fileName": "solution",
+                "extension": "html",
+                "usePrettyUrl": true,
+                "link": "https://www.holunda.io/camunda-bpm-taskpool/wiki/introduction/solution"
+              },
+              "previous": {
+                "path": "wiki/introduction",
+                "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                "fileName": "motivation",
+                "extension": "html",
+                "usePrettyUrl": true,
+                "link": "https://www.holunda.io/camunda-bpm-taskpool/wiki/introduction/motivation"
+              },
+              "description": "",
+              "title": "Features",
+              "content": "<div class=\"sect1\">\n<h2 id=\"_features\">Features<\/h2>\n<div class=\"sectionbody\">\n<div class=\"sect2\">\n<h3 id=\"_supported_process_engines\">Supported process engines<\/h3>\n<div class=\"ulist\">\n<ul>\n<li>\n<p>Camunda BPM<\/p>\n<\/li>\n<\/ul>\n<\/div>\n<\/div>\n<div class=\"sect2\">\n<h3 id=\"_task_list\">Task List<\/h3>\n<div class=\"paragraph\">\n<p>A task list is an application allowing to represent a list of user tasks. This list is created based on\nuser&#8217;s profile (including authorizations based on roles) for every user. The following features are provided\nby the library:<\/p>\n<\/div>\n<div class=\"ulist\">\n<ul>\n<li>\n<p>user task API providing attributes important for processing<\/p>\n<\/li>\n<li>\n<p>mirroring tasks: provides a list of tasks in the system including all task attributes provided by Camunda BPM Engine<\/p>\n<\/li>\n<li>\n<p>reacts on all task life cycle events fired by the process engine<\/p>\n<\/li>\n<li>\n<p>high performance queries: creates of read-optimized projections including task-, process- and business data<\/p>\n<\/li>\n<li>\n<p>centralized task list: running several Camunda BPM Engines in several applications\nis a common use case for larger companies. From the user&#8217;s perspective, it is not feasible\nto login to several task lists and check for relevant user tasks. The demand for the\ncentralized task list arises and can be addressed by the the use of the <code>taskpool<\/code> library\nif the tasks from several process engines are collected and transmitted over the network.<\/p>\n<\/li>\n<li>\n<p>data enrichment: all scenarios in which the data is not stored in the process payload result\nin a cascade of queries executed after the task fetch. In contrast to that,\nthe usage of the <code>taskpool<\/code> libary with a data enrichment plugin mechanism\n(allowing to plug-in some data enricher on task creation) allows for caching the additional\nbusiness data along with the task information, instead of querying it during task fetch.<\/p>\n<\/li>\n<\/ul>\n<\/div>\n<\/div>\n<div class=\"sect2\">\n<h3 id=\"_archive_list\">Archive List<\/h3>\n<div class=\"paragraph\">\n<p>An archive list provides a list of business objects processed during the execution of business process. Such a business\nobject lifecycle spans over a longer period of time than the process instance - a common requirement is to get a list\nof such objects with different statuses like preliminary, in process or completed. The <code>datapool<\/code> library provides the\nfollowing features:<\/p>\n<\/div>\n<div class=\"ulist\">\n<ul>\n<li>\n<p>business object API providing attributes important for processing<\/p>\n<\/li>\n<li>\n<p>business object modification API for creating an audit Log<\/p>\n<\/li>\n<li>\n<p>authorization API for business objects<\/p>\n<\/li>\n<\/ul>\n<\/div>\n<\/div>\n<div class=\"sect2\">\n<h3 id=\"_process_list\">Process List<\/h3>\n<div class=\"paragraph\">\n<p>A process list provides a list of running instances and a list of process definitions deployed in the process engines connected to\nthe library.<\/p>\n<\/div>\n<div class=\"ulist\">\n<ul>\n<li>\n<p>list of startable process definitions (including URLs to start forms)<\/p>\n<\/li>\n<li>\n<p>list of running process instances<\/p>\n<\/li>\n<li>\n<p>reacts on life cycle events of process instance<\/p>\n<\/li>\n<\/ul>\n<\/div>\n<\/div>\n<\/div>\n<\/div>"
+            }]
+          },
+          "solution": {
+            "ownKey": "solution",
+            "ownPages": [{
+              "reference": {
+                "path": "wiki/introduction",
+                "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                "fileName": "solution",
+                "extension": "html",
+                "usePrettyUrl": true,
+                "link": "https://www.holunda.io/camunda-bpm-taskpool/wiki/introduction/solution"
+              },
+              "next": {
+                "path": "wiki/introduction",
+                "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                "fileName": "further-outlook",
+                "extension": "html",
+                "usePrettyUrl": true,
+                "link": "https://www.holunda.io/camunda-bpm-taskpool/wiki/introduction/further-outlook"
+              },
+              "previous": {
+                "path": "wiki/introduction",
+                "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                "fileName": "features",
+                "extension": "html",
+                "usePrettyUrl": true,
+                "link": "https://www.holunda.io/camunda-bpm-taskpool/wiki/introduction/features"
+              },
+              "description": "",
+              "title": "Solution Architecture",
+              "content": "<div class=\"sect1\">\n<h2 id=\"_general_idea\">General Idea<\/h2>\n<div class=\"sectionbody\">\n<div class=\"paragraph\">\n<p>The implementation of a single (small) process application can be performed mostly using the Camunda BPM library itself. If the\nsolution becomes larger, for example by setting up multiple engines for different processes or the load on a single process\nengine becomes unmanageble for a process engine cluster, it is worth to separate the solution into <em>process specific<\/em> and\n<em>process agnostic<\/em> parts. We call the <em>process specific<\/em> part of the solution Process Application and the <em>process agnostic<\/em>\npart - Process Platform.<\/p>\n<\/div>\n<div class=\"paragraph\">\n<p>Based on the assumption of the asymmetric read/write characteristics of task-oriented process applications, we decided\nto apply Command Query Responsibility Segregation (CQRS) pattern during the architectural design. As a result, we supply\ncomponents to collect the user tasks from the process engines and create a read-optimized projections with user tasks\nand correlated business data. The components can be easily integrated into process applications and be used as foundation\nto build parts of the process platform.<\/p>\n<\/div>\n<\/div>\n<\/div>\n<div class=\"sect1\">\n<h2 id=\"_design_decisions\">Design Decisions<\/h2>\n<div class=\"sectionbody\">\n<div class=\"paragraph\">\n<p>We decided to build thi library as a collection of loose-coupled components which can be used during the construction\nof the process automation solution in different ways, depending on your <a href=\"../user-guide/scenarios\">Usage Scenario<\/a>.<\/p>\n<\/div>\n<div class=\"paragraph\">\n<p>The process platform is a central application consisting of business process independent components like a central user management,\ntask inbox (aka task list), archive view for business data processed, audit logs and others. One or many process applications\nintegrate with the process platform by implementing individual business processes and provide user tasks and business data changes to it.\nThey may also ship application frontends which are integrated into/with the frontends of the process platform, including business\nobject views, user task forms and other required pieces.<\/p>\n<\/div>\n<div class=\"paragraph\">\n<p>The following diagram depicts the overall logical architecture.:<\/p>\n<\/div>\n<div class=\"imageblock\">\n<div class=\"content\">\n<img src=\"https://www.holunda.io/camunda-bpm-taskpool/assets/media/process-platform-architecture.png\" alt=\"Process Platform Architecture\">\n<\/div>\n<\/div>\n<\/div>\n<\/div>\n<div class=\"sect1\">\n<h2 id=\"_implementation_decisions\">Implementation Decisions<\/h2>\n<div class=\"sectionbody\">\n<div class=\"paragraph\">\n<p>The components are implemented using Kotlin programming language and relies on SpringBoot as execution environment.\nThey make a massive use of Axon Framework as a basis of the CQRS implementation.<\/p>\n<\/div>\n<div class=\"imageblock\">\n<div class=\"content\">\n<img src=\"https://www.holunda.io/camunda-bpm-taskpool/assets/media/architecture-collector.png\" alt=\"Process Platform Architecture\">\n<\/div>\n<\/div>\n<\/div>\n<\/div>"
+            }]
+          },
+          "further-outlook": {
+            "ownKey": "further-outlook",
+            "ownPages": [{
+              "reference": {
+                "path": "wiki/introduction",
+                "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                "fileName": "further-outlook",
+                "extension": "html",
+                "usePrettyUrl": true,
+                "link": "https://www.holunda.io/camunda-bpm-taskpool/wiki/introduction/further-outlook"
+              },
+              "previous": {
+                "path": "wiki/introduction",
+                "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                "fileName": "solution",
+                "extension": "html",
+                "usePrettyUrl": true,
+                "link": "https://www.holunda.io/camunda-bpm-taskpool/wiki/introduction/solution"
+              },
+              "description": "",
+              "title": "Further outlook",
+              "content": "<div class=\"sect1\">\n<h2 id=\"_further_outlook\">Further outlook<\/h2>\n<div class=\"sectionbody\">\n<div class=\"paragraph\">\n<p>This library serves as a foundation of several follow-up projects and tools:<\/p>\n<\/div>\n<div class=\"ulist\">\n<ul>\n<li>\n<p>Skill-based-routing: based on information stored in the taskpool, a skill-based routing for task assignment can be implemented.<\/p>\n<\/li>\n<li>\n<p>Workload management: apart from the operative task management, the workload management is addressing issues like dynamic task assignment, optimal task distribution, assignment based on presence etc.<\/p>\n<\/li>\n<\/ul>\n<\/div>\n<\/div>\n<\/div>"
+            }]
+          },
+          "motivation": {
+            "ownKey": "motivation",
+            "ownPages": [{
+              "reference": {
+                "path": "wiki/introduction",
+                "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                "fileName": "motivation",
+                "extension": "html",
+                "usePrettyUrl": true,
+                "link": "https://www.holunda.io/camunda-bpm-taskpool/wiki/introduction/motivation"
+              },
+              "next": {
+                "path": "wiki/introduction",
+                "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                "fileName": "features",
+                "extension": "html",
+                "usePrettyUrl": true,
+                "link": "https://www.holunda.io/camunda-bpm-taskpool/wiki/introduction/features"
+              },
+              "description": "",
+              "title": "Motivation",
+              "content": "<div class=\"sect1\">\n<h2 id=\"_motivation_and_goal\">Motivation and Goal<\/h2>\n<div class=\"sectionbody\">\n<div class=\"paragraph\">\n<p>In the last years, we built several process applications and process platforms on behalf of the customers using Camunda BPM Engine.\nIn doing so, we were able to extract common requirements, especially if the task-oriented application has been implemented.\nThe requirements were basic and independent of the frontend implementation technology. It turned out that some issues occurred\nevery time during the implementation.<\/p>\n<\/div>\n<div class=\"paragraph\">\n<p>These were:<\/p>\n<\/div>\n<div class=\"ulist\">\n<ul>\n<li>\n<p>coping with performance issues of Camunda BPM Engine by the big amount of tasks available (total tasks, tasks per user)<\/p>\n<\/li>\n<li>\n<p>creating high-performance custom queries for pre-loading process variables for tasks<\/p>\n<\/li>\n<li>\n<p>creating high-performance custom queries to pre-load business data associated with the running process instance<\/p>\n<\/li>\n<li>\n<p>high-performance re-ordering (sorting) of user tasks<\/p>\n<\/li>\n<li>\n<p>high-performance retrieving of tasks from several process engines<\/p>\n<\/li>\n<li>\n<p>repetitive queries with same result<\/p>\n<\/li>\n<li>\n<p>creating an archive view for business data items handled during the process execution<\/p>\n<\/li>\n<li>\n<p>creating an audit log of changes performed on business data items<\/p>\n<\/li>\n<\/ul>\n<\/div>\n<div class=\"paragraph\">\n<p>Since we were developing customer software, we found solutions to those requirements and gathered experience in applying\ndifferent approaches for that. Some issues listed above result from fact that data on a single user task is being read\nmuch more often than written, depending on the user count. For systems with a big amount of users this becomes a serious\nperformance issue and needs to be addressed.<\/p>\n<\/div>\n<div class=\"paragraph\">\n<p>A possible solution to most of those issues listed above is to create a special component which has a read-optimized representation of tasks.\nSuch component acts as a cache for tasks and allows for serving a high amount of queries without any performance impact to the process engine\nitself at the costs of loosing strong consistency (and working with eventual-consistent task list).<\/p>\n<\/div>\n<div class=\"paragraph\">\n<p>We successfully applied this approach by multiple customers and identified the high initial invest as a main drawback of the solution.\nThe goal of this project is to provide a component as a free and open source library, to be used as a foundation for creation of process platforms\nfor Camunda BPM engine. It can also be used as an integration layer for custom process applications, custom user task lists and other\ncomponents of process automation solutions.<\/p>\n<\/div>\n<\/div>\n<\/div>"
+            }]
+          }
+        },
+        "ownPages": [
+          {
+            "reference": {
+              "path": "wiki",
+              "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+              "fileName": "introduction",
+              "extension": "html",
+              "usePrettyUrl": true,
+              "link": "https://www.holunda.io/camunda-bpm-taskpool/wiki/introduction"
+            },
+            "description": "",
+            "title": "Introduction",
+            "content": "<html>\n <head><\/head>\n <body>\n  <h2><a href=\"#\" class=\"anchor\"><\/a><\/h2> \n  <ul> \n   <li><a href=\"https://www.holunda.io/camunda-bpm-taskpool/wiki/introduction/motivation\">Motivation<\/a><\/li> \n   <li><a href=\"https://www.holunda.io/camunda-bpm-taskpool/wiki/introduction/features\">Features<\/a><\/li> \n   <li><a href=\"https://www.holunda.io/camunda-bpm-taskpool/wiki/introduction/solution\">Solution Strategy<\/a><\/li> \n   <li><a href=\"https://www.holunda.io/camunda-bpm-taskpool/wiki/introduction/further-outlook\">Further Outlook<\/a><\/li> \n  <\/ul> \n <\/body>\n<\/html>\n"
+          },
+          {
+            "reference": {
+              "path": "wiki/introduction",
+              "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+              "fileName": "book",
+              "extension": "pdf",
+              "usePrettyUrl": false,
+              "link": "https://www.holunda.io/camunda-bpm-taskpool/wiki/introduction/book.pdf"
+            },
+            "description": "",
+            "title": "Introduction Book",
+            "content": ""
+          }
+        ]
+      }
+    },
+    "ownPages": [{
+      "reference": {
+        "path": "",
+        "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+        "fileName": "wiki",
+        "extension": "html",
+        "usePrettyUrl": true,
+        "link": "https://www.holunda.io/camunda-bpm-taskpool/wiki"
+      },
+      "description": "",
+      "title": "Wiki",
+      "content": ""
+    }]
+  }}
+}

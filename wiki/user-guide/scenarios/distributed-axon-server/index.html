@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+
+
+
+<meta charset="utf-8"/>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+<meta name="generator" content="Orchid 0.18.2-SNAPSHOT"/>
+<link rel="icon" href="https://www.holunda.io/camunda-bpm-taskpool/favicon.ico">
+
+
+<meta name="robots" content="index, follow">
+
+
+
+<title>Distributed Scenario using Axon Server</title>
+
+
+<meta name="description" content="A component for pooling user tasks with business data for high performance queries.">
+
+
+
+<link rel="prev" href="https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/scenarios/single-node">
+
+
+<link rel="next" href="https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/scenarios/distributed-no-axon-server">
+
+
+<script>
+    window.site = {"orchidVersion":"0.18.2-SNAPSHOT","baseUrl":"https://www.holunda.io/camunda-bpm-taskpool","environment":"debug","version":"3.0.0"};
+</script>
+
+
+
+
+
+<!-- start:debug info -->
+
+<!-- THEME -->
+<!-- Type: BsDoc -->
+<!-- Class: com.eden.orchid.bsdoc.BSDocTheme -->
+
+<!-- PAGE -->
+<!-- Type: wiki -->
+<!-- Class: com.eden.orchid.wiki.pages.WikiPage -->
+<!-- Layout: geopattern2, index -->
+<!-- Resolved Layout: templates/layouts/geopattern2.peb -->
+<!-- Page Template: wiki, page -->
+<!-- Resolved Page Template: templates/pages/page.peb -->
+
+<!-- RESOURCE -->
+<!-- Class: com.eden.orchid.api.resources.resource.FileResource -->
+<!-- Source Filename: wiki/user-guide/scenarios/distributed-axon-server.ad -->
+
+<!-- COMPLETE PAGE CONFIGURATION -->
+<script>
+    window.allData = {"reference":{"path":"wiki/user-guide/scenarios","baseUrl":"https://www.holunda.io/camunda-bpm-taskpool","fileName":"distributed-axon-server","extension":"html","usePrettyUrl":true,"link":"https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/scenarios/distributed-axon-server"},"next":{"path":"wiki/user-guide/scenarios","baseUrl":"https://www.holunda.io/camunda-bpm-taskpool","fileName":"distributed-no-axon-server","extension":"html","usePrettyUrl":true,"link":"https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/scenarios/distributed-no-axon-server"},"previous":{"path":"wiki/user-guide/scenarios","baseUrl":"https://www.holunda.io/camunda-bpm-taskpool","fileName":"single-node","extension":"html","usePrettyUrl":true,"link":"https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/scenarios/single-node"},"description":"","title":"Distributed Scenario using Axon Server"};
+</script>
+
+<!-- end:debug info -->
+
+
+
+
+    <!-- start:inject components -->
+    
+    <!-- end:inject components -->
+
+
+
+    <!-- start:inject components -->
+    
+    <!-- end:inject components -->
+
+
+
+
+
+<!-- start:inject styles -->
+<link rel="stylesheet" type="text/css" href="https://netdna.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css"  />
+<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"  />
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/github-fork-ribbon-css/0.2.0/gh-fork-ribbon.min.css"  />
+<link rel="stylesheet" type="text/css" href="https://www.holunda.io/camunda-bpm-taskpool/BsDoc/b5276d0/assets/css/bsdoc.css"  />
+<link rel="stylesheet" type="text/css" href="https://www.holunda.io/camunda-bpm-taskpool/BsDoc/b5276d0/assets/css/orchidSearch.css"  />
+<link rel="stylesheet" type="text/css" href="https://www.holunda.io/camunda-bpm-taskpool/assets/css/menu.css"  />
+<link rel="stylesheet" type="text/css" href="https://www.holunda.io/camunda-bpm-taskpool/assets/css/asciidoc-admonitionblock.css"  />
+<link rel="stylesheet" type="text/css" href="https://rawgit.com/PrismJS/prism-themes/master/themes/prism-darcula.css"  />
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/plugins/line-numbers/prism-line-numbers.min.css"  />
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/plugins/line-highlight/prism-line-highlight.min.css"  />
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/plugins/toolbar/prism-toolbar.min.css"  />
+<!-- end:inject styles -->
+
+
+</head>
+<body>
+
+
+
+
+<a class="github-fork-ribbon right-top"
+   href="https://github.com/holunda-io/camunda-bpm-taskpool"
+   title="Fork me on GitHub">Fork me on GitHub</a>
+
+
+<header class="navbar navbar-fixed-top bs-docs-nav">
+    <div class="container">
+        <div class="navbar-header" role="banner">
+            <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="https://www.holunda.io/camunda-bpm-taskpool">BPM Taskpool</a>
+        </div>
+        <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
+            <ul class="nav navbar-nav navbar-right">
+                
+                    
+                        <li class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">Introduction<span class="caret"></span></a>
+                            <ul class="dropdown-menu scrollable-menu">
+                                
+                                    <li><a href="https://www.holunda.io/camunda-bpm-taskpool/wiki/introduction/motivation">Motivation</a></li>
+                                
+                                    <li><a href="https://www.holunda.io/camunda-bpm-taskpool/wiki/introduction/features">Features</a></li>
+                                
+                                    <li><a href="https://www.holunda.io/camunda-bpm-taskpool/wiki/introduction/solution">Solution Architecture</a></li>
+                                
+                                    <li><a href="https://www.holunda.io/camunda-bpm-taskpool/wiki/introduction/further-outlook">Further outlook</a></li>
+                                
+                            </ul>
+                        </li>
+                    
+                
+                    
+                        <li class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">User Guide<span class="caret"></span></a>
+                            <ul class="dropdown-menu scrollable-menu">
+                                
+                                    <li><a href="https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/example">Example Application</a></li>
+                                
+                                    <li><a href="https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/example-components">Example Components</a></li>
+                                
+                                    <li><a href="https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/scenarios">Usage Scenarios</a></li>
+                                
+                                    <li><a href="https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/integration-guide">Integration Guide</a></li>
+                                
+                                    <li><a href="https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/components">Taskpool Components</a></li>
+                                
+                            </ul>
+                        </li>
+                    
+                
+                    
+                        <li class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">Developer Guide<span class="caret"></span></a>
+                            <ul class="dropdown-menu scrollable-menu">
+                                
+                                    <li><a href="https://www.holunda.io/camunda-bpm-taskpool/wiki/developer-guide/contribution">Contribution</a></li>
+                                
+                                    <li><a href="https://www.holunda.io/camunda-bpm-taskpool/wiki/developer-guide/project-setup">Project Setup</a></li>
+                                
+                            </ul>
+                        </li>
+                    
+                
+                    
+                        <li class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">Explore<span class="caret"></span></a>
+                            <ul class="dropdown-menu scrollable-menu">
+                                
+                                    <li><a href="https://www.holunda.io/camunda-bpm-taskpool/changelog">Changelog</a></li>
+                                
+                                    <li><a href="https://www.holunda.io/camunda-bpm-taskpool/license">License</a></li>
+                                
+                                    <li><a href="https://www.holunda.io/camunda-bpm-taskpool/readme">Project Readme</a></li>
+                                
+                            </ul>
+                        </li>
+                    
+                
+            </ul>
+        </nav>
+    </div>
+</header>
+
+
+<div id="top"></div>
+
+
+    <div class="bs-docs-header" id="jumbotron">
+        <div class="container">
+            <h1 class="home-title">Distributed Scenario using Axon Server</h1>
+        </div>
+    </div>
+
+
+<div class="container bs-docs-container">
+    <div class="row">
+        <div class="col-md-9" role="main">
+        <nav aria-label="breadcrumb">
+    <ul class="breadcrumb">
+    
+    
+        <li class="breadcrumb-item"><a href="https://www.holunda.io/camunda-bpm-taskpool/wiki">Wiki</a></li>
+    
+    
+    
+        <li class="breadcrumb-item"><a href="https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide">User Guide</a></li>
+    
+    
+    
+        <li class="breadcrumb-item active" aria-current="page">Distributed Scenario using Axon Server</li>
+    
+    
+    </ul>
+</nav>
+        
+
+        
+        
+            
+    <!-- start:inject components -->
+    
+        
+            
+        
+            
+                
+                    
+                        <div class="sect1">
+<h2 id="_distributed_scenario_using_axon_server">Distributed Scenario using Axon Server</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A distributed scenario is helpful if you intend to build a central process platform and multiple process applications using it.</p>
+</div>
+<div class="paragraph">
+<p>In general, this is the main use case for taskpool itself, but the distribution aspects adds technical complexity to the resulting
+architecture. Especially, following the architecture blueprint of Axon Framework, the three buses (command bus, event bus and
+query bus) needs to be distributed and act as connecting infrastructure between components.</p>
+</div>
+<div class="paragraph">
+<p>Axon Server provides an implementation for this requirement leading to a distributed buses and a central event store. It is easy
+to use, easy to configure and easy to run. If you need a HA setup, you will need the enterprise license of Axon Server. Essentially,
+if don&#8217;t have another HA ready-to use messaging, this scenario might be your way to go.</p>
+</div>
+<div class="paragraph">
+<p>This scenario supports:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>central process platform components (including task pool and data pool)</p>
+</li>
+<li>
+<p>free choice for projection persistence (can be replayed)</p>
+</li>
+<li>
+<p>no direct communication between process platform and process application is required (e.g. via REST, since it is routed via command bus)</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The following configuration is used in the distributes scenario with Axon Server:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Bus distribution is provided by Axon Server Connector (command bus, event bus, query bus)</p>
+</li>
+<li>
+<p>Axon Server is used as Event Store</p>
+</li>
+<li>
+<p>Postgresql is used as a database for:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Camunda BPM Engine</p>
+</li>
+<li>
+<p>Process Application Datasource</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Mongo is used as persistence for projection view (<code>mongo-view</code>)</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The following diagram depicts the distribution of the components and the messaging:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="https://www.holunda.io/camunda-bpm-taskpool/assets/media/deployment-axon-server.png" alt="Deployment of taskpool with axon server">
+</div>
+</div>
+<div class="sect2">
+<h3 id="_running_example">Running Example</h3>
+<div class="paragraph">
+<p>This example is demonstrating the usage of the Camunda BPM Taskpool with components distributed with help of Axon Server.
+It provides two applications for demonstration purposes: the process application and the process platform. Both applications are built as SpringBoot applications.</p>
+</div>
+<div class="sect3">
+<h4 id="_system_requirements">System Requirements</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>JDK 8</p>
+</li>
+<li>
+<p>Docker</p>
+</li>
+<li>
+<p>Docker Compose</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_preparations">Preparations</h4>
+<div class="paragraph">
+<p>Before you begin, please build the entire project with <code>mvn clean install</code> from the command line in the project root directory.</p>
+</div>
+<div class="paragraph">
+<p>You will need some backing services (Axon Server, PostgreSQL, MongoDB) and you can easily start them locally
+by using the provided <code>docker-compose.yml</code> file.</p>
+</div>
+<div class="paragraph">
+<p>Before you start change the directory to <code>examples/scenarios/distributed-axon-server</code> and run a preparation script <code>.docker/setup.sh</code>.
+You can do it with the following code from your command line (you need to do it once):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">cd examples/scenarios/distributed-axon-server
+.docker/setup.sh</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now, start required containers. The easiest way to do so is to run:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">docker-compose up -d</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To verify it is running, open your browser <a href="http://localhost:8024/">http://localhost:8024/</a>. You should see
+the Axon Server administration console.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_start">Start</h4>
+<div class="paragraph">
+<p>The demo application consists of several Maven modules. In order to start the example, you will need to start only two
+of them in the following order:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>taskpool-application (process platform)</p>
+</li>
+<li>
+<p>process-application (example process application)</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>The modules can be started by running from command line in the <code>examples/scenarios/distributed-axon-server</code> directory using Maven or start the
+packaged application using:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">java -jar taskpool-application/target/*.jar
+java -jar process-application/target/*.jar</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_urls">URLs</h4>
+<div class="sect4">
+<h5 id="_process_platform">Process Platform</h5>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="http://localhost:8081/taskpool/">http://localhost:8081/taskpool/</a></p>
+</li>
+<li>
+<p><a href="http://localhost:8081/swagger-ui/">http://localhost:8081/swagger-ui/</a></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_process_application">Process Application</h5>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="http://localhost:8080/camunda/app/">http://localhost:8080/camunda/app/</a></p>
+</li>
+<li>
+<p><a href="http://localhost:8080/swagger-ui/">http://localhost:8080/swagger-ui/</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+                    
+                
+            
+        
+    
+    <!-- end:inject components -->
+
+
+        
+        </div>
+
+        <!-- Page navigation
+        =========================================== -->
+        <div class="col-md-3" role="complementary">
+        <div class="bs-docs-sidebar hidden-print" id="bs-docs-sidebar">
+    <section id="search" >
+        <form data-orchid-search="">
+            <div class="input-group">
+                <input type="text" name="query" id="query" class="form-control" placeholder="Search&hellip;">
+                <span class="input-group-btn"><button type="submit" class="btn btn-default">Go</button></span>
+            </div>
+        </form>
+        <div id="search-results" data-orchid-search-results style="display: none;">
+            <b>Search Results</b>
+            <ul></ul>
+        </div>
+        <div id="search-progress" data-orchid-search-progress style="display: none;">
+            <div class="loader">Loading...</div>
+        </div>
+    </section>
+
+    <ul class="nav bs-docs-sidenav">
+        
+        
+            
+                
+                    <li><a class="divider-subheader">In This Page</a></li>
+                
+            
+        
+        
+            
+                <li class="has-children ">
+                    <a>Distributed Scenario Using Axon Server</a>
+                    <ul class="nav">
+                        
+                        
+                            
+                                <li class="">
+                                    <a href="#_running_example">Running Example</a>
+                                </li>
+                            
+                        
+                    </ul>
+                </li>
+            
+        
+        
+            
+                
+                    <li><a class="divider-subheader">User Guide</a></li>
+                
+            
+        
+        
+            
+                
+                    <li class=""><a href="https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/example">Example Application</a></li>
+                
+            
+        
+        
+            
+                <li class="has-children ">
+                    <a>Example Components</a>
+                    <ul class="nav">
+                        
+                        <li>
+                            <a href="https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/example-components">Overview</a>
+                        </li>
+                        
+                        
+                            
+                                <li class="">
+                                    <a href="https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/example-components/pa-frontend">Process Application Frontend</a>
+                                </li>
+                            
+                        
+                            
+                                <li class="">
+                                    <a href="https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/example-components/pa-backend">Process Application Backend</a>
+                                </li>
+                            
+                        
+                            
+                                <li class="">
+                                    <a href="https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/example-components/user-management">User Management</a>
+                                </li>
+                            
+                        
+                            
+                                <li class="">
+                                    <a href="https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/example-components/pp-frontend">Process Platform Frontend</a>
+                                </li>
+                            
+                        
+                            
+                                <li class="">
+                                    <a href="https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/example-components/pp-backend">Process Platform Backend</a>
+                                </li>
+                            
+                        
+                    </ul>
+                </li>
+            
+        
+        
+            
+                <li class="has-children active">
+                    <a>Usage Scenarios</a>
+                    <ul class="nav">
+                        
+                        <li>
+                            <a href="https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/scenarios">Overview</a>
+                        </li>
+                        
+                        
+                            
+                                <li class="">
+                                    <a href="https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/scenarios/single-node">Scenario for running on a single node</a>
+                                </li>
+                            
+                        
+                            
+                                <li class="active">
+                                    <a href="https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/scenarios/distributed-axon-server">Distributed Scenario using Axon Server</a>
+                                </li>
+                            
+                        
+                            
+                                <li class="">
+                                    <a href="https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/scenarios/distributed-no-axon-server">Scenario without Axon Server</a>
+                                </li>
+                            
+                        
+                    </ul>
+                </li>
+            
+        
+        
+            
+                
+                    <li class=""><a href="https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/integration-guide">Integration Guide</a></li>
+                
+            
+        
+        
+            
+                <li class="has-children ">
+                    <a>Taskpool Components</a>
+                    <ul class="nav">
+                        
+                        <li>
+                            <a href="https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/components">Overview</a>
+                        </li>
+                        
+                        
+                            
+                                <li class="">
+                                    <a href="https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/components/engine-starter">Camunda Engine Taskpool Support SpringBoot Starter</a>
+                                </li>
+                            
+                        
+                            
+                                <li class="">
+                                    <a href="https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/components/engine-interaction-client">Camunda Engine Interaction Client</a>
+                                </li>
+                            
+                        
+                            
+                                <li class="">
+                                    <a href="https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/components/engine-taskpool-collector">Taskpool Collector</a>
+                                </li>
+                            
+                        
+                            
+                                <li class="">
+                                    <a href="https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/components/engine-datapool-collector">Datapool Collector</a>
+                                </li>
+                            
+                        
+                            
+                                <li class="">
+                                    <a href="https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/components/core-taskpool">Taskpool Core</a>
+                                </li>
+                            
+                        
+                            
+                                <li class="">
+                                    <a href="https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/components/core-datapool">Datapool Core</a>
+                                </li>
+                            
+                        
+                            
+                                <li class="">
+                                    <a href="https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/components/view-simple">In-Memory View</a>
+                                </li>
+                            
+                        
+                            
+                                <li class="">
+                                    <a href="https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/components/view-mongo">Mongo View</a>
+                                </li>
+                            
+                        
+                    </ul>
+                </li>
+            
+        
+    </ul>
+
+    
+    <!-- start:inject components -->
+    
+    <!-- end:inject components -->
+
+
+
+    <a class="back-to-top" href="#top">
+        <i class="glyphicon glyphicon-chevron-up"></i> Back to top
+    </a>
+</div>
+
+        </div>
+    </div>
+</div>
+
+
+<div id="footer">
+    <div class="container bs-docs-container">
+    <footer class="bs-docs-footer" role="contentinfo">
+    <div class="row">
+        <div class="col-xs-12">
+            <nav aria-label="navigateClasses">
+                <ul class="pager">
+                    
+                        <li class="previous">
+                            <a href="https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/scenarios/single-node">
+                                <span aria-hidden="true">&larr;</span>
+                                <span>Scenario for running on a single node</span>
+                            </a>
+                        </li>
+                    
+
+                    
+                        <li class="next">
+                            <a href="https://www.holunda.io/camunda-bpm-taskpool/wiki/user-guide/scenarios/distributed-no-axon-server">
+                                <span>Scenario without Axon Server</span>
+                                <span aria-hidden="true">&rarr;</span>
+                            </a>
+                        </li>
+                    
+                </ul>
+            </nav>
+        </div>
+    </div>
+    <div class="icons">
+    
+    
+        <a href="https://www.holunda.io/camunda-bpm-taskpool/" class="fa fas fa-home"></a>
+    
+        <a href="https://github.com/holunda-io/camunda-bpm-taskpool" class="fa fa-github"></a>
+    
+        <a href="https://twitter.com/holisticon" class="fa fa-twitter"></a>
+    
+    
+    </div>
+    <br>
+    <p>
+    Documentation template based on the
+    <a href="https://github.com/mistic100/jekyll-bootstrap-doc">Jekyll Bootstrap Doc</a>
+    Jekyll theme by the <a href="https://getbootstrap.com">Bootstrap team</a>. Site created with
+    <a href="https://orchid.run">Orchid</a>.
+</p>
+
+
+</footer>
+    </div>
+</div>
+
+
+<!-- start:inject scripts -->
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script  src="https://netdna.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.3.0/bootbox.min.js"></script>
+<script  src="https://www.holunda.io/camunda-bpm-taskpool/BsDoc/b5276d0/assets/js/bsdoc.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/prism.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-yaml.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-java.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-json.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-kotlin.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-markdown.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/plugins/line-numbers/prism-line-numbers.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/plugins/line-highlight/prism-line-highlight.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/plugins/toolbar/prism-toolbar.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/plugins/show-language/prism-show-language.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js"></script>
+<!-- end:inject scripts -->
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+
+<script>
+    $(function () {
+        window.colors = ['#16480c', '#000000'];
+                  
+    
+        geopattern('Distributed Scenario using Axon Server');
+    
+
+        buildNav();
+    });
+</script>
+
+</body>
+</html>

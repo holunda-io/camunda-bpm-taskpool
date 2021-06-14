@@ -1,0 +1,1905 @@
+{
+  "ownKey": "kotlindoc",
+  "childrenPages": {"io": {
+    "ownKey": "io",
+    "childrenPages": {"holunda": {
+      "ownKey": "holunda",
+      "childrenPages": {"camunda": {
+        "ownKey": "camunda",
+        "childrenPages": {"taskpool": {
+          "ownKey": "taskpool",
+          "childrenPages": {"view": {
+            "ownKey": "view",
+            "childrenPages": {
+              "mongo": {
+                "ownKey": "mongo",
+                "childrenPages": {
+                  "ChangeTrackingMode": {
+                    "ownKey": "ChangeTrackingMode",
+                    "ownPages": [{
+                      "reference": {
+                        "path": "io/holunda/camunda/taskpool/view/mongo",
+                        "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                        "fileName": "ChangeTrackingMode",
+                        "extension": "html",
+                        "usePrettyUrl": true,
+                        "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/mongo/ChangeTrackingMode"
+                      },
+                      "description": "",
+                      "title": "ChangeTrackingMode",
+                      "content": "<p>Change tracking mode.<\/p>\n"
+                    }]
+                  },
+                  "service": {
+                    "ownKey": "service",
+                    "childrenPages": {
+                      "Criterion": {
+                        "ownKey": "Criterion",
+                        "childrenPages": {
+                          "EmptyCriterion": {
+                            "ownKey": "EmptyCriterion",
+                            "ownPages": [{
+                              "reference": {
+                                "path": "io/holunda/camunda/taskpool/view/mongo/service/Criterion",
+                                "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                                "fileName": "EmptyCriterion",
+                                "extension": "html",
+                                "usePrettyUrl": true,
+                                "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/mongo/service/Criterion/EmptyCriterion"
+                              },
+                              "description": "",
+                              "title": "EmptyCriterion",
+                              "content": ""
+                            }]
+                          },
+                          "DataEntryCriterion": {
+                            "ownKey": "DataEntryCriterion",
+                            "ownPages": [{
+                              "reference": {
+                                "path": "io/holunda/camunda/taskpool/view/mongo/service/Criterion",
+                                "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                                "fileName": "DataEntryCriterion",
+                                "extension": "html",
+                                "usePrettyUrl": true,
+                                "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/mongo/service/Criterion/DataEntryCriterion"
+                              },
+                              "description": "",
+                              "title": "DataEntryCriterion",
+                              "content": "<p>Criterion on data entry.<init>\nCriterion on data entry.\nname<\/p>\n<p>value<\/p>\n<p>operator<\/p>\n"
+                            }]
+                          },
+                          "TaskCriterion": {
+                            "ownKey": "TaskCriterion",
+                            "ownPages": [{
+                              "reference": {
+                                "path": "io/holunda/camunda/taskpool/view/mongo/service/Criterion",
+                                "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                                "fileName": "TaskCriterion",
+                                "extension": "html",
+                                "usePrettyUrl": true,
+                                "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/mongo/service/Criterion/TaskCriterion"
+                              },
+                              "description": "",
+                              "title": "TaskCriterion",
+                              "content": "<p>Criterion on task.<init>\nCriterion on task.\nname<\/p>\n<p>value<\/p>\n<p>operator<\/p>\n"
+                            }]
+                          }
+                        },
+                        "ownPages": [{
+                          "reference": {
+                            "path": "io/holunda/camunda/taskpool/view/mongo/service",
+                            "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                            "fileName": "Criterion",
+                            "extension": "html",
+                            "usePrettyUrl": true,
+                            "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/mongo/service/Criterion"
+                          },
+                          "description": "",
+                          "title": "Criterion",
+                          "content": "<p>Criterion.\nname<\/p>\n<p>value<\/p>\n<p>operator<\/p>\n<p>typedValue\nValue converter for criteria.\nequals<\/p>\n<p>hashCode<\/p>\n"
+                        }]
+                      },
+                      "DataEntryChangeTracker": {
+                        "ownKey": "DataEntryChangeTracker",
+                        "ownPages": [{
+                          "reference": {
+                            "path": "io/holunda/camunda/taskpool/view/mongo/service",
+                            "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                            "fileName": "DataEntryChangeTracker",
+                            "extension": "html",
+                            "usePrettyUrl": true,
+                            "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/mongo/service/DataEntryChangeTracker"
+                          },
+                          "description": "",
+                          "title": "DataEntryChangeTracker",
+                          "content": "<p>Tracks changes of data entries.\nOnly active if <code>polyflow.view.mongo.changeTrackingMode<\/code> is set to <code>CHANGE_STREAM<\/code>.<init>\nTracks changes of data entries.\nOnly active if <code>polyflow.view.mongo.changeTrackingMode<\/code> is set to <code>CHANGE_STREAM<\/code>.<\/p>\n<p>trackDataEntryUpdates\nRetrieves a flux of data entries updates.<\/p>\n"
+                        }]
+                      },
+                      "MongoViewService": {
+                        "ownKey": "MongoViewService",
+                        "ownPages": [{
+                          "reference": {
+                            "path": "io/holunda/camunda/taskpool/view/mongo/service",
+                            "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                            "fileName": "MongoViewService",
+                            "extension": "html",
+                            "usePrettyUrl": true,
+                            "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/mongo/service/MongoViewService"
+                          },
+                          "description": "",
+                          "title": "MongoViewService",
+                          "content": "<p>Mongo-based projection.<init>\nMongo-based projection.<\/p>\n<p>trackChanges\nRegister for change stream.\nstopTracking\nUnregister for change stream.\nquery\nRetrieves a list of all data entries for current user.\nquery\nRetrieves a list of all data entries of given entry type (and optional id).\nquery\nRetrieves a list of all data entries.\nquery\nRetrieves a list of all user tasks for current user.\nquery\nRetrieves a list of all tasks of a given process application.\nquery\nRetrieves a task for given task id.\nquery\nRetrieves a task with data entries for given task id.\nquery\nRetrieves a list of tasks with correlated data entries of given entry type (and optional id).\nquery\nRetrieves a task count for application.\non<\/p>\n<p>on<\/p>\n<p>on<\/p>\n<p>on<\/p>\n<p>on<\/p>\n<p>on<\/p>\n<p>on<\/p>\n<p>on<\/p>\n<p>on<\/p>\n<p>restore\nRuns an event replay to fill the mongo task view with events.\nJust kept as example. Not needed, will be called automatically, because of the global index stored in mongo DB.<\/p>\n"
+                        }]
+                      },
+                      "ProcessDefinitionMongoService": {
+                        "ownKey": "ProcessDefinitionMongoService",
+                        "ownPages": [{
+                          "reference": {
+                            "path": "io/holunda/camunda/taskpool/view/mongo/service",
+                            "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                            "fileName": "ProcessDefinitionMongoService",
+                            "extension": "html",
+                            "usePrettyUrl": true,
+                            "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/mongo/service/ProcessDefinitionMongoService"
+                          },
+                          "description": "",
+                          "title": "ProcessDefinitionMongoService",
+                          "content": "<p>Mongo process definition projection.<init>\nMongo process definition projection.<\/p>\n<p>on\nOn new process definition.\nquery\nQuery for startable process definitions.<\/p>\n"
+                        }]
+                      },
+                      "TaskChangeTracker": {
+                        "ownKey": "TaskChangeTracker",
+                        "ownPages": [{
+                          "reference": {
+                            "path": "io/holunda/camunda/taskpool/view/mongo/service",
+                            "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                            "fileName": "TaskChangeTracker",
+                            "extension": "html",
+                            "usePrettyUrl": true,
+                            "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/mongo/service/TaskChangeTracker"
+                          },
+                          "description": "",
+                          "title": "TaskChangeTracker",
+                          "content": "<p>Observes the change stream on the mongo db and provides <code>Flux<\/code>es of changes for the various result types of queries. Also makes sure that tasks marked as\ndeleted are 'really' deleted shortly after.\nOnly active if <code>polyflow.view.mongo.changeTrackingMode<\/code> is set to <code>CHANGE_STREAM<\/code>.<init>\nObserves the change stream on the mongo db and provides <code>Flux<\/code>es of changes for the various result types of queries. Also makes sure that tasks marked as\ndeleted are 'really' deleted shortly after.\nOnly active if <code>polyflow.view.mongo.changeTrackingMode<\/code> is set to <code>CHANGE_STREAM<\/code>.<\/p>\n<p>clearSubscription\nClear subscription.\ntrackTaskCountsByApplication\nAdopt changes to task count by application stream.\ntrackTaskUpdates\nAdopt changes to task update stream.\ntrackTaskWithDataEntriesUpdates\nAdopt changes to task with data entries update stream.<\/p>\n"
+                        }]
+                      }
+                    },
+                    "ownPages": [{
+                      "reference": {
+                        "path": "io/holunda/camunda/taskpool/view/mongo",
+                        "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                        "fileName": "service",
+                        "extension": "html",
+                        "usePrettyUrl": true,
+                        "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/mongo/service"
+                      },
+                      "description": "",
+                      "title": "io.holunda.camunda.taskpool.view.mongo.service",
+                      "content": "<p>toCriteria\nForms criteria from string filters.<\/p>\n"
+                    }]
+                  },
+                  "EnableTaskPoolMongoView": {
+                    "ownKey": "EnableTaskPoolMongoView",
+                    "ownPages": [{
+                      "reference": {
+                        "path": "io/holunda/camunda/taskpool/view/mongo",
+                        "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                        "fileName": "EnableTaskPoolMongoView",
+                        "extension": "html",
+                        "usePrettyUrl": true,
+                        "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/mongo/EnableTaskPoolMongoView"
+                      },
+                      "description": "",
+                      "title": "EnableTaskPoolMongoView",
+                      "content": "<p>Enables polyflow projection using Mongo DB as persistence.<init>\nEnables polyflow projection using Mongo DB as persistence.<\/p>\n"
+                    }]
+                  },
+                  "repository": {
+                    "ownKey": "repository",
+                    "childrenPages": {
+                      "TaskCountByApplicationRepositoryExtension": {
+                        "ownKey": "TaskCountByApplicationRepositoryExtension",
+                        "ownPages": [{
+                          "reference": {
+                            "path": "io/holunda/camunda/taskpool/view/mongo/repository",
+                            "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                            "fileName": "TaskCountByApplicationRepositoryExtension",
+                            "extension": "html",
+                            "usePrettyUrl": true,
+                            "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/mongo/repository/TaskCountByApplicationRepositoryExtension"
+                          },
+                          "description": "",
+                          "title": "TaskCountByApplicationRepositoryExtension",
+                          "content": "<p>Counts tasks.<\/p>\n<p>findTaskCountsByApplication\nRetrieves counts grouped by application names.\nfindTaskCountForApplication\nRetrieves a count of tasks for given application.<\/p>\n"
+                        }]
+                      },
+                      "ProcessReferenceDocument": {
+                        "ownKey": "ProcessReferenceDocument",
+                        "ownPages": [{
+                          "reference": {
+                            "path": "io/holunda/camunda/taskpool/view/mongo/repository",
+                            "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                            "fileName": "ProcessReferenceDocument",
+                            "extension": "html",
+                            "usePrettyUrl": true,
+                            "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/mongo/repository/ProcessReferenceDocument"
+                          },
+                          "description": "",
+                          "title": "ProcessReferenceDocument",
+                          "content": "<p>(Camunda) BPMN Process reference.<init><\/p>\n<p><init>\n(Camunda) BPMN Process reference.\ninstanceId<\/p>\n<p>executionId<\/p>\n<p>definitionId<\/p>\n<p>definitionKey<\/p>\n<p>name<\/p>\n<p>applicationName<\/p>\n<p>tenantId<\/p>\n"
+                        }]
+                      },
+                      "TaskWithDataEntriesRepositoryExtension": {
+                        "ownKey": "TaskWithDataEntriesRepositoryExtension",
+                        "ownPages": [{
+                          "reference": {
+                            "path": "io/holunda/camunda/taskpool/view/mongo/repository",
+                            "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                            "fileName": "TaskWithDataEntriesRepositoryExtension",
+                            "extension": "html",
+                            "usePrettyUrl": true,
+                            "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/mongo/repository/TaskWithDataEntriesRepositoryExtension"
+                          },
+                          "description": "",
+                          "title": "TaskWithDataEntriesRepositoryExtension",
+                          "content": "<p>Repository extension.<\/p>\n<p>findAllFilteredForUser\nFind all tasks with data entries matching specified filter.<\/p>\n"
+                        }]
+                      },
+                      "TaskDocument": {
+                        "ownKey": "TaskDocument",
+                        "ownPages": [{
+                          "reference": {
+                            "path": "io/holunda/camunda/taskpool/view/mongo/repository",
+                            "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                            "fileName": "TaskDocument",
+                            "extension": "html",
+                            "usePrettyUrl": true,
+                            "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/mongo/repository/TaskDocument"
+                          },
+                          "description": "",
+                          "title": "TaskDocument",
+                          "content": "<p>Task document.<init>\nTask document.\nid<\/p>\n<p>sourceReference<\/p>\n<p>taskDefinitionKey<\/p>\n<p>payload<\/p>\n<p>correlations<\/p>\n<p>dataEntriesRefs<\/p>\n<p>businessKey<\/p>\n<p>name<\/p>\n<p>description<\/p>\n<p>formKey<\/p>\n<p>priority<\/p>\n<p>createTime<\/p>\n<p>candidateUsers<\/p>\n<p>candidateGroups<\/p>\n<p>assignee<\/p>\n<p>owner<\/p>\n<p>dueDate<\/p>\n<p>followUpDate<\/p>\n<p>deleted<\/p>\n<p>task\nCreate a task from task document.<\/p>\n"
+                        }]
+                      },
+                      "TaskRepositoryExtensionImpl": {
+                        "ownKey": "TaskRepositoryExtensionImpl",
+                        "ownPages": [{
+                          "reference": {
+                            "path": "io/holunda/camunda/taskpool/view/mongo/repository",
+                            "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                            "fileName": "TaskRepositoryExtensionImpl",
+                            "extension": "html",
+                            "usePrettyUrl": true,
+                            "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/mongo/repository/TaskRepositoryExtensionImpl"
+                          },
+                          "description": "",
+                          "title": "TaskRepositoryExtensionImpl",
+                          "content": "<p>Implementation of the repository extensions.<init>\nImplementation of the repository extensions.<\/p>\n<p>findTaskCountsByApplication\nRetrieves counts grouped by application names.\nfindTaskCountForApplication\nRetrieves a count of tasks for given application.\ngetTaskUpdates\nRetrieves a task updates flux.<\/p>\n"
+                        }]
+                      },
+                      "TaskWithDataEntriesRepository": {
+                        "ownKey": "TaskWithDataEntriesRepository",
+                        "ownPages": [{
+                          "reference": {
+                            "path": "io/holunda/camunda/taskpool/view/mongo/repository",
+                            "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                            "fileName": "TaskWithDataEntriesRepository",
+                            "extension": "html",
+                            "usePrettyUrl": true,
+                            "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/mongo/repository/TaskWithDataEntriesRepository"
+                          },
+                          "description": "",
+                          "title": "TaskWithDataEntriesRepository",
+                          "content": "<p>Reactive mongo repository for tasks with data entries.<\/p>\n"
+                        }]
+                      },
+                      "TaskRepository": {
+                        "ownKey": "TaskRepository",
+                        "ownPages": [{
+                          "reference": {
+                            "path": "io/holunda/camunda/taskpool/view/mongo/repository",
+                            "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                            "fileName": "TaskRepository",
+                            "extension": "html",
+                            "usePrettyUrl": true,
+                            "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/mongo/repository/TaskRepository"
+                          },
+                          "description": "",
+                          "title": "TaskRepository",
+                          "content": "<p>Repository for task documents.<\/p>\n<p>findAllForUser\nRetrieves all tasks for user.\nfindAllForApplication\nRetrieves all tasks for a process application.\nfindNotDeletedById\nRetrieves a not deleted task with given id.<\/p>\n"
+                        }]
+                      },
+                      "DataEntryDocument": {
+                        "ownKey": "DataEntryDocument",
+                        "ownPages": [{
+                          "reference": {
+                            "path": "io/holunda/camunda/taskpool/view/mongo/repository",
+                            "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                            "fileName": "DataEntryDocument",
+                            "extension": "html",
+                            "usePrettyUrl": true,
+                            "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/mongo/repository/DataEntryDocument"
+                          },
+                          "description": "",
+                          "title": "DataEntryDocument",
+                          "content": "<p>Represents a business data entry as Mongo Document.<init>\nRepresents a business data entry as Mongo Document.\nidentity<\/p>\n<p>entryType<\/p>\n<p>payload<\/p>\n<p>correlations<\/p>\n<p>type<\/p>\n<p>name<\/p>\n<p>applicationName<\/p>\n<p>description<\/p>\n<p>state<\/p>\n<p>statusType<\/p>\n<p>authorizedUsers<\/p>\n<p>authorizedGroups<\/p>\n<p>protocol<\/p>\n<p>dataEntry\nConstructs a data entry out of Data Entry Document.<\/p>\n"
+                        }]
+                      },
+                      "DataEntryUpdateRepository": {
+                        "ownKey": "DataEntryUpdateRepository",
+                        "ownPages": [{
+                          "reference": {
+                            "path": "io/holunda/camunda/taskpool/view/mongo/repository",
+                            "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                            "fileName": "DataEntryUpdateRepository",
+                            "extension": "html",
+                            "usePrettyUrl": true,
+                            "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/mongo/repository/DataEntryUpdateRepository"
+                          },
+                          "description": "",
+                          "title": "DataEntryUpdateRepository",
+                          "content": "<p>Repository for retrieving change updates.<\/p>\n<p>getDataEntryUpdates\nRetrieves change stream of data entry updates.<\/p>\n"
+                        }]
+                      },
+                      "TaskWithDataEntriesRepositoryExtensionImpl": {
+                        "ownKey": "TaskWithDataEntriesRepositoryExtensionImpl",
+                        "ownPages": [{
+                          "reference": {
+                            "path": "io/holunda/camunda/taskpool/view/mongo/repository",
+                            "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                            "fileName": "TaskWithDataEntriesRepositoryExtensionImpl",
+                            "extension": "html",
+                            "usePrettyUrl": true,
+                            "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/mongo/repository/TaskWithDataEntriesRepositoryExtensionImpl"
+                          },
+                          "description": "",
+                          "title": "TaskWithDataEntriesRepositoryExtensionImpl",
+                          "content": "<p>Repository extension.<init>\nRepository extension.<\/p>\n<p>findAllFilteredForUser\nRetrieves a list of tasks for user matching provided critera.<\/p>\n"
+                        }]
+                      },
+                      "TaskWithDataEntriesDocument": {
+                        "ownKey": "TaskWithDataEntriesDocument",
+                        "ownPages": [{
+                          "reference": {
+                            "path": "io/holunda/camunda/taskpool/view/mongo/repository",
+                            "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                            "fileName": "TaskWithDataEntriesDocument",
+                            "extension": "html",
+                            "usePrettyUrl": true,
+                            "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/mongo/repository/TaskWithDataEntriesDocument"
+                          },
+                          "description": "",
+                          "title": "TaskWithDataEntriesDocument",
+                          "content": "<p>Document for task with data entries.<init>\nDocument for task with data entries.\nid<\/p>\n<p>sourceReference<\/p>\n<p>taskDefinitionKey<\/p>\n<p>dataEntries<\/p>\n<p>payload<\/p>\n<p>businessKey<\/p>\n<p>name<\/p>\n<p>description<\/p>\n<p>formKey<\/p>\n<p>priority<\/p>\n<p>createTime<\/p>\n<p>candidateUsers<\/p>\n<p>candidateGroups<\/p>\n<p>assignee<\/p>\n<p>owner<\/p>\n<p>dueDate<\/p>\n<p>followUpDate<\/p>\n<p>taskWithDataEntries\nCreate a task with data entries from the corresponding mongo document.<\/p>\n"
+                        }]
+                      },
+                      "GenericReferenceDocument": {
+                        "ownKey": "GenericReferenceDocument",
+                        "ownPages": [{
+                          "reference": {
+                            "path": "io/holunda/camunda/taskpool/view/mongo/repository",
+                            "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                            "fileName": "GenericReferenceDocument",
+                            "extension": "html",
+                            "usePrettyUrl": true,
+                            "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/mongo/repository/GenericReferenceDocument"
+                          },
+                          "description": "",
+                          "title": "GenericReferenceDocument",
+                          "content": "<p>Generic reference.<init><\/p>\n<p><init>\nGeneric reference.\ninstanceId<\/p>\n<p>executionId<\/p>\n<p>definitionId<\/p>\n<p>definitionKey<\/p>\n<p>name<\/p>\n<p>applicationName<\/p>\n<p>tenantId<\/p>\n"
+                        }]
+                      },
+                      "CaseReferenceDocument": {
+                        "ownKey": "CaseReferenceDocument",
+                        "ownPages": [{
+                          "reference": {
+                            "path": "io/holunda/camunda/taskpool/view/mongo/repository",
+                            "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                            "fileName": "CaseReferenceDocument",
+                            "extension": "html",
+                            "usePrettyUrl": true,
+                            "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/mongo/repository/CaseReferenceDocument"
+                          },
+                          "description": "",
+                          "title": "CaseReferenceDocument",
+                          "content": "<p>(Camunda) CMMN Case reference.<init><\/p>\n<p><init>\n(Camunda) CMMN Case reference.\ninstanceId<\/p>\n<p>executionId<\/p>\n<p>definitionId<\/p>\n<p>definitionKey<\/p>\n<p>name<\/p>\n<p>applicationName<\/p>\n<p>tenantId<\/p>\n"
+                        }]
+                      },
+                      "DataEntryRepository": {
+                        "ownKey": "DataEntryRepository",
+                        "ownPages": [{
+                          "reference": {
+                            "path": "io/holunda/camunda/taskpool/view/mongo/repository",
+                            "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                            "fileName": "DataEntryRepository",
+                            "extension": "html",
+                            "usePrettyUrl": true,
+                            "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/mongo/repository/DataEntryRepository"
+                          },
+                          "description": "",
+                          "title": "DataEntryRepository",
+                          "content": "<p>Repository for data entry documents.<\/p>\n<p>findByIdentity\nReactive finder by identity.\nfindAllByEntryType\nReactive finder by type.\nfindAllForUser\nFinder for user.\nfindAllForUser\nRetrieves all data entries for user.<\/p>\n"
+                        }]
+                      },
+                      "DataEntryUpdateRepositoryImpl": {
+                        "ownKey": "DataEntryUpdateRepositoryImpl",
+                        "ownPages": [{
+                          "reference": {
+                            "path": "io/holunda/camunda/taskpool/view/mongo/repository",
+                            "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                            "fileName": "DataEntryUpdateRepositoryImpl",
+                            "extension": "html",
+                            "usePrettyUrl": true,
+                            "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/mongo/repository/DataEntryUpdateRepositoryImpl"
+                          },
+                          "description": "",
+                          "title": "DataEntryUpdateRepositoryImpl",
+                          "content": "<p>Implementation of the change stream based on Mongo template.<init>\nImplementation of the change stream based on Mongo template.<\/p>\n<p>getDataEntryUpdates\nRetrieves change stream of data entry updates.<\/p>\n"
+                        }]
+                      },
+                      "ReferenceDocument": {
+                        "ownKey": "ReferenceDocument",
+                        "ownPages": [{
+                          "reference": {
+                            "path": "io/holunda/camunda/taskpool/view/mongo/repository",
+                            "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                            "fileName": "ReferenceDocument",
+                            "extension": "html",
+                            "usePrettyUrl": true,
+                            "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/mongo/repository/ReferenceDocument"
+                          },
+                          "description": "",
+                          "title": "ReferenceDocument",
+                          "content": "<p>Reference.\ninstanceId<\/p>\n<p>executionId<\/p>\n<p>definitionId<\/p>\n<p>definitionKey<\/p>\n<p>name<\/p>\n<p>applicationName<\/p>\n<p>tenantId<\/p>\n"
+                        }]
+                      },
+                      "TaskUpdatesExtension": {
+                        "ownKey": "TaskUpdatesExtension",
+                        "ownPages": [{
+                          "reference": {
+                            "path": "io/holunda/camunda/taskpool/view/mongo/repository",
+                            "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                            "fileName": "TaskUpdatesExtension",
+                            "extension": "html",
+                            "usePrettyUrl": true,
+                            "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/mongo/repository/TaskUpdatesExtension"
+                          },
+                          "description": "",
+                          "title": "TaskUpdatesExtension",
+                          "content": "<p>Task updates.<\/p>\n<p>getTaskUpdates\nRetrieves a task updates flux.<\/p>\n"
+                        }]
+                      },
+                      "TaskRepositoryExtension": {
+                        "ownKey": "TaskRepositoryExtension",
+                        "ownPages": [{
+                          "reference": {
+                            "path": "io/holunda/camunda/taskpool/view/mongo/repository",
+                            "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                            "fileName": "TaskRepositoryExtension",
+                            "extension": "html",
+                            "usePrettyUrl": true,
+                            "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/mongo/repository/TaskRepositoryExtension"
+                          },
+                          "description": "",
+                          "title": "TaskRepositoryExtension",
+                          "content": ""
+                        }]
+                      },
+                      "ProcessDefinitionDocument": {
+                        "ownKey": "ProcessDefinitionDocument",
+                        "ownPages": [{
+                          "reference": {
+                            "path": "io/holunda/camunda/taskpool/view/mongo/repository",
+                            "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                            "fileName": "ProcessDefinitionDocument",
+                            "extension": "html",
+                            "usePrettyUrl": true,
+                            "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/mongo/repository/ProcessDefinitionDocument"
+                          },
+                          "description": "",
+                          "title": "ProcessDefinitionDocument",
+                          "content": "<p>Mongo document representing a deployed process definition.<init>\nMongo document representing a deployed process definition.\nprocessDefinitionId<\/p>\n<p>processDefinitionKey<\/p>\n<p>processDefinitionVersion<\/p>\n<p>applicationName<\/p>\n<p>processName<\/p>\n<p>processVersionTag<\/p>\n<p>processDescription<\/p>\n<p>formKey<\/p>\n<p>startableFromTasklist<\/p>\n<p>candidateStarterUsers<\/p>\n<p>candidateStarterGroups<\/p>\n<p>toProcessDefinition\nCreates a projection representation out of document.<\/p>\n"
+                        }]
+                      },
+                      "ProcessDefinitionRepository": {
+                        "ownKey": "ProcessDefinitionRepository",
+                        "ownPages": [{
+                          "reference": {
+                            "path": "io/holunda/camunda/taskpool/view/mongo/repository",
+                            "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                            "fileName": "ProcessDefinitionRepository",
+                            "extension": "html",
+                            "usePrettyUrl": true,
+                            "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/mongo/repository/ProcessDefinitionRepository"
+                          },
+                          "description": "",
+                          "title": "ProcessDefinitionRepository",
+                          "content": "<p>Repository for process definitions.<\/p>\n<p>findAllForUser<\/p>\n"
+                        }]
+                      },
+                      "ProtocolElement": {
+                        "ownKey": "ProtocolElement",
+                        "ownPages": [{
+                          "reference": {
+                            "path": "io/holunda/camunda/taskpool/view/mongo/repository",
+                            "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                            "fileName": "ProtocolElement",
+                            "extension": "html",
+                            "usePrettyUrl": true,
+                            "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/mongo/repository/ProtocolElement"
+                          },
+                          "description": "",
+                          "title": "ProtocolElement",
+                          "content": "<p>Element from the protocol.<init>\nElement from the protocol.\ntime<\/p>\n<p>statusType<\/p>\n<p>state<\/p>\n<p>username<\/p>\n<p>logMessage<\/p>\n<p>logDetails<\/p>\n<p>toProtocol\nCreates the protocol.<\/p>\n"
+                        }]
+                      }
+                    },
+                    "ownPages": [{
+                      "reference": {
+                        "path": "io/holunda/camunda/taskpool/view/mongo",
+                        "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                        "fileName": "repository",
+                        "extension": "html",
+                        "usePrettyUrl": true,
+                        "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/mongo/repository"
+                      },
+                      "description": "",
+                      "title": "io.holunda.camunda.taskpool.view.mongo.repository",
+                      "content": "<p>taskDocument\nCreate a task document from task.\ntask\nCreate a task from task document.\nsourceReference\nCreate source reference out of reference document.\ndataEntry\nConstructs a data entry out of Data Entry Document.\nmapState\nMaps the state.\ntoDocument\nCreates the document.\ntoDocument\nCreates the document.\ntaskWithDataEntries\nCreate a task with data entries from the corresponding mongo document.\ntoProtocolElement\nCreates protocol element.\ntoProtocol\nCreates the protocol.<\/p>\n"
+                    }]
+                  },
+                  "TaskPoolMongoViewProperties": {
+                    "ownKey": "TaskPoolMongoViewProperties",
+                    "ownPages": [{
+                      "reference": {
+                        "path": "io/holunda/camunda/taskpool/view/mongo",
+                        "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                        "fileName": "TaskPoolMongoViewProperties",
+                        "extension": "html",
+                        "usePrettyUrl": true,
+                        "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/mongo/TaskPoolMongoViewProperties"
+                      },
+                      "description": "",
+                      "title": "TaskPoolMongoViewProperties",
+                      "content": "<p>Configures mongo projection mode.<init>\nConfigures mongo projection mode.\nchangeTrackingMode\nTracking mode.<\/p>\n"
+                    }]
+                  },
+                  "TaskPoolMongoViewConfiguration": {
+                    "ownKey": "TaskPoolMongoViewConfiguration",
+                    "ownPages": [{
+                      "reference": {
+                        "path": "io/holunda/camunda/taskpool/view/mongo",
+                        "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                        "fileName": "TaskPoolMongoViewConfiguration",
+                        "extension": "html",
+                        "usePrettyUrl": true,
+                        "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/mongo/TaskPoolMongoViewConfiguration"
+                      },
+                      "description": "",
+                      "title": "TaskPoolMongoViewConfiguration",
+                      "content": "<p>Main configuration of the Mongo-DB based view.<init>\nMain configuration of the Mongo-DB based view.<\/p>\n<p>info\nReport initialization.\nconfigureAxonMongoTemplate\nAxon Mongo template configuration.\nconfigureAxonMongoTokenStore\nAxon Mongo Token store configuration.\nconfigureMongoTypeMapping\nMongo Type Mapping.<\/p>\n"
+                    }]
+                  }
+                },
+                "ownPages": [{
+                  "reference": {
+                    "path": "io/holunda/camunda/taskpool/view",
+                    "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                    "fileName": "mongo",
+                    "extension": "html",
+                    "usePrettyUrl": true,
+                    "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/mongo"
+                  },
+                  "description": "",
+                  "title": "io.holunda.camunda.taskpool.view.mongo",
+                  "content": ""
+                }]
+              },
+              "Task": {
+                "ownKey": "Task",
+                "ownPages": [{
+                  "reference": {
+                    "path": "io/holunda/camunda/taskpool/view",
+                    "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                    "fileName": "Task",
+                    "extension": "html",
+                    "usePrettyUrl": true,
+                    "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/Task"
+                  },
+                  "description": "",
+                  "title": "Task",
+                  "content": "<p>User task.<init>\nUser task.\ncorrelationIdentities<\/p>\n<p>id<\/p>\n<p>sourceReference<\/p>\n<p>taskDefinitionKey<\/p>\n<p>payload<\/p>\n<p>correlations<\/p>\n<p>businessKey<\/p>\n<p>name<\/p>\n<p>description<\/p>\n<p>formKey<\/p>\n<p>priority<\/p>\n<p>createTime<\/p>\n<p>candidateUsers<\/p>\n<p>candidateGroups<\/p>\n<p>assignee<\/p>\n<p>owner<\/p>\n<p>dueDate<\/p>\n<p>followUpDate<\/p>\n<p>deleted<\/p>\n<p>taskDocument\nCreate a task document from task.<\/p>\n"
+                }]
+              },
+              "ProtocolEntry": {
+                "ownKey": "ProtocolEntry",
+                "ownPages": [{
+                  "reference": {
+                    "path": "io/holunda/camunda/taskpool/view",
+                    "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                    "fileName": "ProtocolEntry",
+                    "extension": "html",
+                    "usePrettyUrl": true,
+                    "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/ProtocolEntry"
+                  },
+                  "description": "",
+                  "title": "ProtocolEntry",
+                  "content": "<p>Represents a protocol entry.<init>\nRepresents a protocol entry.\ntime<\/p>\n<p>state<\/p>\n<p>username<\/p>\n<p>logMessage<\/p>\n<p>logDetails<\/p>\n<p>toProtocolElement\nCreates protocol element.<\/p>\n"
+                }]
+              },
+              "auth": {
+                "ownKey": "auth",
+                "childrenPages": {
+                  "User": {
+                    "ownKey": "User",
+                    "ownPages": [{
+                      "reference": {
+                        "path": "io/holunda/camunda/taskpool/view/auth",
+                        "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                        "fileName": "User",
+                        "extension": "html",
+                        "usePrettyUrl": true,
+                        "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/auth/User"
+                      },
+                      "description": "",
+                      "title": "User",
+                      "content": "<p>Simple user abstraction.<init>\nSimple user abstraction.\nusername\nusername of the user.\ngroups\nset of group names assigned to the user.<\/p>\n"
+                    }]
+                  },
+                  "UserService": {
+                    "ownKey": "UserService",
+                    "ownPages": [{
+                      "reference": {
+                        "path": "io/holunda/camunda/taskpool/view/auth",
+                        "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                        "fileName": "UserService",
+                        "extension": "html",
+                        "usePrettyUrl": true,
+                        "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/auth/UserService"
+                      },
+                      "description": "",
+                      "title": "UserService",
+                      "content": "<p>Simple integration hook into auth of the final system.<\/p>\n<p>getUser\nRetrieves a user for given user identifier.\nuserIdentifier a token or a key identifying the user.<\/p>\n"
+                    }]
+                  },
+                  "UnknownUserException": {
+                    "ownKey": "UnknownUserException",
+                    "ownPages": [{
+                      "reference": {
+                        "path": "io/holunda/camunda/taskpool/view/auth",
+                        "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                        "fileName": "UnknownUserException",
+                        "extension": "html",
+                        "usePrettyUrl": true,
+                        "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/auth/UnknownUserException"
+                      },
+                      "description": "",
+                      "title": "UnknownUserException",
+                      "content": "<p>Is thrown if the user is not known in the system.<init>\nIs thrown if the user is not known in the system.<\/p>\n"
+                    }]
+                  }
+                },
+                "ownPages": [{
+                  "reference": {
+                    "path": "io/holunda/camunda/taskpool/view",
+                    "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                    "fileName": "auth",
+                    "extension": "html",
+                    "usePrettyUrl": true,
+                    "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/auth"
+                  },
+                  "description": "",
+                  "title": "io.holunda.camunda.taskpool.view.auth",
+                  "content": ""
+                }]
+              },
+              "ProcessVariable": {
+                "ownKey": "ProcessVariable",
+                "ownPages": [{
+                  "reference": {
+                    "path": "io/holunda/camunda/taskpool/view",
+                    "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                    "fileName": "ProcessVariable",
+                    "extension": "html",
+                    "usePrettyUrl": true,
+                    "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/ProcessVariable"
+                  },
+                  "description": "",
+                  "title": "ProcessVariable",
+                  "content": "<p>Represents a process variable.<init>\nRepresents a process variable.\nvariableName<\/p>\n<p>variableInstanceId<\/p>\n<p>sourceReference<\/p>\n<p>scopeActivityInstanceId<\/p>\n<p>value<\/p>\n"
+                }]
+              },
+              "query": {
+                "ownKey": "query",
+                "childrenPages": {
+                  "QueryResult": {
+                    "ownKey": "QueryResult",
+                    "ownPages": [{
+                      "reference": {
+                        "path": "io/holunda/camunda/taskpool/view/query",
+                        "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                        "fileName": "QueryResult",
+                        "extension": "html",
+                        "usePrettyUrl": true,
+                        "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/query/QueryResult"
+                      },
+                      "description": "",
+                      "title": "QueryResult",
+                      "content": "<p>Query result representing a list of elements and the total number of elements.<init><\/p>\n<p><init>\nQuery result representing a list of elements and the total number of elements.\ntotalElementCount\nin the result before the slice has been applied.\nelements\nelements in the query result.\nslice\nSlices the result.<\/p>\n"
+                    }]
+                  },
+                  "process": {
+                    "ownKey": "process",
+                    "childrenPages": {
+                      "ProcessDefinitionsStartableByUserQuery": {
+                        "ownKey": "ProcessDefinitionsStartableByUserQuery",
+                        "ownPages": [{
+                          "reference": {
+                            "path": "io/holunda/camunda/taskpool/view/query/process",
+                            "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                            "fileName": "ProcessDefinitionsStartableByUserQuery",
+                            "extension": "html",
+                            "usePrettyUrl": true,
+                            "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/query/process/ProcessDefinitionsStartableByUserQuery"
+                          },
+                          "description": "",
+                          "title": "ProcessDefinitionsStartableByUserQuery",
+                          "content": "<p>Query for startable processes by given user.<init>\nQuery for startable processes by given user.\nuser\nuser with groups accessing the startable processes.\napplyFilter\nApplies the filter.<\/p>\n"
+                        }]
+                      },
+                      "ReactiveProcessDefinitionApi": {
+                        "ownKey": "ReactiveProcessDefinitionApi",
+                        "ownPages": [{
+                          "reference": {
+                            "path": "io/holunda/camunda/taskpool/view/query/process",
+                            "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                            "fileName": "ReactiveProcessDefinitionApi",
+                            "extension": "html",
+                            "usePrettyUrl": true,
+                            "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/query/process/ReactiveProcessDefinitionApi"
+                          },
+                          "description": "",
+                          "title": "ReactiveProcessDefinitionApi",
+                          "content": "<p>Reactive API for process definitions.<\/p>\n<p>query\nQuery for startable process definitions.<\/p>\n"
+                        }]
+                      },
+                      "ProcessInstancesByStateQuery": {
+                        "ownKey": "ProcessInstancesByStateQuery",
+                        "ownPages": [{
+                          "reference": {
+                            "path": "io/holunda/camunda/taskpool/view/query/process",
+                            "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                            "fileName": "ProcessInstancesByStateQuery",
+                            "extension": "html",
+                            "usePrettyUrl": true,
+                            "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/query/process/ProcessInstancesByStateQuery"
+                          },
+                          "description": "",
+                          "title": "ProcessInstancesByStateQuery",
+                          "content": "<p>Query for process instance matching the provided states.<init>\nQuery for process instance matching the provided states.\nstates<\/p>\n<p>applyFilter\nApplies the filter.<\/p>\n"
+                        }]
+                      },
+                      "ProcessInstanceQueryResult": {
+                        "ownKey": "ProcessInstanceQueryResult",
+                        "ownPages": [{
+                          "reference": {
+                            "path": "io/holunda/camunda/taskpool/view/query/process",
+                            "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                            "fileName": "ProcessInstanceQueryResult",
+                            "extension": "html",
+                            "usePrettyUrl": true,
+                            "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/query/process/ProcessInstanceQueryResult"
+                          },
+                          "description": "",
+                          "title": "ProcessInstanceQueryResult",
+                          "content": "<p>Result for process instance queries.<init>\nResult for process instance queries.\nelements\nelements in the query result.\nslice\nSlices the result.<\/p>\n"
+                        }]
+                      },
+                      "variable": {
+                        "ownKey": "variable",
+                        "childrenPages": {
+                          "filter": {
+                            "ownKey": "filter",
+                            "childrenPages": {
+                              "ProcessVariableOneOf": {
+                                "ownKey": "ProcessVariableOneOf",
+                                "ownPages": [{
+                                  "reference": {
+                                    "path": "io/holunda/camunda/taskpool/view/query/process/variable/filter",
+                                    "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                                    "fileName": "ProcessVariableOneOf",
+                                    "extension": "html",
+                                    "usePrettyUrl": true,
+                                    "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/query/process/variable/filter/ProcessVariableOneOf"
+                                  },
+                                  "description": "",
+                                  "title": "ProcessVariableOneOf",
+                                  "content": "<p>Filter to query for a list of variables. Every variable present in the list matches the filter.<init>\nFilter to query for a list of variables. Every variable present in the list matches the filter.\ntype<\/p>\n<p>processVariableNames<\/p>\n<p>apply<\/p>\n"
+                                }]
+                              },
+                              "ProcessVariableFilterExactlyOne": {
+                                "ownKey": "ProcessVariableFilterExactlyOne",
+                                "ownPages": [{
+                                  "reference": {
+                                    "path": "io/holunda/camunda/taskpool/view/query/process/variable/filter",
+                                    "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                                    "fileName": "ProcessVariableFilterExactlyOne",
+                                    "extension": "html",
+                                    "usePrettyUrl": true,
+                                    "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/query/process/variable/filter/ProcessVariableFilterExactlyOne"
+                                  },
+                                  "description": "",
+                                  "title": "ProcessVariableFilterExactlyOne",
+                                  "content": "<p>Filter to query for exactly one variable.<init>\nFilter to query for exactly one variable.\ntype<\/p>\n<p>processVariableName<\/p>\n<p>apply<\/p>\n"
+                                }]
+                              }
+                            },
+                            "ownPages": [{
+                              "reference": {
+                                "path": "io/holunda/camunda/taskpool/view/query/process/variable",
+                                "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                                "fileName": "filter",
+                                "extension": "html",
+                                "usePrettyUrl": true,
+                                "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/query/process/variable/filter"
+                              },
+                              "description": "",
+                              "title": "io.holunda.camunda.taskpool.view.query.process.variable.filter",
+                              "content": ""
+                            }]
+                          },
+                          "ProcessVariableFilterType": {
+                            "ownKey": "ProcessVariableFilterType",
+                            "ownPages": [{
+                              "reference": {
+                                "path": "io/holunda/camunda/taskpool/view/query/process/variable",
+                                "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                                "fileName": "ProcessVariableFilterType",
+                                "extension": "html",
+                                "usePrettyUrl": true,
+                                "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/query/process/variable/ProcessVariableFilterType"
+                              },
+                              "description": "",
+                              "title": "ProcessVariableFilterType",
+                              "content": "<p>Filter type.<\/p>\n"
+                            }]
+                          },
+                          "ProcessVariableQueryResult": {
+                            "ownKey": "ProcessVariableQueryResult",
+                            "ownPages": [{
+                              "reference": {
+                                "path": "io/holunda/camunda/taskpool/view/query/process/variable",
+                                "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                                "fileName": "ProcessVariableQueryResult",
+                                "extension": "html",
+                                "usePrettyUrl": true,
+                                "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/query/process/variable/ProcessVariableQueryResult"
+                              },
+                              "description": "",
+                              "title": "ProcessVariableQueryResult",
+                              "content": "<p>Response of the process variable query.<init>\nResponse of the process variable query.\nvariables<\/p>\n"
+                            }]
+                          },
+                          "ProcessVariablesForInstanceQuery": {
+                            "ownKey": "ProcessVariablesForInstanceQuery",
+                            "ownPages": [{
+                              "reference": {
+                                "path": "io/holunda/camunda/taskpool/view/query/process/variable",
+                                "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                                "fileName": "ProcessVariablesForInstanceQuery",
+                                "extension": "html",
+                                "usePrettyUrl": true,
+                                "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/query/process/variable/ProcessVariablesForInstanceQuery"
+                              },
+                              "description": "",
+                              "title": "ProcessVariablesForInstanceQuery",
+                              "content": "<p>Query for variables of given process instance.<init>\nQuery for variables of given process instance.\nprocessInstanceId\nprocess instance id to query for.\nvariableFilter<\/p>\n<p>applyFilter\nApplies the filter.<\/p>\n"
+                            }]
+                          },
+                          "ProcessVariableApi": {
+                            "ownKey": "ProcessVariableApi",
+                            "ownPages": [{
+                              "reference": {
+                                "path": "io/holunda/camunda/taskpool/view/query/process/variable",
+                                "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                                "fileName": "ProcessVariableApi",
+                                "extension": "html",
+                                "usePrettyUrl": true,
+                                "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/query/process/variable/ProcessVariableApi"
+                              },
+                              "description": "",
+                              "title": "ProcessVariableApi",
+                              "content": "<p>Process variable API.<\/p>\n<p>query\nQuery for process variables.<\/p>\n"
+                            }]
+                          },
+                          "ProcessVariableFilter": {
+                            "ownKey": "ProcessVariableFilter",
+                            "ownPages": [{
+                              "reference": {
+                                "path": "io/holunda/camunda/taskpool/view/query/process/variable",
+                                "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                                "fileName": "ProcessVariableFilter",
+                                "extension": "html",
+                                "usePrettyUrl": true,
+                                "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/query/process/variable/ProcessVariableFilter"
+                              },
+                              "description": "",
+                              "title": "ProcessVariableFilter",
+                              "content": "<p>Process variable filter\ntype<\/p>\n"
+                            }]
+                          }
+                        },
+                        "ownPages": [{
+                          "reference": {
+                            "path": "io/holunda/camunda/taskpool/view/query/process",
+                            "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                            "fileName": "variable",
+                            "extension": "html",
+                            "usePrettyUrl": true,
+                            "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/query/process/variable"
+                          },
+                          "description": "",
+                          "title": "io.holunda.camunda.taskpool.view.query.process.variable",
+                          "content": ""
+                        }]
+                      },
+                      "ProcessInstanceApi": {
+                        "ownKey": "ProcessInstanceApi",
+                        "ownPages": [{
+                          "reference": {
+                            "path": "io/holunda/camunda/taskpool/view/query/process",
+                            "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                            "fileName": "ProcessInstanceApi",
+                            "extension": "html",
+                            "usePrettyUrl": true,
+                            "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/query/process/ProcessInstanceApi"
+                          },
+                          "description": "",
+                          "title": "ProcessInstanceApi",
+                          "content": "<p>Process instance API.<\/p>\n<p>query\nQuery for process instances.<\/p>\n"
+                        }]
+                      },
+                      "ProcessDefinitionApi": {
+                        "ownKey": "ProcessDefinitionApi",
+                        "ownPages": [{
+                          "reference": {
+                            "path": "io/holunda/camunda/taskpool/view/query/process",
+                            "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                            "fileName": "ProcessDefinitionApi",
+                            "extension": "html",
+                            "usePrettyUrl": true,
+                            "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/query/process/ProcessDefinitionApi"
+                          },
+                          "description": "",
+                          "title": "ProcessDefinitionApi",
+                          "content": "<p>Queries for process definitions.<\/p>\n<p>query\nQuery for process definitions startable by user.<\/p>\n"
+                        }]
+                      }
+                    },
+                    "ownPages": [{
+                      "reference": {
+                        "path": "io/holunda/camunda/taskpool/view/query",
+                        "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                        "fileName": "process",
+                        "extension": "html",
+                        "usePrettyUrl": true,
+                        "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/query/process"
+                      },
+                      "description": "",
+                      "title": "io.holunda.camunda.taskpool.view.query.process",
+                      "content": ""
+                    }]
+                  },
+                  "task": {
+                    "ownKey": "task",
+                    "childrenPages": {
+                      "TaskApi": {
+                        "ownKey": "TaskApi",
+                        "ownPages": [{
+                          "reference": {
+                            "path": "io/holunda/camunda/taskpool/view/query/task",
+                            "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                            "fileName": "TaskApi",
+                            "extension": "html",
+                            "usePrettyUrl": true,
+                            "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/query/task/TaskApi"
+                          },
+                          "description": "",
+                          "title": "TaskApi",
+                          "content": "<p>API to access task projection.<\/p>\n<p>query\nRetrieve tasks with correlated data entries for given user.\nquery\nRetrieve task with correlated data entries by given id.\nquery\nCount tasks and group by application.\nquery\nRetrieve tasks for given user.\nquery\nRetrieve task by given id.\nquery\nRetrieve tasks for given application.<\/p>\n"
+                        }]
+                      },
+                      "TaskCountByApplicationQuery": {
+                        "ownKey": "TaskCountByApplicationQuery",
+                        "ownPages": [{
+                          "reference": {
+                            "path": "io/holunda/camunda/taskpool/view/query/task",
+                            "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                            "fileName": "TaskCountByApplicationQuery",
+                            "extension": "html",
+                            "usePrettyUrl": true,
+                            "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/query/task/TaskCountByApplicationQuery"
+                          },
+                          "description": "",
+                          "title": "TaskCountByApplicationQuery",
+                          "content": "<p>Query for amount of tasks for every application.<init>\nQuery for amount of tasks for every application.<\/p>\n"
+                        }]
+                      },
+                      "TasksWithDataEntriesForUserQuery": {
+                        "ownKey": "TasksWithDataEntriesForUserQuery",
+                        "ownPages": [{
+                          "reference": {
+                            "path": "io/holunda/camunda/taskpool/view/query/task",
+                            "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                            "fileName": "TasksWithDataEntriesForUserQuery",
+                            "extension": "html",
+                            "usePrettyUrl": true,
+                            "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/query/task/TasksWithDataEntriesForUserQuery"
+                          },
+                          "description": "",
+                          "title": "TasksWithDataEntriesForUserQuery",
+                          "content": "<p>Query for tasks with correlated data entries for given user.<init>\nQuery for tasks with correlated data entries for given user.\nuser\nuser able to see the tasks.\npage\ncurrent page.\nsize\nnumber of entries on every page.\nsort\nproperty name of the {@link TaskWithDataEntries} to sort.\nfilters\nlist of filters\nfilterMethod<\/p>\n<p>applyFilter\nApplies the filter.<\/p>\n"
+                        }]
+                      },
+                      "ApplicationWithTaskCount": {
+                        "ownKey": "ApplicationWithTaskCount",
+                        "ownPages": [{
+                          "reference": {
+                            "path": "io/holunda/camunda/taskpool/view/query/task",
+                            "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                            "fileName": "ApplicationWithTaskCount",
+                            "extension": "html",
+                            "usePrettyUrl": true,
+                            "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/query/task/ApplicationWithTaskCount"
+                          },
+                          "description": "",
+                          "title": "ApplicationWithTaskCount",
+                          "content": "<p>Response type.\nFIXME: think of encapsulating it into a typed result instead of List<init>\nResponse type.\nFIXME: think of encapsulating it into a typed result instead of List\napplication<\/p>\n<p>taskCount<\/p>\n"
+                        }]
+                      },
+                      "ReactiveTaskApi": {
+                        "ownKey": "ReactiveTaskApi",
+                        "ownPages": [{
+                          "reference": {
+                            "path": "io/holunda/camunda/taskpool/view/query/task",
+                            "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                            "fileName": "ReactiveTaskApi",
+                            "extension": "html",
+                            "usePrettyUrl": true,
+                            "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/query/task/ReactiveTaskApi"
+                          },
+                          "description": "",
+                          "title": "ReactiveTaskApi",
+                          "content": "<p>Reactive API to retrieve tasks.<\/p>\n<p>query\nQueries user tasks with data.\nquery\nQueries user tasks for task id.\nquery\nCount user tasks for applications.\nquery\nTasks for user.\nquery\nTask for id.\nquery\nQuery tasks for a given process application.<\/p>\n"
+                        }]
+                      },
+                      "TaskWithDataEntriesForIdQuery": {
+                        "ownKey": "TaskWithDataEntriesForIdQuery",
+                        "ownPages": [{
+                          "reference": {
+                            "path": "io/holunda/camunda/taskpool/view/query/task",
+                            "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                            "fileName": "TaskWithDataEntriesForIdQuery",
+                            "extension": "html",
+                            "usePrettyUrl": true,
+                            "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/query/task/TaskWithDataEntriesForIdQuery"
+                          },
+                          "description": "",
+                          "title": "TaskWithDataEntriesForIdQuery",
+                          "content": "<p>Query for task with given id with correlated data entries.<init>\nQuery for task with given id with correlated data entries.\nid\ntask id.\napplyFilter\nApplies the filter.<\/p>\n"
+                        }]
+                      },
+                      "TaskForIdQuery": {
+                        "ownKey": "TaskForIdQuery",
+                        "ownPages": [{
+                          "reference": {
+                            "path": "io/holunda/camunda/taskpool/view/query/task",
+                            "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                            "fileName": "TaskForIdQuery",
+                            "extension": "html",
+                            "usePrettyUrl": true,
+                            "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/query/task/TaskForIdQuery"
+                          },
+                          "description": "",
+                          "title": "TaskForIdQuery",
+                          "content": "<p>Query for task with a given id.<init>\nQuery for task with a given id.\nid\ntask id.\napplyFilter\nApplies the filter.<\/p>\n"
+                        }]
+                      },
+                      "TasksWithDataEntriesQueryResult": {
+                        "ownKey": "TasksWithDataEntriesQueryResult",
+                        "ownPages": [{
+                          "reference": {
+                            "path": "io/holunda/camunda/taskpool/view/query/task",
+                            "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                            "fileName": "TasksWithDataEntriesQueryResult",
+                            "extension": "html",
+                            "usePrettyUrl": true,
+                            "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/query/task/TasksWithDataEntriesQueryResult"
+                          },
+                          "description": "",
+                          "title": "TasksWithDataEntriesQueryResult",
+                          "content": "<p>Result for query for multiple tasks with data entries.<init>\nResult for query for multiple tasks with data entries.\nelements\nelements in the query result.\nslice\nSlices the result.<\/p>\n"
+                        }]
+                      },
+                      "TasksForApplicationQuery": {
+                        "ownKey": "TasksForApplicationQuery",
+                        "ownPages": [{
+                          "reference": {
+                            "path": "io/holunda/camunda/taskpool/view/query/task",
+                            "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                            "fileName": "TasksForApplicationQuery",
+                            "extension": "html",
+                            "usePrettyUrl": true,
+                            "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/query/task/TasksForApplicationQuery"
+                          },
+                          "description": "",
+                          "title": "TasksForApplicationQuery",
+                          "content": "<p>Query for task of a certain process application.<init>\nQuery for task of a certain process application.\napplicationName\nthe name of the process application.\napplyFilter\nApplies the filter.<\/p>\n"
+                        }]
+                      },
+                      "TaskQueryResult": {
+                        "ownKey": "TaskQueryResult",
+                        "ownPages": [{
+                          "reference": {
+                            "path": "io/holunda/camunda/taskpool/view/query/task",
+                            "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                            "fileName": "TaskQueryResult",
+                            "extension": "html",
+                            "usePrettyUrl": true,
+                            "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/query/task/TaskQueryResult"
+                          },
+                          "description": "",
+                          "title": "TaskQueryResult",
+                          "content": "<p>Result of query for multiple tasks.<init>\nResult of query for multiple tasks.\nelements\nelements in the query result.\nslice\nSlices the result.<\/p>\n"
+                        }]
+                      },
+                      "TasksForUserQuery": {
+                        "ownKey": "TasksForUserQuery",
+                        "ownPages": [{
+                          "reference": {
+                            "path": "io/holunda/camunda/taskpool/view/query/task",
+                            "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                            "fileName": "TasksForUserQuery",
+                            "extension": "html",
+                            "usePrettyUrl": true,
+                            "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/query/task/TasksForUserQuery"
+                          },
+                          "description": "",
+                          "title": "TasksForUserQuery",
+                          "content": "<p>Query for tasks visible for user.<init>\nQuery for tasks visible for user.\nuser<\/p>\n<ul><li>the user with groups accessing the tasks.<\/li><\/ul>\napplyFilter\nApplies the filter.\n"
+                        }]
+                      }
+                    },
+                    "ownPages": [{
+                      "reference": {
+                        "path": "io/holunda/camunda/taskpool/view/query",
+                        "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                        "fileName": "task",
+                        "extension": "html",
+                        "usePrettyUrl": true,
+                        "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/query/task"
+                      },
+                      "description": "",
+                      "title": "io.holunda.camunda.taskpool.view.query.task",
+                      "content": ""
+                    }]
+                  },
+                  "data": {
+                    "ownKey": "data",
+                    "childrenPages": {
+                      "DataEntriesForUserQuery": {
+                        "ownKey": "DataEntriesForUserQuery",
+                        "ownPages": [{
+                          "reference": {
+                            "path": "io/holunda/camunda/taskpool/view/query/data",
+                            "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                            "fileName": "DataEntriesForUserQuery",
+                            "extension": "html",
+                            "usePrettyUrl": true,
+                            "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/query/data/DataEntriesForUserQuery"
+                          },
+                          "description": "",
+                          "title": "DataEntriesForUserQuery",
+                          "content": "<p>Queries data entries for provided user.<init>\nQueries data entries for provided user.\nuser\nuser authorized to access data entries.\npage\ncurrent page.\nsize\npage size.\nsort\nsort of data entries.\nfilters\nlist of filters.\napplyFilter\nApplies the filter.<\/p>\n"
+                        }]
+                      },
+                      "DataEntriesQueryResult": {
+                        "ownKey": "DataEntriesQueryResult",
+                        "ownPages": [{
+                          "reference": {
+                            "path": "io/holunda/camunda/taskpool/view/query/data",
+                            "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                            "fileName": "DataEntriesQueryResult",
+                            "extension": "html",
+                            "usePrettyUrl": true,
+                            "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/query/data/DataEntriesQueryResult"
+                          },
+                          "description": "",
+                          "title": "DataEntriesQueryResult",
+                          "content": "<p>Results of a query for multiple data entries.<init>\nResults of a query for multiple data entries.\nelements\nelements in the query result.\nslice\nSlices the result.<\/p>\n"
+                        }]
+                      },
+                      "DataEntriesQuery": {
+                        "ownKey": "DataEntriesQuery",
+                        "ownPages": [{
+                          "reference": {
+                            "path": "io/holunda/camunda/taskpool/view/query/data",
+                            "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                            "fileName": "DataEntriesQuery",
+                            "extension": "html",
+                            "usePrettyUrl": true,
+                            "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/query/data/DataEntriesQuery"
+                          },
+                          "description": "",
+                          "title": "DataEntriesQuery",
+                          "content": "<p>Generic queries data entries.<init>\nGeneric queries data entries.\npage\ncurrent page.\nsize\npage size.\nsort\nsort of data entries.\nfilters\nlist of filters.\napplyFilter\nApplies the filter.<\/p>\n"
+                        }]
+                      },
+                      "DataEntryForIdentityQuery": {
+                        "ownKey": "DataEntryForIdentityQuery",
+                        "ownPages": [{
+                          "reference": {
+                            "path": "io/holunda/camunda/taskpool/view/query/data",
+                            "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                            "fileName": "DataEntryForIdentityQuery",
+                            "extension": "html",
+                            "usePrettyUrl": true,
+                            "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/query/data/DataEntryForIdentityQuery"
+                          },
+                          "description": "",
+                          "title": "DataEntryForIdentityQuery",
+                          "content": "<p>Query for entry type and optional id.<init>\nQuery for entry type and optional id.\nentryType<\/p>\n<p>entryId<\/p>\n<p>page<\/p>\n<p>size<\/p>\n<p>sort<\/p>\n<p>applyFilter\nApplies the filter.\nidentity<\/p>\n"
+                        }]
+                      },
+                      "QueryDataIdentity": {
+                        "ownKey": "QueryDataIdentity",
+                        "ownPages": [{
+                          "reference": {
+                            "path": "io/holunda/camunda/taskpool/view/query/data",
+                            "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                            "fileName": "QueryDataIdentity",
+                            "extension": "html",
+                            "usePrettyUrl": true,
+                            "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/query/data/QueryDataIdentity"
+                          },
+                          "description": "",
+                          "title": "QueryDataIdentity",
+                          "content": "<p>Identity used in queries.<init>\nIdentity used in queries.\nentryType<\/p>\n<p>entryId<\/p>\n"
+                        }]
+                      },
+                      "ReactiveDataEntryApi": {
+                        "ownKey": "ReactiveDataEntryApi",
+                        "ownPages": [{
+                          "reference": {
+                            "path": "io/holunda/camunda/taskpool/view/query/data",
+                            "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                            "fileName": "ReactiveDataEntryApi",
+                            "extension": "html",
+                            "usePrettyUrl": true,
+                            "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/query/data/ReactiveDataEntryApi"
+                          },
+                          "description": "",
+                          "title": "ReactiveDataEntryApi",
+                          "content": "<p>Defines a reactive API interface for Data Entry Queries.<\/p>\n<p>query\nQuery data entries for id.\nquery\nQuery data entries for user.\nquery\nQuery data entries.<\/p>\n"
+                        }]
+                      },
+                      "DataEntryApi": {
+                        "ownKey": "DataEntryApi",
+                        "ownPages": [{
+                          "reference": {
+                            "path": "io/holunda/camunda/taskpool/view/query/data",
+                            "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                            "fileName": "DataEntryApi",
+                            "extension": "html",
+                            "usePrettyUrl": true,
+                            "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/query/data/DataEntryApi"
+                          },
+                          "description": "",
+                          "title": "DataEntryApi",
+                          "content": "<p>Defines an API interface for Data Entry Queries.<\/p>\n<p>query\nQuery data entries for given id.\nquery\nQuery data entries for provided user.\nquery\nQuery data entries.<\/p>\n"
+                        }]
+                      }
+                    },
+                    "ownPages": [{
+                      "reference": {
+                        "path": "io/holunda/camunda/taskpool/view/query",
+                        "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                        "fileName": "data",
+                        "extension": "html",
+                        "usePrettyUrl": true,
+                        "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/query/data"
+                      },
+                      "description": "",
+                      "title": "io.holunda.camunda.taskpool.view.query.data",
+                      "content": ""
+                    }]
+                  },
+                  "FilterQuery": {
+                    "ownKey": "FilterQuery",
+                    "ownPages": [{
+                      "reference": {
+                        "path": "io/holunda/camunda/taskpool/view/query",
+                        "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                        "fileName": "FilterQuery",
+                        "extension": "html",
+                        "usePrettyUrl": true,
+                        "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/query/FilterQuery"
+                      },
+                      "description": "",
+                      "title": "FilterQuery",
+                      "content": "<p>Query using a filter function.<\/p>\n<p>applyFilter\nApplies the filter.<\/p>\n"
+                    }]
+                  },
+                  "PageableSortableQuery": {
+                    "ownKey": "PageableSortableQuery",
+                    "ownPages": [{
+                      "reference": {
+                        "path": "io/holunda/camunda/taskpool/view/query",
+                        "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                        "fileName": "PageableSortableQuery",
+                        "extension": "html",
+                        "usePrettyUrl": true,
+                        "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/query/PageableSortableQuery"
+                      },
+                      "description": "",
+                      "title": "PageableSortableQuery",
+                      "content": "<p>Query interface for queries specifying the total amount of results, page and sort.\npage<\/p>\n<p>size<\/p>\n<p>sort<\/p>\n"
+                    }]
+                  }
+                },
+                "ownPages": [{
+                  "reference": {
+                    "path": "io/holunda/camunda/taskpool/view",
+                    "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                    "fileName": "query",
+                    "extension": "html",
+                    "usePrettyUrl": true,
+                    "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/query"
+                  },
+                  "description": "",
+                  "title": "io.holunda.camunda.taskpool.view.query",
+                  "content": ""
+                }]
+              },
+              "simple": {
+                "ownKey": "simple",
+                "childrenPages": {
+                  "filter": {
+                    "ownKey": "filter",
+                    "childrenPages": {
+                      "CompareOperator": {
+                        "ownKey": "CompareOperator",
+                        "ownPages": [{
+                          "reference": {
+                            "path": "io/holunda/camunda/taskpool/view/simple/filter",
+                            "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                            "fileName": "CompareOperator",
+                            "extension": "html",
+                            "usePrettyUrl": true,
+                            "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/simple/filter/CompareOperator"
+                          },
+                          "description": "",
+                          "title": "CompareOperator",
+                          "content": "<p>Comparator function.<\/p>\n"
+                        }]
+                      },
+                      "DataEntryPredicateWrapper": {
+                        "ownKey": "DataEntryPredicateWrapper",
+                        "ownPages": [{
+                          "reference": {
+                            "path": "io/holunda/camunda/taskpool/view/simple/filter",
+                            "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                            "fileName": "DataEntryPredicateWrapper",
+                            "extension": "html",
+                            "usePrettyUrl": true,
+                            "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/simple/filter/DataEntryPredicateWrapper"
+                          },
+                          "description": "",
+                          "title": "DataEntryPredicateWrapper",
+                          "content": "<p>Wrapper for a pair of data entry and data payload predicate.<init>\nWrapper for a pair of data entry and data payload predicate.\ndataEntryAttributePredicate<\/p>\n<p>dataPayloadPredicate<\/p>\n"
+                        }]
+                      },
+                      "Criterion": {
+                        "ownKey": "Criterion",
+                        "childrenPages": {
+                          "EmptyCriterion": {
+                            "ownKey": "EmptyCriterion",
+                            "ownPages": [{
+                              "reference": {
+                                "path": "io/holunda/camunda/taskpool/view/simple/filter/Criterion",
+                                "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                                "fileName": "EmptyCriterion",
+                                "extension": "html",
+                                "usePrettyUrl": true,
+                                "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/simple/filter/Criterion/EmptyCriterion"
+                              },
+                              "description": "",
+                              "title": "EmptyCriterion",
+                              "content": "<p>Empty aka null-objects.<\/p>\n"
+                            }]
+                          },
+                          "PayloadEntryCriterion": {
+                            "ownKey": "PayloadEntryCriterion",
+                            "ownPages": [{
+                              "reference": {
+                                "path": "io/holunda/camunda/taskpool/view/simple/filter/Criterion",
+                                "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                                "fileName": "PayloadEntryCriterion",
+                                "extension": "html",
+                                "usePrettyUrl": true,
+                                "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/simple/filter/Criterion/PayloadEntryCriterion"
+                              },
+                              "description": "",
+                              "title": "PayloadEntryCriterion",
+                              "content": "<p>Criterion on payload.<init>\nCriterion on payload.\nname<\/p>\n<p>value<\/p>\n<p>operator<\/p>\n"
+                            }]
+                          },
+                          "DataEntryCriterion": {
+                            "ownKey": "DataEntryCriterion",
+                            "ownPages": [{
+                              "reference": {
+                                "path": "io/holunda/camunda/taskpool/view/simple/filter/Criterion",
+                                "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                                "fileName": "DataEntryCriterion",
+                                "extension": "html",
+                                "usePrettyUrl": true,
+                                "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/simple/filter/Criterion/DataEntryCriterion"
+                              },
+                              "description": "",
+                              "title": "DataEntryCriterion",
+                              "content": "<p>Criterion on data entry.<init>\nCriterion on data entry.\nname<\/p>\n<p>value<\/p>\n<p>operator<\/p>\n"
+                            }]
+                          },
+                          "TaskCriterion": {
+                            "ownKey": "TaskCriterion",
+                            "ownPages": [{
+                              "reference": {
+                                "path": "io/holunda/camunda/taskpool/view/simple/filter/Criterion",
+                                "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                                "fileName": "TaskCriterion",
+                                "extension": "html",
+                                "usePrettyUrl": true,
+                                "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/simple/filter/Criterion/TaskCriterion"
+                              },
+                              "description": "",
+                              "title": "TaskCriterion",
+                              "content": "<p>Criterion on task.<init>\nCriterion on task.\nname<\/p>\n<p>value<\/p>\n<p>operator<\/p>\n"
+                            }]
+                          }
+                        },
+                        "ownPages": [{
+                          "reference": {
+                            "path": "io/holunda/camunda/taskpool/view/simple/filter",
+                            "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                            "fileName": "Criterion",
+                            "extension": "html",
+                            "usePrettyUrl": true,
+                            "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/simple/filter/Criterion"
+                          },
+                          "description": "",
+                          "title": "Criterion",
+                          "content": "<p>Criterion.\nname<\/p>\n<p>value<\/p>\n<p>operator<\/p>\n<p>equals<\/p>\n<p>hashCode<\/p>\n"
+                        }]
+                      },
+                      "TaskPredicateWrapper": {
+                        "ownKey": "TaskPredicateWrapper",
+                        "ownPages": [{
+                          "reference": {
+                            "path": "io/holunda/camunda/taskpool/view/simple/filter",
+                            "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                            "fileName": "TaskPredicateWrapper",
+                            "extension": "html",
+                            "usePrettyUrl": true,
+                            "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/simple/filter/TaskPredicateWrapper"
+                          },
+                          "description": "",
+                          "title": "TaskPredicateWrapper",
+                          "content": "<p>Wrapper for a pair of task and data entry predicate.<init>\nWrapper for a pair of task and data entry predicate.\ntaskPredicate<\/p>\n<p>dataEntriesPredicate<\/p>\n"
+                        }]
+                      },
+                      "PropertyValuePredicate": {
+                        "ownKey": "PropertyValuePredicate",
+                        "ownPages": [{
+                          "reference": {
+                            "path": "io/holunda/camunda/taskpool/view/simple/filter",
+                            "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                            "fileName": "PropertyValuePredicate",
+                            "extension": "html",
+                            "usePrettyUrl": true,
+                            "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/simple/filter/PropertyValuePredicate"
+                          },
+                          "description": "",
+                          "title": "PropertyValuePredicate",
+                          "content": "<p><init><\/p>\n<p>test<\/p>\n"
+                        }]
+                      }
+                    },
+                    "ownPages": [{
+                      "reference": {
+                        "path": "io/holunda/camunda/taskpool/view/simple",
+                        "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                        "fileName": "filter",
+                        "extension": "html",
+                        "usePrettyUrl": true,
+                        "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/simple/filter"
+                      },
+                      "description": "",
+                      "title": "io.holunda.camunda.taskpool.view.simple.filter",
+                      "content": "<p>extractField\nRetrieves a filed from class.\nextractField\nRetrieves a field from object.\nextractValue\nExtracts value from object usgin field.\nextractValue\nExtracts value from map or <a href=\"#\">null<\/a>\nextractKey\nExtract key from map or <a href=\"#\">null<\/a>\ntoClassAttributePredicates\nCreate critera for given class fields.\ntoPayloadPredicates\nCreate critera for a map.<\/p>\n"
+                    }]
+                  },
+                  "EnableTaskPoolSimpleView": {
+                    "ownKey": "EnableTaskPoolSimpleView",
+                    "ownPages": [{
+                      "reference": {
+                        "path": "io/holunda/camunda/taskpool/view/simple",
+                        "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                        "fileName": "EnableTaskPoolSimpleView",
+                        "extension": "html",
+                        "usePrettyUrl": true,
+                        "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/simple/EnableTaskPoolSimpleView"
+                      },
+                      "description": "",
+                      "title": "EnableTaskPoolSimpleView",
+                      "content": "<p>Enables simple taskpool view<init>\nEnables simple taskpool view<\/p>\n"
+                    }]
+                  },
+                  "service": {
+                    "ownKey": "service",
+                    "childrenPages": {
+                      "SimpleProcessVariableService": {
+                        "ownKey": "SimpleProcessVariableService",
+                        "ownPages": [{
+                          "reference": {
+                            "path": "io/holunda/camunda/taskpool/view/simple/service",
+                            "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                            "fileName": "SimpleProcessVariableService",
+                            "extension": "html",
+                            "usePrettyUrl": true,
+                            "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/simple/service/SimpleProcessVariableService"
+                          },
+                          "description": "",
+                          "title": "SimpleProcessVariableService",
+                          "content": "<p>In-memory process instance projection.<init>\nIn-memory process instance projection.\nqueryUpdateEmitter<\/p>\n<p>query\nQuery for process variables of a process instance.\non\nHandles process variable change event.<\/p>\n"
+                        }]
+                      },
+                      "SimpleServiceViewProcessingGroup": {
+                        "ownKey": "SimpleServiceViewProcessingGroup",
+                        "ownPages": [{
+                          "reference": {
+                            "path": "io/holunda/camunda/taskpool/view/simple/service",
+                            "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                            "fileName": "SimpleServiceViewProcessingGroup",
+                            "extension": "html",
+                            "usePrettyUrl": true,
+                            "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/simple/service/SimpleServiceViewProcessingGroup"
+                          },
+                          "description": "",
+                          "title": "SimpleServiceViewProcessingGroup",
+                          "content": "<p><init><\/p>\n<p>restore\nConfigure to run a event replay to fill the simple task view with events on start-up.<\/p>\n"
+                        }]
+                      },
+                      "RevisionSupport": {
+                        "ownKey": "RevisionSupport",
+                        "ownPages": [{
+                          "reference": {
+                            "path": "io/holunda/camunda/taskpool/view/simple/service",
+                            "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                            "fileName": "RevisionSupport",
+                            "extension": "html",
+                            "usePrettyUrl": true,
+                            "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/simple/service/RevisionSupport"
+                          },
+                          "description": "",
+                          "title": "RevisionSupport",
+                          "content": "<p><init><\/p>\n<p>updateRevision\nUpdates the revision for specified element key.\ngetRevisionMax\nRetrieve the highest revision for given set of element keys.<\/p>\n"
+                        }]
+                      },
+                      "SimpleTaskPoolService": {
+                        "ownKey": "SimpleTaskPoolService",
+                        "ownPages": [{
+                          "reference": {
+                            "path": "io/holunda/camunda/taskpool/view/simple/service",
+                            "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                            "fileName": "SimpleTaskPoolService",
+                            "extension": "html",
+                            "usePrettyUrl": true,
+                            "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/simple/service/SimpleTaskPoolService"
+                          },
+                          "description": "",
+                          "title": "SimpleTaskPoolService",
+                          "content": "<p>Simple in-memory implementation of the Task API.<init>\nSimple in-memory implementation of the Task API.<\/p>\n<p>query\nRetrieves a list of all user tasks for current user.\nquery\nRetrieves a task for given task id.\nquery\nRetrieves a  list of all tasks of a given process application.\nquery\nRetrieves a task with data entries for given task id.\nquery\nRetrieves a list of tasks with correlated data entries of given entry type (and optional id).\nquery\nRetrieves the count of tasks grouped by source application. Supports subscription queries.\non\nCreates task.\non\nAssigns task.\non\nCompletes task.\non\nDeletes task.\non\nPerforms a task attribute update.\non\nChanges task candidate groups.\non\nChanges task candidatges users.\non\nCreates a data entry.\non\nUpdate data entry.<\/p>\n"
+                        }]
+                      },
+                      "SimpleDataEntryService": {
+                        "ownKey": "SimpleDataEntryService",
+                        "ownPages": [{
+                          "reference": {
+                            "path": "io/holunda/camunda/taskpool/view/simple/service",
+                            "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                            "fileName": "SimpleDataEntryService",
+                            "extension": "html",
+                            "usePrettyUrl": true,
+                            "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/simple/service/SimpleDataEntryService"
+                          },
+                          "description": "",
+                          "title": "SimpleDataEntryService",
+                          "content": "<p>Data entry in-memory projection.<init>\nData entry in-memory projection.<\/p>\n<p>on\nCreates new data entry.\non\nUpdates data entry.\nquery\nRetrieves a list of all data entries of given entry type (and optional id).\nquery\nRetrieves a list of all data entries of given entry type (and optional id).\nquery\nRetrieves a list of all data entries visible for current user matching the filter.<\/p>\n"
+                        }]
+                      },
+                      "SimpleProcessInstanceService": {
+                        "ownKey": "SimpleProcessInstanceService",
+                        "ownPages": [{
+                          "reference": {
+                            "path": "io/holunda/camunda/taskpool/view/simple/service",
+                            "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                            "fileName": "SimpleProcessInstanceService",
+                            "extension": "html",
+                            "usePrettyUrl": true,
+                            "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/simple/service/SimpleProcessInstanceService"
+                          },
+                          "description": "",
+                          "title": "SimpleProcessInstanceService",
+                          "content": "<p>In-memory process instance projection.<init>\nIn-memory process instance projection.\nqueryUpdateEmitter<\/p>\n<p>query\nQuery by the state.\non\nHandles start of process instance.\non\nHandles end of process instance.\non\nHandles suspend of process instance.\non\nHandles resume of process instance.\non\nHandles cancel of process instance.<\/p>\n"
+                        }]
+                      },
+                      "SimpleProcessDefinitionService": {
+                        "ownKey": "SimpleProcessDefinitionService",
+                        "ownPages": [{
+                          "reference": {
+                            "path": "io/holunda/camunda/taskpool/view/simple/service",
+                            "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                            "fileName": "SimpleProcessDefinitionService",
+                            "extension": "html",
+                            "usePrettyUrl": true,
+                            "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/simple/service/SimpleProcessDefinitionService"
+                          },
+                          "description": "",
+                          "title": "SimpleProcessDefinitionService",
+                          "content": "<p>Simple projection for process definitions.<init>\nSimple projection for process definitions.<\/p>\n<p>on<\/p>\n<p>query\nQuery for process definitions startable by user.<\/p>\n"
+                        }]
+                      }
+                    },
+                    "ownPages": [{
+                      "reference": {
+                        "path": "io/holunda/camunda/taskpool/view/simple",
+                        "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                        "fileName": "service",
+                        "extension": "html",
+                        "usePrettyUrl": true,
+                        "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/simple/service"
+                      },
+                      "description": "",
+                      "title": "io.holunda.camunda.taskpool.view.simple.service",
+                      "content": "<p>toDataEntry\nEvent to entry for an update, if an optional entry exists.\ntoDataEntry\nEvent to entry.\ntoProcessInstance\nConverts event to view model.\ntoProcessInstance\nConverts event to view model.\ntoProcessVariable\nConverts a process variable change into process variable.<\/p>\n"
+                    }]
+                  },
+                  "TaskPoolSimpleViewConfiguration": {
+                    "ownKey": "TaskPoolSimpleViewConfiguration",
+                    "ownPages": [{
+                      "reference": {
+                        "path": "io/holunda/camunda/taskpool/view/simple",
+                        "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                        "fileName": "TaskPoolSimpleViewConfiguration",
+                        "extension": "html",
+                        "usePrettyUrl": true,
+                        "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/simple/TaskPoolSimpleViewConfiguration"
+                      },
+                      "description": "",
+                      "title": "TaskPoolSimpleViewConfiguration",
+                      "content": "<p>Configuration for in-memory polyflow view.<init>\nConfiguration for in-memory polyflow view.<\/p>\n<p>configure\nConfigures the in-memory (simple) view to use an in-memory token store, to make sure that the\ntoken and the projection are stored in the same place.<p>This is required to get independent from the globally configured token store (which is JPA, Mongo, or whatever).<\/p>\ninfo\nLogs a little.<\/p>\n"
+                    }]
+                  },
+                  "sort": {
+                    "ownKey": "sort",
+                    "childrenPages": {
+                      "SortDirection": {
+                        "ownKey": "SortDirection",
+                        "ownPages": [{
+                          "reference": {
+                            "path": "io/holunda/camunda/taskpool/view/simple/sort",
+                            "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                            "fileName": "SortDirection",
+                            "extension": "html",
+                            "usePrettyUrl": true,
+                            "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/simple/sort/SortDirection"
+                          },
+                          "description": "",
+                          "title": "SortDirection",
+                          "content": "<p>Sort direction.\nmodifier<\/p>\n<p>sign<\/p>\n"
+                        }]
+                      },
+                      "TasksWithDataEntriesComparator": {
+                        "ownKey": "TasksWithDataEntriesComparator",
+                        "ownPages": [{
+                          "reference": {
+                            "path": "io/holunda/camunda/taskpool/view/simple/sort",
+                            "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                            "fileName": "TasksWithDataEntriesComparator",
+                            "extension": "html",
+                            "usePrettyUrl": true,
+                            "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/simple/sort/TasksWithDataEntriesComparator"
+                          },
+                          "description": "",
+                          "title": "TasksWithDataEntriesComparator",
+                          "content": "<p>Comparator for Tasks with Data Entries<init>\nComparator for Tasks with Data Entries<\/p>\n<p>compare<\/p>\n"
+                        }]
+                      },
+                      "CompareMode": {
+                        "ownKey": "CompareMode",
+                        "ownPages": [{
+                          "reference": {
+                            "path": "io/holunda/camunda/taskpool/view/simple/sort",
+                            "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                            "fileName": "CompareMode",
+                            "extension": "html",
+                            "usePrettyUrl": true,
+                            "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/simple/sort/CompareMode"
+                          },
+                          "description": "",
+                          "title": "CompareMode",
+                          "content": "<p>Comparison mode.<\/p>\n"
+                        }]
+                      },
+                      "DataEntryComparator": {
+                        "ownKey": "DataEntryComparator",
+                        "ownPages": [{
+                          "reference": {
+                            "path": "io/holunda/camunda/taskpool/view/simple/sort",
+                            "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                            "fileName": "DataEntryComparator",
+                            "extension": "html",
+                            "usePrettyUrl": true,
+                            "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/simple/sort/DataEntryComparator"
+                          },
+                          "description": "",
+                          "title": "DataEntryComparator",
+                          "content": "<p>Comparator of data entries to be used in a sort.<init>\nComparator of data entries to be used in a sort.<\/p>\n<p>compare<\/p>\n"
+                        }]
+                      }
+                    },
+                    "ownPages": [{
+                      "reference": {
+                        "path": "io/holunda/camunda/taskpool/view/simple",
+                        "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                        "fileName": "sort",
+                        "extension": "html",
+                        "usePrettyUrl": true,
+                        "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/simple/sort"
+                      },
+                      "description": "",
+                      "title": "io.holunda.camunda.taskpool.view.simple.sort",
+                      "content": "<p>dataComparator\nCreates a new data entry comparator.\ntaskComparator\nCreates a new task comparator.<\/p>\n"
+                    }]
+                  }
+                },
+                "ownPages": [{
+                  "reference": {
+                    "path": "io/holunda/camunda/taskpool/view",
+                    "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                    "fileName": "simple",
+                    "extension": "html",
+                    "usePrettyUrl": true,
+                    "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/simple"
+                  },
+                  "description": "",
+                  "title": "io.holunda.camunda.taskpool.view.simple",
+                  "content": "<p>updateMapFilterQuery\nUpdate query if the element is reset in the map.\nupdateMapFilterQuery\nUpdate query if the element is reset in the map.<\/p>\n"
+                }]
+              },
+              "ProcessDefinition": {
+                "ownKey": "ProcessDefinition",
+                "ownPages": [{
+                  "reference": {
+                    "path": "io/holunda/camunda/taskpool/view",
+                    "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                    "fileName": "ProcessDefinition",
+                    "extension": "html",
+                    "usePrettyUrl": true,
+                    "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/ProcessDefinition"
+                  },
+                  "description": "",
+                  "title": "ProcessDefinition",
+                  "content": "<p>Represents a deployed process definition.<init>\nRepresents a deployed process definition.\nprocessDefinitionId<\/p>\n<p>processDefinitionKey<\/p>\n<p>processDefinitionVersion<\/p>\n<p>applicationName<\/p>\n<p>processName<\/p>\n<p>processVersionTag<\/p>\n<p>processDescription<\/p>\n<p>formKey<\/p>\n<p>startableFromTasklist<\/p>\n<p>candidateStarterUsers<\/p>\n<p>candidateStarterGroups<\/p>\n"
+                }]
+              },
+              "DataEntry": {
+                "ownKey": "DataEntry",
+                "ownPages": [{
+                  "reference": {
+                    "path": "io/holunda/camunda/taskpool/view",
+                    "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                    "fileName": "DataEntry",
+                    "extension": "html",
+                    "usePrettyUrl": true,
+                    "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/DataEntry"
+                  },
+                  "description": "",
+                  "title": "DataEntry",
+                  "content": "<p>Data entry projection.<init>\nData entry projection.\nidentity<\/p>\n<p>entryType\nType of entry.\nentryId\nId of entry of this type.\ntype\nType e.g. &quot;purchase order&quot;\napplicationName\nApplication name (origin)\nname\nHuman readable identifier or name, e.g. &quot;BANF-4711 - TV for meeting room&quot;\ncorrelations\nCorrelations.\npayload\nPayload.\ndescription\nHuman readable description, e.g. &quot;TV in meeting room Hamburg is broken and a new one should be installed.&quot;\nstate\nCurrent state of data entry.\nauthorizedUsers\nList of authorized users.\nauthorizedGroups\nList of authorized groups.\nformKey\nForm key.\nprotocol\nProtocol of changes.<\/p>\n"
+                }]
+              },
+              "TaskWithDataEntries": {
+                "ownKey": "TaskWithDataEntries",
+                "ownPages": [{
+                  "reference": {
+                    "path": "io/holunda/camunda/taskpool/view",
+                    "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                    "fileName": "TaskWithDataEntries",
+                    "extension": "html",
+                    "usePrettyUrl": true,
+                    "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/TaskWithDataEntries"
+                  },
+                  "description": "",
+                  "title": "TaskWithDataEntries",
+                  "content": "<p>Represents a joined entity of a task with correlated data entries.<init>\nRepresents a joined entity of a task with correlated data entries.\ntask\nTask from the engine.\ndataEntries\nList of data entries, bound using task correlation ids.<\/p>\n"
+                }]
+              },
+              "ProcessInstance": {
+                "ownKey": "ProcessInstance",
+                "ownPages": [{
+                  "reference": {
+                    "path": "io/holunda/camunda/taskpool/view",
+                    "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                    "fileName": "ProcessInstance",
+                    "extension": "html",
+                    "usePrettyUrl": true,
+                    "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/ProcessInstance"
+                  },
+                  "description": "",
+                  "title": "ProcessInstance",
+                  "content": "<p>Represents process instance.<init>\nRepresents process instance.\nprocessInstanceId\nProcess instance id.\nsourceReference\nProcess source reference.\nstate\nRepresents instance state.\nbusinessKey\nthe business key of the process instance\nsuperInstanceId\nthe id of the super case instance\nstartActivityId\nid of the activity which started the process instance\nstartUserId\nthe id of the user that started the process instance\nendActivityId\nid of the activity which ended the process instance\ndeleteReason\nthe reason why this process instance was cancelled (deleted)<\/p>\n"
+                }]
+              },
+              "FormUrlResolver": {
+                "ownKey": "FormUrlResolver",
+                "ownPages": [{
+                  "reference": {
+                    "path": "io/holunda/camunda/taskpool/view",
+                    "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                    "fileName": "FormUrlResolver",
+                    "extension": "html",
+                    "usePrettyUrl": true,
+                    "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/FormUrlResolver"
+                  },
+                  "description": "",
+                  "title": "FormUrlResolver",
+                  "content": "<p>Facility to resolve URLs of forms.<\/p>\n<p>resolveUrl\nCreates a complete URL to call the tasks form e.g. from the task list\nresolveUrl\nCreates a complete URL to call the start forms.\nresolveUrl\nCreates a complete<\/p>\n"
+                }]
+              },
+              "ProcessInstanceState": {
+                "ownKey": "ProcessInstanceState",
+                "ownPages": [{
+                  "reference": {
+                    "path": "io/holunda/camunda/taskpool/view",
+                    "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                    "fileName": "ProcessInstanceState",
+                    "extension": "html",
+                    "usePrettyUrl": true,
+                    "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view/ProcessInstanceState"
+                  },
+                  "description": "",
+                  "title": "ProcessInstanceState",
+                  "content": "<p>Process instance state.<\/p>\n"
+                }]
+              }
+            },
+            "ownPages": [{
+              "reference": {
+                "path": "io/holunda/camunda/taskpool",
+                "baseUrl": "https://www.holunda.io/camunda-bpm-taskpool",
+                "fileName": "view",
+                "extension": "html",
+                "usePrettyUrl": true,
+                "link": "https://www.holunda.io/camunda-bpm-taskpool/io/holunda/camunda/taskpool/view"
+              },
+              "description": "",
+              "title": "io.holunda.camunda.taskpool.view",
+              "content": "<p>task\nCreate a new task from data of existing task and incoming event.\ntask\nCreate a new task from data of incoming event.\naddModification\nAdds modification to the list of protocol entry list.<\/p>\n"
+            }]
+          }}
+        }}
+      }}
+    }}
+  }}
+}
