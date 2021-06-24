@@ -1,10 +1,6 @@
 ---
-
 title: Further outlook
-
 ---
-
-## Further outlook
 
 This library serves as a foundation of several follow-up projects and tools:
 

@@ -93,4 +93,4 @@ polyflow:
 
 Now, start your process engine. If you run into a user task, you should see on the console how this is passed to task pool.
 
-For more details on the configuration of different options, please consult the [Polyflow Components](/reference-guide/components/) sections.
+For more details on the configuration of different options, please consult the [Polyflow Components](../reference-guide/components/) sections.

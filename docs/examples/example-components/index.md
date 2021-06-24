@@ -3,14 +3,14 @@
 title: Example Components
 ---
 
-For demonstration purposes we built several example components and reuse them to demonstrate the [Example application](../example-application/) in
+For demonstration purposes we built several example components and reuse them to demonstrate the [Example application](../example-approval/) in
 different [Usage Scenarios](../scenarios/). These components are not part of a polyflow distribution and serve demonstration
 purposes only. They still show implementation of components which needs to be implemented by you and are not part of the provided library.
 
 ## Process Application Example Components
 
 To show the integration of Polyflow components into a Process Application, the process discussed in
-[Example application](../example-application/) has been implemented.
+[Example Approval application](../example-approval/) has been implemented.
 
 * [Process Application Frontend](pa-frontend)
 * [Process Application Backend](pa-backend)

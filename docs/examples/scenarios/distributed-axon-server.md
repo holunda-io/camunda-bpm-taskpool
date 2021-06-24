@@ -31,7 +31,7 @@ The following configuration is used in the distributes scenario with Axon Server
 
 The following diagram depicts the distribution of the components and the messaging:
 
-!["Deployment of taskpool with axon server"](/img/deployment-axon-server.png)
+!["Deployment of taskpool with axon server"](../../../img/deployment-axon-server.png)
 
 ## Running Example
 

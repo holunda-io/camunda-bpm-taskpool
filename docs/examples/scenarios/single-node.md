@@ -20,7 +20,7 @@ In a single node scenario the following configuration is used:
 
 Check the following diagram for more details:
 
-![Deployment of all component in a single node](/img/deployment-single.png)
+![Deployment of all component in a single node](../../../img/deployment-single.png)
 
 ## Running Example
 

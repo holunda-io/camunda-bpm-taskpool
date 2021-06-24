@@ -22,8 +22,8 @@ a business data projection. In doing so, it collects and transmits it to Datapoo
 
 ```xml
     <dependency>
-      <groupId>io.holunda.taskpool</groupId>
-      <artifactId>camunda-bpm-datapool-collector</artifactId>
+      <groupId>io.holunda.polyflow</groupId>
+      <artifactId>datapool-collector</artifactId>
       <version>${camunda-taskpool.version}</version>
     </dependency>
 ```

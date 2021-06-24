@@ -13,8 +13,8 @@ If you can answer one of the previous questions with yes, the taskpool / datapoo
 ## How to start?
 
 We provide documentation for different people and different tasks. A good starting point is the
-[Introduction](/introduction). You might want to look at [Reference Guide](./reference-guide) containing
-a [Working Example](./examples/example-approval) and details about [Usage Scenarios](./examples/scenarios).
+[Introduction](./introduction/). You might want to look at [Reference Guide](./reference-guide/) containing
+a [Working Example](./examples/example-approval/) and details about [Usage Scenarios](./examples/scenarios/).
 
 ## Get in touch
 
@@ -24,4 +24,3 @@ with us. There are various ways to do so:
 * [![Gitter](https://badges.gitter.im/holunda-io/camunda-bpm-taskpool.svg)](https://gitter.im/holunda-io/camunda-bpm-taskpool?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 * [Slack](https://holunda.slack.com/messages/taskpool/)
 * [Github Issues](https://github.com/holunda-io/camunda-bpm-taskpool/issues)
-* [Developer Guide](/wiki/developer-guide)

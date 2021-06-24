@@ -3,8 +3,6 @@ title: Camunda Engine Taskpool Support SpringBoot Starter
 pageId: engine-starter
 ---
 
-## Camunda Engine Taskpool Support SpringBoot Starter
-
 ### Purpose
 
 The Camunda Engine Taskpool Support SpringBoot Starter is a convenience module providing a single
@@ -20,7 +18,7 @@ class of your SpringBoot application.
 ```java
 @SpringBootApplication
 @EnableProcessApplication
-@EnableTaskpoolEngineSupport <1>
+@EnableTaskpoolEngineSupport
 public class MyApplication {
 
   public static void main(String... args) {
