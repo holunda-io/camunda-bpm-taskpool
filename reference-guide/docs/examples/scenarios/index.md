@@ -2,8 +2,6 @@
 title: Usage Scenarios
 ---
 
-## Usage Scenarios Overview
-
 Depending on your requirements and infrastructure available several deployment scenarios of the components is possible.
 
 The simplest setup is to run all components on a single node. A more advanced scenario is to distribute components and connect them.
@@ -14,10 +12,10 @@ events and queries and additional requirements of event-sourced persistence a sp
 command bus, event bus and event store is required. In particular, two scenarios can be distinguished: using Axon Server
 or using a different distribution technology.
 
-The provided link:../example[Example] is implemented several times demonstrating the following usage scenarios:
+The provided [Example application](../example-application/) is implemented several times demonstrating the following usage scenarios:
 
-* link:single-node[Single Node Scenario]
-* link:distributed-axon-server[Distributed Scenario using Axon Server]
-* link:distributed-no-axon-server[Distributed Scenario without Axon Server]
+* [Single Node Scenario](single-node)
+* [Distributed Scenario using Axon Server](distributed-axon-server)
+* [Distributed Scenario without Axon Server](distributed-no-axon-server)
 
 It is a good idea to understand the single node scenario first and then move on to more elaborated scenarios.

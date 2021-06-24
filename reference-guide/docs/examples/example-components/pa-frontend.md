@@ -3,8 +3,6 @@
 title: Process Application Frontend
 ---
 
-## Process Application Frontend
-
 The process application backend is implementing the user task forms and business object views for the
 example application. It is built as a typical Angular Single Page Application (SPA) and provides
 views for both user tasks and the business object. It communicates with process application backend via

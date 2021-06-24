@@ -2,7 +2,7 @@
 title: Distributed Scenario using Axon Server
 ---
 
-## Distributed Scenario using Axon Server
+## Scenario description
 
 A distributed scenario is helpful if you intend to build a central process platform and multiple process applications using it.
 
@@ -31,20 +31,20 @@ The following configuration is used in the distributes scenario with Axon Server
 
 The following diagram depicts the distribution of the components and the messaging:
 
-image::{{baseUrl('assets/media/deployment-axon-server.png')}}["Deployment of taskpool with axon server"]
+!["Deployment of taskpool with axon server"](/img/deployment-axon-server.png)
 
-### Running Example
+## Running Example
 
 This example is demonstrating the usage of the Camunda BPM Taskpool with components distributed with help of Axon Server.
 It provides two applications for demonstration purposes: the process application and the process platform. Both applications are built as SpringBoot applications.
 
-#### System Requirements
+### System Requirements
 
-* JDK 8
+* JDK 11
 * Docker
 * Docker Compose
 
-#### Preparations
+### Preparations
 
 Before you begin, please build the entire project with `mvn clean install` from the command line in the project root directory.
 
@@ -67,10 +67,10 @@ Now, start required containers. The easiest way to do so is to run:
 docker-compose up -d
 ```
 
-To verify it is running, open your browser http://localhost:8024/[http://localhost:8024/]. You should see
+To verify it is running, open your browser [http://localhost:8024/](http://localhost:8024/). You should see
 the Axon Server administration console.
 
-#### Start
+### Start
 
 The demo application consists of several Maven modules. In order to start the example, you will need to start only two
 of them in the following order:
@@ -87,12 +87,12 @@ java -jar taskpool-application/target/*.jar
 java -jar process-application/target/*.jar
 ```
 
-#### URLs
+## Useful URLs
 
-##### Process Platform
-* http://localhost:8081/taskpool/[http://localhost:8081/taskpool/]
-* http://localhost:8081/swagger-ui/[http://localhost:8081/swagger-ui/]
+### Process Platform
+* [http://localhost:8081/taskpool/](http://localhost:8081/taskpool/)
+* [http://localhost:8081/swagger-ui/](http://localhost:8081/swagger-ui/)
 
-##### Process Application
-* http://localhost:8080/camunda/app/[http://localhost:8080/camunda/app/]
-* http://localhost:8080/swagger-ui/[http://localhost:8080/swagger-ui/]
+### Process Application
+* [http://localhost:8080/camunda/app/](http://localhost:8080/camunda/app/)
+* [http://localhost:8080/swagger-ui/](http://localhost:8080/swagger-ui/)

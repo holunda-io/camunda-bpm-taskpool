@@ -3,31 +3,28 @@
 title: Example Components
 ---
 
-## Example Components
+For demonstration purposes we built several example components and reuse them to demonstrate the [Example application](../example-application/) in
+different [Usage Scenarios](../scenarios/). These components are not part of a polyflow distribution and serve demonstration
+purposes only. They still show implementation of components which needs to be implemented by you and are not part of the provided library.
 
-For demonstration purposes we built several example components and reuse them to demonstrate the link:../example[Example] in
-different link:../scenarios[Usage Scenarios]. These components are not part of a taskpool distribution and serve demonstration
-purposes only. They still show a trivial implementation of components which needs to be implemented by you and are not
-part of the provided library.
+## Process Application Example Components
 
-### Process Application Example Components
+To show the integration of Polyflow components into a Process Application, the process discussed in
+[Example application](../example-application/) has been implemented.
 
-To show the integration of `camunda-bpm-taskpool` components into a process application, the process discussed in
-link:../example[Example] has been implemented.
+* [Process Application Frontend](pa-frontend)
+* [Process Application Backend](pa-backend)
 
-* link:pa-frontend[Process Application Frontend]
-* link:pa-backend[Process Application Backend]
+## Process Platform Example Components
 
-### Process Platform Example Components
-
-To show the integration of `camunda-bpm-taskpool` components into a process platform, a simple task list and
+To show the integration of Polyflow components into a Process Platform, a simple task list and
 a workpieces view (archive view for business objects) has been implemented.
 
-* link:pp-frontend[Process Platform Frontend]
-* link:pp-backend[Process Platform Backend]
+* [Process Platform Frontend](pp-frontend)
+* [Process Platform Backend](pp-backend)
 
-### Shared Example Components
+## Shared Example Components
 
 Components used by other example components.
 
-* link:user-management[User Management]
+* [User Management](user-management)

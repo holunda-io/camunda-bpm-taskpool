@@ -3,11 +3,9 @@ title: Project Setup
 pageId: 'project-setup'
 ---
 
-## Project Setup
-
 If you are interested in developing and building the project please follow the following instruction.
 
-### Version control
+## Version control
 
 To get sources of the project, please execute:
 
@@ -20,7 +18,7 @@ We are using gitflow in our git SCM. That means that you should start from `deve
 create a `feature/<name>` out of it and once it is completed create a pull request containing
 it. Please squash your commits before submitting and use semantic commit messages, if possible.
 
-### Project Build
+## Project Build
 
 Perform the following steps to get a development setup up and running.
 
@@ -28,7 +26,7 @@ Perform the following steps to get a development setup up and running.
 ./mvnw clean install
 ```
 
-### Integration Tests
+## Integration Tests
 
 By default, the build command will ignore the run of `failsafe` Maven plugin executing the integration tests
 (usual JUnit tests with class names ending with ITest). In order to run integration tests, please
@@ -38,16 +36,16 @@ call from your command line:
 ./mvnw integration-test failsafe:verify -Pitest -DskipFrontend
 ```
 
-### Project build modes and profiles
+## Project build modes and profiles
 
-#### Camunda Version
+### Camunda Version
 
 You can choose the used Camunda version by specifying the profile `camunda-ee` or `camunda-ce`. The default
 version is a Community Edition. Specify `-Pcamunda-ee` to switch to Camunda Enterprise edition. This will
 require a valid Camunda license. You can put it into a file `~/.camunda/license.txt` and it will be detected
 automatically.
 
-#### Skip Frontend
+### Skip Frontend
 
 TIP: Components for production use of camunda-bpm-taskpool are backend components only. Frontend components are only
 created for examples and demonstration purpose.
@@ -55,7 +53,7 @@ created for examples and demonstration purpose.
 If you are interested in backend only, specify the `-DskipFrontend` switch. This will accelerate the build
 significantly.
 
-#### SQL scripts
+### Generate SQL scripts
 
 The project uses https://flywaydb.org/[Flyway] for versioning of database changes. In doing so we provide the
 required SQL scripts for initialization of required database objects (including Camunda BPM schema, Axon schema and
@@ -68,7 +66,7 @@ For doing so, you can re-generate the scripts running:
 
 NOTE: The existing scripts must not be replaced or changed, but new additional scripts needs to added.
 
-#### Documentation
+### Build Documentation
 
 We are using Orchid for generation of a static site documentation and rely on AsciiDoc as much as possible.
 
@@ -90,7 +88,7 @@ In order to publish documentation to github pages, please run from command line
 ./mvnw -f docs -Pdeploy-docs -DgithubToken=GITHUB_TOKEN
 ```
 
-#### Examples
+### Examples
 
 Taskpool provides a series of examples demonstrating different features of the library. By default, the examples are
 built during the project build. If you want to skip the examples, please add the following parameter to your command
@@ -100,11 +98,11 @@ line or disable the `examples` module in your IDE.
 ./mvnw clean package -DskipExamples
 ```
 
-### Local Start
+## Local Start
 
 IMPORTANT: If you want to run examples locally, you will need `docker` and `docker-compose`.
 
-#### Pre-requirements
+### Pre-requirements
 
 Before starting the example applications, make sure the required infrastructure is set up and running.
 Please run the following from your command line:
@@ -115,7 +113,7 @@ Please run the following from your command line:
 
 This will create required docker volumes and network.
 
-#### Start containers
+### Start containers
 
 In order to operate, the distributed example applications will require several containers. These are:
 
@@ -130,7 +128,7 @@ cd ./examples/scenarios/distributed-axon-server
 docker-compose up
 ```
 
-#### Starting application (distributed scenario)
+### Starting application (distributed scenario)
 
 For the distributed scenario, the containers from the previous section needs to be started.
 To start applications, either use your IDE and create two run configurations for the classes (in this order):
@@ -145,16 +143,16 @@ Alternatively, you can run them from the command line:
 ./mvnw spring-boot:run -f examples/scenarios/distributed-axon-server/process-application
 ```
 
-### Continuous Integration
+## Continuous Integration
 
 Travis CI is building all branches on commit hook. In addition, a private-hosted Jenkins CI
 is used to build the releases.
 
-### Release Management
+## Release Management
 
 Release management has been set-up for use of Sonatype Nexus (= Maven Central)
 
-#### What modules get deployed to repository
+### What modules get deployed to repository
 
 Every module is enabled by default. If you want to change this, please provide the property
 
@@ -164,7 +162,7 @@ Every module is enabled by default. If you want to change this, please provide t
 
 inside the corresponding `pom.xml`. Currently, all examples are _EXCLUDED_ from publication into Maven Central.
 
-#### Trigger new release
+### Trigger new release
 
 WARNING: This operation requires special permissions.
 
@@ -184,7 +182,7 @@ You can build a release with:
 This will update the versions in the `pom.xml` s accordingly and push the release tag to the `master` branch
 and update the `develop` branch for the new development version.
 
-#### Trigger a deploy
+### Trigger a deploy
 
 WARNING: This operation requires special permissions.
 
@@ -192,7 +190,7 @@ Currently, CI allows for deployment of artifacts to Maven Central and is execute
 This means, that a push to `master` branch will start the corresponding build job, and if successful the
 artifacts will get into `Staging Repositories` of OSS Sonatype without manual intervention.
 
-#### Run deploy from local machine
+### Run deploy from local machine
 
 WARNING: This operation requires special permissions.
 
@@ -205,7 +203,7 @@ export GPG_PASSPHRASE="<secret>"
 ./mvnw clean deploy -B -DskipTests -DskipExamples -Prelease -Dgpg.keyname=$GPG_KEYNAME -Dgpg.passphrase=$GPG_PASSPHRASE
 ```
 
-#### Release to public repositories
+### Release to public repositories
 
 WARNING: This operation requires special permissions.
 

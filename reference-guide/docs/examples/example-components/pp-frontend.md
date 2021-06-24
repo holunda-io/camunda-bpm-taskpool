@@ -3,14 +3,12 @@
 title: Process Platform Frontend
 ---
 
-## Process Platform Frontend
-
 The example process platform frontend provides example implementation of two views:
 
 * Example Tasklist
 * Example Workpieces List
 
-### Example Tasklist
+## Example Tasklist
 
 Example Tasklist is a simple implementation of task inbox for a single user. It provides the following features:
 
@@ -27,14 +25,14 @@ Example Tasklist is a simple implementation of task inbox for a single user. It 
 
 Here is, how it looks like showing task descriptions:
 
-image::{{baseUrl('assets/media/example_tasklist_approve_description.png')}}[Task list with task description]
+![Task list with task description](/img/example_tasklist_approve_description.png)
 
 
 you can optionally show the business data correlated with user task:
 
-image::{{baseUrl('assets/media/example_tasklist_approve_data.png')}}[Task list with task description]
+![Task list with task data](/img/example_tasklist_approve_data.png)
 
-### Example Workpieces List
+## Example Workpieces List
 
 The example workpieces list is provides a list of business objects / workpieces that are currently processed by
 the processes even after the process has already been finished. It provides the following features:
@@ -50,4 +48,4 @@ the processes even after the process has already been finished. It provides the 
 
 Here is, how it looks like showing the audit log:
 
-image::{{baseUrl('assets/media/example_archive_business_object.png')}}[Example Archive View]
+![Example Archive View](/img/example_archive_business_object.png)

@@ -3,30 +3,31 @@
 title: Integration Guide
 ---
 
-## Integration Guide
-
-This guide is describing steps required to configure an existing Camunda Spring Boot Process Application and
+This guide is describing steps required to configure an existing Camunda BPM Spring Boot Process Application and
 connect to existing Process Platform.
 
-### Configure your existing process application
 
-Apart from the example application, you might be interested in integrating task pool into your existing
+## Add dependency to Polyflow integration starter
+
+Apart from the example application, you might be interested in integrating Polyflow Taskpool and Datapool into your existing
 application. To do so, you need to enable your Camunda BPM process engine to use the library.
-For doing so, add the `camunda-bpm-taskpool-engine-springboot-starter` library. In Maven, add the following dependency
+For doing so, add the `polyflow-integration-camunda-bpm-engine-parent` library. In Maven, add the following dependency
 to your `pom.xml`:
 
-```xml
+``` xml
 <dependency>
-  <groupId>io.holunda.taskpool</groupId>
-  <artifactId>camunda-bpm-taskpool-engine-springboot-starter</artifactId>
-  <version>${camunda-bpm-taskpool.version}</version>
+  <groupId>io.holunda.polyflow</groupId>
+  <artifactId>polyflow-integration-camunda-bpm-engine-parent</artifactId>
+  <version>${polyflow.version}</version>
 </dependency>
 ```
+
+## Activate Polyflow Support
 
 Now, find your SpringBoot application class and add an additional annotation to it:
 
 
-```java
+``` java
 @SpringBootApplication
 @EnableTaskpoolEngineSupport
 public class MyApplication {
@@ -37,32 +38,53 @@ public class MyApplication {
 }
 ```
 
+## Configure your Polyflow provisioning
+
 Finally, add the following block to your `application.yml`:
 
 
-```yaml
+``` yaml
+
 camunda:
   bpm:
     default-serialization-format: application/json
     history-level: full
+
 polyflow:
-  taskpool:
-    collector:
-      tasklist-url: http://localhost:8081/tasklist/
-      process:
-        enabled: true
-      enricher:
+  integration:
+    client:
+      camunda:
         application-name: ${spring.application.name}  # default
-        type: processVariables
-      sender:
-        enabled: true
-        type: tx
-    dataentry:
-      sender:
-        enabled: true
-        type: simple
-        applicationName: ${spring.application.name}  # default
-    form-url-resolver:
+    collector:
+      camunda:
+        application-name: ${spring.application.name}  # default
+        process-instance:
+          enabled: true
+        process-definition:
+          enabled: true
+        process-variable:
+          enabled: true
+        task:
+          enabled: true
+          enricher:
+            type: processVariables
+  sender:
+    enabled: true
+    data-entry:
+      enabled: true
+      type: simple
+      application-name: ${spring.application.name}  # default
+    process-definition:
+      enabled: true
+    process-instance:
+      enabled: true
+    process-variable:
+      enabled: true
+    task:
+      enabled: true
+      type: tx
+      send-within-transaction: true # Must be set to true in single node scenario.
+  form-url-resolver:
       defaultTaskTemplate:  "/tasks/${formKey}/${id}?userId=%userId%"
       defaultApplicationTemplate: "http://localhost:${server.port}/${applicationName}"
       defaultProcessTemplate: "/${formKey}?userId=%userId%"
@@ -71,4 +93,4 @@ polyflow:
 
 Now, start your process engine. If you run into a user task, you should see on the console how this is passed to task pool.
 
-For more details on the configuration of different options, please consult the link:../components/[Taskpool Components] sections.
+For more details on the configuration of different options, please consult the [Polyflow Components](/reference-guide/components/) sections.

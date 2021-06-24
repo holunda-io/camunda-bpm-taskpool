@@ -2,13 +2,11 @@
 title: Features
 ---
 
-## Features
-
-### Supported process engines
+## Supported process engines
 
 * Camunda BPM
 
-### Task List
+## Task List
 
 A task list is an application allowing to represent a list of user tasks. This list is created based on
 user's profile (including authorizations based on roles) for every user. The library provides the following features:
@@ -29,7 +27,7 @@ user's profile (including authorizations based on roles) for every user. The lib
    (allowing to plug-in some data enricher on task creation) allows for caching the additional
    business data along with the task information, instead of querying it during task fetch.
 
-### Archive List
+## Archive List
 
 An archive list provides a list of business objects processed during the execution of business process. Such a business
 object lifecycle spans over a longer period of time than the process instance. A common requirement is to get a list
@@ -40,7 +38,7 @@ following features:
 * business object modification API for creating an audit log
 * authorization API for business objects
 
-### Process List
+## Process List
 
 A process list provides a list of running instances and a list of process definitions deployed in the process engines connected to
 the library. It provides the following features:

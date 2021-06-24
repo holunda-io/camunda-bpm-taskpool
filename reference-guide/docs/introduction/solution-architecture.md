@@ -28,9 +28,9 @@ integrate with the process platform by implementing individual business processe
 They may also ship application frontends, which are integrated into/with the frontends of the process platform, including business
 object views, user task forms and other required pieces.
 
-The following diagram depicts the overall logical architecture.:
+The following diagram depicts the overall logical architecture:
 
-image::{{baseUrl('assets/media/process-platform-architecture.png')}}["Process Platform Architecture"]
+![Process Platform Architecture](/img/process-platform-architecture.png)
 
 
 ## Implementation Decisions
@@ -38,5 +38,6 @@ image::{{baseUrl('assets/media/process-platform-architecture.png')}}["Process Pl
 The components are implemented using Kotlin programming language and rely on SpringBoot as execution environment.
 They make a massive use of Axon Framework as a basis of the CQRS implementation.
 
-image::{{baseUrl('assets/media/architecture-collector.png')}}["Process Platform Architecture"]
+// FIXME: replace this image with architecture of the camunda integration
 
+![Collector Architecture](/img/architecture-collector.png)

@@ -3,21 +3,19 @@ title: Contribution
 pageId: 'contribution'
 ---
 
-## Contribution
-
 There are several ways in which you may contribute to this project.
 
-* https://github.com/holunda-io/camunda-bpm-taskpool/issues[File issues]
+* [File issues](https://github.com/holunda-io/camunda-bpm-taskpool/issues)
 * Submit a pull requests
 
-### Found a bug or missing feature?
+## Found a bug or missing feature?
 
-Please https://github.com/holunda-io/camunda-bpm-taskpool/issues[file an issue] in our
+Please [file an issue](https://github.com/holunda-io/camunda-bpm-taskpool/issues) in our
 issue tracking system.
 
-### Submit a Pull Request
+## Submit a Pull Request
 
-If you found a solution to an https://github.com/holuda-io/camunda-bpm-taskpool/issues[open issue]
+If you found a solution to an [open issue](https://github.com/holuda-io/camunda-bpm-taskpool/issues)
 and implemented it, we would be happy to add your contribution in the code base. For doing so,
 please create a pull request. Prior to that, please make sure you:
 

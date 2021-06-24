@@ -3,8 +3,6 @@
 title: User Management
 ---
 
-## User Management
-
 Usually, a central user management like a Single-Sign-On (SSO) is a part deployed into the process application
 landscape. This is responsible for authentication and authorization of the user and is required to control the
 role-based access to user tasks.

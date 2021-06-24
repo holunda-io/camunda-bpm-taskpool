@@ -13,8 +13,8 @@ If you can answer one of the previous questions with yes, the taskpool / datapoo
 ## How to start?
 
 We provide documentation for different people and different tasks. A good starting point is the
-[Introduction](./wiki/introduction). You might want to look at [User Guide](./wiki/user-guide) containing
-a [Working Example](./wiki/user-guide/example) and details about [Usage Scenarios](./wiki/user-guide/scenarios).
+[Introduction](/introduction). You might want to look at [Reference Guide](./reference-guide) containing
+a [Working Example](./examples/example-approval) and details about [Usage Scenarios](./examples/scenarios).
 
 ## Get in touch
 
