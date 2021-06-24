@@ -43,7 +43,7 @@ jobs:
       - name: Build and deploy docs
         run: mkdocs build
 
-      - name: Deploy docs from master branch
+      - name: Deploy docs to GH pages.
         uses: peaceiris/actions-gh-pages@v3
         if: github.ref == 'refs/heads/develop'
         with:
