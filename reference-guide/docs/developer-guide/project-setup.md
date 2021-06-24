@@ -170,7 +170,7 @@ WARNING: This operation requires special permissions.
 
 We use gitflow for development (see http://nvie.com/posts/a-successful-git-branching-model/[A successful git branching model]
 for more details). You could use gitflow with native git commands, but then you would have
-to change the versions in the poms manually. Therefore we use the
+to change the versions in the poms manually. Therefore, we use the
 https://github.com/aleksandr-m/gitflow-maven-plugin/[mvn gitflow plugin], which handles this and other
 things nicely.
 
@@ -196,7 +196,7 @@ artifacts will get into `Staging Repositories` of OSS Sonatype without manual in
 
 WARNING: This operation requires special permissions.
 
-If you still want to execute the the deployment from your local machine, you need to have GPG keys at place and
+If you still want to execute the deployment from your local machine, you need to have GPG keys at place and
 to execute the following command on the `master` branch:
 
 ```bash
