@@ -23,7 +23,10 @@ jobs:
           pip install mkdocs mkdocs-material mkdocs-git-committers-plugin
 
       - name: Build and deploy docs
-        run: |
-          git pull origin ${{ github.ref }}
-          mkdocs build
+        run: mkdocs build
 
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./site
