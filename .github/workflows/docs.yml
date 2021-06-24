@@ -1,0 +1,27 @@
+name: Development branches
+
+on:
+  push:
+    branches:
+      - '*'
+      - '**/*'
+      - '!master'
+      - '!release/*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v1
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.x
+
+      - name: Install Python Modules
+        run: pip3 install mkdocs mkdocs-material mkdocs-git-committers-plugin
+
+      - name: Build and deploy docs
+        run: mkdocs gh-deploy --force
