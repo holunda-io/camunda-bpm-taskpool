@@ -1,4 +1,4 @@
-name: Development branches
+name: Build the docs
 
 on:
   push:
@@ -20,8 +20,12 @@ jobs:
         with:
           python-version: 3.x
 
-      - name: Install Python Modules
-        run: pip3 install mkdocs mkdocs-material mkdocs-git-committers-plugin
+      - name: Install dependencies
+        run: |
+          python -m pip3 install --upgrade pip3
+          pip3 install mkdocs mkdocs-material mkdocs-git-committers-plugin
 
       - name: Build and deploy docs
-        run: mkdocs gh-deploy --force
+        run: |
+          git pull
+          mkdocs gh-deploy
