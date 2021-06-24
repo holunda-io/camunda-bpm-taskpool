@@ -17,7 +17,7 @@ by the library:
 * user task API providing attributes important for processing
 * mirroring tasks: provides a list of tasks in the system including all task attributes provided by Camunda BPM Engine
 * reacts on all task life cycle events fired by the process engine
-* high performance queries: creates of read-optimized projections including task-, process- and business data
+* high performance queries: creates read-optimized projections including task-, process- and business data
 * centralized task list: running several Camunda BPM Engines in several applications
    is a common use case for larger companies. From the user's perspective, it is not feasible
    to login to several task lists and check for relevant user tasks. The demand for the

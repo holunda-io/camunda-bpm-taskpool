@@ -9,7 +9,7 @@ In a single node scenario, the process application and the process platform comp
 In most production environments this scenario doesn't make sense because of poor reliability. Still, it is valid for
 demonstration purpose and is ideal to play around with components and understand their purpose and interaction between them.
 
-In a single mode scenario the following configuration is used:
+In a single node scenario the following configuration is used:
 
 * All buses are local (command bus, event bus, query bus)
 * In-memory H2 is used as a database for:

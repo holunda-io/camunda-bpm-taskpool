@@ -19,10 +19,10 @@ issue tracking system.
 
 If you found a solution to an https://github.com/holuda-io/camunda-bpm-taskpool/issues[open issue]
 and implemented it, we would be happy to add your contribution in the code base. For doing so,
-please create a pull request. Prior to that, please make sure you
+please create a pull request. Prior to that, please make sure you:
 
 - rebase against the `develop` branch
 - stick to project coding conventions
 - added test cases for the problem you are solving
 - added docs, describing the change
-- generally comply with codeacy report
+- generally comply with codacy report

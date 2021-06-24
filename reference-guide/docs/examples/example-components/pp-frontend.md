@@ -12,7 +12,7 @@ The example process platform frontend provides example implementation of two vie
 
 ### Example Tasklist
 
-Example Tasklist is a simple implementation of task inbox for a single user. The it provides the following features:
+Example Tasklist is a simple implementation of task inbox for a single user. It provides the following features:
 
 - Lists tasks in the system for selected user
 - Allows for switching users (faking different user login for demonstration purposes)
@@ -20,7 +20,7 @@ Example Tasklist is a simple implementation of task inbox for a single user. The
 - Tasks include process data (from process instance)
 - Tasks include correlated business data (correlated via variable from process instance)
 - The list of tasks is sortable
-- The list of tasks is pageble (7 items per page)
+- The list of tasks is pageable (7 items per page)
 - Allows claiming / unclaiming
 - Provides a deeplink to the user task form provided by the process application
 - Allows starting new process instances

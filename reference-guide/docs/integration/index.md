@@ -13,7 +13,7 @@ connect to existing Process Platform.
 Apart from the example application, you might be interested in integrating task pool into your existing
 application. To do so, you need to enable your Camunda BPM process engine to use the library.
 For doing so, add the `camunda-bpm-taskpool-engine-springboot-starter` library. In Maven, add the following dependency
-to your `pom.xml` :
+to your `pom.xml`:
 
 ```xml
 <dependency>
@@ -64,7 +64,7 @@ polyflow:
         applicationName: ${spring.application.name}  # default
     form-url-resolver:
       defaultTaskTemplate:  "/tasks/${formKey}/${id}?userId=%userId%"
-      defaultApplicationTemplate: "http://localhost:${server.port}/${applicatioName}"
+      defaultApplicationTemplate: "http://localhost:${server.port}/${applicationName}"
       defaultProcessTemplate: "/${formKey}?userId=%userId%"
 
 ```
