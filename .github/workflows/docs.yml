@@ -27,5 +27,5 @@ jobs:
 
       - name: Build and deploy docs
         run: |
-          git pull
+          git pull origin ${{ github.ref }}
           mkdocs gh-deploy
