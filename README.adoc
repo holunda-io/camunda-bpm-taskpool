@@ -41,7 +41,7 @@ solving these problems.
 * User task API providing attributes important for processing
 * Mirroring tasks: provides a copy of all tasks in the system
 * Reacts on all task life cycle events fired by the process engine
-* High performance queries: creates of read-optimized projections including task-, process- and business data
+* High performance queries: creates read-optimized projections including task-, process- and business data
 * Centralized task list: allows to collect tasks from multiple engines
 * Data enrichment: enrich tasks with business data
 * Data entry API providing attributes important for processing
