@@ -68,10 +68,10 @@ extra:
 
 plugins:
   - search
-  - git-committers:
-      repository: holunda-io/camunda-bpm-taskpool
-      branch: master
-      token: !!python/object/apply:os.getenv ["MKDOCS_GIT_COMMITTERS_APIKEY"]
+#  - git-committers:
+#      repository: holunda-io/camunda-bpm-taskpool
+#      branch: master
+#      token: !!python/object/apply:os.getenv ["MKDOCS_GIT_COMMITTERS_APIKEY"]
 
 
 nav:
