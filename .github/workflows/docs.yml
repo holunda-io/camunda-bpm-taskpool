@@ -5,7 +5,7 @@ on:
     branches:
       - master
       - develop
-      -
+      - '**/*'
   pull_request:
 
 jobs:
@@ -43,7 +43,7 @@ jobs:
       - name: Build and deploy docs
         run: mkdocs build
 
-      - name: Deploy
+      - name: Deploy docs from master branch
         uses: peaceiris/actions-gh-pages@v3
         if: github.ref == 'refs/heads/main'
         with:
