@@ -1,12 +1,12 @@
 package io.holunda.camunda.taskpool.view.mongo.repository
 
-import java.util.*
+import java.time.Instant
 
 /**
  * Element from the protocol.
  */
 data class ProtocolElement(
-  val time: Date,
+  val time: Instant,
   val statusType: String,
   val state: String?,
   val username: String?,

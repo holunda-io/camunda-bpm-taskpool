@@ -4,7 +4,7 @@ import com.mongodb.MongoCommandException
 import com.mongodb.client.model.changestream.OperationType
 import io.holunda.camunda.taskpool.view.DataEntry
 import io.holunda.camunda.taskpool.view.mongo.repository.DataEntryDocument
-import io.holunda.camunda.taskpool.view.mongo.repository.DataEntryUpdateRepository
+import io.holunda.camunda.taskpool.view.mongo.repository.DataEntryRepository
 import io.holunda.camunda.taskpool.view.mongo.repository.dataEntry
 import mu.KLogging
 import org.bson.BsonValue
@@ -26,14 +26,14 @@ import java.util.logging.Level
 @Component
 @ConditionalOnProperty(prefix = "polyflow.view.mongo", name = ["changeTrackingMode"], havingValue = "CHANGE_STREAM", matchIfMissing = false)
 class DataEntryChangeTracker(
-  private val dataEntryUpdateRepository: DataEntryUpdateRepository
+  private val dataEntryRepository: DataEntryRepository
 ) {
 
   companion object : KLogging()
 
   private var lastSeenResumeToken: BsonValue? = null
   private val changeStream: Flux<DataEntryDocument> = Flux
-    .defer { this.dataEntryUpdateRepository.getDataEntryUpdates(lastSeenResumeToken) }
+    .defer { this.dataEntryRepository.getDataEntryUpdates(lastSeenResumeToken) }
     .doOnCancel { lastSeenResumeToken = null }
     .doOnNext { event -> lastSeenResumeToken = if (event.resumeToken != null) event.resumeToken else lastSeenResumeToken }
     .doOnError(MongoCommandException::class.java) { lastSeenResumeToken = null }

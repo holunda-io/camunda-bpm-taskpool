@@ -10,6 +10,7 @@ import io.holunda.camunda.taskpool.view.Task
 import io.holunda.camunda.taskpool.view.TaskWithDataEntries
 import io.holunda.camunda.taskpool.view.addModification
 import org.camunda.bpm.engine.variable.Variables
+import java.util.*
 
 /**
  * Create a task document from task.
@@ -153,7 +154,9 @@ fun DataEntryCreatedEvent.toDocument() = DataEntryDocument(
   type = this.type,
   authorizedUsers = AuthorizationChange.applyUserAuthorization(listOf(), this.authorizations),
   authorizedGroups = AuthorizationChange.applyGroupAuthorization(listOf(), this.authorizations),
-  protocol = addModification(listOf(), this.createModification, this.state).map { it.toProtocolElement()},
+  protocol = addModification(listOf(), this.createModification, this.state).map { it.toProtocolElement() },
+  createdDate = this.createModification.time.toInstant(),
+  lastModifiedDate = this.createModification.time.toInstant(),
   applicationName = this.applicationName,
   state = this.state.state,
   statusType = this.state.processingType.name
@@ -163,6 +166,8 @@ fun DataEntryCreatedEvent.toDocument() = DataEntryDocument(
  * Creates the document.
  */
 fun DataEntryUpdatedEvent.toDocument(oldDocument: DataEntryDocument?) = if (oldDocument != null) {
+  val authorizedUsers = AuthorizationChange.applyUserAuthorization(oldDocument.authorizedUsers, this.authorizations)
+  val authorizedGroups = AuthorizationChange.applyGroupAuthorization(oldDocument.authorizedGroups, this.authorizations)
   oldDocument.copy(
     entryType = this.entryType,
     payload = this.payload,
@@ -170,9 +175,11 @@ fun DataEntryUpdatedEvent.toDocument(oldDocument: DataEntryDocument?) = if (oldD
     name = this.name,
     description = this.description,
     type = this.type,
-    authorizedUsers = AuthorizationChange.applyUserAuthorization(oldDocument.authorizedUsers, this.authorizations),
-    authorizedGroups = AuthorizationChange.applyGroupAuthorization(oldDocument.authorizedGroups, this.authorizations),
-    protocol = addModification(oldDocument.protocol.map{ it.toProtocol() }, this.updateModification, this.state).map { it.toProtocolElement()},
+    authorizedUsers = authorizedUsers,
+    authorizedGroups = authorizedGroups,
+    authorizedEntities = DataEntryDocument.authorizedEntities(authorizedUsers, authorizedGroups),
+    protocol = addModification(oldDocument.protocol.map { it.toProtocol() }, this.updateModification, this.state).map { it.toProtocolElement() },
+    lastModifiedDate = this.updateModification.time.toInstant(),
     applicationName = this.applicationName,
     state = this.state.state,
     statusType = this.state.processingType.name
@@ -188,7 +195,9 @@ fun DataEntryUpdatedEvent.toDocument(oldDocument: DataEntryDocument?) = if (oldD
     type = this.type,
     authorizedUsers = AuthorizationChange.applyUserAuthorization(listOf(), this.authorizations),
     authorizedGroups = AuthorizationChange.applyGroupAuthorization(listOf(), this.authorizations),
-    protocol = addModification(listOf(), this.updateModification, this.state).map { it.toProtocolElement()},
+    protocol = addModification(listOf(), this.updateModification, this.state).map { it.toProtocolElement() },
+    createdDate = this.updateModification.time.toInstant(),
+    lastModifiedDate = this.updateModification.time.toInstant(),
     applicationName = this.applicationName,
     state = this.state.state,
     statusType = this.state.processingType.name
@@ -225,7 +234,7 @@ fun TaskWithDataEntriesDocument.taskWithDataEntries() = TaskWithDataEntries(
  * Creates protocol element.
  */
 fun ProtocolEntry.toProtocolElement() = ProtocolElement(
-  time = this.time,
+  time = this.time.toInstant(),
   statusType = this.state.processingType.name,
   state = this.state.state,
   username = this.username,
@@ -237,7 +246,7 @@ fun ProtocolEntry.toProtocolElement() = ProtocolElement(
  * Creates the protocol.
  */
 fun ProtocolElement.toProtocol() = ProtocolEntry(
-  time = this.time,
+  time = Date.from(this.time),
   state = DataEntryStateImpl(processingType = ProcessingType.valueOf(this.statusType), state = this.state ?: ""),
   username = this.username,
   logMessage = this.logMessage,

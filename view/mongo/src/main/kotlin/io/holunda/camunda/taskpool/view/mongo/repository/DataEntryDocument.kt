@@ -5,6 +5,7 @@ import org.springframework.data.annotation.Id
 import org.springframework.data.annotation.TypeAlias
 import org.springframework.data.mongodb.core.index.Indexed
 import org.springframework.data.mongodb.core.mapping.Document
+import java.time.Instant
 
 /**
  * Represents a business data entry as Mongo Document.
@@ -26,10 +27,19 @@ data class DataEntryDocument(
   val statusType: String?,
   val authorizedUsers: List<String> = listOf(),
   val authorizedGroups: List<String> = listOf(),
+  // Mongo DB permits only one array-type field in a compound index. To use an index for the search, we need to put users and groups together in one array that we can index. See #367.
+  val authorizedEntities: List<String> = authorizedEntities(authorizedUsers, authorizedGroups),
+  val createdDate: Instant,
+  val lastModifiedDate: Instant,
   val protocol: List<ProtocolElement> = listOf()
 ) {
   companion object {
-      const val COLLECTION = "data-entries"
+    const val COLLECTION = "data-entries"
+    const val AUTHORIZED_ENTITY_PREFIX_USER = "user"
+    const val AUTHORIZED_ENTITY_PREFIX_GROUP = "group"
+
+    fun authorizedEntities(authorizedUsers: List<String>, authorizedGroups: List<String>) =
+      authorizedUsers.map { "$AUTHORIZED_ENTITY_PREFIX_USER:$it" } + authorizedGroups.map { "$AUTHORIZED_ENTITY_PREFIX_GROUP:$it" }
   }
 }
 
