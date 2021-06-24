@@ -1154,19 +1154,19 @@ and correlated business data. The components can be easily integrated into proce
 to build parts of the process platform.</p>
 <h2 id="design-decisions">Design Decisions<a class="headerlink" href="#design-decisions" title="Permanent link">#</a></h2>
 <p>We decided to build the library as a collection of loose-coupled components which can be used during the construction
-of the process automation solution in different ways, depending on your link:../user-guide/scenarios[Usage Scenario].</p>
+of the process automation solution in different ways, depending on your <a href="../../examples/scenarios">Usage Scenario</a>.</p>
 <p>The process platform is a central application consisting of business process independent components like a central user management,
 task inbox (aka task list), archive view for business data processed, audit logs and others. One or many process applications
 integrate with the process platform by implementing individual business processes and provide user tasks and business data changes to it.
 They may also ship application frontends, which are integrated into/with the frontends of the process platform, including business
 object views, user task forms and other required pieces.</p>
 <p>The following diagram depicts the overall logical architecture:</p>
-<p><img alt="Process Platform Architecture" src="/img/process-platform-architecture.png" /></p>
+<p><img alt="Process Platform Architecture" src="../../img/process-platform-architecture.png" /></p>
 <h2 id="implementation-decisions">Implementation Decisions<a class="headerlink" href="#implementation-decisions" title="Permanent link">#</a></h2>
 <p>The components are implemented using Kotlin programming language and rely on SpringBoot as execution environment.
 They make a massive use of Axon Framework as a basis of the CQRS implementation.</p>
 <p>// FIXME: replace this image with architecture of the camunda integration</p>
-<p><img alt="Collector Architecture" src="/img/architecture-collector.png" /></p>
+<p><img alt="Collector Architecture" src="../../img/architecture-collector.png" /></p>
                 
                   
                 

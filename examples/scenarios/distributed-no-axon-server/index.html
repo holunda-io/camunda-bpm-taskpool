@@ -1166,9 +1166,9 @@ you will be responsible for distribution of events and will need to surrender so
 <li>concurrent access to engines might become a problem (no unit of work guarantees)</li>
 </ul>
 <p>The following diagram depicts the distribution of the components and the messaging.</p>
-<p><img alt="Deployment of taskpool with other messaging" src="/img/deployment-messaging.png" /></p>
+<p><img alt="Deployment of taskpool with other messaging" src="../../../img/deployment-messaging.png" /></p>
 <p>The following diagram depicts the task run from Process Application to the end user, consuming it via Tasklist API.</p>
-<p><img alt="Kafka Message Run" src="/img/scenario_kafka_messaging_overview.png" /></p>
+<p><img alt="Kafka Message Run" src="../../../img/scenario_kafka_messaging_overview.png" /></p>
 <ul>
 <li>The <code>CamundaEventingEnginePlugin</code> provided with the Taskpool tracks events in the Camunda engine (e.g. the creation, deletion or modification of a User Task) and makes them available as Spring events.</li>
 <li>The <code>Taskpool Collector</code> component listens to those events. It collects all relevant events that happen in a single transaction and registers a transaction synchronization to process them beforeCommit. Just before the transaction is committed, the collected events are accumulated and sent as Axon Commands through the <code>CommandGateway</code>.</li>
@@ -1178,11 +1178,11 @@ you will be responsible for distribution of events and will need to surrender so
 <li>Within the Tasklist API, the <code>Axon Kafka Extension</code> polls the events from Kafka and another TrackingEventProcessor forwards them to the <code>TaskPoolMongoService</code> where they are processed to update the Mongo DB accordingly.</li>
 <li>When a user queries the Tasklist API for tasks, two things happen: Firstly, the Mongo DB is queried for the current state of tasks for this user and these tasks are returned. Secondly, the Tasklist API subscribes to any changes to the Mongo DB. These changes are filtered for relevance to the user and relevant changes are returned after the current state as an infinite stream until the request is cancelled or interrupted for some reason.</li>
 </ul>
-<p><img alt="Kafka Message Transaction Overview" src="/img/scenario_kafka_messaging_tx_view.png" /></p>
+<p><img alt="Kafka Message Transaction Overview" src="../../../img/scenario_kafka_messaging_tx_view.png" /></p>
 <h3 id="from-process-application-to-kafka">From Process Application to Kafka<a class="headerlink" href="#from-process-application-to-kafka" title="Permanent link">#</a></h3>
-<p><img alt="Process Application to Kafka Messaging" src="/img/scenario_process_application_to_kafka_detail.png" /></p>
+<p><img alt="Process Application to Kafka Messaging" src="../../../img/scenario_process_application_to_kafka_detail.png" /></p>
 <h3 id="from-kafka-to-tasklist-api">From Kafka to Tasklist API<a class="headerlink" href="#from-kafka-to-tasklist-api" title="Permanent link">#</a></h3>
-<p><img alt="Kafka to Tasklist API Messaging" src="/img/scenario_kafka_to_tasklist_detail.png" /></p>
+<p><img alt="Kafka to Tasklist API Messaging" src="../../../img/scenario_kafka_to_tasklist_detail.png" /></p>
                 
                   
                 
