@@ -1,8 +1,0 @@
-User-agent: *
-
-Disallow: /
-
-
-
-Sitemap: https://www.holunda.io/camunda-bpm-taskpool/sitemap.xml
-
