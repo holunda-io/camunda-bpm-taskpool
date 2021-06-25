@@ -1,0 +1,122 @@
+# ###############################
+# Main config file for MkDocs.
+# ###############################
+# To install:
+# install python3
+# install pip3
+# pip3 install mkdocs
+# pip3 install mkdocs-bootstrap4
+# pip3 install mkdocs-git-committers-plugin
+# pip3 install mkdocs-material
+#
+# To run:
+# mkdocs serve
+# ###############################
+
+site_name: Polyflow
+site_url: https://www.holunda.io/camunda-bpm-taskpool/
+site_description: >-
+ Polyflow is an open-source framework for creation of process platform with one
+ or multiple process engines (like Camunda BPM) providing a holistic enterprise-wide
+ task pool and data entry pool.
+
+copyright: Copyright &copy; 2016 - 2021, Holisticon AG
+
+# Repository
+repo_name: holunda-io/camunda-bpm-taskpool
+repo_url: https://github.com/holunda-io/camunda-bpm-taskpool/
+edit_uri: https://github.com/holunda-io/camunda-bpm-taskpool/edit/develop/reference-guide/docs/
+
+markdown_extensions:
+    - attr_list
+    - toc:
+        permalink: "#"
+    - pymdownx.highlight
+    - pymdownx.superfences
+
+theme:
+  name: material
+  features:
+    - navigation.tabs
+  logo: img/polyflow-65x61.png
+  icon:
+    repo: fontawesome/brands/github
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      toggle:
+        icon: material/toggle-switch-off-outline
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: #19469f;
+      toggle:
+        icon: material/toggle-switch
+        name: Switch to light mode
+
+extra:
+  social:
+    - icon: fontawesome/brands/twitter
+      name: Holisticon on Twitter
+      link: https://twitter.com/holisticon
+    - icon: fontawesome/brands/medium
+      name: Holisticon on Medium
+      link: https://medium.com/holisticon
+
+
+
+plugins:
+  - search
+#  - git-committers:
+#      repository: holunda-io/camunda-bpm-taskpool
+#      branch: master
+#      token: !!python/object/apply:os.getenv ["MKDOCS_GIT_COMMITTERS_APIKEY"]
+
+
+nav:
+  - 'Home': 'index.md'
+  - 'Getting Started':
+    - 'Motivation': 'introduction/motivation.md'
+    - 'Features': 'introduction/features.md'
+    - 'Solution Architecture': introduction/solution-architecture.md
+    - 'Further Outlook': 'introduction/further-outlook.md'
+  - 'Integration': 'integration/index.md'
+  - 'Reference':
+    - 'Reference Overview': reference-guide/index.md
+    - 'Component Overview': reference-guide/components/index.md
+    - 'Integration Components':
+      - 'Camunda BPM Engine Interaction Client': reference-guide/components/camunda-interaction-client.md
+      - 'Camunda BPM Engine Taskpool Collector': reference-guide/components/camunda-taskpool-collector.md
+      - 'Camunda BPM Engine Taskpool SpringBoot Starter': reference-guide/components/camunda-starter.md
+      - 'Taskpool Sender': reference-guide/components/common-taskpool-sender.md
+      - 'Datapool Sender': reference-guide/components/common-datapool-sender.md
+    - 'Core Components':
+      - 'Taskpool Core': reference-guide/components/core-taskpool.md
+      - 'Datapool Core': reference-guide/components/core-datapool.md
+    - 'View Components':
+      - 'In-Memory View': reference-guide/components/view-simple.md
+      - 'Mongo DB View': reference-guide/components/view-mongo.md
+      - 'Cockpit View': reference-guide/components/view-cockpit.md
+    - 'Other Components':
+      - 'Form URL Resolver': reference-guide/components/other-form-url-resolver.md
+      - 'Tasklist URL Resolver': reference-guide/components/other-tasklist-url-resolver.md
+      - 'Variable Serializer': reference-guide/components/other-variable-serializer.md
+    - 'Configuration Overview': reference-guide/configuration/index.md
+  - 'Examples':
+    - 'Example Approval': examples/example-approval.md
+    - 'Example Components':
+      - 'Example Components Overview': examples/example-components/index.md
+      - 'Process Application Frontend': examples/example-components/pa-frontend.md
+      - 'Process Application Backend': examples/example-components/pa-backend.md
+      - 'User Management': examples/example-components/user-management.md
+      - 'Process Platform Frontend': examples/example-components/pp-frontend.md
+      - 'Process Platform Backend': examples/example-components/pp-backend.md
+    - 'Distribution Scenarios':
+      - 'Scenarios Overview': examples/scenarios/index.md
+      - 'Single Node': examples/scenarios/single-node.md
+      - 'Distributed using Axon Server': examples/scenarios/distributed-axon-server.md
+      - 'Distributed without Axon Server': examples/scenarios/distributed-no-axon-server.md
+  - 'Developers':
+    - 'Contribution': developer-guide/contribution.md
+    - 'Project Setup': developer-guide/project-setup.md

@@ -109,7 +109,7 @@
         <activeByDefault>false</activeByDefault>
       </activation>
       <modules>
-        <module>docs</module>
+        <module>old-docs</module>
       </modules>
     </profile>
 
