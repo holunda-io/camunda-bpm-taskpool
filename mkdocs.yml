@@ -25,7 +25,7 @@ copyright: Copyright &copy; 2016 - 2021, Holisticon AG
 # Repository
 repo_name: holunda-io/camunda-bpm-taskpool
 repo_url: https://github.com/holunda-io/camunda-bpm-taskpool/
-edit_uri: https://github.com/holunda-io/camunda-bpm-taskpool/edit/develop/reference-guide/docs/
+edit_uri: https://github.com/holunda-io/camunda-bpm-taskpool/edit/develop/docs/
 
 markdown_extensions:
     - attr_list
