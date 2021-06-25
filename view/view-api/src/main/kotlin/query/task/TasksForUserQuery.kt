@@ -1,8 +1,8 @@
-package io.holunda.camunda.taskpool.view.query.task
+package io.holunda.polyflow.view.query.task
 
-import io.holunda.camunda.taskpool.view.Task
-import io.holunda.camunda.taskpool.view.auth.User
-import io.holunda.camunda.taskpool.view.query.FilterQuery
+import io.holunda.polyflow.view.Task
+import io.holunda.polyflow.view.auth.User
+import io.holunda.polyflow.view.query.FilterQuery
 
 /**
  * Query for tasks visible for user.
@@ -12,7 +12,7 @@ data class TasksForUserQuery(
   val user: User
 ) : FilterQuery<Task> {
 
-  override fun applyFilter(element: Task) =
+  override fun applyFilter(element: Task): Boolean =
   // assignee
     element.assignee == this.user.username
       // candidate user

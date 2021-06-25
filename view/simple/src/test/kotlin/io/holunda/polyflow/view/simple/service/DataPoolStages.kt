@@ -1,13 +1,13 @@
-package io.holunda.camunda.taskpool.view.simple.service
+package io.holunda.polyflow.view.simple.service
 
 import com.tngtech.jgiven.Stage
 import com.tngtech.jgiven.annotation.*
 import com.tngtech.jgiven.integration.spring.JGivenStage
 import io.holunda.camunda.taskpool.api.business.DataEntryCreatedEvent
 import io.holunda.camunda.taskpool.api.business.DataEntryUpdatedEvent
-import io.holunda.camunda.taskpool.view.DataEntry
-import io.holunda.camunda.taskpool.view.auth.User
-import io.holunda.camunda.taskpool.view.query.data.DataEntriesForUserQuery
+import io.holunda.polyflow.view.DataEntry
+import io.holunda.polyflow.view.auth.User
+import io.holunda.polyflow.view.query.data.DataEntriesForUserQuery
 import org.assertj.core.api.Assertions
 import org.axonframework.messaging.MetaData
 import org.axonframework.queryhandling.QueryUpdateEmitter

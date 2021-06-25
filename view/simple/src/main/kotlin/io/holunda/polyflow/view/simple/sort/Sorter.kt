@@ -1,12 +1,13 @@
-package io.holunda.camunda.taskpool.view.simple.sort
+package io.holunda.polyflow.view.simple.sort
 
-import io.holunda.camunda.taskpool.view.DataEntry
-import io.holunda.camunda.taskpool.view.Task
-import io.holunda.camunda.taskpool.view.simple.filter.DATA_PREFIX
-import io.holunda.camunda.taskpool.view.simple.filter.TASK_PREFIX
-import io.holunda.camunda.taskpool.view.simple.filter.extractField
-import io.holunda.camunda.taskpool.view.simple.filter.isTaskAttribute
+import io.holunda.polyflow.view.DataEntry
+import io.holunda.polyflow.view.Task
+import io.holunda.polyflow.view.simple.filter.DATA_PREFIX
+import io.holunda.polyflow.view.simple.filter.TASK_PREFIX
+import io.holunda.polyflow.view.simple.filter.extractField
+import io.holunda.polyflow.view.simple.filter.isTaskAttribute
 import java.lang.reflect.Field
+import java.time.Instant
 import java.util.*
 
 /**
@@ -85,6 +86,7 @@ internal fun compareActual(fieldSort: Pair<Field, SortDirection>, v1: Any?, v2: 
     java.lang.Integer::class.java -> (v1 as Int).compareTo(v2 as Int) * fieldSort.second.modifier
     java.lang.String::class.java -> (v1 as String).compareTo(v2 as String) * fieldSort.second.modifier
     java.util.Date::class.java -> (v1 as Date).compareTo(v2 as Date) * fieldSort.second.modifier
+    Instant::class.java -> (v1 as Instant).compareTo(v2 as Instant) * fieldSort.second.modifier
     Int::class.java -> (v1 as Int).compareTo(v2 as Int) * fieldSort.second.modifier
     else -> throw UnsupportedOperationException("Unknown type ${fieldSort.first.type}")
   }

@@ -1,4 +1,4 @@
-package io.holunda.camunda.taskpool.view.simple.service
+package io.holunda.polyflow.view.simple.service
 
 import io.holunda.camunda.taskpool.api.business.*
 import org.camunda.bpm.engine.variable.VariableMap

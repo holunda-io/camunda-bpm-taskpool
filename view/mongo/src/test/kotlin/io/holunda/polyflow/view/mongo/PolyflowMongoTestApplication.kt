@@ -1,4 +1,4 @@
-package io.holunda.camunda.taskpool.view.mongo
+package io.holunda.polyflow.view.mongo
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.autoconfigure.mongo.embedded.EmbeddedMongoAutoConfiguration

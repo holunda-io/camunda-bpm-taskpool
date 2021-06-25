@@ -1,5 +1,6 @@
 package io.holunda.polyflow.view.mongo.service
 
+import io.holunda.polyflow.view.mongo.sort
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.springframework.data.domain.Sort

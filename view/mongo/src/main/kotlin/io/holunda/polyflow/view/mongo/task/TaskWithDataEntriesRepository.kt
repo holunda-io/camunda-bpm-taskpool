@@ -1,4 +1,4 @@
-package io.holunda.polyflow.view.mongo.repository
+package io.holunda.polyflow.view.mongo.task
 
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository
 import org.springframework.stereotype.Repository

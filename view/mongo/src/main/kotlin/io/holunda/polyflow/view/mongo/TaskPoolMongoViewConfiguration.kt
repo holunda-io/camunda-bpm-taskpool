@@ -1,6 +1,6 @@
 package io.holunda.polyflow.view.mongo
 
-import io.holunda.camunda.taskpool.view.mongo.repository.TaskDocument
+import io.holunda.polyflow.view.mongo.task.TaskDocument
 import mu.KLogging
 import org.axonframework.eventhandling.tokenstore.TokenStore
 import org.axonframework.extensions.mongo.DefaultMongoTemplate
@@ -51,11 +51,11 @@ class TaskPoolMongoViewConfiguration {
     DefaultMongoTemplate
       .builder()
       .mongoDatabase(databaseFactory.mongoDatabase)
-      .trackingTokensCollectionName(io.holunda.polyflow.view.mongo.TaskPoolMongoViewConfiguration.Companion.COLLECTION_TOKENS)
+      .trackingTokensCollectionName(COLLECTION_TOKENS)
       // these collections are configured, but not used on the client side.
-      .domainEventsCollectionName(io.holunda.polyflow.view.mongo.TaskPoolMongoViewConfiguration.Companion.COLLECTION_EVENTS)
-      .sagasCollectionName(io.holunda.polyflow.view.mongo.TaskPoolMongoViewConfiguration.Companion.COLLECTION_SAGAS)
-      .snapshotEventsCollectionName(io.holunda.polyflow.view.mongo.TaskPoolMongoViewConfiguration.Companion.COLLECTION_SNAPSHOTS)
+      .domainEventsCollectionName(COLLECTION_EVENTS)
+      .sagasCollectionName(COLLECTION_SAGAS)
+      .snapshotEventsCollectionName(COLLECTION_SNAPSHOTS)
       .build()
 
   /**

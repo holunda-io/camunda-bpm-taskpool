@@ -1,10 +1,6 @@
-package io.holunda.polyflow.view.mongo.repository
+package io.holunda.polyflow.view.mongo.task
 
-import io.holunda.camunda.taskpool.view.auth.User
-import io.holunda.camunda.taskpool.view.mongo.service.Criterion
-import io.holunda.camunda.taskpool.view.mongo.service.EQUALS
-import io.holunda.camunda.taskpool.view.mongo.service.GREATER
-import io.holunda.camunda.taskpool.view.mongo.service.LESS
+import io.holunda.polyflow.view.auth.User
 import io.holunda.polyflow.view.mongo.data.DataEntryDocument
 import mu.KLogging
 import org.springframework.data.domain.Pageable
@@ -30,21 +26,21 @@ open class TaskWithDataEntriesRepositoryExtensionImpl(
   /**
    * Retrieves a list of tasks for user matching provided critera.
   <pre>
-    db.tasks.aggregate([
-    { $lookup: {
-    from: "data-entries",
-    localField: "dataEntriesRefs",
-    foreignField: "_id",
-    as: "data_entries" } },
-    { $sort: { "dueDate": 1 }},
-    { $match: { $and: [
-    'deleted': { $ne: true },
-    // { $or: [ { 'assignee' : "kermit" }, { 'candidateUsers' : "kermit" }, { 'candidateGroups' : { $in: [ "other" ] } } ] },
-    { $or: [ { 'assignee' : "kermit" }, { 'candidateUsers' : "kermit" }, { 'candidateGroups' : { $in: [ "other" ] } } ] }
-    /Tas/ { $or: [ { 'businessKey': "3" } ] }
-    ]
-    }}
-    ])
+  db.tasks.aggregate([
+  { $lookup: {
+  from: "data-entries",
+  localField: "dataEntriesRefs",
+  foreignField: "_id",
+  as: "data_entries" } },
+  { $sort: { "dueDate": 1 }},
+  { $match: { $and: [
+  'deleted': { $ne: true },
+  // { $or: [ { 'assignee' : "kermit" }, { 'candidateUsers' : "kermit" }, { 'candidateGroups' : { $in: [ "other" ] } } ] },
+  { $or: [ { 'assignee' : "kermit" }, { 'candidateUsers' : "kermit" }, { 'candidateGroups' : { $in: [ "other" ] } } ] }
+  /Tas/ { $or: [ { 'businessKey': "3" } ] }
+  ]
+  }}
+  ])
   </pre>
    */
   override fun findAllFilteredForUser(user: User, criteria: List<Criterion>, pageable: Pageable?): Flux<TaskWithDataEntriesDocument> {
@@ -53,10 +49,10 @@ open class TaskWithDataEntriesRepositoryExtensionImpl(
 
     val filterPropertyCriteria = criteria.map {
       Criteria.where(
-          when (it) {
-              is Criterion.TaskCriterion -> it.name
-              else -> "dataEntries.payload.${it.name}"
-          }
+        when (it) {
+          is Criterion.TaskCriterion -> it.name
+          else -> "dataEntries.payload.${it.name}"
+        }
       ).apply {
         when (it.operator) {
           EQUALS -> this.isEqualTo(it.typedValue())
@@ -82,22 +78,23 @@ open class TaskWithDataEntriesRepositoryExtensionImpl(
           Criteria.where("deleted").ne(true),
           tasksForUserCriteria,
           Criteria()
-            .orOperator(*filterPropertyCriteria))
+            .orOperator(*filterPropertyCriteria)
+        )
     } else {
       tasksForUserCriteria
     }
 
 
     val aggregations = mutableListOf(
-        Aggregation.lookup(DataEntryDocument.COLLECTION, "dataEntriesRefs", "_id", "dataEntries"),
-        Aggregation.sort(sort),
-        Aggregation.match(filterCriteria)
+      Aggregation.lookup(DataEntryDocument.COLLECTION, "dataEntriesRefs", "_id", "dataEntries"),
+      Aggregation.sort(sort),
+      Aggregation.match(filterCriteria)
     )
 
 
     return mongoTemplate.aggregate(
-        Aggregation.newAggregation(aggregations),
-        TaskDocument.COLLECTION,
+      Aggregation.newAggregation(aggregations),
+      TaskDocument.COLLECTION,
       TaskWithDataEntriesDocument::class.java
     )
   }

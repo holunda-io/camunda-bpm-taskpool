@@ -1,6 +1,6 @@
-package io.holunda.polyflow.view.mongo.repository
+package io.holunda.polyflow.view.mongo.task
 
-import io.holunda.camunda.taskpool.view.query.task.ApplicationWithTaskCount
+import io.holunda.polyflow.view.query.task.ApplicationWithTaskCount
 import mu.KLogging
 import org.bson.BsonValue
 import org.springframework.data.mongodb.core.ChangeStreamEvent

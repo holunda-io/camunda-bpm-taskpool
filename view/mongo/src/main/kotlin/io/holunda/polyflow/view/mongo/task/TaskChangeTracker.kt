@@ -1,12 +1,13 @@
-package io.holunda.polyflow.view.mongo.service
+package io.holunda.polyflow.view.mongo.task
 
 import com.mongodb.MongoCommandException
 import com.mongodb.client.model.changestream.OperationType
 import io.holunda.camunda.taskpool.api.business.dataIdentityString
-import io.holunda.camunda.taskpool.view.Task
-import io.holunda.camunda.taskpool.view.TaskWithDataEntries
-import io.holunda.camunda.taskpool.view.mongo.repository.*
-import io.holunda.camunda.taskpool.view.query.task.ApplicationWithTaskCount
+import io.holunda.polyflow.view.Task
+import io.holunda.polyflow.view.TaskWithDataEntries
+import io.holunda.polyflow.view.mongo.data.DataEntryRepository
+import io.holunda.polyflow.view.mongo.data.dataEntry
+import io.holunda.polyflow.view.query.task.ApplicationWithTaskCount
 import mu.KLogging
 import org.bson.BsonValue
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
@@ -65,14 +66,14 @@ class TaskChangeTracker(
   // Truly delete documents that have been marked deleted
   private val trulyDeleteChangeStreamSubscription: Disposable = changeStream
     .filter { it.deleted }
-    .flatMap( { task ->
+    .flatMap({ task ->
       taskRepository.deleteById(task.id)
         .doOnSuccess { logger.trace { "Deleted task ${task.id} from database." } }
         .doOnError { e -> logger.debug(e) { "Deleting task ${task.id} from database failed." } }
         .retryWhen(Retry.backoff(5, Duration.ofMillis(50)))
         .doOnError { e -> logger.warn(e) { "Deleting task ${task.id} from database failed and retries are exhausted." } }
         .onErrorResume { Mono.empty() }
-    }, 10 )
+    }, 10)
     .subscribe()
 
   /**

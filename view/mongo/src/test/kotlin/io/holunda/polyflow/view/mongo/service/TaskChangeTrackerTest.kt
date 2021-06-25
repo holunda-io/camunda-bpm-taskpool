@@ -9,11 +9,12 @@ import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import io.holunda.camunda.taskpool.api.task.ProcessReference
-import io.holunda.camunda.taskpool.view.Task
-import io.holunda.camunda.taskpool.view.mongo.repository.DataEntryRepository
-import io.holunda.camunda.taskpool.view.mongo.repository.ProcessReferenceDocument
-import io.holunda.camunda.taskpool.view.mongo.repository.TaskDocument
-import io.holunda.camunda.taskpool.view.mongo.repository.TaskRepository
+import io.holunda.polyflow.view.Task
+import io.holunda.polyflow.view.mongo.data.DataEntryRepository
+import io.holunda.polyflow.view.mongo.task.ProcessReferenceDocument
+import io.holunda.polyflow.view.mongo.task.TaskChangeTracker
+import io.holunda.polyflow.view.mongo.task.TaskDocument
+import io.holunda.polyflow.view.mongo.task.TaskRepository
 import org.bson.BsonDocument
 import org.bson.BsonString
 import org.bson.Document

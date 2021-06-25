@@ -9,10 +9,10 @@ import io.holunda.camunda.taskpool.example.process.rest.model.ApprovalRequestDra
 import io.holunda.camunda.taskpool.example.process.rest.model.ApprovalRequestDto
 import io.holunda.camunda.taskpool.example.process.service.Request
 import io.holunda.camunda.taskpool.example.process.service.RequestService
-import io.holunda.camunda.taskpool.view.auth.User
-import io.holunda.camunda.taskpool.view.auth.UserService
-import io.holunda.camunda.taskpool.view.query.data.DataEntriesForUserQuery
-import io.holunda.camunda.taskpool.view.query.data.DataEntriesQueryResult
+import io.holunda.polyflow.view.auth.User
+import io.holunda.polyflow.view.auth.UserService
+import io.holunda.polyflow.view.query.data.DataEntriesForUserQuery
+import io.holunda.polyflow.view.query.data.DataEntriesQueryResult
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiParam
 import org.axonframework.messaging.GenericMessage

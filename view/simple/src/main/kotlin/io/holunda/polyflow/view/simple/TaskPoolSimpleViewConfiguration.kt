@@ -1,8 +1,8 @@
-package io.holunda.camunda.taskpool.view.simple
+package io.holunda.polyflow.view.simple
 
-import io.holunda.camunda.taskpool.view.query.FilterQuery
-import io.holunda.camunda.taskpool.view.query.QueryResult
-import io.holunda.camunda.taskpool.view.simple.service.SimpleServiceViewProcessingGroup
+import io.holunda.polyflow.view.query.FilterQuery
+import io.holunda.polyflow.view.query.QueryResult
+import io.holunda.polyflow.view.simple.service.SimpleServiceViewProcessingGroup
 import mu.KLogging
 import org.axonframework.config.EventProcessingConfigurer
 import org.axonframework.eventhandling.tokenstore.inmemory.InMemoryTokenStore

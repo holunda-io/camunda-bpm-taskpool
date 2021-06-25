@@ -1,9 +1,9 @@
-package io.holunda.camunda.taskpool.view.query.task
+package io.holunda.polyflow.view.query.task
 
-import io.holunda.camunda.taskpool.view.TaskWithDataEntries
-import io.holunda.camunda.taskpool.view.auth.User
-import io.holunda.camunda.taskpool.view.query.FilterQuery
-import io.holunda.camunda.taskpool.view.query.PageableSortableQuery
+import io.holunda.polyflow.view.TaskWithDataEntries
+import io.holunda.polyflow.view.auth.User
+import io.holunda.polyflow.view.query.FilterQuery
+import io.holunda.polyflow.view.query.PageableSortableQuery
 
 /**
  * Query for tasks with correlated data entries for given user.

@@ -1,8 +1,8 @@
-package io.holunda.camunda.taskpool.view.simple.filter
+package io.holunda.polyflow.view.simple.filter
 
-import io.holunda.camunda.taskpool.view.DataEntry
-import io.holunda.camunda.taskpool.view.Task
-import io.holunda.camunda.taskpool.view.TaskWithDataEntries
+import io.holunda.polyflow.view.DataEntry
+import io.holunda.polyflow.view.Task
+import io.holunda.polyflow.view.TaskWithDataEntries
 import org.springframework.util.ReflectionUtils
 import java.lang.reflect.Field
 import java.math.BigDecimal
@@ -63,7 +63,8 @@ internal fun filter(filters: List<String>, values: List<TaskWithDataEntries>): L
 /**
  * Filters by applying applies predicates on the list of tasks.
  */
-internal fun filterByPredicate(values: List<TaskWithDataEntries>, wrapper: TaskPredicateWrapper): List<TaskWithDataEntries> = values.filter { filterByPredicate(it, wrapper) }
+internal fun filterByPredicate(values: List<TaskWithDataEntries>, wrapper: TaskPredicateWrapper): List<TaskWithDataEntries> =
+  values.filter { filterByPredicate(it, wrapper) }
 
 
 /**
@@ -196,15 +197,15 @@ internal fun toCriterion(filter: String): Criterion {
   require(segments.size == 3 && !segments[0].isBlank() && !segments[0].isBlank()) { "Failed to create criteria from $filter." }
 
   return when {
-      isTaskAttribute(segments[0]) -> {
-        Criterion.TaskCriterion(name = segments[0].substring(TASK_PREFIX.length), value = segments[1], operator = segments[2])
-      }
-      isDataEntryAttribute(segments[0]) -> {
-        Criterion.DataEntryCriterion(name = segments[0].substring(DATA_PREFIX.length), value = segments[1], operator = segments[2])
-      }
-      else -> {
-        Criterion.PayloadEntryCriterion(name = segments[0], value = segments[1], operator = segments[2])
-      }
+    isTaskAttribute(segments[0]) -> {
+      Criterion.TaskCriterion(name = segments[0].substring(TASK_PREFIX.length), value = segments[1], operator = segments[2])
+    }
+    isDataEntryAttribute(segments[0]) -> {
+      Criterion.DataEntryCriterion(name = segments[0].substring(DATA_PREFIX.length), value = segments[1], operator = segments[2])
+    }
+    else -> {
+      Criterion.PayloadEntryCriterion(name = segments[0], value = segments[1], operator = segments[2])
+    }
   }
 }
 
@@ -259,12 +260,14 @@ sealed class Criterion(open val name: String, open val value: String, open val o
   /**
    * Criterion on data entry.
    */
-  data class DataEntryCriterion(override val name: String, override val value: String, override val operator: String = EQUALS) : Criterion(name, value, operator)
+  data class DataEntryCriterion(override val name: String, override val value: String, override val operator: String = EQUALS) :
+    Criterion(name, value, operator)
 
   /**
    * Criterion on payload.
    */
-  data class PayloadEntryCriterion(override val name: String, override val value: String, override val operator: String = EQUALS) : Criterion(name, value, operator)
+  data class PayloadEntryCriterion(override val name: String, override val value: String, override val operator: String = EQUALS) :
+    Criterion(name, value, operator)
 
 }
 

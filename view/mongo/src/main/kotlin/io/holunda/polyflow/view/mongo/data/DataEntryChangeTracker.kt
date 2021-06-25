@@ -1,11 +1,8 @@
-package io.holunda.polyflow.view.mongo.service
+package io.holunda.polyflow.view.mongo.data
 
 import com.mongodb.MongoCommandException
 import com.mongodb.client.model.changestream.OperationType
 import io.holunda.polyflow.view.DataEntry
-import io.holunda.polyflow.view.mongo.data.DataEntryDocument
-import io.holunda.polyflow.view.mongo.data.DataEntryRepository
-import io.holunda.polyflow.view.mongo.repository.dataEntry
 import mu.KLogging
 import org.bson.BsonValue
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty

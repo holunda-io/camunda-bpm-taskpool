@@ -5,9 +5,9 @@ import io.holunda.camunda.taskpool.example.tasklist.rest.Rest
 import io.holunda.camunda.taskpool.example.tasklist.rest.api.ProcessesApi
 import io.holunda.camunda.taskpool.example.tasklist.rest.mapper.ProcessDefinitionMapper
 import io.holunda.camunda.taskpool.example.tasklist.rest.model.ProcessDefinitionDto
-import io.holunda.camunda.taskpool.view.ProcessDefinition
-import io.holunda.camunda.taskpool.view.auth.UserService
-import io.holunda.camunda.taskpool.view.query.process.ProcessDefinitionsStartableByUserQuery
+import io.holunda.polyflow.view.ProcessDefinition
+import io.holunda.polyflow.view.auth.UserService
+import io.holunda.polyflow.view.query.process.ProcessDefinitionsStartableByUserQuery
 import io.swagger.annotations.Api
 import org.axonframework.messaging.responsetypes.ResponseTypes
 import org.axonframework.queryhandling.QueryGateway
@@ -29,7 +29,12 @@ class StartableProcessDefinitionController(
   private val mapper: ProcessDefinitionMapper
 ) : ProcessesApi {
 
-  override fun getStartableProcesses(@RequestHeader(value = "X-Current-User-ID", required = false) xCurrentUserID: Optional<String>): ResponseEntity<List<ProcessDefinitionDto>> {
+  override fun getStartableProcesses(
+    @RequestHeader(
+      value = "X-Current-User-ID",
+      required = false
+    ) xCurrentUserID: Optional<String>
+  ): ResponseEntity<List<ProcessDefinitionDto>> {
 
     val userIdentifier = xCurrentUserID.orElseGet { currentUserService.getCurrentUser() }
     val user = userService.getUser(userIdentifier)

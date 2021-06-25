@@ -3,13 +3,13 @@ package io.holunda.polyflow.view.mongo.service
 import com.tngtech.jgiven.integration.spring.SpringRuleScenarioTest
 import io.holunda.camunda.taskpool.api.business.CorrelationMap
 import io.holunda.camunda.taskpool.api.task.*
-import io.holunda.camunda.taskpool.view.DataEntry
-import io.holunda.camunda.taskpool.view.Task
-import io.holunda.camunda.taskpool.view.TaskWithDataEntries
-import io.holunda.camunda.taskpool.view.auth.User
-import io.holunda.camunda.taskpool.view.mongo.PolyflowMongoTestApplication
-import io.holunda.camunda.taskpool.view.mongo.utils.MongoLauncher
-import io.holunda.camunda.taskpool.view.query.task.*
+import io.holunda.polyflow.view.DataEntry
+import io.holunda.polyflow.view.Task
+import io.holunda.polyflow.view.TaskWithDataEntries
+import io.holunda.polyflow.view.auth.User
+import io.holunda.polyflow.view.mongo.PolyflowMongoTestApplication
+import io.holunda.polyflow.view.mongo.utils.MongoLauncher
+import io.holunda.polyflow.view.query.task.*
 import org.camunda.bpm.engine.variable.VariableMap
 import org.camunda.bpm.engine.variable.Variables
 import org.junit.After
@@ -130,11 +130,21 @@ abstract class PolyflowMongoServiceITestBase : SpringRuleScenarioTest<PolyflowGi
       .task_created_event_is_received(testTaskData.asTaskCreatedEngineEvent())
 
     `when`()
-      .task_candidate_group_changed_event_is_received(TestTaskData(id = "some-id").asCandidateGroupChangedEvent("muppetshow", CamundaTaskEventType.CANDIDATE_GROUP_DELETE))
+      .task_candidate_group_changed_event_is_received(
+        TestTaskData(id = "some-id").asCandidateGroupChangedEvent(
+          "muppetshow",
+          CamundaTaskEventType.CANDIDATE_GROUP_DELETE
+        )
+      )
       .and()
       .time_passes_until_query_update_is_emitted()
       .and()
-      .task_candidate_group_changed_event_is_received(TestTaskData(id = "some-id").asCandidateGroupChangedEvent("simpsons", CamundaTaskEventType.CANDIDATE_GROUP_ADD))
+      .task_candidate_group_changed_event_is_received(
+        TestTaskData(id = "some-id").asCandidateGroupChangedEvent(
+          "simpsons",
+          CamundaTaskEventType.CANDIDATE_GROUP_ADD
+        )
+      )
       .and()
       .time_passes_until_query_update_is_emitted()
 
@@ -155,7 +165,12 @@ abstract class PolyflowMongoServiceITestBase : SpringRuleScenarioTest<PolyflowGi
       .task_created_event_is_received(TestTaskData(id = "some-id", candidateUsers = setOf("kermit")).asTaskCreatedEngineEvent())
 
     `when`()
-      .task_candidate_user_changed_event_is_received(TestTaskData(id = "some-id").asCandidateUserChangedEvent("kermit", CamundaTaskEventType.CANDIDATE_USER_DELETE))
+      .task_candidate_user_changed_event_is_received(
+        TestTaskData(id = "some-id").asCandidateUserChangedEvent(
+          "kermit",
+          CamundaTaskEventType.CANDIDATE_USER_DELETE
+        )
+      )
       .and()
       .time_passes_until_query_update_is_emitted()
       .and()
@@ -169,7 +184,10 @@ abstract class PolyflowMongoServiceITestBase : SpringRuleScenarioTest<PolyflowGi
 //      .and()
 //      .query_updates_have_been_emitted(TasksForUserQuery(kermit), TestTaskData(id = "some-id", candidateUsers = setOf("gonzo")).asTask())
       .and()
-      .query_updates_have_been_emitted(TasksForUserQuery(User("gonzo", setOf("muppets"))), TestTaskData(id = "some-id", candidateUsers = setOf("gonzo")).asTask())
+      .query_updates_have_been_emitted(
+        TasksForUserQuery(User("gonzo", setOf("muppets"))),
+        TestTaskData(id = "some-id", candidateUsers = setOf("gonzo")).asTask()
+      )
   }
 
   @Test
@@ -239,13 +257,41 @@ abstract class PolyflowMongoServiceITestBase : SpringRuleScenarioTest<PolyflowGi
       .no_task_exists()
 
     `when`()
-      .task_created_event_is_received(TestTaskData(id = "some-id", assignee = null, candidateUsers = setOf(), candidateGroups = setOf("one")).asTaskCreatedEngineEvent())
+      .task_created_event_is_received(
+        TestTaskData(
+          id = "some-id",
+          assignee = null,
+          candidateUsers = setOf(),
+          candidateGroups = setOf("one")
+        ).asTaskCreatedEngineEvent()
+      )
       .and()
-      .task_created_event_is_received(TestTaskData(id = "some-id-2", assignee = null, candidateUsers = setOf(), candidateGroups = setOf("one")).asTaskCreatedEngineEvent())
+      .task_created_event_is_received(
+        TestTaskData(
+          id = "some-id-2",
+          assignee = null,
+          candidateUsers = setOf(),
+          candidateGroups = setOf("one")
+        ).asTaskCreatedEngineEvent()
+      )
       .and()
-      .task_created_event_is_received(TestTaskData(id = "some-other-id", assignee = null, candidateUsers = setOf(), candidateGroups = setOf("two")).asTaskCreatedEngineEvent())
+      .task_created_event_is_received(
+        TestTaskData(
+          id = "some-other-id",
+          assignee = null,
+          candidateUsers = setOf(),
+          candidateGroups = setOf("two")
+        ).asTaskCreatedEngineEvent()
+      )
       .and()
-      .task_created_event_is_received(TestTaskData(id = "some-other-id-2", assignee = null, candidateUsers = setOf(), candidateGroups = setOf("two", "baz")).asTaskCreatedEngineEvent())
+      .task_created_event_is_received(
+        TestTaskData(
+          id = "some-other-id-2",
+          assignee = null,
+          candidateUsers = setOf(),
+          candidateGroups = setOf("two", "baz")
+        ).asTaskCreatedEngineEvent()
+      )
 
     then()
       .tasks_with_payload_are_visible_to(User("kermit", setOf("one", "bar")), "some-id", "some-id-2")
@@ -315,10 +361,12 @@ abstract class PolyflowMongoServiceITestBase : SpringRuleScenarioTest<PolyflowGi
 
 }
 
-@TestPropertySource(properties = [
-  "camunda.taskpool.view.mongo.changeTrackingMode=CHANGE_STREAM",
-  "spring.data.mongodb.database=TaskPoolMongoServiceChangeStreamChangeTrackingITest"
-])
+@TestPropertySource(
+  properties = [
+    "polyflow.view.mongo.changeTrackingMode=CHANGE_STREAM",
+    "spring.data.mongodb.database=TaskPoolMongoServiceChangeStreamChangeTrackingITest"
+  ]
+)
 @ActiveProfiles("itest-replicated")
 class PolyflowMongoServiceChangeStreamChangeTrackingITest : PolyflowMongoServiceITestBase() {
   companion object {
@@ -343,10 +391,12 @@ class PolyflowMongoServiceChangeStreamChangeTrackingITest : PolyflowMongoService
   }
 }
 
-@TestPropertySource(properties = [
-  "camunda.taskpool.view.mongo.changeTrackingMode=EVENT_HANDLER",
-  "spring.data.mongodb.database=TaskPoolMongoServiceEventHandlerChangeTrackingITest"
-])
+@TestPropertySource(
+  properties = [
+    "polyflow.view.mongo.changeTrackingMode=EVENT_HANDLER",
+    "spring.data.mongodb.database=TaskPoolMongoServiceEventHandlerChangeTrackingITest"
+  ]
+)
 @ActiveProfiles("itest-standalone")
 class PolyflowMongoServiceEventHandlerChangeTrackingITest : PolyflowMongoServiceITestBase() {
   companion object {
@@ -390,7 +440,8 @@ data class TestTaskData(
   val owner: String? = null,
   val dueDate: Date? = Date(1234599999L),
   val followUpDate: Date? = null,
-  val deleted: Boolean = false) {
+  val deleted: Boolean = false
+) {
 
   fun asTaskCreatedEngineEvent() = TaskCreatedEngineEvent(
     id = id,
@@ -492,23 +543,25 @@ data class TestTaskData(
     description = description,
     formKey = formKey,
     priority = priority,
-    createTime = createTime,
+    createTime = createTime?.toInstant(),
     candidateUsers = candidateUsers,
     candidateGroups = candidateGroups,
     assignee = assignee,
     owner = owner,
-    dueDate = dueDate,
-    followUpDate = followUpDate,
+    dueDate = dueDate?.toInstant(),
+    followUpDate = followUpDate?.toInstant(),
     deleted = deleted
   )
 }
 
-private fun processReference(instanceId: String = "instance-id-12345",
-                             executionId: String = "execution-id-12345",
-                             definitionId: String = "definition-id-12345",
-                             definitionKey: String = "definition-key-abcde",
-                             name: String = "process-name",
-                             applicationName: String = "application-name"): ProcessReference {
+private fun processReference(
+  instanceId: String = "instance-id-12345",
+  executionId: String = "execution-id-12345",
+  definitionId: String = "definition-id-12345",
+  definitionKey: String = "definition-key-abcde",
+  name: String = "process-name",
+  applicationName: String = "application-name"
+): ProcessReference {
   return ProcessReference(
     instanceId,
     executionId,

@@ -1,9 +1,12 @@
-package io.holunda.camunda.taskpool.view.simple.service
+package io.holunda.polyflow.view.simple.service
 
 import io.holixon.axon.gateway.query.RevisionValue
 import mu.KLogging
 import java.util.concurrent.ConcurrentHashMap
 
+/**
+ * Helper to create revision supported projection.
+ */
 class RevisionSupport {
 
   companion object : KLogging()

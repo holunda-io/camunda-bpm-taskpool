@@ -1,4 +1,4 @@
-package io.holunda.polyflow.view.mongo.repository
+package io.holunda.polyflow.view.mongo.task
 
 import io.holunda.camunda.taskpool.api.business.EntryId
 import io.holunda.camunda.taskpool.api.business.dataIdentityString
@@ -6,13 +6,13 @@ import io.holunda.camunda.taskpool.api.task.CaseReference
 import io.holunda.camunda.taskpool.api.task.GenericReference
 import io.holunda.camunda.taskpool.api.task.ProcessReference
 import io.holunda.polyflow.view.Task
+import io.holunda.polyflow.view.mongo.data.DataEntryDocument
 import org.camunda.bpm.engine.variable.Variables
 import org.springframework.data.annotation.Id
 import org.springframework.data.annotation.TypeAlias
 import org.springframework.data.mongodb.core.index.Indexed
 import org.springframework.data.mongodb.core.mapping.Document
 import java.time.Instant
-import java.util.*
 
 /**
  * Task document.
@@ -40,6 +40,8 @@ data class TaskDocument(
   val candidateUsers: Set<String> = setOf(),
   @Indexed
   val candidateGroups: Set<String> = setOf(),
+  // Mongo DB permits only one array-type field in a compound index. To use an index for the search, we need to put users and groups together in one array that we can index. See #367.
+  val authorizedPrincipals: Set<String> = DataEntryDocument.authorizedPrincipals(candidateUsers, candidateGroups),
   @Indexed
   val assignee: String? = null,
   @Indexed

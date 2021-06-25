@@ -1,8 +1,8 @@
-package io.holunda.camunda.taskpool.view.simple.service
+package io.holunda.polyflow.view.simple.service
 
 import io.holunda.camunda.taskpool.api.business.CorrelationMap
 import io.holunda.camunda.taskpool.api.task.*
-import io.holunda.camunda.taskpool.view.Task
+import io.holunda.polyflow.view.Task
 import org.camunda.bpm.engine.variable.VariableMap
 import org.camunda.bpm.engine.variable.Variables
 import java.util.*
@@ -100,12 +100,12 @@ data class TestTaskData(
     description = description,
     formKey = formKey,
     priority = priority,
-    createTime = createTime,
+    createTime = createTime?.toInstant(),
     candidateUsers = candidateUsers,
     candidateGroups = candidateGroups,
     assignee = assignee,
     owner = owner,
-    dueDate = dueDate,
-    followUpDate = followUpDate
+    dueDate = dueDate?.toInstant(),
+    followUpDate = followUpDate?.toInstant()
   )
 }

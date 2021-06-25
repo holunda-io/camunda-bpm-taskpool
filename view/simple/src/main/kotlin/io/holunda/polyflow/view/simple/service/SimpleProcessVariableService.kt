@@ -1,4 +1,4 @@
-package io.holunda.camunda.taskpool.view.simple.service
+package io.holunda.polyflow.view.simple.service
 
 import io.holixon.axon.gateway.query.QueryResponseMessageResponseType
 import io.holixon.axon.gateway.query.RevisionValue
@@ -7,15 +7,10 @@ import io.holunda.camunda.taskpool.api.process.variable.ProcessVariableCreate
 import io.holunda.camunda.taskpool.api.process.variable.ProcessVariableDelete
 import io.holunda.camunda.taskpool.api.process.variable.ProcessVariableUpdate
 import io.holunda.camunda.taskpool.api.process.variable.ProcessVariablesChangedEvent
-import io.holunda.camunda.taskpool.view.ProcessInstance
-import io.holunda.camunda.taskpool.view.ProcessInstanceState
-import io.holunda.camunda.taskpool.view.ProcessVariable
-import io.holunda.camunda.taskpool.view.query.process.ProcessInstanceApi
-import io.holunda.camunda.taskpool.view.query.process.ProcessInstanceQueryResult
-import io.holunda.camunda.taskpool.view.query.process.ProcessInstancesByStateQuery
-import io.holunda.camunda.taskpool.view.query.process.variable.ProcessVariableApi
-import io.holunda.camunda.taskpool.view.query.process.variable.ProcessVariableQueryResult
-import io.holunda.camunda.taskpool.view.query.process.variable.ProcessVariablesForInstanceQuery
+import io.holunda.polyflow.view.ProcessVariable
+import io.holunda.polyflow.view.query.process.variable.ProcessVariableApi
+import io.holunda.polyflow.view.query.process.variable.ProcessVariableQueryResult
+import io.holunda.polyflow.view.query.process.variable.ProcessVariablesForInstanceQuery
 import mu.KLogging
 import org.axonframework.config.ProcessingGroup
 import org.axonframework.eventhandling.EventHandler

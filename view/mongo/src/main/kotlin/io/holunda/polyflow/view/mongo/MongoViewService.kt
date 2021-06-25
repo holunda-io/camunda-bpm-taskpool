@@ -1,4 +1,4 @@
-package io.holunda.polyflow.view.mongo.service
+package io.holunda.polyflow.view.mongo
 
 import io.holunda.camunda.taskpool.api.business.DataEntryCreatedEvent
 import io.holunda.camunda.taskpool.api.business.DataEntryUpdatedEvent
@@ -9,7 +9,9 @@ import io.holunda.polyflow.view.Task
 import io.holunda.polyflow.view.TaskWithDataEntries
 import io.holunda.polyflow.view.mongo.data.DataEntryChangeTracker
 import io.holunda.polyflow.view.mongo.data.DataEntryRepository
-import io.holunda.polyflow.view.mongo.repository.*
+import io.holunda.polyflow.view.mongo.data.dataEntry
+import io.holunda.polyflow.view.mongo.repository.taskWithDataEntries
+import io.holunda.polyflow.view.mongo.repository.toDocument
 import io.holunda.polyflow.view.mongo.task.*
 import io.holunda.polyflow.view.query.FilterQuery
 import io.holunda.polyflow.view.query.data.*

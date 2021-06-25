@@ -1,7 +1,7 @@
-package io.holunda.polyflow.view.mongo.repository
+package io.holunda.polyflow.view.mongo.process
 
 import io.holunda.polyflow.view.ProcessDefinition
-import io.holunda.polyflow.view.mongo.repository.ProcessDefinitionDocument.Companion.COLLECTION
+import io.holunda.polyflow.view.mongo.process.ProcessDefinitionDocument.Companion.COLLECTION
 import org.springframework.data.annotation.Id
 import org.springframework.data.annotation.TypeAlias
 import org.springframework.data.mongodb.core.mapping.Document

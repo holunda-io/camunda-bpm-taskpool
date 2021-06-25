@@ -1,4 +1,4 @@
-package io.holunda.camunda.taskpool.view.mongo.utils
+package io.holunda.polyflow.view.mongo.utils
 
 import com.mongodb.*
 import com.mongodb.client.MongoClients

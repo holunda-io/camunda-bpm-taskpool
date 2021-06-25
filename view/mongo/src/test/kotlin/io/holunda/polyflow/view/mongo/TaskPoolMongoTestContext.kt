@@ -1,4 +1,4 @@
-package io.holunda.camunda.taskpool.view.mongo
+package io.holunda.polyflow.view.mongo
 
 import com.tngtech.jgiven.integration.spring.EnableJGiven
 import org.axonframework.config.EventProcessingConfiguration

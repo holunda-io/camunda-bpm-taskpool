@@ -1,4 +1,4 @@
-package io.holunda.camunda.taskpool.view.mongo.repository
+package io.holunda.polyflow.view.mongo.data
 
 import org.bson.BsonValue
 import org.springframework.data.mongodb.core.ChangeStreamEvent

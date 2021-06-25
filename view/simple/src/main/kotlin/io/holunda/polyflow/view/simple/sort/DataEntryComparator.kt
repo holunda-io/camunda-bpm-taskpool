@@ -1,7 +1,7 @@
-package io.holunda.camunda.taskpool.view.simple.sort
+package io.holunda.polyflow.view.simple.sort
 
-import io.holunda.camunda.taskpool.view.DataEntry
-import io.holunda.camunda.taskpool.view.simple.filter.extractValue
+import io.holunda.polyflow.view.DataEntry
+import io.holunda.polyflow.view.simple.filter.extractValue
 import java.lang.reflect.Field
 import java.util.Comparator
 import javax.xml.datatype.DatatypeConstants

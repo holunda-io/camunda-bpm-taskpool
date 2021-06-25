@@ -1,4 +1,4 @@
-package io.holunda.camunda.taskpool.view.mongo.repository
+package io.holunda.polyflow.view.mongo.data
 
 import io.holunda.camunda.taskpool.api.business.DataIdentity
 import io.holunda.camunda.taskpool.api.business.EntryType

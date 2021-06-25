@@ -1,6 +1,6 @@
 package io.holunda.camunda.taskpool.example.process
 
-import io.holunda.camunda.taskpool.view.auth.UnknownUserException
+import io.holunda.polyflow.view.auth.UnknownUserException
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpStatus
@@ -12,7 +12,6 @@ import springfox.documentation.builders.RequestHandlerSelectors
 import springfox.documentation.spi.DocumentationType
 import springfox.documentation.spring.web.plugins.Docket
 import springfox.documentation.swagger2.annotations.EnableSwagger2
-import java.util.*
 
 @Configuration
 @EnableSwagger2

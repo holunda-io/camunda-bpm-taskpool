@@ -1,8 +1,8 @@
-package io.holunda.camunda.taskpool.view.query.process
+package io.holunda.polyflow.view.query.process
 
-import io.holunda.camunda.taskpool.view.ProcessDefinition
-import io.holunda.camunda.taskpool.view.auth.User
-import io.holunda.camunda.taskpool.view.query.FilterQuery
+import io.holunda.polyflow.view.ProcessDefinition
+import io.holunda.polyflow.view.auth.User
+import io.holunda.polyflow.view.query.FilterQuery
 
 /**
  * Query for startable processes by given user.

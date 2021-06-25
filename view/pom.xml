@@ -23,6 +23,7 @@
     <module>view-api</module>
     <module>simple</module>
     <module>mongo</module>
+    <module>form-url-resolver</module>
   </modules>
 
   <dependencyManagement>

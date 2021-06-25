@@ -1,4 +1,4 @@
-package io.holunda.camunda.taskpool.view.query
+package io.holunda.polyflow.view.query
 
 /**
  * Query using a filter function.

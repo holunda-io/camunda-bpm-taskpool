@@ -27,8 +27,8 @@ fun DataEntryUpdatedEvent.toDataEntry(oldEntry: DataEntry?) = if (oldEntry == nu
     description = this.description,
     state = this.state,
     formKey = this.formKey,
-    authorizedUsers = AuthorizationChange.applyUserAuthorization(listOf(), this.authorizations),
-    authorizedGroups = AuthorizationChange.applyGroupAuthorization(listOf(), this.authorizations),
+    authorizedUsers = AuthorizationChange.applyUserAuthorization(setOf(), this.authorizations),
+    authorizedGroups = AuthorizationChange.applyGroupAuthorization(setOf(), this.authorizations),
     protocol = addModification(listOf(), this.updateModification, this.state)
   )
 } else {
@@ -61,8 +61,8 @@ fun DataEntryCreatedEvent.toDataEntry() = DataEntry(
   description = this.description,
   state = this.state,
   formKey = this.formKey,
-  authorizedUsers = AuthorizationChange.applyUserAuthorization(listOf(), this.authorizations),
-  authorizedGroups = AuthorizationChange.applyGroupAuthorization(listOf(), this.authorizations),
+  authorizedUsers = AuthorizationChange.applyUserAuthorization(setOf(), this.authorizations),
+  authorizedGroups = AuthorizationChange.applyGroupAuthorization(setOf(), this.authorizations),
   protocol = addModification(listOf(), this.createModification, this.state)
 )
 

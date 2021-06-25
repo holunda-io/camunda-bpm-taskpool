@@ -6,9 +6,9 @@ import io.holunda.camunda.taskpool.example.tasklist.rest.ElementNotFoundExceptio
 import io.holunda.camunda.taskpool.example.tasklist.rest.Rest
 import io.holunda.camunda.taskpool.example.tasklist.rest.api.TaskApi
 import io.holunda.camunda.taskpool.example.tasklist.rest.model.PayloadDto
-import io.holunda.camunda.taskpool.view.Task
-import io.holunda.camunda.taskpool.view.auth.UserService
-import io.holunda.camunda.taskpool.view.query.task.TaskForIdQuery
+import io.holunda.polyflow.view.Task
+import io.holunda.polyflow.view.auth.UserService
+import io.holunda.polyflow.view.query.task.TaskForIdQuery
 import io.swagger.annotations.Api
 import mu.KLogging
 import org.axonframework.commandhandling.gateway.CommandGateway
@@ -33,74 +33,101 @@ class TaskController(
 
   companion object : KLogging()
 
-  override fun claim(@PathVariable("id") id: String, @RequestHeader(value = "X-Current-User-ID", required = false) xCurrentUserID: Optional<String>): ResponseEntity<Void> {
+  override fun claim(
+    @PathVariable("id") id: String,
+    @RequestHeader(value = "X-Current-User-ID", required = false) xCurrentUserID: Optional<String>
+  ): ResponseEntity<Void> {
 
     val task = getTask(id)
     val userIdentifier = currentUserService.getCurrentUser()
     val user = userService.getUser(userIdentifier)
 
-    send(ClaimInteractionTaskCommand(
-      id = task.id,
-      sourceReference = task.sourceReference,
-      taskDefinitionKey = task.taskDefinitionKey,
-      assignee = user.username
-    ))
+    send(
+      ClaimInteractionTaskCommand(
+        id = task.id,
+        sourceReference = task.sourceReference,
+        taskDefinitionKey = task.taskDefinitionKey,
+        assignee = user.username
+      )
+    )
 
     return ResponseEntity.noContent().build()
   }
 
-  override fun unclaim(@PathVariable("id") id: String, @RequestHeader(value = "X-Current-User-ID", required = false) xCurrentUserID: Optional<String>): ResponseEntity<Void> {
+  override fun unclaim(
+    @PathVariable("id") id: String,
+    @RequestHeader(value = "X-Current-User-ID", required = false) xCurrentUserID: Optional<String>
+  ): ResponseEntity<Void> {
 
     val task = getTask(id)
 
-    send(UnclaimInteractionTaskCommand(
-      id = task.id,
-      sourceReference = task.sourceReference,
-      taskDefinitionKey = task.taskDefinitionKey
-    ))
+    send(
+      UnclaimInteractionTaskCommand(
+        id = task.id,
+        sourceReference = task.sourceReference,
+        taskDefinitionKey = task.taskDefinitionKey
+      )
+    )
 
     return ResponseEntity.noContent().build()
   }
 
-  override fun complete(@PathVariable("id") id: String, @RequestHeader(value = "X-Current-User-ID", required = false) xCurrentUserID: Optional<String>, @Valid @RequestBody @NotNull payload: PayloadDto): ResponseEntity<Void> {
+  override fun complete(
+    @PathVariable("id") id: String,
+    @RequestHeader(value = "X-Current-User-ID", required = false) xCurrentUserID: Optional<String>,
+    @Valid @RequestBody @NotNull payload: PayloadDto
+  ): ResponseEntity<Void> {
 
     val task = getTask(id)
     val userIdentifier = xCurrentUserID.orElseGet { currentUserService.getCurrentUser() }
     val user = userService.getUser(userIdentifier)
 
-    send(CompleteInteractionTaskCommand(
-      id = task.id,
-      sourceReference = task.sourceReference,
-      taskDefinitionKey = task.taskDefinitionKey,
-      payload = Variables.createVariables().apply { putAll(payload) },
-      assignee = user.username
-    ))
+    send(
+      CompleteInteractionTaskCommand(
+        id = task.id,
+        sourceReference = task.sourceReference,
+        taskDefinitionKey = task.taskDefinitionKey,
+        payload = Variables.createVariables().apply { putAll(payload) },
+        assignee = user.username
+      )
+    )
 
     return ResponseEntity.noContent().build()
   }
 
 
-  override fun defer(@PathVariable("id") id: String, @RequestHeader(value = "X-Current-User-ID", required = false) xCurrentUserID: Optional<String>, @Valid @RequestBody @NotNull followUpDate: OffsetDateTime): ResponseEntity<Void> {
+  override fun defer(
+    @PathVariable("id") id: String,
+    @RequestHeader(value = "X-Current-User-ID", required = false) xCurrentUserID: Optional<String>,
+    @Valid @RequestBody @NotNull followUpDate: OffsetDateTime
+  ): ResponseEntity<Void> {
     val task = getTask(id)
 
-    send(DeferInteractionTaskCommand(
-      id = task.id,
-      sourceReference = task.sourceReference,
-      taskDefinitionKey = task.taskDefinitionKey,
-      followUpDate = Date.from(followUpDate.toInstant())
-    ))
+    send(
+      DeferInteractionTaskCommand(
+        id = task.id,
+        sourceReference = task.sourceReference,
+        taskDefinitionKey = task.taskDefinitionKey,
+        followUpDate = Date.from(followUpDate.toInstant())
+      )
+    )
 
     return ResponseEntity.noContent().build()
   }
 
-  override fun undefer(@PathVariable("id") id: String, @RequestHeader(value = "X-Current-User-ID", required = false) xCurrentUserID: Optional<String>): ResponseEntity<Void> {
+  override fun undefer(
+    @PathVariable("id") id: String,
+    @RequestHeader(value = "X-Current-User-ID", required = false) xCurrentUserID: Optional<String>
+  ): ResponseEntity<Void> {
     val task = getTask(id)
 
-    send(UndeferInteractionTaskCommand(
-      id = task.id,
-      sourceReference = task.sourceReference,
-      taskDefinitionKey = task.taskDefinitionKey
-    ))
+    send(
+      UndeferInteractionTaskCommand(
+        id = task.id,
+        sourceReference = task.sourceReference,
+        taskDefinitionKey = task.taskDefinitionKey
+      )
+    )
 
     return ResponseEntity.noContent().build()
   }

@@ -1,9 +1,9 @@
-package io.holunda.camunda.taskpool.view.simple.service
+package io.holunda.polyflow.view.simple.service
 
 import io.holunda.camunda.taskpool.api.process.definition.ProcessDefinitionRegisteredEvent
-import io.holunda.camunda.taskpool.view.ProcessDefinition
-import io.holunda.camunda.taskpool.view.query.process.ProcessDefinitionApi
-import io.holunda.camunda.taskpool.view.query.process.ProcessDefinitionsStartableByUserQuery
+import io.holunda.polyflow.view.ProcessDefinition
+import io.holunda.polyflow.view.query.process.ProcessDefinitionApi
+import io.holunda.polyflow.view.query.process.ProcessDefinitionsStartableByUserQuery
 import mu.KLogging
 import org.axonframework.config.ProcessingGroup
 import org.axonframework.eventhandling.EventHandler

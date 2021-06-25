@@ -1,9 +1,10 @@
-package io.holunda.polyflow.view.mongo.repository
+package io.holunda.polyflow.view.mongo.task
 
 import io.holunda.camunda.taskpool.api.task.CaseReference
 import io.holunda.camunda.taskpool.api.task.GenericReference
 import io.holunda.camunda.taskpool.api.task.ProcessReference
-import io.holunda.polyflow.view.mongo.repository.ReferenceDocument.Companion.COLLECTION
+import io.holunda.camunda.taskpool.api.task.SourceReference
+import io.holunda.polyflow.view.mongo.task.ReferenceDocument.Companion.COLLECTION
 import org.springframework.data.annotation.Id
 import org.springframework.data.annotation.TypeAlias
 import org.springframework.data.mongodb.core.index.Indexed
@@ -122,3 +123,39 @@ data class GenericReferenceDocument(
       tenantId = reference.tenantId
     )
 }
+
+/**
+ * Create source reference out of reference document.
+ */
+fun sourceReference(reference: ReferenceDocument): SourceReference =
+  when (reference) {
+    is ProcessReferenceDocument -> ProcessReference(
+      instanceId = reference.instanceId,
+      executionId = reference.executionId,
+      definitionId = reference.definitionId,
+      definitionKey = reference.definitionKey,
+      name = reference.name,
+      applicationName = reference.applicationName,
+      tenantId = reference.tenantId
+    )
+    is CaseReferenceDocument -> CaseReference(
+      instanceId = reference.instanceId,
+      executionId = reference.executionId,
+      definitionId = reference.definitionId,
+      definitionKey = reference.definitionKey,
+      name = reference.name,
+      applicationName = reference.applicationName,
+      tenantId = reference.tenantId
+    )
+    is GenericReferenceDocument -> GenericReference(
+      instanceId = reference.instanceId,
+      executionId = reference.executionId,
+      definitionId = reference.definitionId,
+      definitionKey = reference.definitionKey,
+      name = reference.name,
+      applicationName = reference.applicationName,
+      tenantId = reference.tenantId
+    )
+
+  }
+

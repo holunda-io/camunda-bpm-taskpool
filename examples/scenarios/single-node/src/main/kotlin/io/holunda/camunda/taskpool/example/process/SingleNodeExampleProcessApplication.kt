@@ -5,16 +5,12 @@ import io.holunda.camunda.datapool.core.EnableDataPool
 import io.holunda.camunda.taskpool.core.EnableTaskPool
 import io.holunda.camunda.taskpool.example.tasklist.EnableTasklist
 import io.holunda.camunda.taskpool.example.users.EnableExampleUsers
-import io.holunda.camunda.taskpool.urlresolver.EnablePropertyBasedFormUrlResolver
-import io.holunda.camunda.taskpool.view.simple.EnableTaskPoolSimpleView
+import io.holunda.polyflow.urlresolver.EnablePropertyBasedFormUrlResolver
 import org.axonframework.commandhandling.CommandMessage
 import org.axonframework.messaging.correlation.CorrelationDataProvider
 import org.axonframework.messaging.correlation.MessageOriginProvider
 import org.axonframework.messaging.correlation.MultiCorrelationDataProvider
 import org.axonframework.messaging.correlation.SimpleCorrelationDataProvider
-import org.axonframework.serialization.Serializer
-import org.axonframework.serialization.xml.XStreamSerializer
-import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import org.springframework.context.annotation.Bean
@@ -36,7 +32,7 @@ fun main(args: Array<String>) {
  */
 @SpringBootApplication
 @EnableExampleUsers
-@EnableTaskPoolSimpleView
+@io.holunda.polyflow.view.simple.EnableTaskPoolSimpleView
 @EnableTaskPool
 @EnableDataPool
 @EnableTasklist

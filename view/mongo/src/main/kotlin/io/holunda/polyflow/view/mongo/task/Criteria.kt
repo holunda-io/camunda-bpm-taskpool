@@ -1,6 +1,6 @@
-package io.holunda.camunda.taskpool.view.mongo.service
+package io.holunda.polyflow.view.mongo.task
 
-import io.holunda.camunda.taskpool.view.Task
+import io.holunda.polyflow.view.Task
 import java.time.Instant
 import kotlin.reflect.full.memberProperties
 

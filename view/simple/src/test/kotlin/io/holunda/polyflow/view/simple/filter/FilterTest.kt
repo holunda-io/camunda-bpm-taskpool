@@ -1,15 +1,13 @@
-package io.holunda.camunda.taskpool.view.simple.filter
+package io.holunda.polyflow.view.simple.filter
 
 import io.holunda.camunda.taskpool.api.task.ProcessReference
-import io.holunda.camunda.taskpool.view.DataEntry
-import io.holunda.camunda.taskpool.view.Task
-import io.holunda.camunda.taskpool.view.TaskWithDataEntries
+import io.holunda.polyflow.view.DataEntry
+import io.holunda.polyflow.view.Task
+import io.holunda.polyflow.view.TaskWithDataEntries
 import org.assertj.core.api.Assertions.assertThat
 import org.camunda.bpm.engine.variable.Variables
-import org.junit.Rule
 import org.junit.Test
 import org.junit.jupiter.api.assertThrows
-import org.junit.rules.ExpectedException
 
 class FilterTest {
 
@@ -20,28 +18,64 @@ class FilterTest {
   // no match: task.assignee, dataAttr1, dataAttr2
   // match: task.name
   private val task1 = TaskWithDataEntries(Task("id", ref, "key", name = "myName", priority = 90), listOf())
+
   // no match: task.name, dataAttr1, dataAttr2
   // match: task.assignee
   private val task2 = TaskWithDataEntries(Task("id", ref, "key", assignee = "kermit", priority = 91), listOf())
+
   // no match: task.name, task.assignee, dataAttr2
   // match: dataEntries[0].payload -> dataAttr1
-  private val task3 = TaskWithDataEntries(Task("id", ref, "key", name = "foo", assignee = "gonzo", priority = 80), listOf(
-    DataEntry(entryType = "type", entryId = "4711", type = "type", applicationName = "app1", name = "name", payload = Variables.createVariables().putValue("dataAttr1", "another")
-    )))
+  private val task3 = TaskWithDataEntries(
+    Task("id", ref, "key", name = "foo", assignee = "gonzo", priority = 80), listOf(
+      DataEntry(
+        entryType = "type",
+        entryId = "4711",
+        type = "type",
+        applicationName = "app1",
+        name = "name",
+        payload = Variables.createVariables().putValue("dataAttr1", "another")
+      )
+    )
+  )
+
   // no match: task.name, task.assignee, dataAttr2
   // match: dataEntries[0].payload -> dataAttr1
-  private val task4 = TaskWithDataEntries(Task("id", ref, "key", name = "foo", assignee = "gonzo", priority = 78), listOf(
-    DataEntry(entryType = "type", entryId = "4711", type = "type", applicationName = "app1", name = "name", payload = Variables.createVariables().putValue("dataAttr1", "value"))
-  ))
+  private val task4 = TaskWithDataEntries(
+    Task("id", ref, "key", name = "foo", assignee = "gonzo", priority = 78), listOf(
+      DataEntry(
+        entryType = "type",
+        entryId = "4711",
+        type = "type",
+        applicationName = "app1",
+        name = "name",
+        payload = Variables.createVariables().putValue("dataAttr1", "value")
+      )
+    )
+  )
+
   // no match: task.name, task.assignee, dataAttr1
   // match: dataEntries[0].payload -> dataAttr2
-  private val task5 = TaskWithDataEntries(Task("id", ref, "key", name = "foo", assignee = "gonzo", priority = 80), listOf(
-    DataEntry(entryType = "type", entryId = "4711", type = "type", applicationName = "app1", name = "name", payload = Variables.createVariables().putValue("dataAttr2", "another").putValue("name", "myName"))
-  ))
+  private val task5 = TaskWithDataEntries(
+    Task("id", ref, "key", name = "foo", assignee = "gonzo", priority = 80), listOf(
+      DataEntry(
+        entryType = "type",
+        entryId = "4711",
+        type = "type",
+        applicationName = "app1",
+        name = "name",
+        payload = Variables.createVariables().putValue("dataAttr2", "another").putValue("name", "myName")
+      )
+    )
+  )
+
   // no match: task.name, task.assignee, dataAttr1
   // match: task.payload -> dataAttr2
-  private val task6 = TaskWithDataEntries(Task("id", ref, "key", name = "foo", assignee = "gonzo", priority = 1,
-    payload = Variables.createVariables().putValue("dataAttr2", "another").putValue("name", "myName")), listOf())
+  private val task6 = TaskWithDataEntries(
+    Task(
+      "id", ref, "key", name = "foo", assignee = "gonzo", priority = 1,
+      payload = Variables.createVariables().putValue("dataAttr2", "another").putValue("name", "myName")
+    ), listOf()
+  )
 
 
   @Test
@@ -63,8 +97,12 @@ class FilterTest {
 
     assertThat(criteria).isNotNull
     assertThat(criteria.size).isEqualTo(4)
-    assertThat(criteria).containsExactlyElementsOf(listOf(Criterion.TaskCriterion("name", "myName"), Criterion.TaskCriterion("assignee", "kermit"),
-      Criterion.PayloadEntryCriterion("dataAttr1", "value"), Criterion.PayloadEntryCriterion("dataAttr2", "another")))
+    assertThat(criteria).containsExactlyElementsOf(
+      listOf(
+        Criterion.TaskCriterion("name", "myName"), Criterion.TaskCriterion("assignee", "kermit"),
+        Criterion.PayloadEntryCriterion("dataAttr1", "value"), Criterion.PayloadEntryCriterion("dataAttr2", "another")
+      )
+    )
   }
 
   @Test

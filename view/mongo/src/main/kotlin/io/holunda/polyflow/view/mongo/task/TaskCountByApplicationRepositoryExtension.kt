@@ -1,6 +1,6 @@
-package io.holunda.polyflow.view.mongo.repository
+package io.holunda.polyflow.view.mongo.task
 
-import io.holunda.camunda.taskpool.view.query.task.ApplicationWithTaskCount
+import io.holunda.polyflow.view.query.task.ApplicationWithTaskCount
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 

@@ -1,10 +1,11 @@
 package io.holunda.polyflow.view.mongo.filter
 
-import io.holunda.camunda.taskpool.view.mongo.service.Criterion.DataEntryCriterion
-import io.holunda.camunda.taskpool.view.mongo.service.Criterion.TaskCriterion
-import io.holunda.camunda.taskpool.view.mongo.service.EQUALS
-import io.holunda.camunda.taskpool.view.mongo.service.isTaskAttribute
-import io.holunda.camunda.taskpool.view.mongo.service.toCriteria
+import io.holunda.polyflow.view.mongo.task.Criterion
+import io.holunda.polyflow.view.mongo.task.Criterion.DataEntryCriterion
+import io.holunda.polyflow.view.mongo.task.Criterion.TaskCriterion
+import io.holunda.polyflow.view.mongo.task.EQUALS
+import io.holunda.polyflow.view.mongo.task.isTaskAttribute
+import io.holunda.polyflow.view.mongo.task.toCriteria
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.junit.jupiter.api.assertThrows

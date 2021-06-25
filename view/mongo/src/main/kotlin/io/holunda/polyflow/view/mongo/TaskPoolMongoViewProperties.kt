@@ -10,7 +10,7 @@ data class TaskPoolMongoViewProperties(
   /**
    * Tracking mode.
    */
-  var changeTrackingMode: io.holunda.polyflow.view.mongo.ChangeTrackingMode = io.holunda.polyflow.view.mongo.ChangeTrackingMode.EVENT_HANDLER
+  var changeTrackingMode: ChangeTrackingMode = ChangeTrackingMode.EVENT_HANDLER
 )
 
 /**
@@ -21,10 +21,12 @@ enum class ChangeTrackingMode {
    * Use axon query bus and update subscriptions.
    */
   EVENT_HANDLER,
+
   /**
    * Use mongo change stream.
    */
   CHANGE_STREAM,
+
   /**
    * Disable updates.
    */

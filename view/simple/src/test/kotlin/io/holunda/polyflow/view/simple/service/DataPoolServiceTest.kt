@@ -1,4 +1,4 @@
-package io.holunda.camunda.taskpool.view.simple.service
+package io.holunda.polyflow.view.simple.service
 
 import com.tngtech.jgiven.junit.ScenarioTest
 import org.junit.Test

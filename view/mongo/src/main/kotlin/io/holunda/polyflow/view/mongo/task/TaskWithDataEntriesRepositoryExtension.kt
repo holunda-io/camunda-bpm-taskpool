@@ -1,9 +1,9 @@
-package io.holunda.polyflow.view.mongo.repository
+package io.holunda.polyflow.view.mongo.task
 
-import io.holunda.camunda.taskpool.view.auth.User
-import io.holunda.camunda.taskpool.view.mongo.service.Criterion
+import io.holunda.polyflow.view.auth.User
 import org.springframework.data.domain.Pageable
 import reactor.core.publisher.Flux
+
 
 /**
  * Repository extension.

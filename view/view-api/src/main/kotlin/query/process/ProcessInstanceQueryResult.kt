@@ -1,8 +1,8 @@
-package io.holunda.camunda.taskpool.view.query.process
+package io.holunda.polyflow.view.query.process
 
-import io.holunda.camunda.taskpool.view.ProcessInstance
-import io.holunda.camunda.taskpool.view.query.PageableSortableQuery
-import io.holunda.camunda.taskpool.view.query.QueryResult
+import io.holunda.polyflow.view.ProcessInstance
+import io.holunda.polyflow.view.query.PageableSortableQuery
+import io.holunda.polyflow.view.query.QueryResult
 
 /**
  * Result for process instance queries.

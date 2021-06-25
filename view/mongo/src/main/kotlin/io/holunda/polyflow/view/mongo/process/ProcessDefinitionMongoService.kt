@@ -1,8 +1,7 @@
-package io.holunda.polyflow.view.mongo.service
+package io.holunda.polyflow.view.mongo.process
 
 import io.holunda.camunda.taskpool.api.process.definition.ProcessDefinitionRegisteredEvent
-import io.holunda.polyflow.view.mongo.process.ProcessDefinitionDocument
-import io.holunda.polyflow.view.mongo.process.ProcessDefinitionRepository
+import io.holunda.polyflow.view.ProcessDefinition
 import io.holunda.polyflow.view.query.process.ProcessDefinitionsStartableByUserQuery
 import io.holunda.polyflow.view.query.process.ReactiveProcessDefinitionApi
 import mu.KLogging
