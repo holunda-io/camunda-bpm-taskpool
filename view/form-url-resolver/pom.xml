@@ -5,7 +5,7 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>io.holunda.polyflow</groupId>
-    <artifactId>polyflow-integration-common-parent</artifactId>
+    <artifactId>polyflow-view-parent</artifactId>
     <version>3.0.1-SNAPSHOT</version>
   </parent>
 
