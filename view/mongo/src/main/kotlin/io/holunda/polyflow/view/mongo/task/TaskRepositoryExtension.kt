@@ -1,0 +1,3 @@
+package io.holunda.polyflow.view.mongo.repository
+
+interface TaskRepositoryExtension : TaskCountByApplicationRepositoryExtension, TaskUpdatesExtension
