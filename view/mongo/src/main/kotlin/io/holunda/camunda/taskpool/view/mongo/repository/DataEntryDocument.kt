@@ -38,6 +38,10 @@ data class DataEntryDocument(
     const val AUTHORIZED_ENTITY_PREFIX_USER = "user"
     const val AUTHORIZED_ENTITY_PREFIX_GROUP = "group"
 
+    /**
+     * Create a merged `authorizedEntities` collection out of `authorizedUsers` and `authorizedGroups`. Each user is prefixed with "user:" and each group with
+     * "group:".
+     */
     fun authorizedEntities(authorizedUsers: List<String>, authorizedGroups: List<String>) =
       authorizedUsers.map { "$AUTHORIZED_ENTITY_PREFIX_USER:$it" } + authorizedGroups.map { "$AUTHORIZED_ENTITY_PREFIX_GROUP:$it" }
   }
