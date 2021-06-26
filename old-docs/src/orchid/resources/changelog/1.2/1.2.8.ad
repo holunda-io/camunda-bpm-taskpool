@@ -1,9 +1,0 @@
----
-version: 1.2.8
----
-
-== Bug fixes
-
-* remove application.yml from starter, see #151
-* remove tasklist react, see #157
-

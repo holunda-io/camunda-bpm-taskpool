@@ -3,10 +3,10 @@ name: Development branches
 on:
   push:
     branches:
-      - '*'
-      - '**/*'
       - '!master'
       - '!release/*'
+      - '*'
+      - '**/*'
 
 jobs:
   build:
@@ -42,7 +42,7 @@ jobs:
         run: mkdir -p target/jgiven-reports/json
 
       - name: Run I-Tests with Maven
-        run: ./mvnw integration-test failsafe:verify -Pitest -DskipFrontend -DskipExamples -B -T4
+        run: ./mvnw integration-test failsafe:verify -Pitest -DskipFrontend -DskipExamples -B
 
       - name: Upolad coverage information
         uses: codecov/codecov-action@v1
