@@ -1,4 +1,4 @@
-package io.holunda.camunda.taskpool.view.auth
+package io.holunda.polyflow.view.auth
 
 /**
  * Simple integration hook into auth of the final system.

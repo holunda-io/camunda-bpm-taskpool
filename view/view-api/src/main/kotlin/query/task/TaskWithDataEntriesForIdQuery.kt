@@ -1,7 +1,8 @@
-package io.holunda.camunda.taskpool.view.query.task
+package io.holunda.polyflow.view.query.task
 
-import io.holunda.camunda.taskpool.view.TaskWithDataEntries
-import io.holunda.camunda.taskpool.view.query.FilterQuery
+import io.holunda.polyflow.view.TaskWithDataEntries
+import io.holunda.polyflow.view.query.FilterQuery
+
 
 /**
  * Query for task with given id with correlated data entries.

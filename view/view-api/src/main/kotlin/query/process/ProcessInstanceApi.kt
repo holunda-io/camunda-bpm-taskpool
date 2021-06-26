@@ -1,4 +1,4 @@
-package io.holunda.camunda.taskpool.view.query.process
+package io.holunda.polyflow.view.query.process
 
 import org.axonframework.queryhandling.QueryResponseMessage
 

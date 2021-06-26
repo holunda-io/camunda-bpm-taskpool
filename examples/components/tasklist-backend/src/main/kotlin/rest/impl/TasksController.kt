@@ -5,9 +5,9 @@ import io.holunda.camunda.taskpool.example.tasklist.rest.Rest
 import io.holunda.camunda.taskpool.example.tasklist.rest.api.TasksApi
 import io.holunda.camunda.taskpool.example.tasklist.rest.mapper.TaskWithDataEntriesMapper
 import io.holunda.camunda.taskpool.example.tasklist.rest.model.TaskWithDataEntriesDto
-import io.holunda.camunda.taskpool.view.auth.UserService
-import io.holunda.camunda.taskpool.view.query.task.TasksWithDataEntriesForUserQuery
-import io.holunda.camunda.taskpool.view.query.task.TasksWithDataEntriesQueryResult
+import io.holunda.polyflow.view.auth.UserService
+import io.holunda.polyflow.view.query.task.TasksWithDataEntriesForUserQuery
+import io.holunda.polyflow.view.query.task.TasksWithDataEntriesQueryResult
 import io.swagger.annotations.Api
 import mu.KLogging
 import org.axonframework.messaging.responsetypes.ResponseTypes
@@ -48,7 +48,8 @@ class TasksController(
 
     @Suppress("UNCHECKED_CAST")
     val result: TasksWithDataEntriesQueryResult = queryGateway
-      .query(TasksWithDataEntriesForUserQuery(
+      .query(
+        TasksWithDataEntriesForUserQuery(
         user = user,
         page = page.orElse(1),
         size = size.orElse(Int.MAX_VALUE),

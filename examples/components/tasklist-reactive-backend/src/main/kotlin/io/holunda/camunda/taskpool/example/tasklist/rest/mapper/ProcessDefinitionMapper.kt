@@ -1,8 +1,8 @@
 package io.holunda.camunda.taskpool.example.tasklist.rest.mapper
 
 import io.holunda.camunda.taskpool.example.tasklist.rest.model.ProcessDefinitionDto
-import io.holunda.camunda.taskpool.view.FormUrlResolver
-import io.holunda.camunda.taskpool.view.ProcessDefinition
+import io.holunda.polyflow.view.FormUrlResolver
+import io.holunda.polyflow.view.ProcessDefinition
 import org.mapstruct.Mapper
 import org.mapstruct.Mapping
 import org.mapstruct.Mappings

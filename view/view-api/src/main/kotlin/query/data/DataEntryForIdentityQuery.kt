@@ -1,11 +1,11 @@
-package io.holunda.camunda.taskpool.view.query.data
+package io.holunda.polyflow.view.query.data
 
 import io.holunda.camunda.taskpool.api.business.DataIdentity
 import io.holunda.camunda.taskpool.api.business.EntryId
 import io.holunda.camunda.taskpool.api.business.EntryType
-import io.holunda.camunda.taskpool.view.DataEntry
-import io.holunda.camunda.taskpool.view.query.FilterQuery
-import io.holunda.camunda.taskpool.view.query.PageableSortableQuery
+import io.holunda.polyflow.view.DataEntry
+import io.holunda.polyflow.view.query.FilterQuery
+import io.holunda.polyflow.view.query.PageableSortableQuery
 
 /**
  * Query for entry type and optional id.

@@ -1,7 +1,7 @@
-package io.holunda.camunda.taskpool.view.query.task
+package io.holunda.polyflow.view.query.task
 
-import io.holunda.camunda.taskpool.view.Task
-import io.holunda.camunda.taskpool.view.query.FilterQuery
+import io.holunda.polyflow.view.Task
+import io.holunda.polyflow.view.query.FilterQuery
 
 /**
  * Query for task of a certain process application.

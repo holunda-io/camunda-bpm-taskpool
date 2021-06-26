@@ -1,4 +1,4 @@
-package io.holunda.camunda.taskpool.view.auth
+package io.holunda.polyflow.view.auth
 
 /**
  * Simple user abstraction.

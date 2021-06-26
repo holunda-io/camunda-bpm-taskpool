@@ -1,11 +1,12 @@
-package io.holunda.camunda.taskpool.view
+package io.holunda.polyflow.view
 
 import io.holunda.camunda.taskpool.api.business.*
-import io.holunda.camunda.taskpool.api.task.*
+import io.holunda.camunda.taskpool.api.task.SourceReference
+import io.holunda.camunda.taskpool.api.task.TaskIdentity
 import io.holunda.camunda.taskpool.api.task.WithPayload
 import org.camunda.bpm.engine.variable.VariableMap
 import org.camunda.bpm.engine.variable.Variables
-import java.util.*
+import java.time.Instant
 
 /**
  * User task.
@@ -21,13 +22,13 @@ data class Task(
   val description: String? = null,
   val formKey: String? = null,
   val priority: Int? = 0,
-  val createTime: Date? = null,
+  val createTime: Instant? = null,
   val candidateUsers: Set<String> = setOf(),
   val candidateGroups: Set<String> = setOf(),
   val assignee: String? = null,
   val owner: String? = null,
-  val dueDate: Date? = null,
-  val followUpDate: Date? = null,
+  val dueDate: Instant? = null,
+  val followUpDate: Instant? = null,
   val deleted: Boolean = false
 ) : TaskIdentity, WithPayload, WithCorrelations {
 

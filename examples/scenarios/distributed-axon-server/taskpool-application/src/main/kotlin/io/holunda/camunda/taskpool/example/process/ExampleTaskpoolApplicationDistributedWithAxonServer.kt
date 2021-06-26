@@ -8,7 +8,7 @@ import io.holunda.camunda.taskpool.core.EnableTaskPool
 import io.holunda.camunda.taskpool.core.configureTaskpoolJacksonObjectMapper
 import io.holunda.camunda.taskpool.example.tasklist.EnableTasklist
 import io.holunda.camunda.taskpool.example.users.UsersConfiguration
-import io.holunda.camunda.taskpool.urlresolver.EnablePropertyBasedFormUrlResolver
+import io.holunda.polyflow.urlresolver.EnablePropertyBasedFormUrlResolver
 import org.axonframework.commandhandling.CommandMessage
 import org.axonframework.messaging.correlation.CorrelationDataProvider
 import org.axonframework.messaging.correlation.MessageOriginProvider

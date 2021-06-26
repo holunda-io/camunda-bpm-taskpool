@@ -4,8 +4,8 @@ import io.holunda.camunda.taskpool.example.tasklist.auth.CurrentUserService
 import io.holunda.camunda.taskpool.example.tasklist.rest.Rest
 import io.holunda.camunda.taskpool.example.tasklist.rest.api.ProfileApi
 import io.holunda.camunda.taskpool.example.tasklist.rest.model.UserProfileDto
-import io.holunda.camunda.taskpool.view.auth.User
-import io.holunda.camunda.taskpool.view.auth.UserService
+import io.holunda.polyflow.view.auth.User
+import io.holunda.polyflow.view.auth.UserService
 import io.swagger.annotations.Api
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.RequestHeader
@@ -22,7 +22,7 @@ class UserProfileController(
 ) : ProfileApi {
   override fun getProfile(@RequestHeader(value = "X-Current-User-ID", required = false) xCurrentUserID: Optional<String>): ResponseEntity<UserProfileDto> {
 
-    val userIdentifier = xCurrentUserID.orElseGet{ currentUserService.getCurrentUser() }
+    val userIdentifier = xCurrentUserID.orElseGet { currentUserService.getCurrentUser() }
     // retrieve the user
     val user: User = userService.getUser(userIdentifier)
 

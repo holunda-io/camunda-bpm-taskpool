@@ -1,4 +1,4 @@
-package io.holunda.camunda.taskpool.view
+package io.holunda.polyflow.view
 
 /**
  * Facility to resolve URLs of forms.
