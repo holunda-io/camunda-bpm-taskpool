@@ -1,4 +1,4 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import {of} from 'rxjs-compat/observable/of';
 import {StartComponent} from './start.component';
@@ -30,7 +30,7 @@ describe('Component: StartComponent', () => {
   let component: StartComponent;
   let fixture: ComponentFixture<StartComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
 
     const requestServiceSpy = jasmine.createSpyObj('RequestService', {
       start: of({}),

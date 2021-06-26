@@ -47,7 +47,7 @@ registerLocaleData(localeEn, 'en');
     AppRoutingModule,
     NgbModule,
     StoreModule.forRoot({}, {
-      metaReducers: metaReducers(environment)
+      metaReducers: metaReducers(environment), runtimeChecks: { strictStateImmutability: true, strictActionImmutability: true }
     }),
     EffectsModule.forRoot([]),
     // generated

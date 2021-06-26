@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import 'rxjs/add/observable/of';
 import { AmendTaskComponent } from './amend-task.component';
@@ -15,7 +15,7 @@ describe('Component: ApproveTaskComponent', () => {
   let component: AmendTaskComponent;
   let fixture: ComponentFixture<AmendTaskComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
 
     const amendRequestServiceSpy = jasmine.createSpyObj('AmendRequestService', {
       'loadTaskAmendRequestFormData': of({

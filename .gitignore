@@ -103,5 +103,3 @@ fabric.properties
 .project
 .settings/
 .theia/
-
-package-lock.json

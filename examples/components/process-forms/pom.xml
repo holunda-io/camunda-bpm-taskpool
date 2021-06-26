@@ -65,7 +65,7 @@
                   <configHelp>true</configHelp>
                   -->
                   <configOptions>
-                    <ngVersion>6.1</ngVersion>
+                    <ngVersion>12</ngVersion>
                   </configOptions>
                 </configuration>
               </execution>
