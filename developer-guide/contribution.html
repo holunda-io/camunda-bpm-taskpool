@@ -13,14 +13,14 @@
         <meta name="author" content="Holisticon BPM Craftsman">
       
       
-        <link rel="canonical" href="https://www.holunda.io/camunda-bpm-taskpool/integration/index.html">
+        <link rel="canonical" href="https://www.holunda.io/camunda-bpm-taskpool/developer-guide/contribution.html">
       
       <link rel="icon" href="../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.2.1, mkdocs-material-7.1.9">
     
     
       
-        <title>Integration Guide - Polyflow</title>
+        <title>Contribution - Polyflow</title>
       
     
     
@@ -71,7 +71,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#add-dependency-to-polyflow-integration-starter" class="md-skip">
+        <a href="#found-a-bug-or-missing-feature" class="md-skip">
           Skip to content
         </a>
       
@@ -100,7 +100,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Integration Guide
+              Contribution
             
           </span>
         </div>
@@ -218,12 +218,10 @@
         
   
   
-    
-  
 
 
   <li class="md-tabs__item">
-    <a href="index.html" class="md-tabs__link md-tabs__link--active">
+    <a href="../integration/index.html" class="md-tabs__link">
       Integration
     </a>
   </li>
@@ -264,13 +262,15 @@
         
   
   
+    
+  
 
 
   
   
   
     <li class="md-tabs__item">
-      <a href="../developer-guide/contribution.html" class="md-tabs__link">
+      <a href="contribution.html" class="md-tabs__link md-tabs__link--active">
         Developers
       </a>
     </li>
@@ -421,61 +421,11 @@
 
   
   
-    
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
-      
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          Integration
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="index.html" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../integration/index.html" class="md-nav__link">
         Integration
       </a>
-      
-        
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#add-dependency-to-polyflow-integration-starter" class="md-nav__link">
-    Add dependency to Polyflow integration starter
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#activate-polyflow-support" class="md-nav__link">
-    Activate Polyflow Support
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#configure-your-polyflow-provisioning" class="md-nav__link">
-    Configure your Polyflow provisioning
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1032,12 +982,14 @@
 
   
   
+    
+  
   
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_6" type="checkbox" id="__nav_6" >
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_6" type="checkbox" id="__nav_6" checked>
       
       <label class="md-nav__link" for="__nav_6">
         Developers
@@ -1053,11 +1005,54 @@
             
   
   
+    
   
-    <li class="md-nav__item">
-      <a href="../developer-guide/contribution.html" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Contribution
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="contribution.html" class="md-nav__link md-nav__link--active">
         Contribution
       </a>
+      
+        
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#found-a-bug-or-missing-feature" class="md-nav__link">
+    Found a bug or missing feature?
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#submit-a-pull-request" class="md-nav__link">
+    Submit a Pull Request
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1067,7 +1062,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../developer-guide/project-setup.html" class="md-nav__link">
+      <a href="project-setup.html" class="md-nav__link">
         Project Setup
       </a>
     </li>
@@ -1092,85 +1087,32 @@
             <article class="md-content__inner md-typeset">
               
                 
-                  <a href="https://github.com/holunda-io/camunda-bpm-taskpool/edit/develop/docs/integration/index.md" title="Edit this page" class="md-content__button md-icon">
+                  <a href="https://github.com/holunda-io/camunda-bpm-taskpool/edit/develop/docs/developer-guide/contribution.md" title="Edit this page" class="md-content__button md-icon">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
                   </a>
                 
                 
-                  <h1>Integration</h1>
+                  <h1>Contribution</h1>
                 
-                <p>This guide is describing steps required to configure an existing Camunda BPM Spring Boot Process Application and
-connect to existing Process Platform.</p>
-<h2 id="add-dependency-to-polyflow-integration-starter">Add dependency to Polyflow integration starter<a class="headerlink" href="#add-dependency-to-polyflow-integration-starter" title="Permanent link">#</a></h2>
-<p>Apart from the example application, you might be interested in integrating Polyflow Taskpool and Datapool into your existing
-application. To do so, you need to enable your Camunda BPM process engine to use the library.
-For doing so, add the <code>polyflow-integration-camunda-bpm-engine-parent</code> library. In Maven, add the following dependency
-to your <code>pom.xml</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="nt">&lt;dependency&gt;</span>
-  <span class="nt">&lt;groupId&gt;</span>io.holunda.polyflow<span class="nt">&lt;/groupId&gt;</span>
-  <span class="nt">&lt;artifactId&gt;</span>polyflow-integration-camunda-bpm-engine-parent<span class="nt">&lt;/artifactId&gt;</span>
-  <span class="nt">&lt;version&gt;</span>${polyflow.version}<span class="nt">&lt;/version&gt;</span>
-<span class="nt">&lt;/dependency&gt;</span>
-</code></pre></div>
-<h2 id="activate-polyflow-support">Activate Polyflow Support<a class="headerlink" href="#activate-polyflow-support" title="Permanent link">#</a></h2>
-<p>Now, find your SpringBoot application class and add an additional annotation to it:</p>
-<div class="highlight"><pre><span></span><code><span class="nd">@SpringBootApplication</span>
-<span class="nd">@EnableTaskpoolEngineSupport</span>
-<span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyApplication</span> <span class="p">{</span>
-
-  <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="p">(</span><span class="n">String</span><span class="p">...</span> <span class="n">args</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">SpringApplication</span><span class="p">.</span><span class="na">run</span><span class="p">(</span><span class="n">MyApplication</span><span class="p">.</span><span class="na">class</span><span class="p">,</span> <span class="n">args</span><span class="p">);</span>
-  <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
-<h2 id="configure-your-polyflow-provisioning">Configure your Polyflow provisioning<a class="headerlink" href="#configure-your-polyflow-provisioning" title="Permanent link">#</a></h2>
-<p>Finally, add the following block to your <code>application.yml</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="nt">camunda</span><span class="p">:</span>
-  <span class="nt">bpm</span><span class="p">:</span>
-    <span class="nt">default-serialization-format</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">application/json</span>
-    <span class="nt">history-level</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">full</span>
-
-<span class="nt">polyflow</span><span class="p">:</span>
-  <span class="nt">integration</span><span class="p">:</span>
-    <span class="nt">client</span><span class="p">:</span>
-      <span class="nt">camunda</span><span class="p">:</span>
-        <span class="nt">application-name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">${spring.application.name}</span>  <span class="c1"># default</span>
-    <span class="nt">collector</span><span class="p">:</span>
-      <span class="nt">camunda</span><span class="p">:</span>
-        <span class="nt">application-name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">${spring.application.name}</span>  <span class="c1"># default</span>
-        <span class="nt">process-instance</span><span class="p">:</span>
-          <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
-        <span class="nt">process-definition</span><span class="p">:</span>
-          <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
-        <span class="nt">process-variable</span><span class="p">:</span>
-          <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
-        <span class="nt">task</span><span class="p">:</span>
-          <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
-          <span class="nt">enricher</span><span class="p">:</span>
-            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">processVariables</span>
-  <span class="nt">sender</span><span class="p">:</span>
-    <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
-    <span class="nt">data-entry</span><span class="p">:</span>
-      <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
-      <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">simple</span>
-      <span class="nt">application-name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">${spring.application.name}</span>  <span class="c1"># default</span>
-    <span class="nt">process-definition</span><span class="p">:</span>
-      <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
-    <span class="nt">process-instance</span><span class="p">:</span>
-      <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
-    <span class="nt">process-variable</span><span class="p">:</span>
-      <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
-    <span class="nt">task</span><span class="p">:</span>
-      <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
-      <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tx</span>
-      <span class="nt">send-within-transaction</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span> <span class="c1"># Must be set to true in single node scenario.</span>
-  <span class="nt">form-url-resolver</span><span class="p">:</span>
-      <span class="nt">defaultTaskTemplate</span><span class="p">:</span>  <span class="s">&quot;/tasks/${formKey}/${id}?userId=%userId%&quot;</span>
-      <span class="nt">defaultApplicationTemplate</span><span class="p">:</span> <span class="s">&quot;http://localhost:${server.port}/${applicationName}&quot;</span>
-      <span class="nt">defaultProcessTemplate</span><span class="p">:</span> <span class="s">&quot;/${formKey}?userId=%userId%&quot;</span>
-</code></pre></div>
-<p>Now, start your process engine. If you run into a user task, you should see on the console how this is passed to task pool.</p>
-<p>For more details on the configuration of different options, please consult the <a href="../reference-guide/components/">Polyflow Components</a> sections.</p>
+                <p>There are several ways in which you may contribute to this project.</p>
+<ul>
+<li><a href="https://github.com/holunda-io/camunda-bpm-taskpool/issues">File issues</a></li>
+<li>Submit a pull requests</li>
+</ul>
+<h2 id="found-a-bug-or-missing-feature">Found a bug or missing feature?<a class="headerlink" href="#found-a-bug-or-missing-feature" title="Permanent link">#</a></h2>
+<p>Please <a href="https://github.com/holunda-io/camunda-bpm-taskpool/issues">file an issue</a> in our
+issue tracking system.</p>
+<h2 id="submit-a-pull-request">Submit a Pull Request<a class="headerlink" href="#submit-a-pull-request" title="Permanent link">#</a></h2>
+<p>If you found a solution to an <a href="https://github.com/holuda-io/camunda-bpm-taskpool/issues">open issue</a>
+and implemented it, we would be happy to add your contribution in the code base. For doing so,
+please create a pull request. Prior to that, please make sure you:</p>
+<ul>
+<li>rebase against the <code>develop</code> branch</li>
+<li>stick to project coding conventions</li>
+<li>added test cases for the problem you are solving</li>
+<li>added docs, describing the change</li>
+<li>generally comply with codacy report</li>
+</ul>
                 
                   
                 
@@ -1196,7 +1138,7 @@ to your <code>pom.xml</code>:</p>
     <nav class="md-footer__inner md-grid" aria-label="Footer">
       
         
-        <a href="../introduction/further-outlook.html" class="md-footer__link md-footer__link--prev" aria-label="Previous: Further Outlook" rel="prev">
+        <a href="../examples/scenarios/distributed-no-axon-server.html" class="md-footer__link md-footer__link--prev" aria-label="Previous: Distributed without Axon Server" rel="prev">
           <div class="md-footer__button md-icon">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
           </div>
@@ -1205,20 +1147,20 @@ to your <code>pom.xml</code>:</p>
               <span class="md-footer__direction">
                 Previous
               </span>
-              Further Outlook
+              Distributed without Axon Server
             </div>
           </div>
         </a>
       
       
         
-        <a href="../reference-guide/index.html" class="md-footer__link md-footer__link--next" aria-label="Next: Reference Overview" rel="next">
+        <a href="project-setup.html" class="md-footer__link md-footer__link--next" aria-label="Next: Project Setup" rel="next">
           <div class="md-footer__title">
             <div class="md-ellipsis">
               <span class="md-footer__direction">
                 Next
               </span>
-              Reference Overview
+              Project Setup
             </div>
           </div>
           <div class="md-footer__button md-icon">

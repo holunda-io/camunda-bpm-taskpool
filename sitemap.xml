@@ -1,178 +1,178 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
-         <loc>https://www.holunda.io/camunda-bpm-taskpool/</loc>
-         <lastmod>2021-06-24</lastmod>
+         <loc>https://www.holunda.io/camunda-bpm-taskpool/index.html</loc>
+         <lastmod>2021-06-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://www.holunda.io/camunda-bpm-taskpool/developer-guide/contribution/</loc>
-         <lastmod>2021-06-24</lastmod>
+         <loc>https://www.holunda.io/camunda-bpm-taskpool/developer-guide/contribution.html</loc>
+         <lastmod>2021-06-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://www.holunda.io/camunda-bpm-taskpool/developer-guide/project-setup/</loc>
-         <lastmod>2021-06-24</lastmod>
+         <loc>https://www.holunda.io/camunda-bpm-taskpool/developer-guide/project-setup.html</loc>
+         <lastmod>2021-06-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://www.holunda.io/camunda-bpm-taskpool/examples/example-approval/</loc>
-         <lastmod>2021-06-24</lastmod>
+         <loc>https://www.holunda.io/camunda-bpm-taskpool/examples/example-approval.html</loc>
+         <lastmod>2021-06-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://www.holunda.io/camunda-bpm-taskpool/examples/example-components/</loc>
-         <lastmod>2021-06-24</lastmod>
+         <loc>https://www.holunda.io/camunda-bpm-taskpool/examples/example-components/index.html</loc>
+         <lastmod>2021-06-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://www.holunda.io/camunda-bpm-taskpool/examples/example-components/pa-backend/</loc>
-         <lastmod>2021-06-24</lastmod>
+         <loc>https://www.holunda.io/camunda-bpm-taskpool/examples/example-components/pa-backend.html</loc>
+         <lastmod>2021-06-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://www.holunda.io/camunda-bpm-taskpool/examples/example-components/pa-frontend/</loc>
-         <lastmod>2021-06-24</lastmod>
+         <loc>https://www.holunda.io/camunda-bpm-taskpool/examples/example-components/pa-frontend.html</loc>
+         <lastmod>2021-06-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://www.holunda.io/camunda-bpm-taskpool/examples/example-components/pp-backend/</loc>
-         <lastmod>2021-06-24</lastmod>
+         <loc>https://www.holunda.io/camunda-bpm-taskpool/examples/example-components/pp-backend.html</loc>
+         <lastmod>2021-06-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://www.holunda.io/camunda-bpm-taskpool/examples/example-components/pp-frontend/</loc>
-         <lastmod>2021-06-24</lastmod>
+         <loc>https://www.holunda.io/camunda-bpm-taskpool/examples/example-components/pp-frontend.html</loc>
+         <lastmod>2021-06-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://www.holunda.io/camunda-bpm-taskpool/examples/example-components/user-management/</loc>
-         <lastmod>2021-06-24</lastmod>
+         <loc>https://www.holunda.io/camunda-bpm-taskpool/examples/example-components/user-management.html</loc>
+         <lastmod>2021-06-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://www.holunda.io/camunda-bpm-taskpool/examples/scenarios/</loc>
-         <lastmod>2021-06-24</lastmod>
+         <loc>https://www.holunda.io/camunda-bpm-taskpool/examples/scenarios/index.html</loc>
+         <lastmod>2021-06-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://www.holunda.io/camunda-bpm-taskpool/examples/scenarios/distributed-axon-server/</loc>
-         <lastmod>2021-06-24</lastmod>
+         <loc>https://www.holunda.io/camunda-bpm-taskpool/examples/scenarios/distributed-axon-server.html</loc>
+         <lastmod>2021-06-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://www.holunda.io/camunda-bpm-taskpool/examples/scenarios/distributed-no-axon-server/</loc>
-         <lastmod>2021-06-24</lastmod>
+         <loc>https://www.holunda.io/camunda-bpm-taskpool/examples/scenarios/distributed-no-axon-server.html</loc>
+         <lastmod>2021-06-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://www.holunda.io/camunda-bpm-taskpool/examples/scenarios/single-node/</loc>
-         <lastmod>2021-06-24</lastmod>
+         <loc>https://www.holunda.io/camunda-bpm-taskpool/examples/scenarios/single-node.html</loc>
+         <lastmod>2021-06-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://www.holunda.io/camunda-bpm-taskpool/integration/</loc>
-         <lastmod>2021-06-24</lastmod>
+         <loc>https://www.holunda.io/camunda-bpm-taskpool/integration/index.html</loc>
+         <lastmod>2021-06-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://www.holunda.io/camunda-bpm-taskpool/introduction/features/</loc>
-         <lastmod>2021-06-24</lastmod>
+         <loc>https://www.holunda.io/camunda-bpm-taskpool/introduction/features.html</loc>
+         <lastmod>2021-06-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://www.holunda.io/camunda-bpm-taskpool/introduction/further-outlook/</loc>
-         <lastmod>2021-06-24</lastmod>
+         <loc>https://www.holunda.io/camunda-bpm-taskpool/introduction/further-outlook.html</loc>
+         <lastmod>2021-06-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://www.holunda.io/camunda-bpm-taskpool/introduction/motivation/</loc>
-         <lastmod>2021-06-24</lastmod>
+         <loc>https://www.holunda.io/camunda-bpm-taskpool/introduction/motivation.html</loc>
+         <lastmod>2021-06-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://www.holunda.io/camunda-bpm-taskpool/introduction/solution-architecture/</loc>
-         <lastmod>2021-06-24</lastmod>
+         <loc>https://www.holunda.io/camunda-bpm-taskpool/introduction/solution-architecture.html</loc>
+         <lastmod>2021-06-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://www.holunda.io/camunda-bpm-taskpool/reference-guide/</loc>
-         <lastmod>2021-06-24</lastmod>
+         <loc>https://www.holunda.io/camunda-bpm-taskpool/reference-guide/index.html</loc>
+         <lastmod>2021-06-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://www.holunda.io/camunda-bpm-taskpool/reference-guide/components/</loc>
-         <lastmod>2021-06-24</lastmod>
+         <loc>https://www.holunda.io/camunda-bpm-taskpool/reference-guide/components/index.html</loc>
+         <lastmod>2021-06-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://www.holunda.io/camunda-bpm-taskpool/reference-guide/components/camunda-interaction-client/</loc>
-         <lastmod>2021-06-24</lastmod>
+         <loc>https://www.holunda.io/camunda-bpm-taskpool/reference-guide/components/camunda-interaction-client.html</loc>
+         <lastmod>2021-06-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://www.holunda.io/camunda-bpm-taskpool/reference-guide/components/camunda-starter/</loc>
-         <lastmod>2021-06-24</lastmod>
+         <loc>https://www.holunda.io/camunda-bpm-taskpool/reference-guide/components/camunda-starter.html</loc>
+         <lastmod>2021-06-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://www.holunda.io/camunda-bpm-taskpool/reference-guide/components/camunda-taskpool-collector/</loc>
-         <lastmod>2021-06-24</lastmod>
+         <loc>https://www.holunda.io/camunda-bpm-taskpool/reference-guide/components/camunda-taskpool-collector.html</loc>
+         <lastmod>2021-06-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://www.holunda.io/camunda-bpm-taskpool/reference-guide/components/common-datapool-sender/</loc>
-         <lastmod>2021-06-24</lastmod>
+         <loc>https://www.holunda.io/camunda-bpm-taskpool/reference-guide/components/common-datapool-sender.html</loc>
+         <lastmod>2021-06-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://www.holunda.io/camunda-bpm-taskpool/reference-guide/components/common-taskpool-sender/</loc>
-         <lastmod>2021-06-24</lastmod>
+         <loc>https://www.holunda.io/camunda-bpm-taskpool/reference-guide/components/common-taskpool-sender.html</loc>
+         <lastmod>2021-06-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://www.holunda.io/camunda-bpm-taskpool/reference-guide/components/core-datapool/</loc>
-         <lastmod>2021-06-24</lastmod>
+         <loc>https://www.holunda.io/camunda-bpm-taskpool/reference-guide/components/core-datapool.html</loc>
+         <lastmod>2021-06-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://www.holunda.io/camunda-bpm-taskpool/reference-guide/components/core-taskpool/</loc>
-         <lastmod>2021-06-24</lastmod>
+         <loc>https://www.holunda.io/camunda-bpm-taskpool/reference-guide/components/core-taskpool.html</loc>
+         <lastmod>2021-06-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://www.holunda.io/camunda-bpm-taskpool/reference-guide/components/other-form-url-resolver/</loc>
-         <lastmod>2021-06-24</lastmod>
+         <loc>https://www.holunda.io/camunda-bpm-taskpool/reference-guide/components/other-tasklist-url-resolver.html</loc>
+         <lastmod>2021-06-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://www.holunda.io/camunda-bpm-taskpool/reference-guide/components/other-tasklist-url-resolver/</loc>
-         <lastmod>2021-06-24</lastmod>
+         <loc>https://www.holunda.io/camunda-bpm-taskpool/reference-guide/components/other-variable-serializer.html</loc>
+         <lastmod>2021-06-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://www.holunda.io/camunda-bpm-taskpool/reference-guide/components/other-variable-serializer/</loc>
-         <lastmod>2021-06-24</lastmod>
+         <loc>https://www.holunda.io/camunda-bpm-taskpool/reference-guide/components/view-cockpit.html</loc>
+         <lastmod>2021-06-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://www.holunda.io/camunda-bpm-taskpool/reference-guide/components/view-cockpit/</loc>
-         <lastmod>2021-06-24</lastmod>
+         <loc>https://www.holunda.io/camunda-bpm-taskpool/reference-guide/components/view-form-url-resolver.html</loc>
+         <lastmod>2021-06-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://www.holunda.io/camunda-bpm-taskpool/reference-guide/components/view-mongo/</loc>
-         <lastmod>2021-06-24</lastmod>
+         <loc>https://www.holunda.io/camunda-bpm-taskpool/reference-guide/components/view-mongo.html</loc>
+         <lastmod>2021-06-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://www.holunda.io/camunda-bpm-taskpool/reference-guide/components/view-simple/</loc>
-         <lastmod>2021-06-24</lastmod>
+         <loc>https://www.holunda.io/camunda-bpm-taskpool/reference-guide/components/view-simple.html</loc>
+         <lastmod>2021-06-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://www.holunda.io/camunda-bpm-taskpool/reference-guide/configuration/</loc>
-         <lastmod>2021-06-24</lastmod>
+         <loc>https://www.holunda.io/camunda-bpm-taskpool/reference-guide/configuration/index.html</loc>
+         <lastmod>2021-06-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
 </urlset>

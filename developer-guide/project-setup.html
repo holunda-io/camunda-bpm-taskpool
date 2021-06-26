@@ -13,14 +13,14 @@
         <meta name="author" content="Holisticon BPM Craftsman">
       
       
-        <link rel="canonical" href="https://www.holunda.io/camunda-bpm-taskpool/integration/index.html">
+        <link rel="canonical" href="https://www.holunda.io/camunda-bpm-taskpool/developer-guide/project-setup.html">
       
       <link rel="icon" href="../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.2.1, mkdocs-material-7.1.9">
     
     
       
-        <title>Integration Guide - Polyflow</title>
+        <title>Project Setup - Polyflow</title>
       
     
     
@@ -71,7 +71,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#add-dependency-to-polyflow-integration-starter" class="md-skip">
+        <a href="#version-control" class="md-skip">
           Skip to content
         </a>
       
@@ -100,7 +100,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Integration Guide
+              Project Setup
             
           </span>
         </div>
@@ -218,12 +218,10 @@
         
   
   
-    
-  
 
 
   <li class="md-tabs__item">
-    <a href="index.html" class="md-tabs__link md-tabs__link--active">
+    <a href="../integration/index.html" class="md-tabs__link">
       Integration
     </a>
   </li>
@@ -264,13 +262,15 @@
         
   
   
+    
+  
 
 
   
   
   
     <li class="md-tabs__item">
-      <a href="../developer-guide/contribution.html" class="md-tabs__link">
+      <a href="contribution.html" class="md-tabs__link md-tabs__link--active">
         Developers
       </a>
     </li>
@@ -421,61 +421,11 @@
 
   
   
-    
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
-      
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          Integration
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="index.html" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../integration/index.html" class="md-nav__link">
         Integration
       </a>
-      
-        
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#add-dependency-to-polyflow-integration-starter" class="md-nav__link">
-    Add dependency to Polyflow integration starter
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#activate-polyflow-support" class="md-nav__link">
-    Activate Polyflow Support
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#configure-your-polyflow-provisioning" class="md-nav__link">
-    Configure your Polyflow provisioning
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1032,12 +982,14 @@
 
   
   
+    
+  
   
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_6" type="checkbox" id="__nav_6" >
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_6" type="checkbox" id="__nav_6" checked>
       
       <label class="md-nav__link" for="__nav_6">
         Developers
@@ -1055,7 +1007,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../developer-guide/contribution.html" class="md-nav__link">
+      <a href="contribution.html" class="md-nav__link">
         Contribution
       </a>
     </li>
@@ -1065,11 +1017,198 @@
             
   
   
+    
   
-    <li class="md-nav__item">
-      <a href="../developer-guide/project-setup.html" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Project Setup
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="project-setup.html" class="md-nav__link md-nav__link--active">
         Project Setup
       </a>
+      
+        
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#version-control" class="md-nav__link">
+    Version control
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#project-build" class="md-nav__link">
+    Project Build
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#integration-tests" class="md-nav__link">
+    Integration Tests
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#project-build-modes-and-profiles" class="md-nav__link">
+    Project build modes and profiles
+  </a>
+  
+    <nav class="md-nav" aria-label="Project build modes and profiles">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#camunda-version" class="md-nav__link">
+    Camunda Version
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#skip-frontend" class="md-nav__link">
+    Skip Frontend
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#generate-sql-scripts" class="md-nav__link">
+    Generate SQL scripts
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#build-documentation" class="md-nav__link">
+    Build Documentation
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#examples" class="md-nav__link">
+    Examples
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#local-start" class="md-nav__link">
+    Local Start
+  </a>
+  
+    <nav class="md-nav" aria-label="Local Start">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pre-requirements" class="md-nav__link">
+    Pre-requirements
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#start-containers" class="md-nav__link">
+    Start containers
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#starting-application-distributed-scenario" class="md-nav__link">
+    Starting application (distributed scenario)
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#continuous-integration" class="md-nav__link">
+    Continuous Integration
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#release-management" class="md-nav__link">
+    Release Management
+  </a>
+  
+    <nav class="md-nav" aria-label="Release Management">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-modules-get-deployed-to-repository" class="md-nav__link">
+    What modules get deployed to repository
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#trigger-new-release" class="md-nav__link">
+    Trigger new release
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#trigger-a-deploy" class="md-nav__link">
+    Trigger a deploy
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#run-deploy-from-local-machine" class="md-nav__link">
+    Run deploy from local machine
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#release-to-public-repositories" class="md-nav__link">
+    Release to public repositories
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1092,85 +1231,140 @@
             <article class="md-content__inner md-typeset">
               
                 
-                  <a href="https://github.com/holunda-io/camunda-bpm-taskpool/edit/develop/docs/integration/index.md" title="Edit this page" class="md-content__button md-icon">
+                  <a href="https://github.com/holunda-io/camunda-bpm-taskpool/edit/develop/docs/developer-guide/project-setup.md" title="Edit this page" class="md-content__button md-icon">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
                   </a>
                 
                 
-                  <h1>Integration</h1>
+                  <h1>Project Setup</h1>
                 
-                <p>This guide is describing steps required to configure an existing Camunda BPM Spring Boot Process Application and
-connect to existing Process Platform.</p>
-<h2 id="add-dependency-to-polyflow-integration-starter">Add dependency to Polyflow integration starter<a class="headerlink" href="#add-dependency-to-polyflow-integration-starter" title="Permanent link">#</a></h2>
-<p>Apart from the example application, you might be interested in integrating Polyflow Taskpool and Datapool into your existing
-application. To do so, you need to enable your Camunda BPM process engine to use the library.
-For doing so, add the <code>polyflow-integration-camunda-bpm-engine-parent</code> library. In Maven, add the following dependency
-to your <code>pom.xml</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="nt">&lt;dependency&gt;</span>
-  <span class="nt">&lt;groupId&gt;</span>io.holunda.polyflow<span class="nt">&lt;/groupId&gt;</span>
-  <span class="nt">&lt;artifactId&gt;</span>polyflow-integration-camunda-bpm-engine-parent<span class="nt">&lt;/artifactId&gt;</span>
-  <span class="nt">&lt;version&gt;</span>${polyflow.version}<span class="nt">&lt;/version&gt;</span>
-<span class="nt">&lt;/dependency&gt;</span>
+                <p>If you are interested in developing and building the project please follow the following instruction.</p>
+<h2 id="version-control">Version control<a class="headerlink" href="#version-control" title="Permanent link">#</a></h2>
+<p>To get sources of the project, please execute:</p>
+<div class="highlight"><pre><span></span><code>git clone https://github.com/holunda-io/camunda-bpm-taskpool.git
+<span class="nb">cd</span> camunda-bpm-taskpool
 </code></pre></div>
-<h2 id="activate-polyflow-support">Activate Polyflow Support<a class="headerlink" href="#activate-polyflow-support" title="Permanent link">#</a></h2>
-<p>Now, find your SpringBoot application class and add an additional annotation to it:</p>
-<div class="highlight"><pre><span></span><code><span class="nd">@SpringBootApplication</span>
-<span class="nd">@EnableTaskpoolEngineSupport</span>
-<span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyApplication</span> <span class="p">{</span>
-
-  <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="p">(</span><span class="n">String</span><span class="p">...</span> <span class="n">args</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">SpringApplication</span><span class="p">.</span><span class="na">run</span><span class="p">(</span><span class="n">MyApplication</span><span class="p">.</span><span class="na">class</span><span class="p">,</span> <span class="n">args</span><span class="p">);</span>
-  <span class="p">}</span>
-<span class="p">}</span>
+<p>We are using gitflow in our git SCM. That means that you should start from <code>develop</code> branch,
+create a <code>feature/&lt;name&gt;</code> out of it and once it is completed create a pull request containing
+it. Please squash your commits before submitting and use semantic commit messages, if possible.</p>
+<h2 id="project-build">Project Build<a class="headerlink" href="#project-build" title="Permanent link">#</a></h2>
+<p>Perform the following steps to get a development setup up and running.</p>
+<div class="highlight"><pre><span></span><code>./mvnw clean install
 </code></pre></div>
-<h2 id="configure-your-polyflow-provisioning">Configure your Polyflow provisioning<a class="headerlink" href="#configure-your-polyflow-provisioning" title="Permanent link">#</a></h2>
-<p>Finally, add the following block to your <code>application.yml</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="nt">camunda</span><span class="p">:</span>
-  <span class="nt">bpm</span><span class="p">:</span>
-    <span class="nt">default-serialization-format</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">application/json</span>
-    <span class="nt">history-level</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">full</span>
-
-<span class="nt">polyflow</span><span class="p">:</span>
-  <span class="nt">integration</span><span class="p">:</span>
-    <span class="nt">client</span><span class="p">:</span>
-      <span class="nt">camunda</span><span class="p">:</span>
-        <span class="nt">application-name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">${spring.application.name}</span>  <span class="c1"># default</span>
-    <span class="nt">collector</span><span class="p">:</span>
-      <span class="nt">camunda</span><span class="p">:</span>
-        <span class="nt">application-name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">${spring.application.name}</span>  <span class="c1"># default</span>
-        <span class="nt">process-instance</span><span class="p">:</span>
-          <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
-        <span class="nt">process-definition</span><span class="p">:</span>
-          <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
-        <span class="nt">process-variable</span><span class="p">:</span>
-          <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
-        <span class="nt">task</span><span class="p">:</span>
-          <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
-          <span class="nt">enricher</span><span class="p">:</span>
-            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">processVariables</span>
-  <span class="nt">sender</span><span class="p">:</span>
-    <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
-    <span class="nt">data-entry</span><span class="p">:</span>
-      <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
-      <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">simple</span>
-      <span class="nt">application-name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">${spring.application.name}</span>  <span class="c1"># default</span>
-    <span class="nt">process-definition</span><span class="p">:</span>
-      <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
-    <span class="nt">process-instance</span><span class="p">:</span>
-      <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
-    <span class="nt">process-variable</span><span class="p">:</span>
-      <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
-    <span class="nt">task</span><span class="p">:</span>
-      <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
-      <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tx</span>
-      <span class="nt">send-within-transaction</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span> <span class="c1"># Must be set to true in single node scenario.</span>
-  <span class="nt">form-url-resolver</span><span class="p">:</span>
-      <span class="nt">defaultTaskTemplate</span><span class="p">:</span>  <span class="s">&quot;/tasks/${formKey}/${id}?userId=%userId%&quot;</span>
-      <span class="nt">defaultApplicationTemplate</span><span class="p">:</span> <span class="s">&quot;http://localhost:${server.port}/${applicationName}&quot;</span>
-      <span class="nt">defaultProcessTemplate</span><span class="p">:</span> <span class="s">&quot;/${formKey}?userId=%userId%&quot;</span>
+<h2 id="integration-tests">Integration Tests<a class="headerlink" href="#integration-tests" title="Permanent link">#</a></h2>
+<p>By default, the build command will ignore the run of <code>failsafe</code> Maven plugin executing the integration tests
+(usual JUnit tests with class names ending with ITest). In order to run integration tests, please
+call from your command line:</p>
+<div class="highlight"><pre><span></span><code>./mvnw integration-test failsafe:verify -Pitest -DskipFrontend
 </code></pre></div>
-<p>Now, start your process engine. If you run into a user task, you should see on the console how this is passed to task pool.</p>
-<p>For more details on the configuration of different options, please consult the <a href="../reference-guide/components/">Polyflow Components</a> sections.</p>
+<h2 id="project-build-modes-and-profiles">Project build modes and profiles<a class="headerlink" href="#project-build-modes-and-profiles" title="Permanent link">#</a></h2>
+<h3 id="camunda-version">Camunda Version<a class="headerlink" href="#camunda-version" title="Permanent link">#</a></h3>
+<p>You can choose the used Camunda version by specifying the profile <code>camunda-ee</code> or <code>camunda-ce</code>. The default
+version is a Community Edition. Specify <code>-Pcamunda-ee</code> to switch to Camunda Enterprise edition. This will
+require a valid Camunda license. You can put it into a file <code>~/.camunda/license.txt</code> and it will be detected
+automatically.</p>
+<h3 id="skip-frontend">Skip Frontend<a class="headerlink" href="#skip-frontend" title="Permanent link">#</a></h3>
+<p>TIP: Components for production use of camunda-bpm-taskpool are backend components only. Frontend components are only
+created for examples and demonstration purpose.</p>
+<p>If you are interested in backend only, specify the <code>-DskipFrontend</code> switch. This will accelerate the build
+significantly.</p>
+<h3 id="generate-sql-scripts">Generate SQL scripts<a class="headerlink" href="#generate-sql-scripts" title="Permanent link">#</a></h3>
+<p>The project uses <a href="https://flywaydb.org/">Flyway</a> for versioning of database changes. In doing so we provide the
+required SQL scripts for initialization of required database objects (including Camunda BPM schema, Axon schema and
+some example schema). If you change any of those you will need to create SQL scripts describing your change.
+For doing so, you can re-generate the scripts running:</p>
+<div class="highlight"><pre><span></span><code>./mvnw -Pgenerate-sql
+</code></pre></div>
+<p>NOTE: The existing scripts must not be replaced or changed, but new additional scripts needs to added.</p>
+<h3 id="build-documentation">Build Documentation<a class="headerlink" href="#build-documentation" title="Permanent link">#</a></h3>
+<p>We are using MkDocs for generation of a static site documentation and rely on Markdown as much as possible.
+MkDocs is a written in Python 3 and needs to be installed on your machine. For the installation please run the following
+command from your command line:</p>
+<div class="highlight"><pre><span></span><code>python3 -m pip install --upgrade pip
+python3 -m pip install -r ./docs/requirements.txt
+</code></pre></div>
+<p>For creation of documentation, please run:</p>
+<div class="highlight"><pre><span></span><code>mkdocs build
+</code></pre></div>
+<p>The docs are generated into <code>site</code> directory. </p>
+<p>!!!note If you want to develop your docs in 'live' mode, run <code>mkdocs serve</code> and access
+the <a href="http://localhost:8000/">http://localhost:8000/</a> from your browser.</p>
+<h3 id="examples">Examples<a class="headerlink" href="#examples" title="Permanent link">#</a></h3>
+<p>Polyflow provides a series of examples demonstrating different features of the library. By default, the examples are
+built during the project build. If you want to skip the examples, please add the following parameter to your command
+line or disable the <code>examples</code> module in your IDE.</p>
+<div class="highlight"><pre><span></span><code>./mvnw clean package -DskipExamples
+</code></pre></div>
+<h2 id="local-start">Local Start<a class="headerlink" href="#local-start" title="Permanent link">#</a></h2>
+<p>!!!important If you want to run examples locally, you will need <code>docker</code> and <code>docker-compose</code>.</p>
+<h3 id="pre-requirements">Pre-requirements<a class="headerlink" href="#pre-requirements" title="Permanent link">#</a></h3>
+<p>Before starting the example applications, make sure the required infrastructure is set up and running.
+Please run the following from your command line:</p>
+<div class="highlight"><pre><span></span><code>./.docker/setup.sh
+</code></pre></div>
+<p>This will create required docker volumes and network.</p>
+<h3 id="start-containers">Start containers<a class="headerlink" href="#start-containers" title="Permanent link">#</a></h3>
+<p>In order to operate, the distributed example applications will require several containers. These are:</p>
+<ul>
+<li>Axon Server</li>
+<li>PostgreSQL Database</li>
+<li>Mongo Database (if used in projection)</li>
+</ul>
+<p>Please start the required containers executing the corresponding command from <code>examples/scenarios/distributed-axon-server</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span> ./examples/scenarios/distributed-axon-server
+docker-compose up
+</code></pre></div>
+<h3 id="starting-application-distributed-scenario">Starting application (distributed scenario)<a class="headerlink" href="#starting-application-distributed-scenario" title="Permanent link">#</a></h3>
+<p>For the distributed scenario, the containers from the previous section needs to be started.
+To start applications, either use your IDE and create two run configurations for the classes (in this order):</p>
+<ul>
+<li><code>io.holunda.camunda.taskpool.example.process.ExampleTaskpoolApplicationDistributedWithAxonServer</code></li>
+<li><code>io.holunda.camunda.taskpool.example.process.ExampleProcessApplicationDistributedWithAxonServer</code></li>
+</ul>
+<p>Alternatively, you can run them from the command line:</p>
+<div class="highlight"><pre><span></span><code>./mvnw spring-boot:run -f examples/scenarios/distributed-axon-server/taskpool-application
+./mvnw spring-boot:run -f examples/scenarios/distributed-axon-server/process-application
+</code></pre></div>
+<h2 id="continuous-integration">Continuous Integration<a class="headerlink" href="#continuous-integration" title="Permanent link">#</a></h2>
+<p>Travis CI is building all branches on commit hook. In addition, a private-hosted Jenkins CI
+is used to build the releases.</p>
+<h2 id="release-management">Release Management<a class="headerlink" href="#release-management" title="Permanent link">#</a></h2>
+<p>Release management has been set-up for use of Sonatype Nexus (= Maven Central)</p>
+<h3 id="what-modules-get-deployed-to-repository">What modules get deployed to repository<a class="headerlink" href="#what-modules-get-deployed-to-repository" title="Permanent link">#</a></h3>
+<p>Every module is enabled by default. If you want to change this, please provide the property</p>
+<div class="highlight"><pre><span></span><code><span class="nt">&lt;maven.deploy.skip&gt;</span>true<span class="nt">&lt;/maven.deploy.skip&gt;</span>
+</code></pre></div>
+<p>inside the corresponding <code>pom.xml</code>. Currently, all examples are <em>EXCLUDED</em> from publication into Maven Central.</p>
+<h3 id="trigger-new-release">Trigger new release<a class="headerlink" href="#trigger-new-release" title="Permanent link">#</a></h3>
+<p>WARNING: This operation requires special permissions.</p>
+<p>We use gitflow for development (see <a href="http://nvie.com/posts/a-successful-git-branching-model/">A successful git branching model</a>
+for more details). You could use gitflow with native git commands, but then you would have
+to change the versions in the poms manually. Therefore, we use the
+<a href="https://github.com/aleksandr-m/gitflow-maven-plugin/">mvn gitflow plugin</a>, which handles this and other
+things nicely.</p>
+<p>You can build a release with:</p>
+<div class="highlight"><pre><span></span><code>./mvnw gitflow:release-start
+./mvnw gitflow:release-finish
+</code></pre></div>
+<p>This will update the versions in the <code>pom.xml</code> s accordingly and push the release tag to the <code>master</code> branch
+and update the <code>develop</code> branch for the new development version.</p>
+<h3 id="trigger-a-deploy">Trigger a deploy<a class="headerlink" href="#trigger-a-deploy" title="Permanent link">#</a></h3>
+<p>!!! warning  This operation requires special permissions.</p>
+<p>Currently, CI allows for deployment of artifacts to Maven Central and is executed using github actions.
+This means, that a push to <code>master</code> branch will start the corresponding build job, and if successful the
+artifacts will get into <code>Staging Repositories</code> of OSS Sonatype without manual intervention.</p>
+<h3 id="run-deploy-from-local-machine">Run deploy from local machine<a class="headerlink" href="#run-deploy-from-local-machine" title="Permanent link">#</a></h3>
+<p>WARNING: This operation requires special permissions.</p>
+<p>If you still want to execute the deployment from your local machine, you need to have GPG keys at place and
+to execute the following command on the <code>master</code> branch:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">export</span> <span class="nv">GPG_KEYNAME</span><span class="o">=</span><span class="s2">&quot;&lt;keyname&gt;&quot;</span>
+<span class="nb">export</span> <span class="nv">GPG_PASSPHRASE</span><span class="o">=</span><span class="s2">&quot;&lt;secret&gt;&quot;</span>
+./mvnw clean deploy -B -DskipTests -DskipExamples -Prelease -Dgpg.keyname<span class="o">=</span><span class="nv">$GPG_KEYNAME</span> -Dgpg.passphrase<span class="o">=</span><span class="nv">$GPG_PASSPHRASE</span>
+</code></pre></div>
+<h3 id="release-to-public-repositories">Release to public repositories<a class="headerlink" href="#release-to-public-repositories" title="Permanent link">#</a></h3>
+<p>WARNING: This operation requires special permissions.</p>
+<p>The deploy job will publish the artifacts to Nexus OSS staging repositories. Don't forget to close and release the
+repository to enable it's sync with Maven Central.</p>
                 
                   
                 
@@ -1196,7 +1390,7 @@ to your <code>pom.xml</code>:</p>
     <nav class="md-footer__inner md-grid" aria-label="Footer">
       
         
-        <a href="../introduction/further-outlook.html" class="md-footer__link md-footer__link--prev" aria-label="Previous: Further Outlook" rel="prev">
+        <a href="contribution.html" class="md-footer__link md-footer__link--prev" aria-label="Previous: Contribution" rel="prev">
           <div class="md-footer__button md-icon">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
           </div>
@@ -1205,26 +1399,11 @@ to your <code>pom.xml</code>:</p>
               <span class="md-footer__direction">
                 Previous
               </span>
-              Further Outlook
+              Contribution
             </div>
           </div>
         </a>
       
-      
-        
-        <a href="../reference-guide/index.html" class="md-footer__link md-footer__link--next" aria-label="Next: Reference Overview" rel="next">
-          <div class="md-footer__title">
-            <div class="md-ellipsis">
-              <span class="md-footer__direction">
-                Next
-              </span>
-              Reference Overview
-            </div>
-          </div>
-          <div class="md-footer__button md-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
-          </div>
-        </a>
       
     </nav>
   

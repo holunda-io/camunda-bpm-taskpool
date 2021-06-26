@@ -13,14 +13,14 @@
         <meta name="author" content="Holisticon BPM Craftsman">
       
       
-        <link rel="canonical" href="https://www.holunda.io/camunda-bpm-taskpool/integration/index.html">
+        <link rel="canonical" href="https://www.holunda.io/camunda-bpm-taskpool/examples/example-approval.html">
       
       <link rel="icon" href="../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.2.1, mkdocs-material-7.1.9">
     
     
       
-        <title>Integration Guide - Polyflow</title>
+        <title>Example Application - Polyflow</title>
       
     
     
@@ -71,7 +71,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#add-dependency-to-polyflow-integration-starter" class="md-skip">
+        <a href="#business-context-approval" class="md-skip">
           Skip to content
         </a>
       
@@ -100,7 +100,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Integration Guide
+              Example Application
             
           </span>
         </div>
@@ -218,12 +218,10 @@
         
   
   
-    
-  
 
 
   <li class="md-tabs__item">
-    <a href="index.html" class="md-tabs__link md-tabs__link--active">
+    <a href="../integration/index.html" class="md-tabs__link">
       Integration
     </a>
   </li>
@@ -248,13 +246,15 @@
         
   
   
+    
+  
 
 
   
   
   
     <li class="md-tabs__item">
-      <a href="../examples/example-approval.html" class="md-tabs__link">
+      <a href="example-approval.html" class="md-tabs__link md-tabs__link--active">
         Examples
       </a>
     </li>
@@ -421,61 +421,11 @@
 
   
   
-    
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
-      
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          Integration
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="index.html" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../integration/index.html" class="md-nav__link">
         Integration
       </a>
-      
-        
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#add-dependency-to-polyflow-integration-starter" class="md-nav__link">
-    Add dependency to Polyflow integration starter
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#activate-polyflow-support" class="md-nav__link">
-    Activate Polyflow Support
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#configure-your-polyflow-provisioning" class="md-nav__link">
-    Configure your Polyflow provisioning
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -816,12 +766,14 @@
 
   
   
+    
+  
   
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5" type="checkbox" id="__nav_5" >
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5" type="checkbox" id="__nav_5" checked>
       
       <label class="md-nav__link" for="__nav_5">
         Examples
@@ -837,11 +789,68 @@
             
   
   
+    
   
-    <li class="md-nav__item">
-      <a href="../examples/example-approval.html" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Example Approval
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="example-approval.html" class="md-nav__link md-nav__link--active">
         Example Approval
       </a>
+      
+        
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#business-context-approval" class="md-nav__link">
+    Business context: Approval
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#process-run" class="md-nav__link">
+    Process Run
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#running-examples" class="md-nav__link">
+    Running Examples
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#story-board" class="md-nav__link">
+    Story board
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -872,7 +881,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../examples/example-components/index.html" class="md-nav__link">
+      <a href="example-components/index.html" class="md-nav__link">
         Example Components Overview
       </a>
     </li>
@@ -884,7 +893,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../examples/example-components/pa-frontend.html" class="md-nav__link">
+      <a href="example-components/pa-frontend.html" class="md-nav__link">
         Process Application Frontend
       </a>
     </li>
@@ -896,7 +905,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../examples/example-components/pa-backend.html" class="md-nav__link">
+      <a href="example-components/pa-backend.html" class="md-nav__link">
         Process Application Backend
       </a>
     </li>
@@ -908,7 +917,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../examples/example-components/user-management.html" class="md-nav__link">
+      <a href="example-components/user-management.html" class="md-nav__link">
         User Management
       </a>
     </li>
@@ -920,7 +929,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../examples/example-components/pp-frontend.html" class="md-nav__link">
+      <a href="example-components/pp-frontend.html" class="md-nav__link">
         Process Platform Frontend
       </a>
     </li>
@@ -932,7 +941,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../examples/example-components/pp-backend.html" class="md-nav__link">
+      <a href="example-components/pp-backend.html" class="md-nav__link">
         Process Platform Backend
       </a>
     </li>
@@ -971,7 +980,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../examples/scenarios/index.html" class="md-nav__link">
+      <a href="scenarios/index.html" class="md-nav__link">
         Scenarios Overview
       </a>
     </li>
@@ -983,7 +992,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../examples/scenarios/single-node.html" class="md-nav__link">
+      <a href="scenarios/single-node.html" class="md-nav__link">
         Single Node
       </a>
     </li>
@@ -995,7 +1004,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../examples/scenarios/distributed-axon-server.html" class="md-nav__link">
+      <a href="scenarios/distributed-axon-server.html" class="md-nav__link">
         Distributed using Axon Server
       </a>
     </li>
@@ -1007,7 +1016,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../examples/scenarios/distributed-no-axon-server.html" class="md-nav__link">
+      <a href="scenarios/distributed-no-axon-server.html" class="md-nav__link">
         Distributed without Axon Server
       </a>
     </li>
@@ -1092,85 +1101,97 @@
             <article class="md-content__inner md-typeset">
               
                 
-                  <a href="https://github.com/holunda-io/camunda-bpm-taskpool/edit/develop/docs/integration/index.md" title="Edit this page" class="md-content__button md-icon">
+                  <a href="https://github.com/holunda-io/camunda-bpm-taskpool/edit/develop/docs/examples/example-approval.md" title="Edit this page" class="md-content__button md-icon">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
                   </a>
                 
                 
-                  <h1>Integration</h1>
+                  <h1>Example Approval</h1>
                 
-                <p>This guide is describing steps required to configure an existing Camunda BPM Spring Boot Process Application and
-connect to existing Process Platform.</p>
-<h2 id="add-dependency-to-polyflow-integration-starter">Add dependency to Polyflow integration starter<a class="headerlink" href="#add-dependency-to-polyflow-integration-starter" title="Permanent link">#</a></h2>
-<p>Apart from the example application, you might be interested in integrating Polyflow Taskpool and Datapool into your existing
-application. To do so, you need to enable your Camunda BPM process engine to use the library.
-For doing so, add the <code>polyflow-integration-camunda-bpm-engine-parent</code> library. In Maven, add the following dependency
-to your <code>pom.xml</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="nt">&lt;dependency&gt;</span>
-  <span class="nt">&lt;groupId&gt;</span>io.holunda.polyflow<span class="nt">&lt;/groupId&gt;</span>
-  <span class="nt">&lt;artifactId&gt;</span>polyflow-integration-camunda-bpm-engine-parent<span class="nt">&lt;/artifactId&gt;</span>
-  <span class="nt">&lt;version&gt;</span>${polyflow.version}<span class="nt">&lt;/version&gt;</span>
-<span class="nt">&lt;/dependency&gt;</span>
-</code></pre></div>
-<h2 id="activate-polyflow-support">Activate Polyflow Support<a class="headerlink" href="#activate-polyflow-support" title="Permanent link">#</a></h2>
-<p>Now, find your SpringBoot application class and add an additional annotation to it:</p>
-<div class="highlight"><pre><span></span><code><span class="nd">@SpringBootApplication</span>
-<span class="nd">@EnableTaskpoolEngineSupport</span>
-<span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyApplication</span> <span class="p">{</span>
-
-  <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="p">(</span><span class="n">String</span><span class="p">...</span> <span class="n">args</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">SpringApplication</span><span class="p">.</span><span class="na">run</span><span class="p">(</span><span class="n">MyApplication</span><span class="p">.</span><span class="na">class</span><span class="p">,</span> <span class="n">args</span><span class="p">);</span>
-  <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
-<h2 id="configure-your-polyflow-provisioning">Configure your Polyflow provisioning<a class="headerlink" href="#configure-your-polyflow-provisioning" title="Permanent link">#</a></h2>
-<p>Finally, add the following block to your <code>application.yml</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="nt">camunda</span><span class="p">:</span>
-  <span class="nt">bpm</span><span class="p">:</span>
-    <span class="nt">default-serialization-format</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">application/json</span>
-    <span class="nt">history-level</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">full</span>
-
-<span class="nt">polyflow</span><span class="p">:</span>
-  <span class="nt">integration</span><span class="p">:</span>
-    <span class="nt">client</span><span class="p">:</span>
-      <span class="nt">camunda</span><span class="p">:</span>
-        <span class="nt">application-name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">${spring.application.name}</span>  <span class="c1"># default</span>
-    <span class="nt">collector</span><span class="p">:</span>
-      <span class="nt">camunda</span><span class="p">:</span>
-        <span class="nt">application-name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">${spring.application.name}</span>  <span class="c1"># default</span>
-        <span class="nt">process-instance</span><span class="p">:</span>
-          <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
-        <span class="nt">process-definition</span><span class="p">:</span>
-          <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
-        <span class="nt">process-variable</span><span class="p">:</span>
-          <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
-        <span class="nt">task</span><span class="p">:</span>
-          <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
-          <span class="nt">enricher</span><span class="p">:</span>
-            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">processVariables</span>
-  <span class="nt">sender</span><span class="p">:</span>
-    <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
-    <span class="nt">data-entry</span><span class="p">:</span>
-      <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
-      <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">simple</span>
-      <span class="nt">application-name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">${spring.application.name}</span>  <span class="c1"># default</span>
-    <span class="nt">process-definition</span><span class="p">:</span>
-      <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
-    <span class="nt">process-instance</span><span class="p">:</span>
-      <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
-    <span class="nt">process-variable</span><span class="p">:</span>
-      <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
-    <span class="nt">task</span><span class="p">:</span>
-      <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
-      <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tx</span>
-      <span class="nt">send-within-transaction</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span> <span class="c1"># Must be set to true in single node scenario.</span>
-  <span class="nt">form-url-resolver</span><span class="p">:</span>
-      <span class="nt">defaultTaskTemplate</span><span class="p">:</span>  <span class="s">&quot;/tasks/${formKey}/${id}?userId=%userId%&quot;</span>
-      <span class="nt">defaultApplicationTemplate</span><span class="p">:</span> <span class="s">&quot;http://localhost:${server.port}/${applicationName}&quot;</span>
-      <span class="nt">defaultProcessTemplate</span><span class="p">:</span> <span class="s">&quot;/${formKey}?userId=%userId%&quot;</span>
-</code></pre></div>
-<p>Now, start your process engine. If you run into a user task, you should see on the console how this is passed to task pool.</p>
-<p>For more details on the configuration of different options, please consult the <a href="../reference-guide/components/">Polyflow Components</a> sections.</p>
+                <p>Along with library modules several example modules and applications are provided, demonstrating the main features of the solution.
+This includes a series of example applications for usage in different <a href="./scenarios/">Usage Scenarios</a>. They all share the same
+business process described in the next section.</p>
+<h2 id="business-context-approval">Business context: Approval<a class="headerlink" href="#business-context-approval" title="Permanent link">#</a></h2>
+<p><img alt="Approval Process" src="../img/process_approve_request.png" /></p>
+<p>Take a look on the process model above. Imagine you are building a system that responsible for management of all approval requests
+in the company. Using this system, you can submit requests which then get eventually approved or rejected. Sometimes, the <strong>approver</strong>
+doesn't approve or reject, but returns the request back to the <strong>originator</strong> for correction (that is the person, who submitted the request).
+Then, the <strong>originator</strong> can amend the request and resubmit it or cancel the request.</p>
+<p>An approval request is modelled in the following way. The <strong>subject</strong>  describes what the request is about, the <strong>applicant</strong> is the
+person whom it is about (can be different from <strong>originator</strong>). Finally, the <strong>amount</strong> and <strong>currency</strong> denote the costs of the request.
+All requests must be stored for compliance purposes.</p>
+<p>The request is initially created in <code>DRAFT</code> mode. It gets to state <code>IN PROGRESS</code> as soon as the process is started and will
+eventually get to <code>ACCEPTED</code> or <code>REJECTED</code> as a final state.</p>
+<p>For sample purposes two groups of users are created: The Muppet Show (<code>Kermit</code>, <code>Piggy</code>, <code>Gonzo</code> and <code>Fozzy</code>) and The Avengers (<code>Ironman</code>,
+<code>Hulk</code>).  <code>Gonzo</code> and <code>Fozzy</code> are responsible for approvals.</p>
+<h2 id="process-run">Process Run<a class="headerlink" href="#process-run" title="Permanent link">#</a></h2>
+<p>Let's play the following run through this process model.</p>
+<ul>
+<li><code>Ironman</code> submits an Advanced Training request on behalf of <code>Hulk</code></li>
+<li>The request costs are provided in wrong currency and <code>Gonzo</code> returns the request to <code>Ironman</code> for correction (EUR instead of USD)</li>
+<li><code>Ironman</code> changes the currency to USD and re-submits the request</li>
+<li><code>Gonzo</code> is out of office, so <code>Fozzy</code> takes over and approves the request</li>
+</ul>
+<h2 id="running-examples">Running Examples<a class="headerlink" href="#running-examples" title="Permanent link">#</a></h2>
+<p>To run the example please consult the link:scenarios[Usage Scenarios] section.</p>
+<p>TIP: Since the process application includes Camunda BPM engine, you can use the standard Camunda webapps by navigating
+to <a href="http://localhost:8080/camunda/app/">http://localhost:8080/camunda/app/</a>.
+The default user and password are <code>admin / admin</code>.</p>
+<h2 id="story-board">Story board<a class="headerlink" href="#story-board" title="Permanent link">#</a></h2>
+<p>The following storyboard can be used to understand the mechanics behind the provided implementation:</p>
+<p>TIP: In this storyboard, we assume you started the single node scenario and the application runs locally
+on http://localhost:8080. Please adjust the URLs accordingly, if you started differently.</p>
+<ul>
+<li>
+<p>To start the approval process for a given request open your browser and navigate to the <code>Example Tasklist</code>:
+<a href="http://localhost:8080/taskpool/">http://localhost:8080/taskpool/</a>. Please note that the selected user is <code>Ironman</code>.</p>
+</li>
+<li>
+<p>Open the menu (<code>Start new...</code>) in and select 'Request Approval'. You should see the start form for the example
+approval process.</p>
+</li>
+</ul>
+<p><img alt="New approval process start form" src="../img/example_start_form.png" /></p>
+<ul>
+<li>
+<p>Select <code>Advanced Training</code> from one of predefined templates and click <em>Start</em>. The start form will disappear and redirect back to
+the empty <code>Tasklist</code>.</p>
+</li>
+<li>
+<p>Since you are still acting as <code>Ironman</code> there are nothing you can do here. Please switch the user to <code>Gonzo</code>
+in the top right corner and you should see the user task <code>Approve Request</code> from process <code>Request Approval</code>.</p>
+</li>
+</ul>
+<p><img alt="Task list with task description" src="../img/example_tasklist_approve_description.png" /></p>
+<ul>
+<li>Examine the task details by clicking <em>Data</em> tab in <em>Details</em> column. You can see the data of the request correlated to
+the current process instance.</li>
+</ul>
+<p><img alt="Task list with task data" src="../img/example_tasklist_approve_data.png" /></p>
+<ul>
+<li>Click on the task name and you will see the user task form of the <code>Approve Request</code> task. Select the option
+<code>Return request to originator</code> and click complete.</li>
+</ul>
+<p><img alt="Example User Task Form Approve Request" src="../img/example_approve_request.png" /></p>
+<ul>
+<li>Switch to <code>Workpieces</code> and you should see the request business object. Examine the approval request by clicking
+<em>Data</em>, <em>Audit</em> and <em>Description</em> tabs in <em>Details</em> column.</li>
+</ul>
+<p><img alt="Example Archive View" src="../img/example_archive_business_object.png" /></p>
+<ul>
+<li>Change user back to <code>Ironman</code> and switch back to the <code>Tasklist</code> and open the <code>Amend request</code>task. Change the currency to
+<code>USD</code> and re-submit the request.</li>
+</ul>
+<p><img alt="Example User Task Form Amend Request" src="../img/example_amend_request.png" /></p>
+<ul>
+<li>
+<p>Change user back to <code>Fozzy</code>, open the <code>Approve Request</code> task and approve the request by selecting the appropriate option.</p>
+</li>
+<li>
+<p>Switch to <code>Workpieces</code> and you should still see the request business object, even after the process is finished. Examine the approval
+request by clicking <em>Data</em>, <em>Audit</em> and <em>Description</em> tabs in <em>Details</em> column.</p>
+</li>
+</ul>
                 
                   
                 
@@ -1196,7 +1217,7 @@ to your <code>pom.xml</code>:</p>
     <nav class="md-footer__inner md-grid" aria-label="Footer">
       
         
-        <a href="../introduction/further-outlook.html" class="md-footer__link md-footer__link--prev" aria-label="Previous: Further Outlook" rel="prev">
+        <a href="../reference-guide/configuration/index.html" class="md-footer__link md-footer__link--prev" aria-label="Previous: Configuration Overview" rel="prev">
           <div class="md-footer__button md-icon">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
           </div>
@@ -1205,20 +1226,20 @@ to your <code>pom.xml</code>:</p>
               <span class="md-footer__direction">
                 Previous
               </span>
-              Further Outlook
+              Configuration Overview
             </div>
           </div>
         </a>
       
       
         
-        <a href="../reference-guide/index.html" class="md-footer__link md-footer__link--next" aria-label="Next: Reference Overview" rel="next">
+        <a href="example-components/index.html" class="md-footer__link md-footer__link--next" aria-label="Next: Example Components Overview" rel="next">
           <div class="md-footer__title">
             <div class="md-ellipsis">
               <span class="md-footer__direction">
                 Next
               </span>
-              Reference Overview
+              Example Components Overview
             </div>
           </div>
           <div class="md-footer__button md-icon">
