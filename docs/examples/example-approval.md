@@ -3,13 +3,13 @@ title: Example Application
 ---
 
 Along with library modules several example modules and applications are provided, demonstrating the main features of the solution.
-This includes a series of example applications for usage in different [Usage Scenarios](../scenarios/). They all share the same
+This includes a series of example applications for usage in different [Usage Scenarios](./scenarios/). They all share the same
 business process described in the next section.
 
 
 ## Business context: Approval
 
-![Approval Process](../../img/process_approve_request.png)
+![Approval Process](../img/process_approve_request.png)
 
 Take a look on the process model above. Imagine you are building a system that responsible for management of all approval requests
 in the company. Using this system, you can submit requests which then get eventually approved or rejected. Sometimes, the __approver__
@@ -56,7 +56,7 @@ on http://localhost:8080. Please adjust the URLs accordingly, if you started dif
 - Open the menu (`Start new...`) in and select 'Request Approval'. You should see the start form for the example
 approval process.
 
-![New approval process start form](../../img/example_start_form.png)
+![New approval process start form](../img/example_start_form.png)
 
 - Select `Advanced Training` from one of predefined templates and click _Start_. The start form will disappear and redirect back to
 the empty `Tasklist`.
@@ -64,17 +64,17 @@ the empty `Tasklist`.
 - Since you are still acting as `Ironman` there are nothing you can do here. Please switch the user to `Gonzo`
 in the top right corner and you should see the user task `Approve Request` from process `Request Approval`.
 
-![Task list with task description](../../img/example_tasklist_approve_description.png)
+![Task list with task description](../img/example_tasklist_approve_description.png)
 
 - Examine the task details by clicking _Data_ tab in _Details_ column. You can see the data of the request correlated to
 the current process instance.
 
-![Task list with task data](../../img/example_tasklist_approve_data.png)
+![Task list with task data](../img/example_tasklist_approve_data.png)
 
 - Click on the task name and you will see the user task form of the `Approve Request` task. Select the option
 `Return request to originator` and click complete.
 
-![Example User Task Form Approve Request](../../img/example_approve_request.png)
+![Example User Task Form Approve Request](../img/example_approve_request.png)
 
 - Switch to `Workpieces` and you should see the request business object. Examine the approval request by clicking
 _Data_, _Audit_ and _Description_ tabs in _Details_ column.

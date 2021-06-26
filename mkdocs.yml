@@ -15,6 +15,7 @@
 
 site_name: Polyflow
 site_url: https://www.holunda.io/camunda-bpm-taskpool/
+site_author: Holisticon BPM Craftsman
 site_description: >-
  Polyflow is an open-source framework for creation of process platform with one
  or multiple process engines (like Camunda BPM) providing a holistic enterprise-wide
@@ -22,10 +23,12 @@ site_description: >-
 
 copyright: Copyright &copy; 2016 - 2021, Holisticon AG
 
+use_directory_urls: false
+
 # Repository
 repo_name: holunda-io/camunda-bpm-taskpool
 repo_url: https://github.com/holunda-io/camunda-bpm-taskpool/
-edit_uri: https://github.com/holunda-io/camunda-bpm-taskpool/edit/develop/docs/
+edit_uri: edit/develop/docs/
 
 markdown_extensions:
     - attr_list
@@ -33,11 +36,17 @@ markdown_extensions:
         permalink: "#"
     - pymdownx.highlight
     - pymdownx.superfences
+    - pymdownx.details
 
 theme:
   name: material
   features:
-    - navigation.tabs
+    - navigation.instant # When instant loading is enabled, clicks on all internal links will be intercepted and dispatched via XHR without fully reloading the page
+    - navigation.tabs # add top level nav items into a horizoneal menu
+    - navigation.tabs.sticky # make horizonatl menu sticky (insider feature)
+    # - navigation.sections
+    - navigation.top # add "navigate to top" page icon on bottom left
+    - toc.integrate # integrate site TOC into the menu on the left
   logo: img/polyflow-65x61.png
   icon:
     repo: fontawesome/brands/github
@@ -63,8 +72,8 @@ extra:
     - icon: fontawesome/brands/medium
       name: Holisticon on Medium
       link: https://medium.com/holisticon
-
-
+  version:
+    provider: mike
 
 plugins:
   - search
@@ -72,7 +81,13 @@ plugins:
 #      repository: holunda-io/camunda-bpm-taskpool
 #      branch: master
 #      token: !!python/object/apply:os.getenv ["MKDOCS_GIT_COMMITTERS_APIKEY"]
-
+  - mike:
+      # these fields are all optional; the defaults are as below...
+      version_selector: true   # set to false to leave out the version selector
+      css_dir: css             # the directory to put the version selector's CSS
+      javascript_dir: js       # the directory to put the version selector's JS
+      canonical_version: null  # the version for <link rel="canonical">; `null`
+                               # uses the version specified via `mike deploy`
 
 nav:
   - 'Home': 'index.md'
@@ -98,8 +113,8 @@ nav:
       - 'In-Memory View': reference-guide/components/view-simple.md
       - 'Mongo DB View': reference-guide/components/view-mongo.md
       - 'Cockpit View': reference-guide/components/view-cockpit.md
+      - 'Form URL Resolver': reference-guide/components/view-form-url-resolver.md
     - 'Other Components':
-      - 'Form URL Resolver': reference-guide/components/other-form-url-resolver.md
       - 'Tasklist URL Resolver': reference-guide/components/other-tasklist-url-resolver.md
       - 'Variable Serializer': reference-guide/components/other-variable-serializer.md
     - 'Configuration Overview': reference-guide/configuration/index.md

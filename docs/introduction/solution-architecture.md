@@ -20,7 +20,7 @@ to build parts of the process platform.
 ## Design Decisions
 
 We decided to build the library as a collection of loose-coupled components which can be used during the construction
-of the process automation solution in different ways, depending on your [Usage Scenario](../../examples/scenarios).
+of the process automation solution in different ways, depending on your [Usage Scenario](../examples/scenarios).
 
 The process platform is a central application consisting of business process independent components like a central user management,
 task inbox (aka task list), archive view for business data processed, audit logs and others. One or many process applications
@@ -30,7 +30,7 @@ object views, user task forms and other required pieces.
 
 The following diagram depicts the overall logical architecture:
 
-![Process Platform Architecture](../../img/process-platform-architecture.png)
+![Process Platform Architecture](../img/process-platform-architecture.png)
 
 
 ## Implementation Decisions
@@ -40,4 +40,4 @@ They make a massive use of Axon Framework as a basis of the CQRS implementation.
 
 // FIXME: replace this image with architecture of the camunda integration
 
-![Collector Architecture](../../img/architecture-collector.png)
+![Collector Architecture](../img/architecture-collector.png)

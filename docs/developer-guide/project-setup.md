@@ -55,7 +55,7 @@ significantly.
 
 ### Generate SQL scripts
 
-The project uses https://flywaydb.org/[Flyway] for versioning of database changes. In doing so we provide the
+The project uses [Flyway](https://flywaydb.org/) for versioning of database changes. In doing so we provide the
 required SQL scripts for initialization of required database objects (including Camunda BPM schema, Axon schema and
 some example schema). If you change any of those you will need to create SQL scripts describing your change.
 For doing so, you can re-generate the scripts running:
@@ -68,29 +68,29 @@ NOTE: The existing scripts must not be replaced or changed, but new additional s
 
 ### Build Documentation
 
-We are using Orchid for generation of a static site documentation and rely on AsciiDoc as much as possible.
+We are using MkDocs for generation of a static site documentation and rely on Markdown as much as possible.
+MkDocs is a written in Python 3 and needs to be installed on your machine. For the installation please run the following
+command from your command line:
 
-TIP: If you want to develop your docs in 'live' mode, run `./mvnw -f docs -Pserve-docs` and access
-the http://localhost:8080/ from your browser.
+```bash
+python3 -m pip install --upgrade pip
+python3 -m pip install -r ./docs/requirements.txt
+```
 
 For creation of documentation, please run:
 
 ```bash
-./mvnw -f docs orchid:build
+mkdocs build
 ```
 
-WARNING: This operation requires special permissions. You need to replace `GITHUB_TOKEN` by the token of
-the github pages repository, allowing to publish the pages.
+The docs are generated into `site` directory. 
 
-In order to publish documentation to github pages, please run from command line
-
-```bash
-./mvnw -f docs -Pdeploy-docs -DgithubToken=GITHUB_TOKEN
-```
+!!!note If you want to develop your docs in 'live' mode, run `mkdocs serve` and access
+the [http://localhost:8000/](http://localhost:8000/) from your browser.
 
 ### Examples
 
-Taskpool provides a series of examples demonstrating different features of the library. By default, the examples are
+Polyflow provides a series of examples demonstrating different features of the library. By default, the examples are
 built during the project build. If you want to skip the examples, please add the following parameter to your command
 line or disable the `examples` module in your IDE.
 
@@ -100,7 +100,7 @@ line or disable the `examples` module in your IDE.
 
 ## Local Start
 
-IMPORTANT: If you want to run examples locally, you will need `docker` and `docker-compose`.
+!!!important If you want to run examples locally, you will need `docker` and `docker-compose`.
 
 ### Pre-requirements
 
@@ -166,10 +166,10 @@ inside the corresponding `pom.xml`. Currently, all examples are _EXCLUDED_ from 
 
 WARNING: This operation requires special permissions.
 
-We use gitflow for development (see http://nvie.com/posts/a-successful-git-branching-model/[A successful git branching model]
+We use gitflow for development (see [A successful git branching model](http://nvie.com/posts/a-successful-git-branching-model/)
 for more details). You could use gitflow with native git commands, but then you would have
 to change the versions in the poms manually. Therefore, we use the
-https://github.com/aleksandr-m/gitflow-maven-plugin/[mvn gitflow plugin], which handles this and other
+[mvn gitflow plugin](https://github.com/aleksandr-m/gitflow-maven-plugin/), which handles this and other
 things nicely.
 
 You can build a release with:
@@ -184,7 +184,7 @@ and update the `develop` branch for the new development version.
 
 ### Trigger a deploy
 
-WARNING: This operation requires special permissions.
+!!! warning  This operation requires special permissions.
 
 Currently, CI allows for deployment of artifacts to Maven Central and is executed using github actions.
 This means, that a push to `master` branch will start the corresponding build job, and if successful the
