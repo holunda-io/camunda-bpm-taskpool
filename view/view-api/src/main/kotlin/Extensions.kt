@@ -1,4 +1,4 @@
-package io.holunda.camunda.taskpool.view
+package io.holunda.polyflow.view
 
 import io.holunda.camunda.taskpool.api.business.DataEntryState
 import io.holunda.camunda.taskpool.api.business.Modification
@@ -20,7 +20,7 @@ fun task(event: TaskAssignedEngineEvent, task: Task) = Task(
   payload = task.payload,
   businessKey = event.businessKey,
   formKey = task.formKey,
-  createTime = event.createTime,
+  createTime = event.createTime?.toInstant(),
   assignee = event.assignee,
   candidateGroups = event.candidateGroups,
   candidateUsers = event.candidateUsers,
@@ -30,7 +30,7 @@ fun task(event: TaskAssignedEngineEvent, task: Task) = Task(
   description = event.description,
   owner = event.owner,
   followUpDate = task.followUpDate,
-  dueDate = event.dueDate
+  dueDate = event.dueDate?.toInstant()
 )
 
 /**
@@ -47,7 +47,7 @@ fun task(event: TaskCreatedEngineEvent) = Task(
   payload = event.payload,
   businessKey = event.businessKey,
   formKey = event.formKey,
-  createTime = event.createTime,
+  createTime = event.createTime?.toInstant(),
   assignee = event.assignee,
   candidateGroups = event.candidateGroups,
   candidateUsers = event.candidateUsers,
@@ -56,8 +56,8 @@ fun task(event: TaskCreatedEngineEvent) = Task(
   description = event.description,
   priority = event.priority,
   owner = event.owner,
-  followUpDate = event.followUpDate,
-  dueDate = event.dueDate
+  followUpDate = event.followUpDate?.toInstant(),
+  dueDate = event.dueDate?.toInstant()
 )
 
 /**
@@ -81,8 +81,8 @@ fun task(event: TaskAttributeUpdatedEngineEvent, task: Task) = Task(
   description = event.description,
   priority = event.priority,
   owner = event.owner,
-  followUpDate = event.followUpDate,
-  dueDate = event.dueDate,
+  followUpDate = event.followUpDate?.toInstant(),
+  dueDate = event.dueDate?.toInstant(),
 
   businessKey = event.businessKey ?: task.businessKey,
   correlations = if (event.correlations.isEmpty()) {
@@ -169,7 +169,7 @@ fun task(event: TaskCandidateUserChanged, task: Task) = Task(
  */
 fun addModification(modifications: List<ProtocolEntry>, modification: Modification, state: DataEntryState) =
   modifications.plus(ProtocolEntry(
-    time = Date.from(modification.time.toInstant()),
+    time = modification.time.toInstant(),
     username = modification.username,
     logMessage = modification.log,
     logDetails = modification.logNotes,

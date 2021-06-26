@@ -1,9 +1,5 @@
-package io.holunda.camunda.taskpool.view.query.data
+package io.holunda.polyflow.view.query.data
 
-import io.holunda.camunda.taskpool.view.query.data.DataEntriesForUserQuery
-import io.holunda.camunda.taskpool.view.query.data.DataEntriesQuery
-import io.holunda.camunda.taskpool.view.query.data.DataEntriesQueryResult
-import io.holunda.camunda.taskpool.view.query.data.DataEntryForIdentityQuery
 import org.axonframework.messaging.MetaData
 import java.util.concurrent.CompletableFuture
 

@@ -1,8 +1,8 @@
-package io.holunda.camunda.taskpool.view.query.process.variable.filter
+package io.holunda.polyflow.view.query.process.variable.filter
 
-import io.holunda.camunda.taskpool.view.ProcessVariable
-import io.holunda.camunda.taskpool.view.query.process.variable.ProcessVariableFilter
-import io.holunda.camunda.taskpool.view.query.process.variable.ProcessVariableFilterType
+import io.holunda.polyflow.view.ProcessVariable
+import io.holunda.polyflow.view.query.process.variable.ProcessVariableFilter
+import io.holunda.polyflow.view.query.process.variable.ProcessVariableFilterType
 
 /**
  * Filter to query for exactly one variable.

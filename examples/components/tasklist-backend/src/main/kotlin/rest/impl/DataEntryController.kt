@@ -6,9 +6,9 @@ import io.holunda.camunda.taskpool.example.tasklist.rest.Rest
 import io.holunda.camunda.taskpool.example.tasklist.rest.api.BolistApi
 import io.holunda.camunda.taskpool.example.tasklist.rest.mapper.TaskWithDataEntriesMapper
 import io.holunda.camunda.taskpool.example.tasklist.rest.model.DataEntryDto
-import io.holunda.camunda.taskpool.view.auth.UserService
-import io.holunda.camunda.taskpool.view.query.data.DataEntriesForUserQuery
-import io.holunda.camunda.taskpool.view.query.data.DataEntriesQueryResult
+import io.holunda.polyflow.view.auth.UserService
+import io.holunda.polyflow.view.query.data.DataEntriesForUserQuery
+import io.holunda.polyflow.view.query.data.DataEntriesQueryResult
 import io.swagger.annotations.Api
 import org.axonframework.queryhandling.QueryGateway
 import org.springframework.http.HttpHeaders

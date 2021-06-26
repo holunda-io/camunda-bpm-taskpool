@@ -4,7 +4,7 @@ import io.holunda.camunda.taskpool.example.tasklist.rest.model.DataEntryDto
 import io.holunda.camunda.taskpool.example.tasklist.rest.model.ProtocolEntryDto
 import io.holunda.camunda.taskpool.example.tasklist.rest.model.TaskDto
 import io.holunda.camunda.taskpool.example.tasklist.rest.model.TaskWithDataEntriesDto
-import io.holunda.camunda.taskpool.view.*
+import io.holunda.polyflow.view.*
 import org.mapstruct.Mapper
 import org.mapstruct.Mapping
 import org.mapstruct.Mappings

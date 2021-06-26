@@ -1,8 +1,0 @@
----
-version: 2.1.6
----
-
-== Feature
-
-* Fix Mongo connection problems, see #307
-* Provide current DB scripts for examples

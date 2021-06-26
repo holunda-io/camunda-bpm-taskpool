@@ -1,4 +1,4 @@
-package io.holunda.camunda.taskpool.view
+package io.holunda.polyflow.view
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test

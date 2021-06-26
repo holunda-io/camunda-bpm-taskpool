@@ -1,8 +1,0 @@
----
-version: 1.2.14
----
-
-== Bug fixes
-
-* mongo view now handles empty sort correctly, see #161
-

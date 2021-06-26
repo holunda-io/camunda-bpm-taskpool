@@ -35,14 +35,14 @@ sealed class AuthorizationChange {
      * @return a list of authorized users.
      */
     @JvmStatic
-    fun applyUserAuthorization(authorizedUsers: List<String>, authorizationChanges: List<AuthorizationChange>): List<String> {
+    fun applyUserAuthorization(authorizedUsers: Set<String>, authorizationChanges: List<AuthorizationChange>): Set<String> {
       val usersToRemove = authorizationChanges.filterIsInstance<RemoveAuthorization>().flatMap { it.authorizedUsers }
       val usersToAdd = authorizationChanges.filterIsInstance<AddAuthorization>().flatMap { it.authorizedUsers }
       val mutable = authorizedUsers.toMutableList()
       mutable.addAll(usersToAdd)
       mutable.removeAll(usersToRemove)
 
-      return mutable.toSet().toList()
+      return mutable.toSet()
     }
 
     /**
@@ -50,14 +50,14 @@ sealed class AuthorizationChange {
      * @return a list of authorized groups.
      */
     @JvmStatic
-    fun applyGroupAuthorization(authorizedGroups: List<String>, authorizationChanges: List<AuthorizationChange>): List<String> {
+    fun applyGroupAuthorization(authorizedGroups: Set<String>, authorizationChanges: List<AuthorizationChange>): Set<String> {
       val groupsToRemove = authorizationChanges.filterIsInstance<RemoveAuthorization>().flatMap { it.authorizedGroups }
       val groupsToAdd = authorizationChanges.filterIsInstance<AddAuthorization>().flatMap { it.authorizedGroups }
       val mutable = authorizedGroups.toMutableList()
       mutable.addAll(groupsToAdd)
       mutable.removeAll(groupsToRemove)
 
-      return mutable.toSet().toList()
+      return mutable.toSet()
     }
 
   }

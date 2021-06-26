@@ -5,7 +5,7 @@
 
   <groupId>io.holunda.polyflow</groupId>
   <artifactId>polyflow-root</artifactId>
-  <version>3.0.0-SNAPSHOT</version>
+  <version>3.0.1-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>POM: ${project.artifactId}</name>
@@ -18,11 +18,12 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <java.version>11</java.version>
     <version.java>${java.version}</version.java>
+    <version.java>${java.version}</version.java>
 
     <kotlin.version>1.5.10</kotlin.version>
     <kotlin.compiler.jvmTarget>${java.version}</kotlin.compiler.jvmTarget>
     <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
-    <kotlin-logging.version>2.0.6</kotlin-logging.version>
+    <kotlin-logging.version>2.0.8</kotlin-logging.version>
 
   </properties>
 
@@ -101,18 +102,6 @@
   </build>
 
   <profiles>
-
-    <!-- Docs are generated only if this profile is enabled -->
-    <profile>
-      <id>docs</id>
-      <activation>
-        <activeByDefault>false</activeByDefault>
-      </activation>
-      <modules>
-        <module>docs</module>
-      </modules>
-    </profile>
-
     <!-- Examples are included only if this profile is enabled -->
     <profile>
       <id>examples</id>
@@ -212,7 +201,7 @@
   <licenses>
     <license>
       <name>Apache License, Version 2.0</name>
-      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
       <distribution>repo</distribution>
     </license>
   </licenses>
@@ -226,8 +215,9 @@
 
   <distributionManagement>
     <site>
-      <id>README</id>
-      <url>https://github.com/holunda-io/camunda-bpm-taskpool</url>
+      <id>docs</id>
+      <name>Documentation</name>
+      <url>https://www.holunda.io/camunda-bpm-taskpool/</url>
     </site>
     <snapshotRepository>
       <id>ossrh</id>
@@ -237,6 +227,9 @@
       <id>ossrh</id>
       <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
     </repository>
+    <status>
+
+    </status>
   </distributionManagement>
 
   <developers>
@@ -245,14 +238,14 @@
       <name>Simon Zambrovski</name>
       <email>simon.zambrovski@holisticon.de</email>
       <organization>Holisticon AG</organization>
-      <organizationUrl>http://www.holisticon.de</organizationUrl>
+      <organizationUrl>https://www.holisticon.de</organizationUrl>
     </developer>
     <developer>
       <id>jangalinski</id>
       <name>Jan Galinski</name>
       <email>jan.galinski@holisticon.de</email>
       <organization>Holisticon AG</organization>
-      <organizationUrl>http://www.holisticon.de</organizationUrl>
+      <organizationUrl>https://www.holisticon.de</organizationUrl>
     </developer>
     <developer>
       <id>lbilger</id>
@@ -269,14 +262,14 @@
       <id>bignesta</id>
       <name>Christoph Wolff</name>
       <organization>Holisticon AG</organization>
-      <organizationUrl>http://www.holisticon.de</organizationUrl>
+      <organizationUrl>https://www.holisticon.de</organizationUrl>
     </developer>
     <developer>
       <id>dthuesen</id>
       <name>Detlef von Thuesen</name>
       <email>dthuesen@gmx.de</email>
       <organization>Holisticon AG</organization>
-      <organizationUrl>http://www.holisticon.de</organizationUrl>
+      <organizationUrl>https://www.holisticon.de</organizationUrl>
     </developer>
   </developers>
 </project>

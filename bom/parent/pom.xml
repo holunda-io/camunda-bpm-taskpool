@@ -6,7 +6,7 @@
   <parent>
     <groupId>io.holunda.polyflow</groupId>
     <artifactId>polyflow-root</artifactId>
-    <version>3.0.0-SNAPSHOT</version>
+    <version>3.0.1-SNAPSHOT</version>
     <relativePath>../../pom.xml</relativePath>
   </parent>
 
@@ -21,7 +21,7 @@
     <springboot.version>2.4.5</springboot.version>
     <camunda-commons-typed-values.version>7.15.0</camunda-commons-typed-values.version>
 
-    <axon.version>4.5.1</axon.version>
+    <axon.version>4.5.2</axon.version>
     <axon-kotlin.version>0.1.0</axon-kotlin.version>
     <axon-gateway-extension.version>0.0.4</axon-gateway-extension.version>
 
@@ -456,7 +456,7 @@
           <!-- for loading and unpacking artifacts -->
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-dependency-plugin</artifactId>
-          <version>3.1.2</version>
+          <version>3.2.0</version>
         </plugin>
 
         <plugin>
@@ -574,7 +574,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-failsafe-plugin</artifactId>
-          <version>3.0.0-M5</version>
+          <version>3.0.0-M4</version>
           <executions>
             <execution>
               <goals>

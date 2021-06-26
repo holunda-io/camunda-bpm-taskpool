@@ -1,6 +1,6 @@
 package io.holunda.camunda.taskpool.example.users
 
-import io.holunda.camunda.taskpool.view.auth.User
+import io.holunda.polyflow.view.auth.User
 
 /**
  * Simple abstraction of the user store.

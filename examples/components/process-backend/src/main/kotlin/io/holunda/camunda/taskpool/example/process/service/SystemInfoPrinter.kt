@@ -2,9 +2,9 @@ package io.holunda.camunda.taskpool.example.process.service
 
 import io.holixon.axon.gateway.query.QueryResponseMessageResponseType
 import io.holunda.camunda.taskpool.example.users.UserStoreService
-import io.holunda.camunda.taskpool.view.ProcessInstanceState
-import io.holunda.camunda.taskpool.view.query.process.ProcessInstanceQueryResult
-import io.holunda.camunda.taskpool.view.query.process.ProcessInstancesByStateQuery
+import io.holunda.polyflow.view.ProcessInstanceState
+import io.holunda.polyflow.view.query.process.ProcessInstanceQueryResult
+import io.holunda.polyflow.view.query.process.ProcessInstancesByStateQuery
 import mu.KLogging
 import org.axonframework.queryhandling.QueryGateway
 import org.springframework.boot.ApplicationRunner
