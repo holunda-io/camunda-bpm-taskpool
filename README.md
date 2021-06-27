@@ -9,10 +9,10 @@
 
 > A component library for building enterprise-wide process platforms with multiple process engines like Camunda BPM.
 
-<img src="docs/img/polyflow-hero-530x406.png?raw=true" alt="Polyflow Hero" title="Polyflow Hero" align="right" />
-
 In the last five years, we built different process applications on behalf of the customer several times. It turned out that some of the issues occurred every
 time during the implementation.
+
+<img src="docs/img/polyflow-hero-530x406.png?raw=true" width=500 alt="Polyflow Hero" title="Polyflow Hero" align="right" />
 
 These were:
 
