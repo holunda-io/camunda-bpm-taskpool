@@ -1,9 +1,9 @@
 import {Component} from '@angular/core';
-import {RequestService} from 'process/api/request.service';
+import {RequestService} from 'process/services/request.service';
 import {EnvironmentHelperService} from 'app/services/environment.helper.service';
 import {ActivatedRoute, Router} from '@angular/router';
-import {Environment} from 'process/model/environment';
-import {ApprovalRequest} from 'process/model/approvalRequest';
+import {Environment} from 'process/models/environment';
+import {ApprovalRequest} from 'process/models/approval-request';
 
 
 @Component({
@@ -24,7 +24,7 @@ export class ApprovalRequestComponent {
     const requestId: string = route.snapshot.paramMap.get('requestId');
     this.envProvider.env().subscribe(e => this.environment = e);
 
-    this.client.getApprovalRequest(this.userId, requestId).subscribe(
+    this.client.getApprovalRequest({ 'X-Current-User-ID': this.userId, id: requestId}).subscribe(
       approvalRequest => {
         this.approvalRequest = approvalRequest;
       }, error => {
@@ -40,7 +40,7 @@ export class ApprovalRequestComponent {
   private static emptyApprovalRequest(): ApprovalRequest {
     return {
       applicant: '',
-      amount: '',
+      amount: 0.00,
       id: 'undefined',
       subject: '',
       currency: 'EUR'

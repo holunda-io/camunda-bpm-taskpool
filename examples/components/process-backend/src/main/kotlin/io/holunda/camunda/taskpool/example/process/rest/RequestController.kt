@@ -30,19 +30,20 @@ class RequestController(
   private val requestApprovalProcessBean: RequestApprovalProcessBean,
   private val requestService: RequestService,
   private val userService: UserService,
-  private val queryGateway: QueryGateway, // FIXME -> move
+  private val queryGateway: QueryGateway,
   private val objectMapper: ObjectMapper
 ) : RequestApi {
 
 
   override fun startNewApproval(
-    @ApiParam(value = "Specifies the id of current user.", required = true) @RequestHeader(value = "X-Current-User-ID", required = true) xCurrentUserID: String,
-    @ApiParam("Request to be approved", required = true) @RequestBody request: ApprovalRequestDraftDto
+    @RequestHeader(value = "X-Current-User-ID", required = true) xCurrentUserID: String,
+    @RequestParam(value = "revision", required = false) revision: Optional<String>,
+    @RequestBody request: ApprovalRequestDraftDto
   ): ResponseEntity<Void> {
 
-    val revision = 1L
+    val revisionNumber = revision.orElseGet { "1" }.toLong()
     val username = userService.getUser(xCurrentUserID).username
-    requestApprovalProcessBean.submitDraft(draft(request), username, revision)
+    requestApprovalProcessBean.submitDraft(draft(request), username, revisionNumber)
 
     return noContent().build()
   }
@@ -60,8 +61,9 @@ class RequestController(
   }
 
   override fun getApprovalForUser(
-    @ApiParam(value = "Specifies the id of current user.", required = true) @RequestHeader(value = "X-Current-User-ID", required = true) xCurrentUserID: String,
-    @ApiParam(value = "Revision of the projection.") @RequestParam(value = "revision", required = false) revision: Optional<String>): ResponseEntity<List<ApprovalRequestDto>> {
+    @RequestHeader(value = "X-Current-User-ID", required = true) xCurrentUserID: String,
+    @RequestParam(value = "revision", required = false) revision: Optional<String>
+  ): ResponseEntity<List<ApprovalRequestDto>> {
 
     val revisionNumber = revision.orElse("1").toLong()
     val user = userService.getUser(xCurrentUserID).username

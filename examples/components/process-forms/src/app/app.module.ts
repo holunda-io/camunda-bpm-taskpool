@@ -2,13 +2,9 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { registerLocaleData } from '@angular/common';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import localeFr from '@angular/common/locales/fr';
-import localeDe from '@angular/common/locales/de';
-import localeEn from '@angular/common/locales/en';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-import { ApiModule, BASE_PATH } from 'process';
+import { ApiModule } from 'process/api.module';
 import { AppComponent } from 'app/app.component';
 import { AppRoutingModule } from 'app/app-routing.module';
 import { HttpClientModule } from '@angular/common/http';
@@ -22,11 +18,6 @@ import { PageNotFoundComponent } from 'app/tasks/page-not-found/page-not-found.c
 import { RequestFormComponent } from 'app/components/request-form/request-form.component';
 import { RequestViewComponent } from 'app/components/request-view/request-view.component';
 import { StartComponent } from 'app/tasks/start/start.component';
-
-
-registerLocaleData(localeFr, 'fr');
-registerLocaleData(localeDe, 'de');
-registerLocaleData(localeEn, 'en');
 
 
 @NgModule({
@@ -78,7 +69,6 @@ registerLocaleData(localeEn, 'en');
     HttpClientModule
   ],
   providers: [
-    { provide: BASE_PATH, useValue: '/example-process-approval/rest' },
     EnvironmentHelperService
   ],
   bootstrap: [AppComponent]

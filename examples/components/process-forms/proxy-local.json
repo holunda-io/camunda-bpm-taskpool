@@ -8,7 +8,7 @@
     }
   },
   "/example-process-approval/": {
-    "target": "http://localhost:4200",
+    "target": "http://localhost:4300",
     "secure": false,
     "logLevel": "debug",
     "pathRewrite": {

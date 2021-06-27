@@ -5,7 +5,7 @@ import { AmendTaskComponent } from './amend-task.component';
 import { Observable } from 'rxjs-compat';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { UserTaskAmendRequestService } from 'process/api/userTaskAmendRequest.service';
+import { UserTaskAmendRequestService } from 'process/services/user-task-amend-request.service';
 import { EnvironmentHelperService } from 'app/services/environment.helper.service';
 import { of } from 'rxjs-compat/observable/of';
 

@@ -5,9 +5,9 @@ import {StartComponent} from './start.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 import {EnvironmentHelperService} from 'app/services/environment.helper.service';
-import {RequestService} from 'process/api/request.service';
+import {RequestService} from 'process/services/request.service';
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {ApprovalRequestDraft} from 'process/model/approvalRequestDraft';
+import {ApprovalRequestDraft} from 'process/models/approval-request-draft';
 import {RequestFormComponent} from 'app/components/request-form/request-form.component';
 
 @Component({

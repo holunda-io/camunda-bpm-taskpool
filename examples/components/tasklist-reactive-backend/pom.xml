@@ -13,20 +13,13 @@
   <name>examples/${project.artifactId}</name>
 
   <properties>
-    <application.api-location>../tasklist-api/src/main/resources</application.api-location>
+    <application.api-location>../tasklist-backend/src/main/api</application.api-location>
     <application.base-package>io.holunda.camunda.taskpool.example.tasklist.rest</application.base-package>
-    <application.api-package>${application.base-package}.api</application.api-package>
-    <application.model-package>${application.base-package}.model</application.model-package>
-    <application.config-package>${application.base-package}</application.config-package>
     <maven.deploy.skip>true</maven.deploy.skip>
     <commons-text.version>1.6</commons-text.version>
   </properties>
 
   <dependencies>
-    <dependency>
-      <groupId>io.holunda.polyflow</groupId>
-      <artifactId>polyflow-example-tasklist-api</artifactId>
-    </dependency>
     <dependency>
       <groupId>io.holunda.polyflow</groupId>
       <artifactId>polyflow-example-users</artifactId>
@@ -69,6 +62,10 @@
       <groupId>io.toolisticon.springboot</groupId>
       <artifactId>springboot-swagger-starter</artifactId>
     </dependency>
+    <dependency>
+      <groupId>org.openapitools</groupId>
+      <artifactId>jackson-databind-nullable</artifactId>
+    </dependency>
 
     <!-- Axon -->
     <dependency>
@@ -106,32 +103,12 @@
               <goal>copy-resources</goal>
             </goals>
             <configuration>
-              <outputDirectory>${project.build.directory}/swagger-model</outputDirectory>
+              <outputDirectory>${project.build.directory}/openapi-model</outputDirectory>
               <resources>
                 <resource>
                   <directory>${application.api-location}</directory>
                   <includes>
-                    <include>swagger.yml</include>
-                  </includes>
-                </resource>
-              </resources>
-            </configuration>
-          </execution>
-
-          <execution>
-            <id>copy-swagger-ignore</id>
-            <phase>generate-sources</phase>
-            <goals>
-              <goal>copy-resources</goal>
-            </goals>
-            <configuration>
-              <outputDirectory>${project.build.directory}/generated-sources/swagger
-              </outputDirectory>
-              <resources>
-                <resource>
-                  <directory>src/main/resources</directory>
-                  <includes>
-                    <include>.swagger-codegen-ignore</include>
+                    <include>openapi.yml</include>
                   </includes>
                 </resource>
               </resources>
@@ -160,41 +137,40 @@
         </executions>
       </plugin>
 
-      <!-- Order matters! -->
       <plugin>
-        <!-- generate spring controller stubs -->
-        <groupId>io.swagger</groupId>
-        <artifactId>swagger-codegen-maven-plugin</artifactId>
+        <groupId>org.openapitools</groupId>
+        <artifactId>openapi-generator-maven-plugin</artifactId>
         <executions>
           <execution>
             <id>generate-server-stubs</id>
-            <phase>process-sources</phase>
+            <phase>generate-sources</phase>
             <goals>
               <goal>generate</goal>
             </goals>
             <configuration>
-              <inputSpec>${project.build.directory}/swagger-model/swagger.yml</inputSpec>
-              <templateDirectory>src/main/swagger-templates</templateDirectory>
-              <language>spring</language>
-              <apiPackage>${application.api-package}</apiPackage>
-              <modelPackage>${application.model-package}</modelPackage>
-              <modelNamePrefix />
+              <inputSpec>${project.build.directory}/openapi-model/openapi.yml</inputSpec>
+              <generatorName>spring</generatorName>
+              <apiPackage>${application.base-package}.api</apiPackage>
+              <modelPackage>${application.base-package}.model</modelPackage>
+              <modelNamePrefix/>
               <modelNameSuffix>Dto</modelNameSuffix>
               <configOptions>
+                <sourceFolder>src/main/java</sourceFolder>
                 <basePackage>${application.base-package}</basePackage>
-                <configPackage>${application.config-package}</configPackage>
-                <singleContentTypes>false</singleContentTypes>
+                <configPackage>${application.base-package}</configPackage>
                 <interfaceOnly>true</interfaceOnly>
-                <swaggerDocketConfig>false</swaggerDocketConfig>
                 <dateLibrary>java8</dateLibrary>
-                <useOptional>true</useOptional>
+                <swaggerDocketConfig>false</swaggerDocketConfig>
+                <reactive>false</reactive>
                 <bigDecimalAsString>true</bigDecimalAsString>
+                <useOptional>true</useOptional>
                 <useBeanValidation>true</useBeanValidation>
               </configOptions>
             </configuration>
           </execution>
         </executions>
       </plugin>
+
       <plugin>
         <!-- kotlin compiler -->
         <artifactId>kotlin-maven-plugin</artifactId>
@@ -208,7 +184,7 @@
             </goals>
             <configuration>
               <sourceDirs>
-                <sourceDir>${project.basedir}/target/generated-sources/swagger/src/main/java</sourceDir>
+                <sourceDir>${project.basedir}/target/generated-sources/openapi/src/main/java</sourceDir>
                 <sourceDir>src/main/kotlin</sourceDir>
               </sourceDirs>
               <annotationProcessorPaths>
@@ -227,7 +203,7 @@
             </goals>
             <configuration>
               <sourceDirs>
-                <sourceDir>${project.basedir}/target/generated-sources/swagger/src/main/java
+                <sourceDir>${project.basedir}/target/generated-sources/openapi/src/main/java
                 </sourceDir>
                 <sourceDir>${project.basedir}/src/main/kotlin</sourceDir>
               </sourceDirs>

@@ -1,10 +1,18 @@
 {
-  "/tasklist/rest": {
+  "/polyflow-platform/rest": {
     "target": "http://localhost:8081",
     "secure": false,
     "logLevel": "debug",
     "pathRewrite": {
-      "^/tasklist/rest": "/tasklist/rest"
+      "^/polyflow-platform/rest": "/polyflow-platform/rest"
+    }
+  },
+  "/polyflow": {
+    "target": "http://localhost:4200",
+    "secure": false,
+    "logLevel": "debug",
+    "pathRewrite": {
+      "^/polyflow/": "/"
     }
   }
 }

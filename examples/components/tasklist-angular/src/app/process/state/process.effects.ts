@@ -28,7 +28,9 @@ export class ProcessEffects {
   loadStartableProcesses$ = this.actions$.pipe(
     ofType(ProcessActionTypes.LoadStartableProcesses),
     withLatestFrom(this.userStore.userId$()),
-    flatMap(([_, userId]) => this.processService.getStartableProcesses(userId)),
+    flatMap(([_, userId]) => this.processService.getStartableProcesses({
+      'X-Current-User-ID': userId
+    })),
     map(procDtos => mapFromDto(procDtos)),
     map(procDefs => new StartableProcessDefinitionsLoaded(procDefs))
   );

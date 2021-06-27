@@ -21,7 +21,7 @@ object Rest {
  */
 fun approvalRequestDto(request: Request): ApprovalRequestDto = ApprovalRequestDto()
   .id(request.id)
-  .amount(request.amount.toString())
+  .amount(request.amount.toFloat())
   .applicant(request.applicant)
   .currency(request.currency)
   .subject(request.subject)
@@ -51,7 +51,7 @@ fun taskDto(task: Task): TaskDto = TaskDto()
  */
 fun request(dto: ApprovalRequestDto) = Request(
   id = dto.id,
-  amount = BigDecimal(dto.amount),
+  amount = BigDecimal(dto.amount.toString()),
   currency = dto.currency,
   applicant = dto.applicant,
   subject = dto.subject
@@ -61,7 +61,7 @@ fun request(dto: ApprovalRequestDto) = Request(
  * Converts the draft DTO to approval request.
  */
 fun draft(dto: ApprovalRequestDraftDto) = Request(
-  amount = BigDecimal(dto.amount),
+  amount = BigDecimal(dto.amount.toString()),
   currency = dto.currency,
   applicant = dto.applicant,
   subject = dto.subject

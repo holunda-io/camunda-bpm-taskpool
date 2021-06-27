@@ -1,13 +1,13 @@
 {
-  "name": "taskpool",
+  "name": "polyflow",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --proxy-config proxy-local.json --base-href taskpool",
+    "start:local": "ng serve --port 4200 --proxy-config proxy-local.json --base-href polyflow",
     "build": "ng build",
     "test": "ng test --code-coverage --watch=false --browsers=ChromeHeadless",
     "watch-test": "ng test --watch=true",
-    "generate-sources": "ng-swagger-gen -i ../tasklist-api/src/main/resources/swagger.yml -o ./src-gen/tasklist",
+    "generate-sources": "ng-openapi-gen -i ../tasklist-backend/src/main/api/openapi.yml -o ./src-gen/tasklist",
     "lint": "ng lint --fix"
   },
   "private": true,
@@ -50,7 +50,7 @@
     "karma-jasmine": "~4.0.0",
     "karma-jasmine-html-reporter": "^1.5.0",
     "karma-junit-reporter": "1.2.0",
-    "ng-swagger-gen": "1.5.0",
+    "ng-openapi-gen": "0.17.1",
     "puppeteer": "1.20.0",
     "ts-node": "8.0.3",
     "tslint": "~6.1.0",

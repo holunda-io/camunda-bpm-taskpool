@@ -1,0 +1,154 @@
+openapi: '3.0.3'
+info:
+  title: Camunda BPM Taskpool Cockpit
+  version: 0.0.1
+  description: API for the cockpit.
+
+servers:
+  - url: http://localhost:8082/taskpool-cockpit/rest
+    description: local REST API for cockpit
+
+tags:
+- name: Task Event
+  description: Operations on tasks and task events.
+paths:
+  '/task/{taskId}/{command}':
+    parameters:
+      - in: path
+        name: taskId
+        schema:
+          type: string
+        description: Task id.
+        required: true
+      - in: path
+        name: command
+        schema:
+          type: string
+        description: Command, currently only delete is supported.
+        required: true
+    post:
+      tags:
+      - Task Event
+      summary: Sends a command to task aggregate.
+      operationId: sendCommand
+      responses:
+        '204':
+          description: Sucessful operation.
+  '/task-events':
+    get:
+      tags:
+      - Task Event
+      summary: Lists of all task events.
+      operationId: getTaskEvents
+      responses:
+        '200':
+          description: Successful operation.
+          content:
+            application/json:
+              schema:
+                title: List of tasks.
+                type: array
+                items:
+                  $ref: '#/components/schemas/TaskEvent'
+          headers:
+            X-ElementCount:
+              schema:
+                type: integer
+              description: Number of elements in total.
+
+components:
+  schemas:
+    TaskEvent:
+      type: object
+      description: Represents a user task event.
+      properties:
+        id:
+          type: string
+          description: Id of the task.
+        eventType:
+          type: string
+          description: Event type.
+        created:
+          type: string
+          description: Time of event creation.
+          format: date-time
+        task:
+          $ref: '#/components/schemas/Task'
+      required:
+      - task
+
+    Task:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Id of the user task.
+        formKey:
+          type: string
+          description: Form key of the task (as defined in the process model).
+        processName:
+          type: string
+          description: Name of the process.
+        taskDefinitionKey:
+          type: string
+          description: Task definition key from BPMN.
+        processDefinitionKey:
+          type: string
+          description: Process definition key from BPMN.
+        applicationName:
+          type: string
+          description: Application name.
+        tenantId:
+          type: string
+          description: Tenant Id.
+        name:
+          type: string
+          description: Action to execute.
+        description:
+          type: string
+          description: Description of the user task.
+        candidateGroups:
+          type: array
+          description: Set of candidate groups represented by their group ids.
+          items:
+            type: string
+        candidateUsers:
+          type: array
+          description: Set of candidate users represented by their user ids.
+          items:
+            type: string
+        assignee:
+          type: string
+          description: User name of assigned user.
+        createTime:
+          type: string
+          description: Creation date and time of the task.
+          format: date-time
+        followUpDate:
+          type: string
+          description: Creation date and time of the task.
+          format: date-time
+        dueDate:
+          type: string
+          description: Due date and time of the task.
+          format: date-time
+        businessKey:
+          type: string
+          description: Business Key of the process.
+        priority:
+          type: integer
+          description: Priority of the task.
+        payload:
+          type: object
+          additionalProperties:
+            type: object
+      required:
+      - id
+      - name
+      - description
+      - candidateGroups
+      - candidateUsers
+      - processName
+      - createTime
+      - dueDate
+      - businessKey
