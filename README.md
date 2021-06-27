@@ -4,9 +4,12 @@
 [![Codacy](https://api.codacy.com/project/badge/Grade/653136bd5cad48c8a9f2621ee304ff26)](https://app.codacy.com/app/zambrovski/camunda-bpm-taskpool?utm_source=github.com&utm_medium=referral&utm_content=holunda-io/camunda-bpm-taskpool&utm_campaign=Badge_Grade_Dashboard)
 [![OpenHUB](https://www.openhub.net/p/camunda-bpm-taskpool/widgets/project_thin_badge.gif)](https://www.openhub.net/p/camunda-bpm-taskpool)
 
+![Logo](docs/img/Positive@2x.png)
 ## Polyflow Taskpool and Datapool
 
 > A component library for building enterprise-wide process platforms with multiple process engines like Camunda BPM.
+
+<img align="right" src="./blob/develop/docs/img/polyflow-hero-530x406.png" title="Polyflow Hero">
 
 In the last five years, we built different process applications on behalf of the customer several times. It turned out that some of the issues occurred every
 time during the implementation.
