@@ -19,8 +19,8 @@ import java.util.concurrent.TimeUnit
  */
 object Web {
 
-  const val BASE_PATH = "taskpool"
-  const val RESOURCE_LOCATION = "classpath:/static/taskpool/"
+  const val BASE_PATH = "polyflow"
+  const val RESOURCE_LOCATION = "classpath:/static/polyflow/"
 
   val ROUTES = arrayOf(
     "/${BASE_PATH}", "/${BASE_PATH}/", "/${BASE_PATH}/index.html",
@@ -79,7 +79,8 @@ class TasklistSPAConfiguration : WebMvcConfigurer {
 
   override fun addCorsMappings(registry: CorsRegistry) {
     // allow ng serve to access the backend
-    registry.addMapping(Web.BASE_PATH + "/**")
+    registry
+      .addMapping(Web.BASE_PATH + "/**")
       .allowedOrigins("http://localhost:4200")
       .allowedMethods(
         HttpMethod.GET.name,

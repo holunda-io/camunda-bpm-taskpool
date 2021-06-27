@@ -1,6 +1,7 @@
 package io.holunda.camunda.taskpool.example.process
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.holunda.camunda.taskpool.configureTaskpoolJacksonObjectMapper
 import org.springframework.boot.SpringApplication
@@ -20,6 +21,7 @@ class ExampleProcessApplicationDistributedWithAxonServer {
     return jacksonObjectMapper()
       .findAndRegisterModules()!!
       .configureTaskpoolJacksonObjectMapper()
+      .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
   }
 
 //  @Bean

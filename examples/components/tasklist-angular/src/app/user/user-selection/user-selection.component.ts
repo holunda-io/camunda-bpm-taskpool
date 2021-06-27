@@ -1,7 +1,8 @@
-import {Component, OnInit} from '@angular/core';
-import {UserStoreService} from '../state/user.store-service';
-import {UserProfile} from '../state/user.reducer';
-import {Observable} from 'rxjs';
+import { Component, OnInit } from '@angular/core';
+import { UserStoreService } from '../state/user.store-service';
+import { UserProfile } from '../state/user.reducer';
+import { Observable } from 'rxjs';
+import { UserInfo } from 'tasklist/models/user-info';
 
 @Component({
   selector: 'tasks-user-selection',
@@ -10,7 +11,7 @@ import {Observable} from 'rxjs';
 })
 export class UserSelectionComponent implements OnInit {
 
-  availableUsers$: Observable<{[key: string]: string}>;
+  availableUsers$: Observable<UserInfo[]>;
   currentProfile$: Observable<UserProfile>;
 
   constructor(private userStore: UserStoreService) {

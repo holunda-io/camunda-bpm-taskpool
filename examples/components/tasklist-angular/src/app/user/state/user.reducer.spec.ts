@@ -1,5 +1,5 @@
-import {AvailableUsersLoadedAction, LoadAvailableUsersAction, SelectUserAction, UserProfileLoadedAction} from './user.actions';
-import {UserProfile, userReducer, UserState} from './user.reducer';
+import { AvailableUsersLoadedAction, LoadAvailableUsersAction, SelectUserAction, UserProfileLoadedAction } from './user.actions';
+import { UserProfile, userReducer, UserState } from './user.reducer';
 
 describe('processReducer', () => {
 
@@ -10,12 +10,12 @@ describe('processReducer', () => {
       username: '',
       userIdentifier: ''
     },
-    availableUsers: {}
+    availableUsers: []
   };
 
   it('updates available users', () => {
     // given:
-    const availableIds = {'1': 'foo', '2': 'bar'};
+    const availableIds = [{ id: '1', username: 'foo' }, { id: '2', username: 'bar' }];
     const action = new AvailableUsersLoadedAction(availableIds);
 
     // when:

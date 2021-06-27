@@ -31,10 +31,6 @@
     <!-- Tasklist -->
     <dependency>
       <groupId>io.holunda.polyflow</groupId>
-      <artifactId>polyflow-example-tasklist-api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.holunda.polyflow</groupId>
       <artifactId>polyflow-example-tasklist-backend</artifactId>
     </dependency>
     <dependency>

@@ -1,8 +1,8 @@
-import {Component} from '@angular/core';
-import {RequestService} from 'process/api/request.service';
-import {EnvironmentHelperService} from 'app/services/environment.helper.service';
-import {ActivatedRoute, Router} from '@angular/router';
-import {Environment} from 'process/model/environment';
+import { Component } from '@angular/core';
+import { RequestService } from 'process/services/request.service';
+import { EnvironmentHelperService } from 'app/services/environment.helper.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Environment } from 'process/models/environment';
 import * as ApprovalRequestDraftSamples from 'app/data/approval-request-draft';
 
 
@@ -38,7 +38,11 @@ export class StartComponent {
     this.startFailure = false;
 
     // read it out of local storage.
-    this.client.startNewApproval(this.userId, this.approvalRequestDraft).subscribe(
+    this.client.startNewApproval({
+      'X-Current-User-ID': this.userId,
+      revision: '1',
+      body: this.approvalRequestDraft
+    }).subscribe(
       result => {
         console.log('Successfully submitted');
         this.startSuccess = true;
@@ -58,8 +62,8 @@ export class StartComponent {
 
 
   tasklist() {
-    this.router.navigate(['/externalRedirect', {externalUrl: this.environment.tasklistUrl}], {
-      skipLocationChange: true,
+    this.router.navigate(['/externalRedirect', { externalUrl: this.environment.tasklistUrl }], {
+      skipLocationChange: true
     });
   }
 

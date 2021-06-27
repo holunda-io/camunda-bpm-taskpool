@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ApprovalRequest } from 'process/model/approvalRequest';
-import { UserTaskAmendRequestService } from 'process/api/userTaskAmendRequest.service';
-import { Task } from 'process/model/task';
-import { TaskAmendRequestSubmitData } from 'process/model/taskAmendRequestSubmitData';
 import { EnvironmentHelperService } from 'app/services/environment.helper.service';
-import { Environment } from 'process/model/environment';
+import { UserTaskAmendRequestService } from 'process/services/user-task-amend-request.service';
+import { Environment } from 'process/models/environment';
+import { TaskAmendRequestSubmitData } from 'process/models/task-amend-request-submit-data';
+import { ApprovalRequest } from 'process/models/approval-request';
+import { Task } from 'process/models/task';
 
 @Component({
   selector: 'app-task-amend',
@@ -22,7 +22,7 @@ export class AmendTaskComponent {
   ) {
     this.userId = route.snapshot.queryParams['userId'];
     const taskId: string = route.snapshot.paramMap.get('taskId');
-    this.client.loadTaskAmendRequestFormData(taskId, this.userId).subscribe(
+    this.client.loadTaskAmendRequestFormData({ id: taskId, 'X-Current-User-ID': this.userId}).subscribe(
       formData => {
         this.task = formData.task;
         this.comment = formData.comment;
@@ -56,7 +56,7 @@ export class AmendTaskComponent {
   private static emptyApprovalRequest(): ApprovalRequest {
     return {
       applicant: '',
-      amount: '',
+      amount: 0.00,
       currency: 'USD',
       id: 'undefined',
       subject: ''
@@ -65,7 +65,7 @@ export class AmendTaskComponent {
 
   complete() {
     console.log('Decision for', this.task.id, 'is', this.submitData.action);
-    this.client.submitTaskAmendRequestSubmitData(this.task.id, this.userId, this.submitData).subscribe(
+    this.client.submitTaskAmendRequestSubmitData({ id: this.task.id, 'X-Current-User-ID': this.userId, body: this.submitData}).subscribe(
       result => {
         console.log('Sucessfully submitted');
         this.router.navigate(['/externalRedirect', { externalUrl: this.environment.tasklistUrl }], {

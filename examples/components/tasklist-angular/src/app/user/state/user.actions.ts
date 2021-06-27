@@ -1,5 +1,6 @@
 import {Action} from '@ngrx/store';
 import {UserProfile} from './user.reducer';
+import { UserInfo } from 'tasklist/models/user-info';
 
 export enum UserActionTypes {
   LoadAvailableUsers = '[User] Load available ids',
@@ -19,7 +20,7 @@ export class LoadAvailableUsersAction implements Action {
 export class AvailableUsersLoadedAction implements Action {
   readonly type = UserActionTypes.AvailableUsersLoaded;
 
-  constructor(public payload: {[key: string]: string}) {
+  constructor(public payload: UserInfo[]) {
   }
 }
 
