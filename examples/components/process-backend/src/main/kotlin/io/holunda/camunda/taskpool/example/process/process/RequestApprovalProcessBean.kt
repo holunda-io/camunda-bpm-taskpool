@@ -53,7 +53,7 @@ class RequestApprovalProcessBean(
    * Completes the approve request task with given id, decision and optional comment.
    */
   fun approveTask(taskId: String, decision: String, username: String, comment: String?) {
-    if (!RequestApprovalProcess.Values.APPROVE_DECISION_VALUES.contains(decision.toUpperCase())) {
+    if (!RequestApprovalProcess.Values.APPROVE_DECISION_VALUES.contains(decision.uppercase())) {
       throw IllegalArgumentException("Only one of APPROVE, RETURN, REJECT is supported.")
     }
 
@@ -77,7 +77,7 @@ class RequestApprovalProcessBean(
    * Completes the amend request task with given id, action and optional comment.
    */
   fun amendTask(taskId: String, action: String, request: Request, username: String, comment: String?) {
-    if (!RequestApprovalProcess.Values.AMEND_ACTION_VALUES.contains(action.toUpperCase())) {
+    if (!RequestApprovalProcess.Values.AMEND_ACTION_VALUES.contains(action.uppercase())) {
       throw IllegalArgumentException("Only one of CANCEL, RESUBMIT is supported.")
     }
 
