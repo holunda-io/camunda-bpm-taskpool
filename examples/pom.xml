@@ -31,8 +31,8 @@
       <camunda-ee>false</camunda-ee>
       Use the system property: -Dcamunda-ee to enable EE
     -->
-    <camunda-ce.version>7.14.0</camunda-ce.version>
-    <camunda-ee.version>7.14.1-ee</camunda-ee.version>
+    <camunda-ce.version>7.15.0</camunda-ce.version>
+    <camunda-ee.version>7.15.1-ee</camunda-ee.version>
     <camunda-springboot.version>${camunda-ce.version}</camunda-springboot.version>
 
     <camunda-bpm-assert.version>8.0.0</camunda-bpm-assert.version>
@@ -135,37 +135,6 @@
   <build>
     <pluginManagement>
       <plugins>
-
-        <plugin>
-          <!-- FIXME: move to open api generator, see #380 -->
-          <!-- for generating stubs -->
-          <groupId>io.swagger</groupId>
-          <artifactId>swagger-codegen-maven-plugin</artifactId>
-          <version>2.4.20</version>
-        </plugin>
-
-        <plugin>
-          <!-- validate swagger -->
-          <groupId>com.github.sylvainlaurent.maven</groupId>
-          <artifactId>swagger-validator-maven-plugin</artifactId>
-          <version>1.2.6</version>
-          <executions>
-            <execution>
-              <id>validate</id>
-              <phase>validate</phase>
-              <goals>
-                <goal>validate</goal>
-              </goals>
-              <configuration>
-                <failOnErrors>true</failOnErrors>
-                <includes>
-                  <include>src/main/resources/swagger.yml</include>
-                  <!-- other <include> may be added -->
-                </includes>
-              </configuration>
-            </execution>
-          </executions>
-        </plugin>
 
         <plugin>
           <!-- java compiler -->
