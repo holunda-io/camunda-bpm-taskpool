@@ -1,5 +1,6 @@
 import {UserProfile, UserState} from 'app/user/state/user.reducer';
 import {createSelector} from '@ngrx/store';
+import { UserInfo } from 'tasklist/models/user-info';
 
 export interface StateWithUsers {
   user: UserState;
@@ -9,7 +10,7 @@ const selectFeature = (state: StateWithUsers) => state.user;
 
 export const availableUsers = createSelector(
   selectFeature,
-  (state: UserState): {[key: string]: string} => state.availableUsers
+  (state: UserState): UserInfo[] => state.availableUsers
 );
 
 export const currentUserId = createSelector(

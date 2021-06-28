@@ -1,10 +1,10 @@
 package io.holunda.camunda.taskpool.example.tasklist.rest.mapper
 
 import io.holunda.camunda.taskpool.api.task.ProcessReference
-import io.holunda.camunda.taskpool.view.DataEntry
-import io.holunda.camunda.taskpool.view.FormUrlResolver
-import io.holunda.camunda.taskpool.view.ProcessDefinition
-import io.holunda.camunda.taskpool.view.Task
+import io.holunda.polyflow.view.DataEntry
+import io.holunda.polyflow.view.FormUrlResolver
+import io.holunda.polyflow.view.ProcessDefinition
+import io.holunda.polyflow.view.Task
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -13,7 +13,7 @@ import org.springframework.test.util.ReflectionTestUtils
 
 class TaskWithDataEntriesMapperTest {
 
-  private val formUrlResolver = object:FormUrlResolver {
+  private val formUrlResolver = object : FormUrlResolver {
     override fun resolveUrl(dataEntry: DataEntry) = "http://localhost:8080/test/forms/bo/id/1"
     override fun resolveUrl(task: Task) = "http://localhost:8080/test/forms/the-task/id/1"
     override fun resolveUrl(processDefinition: ProcessDefinition) = "http://localhost:8080/test/start"
@@ -58,7 +58,7 @@ class TaskWithDataEntriesMapperTest {
       entryType = "bo",
       applicationName = "my-app",
       formKey = "the-bo",
-      type ="BO",
+      type = "BO",
       name = "BO 1"
     )
 

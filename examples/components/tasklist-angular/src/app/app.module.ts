@@ -25,6 +25,7 @@ import {DataEntryModule} from 'app/dataentry/dataentry.module';
 import {TaskModule} from 'app/task/task.module';
 import {metaReducers} from 'app/meta-reducers';
 import {environment} from 'environments/environment';
+import { HttpClientModule } from '@angular/common/http';
 
 
 registerLocaleData(localeFr, 'fr');
@@ -43,11 +44,12 @@ registerLocaleData(localeEn, 'en');
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
+    HttpClientModule,
     FormsModule,
     AppRoutingModule,
     NgbModule,
     StoreModule.forRoot({}, {
-      metaReducers: metaReducers(environment)
+      metaReducers: metaReducers(environment), runtimeChecks: { strictStateImmutability: true, strictActionImmutability: true }
     }),
     EffectsModule.forRoot([]),
     // generated

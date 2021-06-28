@@ -1,13 +1,24 @@
-# Tasklist (Angular 6)
+# Polyflow Example Process Platform
 
-## Build
+## NPM-based build
 
-    docker build -t tasklist-angular-build .
+### Build 
 
-## Run (with watch)
+```
+npm run start:local
+```
 
-    docker run -it --net=host \
-     -v `pwd`/src:/opt/build/src \
-     -v `pwd`/src-gen:/opt/build/src-gen \
-     tasklist-angular-build \
-     npm start
+
+## Maven-based build
+
+### Build
+
+```
+./mvnw clean install
+```
+
+### Run (with watch) for distributed scenario 
+
+```
+./mvn clean install -Png-serve
+```

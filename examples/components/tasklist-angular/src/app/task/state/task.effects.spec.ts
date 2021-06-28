@@ -41,8 +41,8 @@ describe('TaskEffects', () => {
   it('should load tasks', (done) => {
     // given:
     const action = new LoadTasksAction();
-    const spy = spyOn(taskService, 'getTasksResponse').and.returnValue(of({body: [],
-    headers: { get: (field: string) => '0'}}));
+    const spy = spyOn(taskService, 'getTasks$Response').and.returnValue(of({body: [],
+    headers: { get: (field: string) => '0'}} as any));
 
     // when:
     effectsFor(action).loadTasks$.subscribe(newAction => {

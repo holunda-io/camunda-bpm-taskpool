@@ -7,8 +7,7 @@ import org.springframework.web.bind.annotation.ResponseStatus
  * REST constants.
  */
 object Rest {
-  const val REQUEST_PATH = "/tasklist/rest"
-  const val REACTIVE_PATH = "/tasklist/reactive"
+  const val REQUEST_PATH = "/polyflow-platform/rest"
 }
 
 /**

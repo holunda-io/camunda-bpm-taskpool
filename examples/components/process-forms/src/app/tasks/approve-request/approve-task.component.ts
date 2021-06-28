@@ -1,16 +1,16 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ApprovalRequest } from 'process/model/approvalRequest';
-import { UserTaskApproveRequestService } from 'process/api/userTaskApproveRequest.service';
-import { Task } from 'process/model/task';
-import { TaskApproveRequestSubmitData } from 'process/model/taskApproveRequestSubmitData';
+import { ApprovalRequest } from 'process/models/approval-request';
+import { UserTaskApproveRequestService } from 'process/services/user-task-approve-request.service';
+import { Task } from 'process/models/task';
+import { TaskApproveRequestSubmitData } from 'process/models/task-approve-request-submit-data';
 import { EnvironmentHelperService } from 'app/services/environment.helper.service';
-import { Environment } from 'process/model/environment';
+import { Environment } from 'process/models/environment';
 
 @Component({
   selector: 'app-task-approve',
   templateUrl: './approve-task.component.html',
-  styleUrls: [ '../tasks.component.scss' ]
+  styleUrls: ['../tasks.component.scss']
 })
 export class ApproveTaskComponent {
 
@@ -23,7 +23,7 @@ export class ApproveTaskComponent {
     const taskId: string = route.snapshot.paramMap.get('taskId');
     this.userId = route.snapshot.queryParams['userId'];
 
-    this.client.loadTaskApproveRequestFormData(taskId, this.userId).subscribe(
+    this.client.loadTaskApproveRequestFormData({ id: taskId, 'X-Current-User-ID': this.userId }).subscribe(
       formData => {
         this.task = formData.task;
         this.approvalRequest = formData.approvalRequest;
@@ -58,7 +58,7 @@ export class ApproveTaskComponent {
   private static emptyApprovalRequest(): ApprovalRequest {
     return {
       applicant: '',
-      amount: '',
+      amount: 0.00,
       id: 'undefined',
       subject: '',
       currency: 'EUR'
@@ -67,11 +67,11 @@ export class ApproveTaskComponent {
 
   complete() {
     console.log('Decision for', this.task.id, 'is', this.submitData.decision);
-    this.client.submitTaskApproveRequestSubmitData(this.task.id, this.userId, this.submitData).subscribe(
+    this.client.submitTaskApproveRequestSubmitData({ id: this.task.id, 'X-Current-User-ID': this.userId, body: this.submitData }).subscribe(
       result => {
         console.log('Sucessfully submitted');
         this.router.navigate(['/externalRedirect', { externalUrl: this.environment.tasklistUrl }], {
-          skipLocationChange: true,
+          skipLocationChange: true
         });
       }, error => {
         console.log('Error submitting approve request task with id', this.task.id);

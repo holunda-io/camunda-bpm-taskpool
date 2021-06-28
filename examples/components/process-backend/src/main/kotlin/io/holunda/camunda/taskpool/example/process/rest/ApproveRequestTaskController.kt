@@ -4,7 +4,7 @@ import io.holunda.camunda.taskpool.example.process.process.RequestApprovalProces
 import io.holunda.camunda.taskpool.example.process.rest.api.ApproveRequestApi
 import io.holunda.camunda.taskpool.example.process.rest.model.TaskApproveRequestFormDataDto
 import io.holunda.camunda.taskpool.example.process.rest.model.TaskApproveRequestSubmitDataDto
-import io.holunda.camunda.taskpool.view.auth.UserService
+import io.holunda.polyflow.view.auth.UserService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiParam
 import mu.KLogging

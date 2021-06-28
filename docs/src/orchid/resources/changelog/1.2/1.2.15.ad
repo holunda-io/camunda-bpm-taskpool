@@ -1,8 +1,0 @@
----
-version: 1.2.15
----
-
-== Bug fixes
-
-* mongo view supports multiple candidate groups, see #162
-

@@ -5,12 +5,13 @@ import {availableUsers, currentUserId, currentUserProfile} from './user.selector
 import {Observable} from 'rxjs';
 import {LoadAvailableUsersAction, SelectUserAction} from './user.actions';
 import {first} from 'rxjs/operators';
+import { UserInfo } from 'tasklist/models/user-info';
 
 @Injectable()
 export class UserStoreService extends StoreService<UserState> {
 
   @Select(availableUsers)
-  availableUsers$: () => Observable<{[key: string]: string}>;
+  availableUsers$: () => Observable<UserInfo[]>;
 
   @Select(currentUserId)
   userId$: () => Observable<string>;

@@ -1,7 +1,6 @@
-package io.holunda.camunda.taskpool.view.query.process
+package io.holunda.polyflow.view.query.process
 
-import io.holunda.camunda.taskpool.view.ProcessDefinition
-import io.holunda.camunda.taskpool.view.query.process.ProcessDefinitionsStartableByUserQuery
+import io.holunda.polyflow.view.ProcessDefinition
 
 /**
  * Queries for process definitions.

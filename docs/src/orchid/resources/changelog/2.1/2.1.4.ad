@@ -1,7 +1,0 @@
----
-version: 2.1.4
----
-
-== Bugfixes
-
-* Fixed implementation of the task collector data serialization, #303

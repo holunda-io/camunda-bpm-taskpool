@@ -1,8 +1,8 @@
-package io.holunda.camunda.taskpool.view.query.data
+package io.holunda.polyflow.view.query.data
 
-import io.holunda.camunda.taskpool.view.DataEntry
-import io.holunda.camunda.taskpool.view.query.PageableSortableQuery
-import io.holunda.camunda.taskpool.view.query.QueryResult
+import io.holunda.polyflow.view.DataEntry
+import io.holunda.polyflow.view.query.PageableSortableQuery
+import io.holunda.polyflow.view.query.QueryResult
 
 /**
  * Results of a query for multiple data entries.

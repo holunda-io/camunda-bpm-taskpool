@@ -1,8 +1,8 @@
-package io.holunda.camunda.taskpool.view.query.process
+package io.holunda.polyflow.view.query.process
 
-import io.holunda.camunda.taskpool.view.ProcessInstance
-import io.holunda.camunda.taskpool.view.ProcessInstanceState
-import io.holunda.camunda.taskpool.view.query.FilterQuery
+import io.holunda.polyflow.view.ProcessInstance
+import io.holunda.polyflow.view.ProcessInstanceState
+import io.holunda.polyflow.view.query.FilterQuery
 
 /**
  * Query for process instance matching the provided states.

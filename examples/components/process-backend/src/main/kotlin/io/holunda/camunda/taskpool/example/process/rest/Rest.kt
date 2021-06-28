@@ -4,17 +4,10 @@ import io.holunda.camunda.taskpool.example.process.rest.model.ApprovalRequestDra
 import io.holunda.camunda.taskpool.example.process.rest.model.ApprovalRequestDto
 import io.holunda.camunda.taskpool.example.process.rest.model.TaskDto
 import io.holunda.camunda.taskpool.example.process.service.Request
-import io.holunda.camunda.taskpool.view.auth.UnknownUserException
 import org.camunda.bpm.engine.task.Task
-import org.springframework.context.annotation.Configuration
-import org.springframework.http.HttpStatus
-import org.springframework.web.bind.annotation.ControllerAdvice
-import org.springframework.web.bind.annotation.ExceptionHandler
-import org.springframework.web.bind.annotation.ResponseStatus
 import java.math.BigDecimal
 import java.time.OffsetDateTime
 import java.time.ZoneId
-import java.util.*
 
 /**
  * REST constants.
@@ -28,7 +21,7 @@ object Rest {
  */
 fun approvalRequestDto(request: Request): ApprovalRequestDto = ApprovalRequestDto()
   .id(request.id)
-  .amount(request.amount.toString())
+  .amount(request.amount.toFloat())
   .applicant(request.applicant)
   .currency(request.currency)
   .subject(request.subject)
@@ -58,7 +51,7 @@ fun taskDto(task: Task): TaskDto = TaskDto()
  */
 fun request(dto: ApprovalRequestDto) = Request(
   id = dto.id,
-  amount = BigDecimal(dto.amount),
+  amount = BigDecimal(dto.amount.toString()),
   currency = dto.currency,
   applicant = dto.applicant,
   subject = dto.subject
@@ -68,7 +61,7 @@ fun request(dto: ApprovalRequestDto) = Request(
  * Converts the draft DTO to approval request.
  */
 fun draft(dto: ApprovalRequestDraftDto) = Request(
-  amount = BigDecimal(dto.amount),
+  amount = BigDecimal(dto.amount.toString()),
   currency = dto.currency,
   applicant = dto.applicant,
   subject = dto.subject

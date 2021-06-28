@@ -1,6 +1,8 @@
 package io.holunda.camunda.taskpool.example.process
 
+import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.holixon.axon.gateway.query.RevisionValue
 import io.holunda.camunda.datapool.core.EnableDataPool
@@ -8,7 +10,7 @@ import io.holunda.camunda.taskpool.core.EnableTaskPool
 import io.holunda.camunda.taskpool.core.configureTaskpoolJacksonObjectMapper
 import io.holunda.camunda.taskpool.example.tasklist.EnableTasklist
 import io.holunda.camunda.taskpool.example.users.UsersConfiguration
-import io.holunda.camunda.taskpool.urlresolver.EnablePropertyBasedFormUrlResolver
+import io.holunda.polyflow.urlresolver.EnablePropertyBasedFormUrlResolver
 import org.axonframework.commandhandling.CommandMessage
 import org.axonframework.messaging.correlation.CorrelationDataProvider
 import org.axonframework.messaging.correlation.MessageOriginProvider
@@ -47,6 +49,8 @@ class ExampleTaskpoolApplicationDistributedWithAxonServer {
     return jacksonObjectMapper()
       .findAndRegisterModules()
       .configureTaskpoolJacksonObjectMapper()
+      .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS) // let the dates be strings and not nanoseconds
+      .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES) // be nice to properties we don't understand
   }
 
 //  @Bean

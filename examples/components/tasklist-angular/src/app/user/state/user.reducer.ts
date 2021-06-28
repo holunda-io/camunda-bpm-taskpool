@@ -1,4 +1,5 @@
 import {UserActions, UserActionTypes} from './user.actions';
+import { UserInfo } from 'tasklist/models/user-info';
 
 export interface UserProfile {
   userIdentifier: string;
@@ -8,13 +9,13 @@ export interface UserProfile {
 
 export interface UserState {
   currentUserId: string;
-  availableUsers: {[key: string]: string};
+  availableUsers: UserInfo[];
   currentUserProfile: UserProfile;
 }
 
 const initialState: UserState = {
   currentUserId: null,
-  availableUsers: {},
+  availableUsers: [],
   currentUserProfile: {
     userIdentifier: '',
     username: '',

@@ -1,4 +1,4 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import {ProcesslistComponent} from './process-list.component';
 import {FormsModule} from '@angular/forms';
@@ -10,7 +10,7 @@ describe('Component: TasklistComponent', () => {
   let component: ProcesslistComponent;
   let fixture: ComponentFixture<ProcesslistComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
 
     TestBed.configureTestingModule({
       imports: [

@@ -6,7 +6,7 @@
   <parent>
     <groupId>io.holunda.polyflow</groupId>
     <artifactId>polyflow-root</artifactId>
-    <version>3.0.0</version>
+    <version>3.0.1</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
@@ -23,16 +23,16 @@
     <java.version>11</java.version>
     <version.java>${java.version}</version.java>
 
-    <npm.version>6.14.8</npm.version>
-    <node.version>v10.22.0</node.version>
+    <npm.version>6.14.12</npm.version>
+    <node.version>v14.16.1</node.version>
 
 
     <!--
       <camunda-ee>false</camunda-ee>
       Use the system property: -Dcamunda-ee to enable EE
     -->
-    <camunda-ce.version>7.14.0</camunda-ce.version>
-    <camunda-ee.version>7.14.1-ee</camunda-ee.version>
+    <camunda-ce.version>7.15.0</camunda-ce.version>
+    <camunda-ee.version>7.15.1-ee</camunda-ee.version>
     <camunda-springboot.version>${camunda-ce.version}</camunda-springboot.version>
 
     <camunda-bpm-assert.version>8.0.0</camunda-bpm-assert.version>
@@ -50,7 +50,6 @@
   <modules>
     <!-- Shared backend modules -->
     <module>components/users</module>
-    <module>components/tasklist-api</module>
     <module>components/tasklist-reactive-backend</module>
     <module>components/tasklist-backend</module>
     <module>components/process-backend</module>
@@ -76,12 +75,6 @@
         <version>${project.version}</version>
         <scope>import</scope>
         <type>pom</type>
-      </dependency>
-
-      <dependency>
-        <groupId>io.holunda.polyflow</groupId>
-        <artifactId>polyflow-example-tasklist-api</artifactId>
-        <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>io.holunda.polyflow</groupId>
@@ -116,6 +109,11 @@
         <artifactId>springboot-swagger-starter</artifactId>
         <version>${springboot-swagger-starter.version}</version>
       </dependency>
+      <dependency>
+        <groupId>org.openapitools</groupId>
+        <artifactId>jackson-databind-nullable</artifactId>
+        <version>0.2.1</version>
+      </dependency>
 
       <!-- Camunda BPM Data -->
       <dependency>
@@ -137,37 +135,6 @@
   <build>
     <pluginManagement>
       <plugins>
-
-        <plugin>
-          <!-- FIXME: move to open api generator -->
-          <!-- for generating stubs -->
-          <groupId>io.swagger</groupId>
-          <artifactId>swagger-codegen-maven-plugin</artifactId>
-          <version>2.4.20</version>
-        </plugin>
-
-        <plugin>
-          <!-- validate swagger -->
-          <groupId>com.github.sylvainlaurent.maven</groupId>
-          <artifactId>swagger-validator-maven-plugin</artifactId>
-          <version>1.2.6</version>
-          <executions>
-            <execution>
-              <id>validate</id>
-              <phase>validate</phase>
-              <goals>
-                <goal>validate</goal>
-              </goals>
-              <configuration>
-                <failOnErrors>true</failOnErrors>
-                <includes>
-                  <include>src/main/resources/swagger.yml</include>
-                  <!-- other <include> may be added -->
-                </includes>
-              </configuration>
-            </execution>
-          </executions>
-        </plugin>
 
         <plugin>
           <!-- java compiler -->
@@ -215,6 +182,13 @@
           <configuration>
             <encoding>UTF-8</encoding>
           </configuration>
+        </plugin>
+
+        <plugin>
+          <!-- Open API generator -->
+          <groupId>org.openapitools</groupId>
+          <artifactId>openapi-generator-maven-plugin</artifactId>
+          <version>5.1.1</version>
         </plugin>
 
         <plugin>
@@ -278,7 +252,7 @@
               </goals>
               <configuration>
                 <sourceDirs>
-                  <sourceDir>${project.basedir}/target/generated-sources/swagger/src/main/java</sourceDir>
+                  <sourceDir>${project.basedir}/target/generated-sources/openapi/src/main/java</sourceDir>
                   <sourceDir>${project.basedir}/src/main/kotlin</sourceDir>
                 </sourceDirs>
                 <annotationProcessorPaths>
@@ -297,7 +271,7 @@
               </goals>
               <configuration>
                 <sourceDirs>
-                  <sourceDir>${project.basedir}/target/generated-sources/swagger/src/main/java</sourceDir>
+                  <sourceDir>${project.basedir}/target/generated-sources/openapi/src/main/java</sourceDir>
                   <sourceDir>${project.basedir}/src/main/kotlin</sourceDir>
                 </sourceDirs>
               </configuration>

@@ -1,4 +1,4 @@
-package io.holunda.camunda.taskpool.view
+package io.holunda.polyflow.view
 
 import io.holunda.camunda.taskpool.api.process.variable.ProcessVariableValue
 import io.holunda.camunda.taskpool.api.task.SourceReference

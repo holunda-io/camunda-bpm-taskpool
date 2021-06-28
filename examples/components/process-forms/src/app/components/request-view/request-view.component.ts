@@ -1,7 +1,6 @@
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import * as ApprovalRequestDraftSamples from 'app/data/approval-request-draft';
-import {ApprovalRequestDraft} from 'process/model/approvalRequestDraft';
+import { Component, Input } from '@angular/core';
+import { ApprovalRequestDraft } from 'process/models/approval-request-draft';
+
 @Component({
   selector: 'app-request-view',
   templateUrl: './request-view.component.html',

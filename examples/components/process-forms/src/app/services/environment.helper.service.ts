@@ -1,7 +1,7 @@
-import { Injectable, OnInit, OnDestroy } from '@angular/core';
-import { EnvironmentService } from 'process/api/environment.service';
+import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Environment } from 'process/model/environment';
+import { Environment } from 'process/models/environment';
+import { EnvironmentService } from 'process/services/environment.service';
 
 @Injectable()
 export class EnvironmentHelperService {

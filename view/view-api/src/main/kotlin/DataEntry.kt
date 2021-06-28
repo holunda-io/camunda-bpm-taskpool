@@ -1,4 +1,4 @@
-package io.holunda.camunda.taskpool.view
+package io.holunda.polyflow.view
 
 import io.holunda.camunda.taskpool.api.business.*
 import org.camunda.bpm.engine.variable.VariableMap
@@ -48,11 +48,11 @@ data class DataEntry(
   /**
    * List of authorized users.
    */
-  val authorizedUsers: List<String> = listOf(),
+  val authorizedUsers: Set<String> = setOf(),
   /**
    * List of authorized groups.
    */
-  val authorizedGroups: List<String> = listOf(),
+  val authorizedGroups: Set<String> = setOf(),
   /**
    * Form key.
    */

@@ -4,12 +4,13 @@ import io.holunda.camunda.taskpool.example.tasklist.rest.model.DataEntryDto
 import io.holunda.camunda.taskpool.example.tasklist.rest.model.ProtocolEntryDto
 import io.holunda.camunda.taskpool.example.tasklist.rest.model.TaskDto
 import io.holunda.camunda.taskpool.example.tasklist.rest.model.TaskWithDataEntriesDto
-import io.holunda.camunda.taskpool.view.*
+import io.holunda.polyflow.view.*
 import org.mapstruct.Mapper
 import org.mapstruct.Mapping
 import org.mapstruct.Mappings
 import org.mapstruct.ReportingPolicy
 import org.springframework.beans.factory.annotation.Autowired
+import java.time.Instant
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
 import java.util.*
@@ -30,7 +31,10 @@ abstract class TaskWithDataEntriesMapper {
 
   @Mappings(
     Mapping(target = "processName", source = "sourceReference.name"),
-    Mapping(target = "url", expression = "java(formUrlResolver.resolveUrl(task))")
+    Mapping(target = "url", expression = "java(formUrlResolver.resolveUrl(task))"),
+    Mapping(target = "createTime", expression ="java(toOffsetDateTime(task.getCreateTime()))"),
+    Mapping(target = "dueDate", expression ="java(toOffsetDateTime(task.getDueDate()))"),
+    Mapping(target = "followUpDate", expression ="java(toOffsetDateTime(task.getFollowUpDate()))")
   )
   abstract fun dto(task: Task): TaskDto
 
@@ -44,7 +48,7 @@ abstract class TaskWithDataEntriesMapper {
   abstract fun dto(dataEntry: DataEntry): DataEntryDto
 
   @Mappings(
-    Mapping(target = "timestamp", source = "entry.time"),
+    Mapping(target = "timestamp", expression = "java(toOffsetDateTime(entry.getTime()))"),
     Mapping(target = "user", source = "entry.username"),
     Mapping(target = "state", source = "entry.state.state"),
     Mapping(target = "stateType", source = "entry.state.processingType"),
@@ -59,9 +63,7 @@ abstract class TaskWithDataEntriesMapper {
   )
   abstract fun dto(taskWithDataEntries: TaskWithDataEntries): TaskWithDataEntriesDto
 
-
-  fun toOffsetDateTime(@Valid time: Date?): OffsetDateTime? {
-    return if (time == null) null else OffsetDateTime.ofInstant(time.toInstant(), ZoneOffset.UTC)
-  }
+  fun toOffsetDateTime(@Valid time: Instant?): OffsetDateTime? =
+    if (time == null) null else OffsetDateTime.ofInstant(time, ZoneOffset.UTC)
 
 }

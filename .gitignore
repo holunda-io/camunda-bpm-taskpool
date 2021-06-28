@@ -3,6 +3,7 @@ camunda-license.txt
 # Compiled class file
 *.class
 target/
+site/
 .tmp/
 examples/scenarios/distributed-axon-server/.docker/mounts
 
@@ -74,9 +75,6 @@ Thumbs.db
 # .idea/*.iml
 # .idea/modules
 
-# CMake
-cmake-build-*/
-
 # Mongo Explorer plugin
 .idea/**/mongoSettings.xml
 
@@ -88,12 +86,6 @@ out/
 
 # mpeltonen/sbt-idea plugin
 .idea_modules/
-
-# JIRA plugin
-atlassian-ide-plugin.xml
-
-# Cursive Clojure plugin
-.idea/replstate.xml
 
 # Crashlytics plugin (for Android Studio and IntelliJ)
 com_crashlytics_export_strings.xml
@@ -111,5 +103,3 @@ fabric.properties
 .project
 .settings/
 .theia/
-
-package-lock.json

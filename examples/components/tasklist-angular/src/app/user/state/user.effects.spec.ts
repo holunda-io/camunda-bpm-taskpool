@@ -7,6 +7,7 @@ import {LoadAvailableUsersAction, LoadUserProfileAction, SelectUserAction} from 
 import {UserProfile} from 'app/user/state/user.reducer';
 import {UserStoreService} from 'app/user/state/user.store-service';
 import {createStoreServiceMock} from '@ngxp/store-service/testing';
+import { UserInfo } from 'tasklist/models';
 
 describe('UserEffects', () => {
 
@@ -26,7 +27,7 @@ describe('UserEffects', () => {
   it('should load available users', (done) => {
     // given:
     const action = new LoadAvailableUsersAction();
-    const usersList = {'1': 'foo', '2': 'bar'};
+    const usersList = [{ id: '1', username: 'foo'}, { id: '2', username: 'bar'}];
     const serviceSpy = spyOn(profileService, 'getUsers').and.returnValue(of(usersList));
 
     // when:

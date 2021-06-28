@@ -1,4 +1,4 @@
-package io.holunda.camunda.taskpool.view
+package io.holunda.polyflow.view
 
 /**
  * Represents a joined entity of a task with correlated data entries.

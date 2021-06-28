@@ -1,4 +1,4 @@
-package io.holunda.camunda.taskpool.view.query.task
+package io.holunda.polyflow.view.query.task
 
 /**
  * Query for amount of tasks for every application.

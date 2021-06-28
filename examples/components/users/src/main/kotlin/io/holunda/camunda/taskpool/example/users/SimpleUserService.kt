@@ -1,8 +1,8 @@
 package io.holunda.camunda.taskpool.example.users
 
-import io.holunda.camunda.taskpool.view.auth.UnknownUserException
-import io.holunda.camunda.taskpool.view.auth.User
-import io.holunda.camunda.taskpool.view.auth.UserService
+import io.holunda.polyflow.view.auth.UnknownUserException
+import io.holunda.polyflow.view.auth.User
+import io.holunda.polyflow.view.auth.UserService
 import org.springframework.stereotype.Component
 
 @Component

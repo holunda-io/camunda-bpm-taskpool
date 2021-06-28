@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - master
-      - release/*
 
 jobs:
   build:
@@ -58,6 +57,3 @@ jobs:
         uses: codecov/codecov-action@v1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-
-      - name: Build and deploy site docs
-        run: ./mvnw -Pdeploy-docs -f docs -DgithubToken=${{secrets.GITHUB_TOKEN}}

@@ -3,7 +3,7 @@ package io.holunda.camunda.taskpool.example.process.rest
 import io.holunda.camunda.taskpool.collector.CamundaTaskpoolCollectorProperties
 import io.holunda.camunda.taskpool.example.process.rest.api.EnvironmentApi
 import io.holunda.camunda.taskpool.example.process.rest.model.EnvironmentDto
-import io.holunda.camunda.taskpool.urlresolver.TasklistUrlResolver
+import io.holunda.polyflow.urlresolver.TasklistUrlResolver
 import io.swagger.annotations.Api
 import org.springframework.http.ResponseEntity
 import org.springframework.http.ResponseEntity.ok

@@ -6,7 +6,7 @@
   <parent>
     <groupId>io.holunda.polyflow</groupId>
     <artifactId>polyflow-example-cockpit-root</artifactId>
-    <version>3.0.0</version>
+    <version>3.0.1</version>
   </parent>
 
   <artifactId>polyflow-example-cockpit</artifactId>

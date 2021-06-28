@@ -4,10 +4,10 @@ import io.holunda.camunda.taskpool.example.tasklist.auth.CurrentUserService
 import io.holunda.camunda.taskpool.example.tasklist.rest.Rest
 import io.holunda.camunda.taskpool.example.tasklist.rest.mapper.TaskWithDataEntriesMapper
 import io.holunda.camunda.taskpool.example.tasklist.rest.model.TaskWithDataEntriesDto
-import io.holunda.camunda.taskpool.view.TaskWithDataEntries
-import io.holunda.camunda.taskpool.view.auth.UserService
-import io.holunda.camunda.taskpool.view.query.task.TasksWithDataEntriesForUserQuery
-import io.holunda.camunda.taskpool.view.query.task.TasksWithDataEntriesQueryResult
+import io.holunda.polyflow.view.TaskWithDataEntries
+import io.holunda.polyflow.view.auth.UserService
+import io.holunda.polyflow.view.query.task.TasksWithDataEntriesForUserQuery
+import io.holunda.polyflow.view.query.task.TasksWithDataEntriesQueryResult
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiParam
 import mu.KLogging

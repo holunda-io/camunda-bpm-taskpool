@@ -72,7 +72,7 @@ polyflow:
         type: tx
         send-within-transaction: true # Must be set to true in single node scenario.
     tasklist:
-      tasklist-url: http://localhost:${server.port}/taskpool/tasks
+      tasklist-url: http://localhost:8081/polyflow/tasks
 
 logging.level:
   io.holunda.camunda:

@@ -1,7 +1,7 @@
-package io.holunda.camunda.taskpool.view.query.process.variable
+package io.holunda.polyflow.view.query.process.variable
 
-import io.holunda.camunda.taskpool.view.ProcessVariable
-import io.holunda.camunda.taskpool.view.query.FilterQuery
+import io.holunda.polyflow.view.ProcessVariable
+import io.holunda.polyflow.view.query.FilterQuery
 
 /**
  * Query for variables of given process instance.

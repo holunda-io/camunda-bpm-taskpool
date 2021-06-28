@@ -5,11 +5,11 @@ import io.holixon.axon.gateway.query.RevisionQueryParameters
 import io.holixon.axon.gateway.query.RevisionValue
 import io.holunda.camunda.datapool.sender.DataEntryCommandSender
 import io.holunda.camunda.taskpool.api.business.*
-import io.holunda.camunda.taskpool.view.DataEntry
-import io.holunda.camunda.taskpool.view.auth.User
-import io.holunda.camunda.taskpool.view.query.data.DataEntriesForUserQuery
-import io.holunda.camunda.taskpool.view.query.data.DataEntriesQuery
-import io.holunda.camunda.taskpool.view.query.data.DataEntriesQueryResult
+import io.holunda.polyflow.view.DataEntry
+import io.holunda.polyflow.view.auth.User
+import io.holunda.polyflow.view.query.data.DataEntriesForUserQuery
+import io.holunda.polyflow.view.query.data.DataEntriesQuery
+import io.holunda.polyflow.view.query.data.DataEntriesQueryResult
 import org.axonframework.messaging.GenericMessage
 import org.axonframework.messaging.MetaData
 import org.axonframework.queryhandling.QueryGateway

@@ -1,9 +1,0 @@
----
-version: 1.2.13
----
-
-== New Features
-
-* improve mongo view (process definitions, tasks with data entries), see #153, #158, #159
-* introduce view api interfaces
-

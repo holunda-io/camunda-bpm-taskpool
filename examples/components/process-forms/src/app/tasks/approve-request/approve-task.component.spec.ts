@@ -1,10 +1,10 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import 'rxjs/add/observable/of';
 import { ApproveTaskComponent } from './approve-task.component';
 import { FormsModule } from '@angular/forms';
-import { UserTaskApproveRequestService } from 'process/api/userTaskApproveRequest.service';
-import { ActivatedRoute, RouterModule, Router } from '@angular/router';
+import { UserTaskApproveRequestService } from 'process/services/user-task-approve-request.service';
+import { ActivatedRoute, Router } from '@angular/router';
 import { EnvironmentHelperService } from 'app/services/environment.helper.service';
 import { of } from 'rxjs-compat/observable/of';
 
@@ -15,45 +15,46 @@ describe('Component: ApproveTaskComponent', () => {
   let component: ApproveTaskComponent;
   let fixture: ComponentFixture<ApproveTaskComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
 
     const approveRequestServiceSpy = jasmine.createSpyObj('ApproveRequestService', {
       loadTaskApproveRequestFormData: of({
         approvalRequest: {},
-        task: {},
+        task: {}
       }),
-      submitTaskApproveRequestSubmitData: of({}),
+      submitTaskApproveRequestSubmitData: of({})
     });
     const envSpy = jasmine.createSpyObj('EnvironmentHelperService', {
       env: of({
         applicationName: 'foo',
-        tasklistUrl: 'http://bar',
+        tasklistUrl: 'http://bar'
       }),
       none: {
         applicationName: 'foo',
-        tasklistUrl: 'http://bar',
+        tasklistUrl: 'http://bar'
       }
     });
 
     TestBed.configureTestingModule({
       imports: [
-        FormsModule,
+        FormsModule
       ],
       declarations: [
-        ApproveTaskComponent,
+        ApproveTaskComponent
       ],
       providers: [
         { provide: Router, useValue: jasmine.createSpyObj('Router', { 'navigate': {} }) },
         { provide: UserTaskApproveRequestService, useValue: approveRequestServiceSpy },
-        { provide: ActivatedRoute, useValue: {
+        {
+          provide: ActivatedRoute, useValue: {
             snapshot: {
-              paramMap: {get: () => taskId},
-              queryParams: { 'userId': 'some-id'}
+              paramMap: { get: () => taskId },
+              queryParams: { 'userId': 'some-id' }
             }
-          },
+          }
         },
         { provide: EnvironmentHelperService, useValue: envSpy }
-      ],
+      ]
     }).compileComponents().then(() => {
       // create component and test fixture
       fixture = TestBed.createComponent(ApproveTaskComponent);
