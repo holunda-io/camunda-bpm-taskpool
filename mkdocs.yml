@@ -1,16 +1,10 @@
 # ###############################
 # Main config file for MkDocs.
 # ###############################
-# To install:
-# install python3
-# install pip3
-# pip3 install mkdocs
-# pip3 install mkdocs-bootstrap4
-# pip3 install mkdocs-git-committers-plugin
-# pip3 install mkdocs-material
 #
 # To run:
 # mkdocs serve
+# More help: https://www.holunda.io/camunda-bpm-taskpool/developer-guide/project-setup.html#build-documentation
 # ###############################
 
 site_name: Polyflow
@@ -43,8 +37,8 @@ theme:
   features:
     - navigation.instant # When instant loading is enabled, clicks on all internal links will be intercepted and dispatched via XHR without fully reloading the page
     - navigation.tabs # add top level nav items into a horizoneal menu
-    - navigation.tabs.sticky # make horizonatl menu sticky (insider feature)
-    # - navigation.sections
+    - navigation.tabs.sticky # make horizontal menu sticky (insider feature)
+    - navigation.sections
     - navigation.top # add "navigate to top" page icon on bottom left
     - toc.integrate # integrate site TOC into the menu on the left
   logo: ../assets/img/logo-negative.svg
@@ -87,13 +81,13 @@ plugins:
   - mike:
       # these fields are all optional; the defaults are as below...
       version_selector: true   # set to false to leave out the version selector
-      css_dir: css             # the directory to put the version selector's CSS
-      javascript_dir: js       # the directory to put the version selector's JS
+      css_dir: css                    # the directory to put the version selector's CSS
+      javascript_dir: js            # the directory to put the version selector's JS
       canonical_version: null  # the version for <link rel="canonical">; `null`
-                               # uses the version specified via `mike deploy`
+                                            # uses the version specified via `mike deploy`
 
 nav:
-  - Home: 'index.md'
+  - Home: index.md
   - Getting Started:
     - Motivation: introduction/motivation.md
     - Features: introduction/features.md
