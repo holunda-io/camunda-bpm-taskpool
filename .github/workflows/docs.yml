@@ -40,8 +40,8 @@ jobs:
       - name: Install dependencies
         run: python3 -m pip install -r ./docs/requirements.txt
 
-      -name: Configure Git
-       run: git config --global user.name="MkDocs Publishing"
+      - name: Configure Git
+        run: git config --global user.name="MkDocs Publishing"
 
       - name: Build and deploy docs
         run: mike deploy latest --push
