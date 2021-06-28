@@ -48,6 +48,9 @@ jobs:
         env:
           GH_USERNAME: ${{ github.actor }}
 
+      - name: Fetch the gh-pages branch
+        run: git fetch
+
       - name: Build docs with MkDocs
         run: mkdocs build
 
