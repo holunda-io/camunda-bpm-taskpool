@@ -72,7 +72,7 @@ Code
 }
 
 /* Disable title text*/
-.md-header__topic {
+.md-ellipsis {
   display: none;
 }
 
