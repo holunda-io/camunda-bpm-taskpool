@@ -52,15 +52,15 @@ jobs:
         run: mkdocs build
 
       - name: Only do this when tagged
+        id: get_tag_name
         if: startsWith(github.ref, 'refs/tags/')
         run: |
           echo "Hello tag ${{ github.ref }}"
-          echo ::set-env name=TAG_VERSION::${GITHUB_REF#refs/tags/}
-          echo ${{ TAG_VERSION }}
+          run: echo ::set-output name=TAG_NAME::${GITHUB_REF/refs\/tags\//}
 
       - name: Create a new version for the tag
         if: startsWith(github.ref, 'refs/tags/')
-        run: mike deploy ${{ TAG_VERSION }} latest
+        run: mike deploy ${{ steps.get_tag_name.outputs.TAG_NAME }} latest
 
       - name: Deploy latest docs to GH pages.
         run: mike deploy latest --push --rebase
