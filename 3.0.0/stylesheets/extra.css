@@ -1,3 +1,26 @@
+/*
+ * General customizations
+ */
+ /* Customize logo size */
+.md-header__button.md-logo img, .md-header__button.md-logo svg {
+  height: 100%;
+  width: 100%;
+}
+
+/* Disable title text*/
+.md-ellipsis {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important; /* Fix for https://github.com/twbs/bootstrap/issues/25686 */
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+
 [data-md-color-scheme="polyflow"] {
 
   /*
@@ -53,53 +76,38 @@ Code
 }
 
 /* Background of the page */
-.md-main:before{
+body[data-md-color-scheme="polyflow"] {
   background-image: url(../assets/img/bg.svg);
   background-size: 1840px 3200px;
   background-repeat: no-repeat;
   background-position: 50% 300px;
-  z-index: -999;
-  content: "";
-  position: absolute;
-  width: 100%;
-  height: 100%;
-}
-
-/* Customize logo size */
-.md-header__button.md-logo img, .md-header__button.md-logo svg {
-  height: 100%;
-  width: 100%;
-}
-
-/* Disable title text*/
-.md-ellipsis {
-  display: none;
 }
 
 /* Shift tabs to the right to align the text */
-.md-tabs {
+[data-md-color-scheme="polyflow"] .md-tabs {
   margin-left: 250px;
 }
 
 /* more margins in the sidebar nav */
-.md-nav {
+[data-md-color-scheme="polyflow"] .md-nav {
   margin-top: 1rem;
   margin-left: 0.1rem;
 }
 
 /* sidebar nav colors */
-.md-sidebar__scrollwrap {
+[data-md-color-scheme="polyflow"] .md-sidebar__scrollwrap {
   background-color: var(--md-footer-bg-color);
   background-image: linear-gradient(to bottom,var(--md-footer-bg-color) 0%,var(--md-default-bg-color) 100%);
 }
-.md-nav--integrated .md-nav__link[for=__toc]~.md-nav {
+
+[data-md-color-scheme="polyflow"] .md-nav--integrated .md-nav__link[for=__toc]~.md-nav {
   border-left: .05rem solid var(--md-accent-fg-color);
 }
 
 /* footer */
-.md-footer {
+[data-md-color-scheme="polyflow"] .md-footer {
   background-image: linear-gradient(to right,var(--md-footer-bg-color) 0%,var(--md-default-bg-color) 100%);
 }
-.md-footer-meta {
+[data-md-color-scheme="polyflow"] .md-footer-meta {
   background-color: transparent;
 }
