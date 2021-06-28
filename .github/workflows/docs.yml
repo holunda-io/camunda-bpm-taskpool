@@ -48,7 +48,7 @@ jobs:
         env:
           GH_USERNAME: ${{ github.actor }}
 
-      - name: Fetch the gh-pages branch
+      - name: Pre-fetch the gh-pages branch
         run: git fetch
 
       - name: Build docs with MkDocs
@@ -68,11 +68,14 @@ jobs:
       - name: Deploy latest docs to GH pages.
         run: mike deploy latest --push --rebase
 
-      - name: Deploy latest docs to GH pages.
-        if: github.ref == 'refs/heads/develop'
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./site
-          cname: www.holunda.io
-          commit_message: "Published with MkDocs "
+      - name: Make latest to default.
+        run: mike set-default latest --push --rebase
+
+#      - name: Deploy latest docs to GH pages.
+#        if: github.ref == 'refs/heads/develop'
+#        uses: peaceiris/actions-gh-pages@v3
+#        with:
+#          github_token: ${{ secrets.GITHUB_TOKEN }}
+#          publish_dir: ./site
+#          cname: www.holunda.io
+#          commit_message: "Published with MkDocs "
