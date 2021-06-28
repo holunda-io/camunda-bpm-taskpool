@@ -41,11 +41,11 @@ jobs:
         run: python3 -m pip install -r ./docs/requirements.txt
 
       - name: Build and deploy docs
-        run: mkdocs build
+        run: mike deploy latest --push
 
-      - name: Deploy docs to GH pages.
-        uses: peaceiris/actions-gh-pages@v3
+      - name: Deploy latest docs to GH pages.
         if: github.ref == 'refs/heads/develop'
+        uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./site
