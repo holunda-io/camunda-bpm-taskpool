@@ -5,6 +5,7 @@ on:
     branches:
       - '!master'
       - '!release/*'
+      - '!feature/polyflow_color_scheme'
       - '*'
       - '**/*'
 
