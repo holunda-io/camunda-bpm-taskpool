@@ -49,7 +49,7 @@ jobs:
           GH_USERNAME: ${{ github.actor }}
 
       - name: Build and deploy docs
-        run: mike deploy latest --push
+        run: mike deploy latest --push --rebase
 
       - name: Deploy latest docs to GH pages.
         if: github.ref == 'refs/heads/develop'
