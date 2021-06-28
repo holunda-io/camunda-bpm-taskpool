@@ -1,4 +1,4 @@
-package io.holunda.polyflow.view.mongo.repository
+package io.holunda.polyflow.view.mongo
 
 import io.holunda.camunda.taskpool.api.business.AuthorizationChange
 import io.holunda.camunda.taskpool.api.business.DataEntryCreatedEvent
