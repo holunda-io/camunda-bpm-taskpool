@@ -2,7 +2,7 @@ package io.holunda.polyflow.view.mongo.data
 
 import io.holunda.camunda.taskpool.api.business.AddAuthorization
 import io.holunda.camunda.taskpool.api.business.DataEntryCreatedEvent
-import io.holunda.polyflow.view.mongo.repository.toDocument
+import io.holunda.polyflow.view.mongo.toDocument
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import java.util.*

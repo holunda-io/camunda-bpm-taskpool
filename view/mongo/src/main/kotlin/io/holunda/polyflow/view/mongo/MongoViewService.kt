@@ -10,8 +10,6 @@ import io.holunda.polyflow.view.TaskWithDataEntries
 import io.holunda.polyflow.view.mongo.data.DataEntryChangeTracker
 import io.holunda.polyflow.view.mongo.data.DataEntryRepository
 import io.holunda.polyflow.view.mongo.data.dataEntry
-import io.holunda.polyflow.view.mongo.repository.taskWithDataEntries
-import io.holunda.polyflow.view.mongo.repository.toDocument
 import io.holunda.polyflow.view.mongo.task.*
 import io.holunda.polyflow.view.query.FilterQuery
 import io.holunda.polyflow.view.query.data.*
