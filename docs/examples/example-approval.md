@@ -37,7 +37,7 @@ Let's play the following run through this process model.
 
 ## Running Examples
 
-To run the example please consult the link:scenarios[Usage Scenarios] section.
+To run the example please consult the [Usage Scenarios](./scenarios/) section.
 
 TIP: Since the process application includes Camunda BPM engine, you can use the standard Camunda webapps by navigating
 to [http://localhost:8080/camunda/app/](http://localhost:8080/camunda/app/).
