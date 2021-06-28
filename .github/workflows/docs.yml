@@ -51,12 +51,17 @@ jobs:
       - name: Build docs with MkDocs
         run: mkdocs build
 
-      - name: Get the tag
-        id: get_tag_version
-        run: echo ::set-output name=VERSION::${GITHUB_REF#refs/tags/}
+      - name: Only do this when tagged
+        if: startsWith(github.ref, 'refs/tags/')
+        run: |
+          echo "Hello tag ${{ github.ref }}"
+          echo ::set-env name=TAG_VERSION::${GITHUB_REF#refs/tags/}
+          echo ${{ TAG_VERSION }}
 
+      - name: Only do this when tagged
+        if: startsWith(github.ref, 'refs/tags/')
       - name: Create a new version for the tag
-        run: mike deploy ${{ steps.get_tag_version.outputs.VERSION }} latest
+        run: mike deploy ${{ TAG_VERSION }} latest
 
       - name: Deploy latest docs to GH pages.
         run: mike deploy latest --push --rebase
