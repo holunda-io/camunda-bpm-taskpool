@@ -58,7 +58,7 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/')
         run: echo ::set-output name=TAG_NAME::${GITHUB_REF/refs\/tags\//}
 
-      - name: Create a new version for the tag
+      - name: Create a new version of documentation and push to GH pages.
         if: startsWith(github.ref, 'refs/tags/')
         run: mike deploy ${{ steps.get_tag_name.outputs.TAG_NAME }} stable
 
@@ -66,8 +66,8 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/')
         run: mike set-default stable --push --rebase
 
-      - name: Deploy latest docs to GH pages.
-        if: startsWith(github.ref, 'refs/develop')
+      - name: Deploy latest develop docs to GH pages.
+        if: github.ref == 'refs/heads/develop'
         run: mike deploy latest --push --rebase
 
 #      - name: Deploy latest docs to GH pages.
