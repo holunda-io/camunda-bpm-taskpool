@@ -52,11 +52,11 @@ jobs:
         run: mkdocs build
 
       - name: Get the tag
-        id: get_version
-        run: echo ::set-output name=GH_TAG::${GITHUB_REF#refs/tags/}
+        id: get_tag_version
+        run: echo ::set-output name=VERSION::${GITHUB_REF#refs/tags/}
 
       - name: Create a new version for the tag
-        run: mike deploy ${GH_TAG} latest
+        run: mike deploy ${{ steps.get_tag_version.outputs.VERSION }} latest
 
       - name: Deploy latest docs to GH pages.
         run: mike deploy latest --push --rebase
