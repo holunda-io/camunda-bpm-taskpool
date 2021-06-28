@@ -67,7 +67,7 @@ jobs:
         run: mike set-default stable --push --rebase
 
       - name: Deploy latest docs to GH pages.
-        if: startsWith(github.ref, 'refs/head/develop')
+        if: startsWith(github.ref, 'refs/develop')
         run: mike deploy latest --push --rebase
 
 #      - name: Deploy latest docs to GH pages.
