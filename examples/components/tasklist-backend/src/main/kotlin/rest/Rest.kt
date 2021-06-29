@@ -1,5 +1,6 @@
 package io.holunda.camunda.taskpool.example.tasklist.rest
 
+import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.ResponseStatus
 
@@ -15,3 +16,10 @@ object Rest {
  */
 @ResponseStatus(HttpStatus.NOT_FOUND)
 class ElementNotFoundException : RuntimeException()
+
+/**
+ * Exception thrown if element is not allowed to be accessed.
+ */
+@ResponseStatus(HttpStatus.FORBIDDEN)
+class NotAllowedException: RuntimeException()
+
