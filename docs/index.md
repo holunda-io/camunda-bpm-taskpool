@@ -1,14 +1,13 @@
 ## Why should I use this?
 
-* Are you building a process application or process platform containing multiple process applications
-  using Camunda BPM Engine?
-* Are you building a custom task list for your existing application using
-  Camunda BPM Engine?
-* Are you trying to solve performance issues with your task list?
-* Are you building an archive view for the business objects processed by your processes?
-* Are you interested in an audit log for any changes performed during the execution of the business process?
+* You are building a process application or platform that comprises multiple process engines?
+* You are building a custom task list for your Camunda process application?
+* You want to include custom business object attributes to your tasks in the task list?
+* You have performance issues with your task list?
+* You need to provide a view on the business objects processed by your processes?
+* You want a customized, business-driven audit log for your processes and changes to the business objects?
 
-If you can answer one of the previous questions with yes, the taskpool / datapool library might help you.
+If you can answer one of the previous questions with yes, Polyflow's libraries might help you.
 
 ## How to start?
 
