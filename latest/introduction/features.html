@@ -425,8 +425,8 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#archive-list" class="md-nav__link">
-    Archive List
+  <a href="#business-object-view" class="md-nav__link">
+    Business Object View
   </a>
   
 </li>
@@ -1127,45 +1127,47 @@
 <li>Camunda BPM</li>
 </ul>
 <h2 id="task-list">Task List<a class="headerlink" href="#task-list" title="Permanent link">#</a></h2>
-<p>A task list is an application allowing to represent a list of user tasks. This list is created based on
-user's profile (including authorizations based on roles) for every user. The library provides the following features:</p>
+<p>A task list is an application that shows a list of tasks for each individual user, based on the 
+user's profile, roles and authorizations. Polyflow's <code>taskpool</code> library provides a backend from which task lists
+can be served. As such, it can be seen as a replacement resp. add-on for Camunda's <code>TaskService</code>. The <code>taskpool</code> library<br />
+provides the the following features:</p>
 <ul>
-<li>user task API providing attributes important for processing</li>
-<li>mirroring tasks: provides a list of tasks in the system including all task attributes provided by Camunda BPM Engine</li>
-<li>reacts on all task life cycle events fired by the process engine</li>
-<li>high performance queries: creates read-optimized projections including task-, process- and business data</li>
+<li>Task mirroring: provides a list of tasks in the system including all standard task attributes provided by Camunda BPM</li>
+<li>User task API providing additional attributes that are important for processing</li>
+<li>Reacts on all task life cycle events fired by the process engine, automatically publishes user tasks to the taskpool</li>
+<li>High performance queries: creates read-optimized projections including task-, process- and business data</li>
 <li>
-<p>centralized task list: running several Camunda BPM Engines in several applications
+<p>Centralized task list: running several Camunda BPM Engines in several applications
    is a common use case for larger companies. From the user's perspective, it is not feasible
-   to login to several task lists and check for relevant user tasks. The demand for the
-   centralized task list arises and can be addressed by the use of the <code>taskpool</code> library
-   if the tasks from several process engines are collected and transmitted over the network.</p>
+   to login to several task lists and check for relevant user tasks. The demand for a
+   centralized task list can be addressed by using the Taskpool component to which
+   tasks from several process engines are transmitted over the network.</p>
 </li>
 <li>
-<p>data enrichment: all scenarios, in which the data is not stored in the process payload, result
-   in a cascade of queries executed after the task fetch. In contrast to that,
+<p>Data enrichment: all scenarios, in which the data is not stored in the process payload, result
+   in a cascade of queries executed after fetching the tasks. In contrast to that,
    the usage of the <code>taskpool</code> library with a data enrichment plugin mechanism
-   (allowing to plug-in some data enricher on task creation) allows for caching the additional
-   business data along with the task information, instead of querying it during task fetch.</p>
+   (allowing to plug-in some data enricher on task creation) allows for caching  additional
+   business data along with the task information.</p>
 </li>
 </ul>
-<h2 id="archive-list">Archive List<a class="headerlink" href="#archive-list" title="Permanent link">#</a></h2>
-<p>An archive list provides a list of business objects processed during the execution of business process. Such a business
-object lifecycle spans over a longer period of time than the process instance. A common requirement is to get a list
-of such objects with different statuses like preliminary, in process or completed. The <code>datapool</code> library provides the
-following features:</p>
+<h2 id="business-object-view">Business Object View<a class="headerlink" href="#business-object-view" title="Permanent link">#</a></h2>
+<p>Each process instance works on one or more business objects and a business object's lifecycle usually spans a longer period of time 
+than the process instance runtime. It's a common requirement to search for these business objects (independently of process tasks) and
+get a list of these objects including their current statuses (e.g. DRAFT, IN_PROGRESS, COMPLETED). The <code>datapool</code> library provides the
+necessary features to implement a high-performance Business Object View:</p>
 <ul>
-<li>business object API providing attributes important for processing</li>
-<li>business object modification API for creating an audit log</li>
-<li>authorization API for business objects</li>
+<li>Business object API providing additional attributes important for processing</li>
+<li>Business object modification API for creating an audit log (aka business object history)</li>
+<li>Authorization API for business objects</li>
 </ul>
 <h2 id="process-list">Process List<a class="headerlink" href="#process-list" title="Permanent link">#</a></h2>
 <p>A process list provides a list of running instances and a list of process definitions deployed in the process engines connected to
 the library. It provides the following features:</p>
 <ul>
-<li>list of startable process definitions (including URLs to start forms)</li>
-<li>list of running process instances</li>
-<li>reacts on life cycle events of process instance</li>
+<li>List of startable process definitions (including URLs to start forms)</li>
+<li>List of running process instances</li>
+<li>Reacts on life cycle events of process instance</li>
 </ul>
                 
                   
