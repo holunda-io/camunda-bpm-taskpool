@@ -17,14 +17,10 @@ data class TaskWithDataEntries(
     /**
      * Helper function to correlate.
      */
-    fun correlate(task: Task, dataEntries: List<DataEntry>): TaskWithDataEntries =
+    fun correlate(task: Task, dataEntries: Map<String, DataEntry>): TaskWithDataEntries =
       TaskWithDataEntries(
         task = task,
-        dataEntries = dataEntries.filter { entry ->
-          // task correlation list contains entryType -> entryId elements
-          // create data entry identity with it and take only data entries with this identity
-          task.correlationIdentities.contains(entry.identity)
-        }.toList()
+        dataEntries = task.correlationIdentities.mapNotNull { dataEntries[it] }
       )
 
     /**
@@ -38,7 +34,7 @@ data class TaskWithDataEntries(
     /**
      * Helper function to correlate.
      */
-    fun correlate(tasks: List<Task>, dataEntries: List<DataEntry>) =
+    fun correlate(tasks: List<Task>, dataEntries: Map<String, DataEntry>): List<TaskWithDataEntries> =
       tasks.map { correlate(it, dataEntries) }
   }
 }
