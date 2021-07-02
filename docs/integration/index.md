@@ -17,7 +17,7 @@ to your `pom.xml`:
 ``` xml
 <dependency>
   <groupId>io.holunda.polyflow</groupId>
-  <artifactId>polyflow-integration-camunda-bpm-engine-parent</artifactId>
+  <artifactId>polyflow-integration-camunda-bpm-engine-starter</artifactId>
   <version>${polyflow.version}</version>
 </dependency>
 ```
