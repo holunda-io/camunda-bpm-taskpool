@@ -66,15 +66,6 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/')
         run: mike set-default stable --push --rebase
 
-      - name: Deploy latest develop docs to GH pages.
+      - name: Deploy latest develop snapshot docs to GH pages.
         if: github.ref == 'refs/heads/develop'
-        run: mike deploy latest --push --rebase
-
-#      - name: Deploy latest docs to GH pages.
-#        if: github.ref == 'refs/heads/develop'
-#        uses: peaceiris/actions-gh-pages@v3
-#        with:
-#          github_token: ${{ secrets.GITHUB_TOKEN }}
-#          publish_dir: ./site
-#          cname: www.holunda.io
-#          commit_message: "Published with MkDocs "
+        run: mike deploy snapshot --push --rebase

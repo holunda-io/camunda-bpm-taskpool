@@ -111,6 +111,10 @@ body[data-md-color-scheme="polyflow"] {
   background-position: 50% 300px;
 }
 
+[data-md-color-scheme="polyflow"] .md-typeset .md-content__button {
+  color: var(--md-default-fg-color);
+}
+
 /* Shift tabs to the right to align the text */
 [data-md-color-scheme="polyflow"] .md-tabs {
   margin-left: 250px;

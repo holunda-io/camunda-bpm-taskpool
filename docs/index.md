@@ -12,7 +12,7 @@ If you can answer one of the previous questions with yes, Polyflow's libraries m
 ## How to start?
 
 We provide documentation for different people and different tasks. A good starting point is the
-[Introduction](./introduction/motivation.html). You might want to look at [Reference Guide](./reference-guide/) containing
+[Introduction](./introduction/). You might want to look at [Reference Guide](./reference-guide/) containing
 a [Working Example](./examples/) and details about [Usage Scenarios](./examples/scenarios/).
 
 ## Get in touch
@@ -20,6 +20,6 @@ a [Working Example](./examples/) and details about [Usage Scenarios](./examples/
 If you are missing a feature, have a question regarding usage or deployment, you should definitely get in touch
 with us. There are various ways to do so:
 
-* [![Gitter](https://badges.gitter.im/holunda-io/camunda-bpm-taskpool.svg)](https://gitter.im/holunda-io/camunda-bpm-taskpool?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
-* [Slack](https://holunda.slack.com/messages/taskpool/)
-* [Github Issues](https://github.com/holunda-io/camunda-bpm-taskpool/issues)
+[![Gitter chat](https://badges.gitter.im/gitterHQ/gitter.png)](https://gitter.im/holunda-io/camunda-bpm-taskpool?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+[![Slack](https://img.shields.io/badge/slack-@holunda/taskpool-green.svg?logo=slack")](https://holunda.slack.com/messages/taskpool/)
+[![Github Issues](https://img.shields.io/github/issues/holunda-io/camunda-bpm-taskpool)](https://github.com/holunda-io/camunda-bpm-taskpool/issues)

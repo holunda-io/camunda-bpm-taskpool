@@ -2,15 +2,11 @@
 title: Features
 ---
 
-## Supported process engines
+## Task pool
 
-* Camunda BPM
-
-## Task List
-
-A task list is an application that shows a list of tasks for each individual user, based on the 
+A task list is an application that shows a list of tasks for each individual user, based on the
 user's profile, roles and authorizations. Polyflow's `taskpool` library provides a backend from which task lists
-can be served. As such, it can be seen as a replacement resp. add-on for Camunda's `TaskService`. The `taskpool` library  
+can be served. As such, it can be seen as a replacement resp. add-on for Camunda's `TaskService`. The `taskpool` library
 provides the the following features:
 
 * Task mirroring: provides a list of tasks in the system including all standard task attributes provided by Camunda BPM
@@ -29,22 +25,29 @@ provides the the following features:
    (allowing to plug-in some data enricher on task creation) allows for caching  additional
    business data along with the task information.
 
-## Business Object View
+## Data pool
 
-Each process instance works on one or more business objects and a business object's lifecycle usually spans a longer period of time 
-than the process instance runtime. It's a common requirement to search for these business objects (independently of process tasks) and
-get a list of these objects including their current statuses (e.g. DRAFT, IN_PROGRESS, COMPLETED). The `datapool` library provides the
-necessary features to implement a high-performance Business Object View:
+Each process instance works on one or more business objects and a business object's lifecycle usually spans a longer period of time than the process instance runtime. It's a common requirement to search for these business objects (independently of process tasks) and get a list of these objects including their current statuses (e.g. DRAFT, IN_PROGRESS, COMPLETED). The `datapool` library provides the necessary features to implement a high-performance Business Object View:
 
 * Business object API providing additional attributes important for processing
 * Business object modification API for creating an audit log (aka business object history)
 * Authorization API for business objects
 
-## Process List
+## Process repository
 
-A process list provides a list of running instances and a list of process definitions deployed in the process engines connected to
-the library. It provides the following features:
+A process repository provides a list of running instances and a list of process definitions deployed in the process engines connected to the library. It provides the following features:
 
 * List of startable process definitions (including URLs to start forms)
 * List of running process instances
 * Reacts on life cycle events of process instance
+
+## Process Variable pool
+
+Along with business data entities being modified during the execution of the business processes, the business process instance itself holds a collection of so-called process variables, representing the state of the execution. In contrast to the business data entities, their lifecycle is bound to the lifecycle of the business process instance. For different reasons the requirement might exist to have a rapid access to the **process variables** of a running process instance, which is provided by the `taskpool` library.
+
+
+## Integration
+
+* Generic task sender
+* Generic data entry sender
+* Camunda BPM collector (tasks, process definitions, process instances, process variables)

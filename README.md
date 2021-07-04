@@ -39,8 +39,8 @@ We decided to stop repetitive work and release an open-source library which buil
 
 ### Where to start
 
-Sounds interesting for you? A good starting point for reading is the
-[Introduction](https://www.holunda.io/camunda-bpm-taskpool/stable/introduction/motivation.html) section.
+Sounds interesting for you? If you want to try it out, please read the
+[Getting Started](https://www.holunda.io/camunda-bpm-taskpool/stable/getting-started/) section.
 
 ### Getting more help
 
@@ -51,13 +51,13 @@ discussion on any issue, feel free to look into [GitHub Project Discussion](http
 Finally, there are:
 - [![Gitter chat](https://badges.gitter.im/gitterHQ/gitter.png)](https://gitter.im/holunda-io/camunda-bpm-taskpool?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 - [![Slack](https://img.shields.io/badge/slack-@holunda/taskpool-green.svg?logo=slack")](https://holunda.slack.com/messages/taskpool/)
-  
+
 available, if you want to discuss more issues with the developers.
 
 ### Working Example
 
 Studying and understanding the functionality is easier if you start with our working example described in
-the [Example Section](https://www.holunda.io/camunda-bpm-taskpool/stable/examples/example-approval.html).
+the [Example Section](https://www.holunda.io/camunda-bpm-taskpool/stable/examples/).
 
 ### License
 
