@@ -34,9 +34,11 @@ class ScheduledStarter(
 
   @Scheduled(initialDelay = 2000, fixedRate = Integer.MAX_VALUE.toLong())
   fun saveDummyRequest() {
-    val username = userStoreService.getUsers().map{
+    val username = userStoreService.getUsers().map {
       val revision = 1L
-      this.requestInfo = requestService.addRequest(createSalaryRequest(), it.username, revision) to AtomicLong(revision)
+      val request = createSalaryRequest()
+      requestService.addRequest(request, it.username, revision)
+      this.requestInfo = request.id to AtomicLong(revision)
     }
   }
 
