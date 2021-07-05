@@ -1,31 +1,8 @@
 ---
-pageId: single-node
 title: Scenario for running on a single node
 ---
 
-## Scenario description
-
-In a single node scenario, the process application and the process platform components are deployed in a single node.
-In most production environments this scenario doesn't make sense because of poor reliability. Still, it is valid for
-demonstration purpose and is ideal to play around with components and understand their purpose and interaction between them.
-
-In a single node scenario the following configuration is used:
-
-* All buses are local (command bus, event bus, query bus)
-* In-memory H2 is used as a database for:
-  - Camunda BPM Engine
-  - Axon Event Store (JPA-based)
-  - Process Application Datasource
-* In-memory transient projection view is used (`simple-view`)
-
-Check the following diagram for more details:
-
-![Deployment of all component in a single node](../../img/deployment-single.png)
-
-## Running Example
-
-This example demonstrates the usage of the Camunda BPM Taskpool deployed in one single node and is
-built as a SpringBoot application.
+This example demonstrates the usage of the Camunda BPM Taskpool deployed in one single node and is built as a SpringBoot application described in the [Deployment](../../indroduction/deployment.md) section.
 
 ### System Requirements
 

@@ -98,6 +98,7 @@ nav:
     - Concepts: introduction/concepts.md
     - Features: introduction/features.md
     - Solution Architecture: introduction/solution-architecture.md
+    - Deployment Strategies: introduction/deployment.md
   - Getting Started: getting-started/index.md
   - Reference:
     - Reference Overview: reference-guide/index.md

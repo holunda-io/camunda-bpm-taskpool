@@ -1,5 +1,5 @@
 ---
-title: Motivation
+title: Motivation and Goals
 ---
 
 Over the last years, we built various process applications and whole process platforms for our customers using a modern process engine - Camunda BPM. In doing so, we were observed common requirements, in particular with respect to task-oriented frontend applications and were able to extract them. These were basic requirements independent of the used frontend technology and it turned out that some issues occurred every time during the implementation.

@@ -1,6 +1,5 @@
 ---
 title: Contribution
-pageId: 'contribution'
 ---
 
 There are several ways in which you may contribute to this project.
