@@ -73,7 +73,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#scenario-description" class="md-skip">
+        <a href="#system-requirements" class="md-skip">
           Skip to content
         </a>
       
@@ -406,6 +406,18 @@
     <li class="md-nav__item">
       <a href="../../introduction/solution-architecture.html" class="md-nav__link">
         Solution Architecture
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../introduction/deployment.md" class="md-nav__link">
+        Deployment Strategies
       </a>
     </li>
   
@@ -992,43 +1004,23 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#scenario-description" class="md-nav__link">
-    Scenario description
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#running-example" class="md-nav__link">
-    Running Example
-  </a>
-  
-    <nav class="md-nav" aria-label="Running Example">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
   <a href="#system-requirements" class="md-nav__link">
     System Requirements
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
+      
+        <li class="md-nav__item">
   <a href="#preparations" class="md-nav__link">
     Preparations
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
+      
+        <li class="md-nav__item">
   <a href="#start" class="md-nav__link">
     Start
   </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -1156,24 +1148,7 @@
                 
                   <h1>Single Node</h1>
                 
-                <h2 id="scenario-description">Scenario description<a class="headerlink" href="#scenario-description" title="Permanent link">#</a></h2>
-<p>In a single node scenario, the process application and the process platform components are deployed in a single node.
-In most production environments this scenario doesn't make sense because of poor reliability. Still, it is valid for
-demonstration purpose and is ideal to play around with components and understand their purpose and interaction between them.</p>
-<p>In a single node scenario the following configuration is used:</p>
-<ul>
-<li>All buses are local (command bus, event bus, query bus)</li>
-<li>In-memory H2 is used as a database for:</li>
-<li>Camunda BPM Engine</li>
-<li>Axon Event Store (JPA-based)</li>
-<li>Process Application Datasource</li>
-<li>In-memory transient projection view is used (<code>simple-view</code>)</li>
-</ul>
-<p>Check the following diagram for more details:</p>
-<p><img alt="Deployment of all component in a single node" src="../../img/deployment-single.png" /></p>
-<h2 id="running-example">Running Example<a class="headerlink" href="#running-example" title="Permanent link">#</a></h2>
-<p>This example demonstrates the usage of the Camunda BPM Taskpool deployed in one single node and is
-built as a SpringBoot application.</p>
+                <p>This example demonstrates the usage of the Camunda BPM Taskpool deployed in one single node and is built as a SpringBoot application described in the <a href="../../indroduction/deployment.md">Deployment</a> section.</p>
 <h3 id="system-requirements">System Requirements<a class="headerlink" href="#system-requirements" title="Permanent link">#</a></h3>
 <ul>
 <li>JDK 11</li>

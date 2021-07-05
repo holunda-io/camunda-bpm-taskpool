@@ -411,6 +411,18 @@
   
 
           
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../introduction/deployment.md" class="md-nav__link">
+        Deployment Strategies
+      </a>
+    </li>
+  
+
+          
         </ul>
       </nav>
     </li>
@@ -1290,8 +1302,10 @@ version is a Community Edition. Specify <code>-Pcamunda-ee</code> to switch to C
 require a valid Camunda license. You can put it into a file <code>~/.camunda/license.txt</code> and it will be detected
 automatically.</p>
 <h3 id="skip-frontend">Skip Frontend<a class="headerlink" href="#skip-frontend" title="Permanent link">#</a></h3>
-<p>TIP: Components for production use of camunda-bpm-taskpool are backend components only. Frontend components are only
-created for examples and demonstration purpose.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Components for production use of camunda-bpm-taskpool are backend components only. Frontend components are only created for examples and demonstration purpose.</p>
+</div>
 <p>If you are interested in backend only, specify the <code>-DskipFrontend</code> switch. This will accelerate the build
 significantly.</p>
 <h3 id="generate-sql-scripts">Generate SQL scripts<a class="headerlink" href="#generate-sql-scripts" title="Permanent link">#</a></h3>
@@ -1301,7 +1315,10 @@ some example schema). If you change any of those you will need to create SQL scr
 For doing so, you can re-generate the scripts running:</p>
 <div class="highlight"><pre><span></span><code>./mvnw -Pgenerate-sql
 </code></pre></div>
-<p>NOTE: The existing scripts must not be replaced or changed, but new additional scripts needs to added.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The existing scripts must not be replaced or changed, but new additional scripts needs to added.</p>
+</div>
 <h3 id="build-documentation">Build Documentation<a class="headerlink" href="#build-documentation" title="Permanent link">#</a></h3>
 <p>We are using MkDocs for generation of a static site documentation and rely on Markdown as much as possible.
 MkDocs is a written in Python 3 and needs to be installed on your machine. For the installation please run the following
@@ -1312,9 +1329,11 @@ python3 -m pip install -r ./docs/requirements.txt
 <p>For creation of documentation, please run:</p>
 <div class="highlight"><pre><span></span><code>mkdocs build
 </code></pre></div>
-<p>The docs are generated into <code>site</code> directory. </p>
-<p>!!!note If you want to develop your docs in 'live' mode, run <code>mkdocs serve</code> and access
-the <a href="http://localhost:8000/">http://localhost:8000/</a> from your browser.</p>
+<p>The docs are generated into <code>site</code> directory.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you want to develop your docs in 'live' mode, run <code>mkdocs serve</code> and access the <a href="http://localhost:8000/">http://localhost:8000/</a> from your browser.</p>
+</div>
 <h3 id="examples">Examples<a class="headerlink" href="#examples" title="Permanent link">#</a></h3>
 <p>Polyflow provides a series of examples demonstrating different features of the library. By default, the examples are
 built during the project build. If you want to skip the examples, please add the following parameter to your command
@@ -1322,7 +1341,10 @@ line or disable the <code>examples</code> module in your IDE.</p>
 <div class="highlight"><pre><span></span><code>./mvnw clean package -DskipExamples
 </code></pre></div>
 <h2 id="local-start">Local Start<a class="headerlink" href="#local-start" title="Permanent link">#</a></h2>
-<p>!!!important If you want to run examples locally, you will need <code>docker</code> and <code>docker-compose</code>.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>If you want to run examples locally, you will need <code>docker</code> and <code>docker-compose</code>.</p>
+</div>
 <h3 id="pre-requirements">Pre-requirements<a class="headerlink" href="#pre-requirements" title="Permanent link">#</a></h3>
 <p>Before starting the example applications, make sure the required infrastructure is set up and running.
 Please run the following from your command line:</p>
@@ -1362,12 +1384,11 @@ is used to build the releases.</p>
 </code></pre></div>
 <p>inside the corresponding <code>pom.xml</code>. Currently, all examples are <em>EXCLUDED</em> from publication into Maven Central.</p>
 <h3 id="trigger-new-release">Trigger new release<a class="headerlink" href="#trigger-new-release" title="Permanent link">#</a></h3>
-<p>WARNING: This operation requires special permissions.</p>
-<p>We use gitflow for development (see <a href="http://nvie.com/posts/a-successful-git-branching-model/">A successful git branching model</a>
-for more details). You could use gitflow with native git commands, but then you would have
-to change the versions in the poms manually. Therefore, we use the
-<a href="https://github.com/aleksandr-m/gitflow-maven-plugin/">mvn gitflow plugin</a>, which handles this and other
-things nicely.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This operation requires special permissions.</p>
+</div>
+<p>We use gitflow for development (see <a href="http://nvie.com/posts/a-successful-git-branching-model/">A successful git branching model</a> for more details). You could use gitflow with native git commands, but then you would have to change the versions in the poms manually. Therefore, we use the <a href="https://github.com/aleksandr-m/gitflow-maven-plugin/">mvn gitflow plugin</a>, which handles this and other things nicely.</p>
 <p>You can build a release with:</p>
 <div class="highlight"><pre><span></span><code>./mvnw gitflow:release-start
 ./mvnw gitflow:release-finish
@@ -1375,12 +1396,18 @@ things nicely.</p>
 <p>This will update the versions in the <code>pom.xml</code> s accordingly and push the release tag to the <code>master</code> branch
 and update the <code>develop</code> branch for the new development version.</p>
 <h3 id="trigger-a-deploy">Trigger a deploy<a class="headerlink" href="#trigger-a-deploy" title="Permanent link">#</a></h3>
-<p>!!! warning  This operation requires special permissions.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This operation requires special permissions.</p>
+</div>
 <p>Currently, CI allows for deployment of artifacts to Maven Central and is executed using github actions.
 This means, that a push to <code>master</code> branch will start the corresponding build job, and if successful the
 artifacts will get into <code>Staging Repositories</code> of OSS Sonatype without manual intervention.</p>
 <h3 id="run-deploy-from-local-machine">Run deploy from local machine<a class="headerlink" href="#run-deploy-from-local-machine" title="Permanent link">#</a></h3>
-<p>WARNING: This operation requires special permissions.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This operation requires special permissions.</p>
+</div>
 <p>If you still want to execute the deployment from your local machine, you need to have GPG keys at place and
 to execute the following command on the <code>master</code> branch:</p>
 <div class="highlight"><pre><span></span><code><span class="nb">export</span> <span class="nv">GPG_KEYNAME</span><span class="o">=</span><span class="s2">&quot;&lt;keyname&gt;&quot;</span>
@@ -1388,7 +1415,10 @@ to execute the following command on the <code>master</code> branch:</p>
 ./mvnw clean deploy -B -DskipTests -DskipExamples -Prelease -Dgpg.keyname<span class="o">=</span><span class="nv">$GPG_KEYNAME</span> -Dgpg.passphrase<span class="o">=</span><span class="nv">$GPG_PASSPHRASE</span>
 </code></pre></div>
 <h3 id="release-to-public-repositories">Release to public repositories<a class="headerlink" href="#release-to-public-repositories" title="Permanent link">#</a></h3>
-<p>WARNING: This operation requires special permissions.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This operation requires special permissions.</p>
+</div>
 <p>The deploy job will publish the artifacts to Nexus OSS staging repositories. Don't forget to close and release the
 repository to enable it's sync with Maven Central.</p>
                 

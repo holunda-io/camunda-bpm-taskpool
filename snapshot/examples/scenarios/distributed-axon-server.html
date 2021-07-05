@@ -73,7 +73,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#scenario-description" class="md-skip">
+        <a href="#system-requirements" class="md-skip">
           Skip to content
         </a>
       
@@ -406,6 +406,18 @@
     <li class="md-nav__item">
       <a href="../../introduction/solution-architecture.html" class="md-nav__link">
         Solution Architecture
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../introduction/deployment.md" class="md-nav__link">
+        Deployment Strategies
       </a>
     </li>
   
@@ -1004,43 +1016,23 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#scenario-description" class="md-nav__link">
-    Scenario description
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#running-example" class="md-nav__link">
-    Running Example
-  </a>
-  
-    <nav class="md-nav" aria-label="Running Example">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
   <a href="#system-requirements" class="md-nav__link">
     System Requirements
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
+      
+        <li class="md-nav__item">
   <a href="#preparations" class="md-nav__link">
     Preparations
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
+      
+        <li class="md-nav__item">
   <a href="#start" class="md-nav__link">
     Start
   </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -1176,34 +1168,19 @@
                 
                   <h1>Distributed using Axon Server</h1>
                 
-                <h2 id="scenario-description">Scenario description<a class="headerlink" href="#scenario-description" title="Permanent link">#</a></h2>
-<p>A distributed scenario is helpful if you intend to build a central process platform and multiple process applications using it.</p>
-<p>In general, this is the main use case for taskpool itself, but the distribution aspects adds technical complexity to the resulting
-architecture. Especially, following the architecture blueprint of Axon Framework, the three buses (command bus, event bus and
-query bus) needs to be distributed and act as connecting infrastructure between components.</p>
-<p>Axon Server provides an implementation for this requirement leading to a distributed buses and a central event store. It is easy
-to use, easy to configure and easy to run. If you need a HA setup, you will need the enterprise license of Axon Server. Essentially,
-if don't have another HA ready-to use messaging, this scenario might be your way to go.</p>
-<p>This scenario supports:</p>
-<ul>
-<li>central process platform components (including task pool and data pool)</li>
-<li>free choice for projection persistence (can be replayed)</li>
-<li>no direct communication between process platform and process application is required (e.g. via REST, since it is routed via command bus)</li>
-</ul>
-<p>The following configuration is used in the distributes scenario with Axon Server:</p>
+                <p>This example is demonstrating the usage of the Camunda BPM Taskpool with components distributed with help of Axon Server.
+It provides two applications for demonstration purposes: the process application and the process platform. Both applications are built as SpringBoot applications.</p>
+<p>The following configuration is used in the distributed scenario with Axon Server:</p>
 <ul>
 <li>Bus distribution is provided by Axon Server Connector (command bus, event bus, query bus)</li>
 <li>Axon Server is used as Event Store</li>
-<li>Postgresql is used as a database for:</li>
+<li>Postgresql is used as a database for:<ul>
 <li>Camunda BPM Engine</li>
 <li>Process Application Datasource</li>
+</ul>
+</li>
 <li>Mongo is used as persistence for projection view (<code>mongo-view</code>)</li>
 </ul>
-<p>The following diagram depicts the distribution of the components and the messaging:</p>
-<p><img alt="&quot;Deployment of taskpool with axon server&quot;" src="../../img/deployment-axon-server.png" /></p>
-<h2 id="running-example">Running Example<a class="headerlink" href="#running-example" title="Permanent link">#</a></h2>
-<p>This example is demonstrating the usage of the Camunda BPM Taskpool with components distributed with help of Axon Server.
-It provides two applications for demonstration purposes: the process application and the process platform. Both applications are built as SpringBoot applications.</p>
 <h3 id="system-requirements">System Requirements<a class="headerlink" href="#system-requirements" title="Permanent link">#</a></h3>
 <ul>
 <li>JDK 11</li>
