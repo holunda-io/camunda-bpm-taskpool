@@ -91,6 +91,7 @@ class ProcessApproveRequestSPAConfiguration(
     // allow ng serve to access the backend
     registry.addMapping("/$applicationName" + Web.ANY)
       .allowedOrigins("http://localhost:4200")
+      .allowedOrigins("http://localhost:4300")
       .allowedMethods(
         HttpMethod.GET.name,
         HttpMethod.HEAD.name,

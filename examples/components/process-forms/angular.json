@@ -39,7 +39,9 @@
             "buildOptimizer": false,
             "sourceMap": true,
             "optimization": false,
-            "namedChunks": true
+            "namedChunks": true,
+            "deployUrl": "/example-process-approval/",
+            "baseHref": "/example-process-approval/"
           },
           "configurations": {
             "production": {
@@ -69,7 +71,9 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "example-process-approval:build"
+            "browserTarget": "example-process-approval:build",
+            "port": 4300,
+            "proxyConfig": "proxy-local.json"
           },
           "configurations": {
             "production": {

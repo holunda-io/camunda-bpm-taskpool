@@ -5,10 +5,7 @@ title: Solution Architecture
 ## General Idea
 
 The implementation of a single (small) process application can be easily done using the Camunda BPM library itself. If the
-solution becomes larger, for example by setting up multiple engines for different processes or if the load on a single process
-engine becomes unmanageable, it is worth to separate the solution into __process specific__ and
-__process agnostic__ parts. We call the __process specific__ part of the solution "Process Application" and the __process agnostic__
-part "Process Platform".
+solution becomes larger, for example by setting up multiple engines for different processes or if the load on a single process engine becomes unmanageable, it is worth to separate the solution into __process specific__ and __process agnostic__ parts. We call the __process specific__ part of the solution "Process Application" and the __process agnostic__ part "Process Platform".
 
 Based on the assumption of the asymmetric read/write characteristics of task-oriented process applications, we decided
 to apply the Command Query Responsibility Segregation (CQRS) pattern for the architectural design. As a result, we supply
@@ -37,6 +34,6 @@ The following diagram depicts the overall logical architecture:
 The components are implemented using Kotlin programming language and rely on SpringBoot as execution environment.
 They make a massive use of Axon Framework as a basis of the CQRS implementation.
 
-// FIXME: replace this image with architecture of the camunda integration
+The following figure demonstrates the architecture of the Camunda Collector.
 
 ![Collector Architecture](../img/architecture-collector.png)

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { BehaviorSubject } from 'rxjs';
 import { Environment } from 'process/models/environment';
 import { EnvironmentService } from 'process/services/environment.service';
 
