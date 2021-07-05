@@ -5,7 +5,7 @@ info:
   description: API for the example approval process.
 
 servers:
-  - url: http://localhost:8080/example-process-approval/rest/
+  - url: http://localhost:8080/example-process-approval/rest
     description: Local example process REST API
 
 tags:

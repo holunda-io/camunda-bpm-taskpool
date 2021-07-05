@@ -10,6 +10,7 @@ import io.swagger.annotations.ApiParam
 import mu.KLogging
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
+import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestHeader
@@ -30,11 +31,15 @@ class ApproveRequestTaskController(
     @ApiParam(value = "Task id.", required = true) @PathVariable("id") id: String,
     @ApiParam(value = "Specifies the id of current user.", required = true) @RequestHeader(value = "X-Current-User-ID", required = true) xCurrentUserID: String
   ): ResponseEntity<TaskApproveRequestFormDataDto> {
-    logger.debug { "Loading data for task $id" }
+
+    val username = userService.getUser(xCurrentUserID).username
+
+    logger.debug { "Loading data task $id for user $username" }
     val (task, approvalRequest) = requestApprovalProcessBean.loadApproveTaskFormData(id)
     return ResponseEntity.ok(TaskApproveRequestFormDataDto().approvalRequest(approvalRequestDto(approvalRequest)).task(taskDto(task)))
   }
 
+  @Transactional
   override fun submitTaskApproveRequestSubmitData(
     @ApiParam(value = "Task id.", required = true) @PathVariable("id") id: String,
     @ApiParam(value = "Specifies the id of current user.", required = true) @RequestHeader(value = "X-Current-User-ID", required = true) xCurrentUserID: String,
@@ -43,7 +48,7 @@ class ApproveRequestTaskController(
 
     val username = userService.getUser(xCurrentUserID).username
 
-    logger.debug { "Submitting data for task $id, $payload" }
+    logger.debug { "User $username is submitting data for task $id, $payload" }
     requestApprovalProcessBean.approveTask(id, payload.decision, username, payload.comment)
     return ResponseEntity.noContent().build()
   }

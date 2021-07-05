@@ -39,9 +39,8 @@ Let's play the following run through this process model.
 
 To run the example please consult the [Usage Scenarios](./scenarios/) section.
 
-TIP: Since the process application includes Camunda BPM engine, you can use the standard Camunda webapps by navigating
-to [http://localhost:8080/camunda/app/](http://localhost:8080/camunda/app/).
-The default user and password are `admin / admin`.
+!!! note
+    Since the process application includes Camunda BPM engine, you can use the standard Camunda webapps by navigating to [http://localhost:8080/camunda/app/](http://localhost:8080/camunda/app/). The default user and password are `admin / admin`.
 
 ## Story board
 
@@ -51,7 +50,7 @@ TIP: In this storyboard, we assume you started the single node scenario and the 
 on http://localhost:8080. Please adjust the URLs accordingly, if you started differently.
 
 - To start the approval process for a given request open your browser and navigate to the `Example Tasklist`:
-[http://localhost:8080/taskpool/](http://localhost:8080/taskpool/). Please note that the selected user is `Ironman`.
+[http://localhost:8080/polyflow/](http://localhost:8080/polyflow/). Please note that the selected user is `Ironman`.
 
 - Open the menu (`Start new...`) in and select 'Request Approval'. You should see the start form for the example
 approval process.

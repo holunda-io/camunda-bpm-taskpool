@@ -20,6 +20,8 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "baseHref": "/polyflow/",
+            "deployUrl": "/polyflow/",
             "outputPath": "dist/polyflow",
             "index": "src/index.html",
             "main": "src/main.ts",
@@ -69,7 +71,9 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "polyflow:build"
+            "browserTarget": "polyflow:build",
+            "port": 4200,
+            "proxyConfig": "proxy-local.json"
           },
           "configurations": {
             "production": {

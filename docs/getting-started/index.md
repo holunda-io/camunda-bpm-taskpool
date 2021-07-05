@@ -4,7 +4,10 @@ title: Integration Guide
 ---
 
 This guide is describing steps required to configure an existing Camunda BPM Spring Boot Process Application and
-connect to existing Process Platform.
+connect to **existing Process Platform**.
+
+!!! note
+    The following steps assume that you have already choosen one of the distribution scenarios and setup the **Core components**. This is a pre-requirement for the following steps to work.
 
 
 ## Add dependency to Polyflow integration starter
@@ -17,7 +20,7 @@ to your `pom.xml`:
 ``` xml
 <dependency>
   <groupId>io.holunda.polyflow</groupId>
-  <artifactId>polyflow-integration-camunda-bpm-engine-parent</artifactId>
+  <artifactId>polyflow-integration-camunda-bpm-engine-starter</artifactId>
   <version>${polyflow.version}</version>
 </dependency>
 ```

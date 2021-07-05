@@ -6,13 +6,5 @@
     "pathRewrite": {
       "^/example-process-approval/rest": "/example-process-approval/rest"
     }
-  },
-  "/example-process-approval/": {
-    "target": "http://localhost:4300",
-    "secure": false,
-    "logLevel": "debug",
-    "pathRewrite": {
-      "^/example-process-approval": "/"
-    }
   }
 }

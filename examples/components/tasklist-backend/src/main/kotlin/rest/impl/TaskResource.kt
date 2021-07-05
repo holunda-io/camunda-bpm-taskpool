@@ -3,17 +3,19 @@ package io.holunda.camunda.taskpool.example.tasklist.rest.impl
 import io.holunda.camunda.taskpool.api.task.*
 import io.holunda.camunda.taskpool.example.tasklist.auth.CurrentUserService
 import io.holunda.camunda.taskpool.example.tasklist.rest.ElementNotFoundException
+import io.holunda.camunda.taskpool.example.tasklist.rest.NotAllowedException
 import io.holunda.camunda.taskpool.example.tasklist.rest.Rest
 import io.holunda.camunda.taskpool.example.tasklist.rest.api.TaskApi
 import io.holunda.polyflow.view.Task
+import io.holunda.polyflow.view.auth.User
 import io.holunda.polyflow.view.auth.UserService
 import io.holunda.polyflow.view.query.task.TaskForIdQuery
-import io.swagger.annotations.Api
 import mu.KLogging
 import org.axonframework.commandhandling.gateway.CommandGateway
 import org.axonframework.queryhandling.QueryGateway
 import org.camunda.bpm.engine.variable.Variables
 import org.springframework.http.ResponseEntity
+import org.springframework.stereotype.Component
 import org.springframework.web.bind.annotation.*
 import java.time.OffsetDateTime
 import java.util.*
@@ -25,8 +27,7 @@ import javax.validation.constraints.NotNull
 @CrossOrigin
 @RequestMapping(Rest.REQUEST_PATH)
 class TaskResource(
-  private val gateway: CommandGateway,
-  private val queryGateway: QueryGateway,
+  private val taskServiceGatewayGateway: TaskServiceGateway,
   private val currentUserService: CurrentUserService,
   private val userService: UserService
 ) : TaskApi {
@@ -34,15 +35,14 @@ class TaskResource(
   companion object : KLogging()
 
   override fun claim(
-    @PathVariable("id") id: String,
-    @RequestHeader(value = "X-Current-User-ID", required = false) xCurrentUserID: Optional<String>
+    id: String,
+    xCurrentUserID: Optional<String>
   ): ResponseEntity<Void> {
 
-    val task = getTask(id)
-    val userIdentifier = currentUserService.getCurrentUser()
-    val user = userService.getUser(userIdentifier)
+    val user = userService.getUser(xCurrentUserID.orElseGet { currentUserService.getCurrentUser() })
+    val task = getAuthorizedTask(id, user)
 
-    send(
+    taskServiceGatewayGateway.send(
       ClaimInteractionTaskCommand(
         id = task.id,
         sourceReference = task.sourceReference,
@@ -55,13 +55,14 @@ class TaskResource(
   }
 
   override fun unclaim(
-    @PathVariable("id") id: String,
-    @RequestHeader(value = "X-Current-User-ID", required = false) xCurrentUserID: Optional<String>
+    id: String,
+    xCurrentUserID: Optional<String>
   ): ResponseEntity<Void> {
 
-    val task = getTask(id)
+    val user = userService.getUser(xCurrentUserID.orElseGet { currentUserService.getCurrentUser() })
+    val task = getAuthorizedTask(id, user)
 
-    send(
+    taskServiceGatewayGateway.send(
       UnclaimInteractionTaskCommand(
         id = task.id,
         sourceReference = task.sourceReference,
@@ -73,16 +74,15 @@ class TaskResource(
   }
 
   override fun complete(
-    @PathVariable("id") id: String,
-    @RequestHeader(value = "X-Current-User-ID", required = false) xCurrentUserID: Optional<String>,
-    @Valid @RequestBody @NotNull payload: Map<String, Any>
+    id: String,
+    xCurrentUserID: Optional<String>,
+    payload: Map<String, Any>
   ): ResponseEntity<Void> {
 
-    val task = getTask(id)
-    val userIdentifier = xCurrentUserID.orElseGet { currentUserService.getCurrentUser() }
-    val user = userService.getUser(userIdentifier)
+    val user = userService.getUser(xCurrentUserID.orElseGet { currentUserService.getCurrentUser() })
+    val task = getAuthorizedTask(id, user)
 
-    send(
+    taskServiceGatewayGateway.send(
       CompleteInteractionTaskCommand(
         id = task.id,
         sourceReference = task.sourceReference,
@@ -97,13 +97,15 @@ class TaskResource(
 
 
   override fun defer(
-    @PathVariable("id") id: String,
-    @RequestHeader(value = "X-Current-User-ID", required = false) xCurrentUserID: Optional<String>,
-    @Valid @RequestBody @NotNull followUpDate: OffsetDateTime
+    id: String,
+    xCurrentUserID: Optional<String>,
+    followUpDate: OffsetDateTime
   ): ResponseEntity<Void> {
-    val task = getTask(id)
 
-    send(
+    val user = userService.getUser(xCurrentUserID.orElseGet { currentUserService.getCurrentUser() })
+    val task = getAuthorizedTask(id, user)
+
+    taskServiceGatewayGateway.send(
       DeferInteractionTaskCommand(
         id = task.id,
         sourceReference = task.sourceReference,
@@ -116,12 +118,14 @@ class TaskResource(
   }
 
   override fun undefer(
-    @PathVariable("id") id: String,
-    @RequestHeader(value = "X-Current-User-ID", required = false) xCurrentUserID: Optional<String>
+    id: String,
+    xCurrentUserID: Optional<String>
   ): ResponseEntity<Void> {
-    val task = getTask(id)
 
-    send(
+    val user = userService.getUser(xCurrentUserID.orElseGet { currentUserService.getCurrentUser() })
+    val task = getAuthorizedTask(id, user)
+
+    taskServiceGatewayGateway.send(
       UndeferInteractionTaskCommand(
         id = task.id,
         sourceReference = task.sourceReference,
@@ -132,13 +136,33 @@ class TaskResource(
     return ResponseEntity.noContent().build()
   }
 
-  private fun getTask(id: String): Task = queryGateway.query(TaskForIdQuery(id), Task::class.java).join()
-    ?: throw ElementNotFoundException()
+  private fun getAuthorizedTask(id: String, user: User): Task = taskServiceGatewayGateway.getTask(id)
+    .apply {
+      if (!isAuthorized(this, user)) {
+        // if the user is not allowed to access, behave if the task is not found
+        throw ElementNotFoundException()
+      }
+    }
 
 
-  private fun send(command: InteractionTaskCommand) {
-    gateway.send<Any, Any?>(command) { m, r -> logger.debug("Successfully submitted command $m, $r") }
-  }
+  private fun isAuthorized(task: Task, user: User) =
+    task.assignee == user.username || task.candidateUsers.contains(user.username) || task.candidateGroups.any { requiredGroup ->
+      user.groups.contains(
+        requiredGroup
+      )
+    }
 }
 
+@Component
+class TaskServiceGateway(
+  val queryGateway: QueryGateway,
+  val commandGateway: CommandGateway
+) {
+
+  fun send(command: InteractionTaskCommand) {
+    commandGateway.send<Any, Any?>(command) { m, r -> TaskResource.logger.debug("Successfully submitted command $m, $r") }
+  }
+
+  fun getTask(id: String): Task = queryGateway.query(TaskForIdQuery(id), Task::class.java).join() ?: throw ElementNotFoundException()
+}
 

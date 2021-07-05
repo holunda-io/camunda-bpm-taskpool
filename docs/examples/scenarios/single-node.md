@@ -47,6 +47,6 @@ java -jar target/*.jar
 
 ## Useful URLs
 
-* [http://localhost:8080/taskpool/](http://localhost:8080/taskpool/)
+* [http://localhost:8080/taskpool/](http://localhost:8080/polyflow/)
 * [http://localhost:8080/swagger-ui/](http://localhost:8080/swagger-ui/)
 * [http://localhost:8080/camunda/app/tasklist/default/](http://localhost:8080/camunda/app/tasklist/default/)

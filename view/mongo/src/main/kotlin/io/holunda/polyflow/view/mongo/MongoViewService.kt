@@ -69,10 +69,10 @@ class MongoViewService(
    */
   @PostConstruct
   fun trackChanges() {
-    if (properties.changeTrackingMode == io.holunda.polyflow.view.mongo.ChangeTrackingMode.CHANGE_STREAM) {
+    if (properties.changeTrackingMode == ChangeTrackingMode.CHANGE_STREAM) {
 
-      requireNotNull(taskChangeTracker) { "Task change tracker must not be null if tracking mode is set to ${io.holunda.polyflow.view.mongo.ChangeTrackingMode.CHANGE_STREAM}" }
-      requireNotNull(dataEntryChangeTracker) { "Data Entry change tracker must not be null if tracking mode is set to ${io.holunda.polyflow.view.mongo.ChangeTrackingMode.CHANGE_STREAM}" }
+      requireNotNull(taskChangeTracker) { "Task change tracker must not be null if tracking mode is set to ${ChangeTrackingMode.CHANGE_STREAM}" }
+      requireNotNull(dataEntryChangeTracker) { "Data Entry change tracker must not be null if tracking mode is set to ${ChangeTrackingMode.CHANGE_STREAM}" }
 
       taskCountByApplicationSubscription = taskChangeTracker.trackTaskCountsByApplication()
         .subscribe { queryUpdateEmitter.emit(TaskCountByApplicationQuery::class.java, { true }, it) }
@@ -90,7 +90,7 @@ class MongoViewService(
    */
   @PreDestroy
   fun stopTracking() {
-    if (properties.changeTrackingMode == io.holunda.polyflow.view.mongo.ChangeTrackingMode.CHANGE_STREAM) {
+    if (properties.changeTrackingMode == ChangeTrackingMode.CHANGE_STREAM) {
       taskCountByApplicationSubscription?.dispose()
       taskUpdateSubscription?.dispose()
       taskWithDataEntriesUpdateSubscription?.dispose()
@@ -250,7 +250,7 @@ class MongoViewService(
       .retryIfEmpty { "Cannot delete task '$id' because it does not exist in the database" }
       .map { it.copy(deleted = true) }
       .flatMap { taskDocument ->
-        if (properties.changeTrackingMode == io.holunda.polyflow.view.mongo.ChangeTrackingMode.CHANGE_STREAM) {
+        if (properties.changeTrackingMode == ChangeTrackingMode.CHANGE_STREAM) {
           taskRepository.save(taskDocument)
         } else {
           taskRepository.delete(taskDocument)

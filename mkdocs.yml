@@ -31,6 +31,8 @@ markdown_extensions:
     - pymdownx.highlight
     - pymdownx.superfences
     - pymdownx.details
+    - admonition
+
 
 theme:
   name: material
@@ -51,12 +53,12 @@ theme:
     - media: "(prefers-color-scheme: dark)"
       scheme: polyflow
       toggle:
-        icon: material/toggle-switch
+        icon: material/weather-sunny
         name: Switch to light mode
     - media: "(prefers-color-scheme: light)"
       scheme: default
       toggle:
-        icon: material/toggle-switch-off-outline
+        icon: material/weather-night
         name: Switch to dark mode
 
 extra_css: [stylesheets/extra.css]
@@ -67,8 +69,8 @@ extra:
       name: Holisticon on Twitter
       link: https://twitter.com/holisticon
     - icon: fontawesome/brands/medium
-      name: Holisticon on Medium
-      link: https://medium.com/holisticon
+      name: Holisticon BPM Craftsmen on Medium
+      link: https://medium.com/holisticon-consultants/tagged/mpb
   version:
     provider: mike
 
@@ -85,14 +87,18 @@ plugins:
       javascript_dir: js            # the directory to put the version selector's JS
       canonical_version: null  # the version for <link rel="canonical">; `null`
                                             # uses the version specified via `mike deploy`
+  - git-revision-date-localized:
+      type: date
+      fallback_to_build_date: true
 
 nav:
   - Home: index.md
-  - Getting Started:
-    - Motivation: introduction/motivation.md
+  - Introduction:
+    - Motivation and Goal: introduction/index.md
+    - Concepts: introduction/concepts.md
     - Features: introduction/features.md
     - Solution Architecture: introduction/solution-architecture.md
-  - Integration: integration/index.md
+  - Getting Started: getting-started/index.md
   - Reference:
     - Reference Overview: reference-guide/index.md
     - Component Overview: reference-guide/components/index.md

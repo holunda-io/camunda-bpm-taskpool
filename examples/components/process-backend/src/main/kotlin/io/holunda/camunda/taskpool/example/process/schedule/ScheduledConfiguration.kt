@@ -2,7 +2,7 @@ package io.holunda.camunda.taskpool.example.process.schedule
 
 import io.holunda.camunda.taskpool.example.process.process.RequestApprovalProcessBean
 import io.holunda.camunda.taskpool.example.process.service.RequestService
-import io.holunda.camunda.taskpool.example.process.service.createDummyRequest
+import io.holunda.camunda.taskpool.example.process.service.createSalaryRequest
 import io.holunda.camunda.taskpool.example.users.UserStoreService
 import mu.KLogging
 import org.springframework.beans.factory.annotation.Value
@@ -34,9 +34,11 @@ class ScheduledStarter(
 
   @Scheduled(initialDelay = 2000, fixedRate = Integer.MAX_VALUE.toLong())
   fun saveDummyRequest() {
-    val username = userStoreService.getUsers().map{
+    val username = userStoreService.getUsers().map {
       val revision = 1L
-      this.requestInfo = requestService.addRequest(createDummyRequest(), it.username, revision) to AtomicLong(revision)
+      val request = createSalaryRequest()
+      requestService.addRequest(request, it.username, revision)
+      this.requestInfo = request.id to AtomicLong(revision)
     }
   }
 

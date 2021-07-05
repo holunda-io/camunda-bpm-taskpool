@@ -28,18 +28,10 @@ class TaskWithDataEntriesTest {
     type = "myType",
     applicationName = "name",
     name = "myName"
-
-  )
-  private val dataEntry3 = DataEntry(
-    entryType = "EntryType3",
-    entryId = UUID.randomUUID().toString(),
-    payload = Variables.putValue("unused", "unused"),
-    type = "myType",
-    applicationName = "name",
-    name = "myName"
   )
 
   private val dataEntryList = listOf(dataEntry1, dataEntry2)
+  private val dataEntryMap = dataEntryList.associateBy { it.identity }
 
   @Test
   fun `should correlate data entries`() {
@@ -55,7 +47,7 @@ class TaskWithDataEntriesTest {
 
     val task = createTask(correlations = correlationMap)
 
-    val taskWithDataEntries = TaskWithDataEntries.correlate(task, dataEntries.values.toList())
+    val taskWithDataEntries = TaskWithDataEntries.correlate(task, dataEntries)
 
     assertThat(taskWithDataEntries.dataEntries).containsExactlyElementsOf(dataEntryList)
   }
@@ -64,7 +56,7 @@ class TaskWithDataEntriesTest {
   fun `correlate task with dataEntries`() {
     val task = createTask(correlations = correlationMap(dataEntry1))
 
-    val taskWithDataEntries = TaskWithDataEntries.correlate(task, dataEntryList)
+    val taskWithDataEntries = TaskWithDataEntries.correlate(task, dataEntryMap)
 
     assertThat(taskWithDataEntries.task).isEqualTo(task)
     assertThat(taskWithDataEntries.dataEntries).containsOnly(dataEntry1)
@@ -78,8 +70,8 @@ class TaskWithDataEntriesTest {
     val list = TaskWithDataEntries.correlate(listOf(task1, task2), dataEntry1)
 
     assertThat(list).hasSize(1)
-    assertThat(list.get(0).task).isEqualTo(task1)
-    assertThat(list.get(0).dataEntries).containsOnly(dataEntry1)
+    assertThat(list[0].task).isEqualTo(task1)
+    assertThat(list[0].dataEntries).containsOnly(dataEntry1)
   }
 
   @Test
@@ -87,12 +79,12 @@ class TaskWithDataEntriesTest {
     val task1 = createTask(id = "1", correlations = correlationMap(dataEntry1))
     val task2 = createTask(id = "2", correlations = correlationMap(dataEntry2))
 
-    val list = TaskWithDataEntries.correlate(listOf(task1, task2), dataEntryList)
+    val list = TaskWithDataEntries.correlate(listOf(task1, task2), dataEntryMap)
 
     assertThat(list).hasSize(2)
 
-    assertThat(list.get(0)).isEqualTo(TaskWithDataEntries(task1, listOf(dataEntry1)))
-    assertThat(list.get(1)).isEqualTo(TaskWithDataEntries(task2, listOf(dataEntry2)))
+    assertThat(list[0]).isEqualTo(TaskWithDataEntries(task1, listOf(dataEntry1)))
+    assertThat(list[1]).isEqualTo(TaskWithDataEntries(task2, listOf(dataEntry2)))
   }
 
   private fun correlationMap(vararg dataEntries: DataEntry): CorrelationMap {

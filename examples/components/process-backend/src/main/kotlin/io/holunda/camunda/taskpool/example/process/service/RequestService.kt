@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import io.holixon.axon.gateway.query.RevisionQueryParameters
 import io.holixon.axon.gateway.query.RevisionValue
 import io.holunda.camunda.taskpool.api.business.AuthorizationChange.Companion.addUser
+import io.holunda.camunda.taskpool.api.business.DataEntryState
 import io.holunda.camunda.taskpool.api.business.Modification
 import io.holunda.camunda.taskpool.api.business.ProcessingType
 import org.springframework.stereotype.Service
@@ -24,7 +25,7 @@ class RequestService(
   private val objectMapper: ObjectMapper
 ) {
 
-  fun addRequest(request: Request, username: String, revision: Long): String {
+  fun addRequest(request: Request, username: String, revision: Long): Long {
     dataEntryRepository.save(
       entryType = BusinessDataEntry.REQUEST,
       entryId = request.id,
@@ -42,7 +43,8 @@ class RequestService(
       authorizationChanges = listOf(addUser(username), addUser(request.applicant)),
       metaData = RevisionValue(revision).toMetaData()
     )
-    return request.id
+    checkRequest(request.id, revision)
+    return revision
   }
 
   fun getRequest(id: String, revision: Long): Request {
@@ -84,14 +86,33 @@ class RequestService(
       .getAll(RevisionQueryParameters(minimalRevision = revision))
       .map { objectMapper.convertValue(it.payload, Request::class.java) }
   }
+
+  /**
+   * Retrieves all request in draft state.
+   */
+  fun getAllDraftRequests(revision: Long): List<Request> {
+    return dataEntryRepository
+      .getAll(RevisionQueryParameters(minimalRevision = revision))
+      .filter { it.state.processingType == ProcessingType.PRELIMINARY }
+      .map { objectMapper.convertValue(it.payload, Request::class.java) }
+  }
+
 }
 
-fun createDummyRequest(id: String = UUID.randomUUID().toString()) = Request(
+fun createSalaryRequest(id: String = UUID.randomUUID().toString()) = Request(
   id = id,
   subject = "Salary increase",
   amount = BigDecimal(10000),
   currency = "USD",
   applicant = "piggy"
+)
+
+fun createAdvertisingCampaignRequest(id: String = UUID.randomUUID().toString()) = Request(
+  id = id,
+  subject = "Small advertising campaign",
+  amount = BigDecimal(60000),
+  currency = "USD",
+  applicant = "ironman"
 )
 
 
