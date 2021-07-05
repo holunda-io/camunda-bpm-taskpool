@@ -78,7 +78,7 @@ class SimpleTaskPoolService(
     val filtered = query(TasksForUserQuery(query.user))
       .elements
       .asSequence()
-      .map { task -> TaskWithDataEntries.correlate(task, this.dataEntries.values.toList()) }
+      .map { task -> TaskWithDataEntries.correlate(task, dataEntries) }
       .filter { filterByPredicate(it, predicates) }
       .toList()
 
@@ -229,11 +229,9 @@ class SimpleTaskPoolService(
   private fun updateTaskForUserQuery(taskId: String) {
     queryUpdateEmitter.updateMapFilterQuery(tasks, taskId, TasksForUserQuery::class.java)
 
-    val mapTasksWithDataEntries = TaskWithDataEntries.correlate(tasks.values.toList(), dataEntries.values.toList())
-      .map { it.task.id to it }
-      .toMap()
-
-    queryUpdateEmitter.updateMapFilterQuery(mapTasksWithDataEntries, taskId, TasksWithDataEntriesForUserQuery::class.java)
+    tasks[taskId]
+      ?.let { task -> TaskWithDataEntries.correlate(task, dataEntries) }
+      ?.let { task -> queryUpdateEmitter.emit(TasksWithDataEntriesForUserQuery::class.java, { query -> query.applyFilter(task) }, task) }
   }
 
   private fun updateTaskCountByApplicationQuery(applicationName: String) {
