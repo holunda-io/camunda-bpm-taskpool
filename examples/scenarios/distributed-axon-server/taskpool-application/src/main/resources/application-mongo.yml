@@ -5,6 +5,6 @@ spring:
       port: 27017
       database: polyflow
 
-logging.level.io.holunda.camunda.taskpool:
-  view.mongo: INFO
+logging.level.io.holunda.polyflow:
+  view.mongo: DEBUG
 
