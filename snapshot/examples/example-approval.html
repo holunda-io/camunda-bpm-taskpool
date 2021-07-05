@@ -1160,9 +1160,10 @@ eventually get to <code>ACCEPTED</code> or <code>REJECTED</code> as a final stat
 </ul>
 <h2 id="running-examples">Running Examples<a class="headerlink" href="#running-examples" title="Permanent link">#</a></h2>
 <p>To run the example please consult the <a href="./scenarios/">Usage Scenarios</a> section.</p>
-<p>TIP: Since the process application includes Camunda BPM engine, you can use the standard Camunda webapps by navigating
-to <a href="http://localhost:8080/camunda/app/">http://localhost:8080/camunda/app/</a>.
-The default user and password are <code>admin / admin</code>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Since the process application includes Camunda BPM engine, you can use the standard Camunda webapps by navigating to <a href="http://localhost:8080/camunda/app/">http://localhost:8080/camunda/app/</a>. The default user and password are <code>admin / admin</code>.</p>
+</div>
 <h2 id="story-board">Story board<a class="headerlink" href="#story-board" title="Permanent link">#</a></h2>
 <p>The following storyboard can be used to understand the mechanics behind the provided implementation:</p>
 <p>TIP: In this storyboard, we assume you started the single node scenario and the application runs locally
@@ -1170,7 +1171,7 @@ on http://localhost:8080. Please adjust the URLs accordingly, if you started dif
 <ul>
 <li>
 <p>To start the approval process for a given request open your browser and navigate to the <code>Example Tasklist</code>:
-<a href="http://localhost:8080/taskpool/">http://localhost:8080/taskpool/</a>. Please note that the selected user is <code>Ironman</code>.</p>
+<a href="http://localhost:8080/polyflow/">http://localhost:8080/polyflow/</a>. Please note that the selected user is <code>Ironman</code>.</p>
 </li>
 <li>
 <p>Open the menu (<code>Start new...</code>) in and select 'Request Approval'. You should see the start form for the example
