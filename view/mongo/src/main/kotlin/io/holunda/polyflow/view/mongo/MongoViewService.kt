@@ -43,7 +43,7 @@ import javax.annotation.PreDestroy
 @Component
 @ProcessingGroup(MongoViewService.PROCESSING_GROUP)
 class MongoViewService(
-  private val properties: io.holunda.polyflow.view.mongo.TaskPoolMongoViewProperties,
+  private val properties: TaskPoolMongoViewProperties,
   private val taskRepository: TaskRepository,
   private val dataEntryRepository: DataEntryRepository,
   private val taskWithDataEntriesRepository: TaskWithDataEntriesRepository,

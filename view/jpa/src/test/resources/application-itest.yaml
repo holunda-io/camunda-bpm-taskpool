@@ -1,0 +1,12 @@
+spring:
+  jpa:
+    open-in-view: true # disable JPA warning
+    show-sql: true
+
+logger:
+  level:
+    org.hibernate.type: TRACE
+    org.hibernate.engine.internal.cascade: DEBUG
+    org.springframework: INFO
+    org.springframework.beans: INFO
+
