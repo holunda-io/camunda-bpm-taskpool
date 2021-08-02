@@ -44,6 +44,7 @@ View Components are responsible for creation of a unified read-only projection o
 user tasks and business data items. They are typically deployed as a part of the process platform.
 
 * [In-Memory View](view-simple.md)
+* [JPA View](view-jpa.md)
 * [Mongo DB View](view-mongo.md)
 * [Property Form URL Resolver](view-form-url-resolver.md)
 

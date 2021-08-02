@@ -6,6 +6,7 @@ import io.holunda.camunda.taskpool.core.EnableTaskPool
 import io.holunda.camunda.taskpool.example.tasklist.EnableTasklist
 import io.holunda.camunda.taskpool.example.users.EnableExampleUsers
 import io.holunda.polyflow.urlresolver.EnablePropertyBasedFormUrlResolver
+import io.holunda.polyflow.view.simple.EnablePolyflowSimpleView
 import org.axonframework.commandhandling.CommandMessage
 import org.axonframework.messaging.correlation.CorrelationDataProvider
 import org.axonframework.messaging.correlation.MessageOriginProvider
@@ -32,7 +33,7 @@ fun main(args: Array<String>) {
  */
 @SpringBootApplication
 @EnableExampleUsers
-@io.holunda.polyflow.view.simple.EnableTaskPoolSimpleView
+@EnablePolyflowSimpleView
 @EnableTaskPool
 @EnableDataPool
 @EnableTasklist

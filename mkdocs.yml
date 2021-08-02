@@ -114,6 +114,7 @@ nav:
       - Datapool Core: reference-guide/components/core-datapool.md
     - View Components:
       - In-Memory View: reference-guide/components/view-simple.md
+      - JPA View: reference-guide/components/view-jpa.md
       - Mongo DB View: reference-guide/components/view-mongo.md
       - Cockpit View: reference-guide/components/view-cockpit.md
       - Form URL Resolver: reference-guide/components/view-form-url-resolver.md

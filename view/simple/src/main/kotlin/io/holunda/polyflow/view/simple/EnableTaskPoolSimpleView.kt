@@ -3,8 +3,16 @@ package io.holunda.polyflow.view.simple
 import org.springframework.context.annotation.Import
 
 /**
- * Enables simple taskpool view
+ * Enables simple taskpool view.
  */
 @MustBeDocumented
-@Import(io.holunda.polyflow.view.simple.TaskPoolSimpleViewConfiguration::class)
+@Deprecated(message = "Please use EnablePolyflowSimpleView instead", replaceWith = ReplaceWith("EnablePolyflowSimpleView"))
+@Import(TaskPoolSimpleViewConfiguration::class)
 annotation class EnableTaskPoolSimpleView
+
+/**
+ * Enables simple (in-memory) polyflow view.
+ */
+@MustBeDocumented
+@Import(TaskPoolSimpleViewConfiguration::class)
+annotation class EnablePolyflowSimpleView
