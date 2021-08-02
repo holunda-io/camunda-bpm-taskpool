@@ -738,6 +738,18 @@
   
   
     <li class="md-nav__item">
+      <a href="view-jpa.html" class="md-nav__link">
+        JPA View
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
       <a href="view-mongo.html" class="md-nav__link">
         Mongo DB View
       </a>
@@ -1166,22 +1178,22 @@ but will fail to delivery high performance results on a large number of items.</
 <h3 id="configuration-options">Configuration options<a class="headerlink" href="#configuration-options" title="Permanent link">#</a></h3>
 <p>In order to activate the in-memory implementation, please include the following dependency on your classpath:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">&lt;dependency&gt;</span>
-  <span class="nt">&lt;groupId&gt;</span>io.holunda.taskpool<span class="nt">&lt;/groupId&gt;</span>
-  <span class="nt">&lt;artifactId&gt;</span>camunda-bpm-taskpool-view-simple<span class="nt">&lt;/artifactId&gt;</span>
-  <span class="nt">&lt;version&gt;</span>${taskpool.version}<span class="nt">&lt;/version&gt;</span>
+  <span class="nt">&lt;groupId&gt;</span>io.holunda.polyflow<span class="nt">&lt;/groupId&gt;</span>
+  <span class="nt">&lt;artifactId&gt;</span>polyflow-view-simple<span class="nt">&lt;/artifactId&gt;</span>
+  <span class="nt">&lt;version&gt;</span>${polyflow.version}<span class="nt">&lt;/version&gt;</span>
 <span class="nt">&lt;/dependency&gt;</span>
 </code></pre></div>
 <p>Then, add the following annotation to any class marked as Spring Configuration
 loaded during initialization:</p>
 <div class="highlight"><pre><span></span><code><span class="nd">@Configuration</span>
-<span class="nd">@EnableTaskPoolSimpleView</span>
+<span class="nd">@EnablePolyflowSimpleView</span>
 <span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyViewConfiguration</span> <span class="p">{</span>
 
 <span class="p">}</span>
 </code></pre></div>
 <p>The view implementation provides runtime details using standard logging facility. If you
 want to increase the logging level, please setup it e.g. in your <code>application.yaml</code>:</p>
-<div class="highlight"><pre><span></span><code>logging.level.io.holunda.camunda.taskpool.view.simple: DEBUG
+<div class="highlight"><pre><span></span><code>logging.level.io.holunda.polyflow.view.simple: DEBUG
 </code></pre></div>
                 
                   
@@ -1237,13 +1249,13 @@ want to increase the logging level, please setup it e.g. in your <code>applicati
       
       
         
-        <a href="view-mongo.html" class="md-footer__link md-footer__link--next" aria-label="Next: Mongo DB View" rel="next">
+        <a href="view-jpa.html" class="md-footer__link md-footer__link--next" aria-label="Next: JPA View" rel="next">
           <div class="md-footer__title">
             <div class="md-ellipsis">
               <span class="md-footer__direction">
                 Next
               </span>
-              Mongo DB View
+              JPA View
             </div>
           </div>
           <div class="md-footer__button md-icon">

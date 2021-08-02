@@ -171,6 +171,11 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://www.holunda.io/camunda-bpm-taskpool/snapshot/reference-guide/components/view-jpa.html</loc>
+         <lastmod>2021-08-02</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://www.holunda.io/camunda-bpm-taskpool/snapshot/reference-guide/components/view-mongo.html</loc>
          <lastmod>2021-08-02</lastmod>
          <changefreq>daily</changefreq>
