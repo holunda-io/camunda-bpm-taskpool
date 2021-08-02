@@ -91,6 +91,11 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://www.holunda.io/camunda-bpm-taskpool/snapshot/introduction/deployment.html</loc>
+         <lastmod>2021-08-02</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://www.holunda.io/camunda-bpm-taskpool/snapshot/introduction/features.html</loc>
          <lastmod>2021-08-02</lastmod>
          <changefreq>daily</changefreq>

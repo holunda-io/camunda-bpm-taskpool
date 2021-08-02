@@ -13,21 +13,21 @@
         <meta name="author" content="Holisticon BPM Craftsman">
       
       
-        <link rel="canonical" href="https://www.holunda.io/camunda-bpm-taskpool/snapshot/examples/example-components/pp-frontend.html">
+        <link rel="canonical" href="https://www.holunda.io/camunda-bpm-taskpool/snapshot/introduction/deployment.html">
       
-      <link rel="icon" href="../../assets/images/favicon.png">
+      <link rel="icon" href="../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.2.2, mkdocs-material-7.2.2">
     
     
       
-        <title>Process Platform Frontend - Polyflow</title>
+        <title>Deployment Scenarios - Polyflow</title>
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.1118c9be.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.1118c9be.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.ba0d045b.min.css">
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ba0d045b.min.css">
         
       
     
@@ -42,7 +42,7 @@
     
     
     
-      <link rel="stylesheet" href="../../stylesheets/extra.css">
+      <link rel="stylesheet" href="../stylesheets/extra.css">
     
     
       
@@ -63,7 +63,7 @@
     <body dir="ltr" data-md-color-scheme="polyflow" data-md-color-primary="" data-md-color-accent="">
   
     
-    <script>function __prefix(e){return new URL("../..",location).pathname+"."+e}function __get(e,t=localStorage){return JSON.parse(t.getItem(__prefix(e)))}</script>
+    <script>function __prefix(e){return new URL("..",location).pathname+"."+e}function __get(e,t=localStorage){return JSON.parse(t.getItem(__prefix(e)))}</script>
     
       <script>var palette=__get("__palette");if(null!==palette&&"object"==typeof palette.color)for(var key in palette.color)document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
     
@@ -73,7 +73,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#example-tasklist" class="md-skip">
+        <a href="#single-node-deployment" class="md-skip">
           Skip to content
         </a>
       
@@ -84,9 +84,9 @@
     
       <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../../index.html" title="Polyflow" class="md-header__button md-logo" aria-label="Polyflow" data-md-component="logo">
+    <a href="../index.html" title="Polyflow" class="md-header__button md-logo" aria-label="Polyflow" data-md-component="logo">
       
-  <img src="../../assets/img/logo-negative.svg" alt="logo">
+  <img src="../assets/img/logo-negative.svg" alt="logo">
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -102,7 +102,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Process Platform Frontend
+              Deployment Scenarios
             
           </span>
         </div>
@@ -199,7 +199,7 @@
 
 
   <li class="md-tabs__item">
-    <a href="../../index.html" class="md-tabs__link">
+    <a href="../index.html" class="md-tabs__link">
       Home
     </a>
   </li>
@@ -208,13 +208,15 @@
         
   
   
+    
+  
 
 
   
   
   
     <li class="md-tabs__item">
-      <a href="../../introduction/index.html" class="md-tabs__link">
+      <a href="index.html" class="md-tabs__link md-tabs__link--active">
         Introduction
       </a>
     </li>
@@ -227,7 +229,7 @@
 
 
   <li class="md-tabs__item">
-    <a href="../../getting-started/index.html" class="md-tabs__link">
+    <a href="../getting-started/index.html" class="md-tabs__link">
       Getting Started
     </a>
   </li>
@@ -242,7 +244,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../reference-guide/index.html" class="md-tabs__link">
+      <a href="../reference-guide/index.html" class="md-tabs__link">
         Reference
       </a>
     </li>
@@ -252,15 +254,13 @@
         
   
   
-    
-  
 
 
   
   
   
     <li class="md-tabs__item">
-      <a href="../index.html" class="md-tabs__link md-tabs__link--active">
+      <a href="../examples/index.html" class="md-tabs__link">
         Examples
       </a>
     </li>
@@ -276,7 +276,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../developer-guide/contribution.html" class="md-tabs__link">
+      <a href="../developer-guide/contribution.html" class="md-tabs__link">
         Developers
       </a>
     </li>
@@ -305,9 +305,9 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../../index.html" title="Polyflow" class="md-nav__button md-logo" aria-label="Polyflow" data-md-component="logo">
+    <a href="../index.html" title="Polyflow" class="md-nav__button md-logo" aria-label="Polyflow" data-md-component="logo">
       
-  <img src="../../assets/img/logo-negative.svg" alt="logo">
+  <img src="../assets/img/logo-negative.svg" alt="logo">
 
     </a>
     Polyflow
@@ -336,7 +336,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../index.html" class="md-nav__link">
+      <a href="../index.html" class="md-nav__link">
         Home
       </a>
     </li>
@@ -349,12 +349,14 @@
 
   
   
+    
+  
   
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2" type="checkbox" id="__nav_2" >
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2" type="checkbox" id="__nav_2" checked>
       
       <label class="md-nav__link" for="__nav_2">
         Introduction
@@ -372,7 +374,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../introduction/index.html" class="md-nav__link">
+      <a href="index.html" class="md-nav__link">
         Motivation and Goal
       </a>
     </li>
@@ -384,7 +386,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../introduction/concepts.html" class="md-nav__link">
+      <a href="concepts.html" class="md-nav__link">
         Concepts
       </a>
     </li>
@@ -396,7 +398,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../introduction/features.html" class="md-nav__link">
+      <a href="features.html" class="md-nav__link">
         Features
       </a>
     </li>
@@ -408,7 +410,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../introduction/solution-architecture.html" class="md-nav__link">
+      <a href="solution-architecture.html" class="md-nav__link">
         Solution Architecture
       </a>
     </li>
@@ -418,11 +420,94 @@
             
   
   
+    
   
-    <li class="md-nav__item">
-      <a href="../../introduction/deployment.html" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Deployment Strategies
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="deployment.html" class="md-nav__link md-nav__link--active">
         Deployment Strategies
       </a>
+      
+        
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#single-node-deployment" class="md-nav__link">
+    Single node deployment
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#multiple-node-deployment" class="md-nav__link">
+    Multiple node deployment
+  </a>
+  
+    <nav class="md-nav" aria-label="Multiple node deployment">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#distribution-using-axon-server" class="md-nav__link">
+    Distribution using Axon Server
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#distribution-without-axon-server" class="md-nav__link">
+    Distribution without Axon Server
+  </a>
+  
+    <nav class="md-nav" aria-label="Distribution without Axon Server">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#from-process-application-to-kafka" class="md-nav__link">
+    From Process Application to Kafka
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#from-kafka-to-tasklist-api" class="md-nav__link">
+    From Kafka to Tasklist API
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -441,7 +526,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../getting-started/index.html" class="md-nav__link">
+      <a href="../getting-started/index.html" class="md-nav__link">
         Getting Started
       </a>
     </li>
@@ -477,7 +562,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference-guide/index.html" class="md-nav__link">
+      <a href="../reference-guide/index.html" class="md-nav__link">
         Reference Overview
       </a>
     </li>
@@ -489,7 +574,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference-guide/components/index.html" class="md-nav__link">
+      <a href="../reference-guide/components/index.html" class="md-nav__link">
         Component Overview
       </a>
     </li>
@@ -524,7 +609,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference-guide/components/camunda-interaction-client.html" class="md-nav__link">
+      <a href="../reference-guide/components/camunda-interaction-client.html" class="md-nav__link">
         Camunda BPM Engine Interaction Client
       </a>
     </li>
@@ -536,7 +621,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference-guide/components/camunda-taskpool-collector.html" class="md-nav__link">
+      <a href="../reference-guide/components/camunda-taskpool-collector.html" class="md-nav__link">
         Camunda BPM Engine Taskpool Collector
       </a>
     </li>
@@ -548,7 +633,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference-guide/components/camunda-starter.html" class="md-nav__link">
+      <a href="../reference-guide/components/camunda-starter.html" class="md-nav__link">
         Camunda BPM Engine Taskpool SpringBoot Starter
       </a>
     </li>
@@ -560,7 +645,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference-guide/components/common-taskpool-sender.html" class="md-nav__link">
+      <a href="../reference-guide/components/common-taskpool-sender.html" class="md-nav__link">
         Taskpool Sender
       </a>
     </li>
@@ -572,7 +657,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference-guide/components/common-datapool-sender.html" class="md-nav__link">
+      <a href="../reference-guide/components/common-datapool-sender.html" class="md-nav__link">
         Datapool Sender
       </a>
     </li>
@@ -613,7 +698,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference-guide/components/core-taskpool.html" class="md-nav__link">
+      <a href="../reference-guide/components/core-taskpool.html" class="md-nav__link">
         Taskpool Core
       </a>
     </li>
@@ -625,7 +710,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference-guide/components/core-datapool.html" class="md-nav__link">
+      <a href="../reference-guide/components/core-datapool.html" class="md-nav__link">
         Datapool Core
       </a>
     </li>
@@ -666,7 +751,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference-guide/components/view-simple.html" class="md-nav__link">
+      <a href="../reference-guide/components/view-simple.html" class="md-nav__link">
         In-Memory View
       </a>
     </li>
@@ -678,7 +763,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference-guide/components/view-mongo.html" class="md-nav__link">
+      <a href="../reference-guide/components/view-mongo.html" class="md-nav__link">
         Mongo DB View
       </a>
     </li>
@@ -690,7 +775,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference-guide/components/view-cockpit.html" class="md-nav__link">
+      <a href="../reference-guide/components/view-cockpit.html" class="md-nav__link">
         Cockpit View
       </a>
     </li>
@@ -702,7 +787,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference-guide/components/view-form-url-resolver.html" class="md-nav__link">
+      <a href="../reference-guide/components/view-form-url-resolver.html" class="md-nav__link">
         Form URL Resolver
       </a>
     </li>
@@ -743,7 +828,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference-guide/components/other-tasklist-url-resolver.html" class="md-nav__link">
+      <a href="../reference-guide/components/other-tasklist-url-resolver.html" class="md-nav__link">
         Tasklist URL Resolver
       </a>
     </li>
@@ -755,7 +840,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference-guide/components/other-variable-serializer.html" class="md-nav__link">
+      <a href="../reference-guide/components/other-variable-serializer.html" class="md-nav__link">
         Variable Serializer
       </a>
     </li>
@@ -773,7 +858,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference-guide/configuration/index.html" class="md-nav__link">
+      <a href="../reference-guide/configuration/index.html" class="md-nav__link">
         Configuration Overview
       </a>
     </li>
@@ -792,14 +877,12 @@
 
   
   
-    
-  
   
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5" type="checkbox" id="__nav_5" checked>
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5" type="checkbox" id="__nav_5" >
       
       <label class="md-nav__link" for="__nav_5">
         Examples
@@ -817,7 +900,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../index.html" class="md-nav__link">
+      <a href="../examples/index.html" class="md-nav__link">
         Examples Overview
       </a>
     </li>
@@ -829,7 +912,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../example-approval.html" class="md-nav__link">
+      <a href="../examples/example-approval.html" class="md-nav__link">
         Example Approval
       </a>
     </li>
@@ -839,16 +922,14 @@
             
   
   
-    
-  
   
     
       
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5_3" type="checkbox" id="__nav_5_3" checked>
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5_3" type="checkbox" id="__nav_5_3" >
       
       <label class="md-nav__link" for="__nav_5_3">
         Example Components
@@ -866,7 +947,7 @@
   
   
     <li class="md-nav__item">
-      <a href="index.html" class="md-nav__link">
+      <a href="../examples/example-components/index.html" class="md-nav__link">
         Example Components Overview
       </a>
     </li>
@@ -878,7 +959,7 @@
   
   
     <li class="md-nav__item">
-      <a href="pa-frontend.html" class="md-nav__link">
+      <a href="../examples/example-components/pa-frontend.html" class="md-nav__link">
         Process Application Frontend
       </a>
     </li>
@@ -890,7 +971,7 @@
   
   
     <li class="md-nav__item">
-      <a href="pa-backend.html" class="md-nav__link">
+      <a href="../examples/example-components/pa-backend.html" class="md-nav__link">
         Process Application Backend
       </a>
     </li>
@@ -902,7 +983,7 @@
   
   
     <li class="md-nav__item">
-      <a href="user-management.html" class="md-nav__link">
+      <a href="../examples/example-components/user-management.html" class="md-nav__link">
         User Management
       </a>
     </li>
@@ -912,54 +993,11 @@
             
   
   
-    
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
-      
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          Process Platform Frontend
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="pp-frontend.html" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../examples/example-components/pp-frontend.html" class="md-nav__link">
         Process Platform Frontend
       </a>
-      
-        
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#example-tasklist" class="md-nav__link">
-    Example Tasklist
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#example-workpieces-list" class="md-nav__link">
-    Example Workpieces List
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -969,7 +1007,7 @@
   
   
     <li class="md-nav__item">
-      <a href="pp-backend.html" class="md-nav__link">
+      <a href="../examples/example-components/pp-backend.html" class="md-nav__link">
         Process Platform Backend
       </a>
     </li>
@@ -1010,7 +1048,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../scenarios/index.html" class="md-nav__link">
+      <a href="../examples/scenarios/index.html" class="md-nav__link">
         Scenarios Overview
       </a>
     </li>
@@ -1022,7 +1060,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../scenarios/single-node.html" class="md-nav__link">
+      <a href="../examples/scenarios/single-node.html" class="md-nav__link">
         Single Node
       </a>
     </li>
@@ -1034,7 +1072,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../scenarios/distributed-axon-server.html" class="md-nav__link">
+      <a href="../examples/scenarios/distributed-axon-server.html" class="md-nav__link">
         Distributed using Axon Server
       </a>
     </li>
@@ -1046,7 +1084,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../scenarios/distributed-no-axon-server.html" class="md-nav__link">
+      <a href="../examples/scenarios/distributed-no-axon-server.html" class="md-nav__link">
         Distributed without Axon Server
       </a>
     </li>
@@ -1094,7 +1132,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../developer-guide/contribution.html" class="md-nav__link">
+      <a href="../developer-guide/contribution.html" class="md-nav__link">
         Contribution
       </a>
     </li>
@@ -1106,7 +1144,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../developer-guide/project-setup.html" class="md-nav__link">
+      <a href="../developer-guide/project-setup.html" class="md-nav__link">
         Project Setup
       </a>
     </li>
@@ -1131,51 +1169,71 @@
             <article class="md-content__inner md-typeset">
               
                 
-                  <a href="https://github.com/holunda-io/camunda-bpm-taskpool/edit/develop/docs/examples/example-components/pp-frontend.md" title="Edit this page" class="md-content__button md-icon">
+                  <a href="https://github.com/holunda-io/camunda-bpm-taskpool/edit/develop/docs/introduction/deployment.md" title="Edit this page" class="md-content__button md-icon">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
                   </a>
                 
                 
-                  <h1>Process Platform Frontend</h1>
+                  <h1>Deployment Strategies</h1>
                 
-                <p>The example process platform frontend provides example implementation of two views:</p>
+                <p>Depending on your requirements and infrastructure available several deployment scenarios of the components are possible.</p>
+<p>The simplest setup is to run all components on a single node. A more advanced scenario is to distribute components over the network and connect them.</p>
+<p>In doing so, one of the challenging issues for distribution and connecting microservices is a setup of messaging technology
+supporting required message exchange patterns (MEPs) for a CQRS system. Because of different semantics of commands,
+events and queries and additional requirements of event-sourced persistence a special implementation of
+command bus, event bus and event store is required. In particular, two scenarios can be distinguished: using Axon Server
+or using a different distribution technology.</p>
+<h2 id="single-node-deployment">Single node deployment<a class="headerlink" href="#single-node-deployment" title="Permanent link">#</a></h2>
+<p>The easiest scenario is the <strong>Single Node Deployment</strong>. It provides all functional features of the Polyflow library, but is not not addressing any of performance, scalability, autonomy and reliability requirements. It works almost without additional infrastructure and is ideal to start with.</p>
+<p>In a single node scenario the following configuration is used:</p>
 <ul>
-<li>Example Tasklist</li>
-<li>Example Workpieces List</li>
+<li>All buses are local (command bus, event bus, query bus)</li>
+<li>Camunda BPM Integration components, Core components and View components are all deployed in the same node</li>
+<li>JPA-Based event storage is used, persisting the domain events in a RDBMS, along with Camunda-specific DB tables.</li>
+<li>Simple (In-memory) View is used to provide projections of <code>taskpool</code> and <code>datapool</code></li>
 </ul>
-<h2 id="example-tasklist">Example Tasklist<a class="headerlink" href="#example-tasklist" title="Permanent link">#</a></h2>
-<p>Example Tasklist is a simple implementation of task inbox for a single user. It provides the following features:</p>
+<p>Check the following diagram for more details:</p>
+<p><img alt="Deployment of all component in a single node" src="../img/deployment-single.png" /></p>
+<h2 id="multiple-node-deployment">Multiple node deployment<a class="headerlink" href="#multiple-node-deployment" title="Permanent link">#</a></h2>
+<p>The more advanced scenario is to separate the <strong>Process Platform components</strong> from <strong>Process Application components</strong>.</p>
+<p>It is helpful if you intend to build a central <strong>Process Platform</strong> and multiple <strong>Process applications</strong> using it.</p>
+<p>In general, this is the main use case for Polyflow framework itself, but the distribution aspects adds technical complexity to the resulting architecture. Especially, following the architecture blueprint of Axon Framework, the three buses (command bus, event bus and query bus) needs to be distributed and act as connecting infrastructure between components.</p>
+<h3 id="distribution-using-axon-server">Distribution using Axon Server<a class="headerlink" href="#distribution-using-axon-server" title="Permanent link">#</a></h3>
+<p>Axon Server provides an implementation for this requirement leading to a distributed buses and a central Event Store. It is easy to use, easy to configure and easy to run. If you need a HA setup, you will need the enterprise license of Axon Server. Essentially, if don't have another HA ready-to use messaging, this scenario might be your way to go.</p>
+<p>This scenario supports:</p>
 <ul>
-<li>Lists tasks in the system for selected user</li>
-<li>Allows for switching users (faking different user login for demonstration purposes)</li>
-<li>Tasks include information about the process, name, description, create time, due date, priority and assignment.</li>
-<li>Tasks include process data (from process instance)</li>
-<li>Tasks include correlated business data (correlated via variable from process instance)</li>
-<li>The list of tasks is sortable</li>
-<li>The list of tasks is pageable (7 items per page)</li>
-<li>Allows claiming / unclaiming</li>
-<li>Provides a deeplink to the user task form provided by the process application</li>
-<li>Allows starting new process instances</li>
+<li>central Process Platform components (including task pool and data pool)</li>
+<li>free choice for projection persistence (since Axon Server supports)</li>
+<li>no direct synchronous communication between <strong>Process Platform</strong> and <strong>Process Application</strong> is required (e.g. via REST, since it is routed via command bus)</li>
 </ul>
-<p>Here is, how it looks like showing task descriptions:</p>
-<p><img alt="Task list with task description" src="/img/example_tasklist_approve_description.png" /></p>
-<p>you can optionally show the business data correlated with user task:</p>
-<p><img alt="Task list with task data" src="/img/example_tasklist_approve_data.png" /></p>
-<h2 id="example-workpieces-list">Example Workpieces List<a class="headerlink" href="#example-workpieces-list" title="Permanent link">#</a></h2>
-<p>The example workpieces list is provides a list of business objects / workpieces that are currently processed by
-the processes even after the process has already been finished. It provides the following features:</p>
+<p>The following diagram depicts the distribution of the components and the messaging:</p>
+<p><img alt="Deployment of Polyflow with Axon server" src="../img/deployment-axon-server.png" /></p>
+<h3 id="distribution-without-axon-server">Distribution without Axon Server<a class="headerlink" href="#distribution-without-axon-server" title="Permanent link">#</a></h3>
+<p>If you already have another messaging at place, like Kafka or RabbitMQ, you might skip the usage of Axon Server. In doing so, you will be responsible for distribution of events and will need to surrender some features.</p>
+<p>This scenario supports:</p>
 <ul>
-<li>Lists business objects in the system for selected user</li>
-<li>Allows for switching users (faking different user login for demonstration purposes)</li>
-<li>Business objects include information about the type, status (with sub status), name, details</li>
-<li>Business objects include details about contained data</li>
-<li>Business objects include audit log with all state changes</li>
-<li>The list is pageable (7 items per page)</li>
-<li>Business object view</li>
-<li>Provides a deeplink to the business object view provided by the process application</li>
+<li>distributed task pool / data pool</li>
+<li>view <strong>MUST</strong> be persistent (no replay supported)</li>
+<li>direct communication between task list / engines required (addressing, routing)</li>
+<li>concurrent access to engines might become a problem (no unit of work guarantees)</li>
 </ul>
-<p>Here is, how it looks like showing the audit log:</p>
-<p><img alt="Example Archive View" src="/img/example_archive_business_object.png" /></p>
+<p>The following diagram depicts the distribution of the components and the messaging.</p>
+<p><img alt="Deployment of taskpool with other messaging" src="../img/deployment-messaging.png" /></p>
+<p>The following diagram depicts the task run from Process Application to the end user, consuming it via Tasklist API.</p>
+<p><img alt="Kafka Message Run" src="../img/scenario_kafka_messaging_overview.png" /></p>
+<ul>
+<li>The <code>Camunda BPM Taskpool Collector</code> component listens to Camunda events, collects all relevant events that happen in a single transaction and registers a transaction synchronization to process them beforeCommit. Just before the transaction is committed, the collected events are accumulated and sent as Axon Commands through the <code>CommandGateway</code>.</li>
+<li>The <code>Taskpool Core</code> processes those commands and issues Axon Events through the EventGateway which are stored in Axon's database tables within the same transaction.</li>
+<li>The transaction commit finishes. If anything goes wrong before this point, the transaction rolls back and it is as though nothing ever happened.</li>
+<li>In the <code>Axon Kafka Extension</code>, a <code>TrackingEventProcessor</code> polls for events and sees them as soon as the transaction that created them is committed. It sends each event to Kafka and waits for an acknowledgment from Kafka. If sending fails or times out, the event processor goes into error mode and retries until it succeeds. This can lead to events being published to Kafka more than once but guarantees at-least-once delivery.</li>
+<li>Within the Tasklist API, the <code>Axon Kafka Extension</code> polls the events from Kafka and another TrackingEventProcessor forwards them to the <code>TaskPoolMongoService</code> where they are processed to update the Mongo DB accordingly.</li>
+<li>When a user queries the Tasklist API for tasks, two things happen: Firstly, the Mongo DB is queried for the current state of tasks for this user and these tasks are returned. Secondly, the Tasklist API subscribes to any changes to the Mongo DB. These changes are filtered for relevance to the user and relevant changes are returned after the current state as an infinite stream until the request is cancelled or interrupted for some reason.</li>
+</ul>
+<p><img alt="Kafka Message Transaction Overview" src="../img/scenario_kafka_messaging_tx_view.png" /></p>
+<h4 id="from-process-application-to-kafka">From Process Application to Kafka<a class="headerlink" href="#from-process-application-to-kafka" title="Permanent link">#</a></h4>
+<p><img alt="Process Application to Kafka Messaging" src="../img/scenario_process_application_to_kafka_detail.png" /></p>
+<h4 id="from-kafka-to-tasklist-api">From Kafka to Tasklist API<a class="headerlink" href="#from-kafka-to-tasklist-api" title="Permanent link">#</a></h4>
+<p><img alt="Kafka to Tasklist API Messaging" src="../img/scenario_kafka_to_tasklist_detail.png" /></p>
                 
                   
                     
@@ -1214,7 +1272,7 @@ the processes even after the process has already been finished. It provides the 
     <nav class="md-footer__inner md-grid" aria-label="Footer">
       
         
-        <a href="user-management.html" class="md-footer__link md-footer__link--prev" aria-label="Previous: User Management" rel="prev">
+        <a href="solution-architecture.html" class="md-footer__link md-footer__link--prev" aria-label="Previous: Solution Architecture" rel="prev">
           <div class="md-footer__button md-icon">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
           </div>
@@ -1223,20 +1281,20 @@ the processes even after the process has already been finished. It provides the 
               <span class="md-footer__direction">
                 Previous
               </span>
-              User Management
+              Solution Architecture
             </div>
           </div>
         </a>
       
       
         
-        <a href="pp-backend.html" class="md-footer__link md-footer__link--next" aria-label="Next: Process Platform Backend" rel="next">
+        <a href="../getting-started/index.html" class="md-footer__link md-footer__link--next" aria-label="Next: Getting Started" rel="next">
           <div class="md-footer__title">
             <div class="md-ellipsis">
               <span class="md-footer__direction">
                 Next
               </span>
-              Process Platform Backend
+              Getting Started
             </div>
           </div>
           <div class="md-footer__button md-icon">
@@ -1285,10 +1343,10 @@ the processes even after the process has already been finished. It provides the 
     <div class="md-dialog" data-md-component="dialog">
       <div class="md-dialog__inner md-typeset"></div>
     </div>
-    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.instant", "navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.top", "toc.integrate"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../assets/javascripts/workers/search.709b4209.min.js", "version": {"provider": "mike"}}</script>
+    <script id="__config" type="application/json">{"base": "..", "features": ["navigation.instant", "navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.top", "toc.integrate"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../assets/javascripts/workers/search.709b4209.min.js", "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.2b46852b.min.js"></script>
+      <script src="../assets/javascripts/bundle.2b46852b.min.js"></script>
       
     
   </body>
