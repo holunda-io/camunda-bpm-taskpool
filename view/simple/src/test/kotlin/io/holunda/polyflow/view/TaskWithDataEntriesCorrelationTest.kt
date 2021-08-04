@@ -10,7 +10,7 @@ import org.camunda.bpm.engine.variable.Variables
 import org.junit.Test
 import java.util.*
 
-class TaskWithDataEntriesTest {
+class TaskWithDataEntriesCorrelationTest {
 
   private val dataEntry1 = DataEntry(
     entryType = "EntryType1",

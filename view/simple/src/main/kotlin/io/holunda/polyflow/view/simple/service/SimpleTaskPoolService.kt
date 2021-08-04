@@ -8,10 +8,10 @@ import io.holunda.polyflow.view.DataEntry
 import io.holunda.polyflow.view.Task
 import io.holunda.polyflow.view.TaskWithDataEntries
 import io.holunda.polyflow.view.query.task.*
-import io.holunda.polyflow.view.simple.filter.createTaskPredicates
-import io.holunda.polyflow.view.simple.filter.filterByPredicate
-import io.holunda.polyflow.view.simple.filter.toCriteria
-import io.holunda.polyflow.view.simple.sort.taskComparator
+import io.holunda.polyflow.view.filter.createTaskPredicates
+import io.holunda.polyflow.view.filter.filterByPredicate
+import io.holunda.polyflow.view.filter.toCriteria
+import io.holunda.polyflow.view.sort.taskComparator
 import io.holunda.polyflow.view.simple.updateMapFilterQuery
 import io.holunda.polyflow.view.task
 import mu.KLogging

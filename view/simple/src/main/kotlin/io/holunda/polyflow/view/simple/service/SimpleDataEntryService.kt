@@ -6,11 +6,11 @@ import io.holunda.camunda.taskpool.api.business.DataEntryCreatedEvent
 import io.holunda.camunda.taskpool.api.business.DataEntryUpdatedEvent
 import io.holunda.camunda.taskpool.api.business.dataIdentityString
 import io.holunda.polyflow.view.DataEntry
+import io.holunda.polyflow.view.filter.createDataEntryPredicates
+import io.holunda.polyflow.view.filter.filterByPredicate
+import io.holunda.polyflow.view.filter.toCriteria
 import io.holunda.polyflow.view.query.data.*
-import io.holunda.polyflow.view.simple.filter.createDataEntryPredicates
-import io.holunda.polyflow.view.simple.filter.filterByPredicate
-import io.holunda.polyflow.view.simple.filter.toCriteria
-import io.holunda.polyflow.view.simple.sort.dataComparator
+import io.holunda.polyflow.view.sort.dataComparator
 import mu.KLogging
 import org.axonframework.config.ProcessingGroup
 import org.axonframework.eventhandling.EventHandler

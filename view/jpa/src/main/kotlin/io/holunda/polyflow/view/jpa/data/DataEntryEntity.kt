@@ -1,12 +1,12 @@
 package io.holunda.polyflow.view.jpa.data
 
 
-import io.holunda.polyflow.view.jpa.auth.AuthorizationPrincipal
-import java.io.Serializable
 import java.time.Instant
-import java.util.*
 import javax.persistence.*
 
+/**
+ * Entity to store data entries.
+ */
 @Entity(name = "DATA_ENTRY")
 class DataEntryEntity(
   @EmbeddedId
@@ -33,22 +33,29 @@ class DataEntryEntity(
   @Column(name = "DATE_LAST_MODIFIED", nullable = false)
   var lastModifiedDate: Instant = Instant.now(),
 
-  @ManyToMany(fetch = FetchType.EAGER, targetEntity = AuthorizationPrincipal::class)
-  @JoinTable(
+  @ElementCollection(fetch = FetchType.EAGER)
+  @CollectionTable(
     name = "DATA_ENTRY_AUTHORIZATIONS",
-    inverseJoinColumns = [
-      JoinColumn(name = "AUTH_NAME", referencedColumnName = "AUTH_NAME"),
-      JoinColumn(name = "AUTH_TYPE", referencedColumnName = "AUTH_TYPE"),
-    ],
     joinColumns = [
       JoinColumn(name = "ENTRY_TYPE", referencedColumnName = "ENTRY_TYPE"),
       JoinColumn(name = "ENTRY_ID", referencedColumnName = "ENTRY_ID"),
-    ],
+    ]
+  )
+  @Column(name = "AUTHORIZED_PRINCIPAL", nullable = false)
+  var authorizedPrincipals: Set<String> = setOf(),
 
-    )
-  var authorizedPrincipals: Set<AuthorizationPrincipal> = setOf(),
+  @ElementCollection(fetch = FetchType.EAGER)
+  @CollectionTable(
+    name = "DATA_PAYLOAD_ATTRIBUTES",
+    joinColumns = [
+      JoinColumn(name = "ENTRY_TYPE", referencedColumnName = "ENTRY_TYPE"),
+      JoinColumn(name = "ENTRY_ID", referencedColumnName = "ENTRY_ID"),
+    ]
+  )
+  @Column(name = "PAYLOAD_ATTRIBUTE", nullable = false)
+  var payloadAttributes: Set<String> = setOf(),
 
-  @OneToMany(mappedBy = "dataEntry", orphanRemoval = true, cascade = [CascadeType.ALL], targetEntity = ProtocolElement::class)
+  @OneToMany(mappedBy = "dataEntry", orphanRemoval = true, cascade = [CascadeType.ALL], targetEntity = ProtocolElement::class, fetch = FetchType.EAGER)
   var protocol: List<ProtocolElement> = mutableListOf(),
 
   @Lob
@@ -59,31 +66,3 @@ class DataEntryEntity(
   }
 }
 
-@Embeddable
-class DataEntryId(
-  @Column(name = "ENTRY_ID", nullable = false)
-  var entryId: String,
-  @Column(name = "ENTRY_TYPE", nullable = false)
-  var entryType: String
-) : Serializable {
-
-  companion object {
-    operator fun invoke(identity: String): DataEntryId = identity.split(":").let {
-      require(it.size == 2) { "Illegal identity format, expecting <entryType>:<entryId>" }
-      DataEntryId(entryType = it[0], entryId = it[1])
-    }
-  }
-
-  override fun equals(other: Any?): Boolean {
-    if (this === other) return true
-    if (other !is DataEntryId) return false
-    return Objects.equals(this.entryId, other.entryId) &&
-      Objects.equals(this.entryType, other.entryType)
-  }
-
-  override fun hashCode(): Int {
-    return Objects.hash(this.entryId, this.entryType)
-  }
-
-  override fun toString(): String = "$entryType:$entryId"
-}

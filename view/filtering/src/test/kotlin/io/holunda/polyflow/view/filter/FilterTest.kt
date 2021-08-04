@@ -1,13 +1,13 @@
-package io.holunda.polyflow.view.simple.filter
+package io.holunda.polyflow.view.filter
 
 import io.holunda.camunda.taskpool.api.task.ProcessReference
 import io.holunda.polyflow.view.DataEntry
 import io.holunda.polyflow.view.Task
 import io.holunda.polyflow.view.TaskWithDataEntries
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.camunda.bpm.engine.variable.Variables
 import org.junit.Test
-import org.junit.jupiter.api.assertThrows
 
 class FilterTest {
 
@@ -107,14 +107,14 @@ class FilterTest {
 
   @Test
   fun `should fail to create criteria`() {
-    assertThrows<IllegalArgumentException> {
+    assertThatThrownBy {
       toCriteria(listOf("$EQUALS$EQUALS"))
     }
   }
 
   @Test
   fun `should fail to create criteria 2`() {
-    assertThrows<IllegalArgumentException> {
+    assertThatThrownBy {
       toCriteria(listOf("${EQUALS}some$EQUALS"))
     }
   }
@@ -131,15 +131,15 @@ class FilterTest {
     val predicates = createTaskPredicates(criteria)
 
     assertThat(predicates).isNotNull
-    assertThat(predicates.taskPredicate).isNotNull
-    assertThat(predicates.dataEntriesPredicate).isNotNull
+    assertThat(predicates.taskAttributePredicate).isNotNull
+    assertThat(predicates.taskPayloadPredicate).isNotNull
 
-    assertThat(predicates.taskPredicate!!.test(task1.task)).isTrue
-    assertThat(predicates.taskPredicate!!.test(task2.task)).isTrue
-    assertThat(predicates.taskPredicate!!.test(task3.task)).isFalse
-    assertThat(predicates.dataEntriesPredicate!!.test(task3.dataEntries[0].payload)).isFalse
-    assertThat(predicates.dataEntriesPredicate!!.test(task4.dataEntries[0].payload)).isTrue
-    assertThat(predicates.dataEntriesPredicate!!.test(task5.dataEntries[0].payload)).isTrue
+    assertThat(predicates.taskAttributePredicate!!.test(task1.task)).isTrue
+    assertThat(predicates.taskAttributePredicate!!.test(task2.task)).isTrue
+    assertThat(predicates.taskAttributePredicate!!.test(task3.task)).isFalse
+    assertThat(predicates.taskPayloadPredicate!!.test(task3.dataEntries[0].payload)).isFalse
+    assertThat(predicates.taskPayloadPredicate!!.test(task4.dataEntries[0].payload)).isTrue
+    assertThat(predicates.taskPayloadPredicate!!.test(task5.dataEntries[0].payload)).isTrue
   }
 
   @Test

@@ -1,12 +1,10 @@
 spring:
   jpa:
     open-in-view: true # disable JPA warning
-    show-sql: true
+    show-sql: false
 
-logger:
-  level:
-    org.hibernate.type: TRACE
-    org.hibernate.engine.internal.cascade: DEBUG
-    org.springframework: INFO
-    org.springframework.beans: INFO
+# logger:
+#  level:
+#    org.hibernate.type: TRACE # activate this and generic ROOT logger to see SQL and binding
+
 

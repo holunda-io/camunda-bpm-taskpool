@@ -2,15 +2,22 @@ package io.holunda.polyflow.view.jpa.data
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.holunda.camunda.taskpool.api.business.ProcessingType
-import io.holunda.polyflow.view.jpa.auth.AuthorizationPrincipal
-import io.holunda.polyflow.view.jpa.auth.AuthorizationPrincipalRepository
+import io.holunda.camunda.variable.serializer.toJsonPathsWithValues
+import io.holunda.polyflow.view.jpa.data.AuthorizationPrincipal.Companion.group
+import io.holunda.polyflow.view.jpa.data.AuthorizationPrincipal.Companion.user
+import io.holunda.polyflow.view.jpa.data.DataEntryRepository.Companion.hasPayloadAttribute
+import io.holunda.polyflow.view.jpa.data.DataEntryRepository.Companion.hasProcessingType
+import io.holunda.polyflow.view.jpa.data.DataEntryRepository.Companion.hasState
+import io.holunda.polyflow.view.jpa.data.DataEntryRepository.Companion.isAuthorizedFor
 import org.assertj.core.api.Assertions.assertThat
+import org.camunda.bpm.engine.variable.Variables.createVariables
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
+import org.springframework.data.jpa.domain.Specification.where
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit4.SpringRunner
@@ -28,54 +35,65 @@ internal class DataEntryRepositoryITest {
   @Autowired
   lateinit var dataEntryRepository: DataEntryRepository
 
-  @Autowired
-  lateinit var authorizationPrincipalRepository: AuthorizationPrincipalRepository
-
   lateinit var dataEntry: DataEntryEntity
   lateinit var dataEntry2: DataEntryEntity
 
   @Before
-  fun `insert principals`() {
-    authorizationPrincipalRepository.saveAll(
-      setOf(
-        AuthorizationPrincipal.group("muppets"),
-        AuthorizationPrincipal.user("kermit"),
-        AuthorizationPrincipal.user("piggy"),
-        AuthorizationPrincipal.group("avengers"),
-      )
-    )
+  fun `insert entries`() {
 
     val id = UUID.randomUUID().toString()
-    val payload = mapOf(
-      "amount" to 90L,
-      "id" to id
-    )
 
-    val json = jacksonObjectMapper().writeValueAsString(payload)
+    val payload1 = createVariables().apply {
+      putAll(
+        mapOf(
+          "amount" to 90L,
+          "id" to id,
+          "child" to mapOf(
+            "key" to "value",
+            "key-number" to 42
+          )
+        )
+      )
+    }
+    val json = jacksonObjectMapper().writeValueAsString(payload1)
+    val payloadAttributes = payload1.toJsonPathsWithValues().map { "${it.key}=${it.value}" }.toSet()
 
-    val id2 = UUID.randomUUID().toString()
-    val state = ProcessingType.IN_PROGRESS.of("In progress")
+    val payload2 = createVariables().apply {
+      putAll(
+        mapOf(
+          "child" to mapOf(
+            "key-number" to 42
+          )
+        )
+      )
+    }
+    val json2 = jacksonObjectMapper().writeValueAsString(payload2)
+    val payloadAttributes2 = payload2.toJsonPathsWithValues().map { "${it.key}=${it.value}" }.toSet()
+
+    val state1 = ProcessingType.IN_PROGRESS.of("In progress")
+    val state2 = ProcessingType.IN_PROGRESS.of("In review")
 
     dataEntry = DataEntryEntity(
       dataEntryId = DataEntryId(entryType = "test", entryId = id),
       type = "Test Entry",
       name = "Test Case",
       applicationName = "my-application",
-      state = DataEntryStateEmbeddable(state),
+      state = DataEntryStateEmbeddable(state1),
       description = "This is a test case.",
       revision = 1L,
       lastModifiedDate = Instant.now(),
       authorizedPrincipals = setOf(
-        AuthorizationPrincipal.group("muppets"),
-        AuthorizationPrincipal.user("kermit"),
-        AuthorizationPrincipal.user("piggy"),
+        group("muppets").toString(),
+        user("kermit").toString(),
+        user("piggy").toString(),
       ),
-      payload = json
+      payload = json,
+      payloadAttributes = payloadAttributes
     ).apply {
       this.protocol = listOf(
         ProtocolElement(
           dataEntry = this,
-          state = DataEntryStateEmbeddable(state),
+          state = DataEntryStateEmbeddable(state1),
           username = "kermit",
           logMessage = "Created",
           logDetails = "Created test case."
@@ -84,23 +102,25 @@ internal class DataEntryRepositoryITest {
     }
 
     dataEntry2 = DataEntryEntity(
-      dataEntryId = DataEntryId(entryType = "test", entryId = id2),
+      dataEntryId = DataEntryId(entryType = "test", entryId = UUID.randomUUID().toString()),
       type = "Test Entry",
       name = "Test Case 2",
       applicationName = "my-application",
-      state = DataEntryStateEmbeddable(state),
+      state = DataEntryStateEmbeddable(state2),
       revision = 12L,
       description = "This is a second test case.",
       lastModifiedDate = Instant.now(),
+      payload = json2,
+      payloadAttributes = payloadAttributes2,
       authorizedPrincipals = setOf(
-        AuthorizationPrincipal.group("avengers"),
-        AuthorizationPrincipal.user("piggy"),
+        group("avengers").toString(),
+        user("piggy").toString(),
       )
     ).apply {
       this.protocol = listOf(
         ProtocolElement(
           dataEntry = this,
-          state = DataEntryStateEmbeddable(state),
+          state = DataEntryStateEmbeddable(state1),
           username = "ironman",
           logMessage = "Created other",
           logDetails = "Created test case 2."
@@ -117,7 +137,6 @@ internal class DataEntryRepositoryITest {
   @After
   fun `remove principals`() {
     dataEntryRepository.deleteAll()
-    authorizationPrincipalRepository.deleteAll()
     entityManager.flush()
   }
 
@@ -130,22 +149,22 @@ internal class DataEntryRepositoryITest {
 
   @Test
   fun `should find data entries by authorization`() {
-    val muppets = dataEntryRepository.findAllByAuthorizedPrincipalsIn(setOf(AuthorizationPrincipal.group("muppets")))
+    val muppets = dataEntryRepository.findAllByAuthorizedPrincipalsIn(setOf(group("muppets").toString()))
     assertThat(muppets).containsExactly(dataEntry)
 
-    val kermit = dataEntryRepository.findAllByAuthorizedPrincipalsIn(setOf(AuthorizationPrincipal.user("kermit")))
+    val kermit = dataEntryRepository.findAllByAuthorizedPrincipalsIn(setOf(user("kermit").toString()))
     assertThat(kermit).containsExactly(dataEntry)
 
-    val piggy = dataEntryRepository.findAllByAuthorizedPrincipalsIn(setOf(AuthorizationPrincipal.user("piggy")))
+    val piggy = dataEntryRepository.findAllByAuthorizedPrincipalsIn(setOf(user("piggy").toString()))
     assertThat(piggy).containsExactlyInAnyOrderElementsOf(listOf(dataEntry, dataEntry2))
 
-    val avengers = dataEntryRepository.findAllByAuthorizedPrincipalsIn(setOf(AuthorizationPrincipal.group("avengers")))
+    val avengers = dataEntryRepository.findAllByAuthorizedPrincipalsIn(setOf(group("avengers").toString()))
     assertThat(avengers).containsExactly(dataEntry2)
 
-    val unknownGroup = dataEntryRepository.findAllByAuthorizedPrincipalsIn(setOf(AuthorizationPrincipal.group("unknown group")))
+    val unknownGroup = dataEntryRepository.findAllByAuthorizedPrincipalsIn(setOf(group("unknown group").toString()))
     assertThat(unknownGroup).isEmpty()
 
-    val unknownUser = dataEntryRepository.findAllByAuthorizedPrincipalsIn(setOf(AuthorizationPrincipal.user("unknown user")))
+    val unknownUser = dataEntryRepository.findAllByAuthorizedPrincipalsIn(setOf(user("unknown user").toString()))
     assertThat(unknownUser).isEmpty()
   }
 
@@ -155,5 +174,36 @@ internal class DataEntryRepositoryITest {
     assertThat(all).containsExactlyInAnyOrderElementsOf(listOf(dataEntry, dataEntry2))
   }
 
+  @Test
+  fun `should find by filter`() {
+    val byStateInProgress = dataEntryRepository.findAll(where(hasState("In progress")))
+    assertThat(byStateInProgress).containsExactlyInAnyOrderElementsOf(listOf(dataEntry))
+
+    val byStateInReview = dataEntryRepository.findAll(where(hasState("In review")))
+    assertThat(byStateInReview).containsExactlyInAnyOrderElementsOf(listOf(dataEntry2))
+
+    val byProcessingTypeInProgress = dataEntryRepository.findAll(where(hasProcessingType(ProcessingType.IN_PROGRESS)))
+    assertThat(byProcessingTypeInProgress).containsExactlyInAnyOrderElementsOf(listOf(dataEntry, dataEntry2))
+
+    val byProcessingTypeCompleted = dataEntryRepository.findAll(where(hasProcessingType(ProcessingType.COMPLETED)))
+    assertThat(byProcessingTypeCompleted).isEmpty()
+
+    val byPayloadFilterByChildKeyNumberValue = dataEntryRepository.findAll(where(hasPayloadAttribute("child.key-number", "42")))
+    assertThat(byPayloadFilterByChildKeyNumberValue).containsExactlyInAnyOrderElementsOf(listOf(dataEntry, dataEntry2))
+
+    val byPayloadFilterByChildKeyValue =
+      dataEntryRepository.findAll(
+        where(hasPayloadAttribute("child.key", "value"))
+          .and(hasPayloadAttribute("id", dataEntry.dataEntryId.entryId))
+      )
+    assertThat(byPayloadFilterByChildKeyValue).containsExactlyInAnyOrderElementsOf(listOf(dataEntry))
+
+    val piggy = dataEntryRepository.findAll(isAuthorizedFor(setOf(user("piggy"))))
+    assertThat(piggy).containsExactlyInAnyOrderElementsOf(listOf(dataEntry, dataEntry2))
+
+    val kermitOrAvengers = dataEntryRepository.findAll(isAuthorizedFor(setOf(user("kermit"), group("avengers"))))
+    assertThat(kermitOrAvengers).containsExactlyInAnyOrderElementsOf(listOf(dataEntry, dataEntry2))
+
+  }
 
 }

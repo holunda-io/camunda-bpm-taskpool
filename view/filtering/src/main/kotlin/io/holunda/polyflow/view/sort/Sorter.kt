@@ -1,11 +1,11 @@
-package io.holunda.polyflow.view.simple.sort
+package io.holunda.polyflow.view.sort
 
 import io.holunda.polyflow.view.DataEntry
 import io.holunda.polyflow.view.Task
-import io.holunda.polyflow.view.simple.filter.DATA_PREFIX
-import io.holunda.polyflow.view.simple.filter.TASK_PREFIX
-import io.holunda.polyflow.view.simple.filter.extractField
-import io.holunda.polyflow.view.simple.filter.isTaskAttribute
+import io.holunda.polyflow.view.filter.DATA_PREFIX
+import io.holunda.polyflow.view.filter.TASK_PREFIX
+import io.holunda.polyflow.view.filter.extractField
+import io.holunda.polyflow.view.filter.isTaskAttribute
 import java.lang.reflect.Field
 import java.time.Instant
 import java.util.*

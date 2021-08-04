@@ -1,22 +1,72 @@
 package io.holunda.polyflow.view.jpa.data
 
 import io.holunda.camunda.taskpool.api.business.ProcessingType
-import io.holunda.polyflow.view.jpa.auth.AuthorizationPrincipal
 import org.springframework.data.jpa.domain.Specification
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor
 import org.springframework.data.repository.CrudRepository
 
 interface DataEntryRepository : CrudRepository<DataEntryEntity, DataEntryId>, JpaSpecificationExecutor<DataEntryEntity> {
 
-  fun findAllByAuthorizedPrincipalsIn(authorizedPrincipals: Set<out AuthorizationPrincipal>): List<DataEntryEntity>
+  fun findAllByAuthorizedPrincipalsIn(authorizedPrincipalIds: Collection<String>): List<DataEntryEntity>
 
   companion object {
+
+    /**
+     * Specification for the user-defined state.
+     */
     fun hasState(state: String): Specification<DataEntryEntity> =
-      Specification { dataEntry, _, builder -> builder.equal(dataEntry.get<DataEntryStateEmbeddable>("state").get<String>("state"), state) }
+      Specification { dataEntry, _, builder ->
+        builder.equal(
+          dataEntry.get<DataEntryStateEmbeddable>(DataEntryEntity::state.name).get<String>(DataEntryStateEmbeddable::state.name),
+          state
+        )
+      }
 
+    /**
+     * Specification for the processing type.
+     */
     fun hasProcessingType(processingType: ProcessingType): Specification<DataEntryEntity> =
-      Specification { dataEntry, _, builder -> builder.equal(dataEntry.get<DataEntryStateEmbeddable>("state").get<ProcessingType>("processingType"), processingType) }
+      Specification { dataEntry, _, builder ->
+        builder.equal(
+          dataEntry.get<DataEntryStateEmbeddable>(DataEntryEntity::state.name).get<ProcessingType>(DataEntryStateEmbeddable::processingType.name),
+          processingType.name
+        )
+      }
 
+    /**
+     * Specification for checking the payload attribute.
+     */
+    fun hasPayloadAttribute(name: String, value: String): Specification<DataEntryEntity> =
+      Specification { dataEntry, _, builder ->
+        builder.isMember(
+          "$name=$value",
+          dataEntry.get<List<String>>(DataEntryEntity::payloadAttributes.name)
+        )
+      }
+
+    /**
+     * Specification for checking authorization.
+     */
+    fun isAuthorizedFor(principal: AuthorizationPrincipal): Specification<DataEntryEntity> =
+      Specification { dataEntry, _, builder ->
+        builder.isMember(
+          "${principal.type}:${principal.name}",
+          dataEntry.get<List<String>>(DataEntryEntity::authorizedPrincipals.name)
+        )
+      }
+
+    /**
+     * Specification for checking authorization of multiple principals.
+     */
+    fun isAuthorizedFor(principals: Collection<AuthorizationPrincipal>): Specification<DataEntryEntity> =
+      composeOr(principals.map { principal ->
+        Specification { dataEntry, _, builder ->
+          builder.isMember(
+            "${principal.type}:${principal.name}",
+            dataEntry.get<List<String>>(DataEntryEntity::authorizedPrincipals.name)
+          )
+        }
+      }) ?: Specification { _, _, _ -> null }
   }
 }
 

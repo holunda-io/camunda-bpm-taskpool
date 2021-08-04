@@ -1,4 +1,4 @@
-package io.holunda.polyflow.view.simple.sort
+package io.holunda.polyflow.view.sort
 
 import io.holunda.camunda.taskpool.api.task.ProcessReference
 import io.holunda.polyflow.view.Task

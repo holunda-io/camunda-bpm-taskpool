@@ -27,4 +27,26 @@ class ProtocolElement(
     JoinColumn(name = "ENTRY_ID", referencedColumnName = "ENTRY_ID", nullable = false)
   )
   var dataEntry: DataEntryEntity
-)
+) {
+
+
+  /**
+   * Checks if the protocol element is the same as provided.
+   */
+  fun same(other: Any?): Boolean {
+    if (this === other) return true
+    if (javaClass != other?.javaClass) return false
+
+    other as ProtocolElement
+
+    if (time != other.time) return false
+    if (state != other.state) return false
+    if (username != other.username) return false
+    if (logMessage != other.logMessage) return false
+    if (logDetails != other.logDetails) return false
+    if (dataEntry != other.dataEntry) return false
+
+    return true
+  }
+
+}
