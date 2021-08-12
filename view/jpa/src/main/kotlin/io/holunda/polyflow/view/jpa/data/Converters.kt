@@ -8,7 +8,6 @@ import io.holunda.camunda.variable.serializer.toPayloadJson
 import io.holunda.camunda.variable.serializer.toPayloadVariableMap
 import io.holunda.polyflow.view.DataEntry
 import io.holunda.polyflow.view.ProtocolEntry
-import io.holunda.polyflow.view.addModification
 import io.holunda.polyflow.view.jpa.data.AuthorizationPrincipal.Companion.group
 import io.holunda.polyflow.view.jpa.data.AuthorizationPrincipal.Companion.user
 import io.holunda.polyflow.view.jpa.data.AuthorizationPrincipalType.GROUP
@@ -88,11 +87,7 @@ fun DataEntryCreatedEvent.toEntity(objectMapper: ObjectMapper, revisionValue: Re
   authorizedPrincipals = AuthorizationChange.applyUserAuthorization(mutableSetOf(), this.authorizations).map { user(it).toString() }
     .plus(AuthorizationChange.applyGroupAuthorization(mutableSetOf(), this.authorizations).map { group(it).toString() }).toMutableSet(),
 ).apply {
-  this.protocol = this.protocol
-    .map { it.toProtocolEntry() }
-    .addModification(this@toEntity.createModification, this@toEntity.state)
-    .map { it.toEntity(this) }
-    .toMutableList()
+  this.protocol = this.protocol.addModification(this, this@toEntity.createModification, this@toEntity.state).toMutableList()
 }
 
 /**
@@ -147,23 +142,25 @@ fun DataEntryUpdatedEvent.toEntity(objectMapper: ObjectMapper, revisionValue: Re
     }
   }
 }.apply {
-  this.protocol = this.protocol
-    .map { it.toProtocolEntry() }
-    .addModification(this@toEntity.updateModification, this@toEntity.state)
-    .map { it.toEntity(this) }
-    .toMutableList()
+  this.protocol = this.protocol.addModification(this, this@toEntity.updateModification, this@toEntity.state).toMutableList()
 }
 
 /**
- * Converts a protocol entry to entity for given data entry entity.
+ * Adds a modification to the protocol, if it doesn't exist in the protocol already, comparing all protocol element properties
+ * besides the technical id.
  */
-fun ProtocolEntry.toEntity(dataEntry: DataEntryEntity): ProtocolElement {
-  return ProtocolElement(
+fun List<ProtocolElement>.addModification(dataEntry: DataEntryEntity, modification: Modification, state: DataEntryState) =
+  ProtocolElement(
     dataEntry = dataEntry,
-    time = this.time,
-    username = this.username,
-    logMessage = this.logMessage,
-    logDetails = this.logDetails,
+    time = modification.time.toInstant(),
+    username = modification.username,
+    logMessage = modification.log,
+    logDetails = modification.logNotes,
     state = state.toState()
-  )
-}
+  ).let { protocolElement ->
+    if (dataEntry.protocol.any { existing -> existing.same(protocolElement) }) {
+      this
+    } else {
+      this.plus(protocolElement)
+    }
+  }
