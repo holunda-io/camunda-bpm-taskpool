@@ -7,7 +7,9 @@ import org.axonframework.serialization.upcasting.event.IntermediateEventRepresen
 import org.dom4j.Document
 import java.util.function.Function
 
-
+/**
+ * Upcaster to put revision 1 into the event and remove uneeded attributes.
+ */
 @AnnotatedEventUpcaster("io.holunda.camunda.taskpool.api.task.ProcessDefinitionRegisteredEvent")
 class ProcessDefinitionEventXMLNullTo1Upcaster : AnnotationBasedSingleEventUpcaster() {
 
@@ -35,6 +37,9 @@ class ProcessDefinitionEventXMLNullTo1Upcaster : AnnotationBasedSingleEventUpcas
   }
 }
 
+/**
+ * Upcaster to put revision 1 into the event and remove uneeded attributes.
+ */
 @AnnotatedEventUpcaster("io.holunda.camunda.taskpool.api.task.ProcessDefinitionRegisteredEvent", representationContentType = JSON)
 class ProcessDefinitionEventJSONNullTo1Upcaster : AnnotationBasedSingleEventUpcaster() {
 

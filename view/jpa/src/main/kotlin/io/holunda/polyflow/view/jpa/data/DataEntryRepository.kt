@@ -7,6 +7,9 @@ import org.springframework.data.repository.CrudRepository
 
 interface DataEntryRepository : CrudRepository<DataEntryEntity, DataEntryId>, JpaSpecificationExecutor<DataEntryEntity> {
 
+  /**
+   * Finds all data entries with provided authorizations.
+   */
   fun findAllByAuthorizedPrincipalsIn(authorizedPrincipalIds: Collection<String>): List<DataEntryEntity>
 
   companion object {

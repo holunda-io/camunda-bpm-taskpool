@@ -5,6 +5,9 @@ import java.util.*
 import javax.persistence.Column
 import javax.persistence.Embeddable
 
+/**
+ * JPA composite id used for data entries.
+ */
 @Embeddable
 class DataEntryId(
   @Column(name = "ENTRY_ID", nullable = false)

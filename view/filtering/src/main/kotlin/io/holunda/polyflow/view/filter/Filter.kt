@@ -156,7 +156,7 @@ fun List<Criterion>.toClassAttributePredicates(clazz: KClass<out Criterion>) =
     .toList()
 
 /**
- * Create critera for a map.
+ * Create criteria for a map.
  */
 fun List<Criterion>.toPayloadPredicates() = this
   .asSequence()
@@ -233,6 +233,17 @@ internal fun isDataEntryAttribute(propertyName: String): Boolean =
  * Criterion.
  */
 sealed class Criterion(open val name: String, open val value: String, open val operator: String) {
+
+  /**
+   * Value converter for criteria.
+   */
+  fun typedValue(): Any =
+    when (this.name) {
+      "priority" -> this.value.toInt()
+      "createTime", "dueDate", "followUpDate" -> Instant.parse(this.value)
+      else -> this.value
+    }
+
   override fun equals(other: Any?): Boolean {
     if (this === other) return true
     if (other !is Criterion) return false
@@ -279,7 +290,7 @@ sealed class Criterion(open val name: String, open val value: String, open val o
  * Wrapper for a pair of task and data entry predicate.
  */
 data class TaskPredicateWrapper(val taskAttributePredicate: Predicate<Any>?, val taskPayloadPredicate: Predicate<Any>?) {
-  /*
+  /**
    * Checks if a payload predicate is set.
    */
   fun hasPayloadPredicate() = taskPayloadPredicate != null
@@ -294,7 +305,7 @@ data class TaskPredicateWrapper(val taskAttributePredicate: Predicate<Any>?, val
  * Wrapper for a pair of data entry and data payload predicate.
  */
 data class DataEntryPredicateWrapper(val dataEntryAttributePredicate: Predicate<Any>?, val dataEntryPayloadPredicate: Predicate<Any>?) {
-  /*
+  /**
    * Checks if a payload predicate is set.
    */
   fun hasPayloadPredicate() = dataEntryPayloadPredicate != null
