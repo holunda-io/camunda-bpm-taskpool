@@ -11,15 +11,15 @@ class ProtocolElement(
   var id: String = UUID.randomUUID().toString(),
 
   @Column(name = "TIME", nullable = false)
-  val time: Instant = Instant.now(),
+  var time: Instant = Instant.now(),
   @Embedded
-  val state: DataEntryStateEmbeddable,
+  var state: DataEntryStateEmbeddable,
   @Column(name = "USERNAME", nullable = true)
-  val username: String? = null,
+  var username: String? = null,
   @Column(name = "LOG_MESSAGE", nullable = true)
-  val logMessage: String? = null,
+  var logMessage: String? = null,
   @Column(name = "LOG_DETAILS", nullable = true)
-  val logDetails: String? = null,
+  var logDetails: String? = null,
 
   @ManyToOne
   @JoinColumns(

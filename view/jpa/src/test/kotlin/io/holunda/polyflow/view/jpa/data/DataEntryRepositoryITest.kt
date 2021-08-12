@@ -82,15 +82,15 @@ internal class DataEntryRepositoryITest {
       description = "This is a test case.",
       revision = 1L,
       lastModifiedDate = Instant.now(),
-      authorizedPrincipals = setOf(
+      authorizedPrincipals = mutableSetOf(
         group("muppets").toString(),
         user("kermit").toString(),
         user("piggy").toString(),
       ),
       payload = json,
-      payloadAttributes = payloadAttributes
+      payloadAttributes = payloadAttributes.toMutableSet()
     ).apply {
-      this.protocol = listOf(
+      this.protocol = mutableListOf(
         ProtocolElement(
           dataEntry = this,
           state = DataEntryStateEmbeddable(state1),
@@ -111,13 +111,13 @@ internal class DataEntryRepositoryITest {
       description = "This is a second test case.",
       lastModifiedDate = Instant.now(),
       payload = json2,
-      payloadAttributes = payloadAttributes2,
-      authorizedPrincipals = setOf(
+      payloadAttributes = payloadAttributes2.toMutableSet(),
+      authorizedPrincipals = mutableSetOf(
         group("avengers").toString(),
         user("piggy").toString(),
       )
     ).apply {
-      this.protocol = listOf(
+      this.protocol = mutableListOf(
         ProtocolElement(
           dataEntry = this,
           state = DataEntryStateEmbeddable(state1),

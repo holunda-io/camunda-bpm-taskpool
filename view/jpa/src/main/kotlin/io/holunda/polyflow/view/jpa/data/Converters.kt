@@ -8,6 +8,7 @@ import io.holunda.camunda.variable.serializer.toPayloadJson
 import io.holunda.camunda.variable.serializer.toPayloadVariableMap
 import io.holunda.polyflow.view.DataEntry
 import io.holunda.polyflow.view.ProtocolEntry
+import io.holunda.polyflow.view.addModification
 import io.holunda.polyflow.view.jpa.data.AuthorizationPrincipal.Companion.group
 import io.holunda.polyflow.view.jpa.data.AuthorizationPrincipal.Companion.user
 import io.holunda.polyflow.view.jpa.data.AuthorizationPrincipalType.GROUP
@@ -70,7 +71,7 @@ fun DataEntryState.toState() = DataEntryStateEmbeddable(processingType = this.pr
 fun DataEntryCreatedEvent.toEntity(objectMapper: ObjectMapper, revisionValue: RevisionValue, limit: Int) = DataEntryEntity(
   dataEntryId = DataEntryId(entryType = this.entryType, entryId = this.entryId),
   payload = this.payload.toPayloadJson(objectMapper),
-  payloadAttributes = this.payload.toJsonPathsWithValues(limit).map { "${it.key}=${it.value}" }.toSet(),
+  payloadAttributes = this.payload.toJsonPathsWithValues(limit).map { "${it.key}=${it.value}" }.toMutableSet(),
   name = this.name,
   applicationName = this.applicationName,
   type = this.type,
@@ -84,10 +85,14 @@ fun DataEntryCreatedEvent.toEntity(objectMapper: ObjectMapper, revisionValue: Re
   } else {
     0L
   },
-  authorizedPrincipals = AuthorizationChange.applyUserAuthorization(setOf(), this.authorizations).map { user(it).toString() }
-    .plus(AuthorizationChange.applyGroupAuthorization(setOf(), this.authorizations).map { group(it).toString() }).toSet(),
+  authorizedPrincipals = AuthorizationChange.applyUserAuthorization(mutableSetOf(), this.authorizations).map { user(it).toString() }
+    .plus(AuthorizationChange.applyGroupAuthorization(mutableSetOf(), this.authorizations).map { group(it).toString() }).toMutableSet(),
 ).apply {
-  this.protocol = this.protocol.addModification(this, this@toEntity.createModification, this@toEntity.state)
+  this.protocol = this.protocol
+    .map { it.toProtocolEntry() }
+    .addModification(this@toEntity.createModification, this@toEntity.state)
+    .map { it.toEntity(this) }
+    .toMutableList()
 }
 
 /**
@@ -97,7 +102,7 @@ fun DataEntryUpdatedEvent.toEntity(objectMapper: ObjectMapper, revisionValue: Re
   DataEntryEntity(
     dataEntryId = DataEntryId(entryType = this.entryType, entryId = this.entryId),
     payload = this.payload.toPayloadJson(objectMapper),
-    payloadAttributes = this.payload.toJsonPathsWithValues(limit).map { "${it.key}=${it.value}" }.toSet(),
+    payloadAttributes = this.payload.toJsonPathsWithValues(limit).map { "${it.key}=${it.value}" }.toMutableSet(),
     name = this.name,
     applicationName = this.applicationName,
     type = this.type,
@@ -107,7 +112,7 @@ fun DataEntryUpdatedEvent.toEntity(objectMapper: ObjectMapper, revisionValue: Re
     state = this.state.toState(),
     formKey = this.formKey,
     authorizedPrincipals = AuthorizationChange.applyUserAuthorization(setOf(), this.authorizations).map { user(it).toString() }
-      .plus(AuthorizationChange.applyGroupAuthorization(setOf(), this.authorizations).map { group(it).toString() }).toSet(),
+      .plus(AuthorizationChange.applyGroupAuthorization(setOf(), this.authorizations).map { group(it).toString() }).toMutableSet(),
     revision = if (revisionValue != RevisionValue.NO_REVISION) {
       revisionValue.revision
     } else {
@@ -117,7 +122,7 @@ fun DataEntryUpdatedEvent.toEntity(objectMapper: ObjectMapper, revisionValue: Re
 } else {
   oldEntry.also {
     it.payload = this.payload.toPayloadJson(objectMapper)
-    it.payloadAttributes = this.payload.toJsonPathsWithValues(limit).map { "${it.key}=${it.value}" }.toSet()
+    it.payloadAttributes = this.payload.toJsonPathsWithValues(limit).map { "${it.key}=${it.value}" }.toMutableSet()
     it.name = this.name
     it.applicationName = this.applicationName
     it.type = this.type
@@ -134,7 +139,7 @@ fun DataEntryUpdatedEvent.toEntity(objectMapper: ObjectMapper, revisionValue: Re
           it.authorizedPrincipals.asGroupnames(),
           this.authorizations
         ).map { group(it).toString() })
-        .toSet()
+        .toMutableSet()
     it.revision = if (revisionValue != RevisionValue.NO_REVISION) {
       revisionValue.revision
     } else {
@@ -142,25 +147,23 @@ fun DataEntryUpdatedEvent.toEntity(objectMapper: ObjectMapper, revisionValue: Re
     }
   }
 }.apply {
-  this.protocol = this.protocol.addModification(this, this@toEntity.updateModification, this@toEntity.state)
+  this.protocol = this.protocol
+    .map { it.toProtocolEntry() }
+    .addModification(this@toEntity.updateModification, this@toEntity.state)
+    .map { it.toEntity(this) }
+    .toMutableList()
 }
 
 /**
- * Adds a modification to the protocol, if it doesn't exist in the protocol already, comparing all protocol element properties
- * besides the technical id.
+ * Converts a protocol entry to entity for given data entry entity.
  */
-fun List<ProtocolElement>.addModification(dataEntry: DataEntryEntity, modification: Modification, state: DataEntryState) =
-  ProtocolElement(
+fun ProtocolEntry.toEntity(dataEntry: DataEntryEntity): ProtocolElement {
+  return ProtocolElement(
     dataEntry = dataEntry,
-    time = modification.time.toInstant(),
-    username = modification.username,
-    logMessage = modification.log,
-    logDetails = modification.logNotes,
+    time = this.time,
+    username = this.username,
+    logMessage = this.logMessage,
+    logDetails = this.logDetails,
     state = state.toState()
-  ).let { protocolElement ->
-    if (dataEntry.protocol.any { existing -> existing.same(protocolElement) }) {
-      this
-    } else {
-      this.plus(protocolElement)
-    }
-  }
+  )
+}

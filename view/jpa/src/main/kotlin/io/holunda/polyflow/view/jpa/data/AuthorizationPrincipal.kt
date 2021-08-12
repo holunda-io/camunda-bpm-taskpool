@@ -9,8 +9,8 @@ data class AuthorizationPrincipal(
 ) {
   companion object {
     operator fun invoke(auth: String) = auth.split(":").let {
-      require(it.size == 2) { "Illegal auth format, expecting <type>:<name>" }
-      AuthorizationPrincipal(type = AuthorizationPrincipalType.valueOf(it[0]), name = it[1])
+      require(it.size >= 2) { "Illegal auth format, expecting <type>:<name>, received '$auth'" }
+      AuthorizationPrincipal(type = AuthorizationPrincipalType.valueOf(it[0]), name = it.subList(1, it.size).joinToString(":"))
     }
 
     fun group(name: String): AuthorizationPrincipal = AuthorizationPrincipal(name = name, type = AuthorizationPrincipalType.GROUP)

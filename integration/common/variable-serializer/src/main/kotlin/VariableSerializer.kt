@@ -48,7 +48,7 @@ fun VariableMap.toJsonPathsWithValues(limit: Int = -1): Map<String, Any> {
 }
 
 
-internal fun MutableMap.MutableEntry<String, Any>.toJsonPathWithValue(prefix: String = "", limit: Int = -1): List<Pair<String, Any>> {
+internal fun MutableMap.MutableEntry<String, Any?>.toJsonPathWithValue(prefix: String = "", limit: Int = -1): List<Pair<String, Any>> {
   // level limit check
   val currentLevel = prefix.count { ".".contains(it) }
   if (limit != -1 && currentLevel >= limit) {
@@ -60,11 +60,12 @@ internal fun MutableMap.MutableEntry<String, Any>.toJsonPathWithValue(prefix: St
   } else {
     "$prefix.${this.key}"
   }
-  return if (this.value.isPrimitiveType()) {
-    listOf(key to this.value)
-  } else if (this.value is Map<*, *>) {
+  val value = this.value
+  return if (value != null && value.isPrimitiveType()) {
+    listOf(key to value)
+  } else if (value is Map<*, *>) {
     @Suppress("UNCHECKED_CAST")
-    (this.value as Map<String, Any>).toMutableMap().entries.map { it.toJsonPathWithValue(key, limit) }.flatten()
+    (value as Map<String, Any?>).toMutableMap().entries.map { it.toJsonPathWithValue(key, limit) }.flatten()
   } else {
     // ignore complex objects
     listOf()

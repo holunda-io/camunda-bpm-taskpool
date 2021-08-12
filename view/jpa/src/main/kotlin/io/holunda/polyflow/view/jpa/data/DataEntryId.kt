@@ -15,8 +15,8 @@ class DataEntryId(
 
   companion object {
     operator fun invoke(identity: String): DataEntryId = identity.split(":").let {
-      require(it.size == 2) { "Illegal identity format, expecting <entryType>:<entryId>" }
-      DataEntryId(entryType = it[0], entryId = it[1])
+      require(it.size >= 2) { "Illegal identity format, expecting <entryType>:<entryId>, received '$identity'" }
+      DataEntryId(entryType = it[0], entryId = it.subList(1, it.size).joinToString(":"))
     }
   }
 

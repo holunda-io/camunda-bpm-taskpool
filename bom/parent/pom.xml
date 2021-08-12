@@ -632,7 +632,7 @@
               </goals>
               <configuration>
                 <sources>
-                  <source>${project.basedir}/src/main/kotlin</source>
+                  <source>src/main/kotlin</source>
                 </sources>
               </configuration>
             </execution>

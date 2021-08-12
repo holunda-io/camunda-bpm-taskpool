@@ -42,7 +42,7 @@ class DataEntryEntity(
     ]
   )
   @Column(name = "AUTHORIZED_PRINCIPAL", nullable = false)
-  var authorizedPrincipals: Set<String> = setOf(),
+  var authorizedPrincipals: MutableSet<String> = mutableSetOf(),
 
   @ElementCollection(fetch = FetchType.EAGER)
   @CollectionTable(
@@ -53,10 +53,10 @@ class DataEntryEntity(
     ]
   )
   @Column(name = "PAYLOAD_ATTRIBUTE", nullable = false)
-  var payloadAttributes: Set<String> = setOf(),
+  var payloadAttributes: MutableSet<String> = mutableSetOf(),
 
   @OneToMany(mappedBy = "dataEntry", orphanRemoval = true, cascade = [CascadeType.ALL], targetEntity = ProtocolElement::class, fetch = FetchType.EAGER)
-  var protocol: List<ProtocolElement> = mutableListOf(),
+  var protocol: MutableList<ProtocolElement> = mutableListOf(),
 
   @Lob
   var payload: String? = null,

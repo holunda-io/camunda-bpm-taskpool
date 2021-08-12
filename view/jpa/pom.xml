@@ -141,12 +141,54 @@
                   <outputFile>h2_ddl.sql</outputFile>
                 </configuration>
               </execution>
+              <execution>
+                <id>generate-mssql-ddl</id>
+                <goals>
+                  <goal>create</goal>
+                </goals>
+                <configuration>
+                  <dialect>org.hibernate.dialect.SQLServer2012Dialect</dialect>
+                  <physicalNamingStrategy>
+                    org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
+                  </physicalNamingStrategy>
+                  <execute>false</execute>
+                  <show>true</show>
+                  <format>true</format>
+                  <outputFile>mssql_ddl.sql</outputFile>
+                </configuration>
+              </execution>
+              <execution>
+                <id>generate-posgresql-ddl</id>
+                <goals>
+                  <goal>create</goal>
+                </goals>
+                <configuration>
+                  <dialect>org.hibernate.dialect.PostgreSQL10Dialect</dialect>
+                  <physicalNamingStrategy>
+                    org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
+                  </physicalNamingStrategy>
+                  <execute>false</execute>
+                  <show>true</show>
+                  <format>true</format>
+                  <outputFile>pgsql_ddl.sql</outputFile>
+                </configuration>
+              </execution>
             </executions>
             <dependencies>
               <dependency>
                 <groupId>javax.xml.bind</groupId>
                 <artifactId>jaxb-api</artifactId>
                 <version>2.4.0-b180830.0359</version>
+              </dependency>
+              <dependency>
+                <groupId>com.microsoft.sqlserver</groupId>
+                <artifactId>mssql-jdbc</artifactId>
+                <version>9.2.1.jre11</version>
+              </dependency>
+              <dependency>
+                <groupId>org.postgresql</groupId>
+                <artifactId>postgresql</artifactId>
+                <version>42.2.19</version>
               </dependency>
             </dependencies>
           </plugin>

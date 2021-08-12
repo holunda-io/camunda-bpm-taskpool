@@ -15,6 +15,13 @@ internal class AuthorizationPrincipalTest {
   }
 
   @Test
+  fun `should construct authorization principal id for group created from a client role`() {
+    val id = AuthorizationPrincipal("GROUP:client-id:groupName")
+    assertThat(id).isEqualTo(group(name = "client-id:groupName"))
+  }
+
+
+  @Test
   fun `should construct authorization principal id for user`() {
     val id = AuthorizationPrincipal("USER:userName")
     assertThat(id).isEqualTo(user(name = "userName"))
@@ -22,7 +29,7 @@ internal class AuthorizationPrincipalTest {
 
   @Test
   fun `should not construct authorization principal id`() {
-    assertThatThrownBy { AuthorizationPrincipal("bad string") }.hasMessage("Illegal auth format, expecting <type>:<name>")
+    assertThatThrownBy { AuthorizationPrincipal("bad string") }.hasMessage("Illegal auth format, expecting <type>:<name>, received 'bad string'")
   }
 
 

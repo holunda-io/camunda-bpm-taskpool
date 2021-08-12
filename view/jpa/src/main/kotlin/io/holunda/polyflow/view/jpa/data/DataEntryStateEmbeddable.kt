@@ -8,9 +8,9 @@ import javax.persistence.Embeddable
 @Embeddable
 class DataEntryStateEmbeddable(
   @Column(name = "PROCESSING_TYPE", nullable = false)
-  val processingType: String,
+  var processingType: String,
   @Column(name = "STATE", nullable = false)
-  val state: String
+  var state: String
 ) : Serializable {
   companion object {
     operator fun invoke(state: DataEntryState): DataEntryStateEmbeddable =

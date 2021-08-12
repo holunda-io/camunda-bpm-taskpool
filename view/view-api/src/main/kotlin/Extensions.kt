@@ -3,7 +3,6 @@ package io.holunda.polyflow.view
 import io.holunda.camunda.taskpool.api.business.DataEntryState
 import io.holunda.camunda.taskpool.api.business.Modification
 import io.holunda.camunda.taskpool.api.task.*
-import java.util.*
 
 /**
  * Create a new task from data of existing task and incoming event.
@@ -166,12 +165,19 @@ fun task(event: TaskCandidateUserChanged, task: Task) = Task(
 
 /**
  * Adds modification to the list of protocol entry list.
+ * Make sure there are no duplicates in this list.
  */
-fun addModification(modifications: List<ProtocolEntry>, modification: Modification, state: DataEntryState) =
-  modifications.plus(ProtocolEntry(
+fun List<ProtocolEntry>.addModification(modification: Modification, state: DataEntryState) =
+  ProtocolEntry(
     time = modification.time.toInstant(),
     username = modification.username,
     logMessage = modification.log,
     logDetails = modification.logNotes,
     state = state
-  ))
+  ).let { protocolEntry ->
+    if (this.any { existing -> existing == protocolEntry }) {
+      this
+    } else {
+      this.plus(protocolEntry)
+    }
+  }

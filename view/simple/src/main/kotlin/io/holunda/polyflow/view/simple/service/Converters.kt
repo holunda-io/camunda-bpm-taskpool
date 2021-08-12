@@ -29,7 +29,7 @@ fun DataEntryUpdatedEvent.toDataEntry(oldEntry: DataEntry?) = if (oldEntry == nu
     formKey = this.formKey,
     authorizedUsers = AuthorizationChange.applyUserAuthorization(setOf(), this.authorizations),
     authorizedGroups = AuthorizationChange.applyGroupAuthorization(setOf(), this.authorizations),
-    protocol = addModification(listOf(), this.updateModification, this.state)
+    protocol = listOf<ProtocolEntry>().addModification(this.updateModification, this.state)
   )
 } else {
   oldEntry.copy(
@@ -43,7 +43,7 @@ fun DataEntryUpdatedEvent.toDataEntry(oldEntry: DataEntry?) = if (oldEntry == nu
     formKey = this.formKey,
     authorizedUsers = AuthorizationChange.applyUserAuthorization(oldEntry.authorizedUsers, this.authorizations),
     authorizedGroups = AuthorizationChange.applyGroupAuthorization(oldEntry.authorizedGroups, this.authorizations),
-    protocol = addModification(oldEntry.protocol, this.updateModification, this.state)
+    protocol = oldEntry.protocol.addModification(this.updateModification, this.state)
   )
 }
 
@@ -63,7 +63,7 @@ fun DataEntryCreatedEvent.toDataEntry() = DataEntry(
   formKey = this.formKey,
   authorizedUsers = AuthorizationChange.applyUserAuthorization(setOf(), this.authorizations),
   authorizedGroups = AuthorizationChange.applyGroupAuthorization(setOf(), this.authorizations),
-  protocol = addModification(listOf(), this.createModification, this.state)
+  protocol = listOf<ProtocolEntry>().addModification(this.createModification, this.state)
 )
 
 /**
