@@ -4,7 +4,8 @@ import java.time.Instant
 import java.util.*
 import javax.persistence.*
 
-@Entity(name = "PROTOCOL")
+@Entity
+@Table(name = "PLF_DATA_ENTRY_PROTOCOL")
 class ProtocolElement(
   @Id
   @Column(name = "ID")

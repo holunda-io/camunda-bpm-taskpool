@@ -54,12 +54,9 @@ class JpaPolyflowViewService(
     val specification = criteria.toSpecification()
 
     val elements = if (specification != null) {
-      // alternative
       dataEntryRepository.findAll(specification.and(isAuthorizedFor(authorizedPrincipals)))
-      // dataEntryRepository.findAllByAuthorizedPrincipalsIn(authorizationQuery, specification)
     } else {
       dataEntryRepository.findAll(isAuthorizedFor(authorizedPrincipals))
-      // dataEntryRepository.findAllByAuthorizedPrincipalsIn(authorizedPrincipals.map { it.toString() })
     }
 
     return constructResponse(elements, query)

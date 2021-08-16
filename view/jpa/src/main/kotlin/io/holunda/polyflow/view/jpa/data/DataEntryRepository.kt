@@ -41,21 +41,16 @@ interface DataEntryRepository : CrudRepository<DataEntryEntity, DataEntryId>, Jp
      */
     fun hasPayloadAttribute(name: String, value: String): Specification<DataEntryEntity> =
       Specification { dataEntry, _, builder ->
-        builder.isMember(
-          "$name=$value",
-          dataEntry.get<List<String>>(DataEntryEntity::payloadAttributes.name)
+        val join = dataEntry.join<DataEntryEntity, Set<PayloadAttribute>>(DataEntryEntity::payloadAttributes.name)
+        val pathEquals = builder.equal(
+          join.get<String>(PayloadAttribute::path.name),
+          name
         )
-      }
-
-    /**
-     * Specification for checking authorization.
-     */
-    fun isAuthorizedFor(principal: AuthorizationPrincipal): Specification<DataEntryEntity> =
-      Specification { dataEntry, _, builder ->
-        builder.isMember(
-          "${principal.type}:${principal.name}",
-          dataEntry.get<List<String>>(DataEntryEntity::authorizedPrincipals.name)
+        val valueEquals = builder.equal(
+          join.get<String>(PayloadAttribute::value.name),
+          value
         )
+        builder.and(pathEquals, valueEquals)
       }
 
     /**

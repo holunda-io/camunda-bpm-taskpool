@@ -7,7 +7,8 @@ import javax.persistence.*
 /**
  * Entity to store data entries.
  */
-@Entity(name = "DATA_ENTRY")
+@Entity
+@Table(name = "PLF_DATA_ENTRY")
 class DataEntryEntity(
   @EmbeddedId
   var dataEntryId: DataEntryId,
@@ -35,7 +36,7 @@ class DataEntryEntity(
 
   @ElementCollection(fetch = FetchType.EAGER)
   @CollectionTable(
-    name = "DATA_ENTRY_AUTHORIZATIONS",
+    name = "PLF_DATA_ENTRY_AUTHORIZATIONS",
     joinColumns = [
       JoinColumn(name = "ENTRY_TYPE", referencedColumnName = "ENTRY_TYPE"),
       JoinColumn(name = "ENTRY_ID", referencedColumnName = "ENTRY_ID"),
@@ -46,16 +47,16 @@ class DataEntryEntity(
 
   @ElementCollection(fetch = FetchType.EAGER)
   @CollectionTable(
-    name = "DATA_PAYLOAD_ATTRIBUTES",
+    name = "PLF_DATA_ENTRY_PAYLOAD_ATTRIBUTES",
     joinColumns = [
       JoinColumn(name = "ENTRY_TYPE", referencedColumnName = "ENTRY_TYPE"),
       JoinColumn(name = "ENTRY_ID", referencedColumnName = "ENTRY_ID"),
     ]
   )
-  @Column(name = "PAYLOAD_ATTRIBUTE", nullable = false)
-  var payloadAttributes: MutableSet<String> = mutableSetOf(),
+  var payloadAttributes: MutableSet<PayloadAttribute> = mutableSetOf(),
 
-  @OneToMany(mappedBy = "dataEntry", orphanRemoval = true, cascade = [CascadeType.ALL], targetEntity = ProtocolElement::class, fetch = FetchType.EAGER)
+
+  @OneToMany(mappedBy = "dataEntry", orphanRemoval = true, cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
   var protocol: MutableList<ProtocolElement> = mutableListOf(),
 
   @Lob

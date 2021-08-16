@@ -70,7 +70,7 @@ fun DataEntryState.toState() = DataEntryStateEmbeddable(processingType = this.pr
 fun DataEntryCreatedEvent.toEntity(objectMapper: ObjectMapper, revisionValue: RevisionValue, limit: Int) = DataEntryEntity(
   dataEntryId = DataEntryId(entryType = this.entryType, entryId = this.entryId),
   payload = this.payload.toPayloadJson(objectMapper),
-  payloadAttributes = this.payload.toJsonPathsWithValues(limit).map { "${it.key}=${it.value}" }.toMutableSet(),
+  payloadAttributes = this.payload.toJsonPathsWithValues(limit).map { attr -> PayloadAttribute(attr) }.toMutableSet(),
   name = this.name,
   applicationName = this.applicationName,
   type = this.type,
@@ -87,7 +87,7 @@ fun DataEntryCreatedEvent.toEntity(objectMapper: ObjectMapper, revisionValue: Re
   authorizedPrincipals = AuthorizationChange.applyUserAuthorization(mutableSetOf(), this.authorizations).map { user(it).toString() }
     .plus(AuthorizationChange.applyGroupAuthorization(mutableSetOf(), this.authorizations).map { group(it).toString() }).toMutableSet(),
 ).apply {
-  this.protocol = this.protocol.addModification(this, this@toEntity.createModification, this@toEntity.state).toMutableList()
+  this.protocol = this.protocol.addModification(this, this@toEntity.createModification, this@toEntity.state)
 }
 
 /**
@@ -97,7 +97,7 @@ fun DataEntryUpdatedEvent.toEntity(objectMapper: ObjectMapper, revisionValue: Re
   DataEntryEntity(
     dataEntryId = DataEntryId(entryType = this.entryType, entryId = this.entryId),
     payload = this.payload.toPayloadJson(objectMapper),
-    payloadAttributes = this.payload.toJsonPathsWithValues(limit).map { "${it.key}=${it.value}" }.toMutableSet(),
+    payloadAttributes = this.payload.toJsonPathsWithValues(limit).map { attr -> PayloadAttribute(attr) }.toMutableSet(),
     name = this.name,
     applicationName = this.applicationName,
     type = this.type,
@@ -117,7 +117,7 @@ fun DataEntryUpdatedEvent.toEntity(objectMapper: ObjectMapper, revisionValue: Re
 } else {
   oldEntry.also {
     it.payload = this.payload.toPayloadJson(objectMapper)
-    it.payloadAttributes = this.payload.toJsonPathsWithValues(limit).map { "${it.key}=${it.value}" }.toMutableSet()
+    it.payloadAttributes = this.payload.toJsonPathsWithValues(limit).map { attr -> PayloadAttribute(attr) }.toMutableSet()
     it.name = this.name
     it.applicationName = this.applicationName
     it.type = this.type
@@ -129,11 +129,11 @@ fun DataEntryUpdatedEvent.toEntity(objectMapper: ObjectMapper, revisionValue: Re
       AuthorizationChange.applyUserAuthorization(
         it.authorizedPrincipals.asUsernames(),
         this.authorizations
-      ).map { user(it).toString() }
+      ).map { user -> user(user).toString() }
         .plus(AuthorizationChange.applyGroupAuthorization(
           it.authorizedPrincipals.asGroupnames(),
           this.authorizations
-        ).map { group(it).toString() })
+        ).map { group -> group(group).toString() })
         .toMutableSet()
     it.revision = if (revisionValue != RevisionValue.NO_REVISION) {
       revisionValue.revision
@@ -142,14 +142,14 @@ fun DataEntryUpdatedEvent.toEntity(objectMapper: ObjectMapper, revisionValue: Re
     }
   }
 }.apply {
-  this.protocol = this.protocol.addModification(this, this@toEntity.updateModification, this@toEntity.state).toMutableList()
+  this.protocol = this.protocol.addModification(this, this@toEntity.updateModification, this@toEntity.state)
 }
 
 /**
  * Adds a modification to the protocol, if it doesn't exist in the protocol already, comparing all protocol element properties
  * besides the technical id.
  */
-fun List<ProtocolElement>.addModification(dataEntry: DataEntryEntity, modification: Modification, state: DataEntryState) =
+fun MutableList<ProtocolElement>.addModification(dataEntry: DataEntryEntity, modification: Modification, state: DataEntryState) =
   ProtocolElement(
     dataEntry = dataEntry,
     time = modification.time.toInstant(),
@@ -158,9 +158,9 @@ fun List<ProtocolElement>.addModification(dataEntry: DataEntryEntity, modificati
     logDetails = modification.logNotes,
     state = state.toState()
   ).let { protocolElement ->
-    if (dataEntry.protocol.any { existing -> existing.same(protocolElement) }) {
-      this
-    } else {
-      this.plus(protocolElement)
+    this.apply {
+      if (dataEntry.protocol.none { existing -> existing.same(protocolElement) }) {
+        this.add(protocolElement)
+      }
     }
   }

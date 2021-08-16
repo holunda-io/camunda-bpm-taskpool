@@ -18,7 +18,7 @@ class DataEntryId(
 
   companion object {
     /**
-     * Factgory method to construct the Data Entry Id from a string.
+     * Factory method to construct the Data Entry Id from a string.
      */
     operator fun invoke(identity: String): DataEntryId = identity.split(":").let {
       require(it.size >= 2) { "Illegal identity format, expecting <entryType>:<entryId>, received '$identity'" }
