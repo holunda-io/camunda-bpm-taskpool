@@ -24,6 +24,9 @@ import org.axonframework.queryhandling.QueryUpdateEmitter
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Component
 
+/**
+ * Implementation of the Polyflow View API using JPA to create the persistence model.
+ */
 @Component
 @ProcessingGroup(PROCESSING_GROUP)
 class JpaPolyflowViewService(

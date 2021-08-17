@@ -9,33 +9,33 @@
 
 > A component library for building enterprise-wide process platforms with multiple process engines like Camunda BPM.
 
-In the last five years, we built different process applications on behalf of the customer several times. It turned out that some of the issues occurred every
+In the last five years, we built different process applications on behalf of the customer several times. It turned out that some issues occurred every
 time during the implementation.
 
-<img src="docs/img/polyflow-hero-530x406.png?raw=true" width=500 alt="Polyflow Hero" title="Polyflow Hero" align="right" />
+![Hero Image](docs/img/polyflow-hero-530x406.png)
 
 These were:
 
-* coping with performance issues if big amount of tasks is available
-* creating high-performance custom queries for pre-loading process variables for tasks
-* creating high-performance custom queries to pre-load business data associated with the process instance
-* high-performance retrieving a list of tasks from several process engines
-* repetitive queries with same result
-* creating an archive view for business data items handled during the process execution
-* creating an audit log of changes performed on business data items
+  * coping with performance issues if big amount of tasks is available
+  * creating high-performance custom queries for pre-loading process variables for tasks
+  * creating high-performance custom queries to pre-load business data associated with the process instance
+  * high-performance retrieving a list of tasks from several process engines
+  * repetitive queries with same result
+  * creating an archive view for business data items handled during the process execution
+  * creating an audit log of changes performed on business data items
 
 We decided to stop repetitive work and release an open-source library which builds a foundation for solving these problems.
 
 ### Features
 
-* User task API providing attributes important for processing
-* Mirroring tasks: provides a copy of all tasks in the system
-* Reacts on all task life cycle events fired by the process engine
-* High performance queries: creates read-optimized projections including task-, process- and business data
-* Centralized task list: allows collecting tasks from multiple engines
-* Data enrichment: enrich tasks with business data
-* Data entries API providing attributes important for processing
-* Audit-Trail creation on business event emission
+  * User task API providing attributes important for processing
+  * Mirroring tasks: provides a copy of all tasks in the system
+  * Reacts on all task life cycle events fired by the process engine
+  * High performance queries: creates read-optimized projections including task-, process- and business data
+  * Centralized task list: allows collecting tasks from multiple engines
+  * Data enrichment: enrich tasks with business data
+  * Data entries API providing attributes important for processing
+  * Audit-Trail creation on business event emission
 
 ### Where to start
 

@@ -8,6 +8,9 @@ import org.axonframework.modelling.command.AggregateIdentifier
 import org.axonframework.modelling.command.AggregateLifecycle
 import org.axonframework.spring.stereotype.Aggregate
 
+/**
+ * Command model responsible for commands on process definition.
+ */
 @Aggregate
 class ProcessDefinitionAggregate() {
 
@@ -34,7 +37,9 @@ class ProcessDefinitionAggregate() {
     ))
   }
 
-
+  /**
+   * React on registration of a new process definition.
+   */
   @EventSourcingHandler
   fun on(event: ProcessDefinitionRegisteredEvent) {
     this.processDefinitionId = event.processDefinitionId
