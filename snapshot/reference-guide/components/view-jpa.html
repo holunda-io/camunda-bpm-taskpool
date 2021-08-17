@@ -739,8 +739,8 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#tables" class="md-nav__link">
-    Tables
+  <a href="#db-tables" class="md-nav__link">
+    DB Tables
   </a>
   
 </li>
@@ -1212,13 +1212,27 @@ if the JPA persistence is already used in the project setup.</p>
   <span class="nt">&lt;version&gt;</span>${polyflow.version}<span class="nt">&lt;/version&gt;</span>
 <span class="nt">&lt;/dependency&gt;</span>
 </code></pre></div>
-<p>The implementation relies on Spring Data JPA and needs to activate those. 
-In addition, configure a JPA connection to database using <code>application.properties</code> or <code>application.yaml</code>:</p>
-<div class="highlight"><pre><span></span><code>spring:
-  data:
-    jpa:
+<p>The implementation relies on Spring Data JPA and needs to activate those. </p>
+<div class="highlight"><pre><span></span><code><span class="nd">@Configuration</span>
+<span class="nd">@EnablePolyflowJpaView</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyViewConfiguration</span> <span class="p">{</span>
+
+<span class="p">}</span>
 </code></pre></div>
-<p>The JPA view uses a special facility for creating search indexes on unstructured payload. You can provide some
+<p>In addition, configure a database connection to database using <code>application.properties</code> or <code>application.yaml</code>:</p>
+<div class="highlight"><pre><span></span><code>spring:
+  jpa:
+    show-sql: false
+    open-in-view: true # disable JPA warning
+  datasource:
+    url: &lt;jdbc-connnection-string&gt;
+    username: &lt;db-user&gt;
+    password: &lt;db-password&gt;
+</code></pre></div>
+<p>The JPA view uses a special facility for creating search indexes on unstructured payload. For this purpose
+it converts the payload into a recursive map structure (in which every primitive type is a leaf and every
+complex type is decomposed via the map) using Jackson ObjectMapper and then create search indexes for all 
+property paths (<code>myObj1.myProperty2.myOtherEmbeddedProperty3</code>) and their values. You can provide some 
 configuration of this indexing process by the following configuration options:</p>
 <div class="highlight"><pre><span></span><code>polyflow.view.jpa:
   payload-attribute-level-limit: 2
@@ -1228,17 +1242,18 @@ configuration of this indexing process by the following configuration options:</
 want to increase the logging level, please setup it e.g. in your <code>application.yaml</code>:</p>
 <div class="highlight"><pre><span></span><code>logging.level.io.holunda.polyflow.view.jpa: DEBUG
 </code></pre></div>
-<h3 id="tables">Tables<a class="headerlink" href="#tables" title="Permanent link">#</a></h3>
+<h3 id="db-tables">DB Tables<a class="headerlink" href="#db-tables" title="Permanent link">#</a></h3>
 <p>The JPA View uses several tables to store the results. These are:</p>
 <ul>
-<li>PLF_DATA_ENTRY: table for business data entries</li>
-<li>PLF_DATA_ENTRY_AUTHORIZATIONS: table for authorization information of data entries</li>
-<li>PLF_DATA_ENTRY_PAYLOAD_ATTRIBUTES: table for data entry protocol entry (users, groups)</li>
-<li>PLF_DATA_ENTRY_PROTOCOL: table for data entry protocol entry (users, groups)</li>
-<li>TRACKING_TOKEN: table for Axon Tracking Tokens</li>
+<li><code>PLF_DATA_ENTRY</code>: table for business data entries</li>
+<li><code>PLF_DATA_ENTRY_AUTHORIZATIONS</code>: table for authorization information of data entries</li>
+<li><code>PLF_DATA_ENTRY_PAYLOAD_ATTRIBUTES</code>: table for data entry attribute search index</li>
+<li><code>PLF_DATA_ENTRY_PROTOCOL</code>: table for data entry protocol entry (users, groups)</li>
+<li><code>TRACKING_TOKEN</code>: table for Axon Tracking Tokens</li>
 </ul>
-<p>IF you are interested in DDLs for the view, feel free to generate one using the following call of Apache Maven <code>mvn clean test -DskipTests -Pgenerate-sql -f view/jpa</code>.
-Currently, DDLs for the databases H2, MSSQL and PostgreSQL are generated.</p>
+<p>If you are interested in DDLs for the view, feel free to generate one using the following call of Apache Maven 
+<code>mvn clean test -DskipTests -Pgenerate-sql -f view/jpa</code>. Currently, DDLs for the databases H2, MSSQL and PostgreSQL 
+are generated into <code>target/</code> directory.</p>
                 
                   
                     
