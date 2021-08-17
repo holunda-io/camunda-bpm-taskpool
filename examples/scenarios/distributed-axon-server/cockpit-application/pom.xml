@@ -6,7 +6,7 @@
   <parent>
     <groupId>io.holunda.polyflow</groupId>
     <artifactId>polyflow-example-scenario-distributed-axon-server</artifactId>
-    <version>3.0.3-SNAPSHOT</version>
+    <version>3.1.0</version>
   </parent>
 
   <artifactId>polyflow-example-cockpit-root</artifactId>
