@@ -2,9 +2,6 @@
 title: Mongo View
 pageId: view-mongo
 ---
-
-## Mongo View
-
 ### Purpose
 
 The Mongo View is component responsible for creating read-projections of tasks and business data entries. It implements

@@ -2,9 +2,6 @@
 title: JPA View
 pageId: view-jpa
 ---
-
-## JPA View
-
 ### Purpose
 
 The JPA View is component responsible for creating read-projections of tasks and business data entries. It currently implements

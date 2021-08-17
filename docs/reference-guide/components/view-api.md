@@ -3,8 +3,6 @@ title: View API
 pageId: view-api
 ---
 
-## View API
-
 ### Purpose
 
 The Polyflow View API defines the interfaces of the task-pool and data-pool query API. It defines the main queries of the common read-projections.

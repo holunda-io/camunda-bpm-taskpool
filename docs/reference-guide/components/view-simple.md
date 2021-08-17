@@ -3,7 +3,7 @@ title: In-Memory View
 pageId: view-simple
 ---
 
-## In-Memory View
+## Purpose
 
 The In-Memory View is component responsible for creating read-projections of tasks and business data entries. It implements
 the Taskpool and Datapool View API and persists the projection in memory. The projection is transient and relies on event
