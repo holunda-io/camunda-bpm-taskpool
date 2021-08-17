@@ -5,7 +5,8 @@
     </encoder>
   </appender>
 
-  <root level="TRACE">
+  <!-- <root level="TRACE"> activate to see the variable binding-->
+  <root level="INFO">
     <appender-ref ref="STDOUT" />
   </root>
 </configuration>

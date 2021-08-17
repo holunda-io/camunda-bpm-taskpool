@@ -118,6 +118,8 @@ nav:
       - Mongo DB View: reference-guide/components/view-mongo.md
       - Cockpit View: reference-guide/components/view-cockpit.md
       - Form URL Resolver: reference-guide/components/view-form-url-resolver.md
+      - View-API: reference-guide/components/view-api.md
+      - View Filtering: reference-guide/components/view-filtering.md
     - Other Components:
       - Tasklist URL Resolver: reference-guide/components/other-tasklist-url-resolver.md
       - Variable Serializer: reference-guide/components/other-variable-serializer.md

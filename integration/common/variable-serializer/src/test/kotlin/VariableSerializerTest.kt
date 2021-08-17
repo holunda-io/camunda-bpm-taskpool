@@ -1,3 +1,4 @@
+package io.holunda.polyflow.variable.serializer
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
@@ -10,7 +11,7 @@ import java.time.Instant
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
 
-class SimpleDataEntryCommandSenderTest {
+class VariableSerializerTest {
 
   private val mapper = jacksonObjectMapper()
 
@@ -120,29 +121,3 @@ class SimpleDataEntryCommandSenderTest {
     assertThat(elements).containsExactly(linkedMapOf(Pojo2::keyZUZUZ.name to "p2", Pojo2::children.name to listOf<String>()))
   }
 }
-
-data class Pojo1(
-  val key: String,
-  val anotherKey: List<Pojo2>
-)
-
-data class Pojo2(
-  val keyZUZUZ: String,
-  var children: List<Pojo1> = listOf()
-)
-
-data class Pojo3(
-  val key: String,
-  val anotherKey: Int
-)
-
-data class Pojo4(
-  val key: String,
-  val anotherKey: List<Int>
-)
-
-data class Pojo5(
-  val key: String,
-  val ts: Instant,
-  val date: OffsetDateTime
-)

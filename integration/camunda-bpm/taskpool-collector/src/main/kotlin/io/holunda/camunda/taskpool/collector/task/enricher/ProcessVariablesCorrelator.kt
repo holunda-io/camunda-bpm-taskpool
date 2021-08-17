@@ -5,10 +5,16 @@ import io.holunda.camunda.taskpool.api.business.addCorrelation
 import io.holunda.camunda.taskpool.api.business.newCorrelations
 import org.camunda.bpm.engine.variable.VariableMap
 
+/**
+ * Correlator for process variables.
+ */
 class ProcessVariablesCorrelator(vararg correlations: ProcessVariableCorrelation) {
 
   private val all: Map<ProcessDefinitionKey, ProcessVariableCorrelation> = correlations.associate { it.processDefinitionKey to it }
 
+  /**
+   * Correlates variables from a given correlation map for a provided process definition and task definition.
+   */
   fun correlateVariables(processDefinitionKey: ProcessDefinitionKey, taskDefinitionKey: TaskDefinitionKey, variables: VariableMap): CorrelationMap {
 
     val result = newCorrelations()

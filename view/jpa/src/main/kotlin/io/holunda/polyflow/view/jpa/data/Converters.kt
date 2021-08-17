@@ -3,12 +3,15 @@ package io.holunda.polyflow.view.jpa.data
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.holixon.axon.gateway.query.RevisionValue
 import io.holunda.camunda.taskpool.api.business.*
+import io.holunda.camunda.variable.serializer.toJsonPathsWithValues
+import io.holunda.camunda.variable.serializer.toPayloadJson
+import io.holunda.camunda.variable.serializer.toPayloadVariableMap
 import io.holunda.polyflow.view.DataEntry
 import io.holunda.polyflow.view.ProtocolEntry
-import io.holunda.polyflow.view.jpa.auth.AuthorizationPrincipal
-import io.holunda.polyflow.view.jpa.auth.AuthorizationPrincipalType
-import org.camunda.bpm.engine.variable.VariableMap
-import org.camunda.bpm.engine.variable.Variables.createVariables
+import io.holunda.polyflow.view.jpa.data.AuthorizationPrincipal.Companion.group
+import io.holunda.polyflow.view.jpa.data.AuthorizationPrincipal.Companion.user
+import io.holunda.polyflow.view.jpa.data.AuthorizationPrincipalType.GROUP
+import io.holunda.polyflow.view.jpa.data.AuthorizationPrincipalType.USER
 
 /**
  * Converts the entity into API type.
@@ -26,37 +29,18 @@ fun DataEntryEntity.toDataEntry(objectMapper: ObjectMapper) =
     protocol = this.protocol.map { it.toProtocolEntry() },
     authorizedUsers = this.authorizedPrincipals.asUsernames(),
     authorizedGroups = this.authorizedPrincipals.asGroupnames(),
-    payload = this.payload.toPayloadVariableMap(objectMapper)
+    payload = this.payload.toPayloadVariableMap(objectMapper),
   )
 
 /**
  * Retrieves user authorizations as list of user names.
  */
-fun Set<AuthorizationPrincipal>.asUsernames() = this.filter { it.id.type == AuthorizationPrincipalType.USER }.map { it.id.name }.toSet()
+fun Set<String>.asUsernames() = this.filter { AuthorizationPrincipal(it).type == USER }.map { AuthorizationPrincipal(it).name }.toSet()
 
 /**
  * Retrieves group authorizations as list of group names.
  */
-fun Set<AuthorizationPrincipal>.asGroupnames() = this.filter { it.id.type == AuthorizationPrincipalType.GROUP }.map { it.id.name }.toSet()
-
-/**
- * Serializes payload as JSON.
- */
-fun VariableMap.toPayloadJson(objectMapper: ObjectMapper): String =
-  objectMapper.writeValueAsString(this)
-
-/**
- * Deserializes JSON back into variable map.
- */
-fun String?.toPayloadVariableMap(objectMapper: ObjectMapper): VariableMap = if (this != null) {
-  val mapType = objectMapper.typeFactory.constructMapType(Map::class.java, String::class.java, Any::class.java)
-  val map: Map<String, Any> = objectMapper.convertValue(this, mapType)
-  createVariables().apply {
-    putAll(map)
-  }
-} else {
-  createVariables()
-}
+fun Set<String>.asGroupnames() = this.filter { AuthorizationPrincipal(it).type == GROUP }.map { AuthorizationPrincipal(it).name }.toSet()
 
 /**
  * Converts entity to API type.
@@ -83,12 +67,15 @@ fun DataEntryState.toState() = DataEntryStateEmbeddable(processingType = this.pr
 /**
  * Event to entity.
  */
-fun DataEntryCreatedEvent.toEntity(objectMapper: ObjectMapper, revisionValue: RevisionValue) = DataEntryEntity(
+fun DataEntryCreatedEvent.toEntity(objectMapper: ObjectMapper, revisionValue: RevisionValue, limit: Int) = DataEntryEntity(
   dataEntryId = DataEntryId(entryType = this.entryType, entryId = this.entryId),
   payload = this.payload.toPayloadJson(objectMapper),
+  payloadAttributes = this.payload.toJsonPathsWithValues(limit).map { attr -> PayloadAttribute(attr) }.toMutableSet(),
   name = this.name,
   applicationName = this.applicationName,
   type = this.type,
+  createdDate = this.createModification.time.toInstant(),
+  lastModifiedDate = this.createModification.time.toInstant(),
   description = this.description,
   state = this.state.toState(),
   formKey = this.formKey,
@@ -97,8 +84,8 @@ fun DataEntryCreatedEvent.toEntity(objectMapper: ObjectMapper, revisionValue: Re
   } else {
     0L
   },
-  authorizedPrincipals = AuthorizationChange.applyUserAuthorization(setOf(), this.authorizations).map { AuthorizationPrincipal.user(it) }
-    .plus(AuthorizationChange.applyGroupAuthorization(setOf(), this.authorizations).map { AuthorizationPrincipal.group(it) }).toSet(),
+  authorizedPrincipals = AuthorizationChange.applyUserAuthorization(mutableSetOf(), this.authorizations).map { user(it).toString() }
+    .plus(AuthorizationChange.applyGroupAuthorization(mutableSetOf(), this.authorizations).map { group(it).toString() }).toMutableSet(),
 ).apply {
   this.protocol = this.protocol.addModification(this, this@toEntity.createModification, this@toEntity.state)
 }
@@ -106,18 +93,21 @@ fun DataEntryCreatedEvent.toEntity(objectMapper: ObjectMapper, revisionValue: Re
 /**
  * Event to entity for an update, if an optional entry exists.
  */
-fun DataEntryUpdatedEvent.toEntity(objectMapper: ObjectMapper, revisionValue: RevisionValue, oldEntry: DataEntryEntity?) = if (oldEntry == null) {
+fun DataEntryUpdatedEvent.toEntity(objectMapper: ObjectMapper, revisionValue: RevisionValue, oldEntry: DataEntryEntity?, limit: Int) = if (oldEntry == null) {
   DataEntryEntity(
     dataEntryId = DataEntryId(entryType = this.entryType, entryId = this.entryId),
     payload = this.payload.toPayloadJson(objectMapper),
+    payloadAttributes = this.payload.toJsonPathsWithValues(limit).map { attr -> PayloadAttribute(attr) }.toMutableSet(),
     name = this.name,
     applicationName = this.applicationName,
     type = this.type,
+    createdDate = this.updateModification.time.toInstant(),
+    lastModifiedDate = this.updateModification.time.toInstant(),
     description = this.description,
     state = this.state.toState(),
     formKey = this.formKey,
-    authorizedPrincipals = AuthorizationChange.applyUserAuthorization(setOf(), this.authorizations).map { AuthorizationPrincipal.user(it) }
-      .plus(AuthorizationChange.applyGroupAuthorization(setOf(), this.authorizations).map { AuthorizationPrincipal.group(it) }).toSet(),
+    authorizedPrincipals = AuthorizationChange.applyUserAuthorization(setOf(), this.authorizations).map { user(it).toString() }
+      .plus(AuthorizationChange.applyGroupAuthorization(setOf(), this.authorizations).map { group(it).toString() }).toMutableSet(),
     revision = if (revisionValue != RevisionValue.NO_REVISION) {
       revisionValue.revision
     } else {
@@ -127,22 +117,24 @@ fun DataEntryUpdatedEvent.toEntity(objectMapper: ObjectMapper, revisionValue: Re
 } else {
   oldEntry.also {
     it.payload = this.payload.toPayloadJson(objectMapper)
+    it.payloadAttributes = this.payload.toJsonPathsWithValues(limit).map { attr -> PayloadAttribute(attr) }.toMutableSet()
     it.name = this.name
     it.applicationName = this.applicationName
     it.type = this.type
     it.description = this.description
     it.state = this.state.toState()
+    it.lastModifiedDate = this.updateModification.time.toInstant()
     it.formKey = this.formKey
     it.authorizedPrincipals =
       AuthorizationChange.applyUserAuthorization(
         it.authorizedPrincipals.asUsernames(),
         this.authorizations
-      ).map { AuthorizationPrincipal.user(it) }
+      ).map { user -> user(user).toString() }
         .plus(AuthorizationChange.applyGroupAuthorization(
           it.authorizedPrincipals.asGroupnames(),
           this.authorizations
-        ).map { AuthorizationPrincipal.group(it) })
-        .toSet()
+        ).map { group -> group(group).toString() })
+        .toMutableSet()
     it.revision = if (revisionValue != RevisionValue.NO_REVISION) {
       revisionValue.revision
     } else {
@@ -154,16 +146,21 @@ fun DataEntryUpdatedEvent.toEntity(objectMapper: ObjectMapper, revisionValue: Re
 }
 
 /**
- * Adds a modification to the protocol.
+ * Adds a modification to the protocol, if it doesn't exist in the protocol already, comparing all protocol element properties
+ * besides the technical id.
  */
-fun List<ProtocolElement>.addModification(dataEntry: DataEntryEntity, modification: Modification, state: DataEntryState) =
-  this.plus(
-    ProtocolElement(
-      dataEntry = dataEntry,
-      time = modification.time.toInstant(),
-      username = modification.username,
-      logMessage = modification.log,
-      logDetails = modification.logNotes,
-      state = state.toState()
-    )
-  )
+fun MutableList<ProtocolElement>.addModification(dataEntry: DataEntryEntity, modification: Modification, state: DataEntryState) =
+  ProtocolElement(
+    dataEntry = dataEntry,
+    time = modification.time.toInstant(),
+    username = modification.username,
+    logMessage = modification.log,
+    logDetails = modification.logNotes,
+    state = state.toState()
+  ).let { protocolElement ->
+    this.apply {
+      if (dataEntry.protocol.none { existing -> existing.same(protocolElement) }) {
+        this.add(protocolElement)
+      }
+    }
+  }

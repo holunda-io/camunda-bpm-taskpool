@@ -39,6 +39,10 @@
     </dependency>
     <dependency>
       <groupId>io.holunda.polyflow</groupId>
+      <artifactId>polyflow-view-jpa</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.holunda.polyflow</groupId>
       <artifactId>polyflow-view-mongo</artifactId>
     </dependency>
 

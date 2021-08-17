@@ -4,6 +4,7 @@ import io.holunda.camunda.taskpool.api.business.AuthorizationChange
 import io.holunda.camunda.taskpool.api.business.DataEntryCreatedEvent
 import io.holunda.camunda.taskpool.api.business.DataEntryUpdatedEvent
 import io.holunda.camunda.taskpool.api.business.dataIdentityString
+import io.holunda.polyflow.view.ProtocolEntry
 import io.holunda.polyflow.view.Task
 import io.holunda.polyflow.view.TaskWithDataEntries
 import io.holunda.polyflow.view.addModification
@@ -28,7 +29,7 @@ fun DataEntryCreatedEvent.toDocument() = DataEntryDocument(
   type = this.type,
   authorizedUsers = AuthorizationChange.applyUserAuthorization(setOf(), this.authorizations),
   authorizedGroups = AuthorizationChange.applyGroupAuthorization(setOf(), this.authorizations),
-  protocol = addModification(listOf(), this.createModification, this.state).map { it.toProtocolElement() },
+  protocol = listOf<ProtocolEntry>().addModification(this.createModification, this.state).map { it.toProtocolElement() },
   createdDate = this.createModification.time.toInstant(),
   lastModifiedDate = this.createModification.time.toInstant(),
   applicationName = this.applicationName,
@@ -52,7 +53,7 @@ fun DataEntryUpdatedEvent.toDocument(oldDocument: DataEntryDocument?) = if (oldD
     authorizedUsers = authorizedUsers,
     authorizedGroups = authorizedGroups,
     authorizedPrincipals = DataEntryDocument.authorizedPrincipals(authorizedUsers, authorizedGroups),
-    protocol = addModification(oldDocument.protocol.map { it.toProtocol() }, this.updateModification, this.state).map { it.toProtocolElement() },
+    protocol = oldDocument.protocol.map { it.toProtocol() }.addModification(this.updateModification, this.state).map { it.toProtocolElement() },
     lastModifiedDate = this.updateModification.time.toInstant(),
     applicationName = this.applicationName,
     state = this.state.state,
@@ -70,7 +71,7 @@ fun DataEntryUpdatedEvent.toDocument(oldDocument: DataEntryDocument?) = if (oldD
     type = this.type,
     authorizedUsers = AuthorizationChange.applyUserAuthorization(setOf(), this.authorizations),
     authorizedGroups = AuthorizationChange.applyGroupAuthorization(setOf(), this.authorizations),
-    protocol = addModification(listOf(), this.updateModification, this.state).map { it.toProtocolElement() },
+    protocol = listOf<ProtocolEntry>().addModification(this.updateModification, this.state).map { it.toProtocolElement() },
     createdDate = this.updateModification.time.toInstant(),
     lastModifiedDate = this.updateModification.time.toInstant(),
     applicationName = this.applicationName,

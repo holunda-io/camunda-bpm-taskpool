@@ -147,10 +147,8 @@ internal class TaskResourceITest {
   @Test
   fun `should undefer task`() {
 
-    val date = Instant.now()
     val taskId = UUID.randomUUID().toString()
     val task = testTask(taskId, assignee = "kermit")
-    val json = objectMapper.writeValueAsString(OffsetDateTime.ofInstant(date, UTC))
 
     whenever(taskServiceGateway.getTask(any())).thenReturn(task)
 

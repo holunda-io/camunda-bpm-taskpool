@@ -2,7 +2,8 @@
 title: Scenario for running on a single node
 ---
 
-This example demonstrates the usage of the Camunda BPM Taskpool deployed in one single node and is built as a SpringBoot application described in the [Deployment](../../indroduction/deployment.md) section.
+This example demonstrates the usage of the Camunda BPM Taskpool deployed in one single node and is built as a SpringBoot application 
+described in the [Deployment](../../introduction/deployment.md) section.
 
 ### System Requirements
 

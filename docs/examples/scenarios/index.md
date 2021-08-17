@@ -12,7 +12,7 @@ events and queries and additional requirements of event-sourced persistence a sp
 command bus, event bus and event store is required. In particular, two scenarios can be distinguished: using Axon Server
 or using a different distribution technology.
 
-The provided [Example application](../example-application/) is implemented several times demonstrating the following usage scenarios:
+The provided [Example application](../example-approval) is implemented several times demonstrating the following usage scenarios:
 
 * [Single Node Scenario](single-node)
 * [Distributed Scenario using Axon Server](distributed-axon-server)
