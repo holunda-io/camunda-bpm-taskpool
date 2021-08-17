@@ -14,13 +14,13 @@ time during the implementation.
 
 These were:
 
-  * coping with performance issues if big amount of tasks is available
-  * creating high-performance custom queries for pre-loading process variables for tasks
-  * creating high-performance custom queries to pre-load business data associated with the process instance
-  * high-performance retrieving a list of tasks from several process engines
-  * repetitive queries with same result
-  * creating an archive view for business data items handled during the process execution
-  * creating an audit log of changes performed on business data items
+* coping with performance issues if big amount of tasks is available
+* creating high-performance custom queries for pre-loading process variables for tasks
+* creating high-performance custom queries to pre-load business data associated with the process instance
+* high-performance retrieving a list of tasks from several process engines
+* repetitive queries with same result
+* creating an archive view for business data items handled during the process execution
+* creating an audit log of changes performed on business data items
 
 ![Polyflow Hero](docs/img/polyflow-hero-530x406.png)
 
@@ -28,14 +28,14 @@ We decided to stop repetitive work and release an open-source library which buil
 
 ### Features
 
-  * User task API providing attributes important for processing
-  * Mirroring tasks: provides a copy of all tasks in the system
-  * Reacts on all task life cycle events fired by the process engine
-  * High performance queries: creates read-optimized projections including task-, process- and business data
-  * Centralized task list: allows collecting tasks from multiple engines
-  * Data enrichment: enrich tasks with business data
-  * Data entries API providing attributes important for processing
-  * Audit-Trail creation on business event emission
+* User task API providing attributes important for processing
+* Mirroring tasks: provides a copy of all tasks in the system
+* Reacts on all task life cycle events fired by the process engine
+* High performance queries: creates read-optimized projections including task-, process- and business data
+* Centralized task list: allows collecting tasks from multiple engines
+* Data enrichment: enrich tasks with business data
+* Data entries API providing attributes important for processing
+* Audit-Trail creation on business event emission
 
 ### Where to start
 
