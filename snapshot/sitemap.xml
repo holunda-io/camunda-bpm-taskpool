@@ -161,7 +161,17 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://www.holunda.io/camunda-bpm-taskpool/snapshot/reference-guide/components/view-api.html</loc>
+         <lastmod>2021-08-17</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://www.holunda.io/camunda-bpm-taskpool/snapshot/reference-guide/components/view-cockpit.html</loc>
+         <lastmod>2021-08-17</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://www.holunda.io/camunda-bpm-taskpool/snapshot/reference-guide/components/view-filtering.html</loc>
          <lastmod>2021-08-17</lastmod>
          <changefreq>daily</changefreq>
     </url>

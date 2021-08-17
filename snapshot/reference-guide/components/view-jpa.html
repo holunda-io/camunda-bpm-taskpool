@@ -740,6 +740,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#logging" class="md-nav__link">
+    Logging
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#tables" class="md-nav__link">
     Tables
   </a>
@@ -790,6 +797,30 @@
     <li class="md-nav__item">
       <a href="view-form-url-resolver.html" class="md-nav__link">
         Form URL Resolver
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="view-api.html" class="md-nav__link">
+        View-API
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="view-filtering.html" class="md-nav__link">
+        View Filtering
       </a>
     </li>
   
@@ -1179,12 +1210,12 @@
                 
                 <h2 id="jpa-view">JPA View<a class="headerlink" href="#jpa-view" title="Permanent link">#</a></h2>
 <h3 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">#</a></h3>
-<p>The JPA View is component responsible for creating read-projections of tasks and business data entries. It implements
-the Taskpool and Datapool View API and persists the projection as document collections in a RDBMS using JPA. It is a useful
-if the JPA persistence is used in the project already.</p>
+<p>The JPA View is component responsible for creating read-projections of tasks and business data entries. It currently implements
+Datapool View API (Taskpool API will follow) and persists the projection as entities and relations in a RDBMS using JPA. It is a useful
+if the JPA persistence is already used in the project setup.</p>
 <h3 id="features">Features<a class="headerlink" href="#features" title="Permanent link">#</a></h3>
 <ul>
-<li>stores representation of enriched tasks, process definitions and business data entries</li>
+<li>stores representation of business data entries</li>
 <li>provides single query API</li>
 </ul>
 <h3 id="configuration-options">Configuration options<a class="headerlink" href="#configuration-options" title="Permanent link">#</a></h3>
@@ -1195,12 +1226,18 @@ if the JPA persistence is used in the project already.</p>
   <span class="nt">&lt;version&gt;</span>${polyflow.version}<span class="nt">&lt;/version&gt;</span>
 <span class="nt">&lt;/dependency&gt;</span>
 </code></pre></div>
-<p>The implementation relies on Spring Data JPA and needs to activate those. </p>
-<p>In addition, configure a a JPA connection to database using <code>application.properties</code> or <code>application.yaml</code>:</p>
+<p>The implementation relies on Spring Data JPA and needs to activate those. 
+In addition, configure a JPA connection to database using <code>application.properties</code> or <code>application.yaml</code>:</p>
 <div class="highlight"><pre><span></span><code>spring:
   data:
     jpa:
 </code></pre></div>
+<p>The JPA view uses a special facility for creating search indexes on unstructured payload. You can provide some
+configuration of this indexing process by the following configuration options:</p>
+<div class="highlight"><pre><span></span><code>polyflow.view.jpa:
+  payload-attribute-level-limit: 2
+</code></pre></div>
+<h3 id="logging">Logging<a class="headerlink" href="#logging" title="Permanent link">#</a></h3>
 <p>The view implementation provides runtime details using standard logging facility. If you
 want to increase the logging level, please setup it e.g. in your <code>application.yaml</code>:</p>
 <div class="highlight"><pre><span></span><code>logging.level.io.holunda.polyflow.view.jpa: DEBUG
@@ -1208,12 +1245,14 @@ want to increase the logging level, please setup it e.g. in your <code>applicati
 <h3 id="tables">Tables<a class="headerlink" href="#tables" title="Permanent link">#</a></h3>
 <p>The JPA View uses several tables to store the results. These are:</p>
 <ul>
-<li>AUTHORIZATION_PRINCIPAL: table for authorization principals (users, groups)</li>
-<li>DATA_ENTRY: table for business data entries</li>
-<li>DATA_ENTRY_AUTHORIZATIONS: table for authorization information of data entries (relation)</li>
-<li>PROTOCOL_ENTRY: table for data entry protocol entry (users, groups)</li>
+<li>PLF_DATA_ENTRY: table for business data entries</li>
+<li>PLF_DATA_ENTRY_AUTHORIZATIONS: table for authorization information of data entries</li>
+<li>PLF_DATA_ENTRY_PAYLOAD_ATTRIBUTES: table for data entry protocol entry (users, groups)</li>
+<li>PLF_DATA_ENTRY_PROTOCOL: table for data entry protocol entry (users, groups)</li>
 <li>TRACKING_TOKEN: table for Axon Tracking Tokens</li>
 </ul>
+<p>IF you are interested in DDLs for the view, feel free to generate one using the following call of Apache Maven <code>mvn clean test -DskipTests -Pgenerate-sql -f view/jpa</code>.
+Currently, DDLs for the databases H2, MSSQL and PostgreSQL are generated.</p>
                 
                   
                     
