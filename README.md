@@ -12,8 +12,6 @@
 In the last five years, we built different process applications on behalf of the customer several times. It turned out that some issues occurred every
 time during the implementation.
 
-![Hero Image](docs/img/polyflow-hero-530x406.png)
-
 These were:
 
   * coping with performance issues if big amount of tasks is available
@@ -23,6 +21,8 @@ These were:
   * repetitive queries with same result
   * creating an archive view for business data items handled during the process execution
   * creating an audit log of changes performed on business data items
+
+![Polyflow Hero](docs/img/polyflow-hero-530x406.png)
 
 We decided to stop repetitive work and release an open-source library which builds a foundation for solving these problems.
 
