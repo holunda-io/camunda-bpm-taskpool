@@ -43,9 +43,12 @@ process application, process platform or even completely separately.
 View Components are responsible for creation of a unified read-only projection of process definitions, process instances, process variables,
 user tasks and business data items. They are typically deployed as a part of the process platform.
 
+* [View API](view-api.md)
 * [In-Memory View](view-simple.md)
+* [JPA View](view-jpa.md)
 * [Mongo DB View](view-mongo.md)
 * [Property Form URL Resolver](view-form-url-resolver.md)
+* [View Filtering](view-filtering.md)
 
 ## Other Components
 

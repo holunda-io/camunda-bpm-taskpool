@@ -7,6 +7,7 @@ import io.holunda.camunda.taskpool.api.business.dataIdentityString
 import io.holunda.camunda.taskpool.api.task.*
 import io.holunda.polyflow.view.Task
 import io.holunda.polyflow.view.TaskWithDataEntries
+import io.holunda.polyflow.view.filter.toCriteria
 import io.holunda.polyflow.view.mongo.data.DataEntryChangeTracker
 import io.holunda.polyflow.view.mongo.data.DataEntryRepository
 import io.holunda.polyflow.view.mongo.data.dataEntry
@@ -43,7 +44,7 @@ import javax.annotation.PreDestroy
 @Component
 @ProcessingGroup(MongoViewService.PROCESSING_GROUP)
 class MongoViewService(
-  private val properties: io.holunda.polyflow.view.mongo.TaskPoolMongoViewProperties,
+  private val properties: TaskPoolMongoViewProperties,
   private val taskRepository: TaskRepository,
   private val dataEntryRepository: DataEntryRepository,
   private val taskWithDataEntriesRepository: TaskWithDataEntriesRepository,
@@ -204,6 +205,9 @@ class MongoViewService(
   override fun query(query: TaskCountByApplicationQuery): CompletableFuture<List<ApplicationWithTaskCount>> =
     taskRepository.findTaskCountsByApplication().collectList().toFuture()
 
+  /**
+   * Delivers task created event.
+   */
   @Suppress("unused")
   @EventHandler
   fun on(event: TaskCreatedEngineEvent, metaData: MetaData) {
@@ -217,6 +221,9 @@ class MongoViewService(
       .block()
   }
 
+  /**
+   * Delivers task assigned event.
+   */
   @Suppress("unused")
   @EventHandler
   fun on(event: TaskAssignedEngineEvent, metaData: MetaData) {
@@ -231,6 +238,9 @@ class MongoViewService(
       .block()
   }
 
+  /**
+   * Delivers task completed event.
+   */
   @Suppress("unused")
   @EventHandler
   fun on(event: TaskCompletedEngineEvent, metaData: MetaData) {
@@ -238,6 +248,9 @@ class MongoViewService(
     deleteTask(event.id, event.sourceReference.applicationName)
   }
 
+  /**
+   * Delivers task deleted event.
+   */
   @Suppress("unused")
   @EventHandler
   fun on(event: TaskDeletedEngineEvent, metaData: MetaData) {
@@ -263,6 +276,9 @@ class MongoViewService(
       .block()
   }
 
+  /**
+   * Delivers task attribute changed event.
+   */
   @Suppress("unused")
   @EventHandler
   fun on(event: TaskAttributeUpdatedEngineEvent, metaData: MetaData) {
@@ -277,6 +293,9 @@ class MongoViewService(
       .block()
   }
 
+  /**
+   * Delivers task group changed event.
+   */
   @Suppress("unused")
   @EventHandler
   fun on(event: TaskCandidateGroupChanged, metaData: MetaData) {
@@ -291,6 +310,9 @@ class MongoViewService(
       .block()
   }
 
+  /**
+   * Delivers task user changed event.
+   */
   @Suppress("unused")
   @EventHandler
   fun on(event: TaskCandidateUserChanged, metaData: MetaData) {
@@ -305,6 +327,9 @@ class MongoViewService(
       .block()
   }
 
+  /**
+   * Delivers data entry created event.
+   */
   @Suppress("unused")
   @EventHandler
   fun on(event: DataEntryCreatedEvent, metaData: MetaData) {
@@ -314,6 +339,9 @@ class MongoViewService(
       .block()
   }
 
+  /**
+   * Delivers data entry updated event.
+   */
   @Suppress("unused")
   @EventHandler
   fun on(event: DataEntryUpdatedEvent, metaData: MetaData) {

@@ -6,7 +6,7 @@
   <parent>
     <groupId>io.holunda.polyflow</groupId>
     <artifactId>polyflow-root</artifactId>
-    <version>3.0.2</version>
+    <version>3.1.0</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
@@ -38,7 +38,7 @@
     <camunda-bpm-assert.version>8.0.0</camunda-bpm-assert.version>
     <camunda-bpm-mockito.version>4.13.0</camunda-bpm-mockito.version>
     <camunda-bpm-data.version>1.2.3</camunda-bpm-data.version>
-    <version.camunda.spin>1.10.1</version.camunda.spin>
+    <version.camunda.spin>1.11.0</version.camunda.spin>
 
     <springboot.version>2.4.5</springboot.version>
 
@@ -188,7 +188,7 @@
           <!-- Open API generator -->
           <groupId>org.openapitools</groupId>
           <artifactId>openapi-generator-maven-plugin</artifactId>
-          <version>5.1.1</version>
+          <version>5.2.1</version>
         </plugin>
 
         <plugin>

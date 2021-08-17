@@ -98,6 +98,7 @@ nav:
     - Concepts: introduction/concepts.md
     - Features: introduction/features.md
     - Solution Architecture: introduction/solution-architecture.md
+    - Deployment Strategies: introduction/deployment.md
   - Getting Started: getting-started/index.md
   - Reference:
     - Reference Overview: reference-guide/index.md
@@ -113,9 +114,12 @@ nav:
       - Datapool Core: reference-guide/components/core-datapool.md
     - View Components:
       - In-Memory View: reference-guide/components/view-simple.md
+      - JPA View: reference-guide/components/view-jpa.md
       - Mongo DB View: reference-guide/components/view-mongo.md
       - Cockpit View: reference-guide/components/view-cockpit.md
       - Form URL Resolver: reference-guide/components/view-form-url-resolver.md
+      - View-API: reference-guide/components/view-api.md
+      - View Filtering: reference-guide/components/view-filtering.md
     - Other Components:
       - Tasklist URL Resolver: reference-guide/components/other-tasklist-url-resolver.md
       - Variable Serializer: reference-guide/components/other-variable-serializer.md

@@ -23,9 +23,9 @@ In order to activate the in-memory implementation, please include the following 
 
 ```xml
 <dependency>
-  <groupId>io.holunda.taskpool</groupId>
-  <artifactId>camunda-bpm-taskpool-view-simple</artifactId>
-  <version>${taskpool.version}</version>
+  <groupId>io.holunda.polyflow</groupId>
+  <artifactId>polyflow-view-simple</artifactId>
+  <version>${polyflow.version}</version>
 </dependency>
 ```
 
@@ -34,7 +34,7 @@ loaded during initialization:
 
 ```java
 @Configuration
-@EnableTaskPoolSimpleView
+@EnablePolyflowSimpleView
 public class MyViewConfiguration {
 
 }
@@ -44,5 +44,5 @@ The view implementation provides runtime details using standard logging facility
 want to increase the logging level, please setup it e.g. in your `application.yaml`:
 
 ```yml
-logging.level.io.holunda.camunda.taskpool.view.simple: DEBUG
+logging.level.io.holunda.polyflow.view.simple: DEBUG
 ```

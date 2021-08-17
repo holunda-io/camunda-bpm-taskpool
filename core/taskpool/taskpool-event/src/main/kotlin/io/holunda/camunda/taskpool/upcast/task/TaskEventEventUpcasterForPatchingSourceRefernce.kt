@@ -5,7 +5,6 @@ import io.holunda.camunda.taskpool.upcast.definition.AnnotationBasedSingleEventU
 import mu.KLogging
 import org.axonframework.serialization.SimpleSerializedType
 import org.axonframework.serialization.upcasting.event.IntermediateEventRepresentation
-import org.dom4j.Attribute
 import org.dom4j.Document
 
 /**
@@ -171,7 +170,8 @@ abstract class AbstractSourceReferenceElementRemovingUpcaster : AnnotationBasedS
   override fun doUpcast(representation: IntermediateEventRepresentation): IntermediateEventRepresentation {
     return representation.upcastPayload(
       SimpleSerializedType(getType(), "4"),
-      Document::class.java) { document ->
+      Document::class.java
+    ) { document ->
       document.apply {
         TAG_NAMES.forEach {
           removeWrongElement(document, it)
@@ -180,6 +180,9 @@ abstract class AbstractSourceReferenceElementRemovingUpcaster : AnnotationBasedS
     }
   }
 
+  /**
+   * Retrieves the type of resulting object.
+   */
   abstract fun getType(): String
 
   private fun removeWrongElement(document: Document, tagName: String) {

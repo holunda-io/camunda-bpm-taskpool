@@ -1,6 +1,7 @@
 package io.holunda.polyflow.view.mongo.task
 
 import io.holunda.polyflow.view.auth.User
+import io.holunda.polyflow.view.filter.Criterion
 import org.springframework.data.domain.Pageable
 import reactor.core.publisher.Flux
 

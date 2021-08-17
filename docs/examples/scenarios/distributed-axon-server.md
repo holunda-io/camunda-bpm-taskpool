@@ -2,41 +2,18 @@
 title: Distributed Scenario using Axon Server
 ---
 
-## Scenario description
+This example is demonstrating the usage of the Camunda BPM Taskpool with components distributed with help of Axon Server.
+It provides two applications for demonstration purposes: the process application and the process platform. Both applications are built as SpringBoot applications.
 
-A distributed scenario is helpful if you intend to build a central process platform and multiple process applications using it.
-
-In general, this is the main use case for taskpool itself, but the distribution aspects adds technical complexity to the resulting
-architecture. Especially, following the architecture blueprint of Axon Framework, the three buses (command bus, event bus and
-query bus) needs to be distributed and act as connecting infrastructure between components.
-
-Axon Server provides an implementation for this requirement leading to a distributed buses and a central event store. It is easy
-to use, easy to configure and easy to run. If you need a HA setup, you will need the enterprise license of Axon Server. Essentially,
-if don't have another HA ready-to use messaging, this scenario might be your way to go.
-
-This scenario supports:
-
--  central process platform components (including task pool and data pool)
--  free choice for projection persistence (can be replayed)
--  no direct communication between process platform and process application is required (e.g. via REST, since it is routed via command bus)
-
-The following configuration is used in the distributes scenario with Axon Server:
+The following configuration is used in the distributed scenario with Axon Server:
 
 * Bus distribution is provided by Axon Server Connector (command bus, event bus, query bus)
 * Axon Server is used as Event Store
 * Postgresql is used as a database for:
-- Camunda BPM Engine
-- Process Application Datasource
+    - Camunda BPM Engine
+    - Process Application Datasource
 * Mongo is used as persistence for projection view (`mongo-view`)
 
-The following diagram depicts the distribution of the components and the messaging:
-
-!["Deployment of taskpool with axon server"](../../img/deployment-axon-server.png)
-
-## Running Example
-
-This example is demonstrating the usage of the Camunda BPM Taskpool with components distributed with help of Axon Server.
-It provides two applications for demonstration purposes: the process application and the process platform. Both applications are built as SpringBoot applications.
 
 ### System Requirements
 

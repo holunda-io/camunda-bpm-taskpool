@@ -8,6 +8,9 @@ import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
 
 
+/**
+ * Configuration of polyflow data pool core.
+ */
 @Configuration
 @ComponentScan
 class DataPoolCoreConfiguration {

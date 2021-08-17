@@ -24,9 +24,9 @@ In order to activate the Mongo implementation, please include the following depe
 
 ```xml
 <dependency>
-  <groupId>io.holunda.taskpool</groupId>
-  <artifactId>camunda-bpm-taskpool-view-mongo</artifactId>
-  <version>${taskpool.version}</version>
+  <groupId>io.holunda.polyflow</groupId>
+  <artifactId>polyflow-view-mongo</artifactId>
+  <version>${polyflow.version}</version>
 </dependency>
 ```
 
@@ -35,7 +35,7 @@ the following annotation to any class marked as Spring Configuration loaded duri
 
 ```java
 @Configuration
-@EnableTaskPoolMongoView
+@EnablePolyflowMongoView
 @Import({
     org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration.class,
     org.springframework.boot.autoconfigure.mongo.MongoReactiveAutoConfiguration.class,
@@ -64,7 +64,7 @@ want to increase the logging level, please setup it e.g. in your `application.ya
 
 
 ```yml
-logging.level.io.holunda.camunda.taskpool.view.mongo: DEBUG
+logging.level.io.holunda.polyflow.view.mongo: DEBUG
 ```
 
 

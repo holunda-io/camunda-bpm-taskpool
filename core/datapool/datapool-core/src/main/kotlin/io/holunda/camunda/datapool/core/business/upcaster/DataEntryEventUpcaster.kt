@@ -8,7 +8,9 @@ import org.dom4j.Document
 import org.dom4j.DocumentHelper
 import org.springframework.stereotype.Component
 
-
+/**
+ * Upcaster adding attributes applicationName, type and name to the event as specified in revision 2.
+ */
 @Component
 class DataEntryCreatedEventUpcaster : SingleEventUpcaster() {
 

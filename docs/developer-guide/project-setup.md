@@ -47,8 +47,8 @@ automatically.
 
 ### Skip Frontend
 
-TIP: Components for production use of camunda-bpm-taskpool are backend components only. Frontend components are only
-created for examples and demonstration purpose.
+!!! note
+    Components for production use of camunda-bpm-taskpool are backend components only. Frontend components are only created for examples and demonstration purpose.
 
 If you are interested in backend only, specify the `-DskipFrontend` switch. This will accelerate the build
 significantly.
@@ -64,7 +64,8 @@ For doing so, you can re-generate the scripts running:
 ./mvnw -Pgenerate-sql
 ```
 
-NOTE: The existing scripts must not be replaced or changed, but new additional scripts needs to added.
+!!! warning
+    The existing scripts must not be replaced or changed, but new additional scripts needs to added.
 
 ### Build Documentation
 
@@ -83,10 +84,10 @@ For creation of documentation, please run:
 mkdocs build
 ```
 
-The docs are generated into `site` directory. 
+The docs are generated into `site` directory.
 
-!!!note If you want to develop your docs in 'live' mode, run `mkdocs serve` and access
-the [http://localhost:8000/](http://localhost:8000/) from your browser.
+!!! note
+    If you want to develop your docs in 'live' mode, run `mkdocs serve` and access the [http://localhost:8000/](http://localhost:8000/) from your browser.
 
 ### Examples
 
@@ -100,7 +101,8 @@ line or disable the `examples` module in your IDE.
 
 ## Local Start
 
-!!!important If you want to run examples locally, you will need `docker` and `docker-compose`.
+!!! important
+    If you want to run examples locally, you will need `docker` and `docker-compose`.
 
 ### Pre-requirements
 
@@ -164,13 +166,10 @@ inside the corresponding `pom.xml`. Currently, all examples are _EXCLUDED_ from 
 
 ### Trigger new release
 
-WARNING: This operation requires special permissions.
+!!! warning
+    This operation requires special permissions.
 
-We use gitflow for development (see [A successful git branching model](http://nvie.com/posts/a-successful-git-branching-model/)
-for more details). You could use gitflow with native git commands, but then you would have
-to change the versions in the poms manually. Therefore, we use the
-[mvn gitflow plugin](https://github.com/aleksandr-m/gitflow-maven-plugin/), which handles this and other
-things nicely.
+We use gitflow for development (see [A successful git branching model](http://nvie.com/posts/a-successful-git-branching-model/) for more details). You could use gitflow with native git commands, but then you would have to change the versions in the poms manually. Therefore, we use the [mvn gitflow plugin](https://github.com/aleksandr-m/gitflow-maven-plugin/), which handles this and other things nicely.
 
 You can build a release with:
 
@@ -184,7 +183,8 @@ and update the `develop` branch for the new development version.
 
 ### Trigger a deploy
 
-!!! warning  This operation requires special permissions.
+!!! warning
+    This operation requires special permissions.
 
 Currently, CI allows for deployment of artifacts to Maven Central and is executed using github actions.
 This means, that a push to `master` branch will start the corresponding build job, and if successful the
@@ -192,7 +192,8 @@ artifacts will get into `Staging Repositories` of OSS Sonatype without manual in
 
 ### Run deploy from local machine
 
-WARNING: This operation requires special permissions.
+!!! warning
+    This operation requires special permissions.
 
 If you still want to execute the deployment from your local machine, you need to have GPG keys at place and
 to execute the following command on the `master` branch:
@@ -205,7 +206,8 @@ export GPG_PASSPHRASE="<secret>"
 
 ### Release to public repositories
 
-WARNING: This operation requires special permissions.
+!!! warning
+     This operation requires special permissions.
 
 The deploy job will publish the artifacts to Nexus OSS staging repositories. Don't forget to close and release the
 repository to enable it's sync with Maven Central.

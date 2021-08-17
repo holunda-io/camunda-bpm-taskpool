@@ -12,7 +12,7 @@ class SimpleServiceViewProcessingGroup(
 
 
   companion object : KLogging() {
-    const val PROCESSING_GROUP = "io.holunda.camunda.taskpool.view.simple.service"
+    const val PROCESSING_GROUP = "io.holunda.polyflow.view.simple"
   }
 
   /**

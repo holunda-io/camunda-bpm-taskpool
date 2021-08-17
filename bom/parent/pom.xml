@@ -6,7 +6,7 @@
   <parent>
     <groupId>io.holunda.polyflow</groupId>
     <artifactId>polyflow-root</artifactId>
-    <version>3.0.2</version>
+    <version>3.1.0</version>
     <relativePath>../../pom.xml</relativePath>
   </parent>
 
@@ -21,7 +21,7 @@
     <springboot.version>2.4.5</springboot.version>
     <camunda-commons-typed-values.version>7.15.0</camunda-commons-typed-values.version>
 
-    <axon.version>4.5.2</axon.version>
+    <axon.version>4.5.3</axon.version>
     <axon-kotlin.version>0.1.0</axon-kotlin.version>
     <axon-gateway-extension.version>0.0.4</axon-gateway-extension.version>
 
@@ -116,6 +116,12 @@
         <artifactId>polyflow-view-api</artifactId>
         <version>${project.version}</version>
       </dependency>
+      <dependency>
+        <groupId>io.holunda.polyflow</groupId>
+        <artifactId>polyflow-view-filtering</artifactId>
+        <version>3.1.0</version>
+      </dependency>
+
       <dependency>
         <groupId>io.holunda.polyflow</groupId>
         <artifactId>polyflow-view-simple</artifactId>
@@ -471,6 +477,9 @@
           <groupId>org.jetbrains.kotlin</groupId>
           <version>${kotlin.version}</version>
           <configuration>
+            <args>
+              <arg>-Xjsr305=strict</arg>
+            </args>
             <compilerPlugins>
               <plugin>spring</plugin>
               <plugin>jpa</plugin>
@@ -598,7 +607,7 @@
         <plugin>
           <groupId>org.jetbrains.dokka</groupId>
           <artifactId>dokka-maven-plugin</artifactId>
-          <version>1.4.32</version>
+          <version>1.5.0</version>
           <executions>
             <execution>
               <id>attach-javadocs</id>
@@ -623,7 +632,7 @@
               </goals>
               <configuration>
                 <sources>
-                  <source>${project.basedir}/src/main/kotlin</source>
+                  <source>src/main/kotlin</source>
                 </sources>
               </configuration>
             </execution>

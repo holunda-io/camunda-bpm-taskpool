@@ -6,7 +6,7 @@
   <parent>
     <groupId>io.holunda.polyflow</groupId>
     <artifactId>polyflow-example-scenario-distributed-axon-server</artifactId>
-    <version>3.0.2</version>
+    <version>3.1.0</version>
   </parent>
 
   <artifactId>example-distributed-axon-server-taskpool-application</artifactId>
@@ -36,6 +36,10 @@
     <dependency>
       <groupId>io.holunda.polyflow</groupId>
       <artifactId>polyflow-view-simple</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.holunda.polyflow</groupId>
+      <artifactId>polyflow-view-jpa</artifactId>
     </dependency>
     <dependency>
       <groupId>io.holunda.polyflow</groupId>
