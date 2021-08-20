@@ -188,7 +188,7 @@
               <dependency>
                 <groupId>com.microsoft.sqlserver</groupId>
                 <artifactId>mssql-jdbc</artifactId>
-                <version>9.2.1.jre11</version>
+                <version>9.4.0.jre11</version>
               </dependency>
               <dependency>
                 <groupId>org.postgresql</groupId>
