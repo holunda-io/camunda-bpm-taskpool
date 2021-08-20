@@ -66,6 +66,7 @@ class PropertiesProjectorTest {
 
       mutableMapOf(
         Payload::class to { map, key, value ->
+          @Suppress("UNCHECKED_CAST")
           when (val originalValue = map[key]) {
             is MutableMap<*, *> -> originalValue.putAll(value as Map<Nothing, Nothing>)
             else -> map[key] = value

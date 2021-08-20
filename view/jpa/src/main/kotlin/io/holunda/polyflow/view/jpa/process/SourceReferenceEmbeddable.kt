@@ -8,28 +8,30 @@ import javax.persistence.Embeddable
  * Represents process source.
  */
 @Embeddable
-class ProcessSourceReferenceEmbeddable(
-  @Column(name = "PROC_INSTANCE_ID", nullable = false)
+class SourceReferenceEmbeddable(
+  @Column(name = "SOURCE_INSTANCE_ID", nullable = false)
   var instanceId: String,
-  @Column(name = "PROC_EXECUTION_ID", nullable = false)
+  @Column(name = "SOURCE_EXECUTION_ID", nullable = false)
   var executionId: String,
-  @Column(name = "PROC_DEF_ID", nullable = false)
+  @Column(name = "SOURCE_DEF_ID", nullable = false)
   var definitionId: String,
-  @Column(name = "PROC_DEF_KEY", nullable = false)
+  @Column(name = "SOURCE_DEF_KEY", nullable = false)
   var definitionKey: String,
-  @Column(name = "PROC_NAME", nullable = false)
+  @Column(name = "SOURCE_NAME", nullable = false)
   var name: String,
   @Column(name = "APPLICATION_NAME", nullable = false)
   var applicationName: String,
-  @Column(name = "TENANT_ID", nullable = true)
-  var tenantId: String? = null
+  @Column(name = "SOURCE_TENANT_ID", nullable = true)
+  var tenantId: String? = null,
+  @Column(name = "SOURCE_TYPE", nullable = false)
+  var sourceType: String
 ) : Serializable {
 
   override fun equals(other: Any?): Boolean {
     if (this === other) return true
     if (javaClass != other?.javaClass) return false
 
-    other as ProcessSourceReferenceEmbeddable
+    other as SourceReferenceEmbeddable
 
     if (instanceId != other.instanceId) return false
     if (executionId != other.executionId) return false

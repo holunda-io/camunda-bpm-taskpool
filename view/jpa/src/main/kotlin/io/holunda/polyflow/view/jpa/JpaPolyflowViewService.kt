@@ -11,9 +11,10 @@ import io.holunda.polyflow.view.ProcessDefinition
 import io.holunda.polyflow.view.filter.Criterion
 import io.holunda.polyflow.view.filter.toCriteria
 import io.holunda.polyflow.view.jpa.JpaPolyflowViewService.Companion.PROCESSING_GROUP
+import io.holunda.polyflow.view.jpa.auth.AuthorizationPrincipal
 import io.holunda.polyflow.view.jpa.data.*
-import io.holunda.polyflow.view.jpa.data.AuthorizationPrincipal.Companion.group
-import io.holunda.polyflow.view.jpa.data.AuthorizationPrincipal.Companion.user
+import io.holunda.polyflow.view.jpa.auth.AuthorizationPrincipal.Companion.group
+import io.holunda.polyflow.view.jpa.auth.AuthorizationPrincipal.Companion.user
 import io.holunda.polyflow.view.jpa.data.DataEntryRepository.Companion.isAuthorizedFor
 import io.holunda.polyflow.view.jpa.process.*
 import io.holunda.polyflow.view.jpa.process.ProcessDefinitionRepository.Companion.isStarterAuthorizedFor

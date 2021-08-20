@@ -8,10 +8,12 @@ import io.holunda.camunda.variable.serializer.toPayloadJson
 import io.holunda.camunda.variable.serializer.toPayloadVariableMap
 import io.holunda.polyflow.view.DataEntry
 import io.holunda.polyflow.view.ProtocolEntry
-import io.holunda.polyflow.view.jpa.data.AuthorizationPrincipal.Companion.group
-import io.holunda.polyflow.view.jpa.data.AuthorizationPrincipal.Companion.user
-import io.holunda.polyflow.view.jpa.data.AuthorizationPrincipalType.GROUP
-import io.holunda.polyflow.view.jpa.data.AuthorizationPrincipalType.USER
+import io.holunda.polyflow.view.jpa.auth.AuthorizationPrincipal
+import io.holunda.polyflow.view.jpa.auth.AuthorizationPrincipal.Companion.group
+import io.holunda.polyflow.view.jpa.auth.AuthorizationPrincipal.Companion.user
+import io.holunda.polyflow.view.jpa.auth.AuthorizationPrincipalType.GROUP
+import io.holunda.polyflow.view.jpa.auth.AuthorizationPrincipalType.USER
+import io.holunda.polyflow.view.jpa.payload.PayloadAttribute
 
 /**
  * Converts the entity into API type.

@@ -3,12 +3,10 @@ package io.holunda.polyflow.view.jpa.data
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.holunda.camunda.taskpool.api.business.ProcessingType
 import io.holunda.camunda.variable.serializer.toJsonPathsWithValues
-import io.holunda.polyflow.view.jpa.data.AuthorizationPrincipal.Companion.group
-import io.holunda.polyflow.view.jpa.data.AuthorizationPrincipal.Companion.user
+import io.holunda.polyflow.view.jpa.auth.AuthorizationPrincipal.Companion.group
+import io.holunda.polyflow.view.jpa.auth.AuthorizationPrincipal.Companion.user
 import io.holunda.polyflow.view.jpa.data.DataEntryRepository.Companion.hasPayloadAttribute
-import io.holunda.polyflow.view.jpa.data.DataEntryRepository.Companion.hasProcessingType
-import io.holunda.polyflow.view.jpa.data.DataEntryRepository.Companion.hasState
-import io.holunda.polyflow.view.jpa.data.DataEntryRepository.Companion.isAuthorizedFor
+import io.holunda.polyflow.view.jpa.payload.PayloadAttribute
 import org.assertj.core.api.Assertions.assertThat
 import org.camunda.bpm.engine.variable.Variables.createVariables
 import org.junit.After

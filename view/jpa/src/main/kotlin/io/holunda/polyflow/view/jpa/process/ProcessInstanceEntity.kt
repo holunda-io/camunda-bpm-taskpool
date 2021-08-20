@@ -24,7 +24,8 @@ class ProcessInstanceEntity(
   var deleteReason: String?,
   @Column(name = "START_USER_ID", nullable = true)
   var startUserId: String?,
-  var sourceReference: ProcessSourceReferenceEmbeddable,
+  @Embedded
+  var sourceReference: SourceReferenceEmbeddable,
   @Column(name = "RUN_STATE", nullable = false)
   @Enumerated(EnumType.STRING)
   var state: ProcessInstanceState

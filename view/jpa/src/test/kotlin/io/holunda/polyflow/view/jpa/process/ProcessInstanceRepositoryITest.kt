@@ -20,7 +20,6 @@ import javax.persistence.EntityManager
 class ProcessInstanceRepositoryITest {
   @Autowired
   lateinit var entityManager: EntityManager
-
   @Autowired
   lateinit var processInstanceRepository: ProcessInstanceRepository
 
@@ -37,14 +36,15 @@ class ProcessInstanceRepositoryITest {
       superInstanceId = null,
       startActivityId = "start",
       startUserId = "kermit",
-      sourceReference = ProcessSourceReferenceEmbeddable(
+      sourceReference = SourceReferenceEmbeddable(
         instanceId = id,
         executionId = UUID.randomUUID().toString(),
         definitionId = "my-process-def-key:13",
         definitionKey = "my-process-def-key",
         name = "My process",
         applicationName = "test-application",
-        tenantId = null
+        tenantId = null,
+        sourceType = "PROCESS"
       ),
       state = ProcessInstanceState.RUNNING,
       deleteReason = null,

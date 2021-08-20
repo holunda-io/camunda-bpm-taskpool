@@ -1,6 +1,6 @@
 package io.holunda.polyflow.view.jpa.process
 
-import io.holunda.polyflow.view.jpa.data.AuthorizationPrincipal.Companion.group
+import io.holunda.polyflow.view.jpa.auth.AuthorizationPrincipal.Companion.group
 import io.holunda.polyflow.view.jpa.process.ProcessDefinitionRepository.Companion.isStarterAuthorizedFor
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.After

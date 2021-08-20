@@ -1,6 +1,6 @@
 package io.holunda.polyflow.view.jpa.process
 
-import io.holunda.polyflow.view.jpa.data.AuthorizationPrincipal
+import io.holunda.polyflow.view.jpa.auth.AuthorizationPrincipal
 import io.holunda.polyflow.view.jpa.data.composeOr
 import org.springframework.data.jpa.domain.Specification
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor
