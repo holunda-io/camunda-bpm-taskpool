@@ -5,6 +5,9 @@ import io.holixon.axon.gateway.query.QueryResponseMessageResponseType
 import io.holixon.axon.gateway.query.RevisionValue
 import io.holunda.camunda.taskpool.api.business.DataEntryCreatedEvent
 import io.holunda.camunda.taskpool.api.business.DataEntryUpdatedEvent
+import io.holunda.camunda.taskpool.api.process.definition.ProcessDefinitionRegisteredEvent
+import io.holunda.camunda.taskpool.api.process.instance.*
+import io.holunda.polyflow.view.ProcessDefinition
 import io.holunda.polyflow.view.filter.Criterion
 import io.holunda.polyflow.view.filter.toCriteria
 import io.holunda.polyflow.view.jpa.JpaPolyflowViewService.Companion.PROCESSING_GROUP
@@ -12,8 +15,12 @@ import io.holunda.polyflow.view.jpa.data.*
 import io.holunda.polyflow.view.jpa.data.AuthorizationPrincipal.Companion.group
 import io.holunda.polyflow.view.jpa.data.AuthorizationPrincipal.Companion.user
 import io.holunda.polyflow.view.jpa.data.DataEntryRepository.Companion.isAuthorizedFor
+import io.holunda.polyflow.view.jpa.process.*
+import io.holunda.polyflow.view.jpa.process.ProcessDefinitionRepository.Companion.isStarterAuthorizedFor
+import io.holunda.polyflow.view.jpa.process.ProcessInstanceRepository.Companion.hasStates
 import io.holunda.polyflow.view.query.PageableSortableQuery
 import io.holunda.polyflow.view.query.data.*
+import io.holunda.polyflow.view.query.process.*
 import mu.KLogging
 import org.axonframework.config.ProcessingGroup
 import org.axonframework.eventhandling.EventHandler
@@ -31,10 +38,12 @@ import org.springframework.stereotype.Component
 @ProcessingGroup(PROCESSING_GROUP)
 class JpaPolyflowViewService(
   val dataEntryRepository: DataEntryRepository,
+  val processInstanceRepository: ProcessInstanceRepository,
+  val processDefinitionRepository: ProcessDefinitionRepository,
   val objectMapper: ObjectMapper,
   val queryUpdateEmitter: QueryUpdateEmitter,
   val polyflowJpaViewProperties: PolyflowJpaViewProperties
-) : DataEntryApi {
+) : DataEntryApi, ProcessInstanceApi, ProcessDefinitionApi {
 
   companion object : KLogging() {
     const val PROCESSING_GROUP = "io.holunda.polyflow.view.jpa.service"
@@ -46,7 +55,7 @@ class JpaPolyflowViewService(
     require(entryId != null) { "Entry id must be set on query by id" }
 
     val elements = dataEntryRepository.findAllById(listOf(DataEntryId(entryId = entryId, entryType = query.entryType)))
-    return constructResponse(elements, query)
+    return constructDataEntryResponse(elements, query)
   }
 
   @QueryHandler
@@ -62,7 +71,7 @@ class JpaPolyflowViewService(
       dataEntryRepository.findAll(isAuthorizedFor(authorizedPrincipals))
     }
 
-    return constructResponse(elements, query)
+    return constructDataEntryResponse(elements, query)
   }
 
   @QueryHandler
@@ -76,25 +85,21 @@ class JpaPolyflowViewService(
       dataEntryRepository.findAll()
     }
 
-    return constructResponse(elements, query)
+    return constructDataEntryResponse(elements, query)
   }
 
-  /**
-   * Constructs response message slicing it.
-   */
-  private fun constructResponse(
-    elements: Iterable<DataEntryEntity>,
-    query: PageableSortableQuery
-  ): QueryResponseMessage<DataEntriesQueryResult> {
+  @QueryHandler
+  override fun query(query: ProcessDefinitionsStartableByUserQuery): List<ProcessDefinition> {
+    val authorizedPrincipals: Set<AuthorizationPrincipal> = setOf(user(query.user.username)).plus(query.user.groups.map { group(it) })
+    return processDefinitionRepository.findAll(isStarterAuthorizedFor(authorizedPrincipals)).map { it.toProcessDefinition() }
+  }
 
-    val payload = DataEntriesQueryResult(elements = elements.map { it.toDataEntry(objectMapper) }).slice(query = query)
-
+  @QueryHandler
+  override fun query(query: ProcessInstancesByStateQuery): QueryResponseMessage<ProcessInstanceQueryResult> {
     return QueryResponseMessageResponseType.asQueryResponseMessage(
-      payload = payload,
-      metaData = getMaxRevision(elements.filter { dataEntryEntity ->
-        payload.elements.map { dataEntry -> dataEntry.entryType to dataEntry.entryId }
-          .contains(dataEntryEntity.dataEntryId.entryType to dataEntryEntity.dataEntryId.entryId)
-      }.map { it.revision }).toMetaData()
+      payload = ProcessInstanceQueryResult(
+        elements = processInstanceRepository.findAll(hasStates(query.states)).map { it.toProcessInstance() }
+      )
     )
   }
 
@@ -121,7 +126,7 @@ class JpaPolyflowViewService(
     } else {
       savedEntity
     }
-    updateDataEntryQuery(entity = entity)
+    queryUpdateEmitter.updateDataEntryQuery(entity = entity, objectMapper = objectMapper)
   }
 
 
@@ -149,46 +154,106 @@ class JpaPolyflowViewService(
     } else {
       savedEntity
     }
-    updateDataEntryQuery(entity = entity)
+    queryUpdateEmitter.updateDataEntryQuery(entity = entity, objectMapper = objectMapper)
   }
+
+  /**
+   * Registers a new process definition.
+   */
+  @Suppress("unused")
+  @EventHandler
+  fun on(event: ProcessDefinitionRegisteredEvent) {
+    val entity = processDefinitionRepository.save(
+      event.toEntity()
+    )
+    queryUpdateEmitter.updateProcessDefinitionQuery(entity = entity)
+  }
+
+  /**
+   * New instance started.
+   */
+  @Suppress("unused")
+  @EventHandler
+  fun on(event: ProcessInstanceStartedEvent) {
+    val entity = processInstanceRepository.save(
+      event.toEntity()
+    )
+    queryUpdateEmitter.updateProcessInstanceQuery(entity = entity)
+  }
+  /**
+   * Instance cancelled.
+   */
+  @Suppress("unused")
+  @EventHandler
+  fun on(event: ProcessInstanceCancelledEvent) {
+    processInstanceRepository.findById(event.processInstanceId).ifPresent {
+      val entity = processInstanceRepository.save(
+        it.cancelInstance(event)
+      )
+      queryUpdateEmitter.updateProcessInstanceQuery(entity = entity)
+    }
+  }
+  /**
+   * Instance suspended.
+   */
+  @Suppress("unused")
+  @EventHandler
+  fun on(event: ProcessInstanceSuspendedEvent) {
+    processInstanceRepository.findById(event.processInstanceId).ifPresent {
+      val entity = processInstanceRepository.save(
+        it.suspendInstance()
+      )
+      queryUpdateEmitter.updateProcessInstanceQuery(entity = entity)
+    }
+  }
+  /**
+   * Instance resumed.
+   */
+  @Suppress("unused")
+  @EventHandler
+  fun on(event: ProcessInstanceResumedEvent) {
+    processInstanceRepository.findById(event.processInstanceId).ifPresent {
+      val entity = processInstanceRepository.save(
+        it.resumeInstance()
+      )
+      queryUpdateEmitter.updateProcessInstanceQuery(entity = entity)
+    }
+  }
+  /**
+   * Instance ended.
+   */
+  @Suppress("unused")
+  @EventHandler
+  fun on(event: ProcessInstanceEndedEvent) {
+    processInstanceRepository.findById(event.processInstanceId).ifPresent {
+      val entity = processInstanceRepository.save(
+        it.finishInstance(event)
+      )
+      queryUpdateEmitter.updateProcessInstanceQuery(entity = entity)
+    }
+  }
+
+  /**
+   * Constructs response message slicing it.
+   */
+  private fun constructDataEntryResponse(
+    elements: Iterable<DataEntryEntity>,
+    query: PageableSortableQuery
+  ): QueryResponseMessage<DataEntriesQueryResult> {
+
+    val payload = DataEntriesQueryResult(elements = elements.map { it.toDataEntry(objectMapper) }).slice(query = query)
+
+    return QueryResponseMessageResponseType.asQueryResponseMessage(
+      payload = payload,
+      metaData = getMaxRevision(elements.filter { dataEntryEntity ->
+        payload.elements.map { dataEntry -> dataEntry.entryType to dataEntry.entryId }
+          .contains(dataEntryEntity.dataEntryId.entryType to dataEntryEntity.dataEntryId.entryId)
+      }.map { it.revision }).toMetaData()
+    )
+  }
+
 
   private fun getMaxRevision(elementRevisions: List<Long>): RevisionValue =
     elementRevisions.maxByOrNull { it }?.let { RevisionValue(it) } ?: RevisionValue.NO_REVISION
 
-  /**
-   * Updates query for provided data entry identity.
-   * @param entity entity to notify about.
-   */
-  private fun updateDataEntryQuery(entity: DataEntryEntity) {
-
-    val entry = entity.toDataEntry(objectMapper)
-    val revisionValue = RevisionValue(revision = entity.revision)
-
-    logger.debug { "JPA-VIEW-43: Updating query with new element ${entry.identity} with revision $revisionValue" }
-
-    queryUpdateEmitter.emit(
-      DataEntriesForUserQuery::class.java,
-      { query -> query.applyFilter(entry) },
-      QueryResponseMessageResponseType.asSubscriptionUpdateMessage(
-        payload = DataEntriesQueryResult(elements = listOf(entry)),
-        metaData = revisionValue.toMetaData()
-      )
-    )
-    queryUpdateEmitter.emit(
-      DataEntryForIdentityQuery::class.java,
-      { query -> query.applyFilter(entry) },
-      QueryResponseMessageResponseType.asSubscriptionUpdateMessage(
-        payload = DataEntriesQueryResult(elements = listOf(entry)),
-        metaData = revisionValue.toMetaData()
-      )
-    )
-    queryUpdateEmitter.emit(
-      DataEntriesQuery::class.java,
-      { query -> query.applyFilter(entry) },
-      QueryResponseMessageResponseType.asSubscriptionUpdateMessage(
-        payload = DataEntriesQueryResult(elements = listOf(entry)),
-        metaData = revisionValue.toMetaData()
-      )
-    )
-  }
 }

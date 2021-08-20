@@ -68,7 +68,7 @@ internal fun Criterion.PayloadEntryCriterion.toSpecification(): Specification<Da
 /**
  * Compose multiple specifications into one specification using conjunction.
  */
-internal fun composeAnd(specifications: List<Specification<DataEntryEntity>?>): Specification<DataEntryEntity>? {
+internal fun <T> composeAnd(specifications: List<Specification<T>?>): Specification<T>? {
   return when (specifications.size) {
     0 -> null
     1 -> specifications[0]
@@ -79,7 +79,7 @@ internal fun composeAnd(specifications: List<Specification<DataEntryEntity>?>): 
 /**
  * Compose multiple specifications into one specification using disjunction.
  */
-internal fun composeOr(specifications: List<Specification<DataEntryEntity>?>): Specification<DataEntryEntity>? {
+internal fun <T> composeOr(specifications: List<Specification<T>?>): Specification<T>? {
   return when (specifications.size) {
     0 -> null
     1 -> specifications[0]
