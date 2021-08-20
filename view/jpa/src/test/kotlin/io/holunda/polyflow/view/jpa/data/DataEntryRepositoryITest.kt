@@ -135,7 +135,7 @@ internal class DataEntryRepositoryITest {
   }
 
   @After
-  fun `remove principals`() {
+  fun `remove all stuff`() {
     dataEntryRepository.deleteAll()
     entityManager.flush()
   }

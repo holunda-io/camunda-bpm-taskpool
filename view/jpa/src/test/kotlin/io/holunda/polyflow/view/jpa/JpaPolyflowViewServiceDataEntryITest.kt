@@ -36,7 +36,7 @@ import java.util.*
 @RunWith(SpringRunner::class)
 @SpringBootTest
 @ActiveProfiles("itest")
-internal class JpaPolyflowViewServiceITest {
+internal class JpaPolyflowViewServiceDataEntryITest {
 
   @MockBean
   lateinit var queryUpdateEmitter: QueryUpdateEmitter
@@ -192,7 +192,6 @@ internal class JpaPolyflowViewServiceITest {
       )
     )
   }
-
 
   internal fun assertResultIsTestEntry1(result: QueryResponseMessage<DataEntriesQueryResult>) {
     assertThat(result.payload.elements.size).isEqualTo(1)
