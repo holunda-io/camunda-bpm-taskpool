@@ -4,6 +4,9 @@ import java.io.Serializable
 import javax.persistence.Column
 import javax.persistence.Embeddable
 
+/**
+ * Represents process source.
+ */
 @Embeddable
 class ProcessSourceReferenceEmbeddable(
   @Column(name = "PROC_INSTANCE_ID", nullable = false)
