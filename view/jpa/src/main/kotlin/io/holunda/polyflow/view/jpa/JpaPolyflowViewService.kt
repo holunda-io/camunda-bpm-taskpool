@@ -116,7 +116,8 @@ class JpaPolyflowViewService(
         event.toEntity(
           objectMapper = objectMapper,
           revisionValue = RevisionValue.fromMetaData(metaData),
-          limit = polyflowJpaViewProperties.payloadAttributeLevelLimit
+          limit = polyflowJpaViewProperties.payloadAttributeLevelLimit,
+          filters = polyflowJpaViewProperties.dataEntryJsonPathFilters()
         )
       ).apply {
         logger.debug { "JPA-VIEW-41: Business data entry created $event." }
@@ -140,7 +141,8 @@ class JpaPolyflowViewService(
           objectMapper = objectMapper,
           revisionValue = RevisionValue.fromMetaData(metaData),
           oldEntry = savedEntity,
-          limit = polyflowJpaViewProperties.payloadAttributeLevelLimit
+          limit = polyflowJpaViewProperties.payloadAttributeLevelLimit,
+          filters = polyflowJpaViewProperties.dataEntryJsonPathFilters()
         )
       ).apply {
         logger.debug { "JPA-VIEW-42: Business data entry updated $event" }

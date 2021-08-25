@@ -42,7 +42,8 @@ import javax.transaction.Transactional
   classes = [TestApplication::class],
   properties = [
     "axon-gateway.query.type=revision-aware",
-    "axon-gateway.query.revision-aware.default-query-timeout=10"
+    "axon-gateway.query.revision-aware.default-query-timeout=10",
+    "polyflow.view.jpa.data-entry-filters.exclude=secret"
   ]
 )
 @Transactional
@@ -53,6 +54,9 @@ internal class JpaPolyflowViewServiceDataEntryRevisionSupportITest {
   companion object : KLogging()
 
   lateinit var executorService: ExecutorService
+
+  @Autowired
+  lateinit var polyflowJpaViewProperties: PolyflowJpaViewProperties
 
   @Autowired
   lateinit var dbCleaner: DbCleaner
@@ -71,6 +75,7 @@ internal class JpaPolyflowViewServiceDataEntryRevisionSupportITest {
   private val payload = mapOf(
     "key" to "value",
     "key-int" to 1,
+    "secret" to "very-secret",
     "complex" to Pojo(
       attribute1 = "value",
       attribute2 = Date.from(now)
@@ -150,11 +155,12 @@ internal class JpaPolyflowViewServiceDataEntryRevisionSupportITest {
     val result = queryResult.get()
     assertThat(result).isNotEmpty
     assertThat(result[0].name).isEqualTo("Test Entry 3")
+    assertThat(result[0].payload).containsOnlyKeys("key", "key-int", "complex")
 
   }
 
   @Test
-  fun `should not find the entry filter`() {
+  fun `should not find the entry filtered by the gateway`() {
 
     val user = User("kermit", setOf("muppets"))
     val filters = listOf("key-int=1")
@@ -180,7 +186,35 @@ internal class JpaPolyflowViewServiceDataEntryRevisionSupportITest {
 
     val result = queryResult.get()
     assertThat(result).isEmpty()
+  }
 
+  @Test
+  fun `should not find the entry becasue of the path filter exclude`() {
+
+    val user = User("kermit", setOf("muppets"))
+    val filters = listOf("secret=very-secret")
+    val query = DataEntriesForUserQuery(user = user, filters = filters)
+    val revisionValue = RevisionValue(revision = 1)
+
+    val subscription = queryGateway.query(
+      GenericMessage.asMessage(query).andMetaData(revisionValue.toMetaData()),
+      QueryResponseMessageResponseType.queryResponseMessageResponseType<DataEntriesQueryResult>()
+    )
+
+    // subscription in one thread
+    val queryResult = executorService.submit(Callable {
+      subscription.handle { dataEntriesQueryResult, throwable ->
+        if (throwable == null) {
+          dataEntriesQueryResult.elements
+        } else {
+          logger.warn { "Requested entries for user $user with filter $filters and rev. $revisionValue were not found" }
+          emptyList()
+        }
+      }.join()
+    })
+
+    val result = queryResult.get()
+    assertThat(result).isEmpty()
   }
 
 
