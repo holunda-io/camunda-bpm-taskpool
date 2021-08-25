@@ -4,6 +4,8 @@ import io.holunda.polyflow.view.jpa.auth.AuthorizationPrincipal.Companion.group
 import io.holunda.polyflow.view.jpa.auth.AuthorizationPrincipal.Companion.user
 import io.holunda.polyflow.view.jpa.data.DataEntryId
 import io.holunda.polyflow.view.jpa.emptyTask
+import io.holunda.polyflow.view.jpa.itest.MockQueryEmitterConfiguration
+import io.holunda.polyflow.view.jpa.itest.TestApplicationDataJpa
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.After
 import org.junit.Before
@@ -12,13 +14,15 @@ import org.junit.runner.RunWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.test.context.ActiveProfiles
+import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.junit4.SpringRunner
 import java.util.*
 import javax.persistence.EntityManager
 
 @RunWith(SpringRunner::class)
 @DataJpaTest
-@ActiveProfiles("itest")
+@ContextConfiguration(classes = [TestApplicationDataJpa::class])
+@ActiveProfiles("itest", "mock-query-emitter")
 class TaskRepositoryITest {
   @Autowired
   lateinit var entityManager: EntityManager

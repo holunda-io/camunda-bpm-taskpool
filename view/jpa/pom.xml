@@ -97,6 +97,16 @@
       <artifactId>jackson-datatype-jsr310</artifactId>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>io.holixon</groupId>
+      <artifactId>axon-gateway-spring-boot-starter</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.axonframework</groupId>
+      <artifactId>axon-spring-boot-starter</artifactId>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <build>
@@ -118,8 +128,35 @@
   <profiles>
     <profile>
       <id>generate-sql</id>
+      <properties>
+        <jacoco.skip>true</jacoco.skip>
+      </properties>
       <build>
+        <defaultGoal>clean process-classes</defaultGoal>
         <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-resources-plugin</artifactId>
+            <version>3.2.0</version>
+            <executions>
+              <execution>
+                <id>copy persistence xml</id>
+                <phase>generate-sources</phase>
+                <goals>
+                  <goal>copy-resources</goal>
+                </goals>
+                <configuration>
+                  <outputDirectory>${basedir}/target/classes/META-INF</outputDirectory>
+                  <resources>
+                    <resource>
+                      <directory>src/sql</directory>
+                      <filtering>false</filtering>
+                    </resource>
+                  </resources>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
           <plugin>
             <groupId>de.juplo</groupId>
             <artifactId>hibernate-maven-plugin</artifactId>
@@ -127,6 +164,7 @@
             <executions>
               <execution>
                 <id>generate-h2-ddl</id>
+                <phase>process-classes</phase>
                 <goals>
                   <goal>create</goal>
                 </goals>
@@ -138,11 +176,13 @@
                   <execute>false</execute>
                   <show>true</show>
                   <format>true</format>
+                  <force>true</force>
                   <outputFile>h2_ddl.sql</outputFile>
                 </configuration>
               </execution>
               <execution>
                 <id>generate-mssql-ddl</id>
+                <phase>process-classes</phase>
                 <goals>
                   <goal>create</goal>
                 </goals>
@@ -154,11 +194,13 @@
                   <execute>false</execute>
                   <show>true</show>
                   <format>true</format>
+                  <force>true</force>
                   <outputFile>mssql_ddl.sql</outputFile>
                 </configuration>
               </execution>
               <execution>
                 <id>generate-posgresql-ddl</id>
+                <phase>process-classes</phase>
                 <goals>
                   <goal>create</goal>
                 </goals>
@@ -170,6 +212,7 @@
                   <execute>false</execute>
                   <show>true</show>
                   <format>true</format>
+                  <force>true</force>
                   <outputFile>pgsql_ddl.sql</outputFile>
                 </configuration>
               </execution>

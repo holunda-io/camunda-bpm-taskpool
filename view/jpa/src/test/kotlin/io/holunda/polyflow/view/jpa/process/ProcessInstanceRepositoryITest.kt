@@ -1,6 +1,8 @@
 package io.holunda.polyflow.view.jpa.process
 
 import io.holunda.polyflow.view.ProcessInstanceState
+import io.holunda.polyflow.view.jpa.itest.MockQueryEmitterConfiguration
+import io.holunda.polyflow.view.jpa.itest.TestApplicationDataJpa
 import io.holunda.polyflow.view.jpa.process.ProcessInstanceRepository.Companion.hasStates
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.After
@@ -10,13 +12,15 @@ import org.junit.runner.RunWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.test.context.ActiveProfiles
+import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.junit4.SpringRunner
 import java.util.*
 import javax.persistence.EntityManager
 
 @RunWith(SpringRunner::class)
 @DataJpaTest
-@ActiveProfiles("itest")
+@ContextConfiguration(classes = [TestApplicationDataJpa::class])
+@ActiveProfiles("itest", "mock-query-emitter")
 class ProcessInstanceRepositoryITest {
   @Autowired
   lateinit var entityManager: EntityManager

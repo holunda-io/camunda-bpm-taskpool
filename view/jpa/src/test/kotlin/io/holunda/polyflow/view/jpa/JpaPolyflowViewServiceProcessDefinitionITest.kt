@@ -2,35 +2,36 @@ package io.holunda.polyflow.view.jpa
 
 import io.holunda.camunda.taskpool.api.process.definition.ProcessDefinitionRegisteredEvent
 import io.holunda.polyflow.view.auth.User
+import io.holunda.polyflow.view.jpa.itest.TestApplication
 import io.holunda.polyflow.view.query.process.ProcessDefinitionsStartableByUserQuery
 import org.assertj.core.api.Assertions.assertThat
-import org.axonframework.queryhandling.QueryUpdateEmitter
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit4.SpringRunner
 import java.util.*
+import javax.transaction.Transactional
 
 @RunWith(SpringRunner::class)
-@SpringBootTest
-@ActiveProfiles("itest")
+@SpringBootTest(classes = [TestApplication::class])
+@ActiveProfiles("itest", "mock-query-emitter")
+@Transactional
 internal class JpaPolyflowViewServiceProcessDefinitionITest {
-
-  @MockBean
-  lateinit var queryUpdateEmitter: QueryUpdateEmitter
 
   @Autowired
   lateinit var jpaPolyflowViewService: JpaPolyflowViewService
 
+  @Autowired
+  lateinit var dbCleaner: DbCleaner
+
   private val procDefId = UUID.randomUUID().toString()
 
   @Before
-  internal fun `ingest events`() {
+  fun `ingest events`() {
 
     jpaPolyflowViewService.on(
       event = ProcessDefinitionRegisteredEvent(
@@ -50,12 +51,12 @@ internal class JpaPolyflowViewServiceProcessDefinitionITest {
   }
 
   @After
-  internal fun `cleanup projection`() {
-    jpaPolyflowViewService.processDefinitionRepository.deleteAll()
+  fun `cleanup projection`() {
+    dbCleaner.cleanup()
   }
 
   @Test
-  internal fun `should find process definition startable for user`() {
+  fun `should find process definition startable for user`() {
     val result = jpaPolyflowViewService.query(
       ProcessDefinitionsStartableByUserQuery(user = User("kermit", setOf("muppets")))
     )

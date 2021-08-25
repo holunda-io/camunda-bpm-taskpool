@@ -12,13 +12,14 @@ import io.holunda.polyflow.view.filter.Criterion
 import io.holunda.polyflow.view.filter.toCriteria
 import io.holunda.polyflow.view.jpa.JpaPolyflowViewService.Companion.PROCESSING_GROUP
 import io.holunda.polyflow.view.jpa.auth.AuthorizationPrincipal
-import io.holunda.polyflow.view.jpa.data.*
 import io.holunda.polyflow.view.jpa.auth.AuthorizationPrincipal.Companion.group
 import io.holunda.polyflow.view.jpa.auth.AuthorizationPrincipal.Companion.user
+import io.holunda.polyflow.view.jpa.data.*
 import io.holunda.polyflow.view.jpa.data.DataEntryRepository.Companion.isAuthorizedFor
 import io.holunda.polyflow.view.jpa.process.*
 import io.holunda.polyflow.view.jpa.process.ProcessDefinitionRepository.Companion.isStarterAuthorizedFor
 import io.holunda.polyflow.view.jpa.process.ProcessInstanceRepository.Companion.hasStates
+import io.holunda.polyflow.view.jpa.update.TxAwareQueryUpdateEmitter
 import io.holunda.polyflow.view.query.PageableSortableQuery
 import io.holunda.polyflow.view.query.data.*
 import io.holunda.polyflow.view.query.process.*
@@ -28,7 +29,6 @@ import org.axonframework.eventhandling.EventHandler
 import org.axonframework.messaging.MetaData
 import org.axonframework.queryhandling.QueryHandler
 import org.axonframework.queryhandling.QueryResponseMessage
-import org.axonframework.queryhandling.QueryUpdateEmitter
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Component
 
@@ -42,9 +42,9 @@ class JpaPolyflowViewService(
   val processInstanceRepository: ProcessInstanceRepository,
   val processDefinitionRepository: ProcessDefinitionRepository,
   val objectMapper: ObjectMapper,
-  val queryUpdateEmitter: QueryUpdateEmitter,
+  val txAwareQueryUpdateEmitter: TxAwareQueryUpdateEmitter,
   val polyflowJpaViewProperties: PolyflowJpaViewProperties
-) : DataEntryApi, ProcessInstanceApi, ProcessDefinitionApi {
+) : DataEntryApi, DataEntryEventHandler, ProcessInstanceApi, ProcessDefinitionApi {
 
   companion object : KLogging() {
     const val PROCESSING_GROUP = "io.holunda.polyflow.view.jpa.service"
@@ -104,12 +104,9 @@ class JpaPolyflowViewService(
     )
   }
 
-  /**
-   * Creates new data entry.
-   */
   @Suppress("unused")
   @EventHandler
-  fun on(event: DataEntryCreatedEvent, metaData: MetaData) {
+  override fun on(event: DataEntryCreatedEvent, metaData: MetaData) {
     val savedEntity = dataEntryRepository.findByIdOrNull(DataEntryId(entryType = event.entryType, entryId = event.entryId))
     val entity = if (savedEntity == null || savedEntity.lastModifiedDate < event.createModification.time.toInstant()) {
       /*
@@ -127,16 +124,12 @@ class JpaPolyflowViewService(
     } else {
       savedEntity
     }
-    queryUpdateEmitter.updateDataEntryQuery(entity = entity, objectMapper = objectMapper)
+    txAwareQueryUpdateEmitter.emitEntityUpdate(entity)
   }
 
-
-  /**
-   * Updates data entry.
-   */
   @Suppress("unused")
   @EventHandler
-  fun on(event: DataEntryUpdatedEvent, metaData: MetaData) {
+  override fun on(event: DataEntryUpdatedEvent, metaData: MetaData) {
     val savedEntity = dataEntryRepository.findByIdOrNull(DataEntryId(entryType = event.entryType, entryId = event.entryId))
     val entity = if (savedEntity == null || savedEntity.lastModifiedDate < event.updateModification.time.toInstant()) {
       /*
@@ -155,7 +148,7 @@ class JpaPolyflowViewService(
     } else {
       savedEntity
     }
-    queryUpdateEmitter.updateDataEntryQuery(entity = entity, objectMapper = objectMapper)
+    txAwareQueryUpdateEmitter.emitEntityUpdate(entity)
   }
 
   /**
@@ -167,7 +160,7 @@ class JpaPolyflowViewService(
     val entity = processDefinitionRepository.save(
       event.toEntity()
     )
-    queryUpdateEmitter.updateProcessDefinitionQuery(entity = entity)
+    txAwareQueryUpdateEmitter.emitEntityUpdate(entity)
   }
 
   /**
@@ -179,8 +172,9 @@ class JpaPolyflowViewService(
     val entity = processInstanceRepository.save(
       event.toEntity()
     )
-    queryUpdateEmitter.updateProcessInstanceQuery(entity = entity)
+    txAwareQueryUpdateEmitter.emitEntityUpdate(entity)
   }
+
   /**
    * Instance cancelled.
    */
@@ -191,9 +185,10 @@ class JpaPolyflowViewService(
       val entity = processInstanceRepository.save(
         it.cancelInstance(event)
       )
-      queryUpdateEmitter.updateProcessInstanceQuery(entity = entity)
+      txAwareQueryUpdateEmitter.emitEntityUpdate(entity)
     }
   }
+
   /**
    * Instance suspended.
    */
@@ -204,9 +199,10 @@ class JpaPolyflowViewService(
       val entity = processInstanceRepository.save(
         it.suspendInstance()
       )
-      queryUpdateEmitter.updateProcessInstanceQuery(entity = entity)
+      txAwareQueryUpdateEmitter.emitEntityUpdate(entity)
     }
   }
+
   /**
    * Instance resumed.
    */
@@ -217,9 +213,10 @@ class JpaPolyflowViewService(
       val entity = processInstanceRepository.save(
         it.resumeInstance()
       )
-      queryUpdateEmitter.updateProcessInstanceQuery(entity = entity)
+      txAwareQueryUpdateEmitter.emitEntityUpdate(entity)
     }
   }
+
   /**
    * Instance ended.
    */
@@ -230,7 +227,7 @@ class JpaPolyflowViewService(
       val entity = processInstanceRepository.save(
         it.finishInstance(event)
       )
-      queryUpdateEmitter.updateProcessInstanceQuery(entity = entity)
+      txAwareQueryUpdateEmitter.emitEntityUpdate(entity)
     }
   }
 
