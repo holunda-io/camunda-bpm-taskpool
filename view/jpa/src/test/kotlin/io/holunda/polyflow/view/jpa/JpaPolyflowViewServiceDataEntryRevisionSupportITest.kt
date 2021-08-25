@@ -155,8 +155,6 @@ internal class JpaPolyflowViewServiceDataEntryRevisionSupportITest {
     val result = queryResult.get()
     assertThat(result).isNotEmpty
     assertThat(result[0].name).isEqualTo("Test Entry 3")
-    assertThat(result[0].payload).containsOnlyKeys("key", "key-int", "complex")
-
   }
 
   @Test
