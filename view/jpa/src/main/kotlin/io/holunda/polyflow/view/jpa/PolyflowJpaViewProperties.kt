@@ -17,7 +17,7 @@ data class PolyflowJpaViewProperties(
   val payloadAttributeLevelLimit: Int = -1,
   val eventEmittingType: EventEmittingType = EventEmittingType.AFTER_COMMIT,
   @NestedConfigurationProperty
-  val dataEntryFilters: PayloadAttributeFilterPaths
+  val dataEntryFilters: PayloadAttributeFilterPaths = PayloadAttributeFilterPaths()
 ) {
   /**
    * Extracts JSON path filters out of the properties.
