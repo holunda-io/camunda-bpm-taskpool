@@ -60,7 +60,13 @@ configuration of this indexing process by the following configuration options:
 ```yml
 polyflow.view.jpa:
   payload-attribute-level-limit: 2
+  data-entry-filter:
+    include: myProperty2.myOtherEmbeddedProperty3, myProperty2.myOtherEmbeddedProperty2
+#    exclude: myProperty
 ```
+
+In the example below you see the configuration of the limit of keying depth and usage of include/exclude filters of the keys.
+
 
 The events consumed by the JPA view change data inside the database. In addition, the view sends
 updates to subscription queries using the standard Axon Query Event Update Emitter mechanism. Since your
@@ -74,6 +80,7 @@ polyflow.view.jpa:
 The `DIRECT` option sends the events directly without any transaction synchronization,  
 the default `AFTER_COMMIT` option sends updates after the commit and `BEFORE_COMMIT` option 
 sends updates before the commit of the transaction, delivering the events.
+
 
 
 ### Logging
