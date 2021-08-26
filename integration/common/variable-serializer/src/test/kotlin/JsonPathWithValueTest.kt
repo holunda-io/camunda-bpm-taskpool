@@ -3,6 +3,9 @@ package io.holunda.polyflow.variable.serializer
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import io.holunda.camunda.variable.serializer.EqualityPathFilter.Companion.all
+import io.holunda.camunda.variable.serializer.EqualityPathFilter.Companion.eqExclude
+import io.holunda.camunda.variable.serializer.EqualityPathFilter.Companion.none
 import io.holunda.camunda.variable.serializer.toJsonPathsWithValues
 import org.assertj.core.api.Assertions.assertThat
 import org.camunda.bpm.engine.variable.Variables.createVariables
@@ -132,6 +135,35 @@ internal class JsonPathWithValueTest {
       put("key", Pojo1("value", listOf(Pojo2("value", listOf()))))
     }
     assertThat(payload.toJsonPathsWithValues()).isEmpty()
+  }
+
+
+  @Test
+  fun `should ignore attribute by name`() {
+    val payload = createVariables().apply {
+      put("key", "value")
+      put("to-ignore", "should not be there")
+    }
+    assertThat(payload.toJsonPathsWithValues(filters = listOf(eqExclude("to-ignore")))).containsOnlyKeys("key")
+
+  }
+
+  @Test
+  fun `should accept all attributes`() {
+    val payload = createVariables().apply {
+      put("key", "value")
+      put("other", "value2")
+    }
+    assertThat(payload.toJsonPathsWithValues(filters = listOf(all()))).containsOnlyKeys("key", "other")
+  }
+
+  @Test
+  fun `should ignore all attributes`() {
+    val payload = createVariables().apply {
+      put("key", "value")
+      put("other", "value2")
+    }
+    assertThat(payload.toJsonPathsWithValues(filters = listOf(none()))).isEmpty()
   }
 
 }

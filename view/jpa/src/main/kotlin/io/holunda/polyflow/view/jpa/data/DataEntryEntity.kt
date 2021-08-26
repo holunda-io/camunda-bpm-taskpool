@@ -1,6 +1,7 @@
 package io.holunda.polyflow.view.jpa.data
 
 
+import io.holunda.polyflow.view.jpa.payload.PayloadAttribute
 import java.time.Instant
 import javax.persistence.*
 
@@ -15,6 +16,7 @@ class DataEntryEntity(
   @Column(name = "TYPE", nullable = false)
   var type: String,
   @Column(name = "NAME", nullable = false)
+  @Lob
   var name: String,
   @Column(name = "APPLICATION_NAME", nullable = false)
   var applicationName: String,
@@ -24,8 +26,8 @@ class DataEntryEntity(
   var revision: Long = 0L,
   @Embedded
   var state: DataEntryStateEmbeddable,
-
   @Column(name = "DESCRIPTION")
+  @Lob
   var description: String? = null,
 
   @Column(name = "DATE_CREATED", nullable = false)
@@ -59,6 +61,7 @@ class DataEntryEntity(
   @OneToMany(mappedBy = "dataEntry", orphanRemoval = true, cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
   var protocol: MutableList<ProtocolElement> = mutableListOf(),
 
+  @Column(name = "PAYLOAD")
   @Lob
   var payload: String? = null,
 ) {

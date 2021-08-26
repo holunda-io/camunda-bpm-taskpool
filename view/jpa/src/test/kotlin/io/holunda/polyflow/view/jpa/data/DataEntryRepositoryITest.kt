@@ -3,12 +3,11 @@ package io.holunda.polyflow.view.jpa.data
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.holunda.camunda.taskpool.api.business.ProcessingType
 import io.holunda.camunda.variable.serializer.toJsonPathsWithValues
-import io.holunda.polyflow.view.jpa.data.AuthorizationPrincipal.Companion.group
-import io.holunda.polyflow.view.jpa.data.AuthorizationPrincipal.Companion.user
+import io.holunda.polyflow.view.jpa.auth.AuthorizationPrincipal.Companion.group
+import io.holunda.polyflow.view.jpa.auth.AuthorizationPrincipal.Companion.user
 import io.holunda.polyflow.view.jpa.data.DataEntryRepository.Companion.hasPayloadAttribute
-import io.holunda.polyflow.view.jpa.data.DataEntryRepository.Companion.hasProcessingType
-import io.holunda.polyflow.view.jpa.data.DataEntryRepository.Companion.hasState
-import io.holunda.polyflow.view.jpa.data.DataEntryRepository.Companion.isAuthorizedFor
+import io.holunda.polyflow.view.jpa.itest.TestApplication
+import io.holunda.polyflow.view.jpa.payload.PayloadAttribute
 import org.assertj.core.api.Assertions.assertThat
 import org.camunda.bpm.engine.variable.Variables.createVariables
 import org.junit.After
@@ -20,6 +19,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.data.jpa.domain.Specification.where
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.test.context.ActiveProfiles
+import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.junit4.SpringRunner
 import java.time.Instant
 import java.util.*
@@ -27,7 +27,8 @@ import javax.persistence.EntityManager
 
 @RunWith(SpringRunner::class)
 @DataJpaTest
-@ActiveProfiles("itest")
+@ContextConfiguration(classes = [TestApplication::class])
+@ActiveProfiles("itest", "mock-query-emitter")
 internal class DataEntryRepositoryITest {
   @Autowired
   lateinit var entityManager: EntityManager
@@ -135,7 +136,7 @@ internal class DataEntryRepositoryITest {
   }
 
   @After
-  fun `remove principals`() {
+  fun `remove all stuff`() {
     dataEntryRepository.deleteAll()
     entityManager.flush()
   }

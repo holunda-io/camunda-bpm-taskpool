@@ -1,4 +1,4 @@
-package io.holunda.polyflow.view.jpa.data
+package io.holunda.polyflow.view.jpa.payload
 
 import java.io.Serializable
 import javax.persistence.Column

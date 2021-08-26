@@ -41,7 +41,7 @@ open class DataPoolGivenStage<SELF : DataPoolGivenStage<SELF>> : DataPoolStage<S
   @ProvidedScenarioState(resolution = ScenarioState.Resolution.NAME)
   private var dataEntries: List<DataEntry> = listOf()
 
-  private fun data(i: Int, applicationName: String = "app") = TestDataEntry(entryId = "entry-$i", name = "Test entry $i")
+  private fun data(i: Int) = TestDataEntry(entryId = "entry-$i", name = "Test entry $i")
 
   fun none_exists(): SELF {
     dataEntries = listOf()

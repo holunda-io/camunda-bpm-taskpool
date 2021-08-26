@@ -1,5 +1,5 @@
-camunda:
-  taskpool:
+polyflow:
+  integration:
     form-url-resolver:
       defaultTaskTemplate:  "/forms/${formKey}/${id}"
       defaultApplicationTemplate: "http://localhost:8080/${applicatioName}"

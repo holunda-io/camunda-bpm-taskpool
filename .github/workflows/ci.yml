@@ -1,9 +1,10 @@
-name: Development branches
+name: CI for branches
 
 on:
   push:
     branches:
       - '!master'
+      - '!develop'
       - '!release/*'
       - '*'
       - '**/*'

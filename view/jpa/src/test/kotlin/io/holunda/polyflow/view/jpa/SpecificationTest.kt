@@ -1,8 +1,10 @@
-package io.holunda.polyflow.view.jpa.data
+package io.holunda.polyflow.view.jpa
 
 import io.holunda.polyflow.view.filter.toCriteria
-import io.holunda.polyflow.view.jpa.data.AuthorizationPrincipal.Companion.group
-import io.holunda.polyflow.view.jpa.data.AuthorizationPrincipal.Companion.user
+import io.holunda.polyflow.view.jpa.auth.AuthorizationPrincipal.Companion.group
+import io.holunda.polyflow.view.jpa.auth.AuthorizationPrincipal.Companion.user
+import io.holunda.polyflow.view.jpa.data.DataEntryRepository
+import io.holunda.polyflow.view.jpa.data.toSpecification
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 
@@ -31,11 +33,13 @@ internal class SpecificationTest {
 
   @Test
   internal fun `should create multiple principal specifications`() {
-    val spec = DataEntryRepository.Companion.isAuthorizedFor(setOf(
-      user("kermit"),
-      group("muppets"),
-      group("avengers"),
-    ))
+    val spec = DataEntryRepository.isAuthorizedFor(
+      setOf(
+        user("kermit"),
+        group("muppets"),
+        group("avengers"),
+      )
+    )
 
     assertThat(spec).isNotNull
   }

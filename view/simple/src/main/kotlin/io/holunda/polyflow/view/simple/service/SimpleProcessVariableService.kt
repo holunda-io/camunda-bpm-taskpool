@@ -2,7 +2,6 @@ package io.holunda.polyflow.view.simple.service
 
 import io.holixon.axon.gateway.query.QueryResponseMessageResponseType
 import io.holixon.axon.gateway.query.RevisionValue
-import io.holunda.camunda.taskpool.api.process.instance.*
 import io.holunda.camunda.taskpool.api.process.variable.ProcessVariableCreate
 import io.holunda.camunda.taskpool.api.process.variable.ProcessVariableDelete
 import io.holunda.camunda.taskpool.api.process.variable.ProcessVariableUpdate
@@ -70,6 +69,14 @@ class SimpleProcessVariableService(
 
 
   private fun updateProcessVariableQuery(processInstanceId: String) {
-    // FIXME
+    if (processVariables.contains(processInstanceId)) {
+      val processVariablesForInstance = processVariables.getValue(processInstanceId)
+      queryUpdateEmitter.emit(
+        ProcessVariablesForInstanceQuery::class.java,
+        // send update if at least one variable of the queried is being modified
+        { query -> processVariablesForInstance.any { variable -> query.applyFilter(variable) } },
+        processVariablesForInstance
+      )
+    }
   }
 }

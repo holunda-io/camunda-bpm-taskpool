@@ -1,4 +1,4 @@
-package io.holunda.polyflow.view.jpa.data
+package io.holunda.polyflow.view.jpa.auth
 
 /**
  * Authorization principal type.

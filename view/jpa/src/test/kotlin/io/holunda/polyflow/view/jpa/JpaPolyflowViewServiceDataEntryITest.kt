@@ -1,6 +1,7 @@
 package io.holunda.polyflow.view.jpa
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import io.holixon.axon.gateway.query.RevisionValue
 import io.holunda.camunda.taskpool.api.business.AuthorizationChange.Companion.addGroup
 import io.holunda.camunda.taskpool.api.business.AuthorizationChange.Companion.addUser
 import io.holunda.camunda.taskpool.api.business.DataEntryCreatedEvent
@@ -10,39 +11,59 @@ import io.holunda.camunda.taskpool.api.business.ProcessingType
 import io.holunda.camunda.variable.serializer.serialize
 import io.holunda.polyflow.view.DataEntry
 import io.holunda.polyflow.view.auth.User
+import io.holunda.polyflow.view.jpa.itest.TestApplication
 import io.holunda.polyflow.view.query.data.DataEntriesForUserQuery
 import io.holunda.polyflow.view.query.data.DataEntriesQuery
 import io.holunda.polyflow.view.query.data.DataEntriesQueryResult
 import io.holunda.polyflow.view.query.data.DataEntryForIdentityQuery
 import org.assertj.core.api.Assertions.assertThat
 import org.axonframework.messaging.MetaData
+import org.axonframework.queryhandling.GenericSubscriptionQueryUpdateMessage
 import org.axonframework.queryhandling.QueryResponseMessage
 import org.axonframework.queryhandling.QueryUpdateEmitter
+import org.axonframework.queryhandling.SubscriptionQueryUpdateMessage
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.kotlin.argumentCaptor
+import org.mockito.kotlin.atLeast
+import org.mockito.kotlin.clearInvocations
+import org.mockito.kotlin.verify
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.mock.mockito.MockBean
+import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit4.SpringRunner
+import org.springframework.transaction.annotation.Transactional
 import java.time.Instant
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
 import java.time.temporal.ChronoUnit
 import java.util.*
+import java.util.function.Predicate
 
 @RunWith(SpringRunner::class)
-@SpringBootTest
-@ActiveProfiles("itest")
-internal class JpaPolyflowViewServiceITest {
+@SpringBootTest(
+  classes = [TestApplication::class], properties = [
+    "polyflow.view.jpa.event-emitting-type=direct"
+  ]
+)
+@ActiveProfiles("itest", "mock-query-emitter")
+@Transactional
+@DirtiesContext
+internal class JpaPolyflowViewServiceDataEntryITest {
 
-  @MockBean
+  val emittedQueryUpdates: MutableList<QueryUpdate<Any>> = mutableListOf()
+
+  @Autowired
   lateinit var queryUpdateEmitter: QueryUpdateEmitter
 
   @Autowired
   lateinit var jpaPolyflowViewService: JpaPolyflowViewService
+
+  @Autowired
+  lateinit var dbCleaner: DbCleaner
 
   @Autowired
   lateinit var objectMapper: ObjectMapper
@@ -52,8 +73,7 @@ internal class JpaPolyflowViewServiceITest {
   private val now = Instant.now()
 
   @Before
-  internal fun `ingest events`() {
-
+  fun `ingest events`() {
     val payload = mapOf(
       "key" to "value",
       "key-int" to 1,
@@ -83,7 +103,7 @@ internal class JpaPolyflowViewServiceITest {
           logNotes = "Created the entry"
         )
       ),
-      metaData = MetaData.emptyInstance()
+      metaData = RevisionValue(revision = 1).toMetaData()
     )
 
     jpaPolyflowViewService.on(
@@ -105,7 +125,7 @@ internal class JpaPolyflowViewServiceITest {
           logNotes = "Updated the entry"
         )
       ),
-      metaData = MetaData.emptyInstance()
+      metaData = RevisionValue(revision = 2).toMetaData()
     )
 
     jpaPolyflowViewService.on(
@@ -133,12 +153,14 @@ internal class JpaPolyflowViewServiceITest {
   }
 
   @After
-  internal fun `cleanup projection`() {
-    jpaPolyflowViewService.dataEntryRepository.deleteAll()
+  fun `cleanup projection`() {
+    dbCleaner.cleanup()
+    // clear updates
+    emittedQueryUpdates.clear()
   }
 
   @Test
-  internal fun `should find the entry by id`() {
+  fun `should find the entry by id`() {
     assertResultIsTestEntry1(
       jpaPolyflowViewService.query(
         DataEntryForIdentityQuery(entryType = "io.polyflow.test", entryId = id)
@@ -147,13 +169,13 @@ internal class JpaPolyflowViewServiceITest {
   }
 
   @Test
-  internal fun `should find the entry by user`() {
+  fun `should find the entry by user`() {
 
-    assertResultIsTestEntry1(
-      jpaPolyflowViewService.query(
-        DataEntriesForUserQuery(user = User("kermit", groups = setOf()))
-      )
+    val result = jpaPolyflowViewService.query(
+      DataEntriesForUserQuery(user = User("kermit", groups = setOf()))
     )
+
+    assertResultIsTestEntry1(result)
 
     assertResultIsTestEntry1And2(
       jpaPolyflowViewService.query(
@@ -176,16 +198,20 @@ internal class JpaPolyflowViewServiceITest {
   }
 
   @Test
-  internal fun `should find the entry by user and filter`() {
+  fun `should find the entry by user and filter`() {
+    val query = DataEntriesForUserQuery(user = User("kermit", groups = setOf("muppets")), filters = listOf("key-int=1"))
     assertResultIsTestEntry1(
       jpaPolyflowViewService.query(
-        DataEntriesForUserQuery(user = User("kermit", groups = setOf("muppets")), filters = listOf("key-int=1"))
+        query
       )
     )
+
+    query_updates_have_been_emitted(query, id, 2)
+    query_updates_have_been_emitted(query, id2, 0)
   }
 
   @Test
-  internal fun `should find the entry by filter`() {
+  fun `should find the entry by filter`() {
     assertResultIsTestEntry1And2(
       jpaPolyflowViewService.query(
         DataEntriesQuery(filters = listOf("key=value"))
@@ -194,20 +220,35 @@ internal class JpaPolyflowViewServiceITest {
   }
 
 
-  internal fun assertResultIsTestEntry1(result: QueryResponseMessage<DataEntriesQueryResult>) {
+  private fun <T : Any> query_updates_have_been_emitted(query: T, id: String, revision: Long) {
+    captureEmittedQueryUpdates()
+
+    val updates = emittedQueryUpdates
+      .filter { it.queryType == query::class.java }
+      .filter { it.predicate.test(query) }
+      .map { it.update as GenericSubscriptionQueryUpdateMessage<*> }
+      .map { message -> (message.payload as DataEntriesQueryResult).elements.map { entry -> entry.entryId } to RevisionValue.fromMetaData(message.metaData).revision }
+
+    assertThat(updates)
+      .`as`("Query updates for query $query")
+      .containsAnyElementsOf(listOf(listOf(id) to revision))
+  }
+
+
+  private fun assertResultIsTestEntry1(result: QueryResponseMessage<DataEntriesQueryResult>) {
     assertThat(result.payload.elements.size).isEqualTo(1)
     val dataEntry = result.payload.elements[0]
     assertTestDataEntry1(dataEntry)
   }
 
-  internal fun assertResultIsTestEntry1And2(result: QueryResponseMessage<DataEntriesQueryResult>) {
+  private fun assertResultIsTestEntry1And2(result: QueryResponseMessage<DataEntriesQueryResult>) {
     assertThat(result.payload.elements.size).isEqualTo(2)
     assertTestDataEntry1(result.payload.elements[0])
     assertTestDataEntry2(result.payload.elements[1])
   }
 
 
-  internal fun assertTestDataEntry1(dataEntry: DataEntry) {
+  private fun assertTestDataEntry1(dataEntry: DataEntry) {
     assertThat(dataEntry.entryId).isEqualTo(id)
     assertThat(dataEntry.entryType).isEqualTo("io.polyflow.test")
     assertThat(dataEntry.name).isEqualTo("Test Entry 1")
@@ -219,7 +260,7 @@ internal class JpaPolyflowViewServiceITest {
     assertThat(dataEntry.protocol[1].username).isEqualTo("ironman")
   }
 
-  internal fun assertTestDataEntry2(dataEntry: DataEntry) {
+  private fun assertTestDataEntry2(dataEntry: DataEntry) {
     assertThat(dataEntry.entryId).isEqualTo(id2)
     assertThat(dataEntry.entryType).isEqualTo("io.polyflow.test")
     assertThat(dataEntry.name).isEqualTo("Test Entry 2")
@@ -228,5 +269,24 @@ internal class JpaPolyflowViewServiceITest {
     assertThat(dataEntry.protocol[0].time).isEqualTo(now)
     assertThat(dataEntry.protocol[0].username).isEqualTo("piggy")
   }
+
+  private fun captureEmittedQueryUpdates(): List<QueryUpdate<Any>> {
+    val queryTypeCaptor = argumentCaptor<Class<Any>>()
+    val predicateCaptor = argumentCaptor<Predicate<Any>>()
+    val updateCaptor = argumentCaptor<SubscriptionQueryUpdateMessage<Any>>()
+    verify(queryUpdateEmitter, atLeast(0)).emit(queryTypeCaptor.capture(), predicateCaptor.capture(), updateCaptor.capture())
+    clearInvocations(queryUpdateEmitter)
+
+    val foundUpdates = queryTypeCaptor.allValues
+      .zip(predicateCaptor.allValues)
+      .zip(updateCaptor.allValues) { (queryType, predicate), update ->
+        QueryUpdate(queryType, predicate, update)
+      }
+
+    emittedQueryUpdates.addAll(foundUpdates)
+    return foundUpdates
+  }
+
+  data class QueryUpdate<E>(val queryType: Class<E>, val predicate: Predicate<E>, val update: Any)
 
 }

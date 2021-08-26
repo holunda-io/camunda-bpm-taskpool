@@ -33,22 +33,30 @@ fun String?.toPayloadVariableMap(objectMapper: ObjectMapper): VariableMap = Vari
 fun VariableMap.toPayloadJson(objectMapper: ObjectMapper): String =
   objectMapper.writeValueAsString(this)
 
+/**
+ * JSON path filter to match paths.
+ */
+typealias JsonPathFilterFunction = (path: String) -> Boolean
 
 
 /**
  * Converts a deep map structure representing the payload into a map of one level keyed by the JSON path and valued by the value.
  * The map might contain primitive types or maps as value.
- * @param limit of levels to convert. Defaults to -1 meaning there is no limit.
+ * @param limit limit of levels to convert. Defaults to -1 meaning there is no limit.
+ * @param filters filter object to identify properties to include into the result.
  */
-fun VariableMap.toJsonPathsWithValues(limit: Int = -1): Map<String, Any> {
+fun VariableMap.toJsonPathsWithValues(limit: Int = -1, filters: List<Pair<JsonPathFilterFunction, FilterType>> = emptyList()): Map<String, Any> {
   val pathsWithValues: List<MutableMap<String, Any>> = this.entries.map {
-    it.toJsonPathWithValue(prefix = "", limit = limit).toMap().toMutableMap()
+    it.toJsonPathWithValue(prefix = "", limit = limit, filter = filters).toMap().toMutableMap()
   }
   return pathsWithValues.reduce { result, memberList -> result.apply { putAll(memberList) } }.toMap()
 }
 
-
-internal fun MutableMap.MutableEntry<String, Any?>.toJsonPathWithValue(prefix: String = "", limit: Int = -1): List<Pair<String, Any>> {
+internal fun MutableMap.MutableEntry<String, Any?>.toJsonPathWithValue(
+  prefix: String = "",
+  limit: Int = -1,
+  filter: List<Pair<JsonPathFilterFunction, FilterType>>
+): List<Pair<String, Any>> {
   // level limit check
   val currentLevel = prefix.count { ".".contains(it) }
   if (limit != -1 && currentLevel >= limit) {
@@ -60,12 +68,24 @@ internal fun MutableMap.MutableEntry<String, Any?>.toJsonPathWithValue(prefix: S
   } else {
     "$prefix.${this.key}"
   }
+
+  // check the filters
+  if (!filter.all { (filter, type) ->
+      when (type) {
+        FilterType.INCLUDE -> filter.invoke(key)
+        FilterType.EXCLUDE -> filter.invoke(key).not()
+      }
+    }) {
+    // found at least one filter that didn't match the key => exclude the key from processing
+    return listOf()
+  }
+
   val value = this.value
   return if (value != null && value.isPrimitiveType()) {
     listOf(key to value)
   } else if (value is Map<*, *>) {
     @Suppress("UNCHECKED_CAST")
-    (value as Map<String, Any?>).toMutableMap().entries.map { it.toJsonPathWithValue(key, limit) }.flatten()
+    (value as Map<String, Any?>).toMutableMap().entries.map { it.toJsonPathWithValue(key, limit, filter) }.flatten()
   } else {
     // ignore complex objects
     listOf()
