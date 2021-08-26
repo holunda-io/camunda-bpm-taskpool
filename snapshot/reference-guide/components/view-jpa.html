@@ -16,7 +16,7 @@
         <link rel="canonical" href="https://www.holunda.io/camunda-bpm-taskpool/snapshot/reference-guide/components/view-jpa.html">
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.2.2, mkdocs-material-7.2.4">
+      <meta name="generator" content="mkdocs-1.2.2, mkdocs-material-7.2.5">
     
     
       
@@ -24,7 +24,7 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.f7f47774.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.be71726b.min.css">
       
         
         <link rel="stylesheet" href="../../assets/stylesheets/palette.3f5d1f46.min.css">
@@ -1197,12 +1197,14 @@
                 
                 <h3 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">#</a></h3>
 <p>The JPA View is component responsible for creating read-projections of tasks and business data entries. It currently implements
-Datapool View API (Taskpool API will follow) and persists the projection as entities and relations in a RDBMS using JPA. It is a useful
+Datapool View API and Taskpool API and persists the projection as entities and relations in a RDBMS using JPA. It is a useful
 if the JPA persistence is already used in the project setup.</p>
 <h3 id="features">Features<a class="headerlink" href="#features" title="Permanent link">#</a></h3>
 <ul>
 <li>stores representation of business data entries</li>
-<li>provides single query API</li>
+<li>stores representation of process definitions</li>
+<li>stores representation of process instances</li>
+<li>provides single query API supporting single and subscription queries</li>
 </ul>
 <h3 id="configuration-options">Configuration options<a class="headerlink" href="#configuration-options" title="Permanent link">#</a></h3>
 <p>In order to activate the JPA View implementation, please include the following dependency on your classpath:</p>
@@ -1237,6 +1239,16 @@ configuration of this indexing process by the following configuration options:</
 <div class="highlight"><pre><span></span><code>polyflow.view.jpa:
   payload-attribute-level-limit: 2
 </code></pre></div>
+<p>The events consumed by the JPA view change data inside the database. In addition, the view sends
+updates to subscription queries using the standard Axon Query Event Update Emitter mechanism. Since your
+application may use transactions, you might want to configure the moment when the events are sent using the
+following configuration options:
+<div class="highlight"><pre><span></span><code>polyflow.view.jpa:
+  event-emitting-type: AFTER_COMMIT # or DIRECT or BEFORE_COMMIT
+</code></pre></div></p>
+<p>The <code>DIRECT</code> option sends the events directly without any transaction synchronization,<br />
+the default <code>AFTER_COMMIT</code> option sends updates after the commit and <code>BEFORE_COMMIT</code> option 
+sends updates before the commit of the transaction, delivering the events.</p>
 <h3 id="logging">Logging<a class="headerlink" href="#logging" title="Permanent link">#</a></h3>
 <p>The view implementation provides runtime details using standard logging facility. If you
 want to increase the logging level, please setup it e.g. in your <code>application.yaml</code>:</p>
@@ -1249,11 +1261,17 @@ want to increase the logging level, please setup it e.g. in your <code>applicati
 <li><code>PLF_DATA_ENTRY_AUTHORIZATIONS</code>: table for authorization information of data entries</li>
 <li><code>PLF_DATA_ENTRY_PAYLOAD_ATTRIBUTES</code>: table for data entry attribute search index</li>
 <li><code>PLF_DATA_ENTRY_PROTOCOL</code>: table for data entry protocol entry (users, groups)</li>
+<li><code>PLF_PROC_DEF</code>: table for process definitions</li>
+<li><code>PLF_PROC_DEF_AUTHORIZATIONS</code>: table for authorization information of process definitions </li>
+<li><code>PLF_PROC_INSTANCE</code>: table for process instances</li>
+<li><code>PLF_TASK</code>: table for user tasks</li>
+<li><code>PLF_TASK_AUTHORIZATIONS</code>: table for authorization information of user tasks</li>
+<li><code>PLF_TASK_CORRELATIONS</code>: table for user task correlation information</li>
+<li><code>PLF_TASK_PAYLOAD_ATTRIBUTES</code>: table for user task attribute search index</li>
 <li><code>TRACKING_TOKEN</code>: table for Axon Tracking Tokens</li>
 </ul>
 <p>If you are interested in DDLs for the view, feel free to generate one using the following call of Apache Maven 
-<code>mvn clean test -DskipTests -Pgenerate-sql -f view/jpa</code>. Currently, DDLs for the databases H2, MSSQL and PostgreSQL 
-are generated into <code>target/</code> directory.</p>
+<code>mvn -Pgenerate-sql -f view/jpa</code>. Currently, DDLs for the databases H2, MSSQL and PostgreSQL are generated into <code>target/</code> directory.</p>
                 
                   
                     
@@ -1262,7 +1280,7 @@ are generated into <code>target/</code> directory.</p>
 <div class="md-source-date">
   <small>
     
-      Last update: <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">August 24, 2021</span>
+      Last update: <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">August 26, 2021</span>
       
     
   </small>
@@ -1363,10 +1381,10 @@ are generated into <code>target/</code> directory.</p>
     <div class="md-dialog" data-md-component="dialog">
       <div class="md-dialog__inner md-typeset"></div>
     </div>
-    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.instant", "navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.top", "toc.integrate"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../assets/javascripts/workers/search.709b4209.min.js", "version": {"provider": "mike"}}</script>
+    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.instant", "navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.top", "toc.integrate"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../assets/javascripts/workers/search.409db549.min.js", "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.febc23d1.min.js"></script>
+      <script src="../../assets/javascripts/bundle.56a63758.min.js"></script>
       
     
   </body>
