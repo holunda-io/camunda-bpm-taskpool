@@ -1,10 +1,18 @@
 spring:
   jpa:
     open-in-view: true # disable JPA warning
-    show-sql: true
+    show-sql: false
+
 
 logger:
   level:
-    org.hibernate.type: TRACE # activate this and generic ROOT logger to see SQL and binding
+    org.springframework: INFO
+    org.axonframework: INFO
+    org.hibernate.type: INFO # activate this and generic ROOT logger to see SQL and binding
+    io.holixon.axon.gateway.query: DEBUG
+    io.holunda.polyflow.view.jpa: DEBUG
 
+axon:
+  axonserver:
+    enabled: false
 

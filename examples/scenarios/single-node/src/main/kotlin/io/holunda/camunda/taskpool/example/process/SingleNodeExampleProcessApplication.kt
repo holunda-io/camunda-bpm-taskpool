@@ -19,6 +19,7 @@ import org.springframework.context.annotation.Bean
 /**
  * Starts the single node application.
  */
+@Suppress("UNUSED_PARAMETER")
 fun main(args: Array<String>) {
   runApplication<SingleNodeExampleProcessApplication>().let { Unit }
 }

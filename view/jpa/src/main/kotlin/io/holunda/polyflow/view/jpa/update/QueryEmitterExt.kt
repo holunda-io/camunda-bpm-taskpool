@@ -1,14 +1,10 @@
 package io.holunda.polyflow.view.jpa
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import io.holixon.axon.gateway.query.QueryResponseMessageResponseType
 import io.holixon.axon.gateway.query.RevisionValue
-import io.holunda.polyflow.view.jpa.data.DataEntryEntity
-import io.holunda.polyflow.view.jpa.data.toDataEntry
-import io.holunda.polyflow.view.jpa.process.ProcessDefinitionEntity
-import io.holunda.polyflow.view.jpa.process.ProcessInstanceEntity
-import io.holunda.polyflow.view.jpa.process.toProcessDefinition
-import io.holunda.polyflow.view.jpa.process.toProcessInstance
+import io.holunda.polyflow.view.DataEntry
+import io.holunda.polyflow.view.ProcessDefinition
+import io.holunda.polyflow.view.ProcessInstance
 import io.holunda.polyflow.view.query.data.DataEntriesForUserQuery
 import io.holunda.polyflow.view.query.data.DataEntriesQuery
 import io.holunda.polyflow.view.query.data.DataEntriesQueryResult
@@ -17,15 +13,12 @@ import io.holunda.polyflow.view.query.process.ProcessDefinitionsStartableByUserQ
 import io.holunda.polyflow.view.query.process.ProcessInstancesByStateQuery
 import org.axonframework.queryhandling.QueryUpdateEmitter
 
+
 /**
  * Updates queries for process definitions.
- * @param entity entity to notify about.
+ * @param entry entry to notify about.
  */
-fun QueryUpdateEmitter.updateProcessDefinitionQuery(entity: ProcessDefinitionEntity) {
-  val entry = entity.toProcessDefinition()
-
-  JpaPolyflowViewService.logger.debug { "JPA-VIEW-44: Updating query with new element ${entry.processDefinitionId}" }
-
+fun QueryUpdateEmitter.updateProcessDefinitionQuery(entry: ProcessDefinition) {
   this.emit(
     ProcessDefinitionsStartableByUserQuery::class.java,
     { query -> query.applyFilter(entry) },
@@ -37,15 +30,10 @@ fun QueryUpdateEmitter.updateProcessDefinitionQuery(entity: ProcessDefinitionEnt
 
 /**
  * Updates subscription queries for data entries.
- * @param entity entity to notify about.
- * @param objectMapper objectMapper for conversion of payload.
+ * @param entry entry to notify about.
+ * @param revisionValue revision.
  */
-fun QueryUpdateEmitter.updateDataEntryQuery(entity: DataEntryEntity, objectMapper: ObjectMapper) {
-
-  val entry = entity.toDataEntry(objectMapper)
-  val revisionValue = RevisionValue(revision = entity.revision)
-
-  JpaPolyflowViewService.logger.debug { "JPA-VIEW-43: Updating query with new element ${entry.identity} with revision $revisionValue" }
+fun QueryUpdateEmitter.updateDataEntryQuery(entry: DataEntry, revisionValue: RevisionValue) {
 
   this.emit(
     DataEntriesForUserQuery::class.java,
@@ -75,11 +63,9 @@ fun QueryUpdateEmitter.updateDataEntryQuery(entity: DataEntryEntity, objectMappe
 
 /**
  * Updates subscription queries for process instances.
- * @param entity entity to notify about.
+ * @param entry entry to notify about.
  */
-fun QueryUpdateEmitter.updateProcessInstanceQuery(entity: ProcessInstanceEntity) {
-  val entry = entity.toProcessInstance()
-  JpaPolyflowViewService.logger.debug { "JPA-VIEW-44: Updating query with new element ${entry.processInstanceId}" }
+fun QueryUpdateEmitter.updateProcessInstanceQuery(entry: ProcessInstance) {
   this.emit(
     ProcessInstancesByStateQuery::class.java,
     { query -> query.applyFilter(entry) },

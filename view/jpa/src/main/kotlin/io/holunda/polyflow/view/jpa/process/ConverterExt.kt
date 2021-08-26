@@ -1,17 +1,21 @@
 package io.holunda.polyflow.view.jpa.process
 
 import io.holunda.camunda.taskpool.api.process.definition.ProcessDefinitionRegisteredEvent
-import io.holunda.camunda.taskpool.api.process.instance.*
+import io.holunda.camunda.taskpool.api.process.instance.ProcessInstanceCancelledEvent
+import io.holunda.camunda.taskpool.api.process.instance.ProcessInstanceEndedEvent
+import io.holunda.camunda.taskpool.api.process.instance.ProcessInstanceStartedEvent
+import io.holunda.camunda.taskpool.api.task.CaseReference
+import io.holunda.camunda.taskpool.api.task.GenericReference
 import io.holunda.camunda.taskpool.api.task.ProcessReference
 import io.holunda.camunda.taskpool.api.task.SourceReference
 import io.holunda.polyflow.view.ProcessDefinition
 import io.holunda.polyflow.view.ProcessInstance
 import io.holunda.polyflow.view.ProcessInstanceState
-import io.holunda.polyflow.view.jpa.data.AuthorizationPrincipal
-import io.holunda.polyflow.view.jpa.data.AuthorizationPrincipal.Companion.group
-import io.holunda.polyflow.view.jpa.data.AuthorizationPrincipal.Companion.user
-import io.holunda.polyflow.view.jpa.data.AuthorizationPrincipalType.GROUP
-import io.holunda.polyflow.view.jpa.data.AuthorizationPrincipalType.USER
+import io.holunda.polyflow.view.jpa.auth.AuthorizationPrincipal
+import io.holunda.polyflow.view.jpa.auth.AuthorizationPrincipal.Companion.group
+import io.holunda.polyflow.view.jpa.auth.AuthorizationPrincipal.Companion.user
+import io.holunda.polyflow.view.jpa.auth.AuthorizationPrincipalType.GROUP
+import io.holunda.polyflow.view.jpa.auth.AuthorizationPrincipalType.USER
 
 /**
  * Creates a new process definition from registration event.
@@ -66,19 +70,6 @@ fun ProcessInstanceEntity.toProcessInstance() = ProcessInstance(
 )
 
 /**
- * Converts embeddable into View API DTO.
- */
-fun ProcessSourceReferenceEmbeddable.toSourceReference() = ProcessReference(
-  instanceId = this.instanceId,
-  executionId = this.executionId,
-  definitionId = this.definitionId,
-  definitionKey = this.definitionKey,
-  name = this.name,
-  applicationName = this.applicationName,
-  tenantId = this.tenantId
-)
-
-/**
  * Creates a new entity.
  */
 fun ProcessInstanceStartedEvent.toEntity() = ProcessInstanceEntity(
@@ -128,12 +119,51 @@ fun ProcessInstanceEntity.resumeInstance() = this.apply {
 /**
  * Converts View API DTO into embeddable.
  */
-fun SourceReference.toSourceReferenceEmbeddable() = ProcessSourceReferenceEmbeddable(
+fun SourceReference.toSourceReferenceEmbeddable() = SourceReferenceEmbeddable(
   instanceId = this.instanceId,
   executionId = this.executionId,
   definitionId = this.definitionId,
   definitionKey = this.definitionKey,
   name = this.name,
   applicationName = this.applicationName,
-  tenantId = this.tenantId
+  tenantId = this.tenantId,
+  sourceType = when (this) {
+    is ProcessReference -> "PROCESS"
+    is CaseReference -> "CASE"
+    else -> "GENERIC"
+  }
 )
+
+/**
+ * Converts embeddable into View API DTO.
+ */
+fun SourceReferenceEmbeddable.toSourceReference() = when (this.sourceType) {
+  "CASE" -> CaseReference(
+    instanceId = this.instanceId,
+    executionId = this.executionId,
+    definitionId = this.definitionId,
+    definitionKey = this.definitionKey,
+    name = this.name,
+    applicationName = this.applicationName,
+    tenantId = this.tenantId
+  )
+  "PROCESS" -> ProcessReference(
+    instanceId = this.instanceId,
+    executionId = this.executionId,
+    definitionId = this.definitionId,
+    definitionKey = this.definitionKey,
+    name = this.name,
+    applicationName = this.applicationName,
+    tenantId = this.tenantId
+  )
+  "GENERIC" -> GenericReference(
+    instanceId = this.instanceId,
+    executionId = this.executionId,
+    definitionId = this.definitionId,
+    definitionKey = this.definitionKey,
+    name = this.name,
+    applicationName = this.applicationName,
+    tenantId = this.tenantId
+  )
+  else -> throw IllegalArgumentException("Unexpected source reference of type ${this.sourceType}")
+}

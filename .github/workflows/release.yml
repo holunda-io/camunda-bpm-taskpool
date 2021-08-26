@@ -1,9 +1,10 @@
-name: Master build
+name: Master and Snapshot release
 
 on:
   push:
     branches:
       - master
+      - develop
 
 jobs:
   build:

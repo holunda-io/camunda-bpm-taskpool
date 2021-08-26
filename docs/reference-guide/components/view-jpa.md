@@ -5,13 +5,15 @@ pageId: view-jpa
 ### Purpose
 
 The JPA View is component responsible for creating read-projections of tasks and business data entries. It currently implements
-Datapool View API (Taskpool API will follow) and persists the projection as entities and relations in a RDBMS using JPA. It is a useful
+Datapool View API and Taskpool API and persists the projection as entities and relations in a RDBMS using JPA. It is a useful
 if the JPA persistence is already used in the project setup.
 
 ### Features
 
 * stores representation of business data entries
-* provides single query API
+* stores representation of process definitions
+* stores representation of process instances
+* provides single query API supporting single and subscription queries
 
 
 ### Configuration options
@@ -60,6 +62,20 @@ polyflow.view.jpa:
   payload-attribute-level-limit: 2
 ```
 
+The events consumed by the JPA view change data inside the database. In addition, the view sends
+updates to subscription queries using the standard Axon Query Event Update Emitter mechanism. Since your
+application may use transactions, you might want to configure the moment when the events are sent using the
+following configuration options:
+```yml
+polyflow.view.jpa:
+  event-emitting-type: AFTER_COMMIT # or DIRECT or BEFORE_COMMIT
+```
+
+The `DIRECT` option sends the events directly without any transaction synchronization,  
+the default `AFTER_COMMIT` option sends updates after the commit and `BEFORE_COMMIT` option 
+sends updates before the commit of the transaction, delivering the events.
+
+
 ### Logging
 
 The view implementation provides runtime details using standard logging facility. If you
@@ -77,8 +93,14 @@ The JPA View uses several tables to store the results. These are:
 * `PLF_DATA_ENTRY_AUTHORIZATIONS`: table for authorization information of data entries
 * `PLF_DATA_ENTRY_PAYLOAD_ATTRIBUTES`: table for data entry attribute search index
 * `PLF_DATA_ENTRY_PROTOCOL`: table for data entry protocol entry (users, groups)
+* `PLF_PROC_DEF`: table for process definitions
+* `PLF_PROC_DEF_AUTHORIZATIONS`: table for authorization information of process definitions 
+* `PLF_PROC_INSTANCE`: table for process instances
+* `PLF_TASK`: table for user tasks
+* `PLF_TASK_AUTHORIZATIONS`: table for authorization information of user tasks
+* `PLF_TASK_CORRELATIONS`: table for user task correlation information
+* `PLF_TASK_PAYLOAD_ATTRIBUTES`: table for user task attribute search index
 * `TRACKING_TOKEN`: table for Axon Tracking Tokens
 
 If you are interested in DDLs for the view, feel free to generate one using the following call of Apache Maven 
-`mvn clean test -DskipTests -Pgenerate-sql -f view/jpa`. Currently, DDLs for the databases H2, MSSQL and PostgreSQL 
-are generated into `target/` directory.
+`mvn -Pgenerate-sql -f view/jpa`. Currently, DDLs for the databases H2, MSSQL and PostgreSQL are generated into `target/` directory.

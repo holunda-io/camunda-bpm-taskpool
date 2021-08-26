@@ -3,15 +3,15 @@ package io.holunda.polyflow.view.jpa.data
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.holixon.axon.gateway.query.RevisionValue
 import io.holunda.camunda.taskpool.api.business.*
-import io.holunda.camunda.variable.serializer.toJsonPathsWithValues
-import io.holunda.camunda.variable.serializer.toPayloadJson
-import io.holunda.camunda.variable.serializer.toPayloadVariableMap
+import io.holunda.camunda.variable.serializer.*
 import io.holunda.polyflow.view.DataEntry
 import io.holunda.polyflow.view.ProtocolEntry
-import io.holunda.polyflow.view.jpa.data.AuthorizationPrincipal.Companion.group
-import io.holunda.polyflow.view.jpa.data.AuthorizationPrincipal.Companion.user
-import io.holunda.polyflow.view.jpa.data.AuthorizationPrincipalType.GROUP
-import io.holunda.polyflow.view.jpa.data.AuthorizationPrincipalType.USER
+import io.holunda.polyflow.view.jpa.auth.AuthorizationPrincipal
+import io.holunda.polyflow.view.jpa.auth.AuthorizationPrincipal.Companion.group
+import io.holunda.polyflow.view.jpa.auth.AuthorizationPrincipal.Companion.user
+import io.holunda.polyflow.view.jpa.auth.AuthorizationPrincipalType.GROUP
+import io.holunda.polyflow.view.jpa.auth.AuthorizationPrincipalType.USER
+import io.holunda.polyflow.view.jpa.payload.PayloadAttribute
 
 /**
  * Converts the entity into API type.
@@ -67,10 +67,10 @@ fun DataEntryState.toState() = DataEntryStateEmbeddable(processingType = this.pr
 /**
  * Event to entity.
  */
-fun DataEntryCreatedEvent.toEntity(objectMapper: ObjectMapper, revisionValue: RevisionValue, limit: Int) = DataEntryEntity(
+fun DataEntryCreatedEvent.toEntity(objectMapper: ObjectMapper, revisionValue: RevisionValue, limit: Int, filters: List<Pair<JsonPathFilterFunction, FilterType>>) = DataEntryEntity(
   dataEntryId = DataEntryId(entryType = this.entryType, entryId = this.entryId),
   payload = this.payload.toPayloadJson(objectMapper),
-  payloadAttributes = this.payload.toJsonPathsWithValues(limit).map { attr -> PayloadAttribute(attr) }.toMutableSet(),
+  payloadAttributes = this.payload.toJsonPathsWithValues(limit, filters).map { attr -> PayloadAttribute(attr) }.toMutableSet(),
   name = this.name,
   applicationName = this.applicationName,
   type = this.type,
@@ -93,11 +93,11 @@ fun DataEntryCreatedEvent.toEntity(objectMapper: ObjectMapper, revisionValue: Re
 /**
  * Event to entity for an update, if an optional entry exists.
  */
-fun DataEntryUpdatedEvent.toEntity(objectMapper: ObjectMapper, revisionValue: RevisionValue, oldEntry: DataEntryEntity?, limit: Int) = if (oldEntry == null) {
+fun DataEntryUpdatedEvent.toEntity(objectMapper: ObjectMapper, revisionValue: RevisionValue, oldEntry: DataEntryEntity?, limit: Int, filters: List<Pair<JsonPathFilterFunction, FilterType>>) = if (oldEntry == null) {
   DataEntryEntity(
     dataEntryId = DataEntryId(entryType = this.entryType, entryId = this.entryId),
     payload = this.payload.toPayloadJson(objectMapper),
-    payloadAttributes = this.payload.toJsonPathsWithValues(limit).map { attr -> PayloadAttribute(attr) }.toMutableSet(),
+    payloadAttributes = this.payload.toJsonPathsWithValues(limit, filters).map { attr -> PayloadAttribute(attr) }.toMutableSet(),
     name = this.name,
     applicationName = this.applicationName,
     type = this.type,
@@ -117,7 +117,7 @@ fun DataEntryUpdatedEvent.toEntity(objectMapper: ObjectMapper, revisionValue: Re
 } else {
   oldEntry.also {
     it.payload = this.payload.toPayloadJson(objectMapper)
-    it.payloadAttributes = this.payload.toJsonPathsWithValues(limit).map { attr -> PayloadAttribute(attr) }.toMutableSet()
+    it.payloadAttributes = this.payload.toJsonPathsWithValues(limit, filters).map { attr -> PayloadAttribute(attr) }.toMutableSet()
     it.name = this.name
     it.applicationName = this.applicationName
     it.type = this.type

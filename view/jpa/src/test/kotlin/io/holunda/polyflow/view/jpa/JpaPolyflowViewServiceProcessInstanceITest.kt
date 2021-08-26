@@ -4,39 +4,40 @@ import io.holunda.camunda.taskpool.api.process.instance.*
 import io.holunda.camunda.taskpool.api.task.ProcessReference
 import io.holunda.camunda.taskpool.api.task.SourceReference
 import io.holunda.polyflow.view.ProcessInstanceState
+import io.holunda.polyflow.view.jpa.itest.TestApplication
 import io.holunda.polyflow.view.query.process.ProcessInstanceQueryResult
 import io.holunda.polyflow.view.query.process.ProcessInstancesByStateQuery
 import org.assertj.core.api.Assertions.assertThat
-import org.axonframework.queryhandling.QueryUpdateEmitter
+import org.awaitility.Awaitility.await
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit4.SpringRunner
 import java.util.*
+import java.util.concurrent.TimeUnit
 import javax.transaction.Transactional
 
 @RunWith(SpringRunner::class)
-@SpringBootTest
-@ActiveProfiles("itest")
+@SpringBootTest(classes = [TestApplication::class])
+@ActiveProfiles("itest", "mock-query-emitter")
 @Transactional
 internal class JpaPolyflowViewServiceProcessInstanceITest {
 
-  @MockBean
-  lateinit var queryUpdateEmitter: QueryUpdateEmitter
-
   @Autowired
   lateinit var jpaPolyflowViewService: JpaPolyflowViewService
+
+  @Autowired
+  lateinit var dbCleaner: DbCleaner
 
   private val instanceId = UUID.randomUUID().toString()
   private lateinit var source: SourceReference
 
   @Before
-  internal fun `ingest events`() {
+  fun `ingest events`() {
 
     source = ProcessReference(
       instanceId = instanceId,
@@ -62,12 +63,12 @@ internal class JpaPolyflowViewServiceProcessInstanceITest {
   }
 
   @After
-  internal fun `cleanup projection`() {
-    jpaPolyflowViewService.processDefinitionRepository.deleteAll()
+  fun `cleanup projection`() {
+    dbCleaner.cleanup()
   }
 
   @Test
-  internal fun `should find process instance by state running`() {
+  fun `should find process instance by state running`() {
     val result = jpaPolyflowViewService.query(
       ProcessInstancesByStateQuery(states = setOf(ProcessInstanceState.RUNNING))
     )
@@ -86,7 +87,7 @@ internal class JpaPolyflowViewServiceProcessInstanceITest {
   }
 
   @Test
-  internal fun `should find process instance by state suspended`() {
+  fun `should find process instance by state suspended`() {
 
     jpaPolyflowViewService.on(
       ProcessInstanceSuspendedEvent(
@@ -144,7 +145,7 @@ internal class JpaPolyflowViewServiceProcessInstanceITest {
 
 
   @Test
-  internal fun `should find process instance by state cancelled`() {
+  fun `should find process instance by state cancelled`() {
 
     jpaPolyflowViewService.on(
       ProcessInstanceCancelledEvent(
@@ -180,7 +181,7 @@ internal class JpaPolyflowViewServiceProcessInstanceITest {
   }
 
   @Test
-  internal fun `should find process instance by state deleted`() {
+  fun `should find process instance by state deleted`() {
 
     jpaPolyflowViewService.on(
       ProcessInstanceEndedEvent(

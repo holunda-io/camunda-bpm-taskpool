@@ -4,5 +4,6 @@
     <class>io.holunda.polyflow.view.jpa.data.ProtocolElement</class>
     <class>io.holunda.polyflow.view.jpa.process.ProcessDefinitionEntity</class>
     <class>io.holunda.polyflow.view.jpa.process.ProcessInstanceEntity</class>
+    <class>io.holunda.polyflow.view.jpa.task.TaskEntity</class>
   </persistence-unit>
 </persistence>

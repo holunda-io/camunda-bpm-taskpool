@@ -1,6 +1,8 @@
 package io.holunda.polyflow.view.jpa.data
 
 import io.holunda.camunda.taskpool.api.business.ProcessingType
+import io.holunda.polyflow.view.jpa.auth.AuthorizationPrincipal
+import io.holunda.polyflow.view.jpa.payload.PayloadAttribute
 import org.springframework.data.jpa.domain.Specification
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor
 import org.springframework.data.repository.CrudRepository
