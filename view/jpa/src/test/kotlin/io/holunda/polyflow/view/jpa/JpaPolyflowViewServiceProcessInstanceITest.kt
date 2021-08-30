@@ -8,7 +8,6 @@ import io.holunda.polyflow.view.jpa.itest.TestApplication
 import io.holunda.polyflow.view.query.process.ProcessInstanceQueryResult
 import io.holunda.polyflow.view.query.process.ProcessInstancesByStateQuery
 import org.assertj.core.api.Assertions.assertThat
-import org.awaitility.Awaitility.await
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -18,7 +17,6 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit4.SpringRunner
 import java.util.*
-import java.util.concurrent.TimeUnit
 import javax.transaction.Transactional
 
 @RunWith(SpringRunner::class)
@@ -28,7 +26,7 @@ import javax.transaction.Transactional
 internal class JpaPolyflowViewServiceProcessInstanceITest {
 
   @Autowired
-  lateinit var jpaPolyflowViewService: JpaPolyflowViewService
+  lateinit var jpaPolyflowViewService: JpaPolyflowViewProcessInstanceService
 
   @Autowired
   lateinit var dbCleaner: DbCleaner

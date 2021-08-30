@@ -21,7 +21,6 @@
 
   <modules>
     <module>view-api</module>
-    <module>filtering</module>
     <module>simple</module>
     <module>jpa</module>
     <module>mongo</module>

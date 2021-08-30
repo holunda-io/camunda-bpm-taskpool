@@ -23,7 +23,7 @@ import javax.transaction.Transactional
 internal class JpaPolyflowViewServiceProcessDefinitionITest {
 
   @Autowired
-  lateinit var jpaPolyflowViewService: JpaPolyflowViewService
+  lateinit var jpaPolyflowViewService: JpaPolyflowViewProcessDefinitionService
 
   @Autowired
   lateinit var dbCleaner: DbCleaner

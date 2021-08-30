@@ -5,7 +5,7 @@ import io.holunda.camunda.taskpool.api.business.ProcessingType
 import io.holunda.camunda.variable.serializer.toJsonPathsWithValues
 import io.holunda.polyflow.view.jpa.auth.AuthorizationPrincipal.Companion.group
 import io.holunda.polyflow.view.jpa.auth.AuthorizationPrincipal.Companion.user
-import io.holunda.polyflow.view.jpa.data.DataEntryRepository.Companion.hasPayloadAttribute
+import io.holunda.polyflow.view.jpa.data.DataEntryRepository.Companion.hasDataEntryPayloadAttribute
 import io.holunda.polyflow.view.jpa.itest.TestApplication
 import io.holunda.polyflow.view.jpa.payload.PayloadAttribute
 import org.assertj.core.api.Assertions.assertThat
@@ -197,8 +197,8 @@ internal class DataEntryRepositoryITest {
       dataEntryRepository.findAll(
 //        where(hasPayloadAttribute("child.key", "value"))
 //          .and(hasPayloadAttribute("id", dataEntry.dataEntryId.entryId))
-        where(hasPayloadAttribute("child.key", "value"))
-          .and(hasPayloadAttribute("id", dataEntry.dataEntryId.entryId))
+        where(hasDataEntryPayloadAttribute("child.key", "value"))
+          .and(hasDataEntryPayloadAttribute("id", dataEntry.dataEntryId.entryId))
       )
     assertThat(byPayloadFilterByChildKeyValue).containsExactlyInAnyOrderElementsOf(listOf(dataEntry))
 

@@ -32,7 +32,6 @@ import org.mockito.kotlin.clearInvocations
 import org.mockito.kotlin.verify
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit4.SpringRunner
 import org.springframework.transaction.annotation.Transactional
@@ -51,7 +50,6 @@ import java.util.function.Predicate
 )
 @ActiveProfiles("itest", "mock-query-emitter")
 @Transactional
-@DirtiesContext
 internal class JpaPolyflowViewServiceDataEntryITest {
 
   val emittedQueryUpdates: MutableList<QueryUpdate<Any>> = mutableListOf()
@@ -60,7 +58,7 @@ internal class JpaPolyflowViewServiceDataEntryITest {
   lateinit var queryUpdateEmitter: QueryUpdateEmitter
 
   @Autowired
-  lateinit var jpaPolyflowViewService: JpaPolyflowViewService
+  lateinit var jpaPolyflowViewService: JpaPolyflowViewDataEntryService
 
   @Autowired
   lateinit var dbCleaner: DbCleaner
@@ -207,7 +205,6 @@ internal class JpaPolyflowViewServiceDataEntryITest {
     )
 
     query_updates_have_been_emitted(query, id, 2)
-    query_updates_have_been_emitted(query, id2, 0)
   }
 
   @Test

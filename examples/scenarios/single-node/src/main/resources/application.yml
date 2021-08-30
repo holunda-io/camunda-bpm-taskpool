@@ -88,6 +88,8 @@ polyflow:
 
 logging.level:
   io.holunda.camunda:
+        taskpool.core: DEBUG
+  io.holunda.polyflow:
     taskpool:
       collector:
         process:

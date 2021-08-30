@@ -1,7 +1,7 @@
-package io.holunda.camunda.client.task
+package io.holunda.polyflow.client.camunda.task
 
-import io.holunda.camunda.client.CamundaEngineClientProperties
 import io.holunda.camunda.taskpool.api.task.*
+import io.holunda.polyflow.client.camunda.CamundaEngineClientProperties
 import org.camunda.bpm.engine.TaskService
 import org.camunda.bpm.extension.mockito.QueryMocks
 import org.camunda.bpm.extension.mockito.task.TaskFake
@@ -67,7 +67,15 @@ class TaskEventHandlerTest {
     val taskFake = TaskFake.builder().id("4711").build()
     QueryMocks.mockTaskQuery(taskService).singleResult(taskFake)
 
-    taskEventHandlers.on(TaskClaimedEvent(id = taskFake.id, taskDefinitionKey = "TASK-001", sourceReference = processReference, assignee = "kermit", formKey = null))
+    taskEventHandlers.on(
+      TaskClaimedEvent(
+        id = taskFake.id,
+        taskDefinitionKey = "TASK-001",
+        sourceReference = processReference,
+        assignee = "kermit",
+        formKey = null
+      )
+    )
 
     verify(taskService).createTaskQuery()
     verify(taskService).setAssignee("4711", "kermit")

@@ -15,7 +15,7 @@
 
   <properties>
     <rest.api.location>src/main/api</rest.api.location>
-    <rest.api.base-package>io.holunda.camunda.taskpool.example.process.rest</rest.api.base-package>
+    <rest.api.base-package>io.holunda.polyflow.example.process.approval.rest</rest.api.base-package>
     <maven.deploy.skip>true</maven.deploy.skip>
   </properties>
 

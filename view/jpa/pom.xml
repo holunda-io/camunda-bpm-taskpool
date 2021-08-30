@@ -19,10 +19,6 @@
     </dependency>
     <dependency>
       <groupId>io.holunda.polyflow</groupId>
-      <artifactId>polyflow-view-filtering</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.holunda.polyflow</groupId>
       <artifactId>polyflow-variable-serializer</artifactId>
     </dependency>
     <dependency>

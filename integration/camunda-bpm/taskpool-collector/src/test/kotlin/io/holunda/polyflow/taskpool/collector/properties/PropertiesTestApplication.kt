@@ -1,0 +1,9 @@
+package io.holunda.polyflow.taskpool.collector.properties
+
+import io.holunda.polyflow.taskpool.collector.CamundaTaskpoolCollectorProperties
+import org.springframework.boot.autoconfigure.SpringBootApplication
+import org.springframework.boot.context.properties.EnableConfigurationProperties
+
+@SpringBootApplication
+@EnableConfigurationProperties(CamundaTaskpoolCollectorProperties::class)
+class PropertiesTestApplication
