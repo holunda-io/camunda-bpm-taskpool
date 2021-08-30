@@ -22,7 +22,7 @@ class TasklistRestConfiguration {
   fun tasklistRestApi() = Docket(DocumentationType.SWAGGER_2)
     .groupName("polyflow process platform")
     .select()
-    .apis(RequestHandlerSelectors.basePackage("io.holunda.camunda.taskpool.example.tasklist"))
+    .apis(RequestHandlerSelectors.basePackage("io.holunda.polyflow.example.tasklist"))
     .paths(PathSelectors.any())
     .build()
 
