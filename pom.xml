@@ -5,7 +5,7 @@
 
   <groupId>io.holunda.polyflow</groupId>
   <artifactId>polyflow-root</artifactId>
-  <version>3.1.2-SNAPSHOT</version>
+  <version>3.1.2</version>
   <packaging>pom</packaging>
 
   <name>POM: ${project.artifactId}</name>
