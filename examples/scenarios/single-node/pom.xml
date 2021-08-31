@@ -6,7 +6,7 @@
   <parent>
     <groupId>io.holunda.polyflow</groupId>
     <artifactId>polyflow-example-scenario-root</artifactId>
-    <version>3.1.1</version>
+    <version>3.1.2</version>
   </parent>
 
   <artifactId>polyflow-example-scenario-single-node</artifactId>
@@ -37,9 +37,14 @@
       <groupId>io.holunda.polyflow</groupId>
       <artifactId>polyflow-form-url-resolver</artifactId>
     </dependency>
+    <!-- Put both JPA and MEM views and decide on active profile -->
     <dependency>
       <groupId>io.holunda.polyflow</groupId>
       <artifactId>polyflow-view-simple</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.holunda.polyflow</groupId>
+      <artifactId>polyflow-view-jpa</artifactId>
     </dependency>
 
     <!-- Process application -->
@@ -57,6 +62,12 @@
       <groupId>com.h2database</groupId>
       <artifactId>h2</artifactId>
     </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+
   </dependencies>
 
   <build>

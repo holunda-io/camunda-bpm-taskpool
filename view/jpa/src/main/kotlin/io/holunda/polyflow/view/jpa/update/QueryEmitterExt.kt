@@ -1,16 +1,16 @@
-package io.holunda.polyflow.view.jpa
+package io.holunda.polyflow.view.jpa.update
 
 import io.holixon.axon.gateway.query.QueryResponseMessageResponseType
 import io.holixon.axon.gateway.query.RevisionValue
-import io.holunda.polyflow.view.DataEntry
-import io.holunda.polyflow.view.ProcessDefinition
-import io.holunda.polyflow.view.ProcessInstance
+import io.holunda.polyflow.view.*
 import io.holunda.polyflow.view.query.data.DataEntriesForUserQuery
 import io.holunda.polyflow.view.query.data.DataEntriesQuery
 import io.holunda.polyflow.view.query.data.DataEntriesQueryResult
 import io.holunda.polyflow.view.query.data.DataEntryForIdentityQuery
 import io.holunda.polyflow.view.query.process.ProcessDefinitionsStartableByUserQuery
+import io.holunda.polyflow.view.query.process.ProcessInstanceQueryResult
 import io.holunda.polyflow.view.query.process.ProcessInstancesByStateQuery
+import io.holunda.polyflow.view.query.task.*
 import org.axonframework.queryhandling.QueryUpdateEmitter
 
 
@@ -70,7 +70,57 @@ fun QueryUpdateEmitter.updateProcessInstanceQuery(entry: ProcessInstance) {
     ProcessInstancesByStateQuery::class.java,
     { query -> query.applyFilter(entry) },
     QueryResponseMessageResponseType.asSubscriptionUpdateMessage(
-      payload = listOf(entry)
+      payload = ProcessInstanceQueryResult(listOf(entry))
     )
   )
+}
+
+/**
+ * Updates subscription queries for tasks.
+ * @param entry task to send update about.
+ */
+fun QueryUpdateEmitter.updateTaskQuery(entry: TaskWithDataEntries) {
+
+  this.emit(
+    TaskForIdQuery::class.java,
+    { query -> query.applyFilter(entry.task) },
+    QueryResponseMessageResponseType.asSubscriptionUpdateMessage(
+      payload = entry.task
+    )
+  )
+
+  this.emit(
+    TasksForApplicationQuery::class.java,
+    { query -> query.applyFilter(entry.task) },
+    QueryResponseMessageResponseType.asSubscriptionUpdateMessage(
+      payload = TaskQueryResult(elements = listOf(entry.task))
+    )
+  )
+
+  this.emit(
+    TasksForUserQuery::class.java,
+    { query -> query.applyFilter(entry.task) },
+    QueryResponseMessageResponseType.asSubscriptionUpdateMessage(
+      payload = TaskQueryResult(elements = listOf(entry.task))
+    )
+  )
+
+  this.emit(
+    TaskWithDataEntriesForIdQuery::class.java,
+    { query -> query.applyFilter(entry) },
+    QueryResponseMessageResponseType.asSubscriptionUpdateMessage(
+      payload = entry
+    )
+  )
+
+  this.emit(
+    TasksWithDataEntriesForUserQuery::class.java,
+    { query -> query.applyFilter(entry) },
+    QueryResponseMessageResponseType.asSubscriptionUpdateMessage(
+      payload = TasksWithDataEntriesQueryResult(
+        elements = listOf(entry)
+      )
+    )
+  )
+
 }

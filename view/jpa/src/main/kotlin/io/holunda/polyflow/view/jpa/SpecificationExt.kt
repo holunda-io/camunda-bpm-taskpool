@@ -1,20 +1,24 @@
-package io.holunda.polyflow.view.jpa.data
+package io.holunda.polyflow.view.jpa
 
 import io.holunda.camunda.taskpool.api.business.DataEntryState
 import io.holunda.camunda.taskpool.api.business.ProcessingType
 import io.holunda.polyflow.view.DataEntry
 import io.holunda.polyflow.view.filter.Criterion
 import io.holunda.polyflow.view.filter.EQUALS
-import io.holunda.polyflow.view.jpa.data.DataEntryRepository.Companion.hasPayloadAttribute
+import io.holunda.polyflow.view.jpa.data.DataEntryEntity
+import io.holunda.polyflow.view.jpa.data.DataEntryRepository.Companion.hasDataEntryPayloadAttribute
 import io.holunda.polyflow.view.jpa.data.DataEntryRepository.Companion.hasProcessingType
 import io.holunda.polyflow.view.jpa.data.DataEntryRepository.Companion.hasState
+import io.holunda.polyflow.view.jpa.task.TaskEntity
+import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.hasBusinessKey
+import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.hasTaskPayloadAttribute
 import org.springframework.data.jpa.domain.Specification
 import org.springframework.data.jpa.domain.Specification.where
 
 /**
  * Creates a JPQL specification out of predicate wrapper.
  */
-fun List<Criterion>.toSpecification(): Specification<DataEntryEntity>? {
+fun List<Criterion>.toDataEntrySpecification(): Specification<DataEntryEntity>? {
 
   val attributeSpec = toDataEntryAttributeSpecification()
   val payloadSpec = toDataEntryPayloadSpecification()
@@ -28,10 +32,34 @@ fun List<Criterion>.toSpecification(): Specification<DataEntryEntity>? {
 }
 
 /**
+ * Creates a JPQL specification out of predicate wrapper.
+ */
+fun List<Criterion>.toTaskSpecification(): Specification<TaskEntity>? {
+
+  val attributeSpec = toTaskAttributeSpecification()
+  val payloadSpec = toTaskPayloadSpecification()
+
+  return when {
+    attributeSpec != null && payloadSpec != null -> where(attributeSpec).and(payloadSpec)
+    attributeSpec != null -> attributeSpec
+    payloadSpec != null -> payloadSpec
+    else -> null
+  }
+}
+
+/**
+ * Specification for query on task attributes.
+ */
+internal fun List<Criterion>.toTaskAttributeSpecification(): Specification<TaskEntity>? {
+  val relevant = this.filterIsInstance<Criterion.TaskCriterion>().map { it.toTaskSpecification() }
+  return composeAnd(relevant)
+}
+
+/**
  * Specification for query on data entry attributes.
  */
 internal fun List<Criterion>.toDataEntryAttributeSpecification(): Specification<DataEntryEntity>? {
-  val relevant = this.filterIsInstance<Criterion.DataEntryCriterion>().map { it.toSpecification() }
+  val relevant = this.filterIsInstance<Criterion.DataEntryCriterion>().map { it.toDataEntrySpecification() }
   return composeAnd(relevant)
 }
 
@@ -39,14 +67,43 @@ internal fun List<Criterion>.toDataEntryAttributeSpecification(): Specification<
  * Specification on payload.
  */
 internal fun List<Criterion>.toDataEntryPayloadSpecification(): Specification<DataEntryEntity>? {
-  val relevant = this.filterIsInstance<Criterion.PayloadEntryCriterion>().map { it.toSpecification() }
+  val relevant = this.filterIsInstance<Criterion.PayloadEntryCriterion>().map { it.toDataEntrySpecification() }
   return composeAnd(relevant)
+}
+
+/**
+ * Specification on payload.
+ */
+internal fun List<Criterion>.toTaskPayloadSpecification(): Specification<TaskEntity>? {
+  val relevant = this.filterIsInstance<Criterion.PayloadEntryCriterion>().map { it.toTaskSpecification() }
+  return composeAnd(relevant)
+}
+
+
+/**
+ * Creates JPA specification for the query of direct attributes of the task.
+ */
+internal fun Criterion.TaskCriterion.toTaskSpecification(): Specification<TaskEntity> {
+  return when (this.name) {
+    TaskEntity::businessKey.name -> hasBusinessKey(this.value)
+    else -> throw IllegalArgumentException("JPA View found unsupported task attribute: ${this.name}.")
+  }
+}
+
+/**
+ * Creates JPA Specification for query of payload attributes based on JSON paths.
+ */
+internal fun Criterion.PayloadEntryCriterion.toTaskSpecification(): Specification<TaskEntity> {
+  return when (this.operator) {
+    EQUALS -> hasTaskPayloadAttribute(this.name, this.value)
+    else -> throw IllegalArgumentException("JPA View currently supports only equals as operator for filtering of payload attributes.")
+  }
 }
 
 /**
  * Creates JPA specification for the query of direct attributes of the data entry.
  */
-internal fun Criterion.DataEntryCriterion.toSpecification(): Specification<DataEntryEntity> {
+internal fun Criterion.DataEntryCriterion.toDataEntrySpecification(): Specification<DataEntryEntity> {
   return when (this.name) {
     "${DataEntry::state.name}.${DataEntryState::state.name}" -> hasState(this.value)
     "${DataEntry::state.name}.${DataEntryState::processingType.name}" -> hasProcessingType(ProcessingType.valueOf(this.value))
@@ -57,10 +114,10 @@ internal fun Criterion.DataEntryCriterion.toSpecification(): Specification<DataE
 /**
  * Creates JPA Specification for query of payload attributes based on JSON paths.
  */
-internal fun Criterion.PayloadEntryCriterion.toSpecification(): Specification<DataEntryEntity> {
+internal fun Criterion.PayloadEntryCriterion.toDataEntrySpecification(): Specification<DataEntryEntity> {
   return when (this.operator) {
-    EQUALS -> hasPayloadAttribute(this.name, this.value)
-    else -> throw IllegalArgumentException("JPA View currently supports only equals as operator for filtering.")
+    EQUALS -> hasDataEntryPayloadAttribute(this.name, this.value)
+    else -> throw IllegalArgumentException("JPA View currently supports only equals as operator for filtering of payload attributes.")
   }
 }
 

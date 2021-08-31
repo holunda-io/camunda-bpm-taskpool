@@ -48,24 +48,10 @@ automatically.
 ### Skip Frontend
 
 !!! note
-    Components for production use of camunda-bpm-taskpool are backend components only. Frontend components are only created for examples and demonstration purpose.
+    Components for production use of Polyflow are backend components only. Frontend components are only created for examples and demonstration purpose.
 
 If you are interested in backend only, specify the `-DskipFrontend` switch. This will accelerate the build
 significantly.
-
-### Generate SQL scripts
-
-The project uses [Flyway](https://flywaydb.org/) for versioning of database changes. In doing so we provide the
-required SQL scripts for initialization of required database objects (including Camunda BPM schema, Axon schema and
-some example schema). If you change any of those you will need to create SQL scripts describing your change.
-For doing so, you can re-generate the scripts running:
-
-```bash
-./mvnw -Pgenerate-sql
-```
-
-!!! warning
-    The existing scripts must not be replaced or changed, but new additional scripts needs to added.
 
 ### Build Documentation
 
@@ -135,8 +121,8 @@ docker-compose up
 For the distributed scenario, the containers from the previous section needs to be started.
 To start applications, either use your IDE and create two run configurations for the classes (in this order):
 
-* `io.holunda.camunda.taskpool.example.process.ExampleTaskpoolApplicationDistributedWithAxonServer`
-* `io.holunda.camunda.taskpool.example.process.ExampleProcessApplicationDistributedWithAxonServer`
+* `io.holunda.polyflow.example.process.platform.ExampleTaskpoolApplicationDistributedWithAxonServer`
+* `io.holunda.polyflow.example.process.approval.ExampleProcessApplicationDistributedWithAxonServer`
 
 Alternatively, you can run them from the command line:
 
@@ -152,7 +138,7 @@ is used to build the releases.
 
 ## Release Management
 
-Release management has been set-up for use of Sonatype Nexus (= Maven Central)
+Release management has been setup for use of Sonatype Nexus (= Maven Central)
 
 ### What modules get deployed to repository
 
@@ -209,5 +195,5 @@ export GPG_PASSPHRASE="<secret>"
 !!! warning
      This operation requires special permissions.
 
-The deploy job will publish the artifacts to Nexus OSS staging repositories. Don't forget to close and release the
-repository to enable it's sync with Maven Central.
+The deployment job will publish the artifacts to Nexus OSS staging repositories. Currently, all snapshots get into OSS Sonatype Snapshot
+repository and all releases to Maven Central automatically.

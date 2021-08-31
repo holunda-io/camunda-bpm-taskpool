@@ -1,9 +1,5 @@
-package io.holunda.camunda.client.process
+package io.holunda.polyflow.client.camunda.process
 
-import org.mockito.kotlin.any
-import org.mockito.kotlin.verify
-import org.mockito.kotlin.verifyNoMoreInteractions
-import org.mockito.kotlin.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.camunda.bpm.engine.RuntimeService
 import org.camunda.bpm.engine.variable.Variables
@@ -14,6 +10,10 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
+import org.mockito.kotlin.any
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoMoreInteractions
+import org.mockito.kotlin.whenever
 
 
 @ExtendWith(MockitoExtension::class)
@@ -36,13 +36,15 @@ class ProcessStarterTest {
     val payload = Variables.createVariables().putValueTyped("my-user-input", stringValue("my value"))
 
     whenever(runtimeService.startProcessInstanceByKey(any(), any(), any<Map<String, Any>>()))
-      .thenReturn(ProcessInstanceFake
-        .builder()
-        .id("4711")
-        .processDefinitionId("myProcess")
-        .processInstanceId("0815")
-        .businessKey("business 123")
-        .build())
+      .thenReturn(
+        ProcessInstanceFake
+          .builder()
+          .id("4711")
+          .processDefinitionId("myProcess")
+          .processInstanceId("0815")
+          .businessKey("business 123")
+          .build()
+      )
 
     val instance = processStarter.startProcess("process 1", payload = payload, businessKey = "business 789")
     assertThat(instance).isEqualTo("0815")

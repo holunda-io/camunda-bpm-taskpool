@@ -14,9 +14,12 @@ import io.holunda.camunda.variable.serializer.serialize
 import io.holunda.polyflow.view.auth.User
 import io.holunda.polyflow.view.jpa.itest.TestApplication
 import io.holunda.polyflow.view.query.data.DataEntriesForUserQuery
+import io.holunda.polyflow.view.query.data.DataEntriesQuery
 import io.holunda.polyflow.view.query.data.DataEntriesQueryResult
 import mu.KLogging
 import org.assertj.core.api.Assertions.assertThat
+import org.axonframework.eventhandling.GenericEventMessage
+import org.axonframework.eventsourcing.eventstore.EventStore
 import org.axonframework.messaging.GenericMessage
 import org.axonframework.queryhandling.QueryGateway
 import org.junit.After
@@ -56,16 +59,13 @@ internal class JpaPolyflowViewServiceDataEntryRevisionSupportITest {
   lateinit var executorService: ExecutorService
 
   @Autowired
-  lateinit var polyflowJpaViewProperties: PolyflowJpaViewProperties
-
-  @Autowired
   lateinit var dbCleaner: DbCleaner
 
   @Autowired
   lateinit var queryGateway: QueryGateway
 
   @Autowired
-  lateinit var jpaPolyflowViewService: JpaPolyFlowJpaServiceTxFacade
+  lateinit var eventStore: EventStore
 
   @Autowired
   lateinit var objectMapper: ObjectMapper
@@ -87,27 +87,29 @@ internal class JpaPolyflowViewServiceDataEntryRevisionSupportITest {
 
     executorService = Executors.newFixedThreadPool(2)
 
-    jpaPolyflowViewService.on(
-      event = DataEntryCreatedEvent(
-        entryType = "io.polyflow.test",
-        entryId = id,
-        type = "Test",
-        applicationName = "test-application",
-        name = "Test Entry 1",
-        state = ProcessingType.IN_PROGRESS.of("In progress"),
-        payload = serialize(payload = payload, mapper = objectMapper),
-        authorizations = listOf(
-          addUser("kermit"),
-          addGroup("muppets")
+    eventStore.publish(
+      GenericEventMessage(
+        DataEntryCreatedEvent(
+          entryType = "io.polyflow.test",
+          entryId = id,
+          type = "Test",
+          applicationName = "test-application",
+          name = "Test Entry 1",
+          state = ProcessingType.IN_PROGRESS.of("In progress"),
+          payload = serialize(payload = payload, mapper = objectMapper),
+          authorizations = listOf(
+            addUser("kermit"),
+            addGroup("muppets")
+          ),
+          createModification = Modification(
+            time = OffsetDateTime.ofInstant(now, ZoneOffset.UTC),
+            username = "kermit",
+            log = "Created",
+            logNotes = "Created the entry"
+          )
         ),
-        createModification = Modification(
-          time = OffsetDateTime.ofInstant(now, ZoneOffset.UTC),
-          username = "kermit",
-          log = "Created",
-          logNotes = "Created the entry"
-        )
-      ),
-      metaData = RevisionValue(revision = 1).toMetaData()
+        RevisionValue(revision = 1).toMetaData()
+      )
     )
 
     send_event_update_with_revision(2)
@@ -124,7 +126,7 @@ internal class JpaPolyflowViewServiceDataEntryRevisionSupportITest {
 
     val user = User("kermit", setOf("muppets"))
     val filters = listOf("key-int=1")
-    val query = DataEntriesForUserQuery(user = user, filters = filters)
+    val query = DataEntriesQuery(filters = filters)
     val revisionValue = RevisionValue(revision = 3)
 
     val subscription = queryGateway.query(
@@ -217,24 +219,26 @@ internal class JpaPolyflowViewServiceDataEntryRevisionSupportITest {
 
 
   fun send_event_update_with_revision(revision: Long) {
-    jpaPolyflowViewService.on(
-      event = DataEntryUpdatedEvent(
-        entryType = "io.polyflow.test",
-        entryId = id,
-        type = "Test",
-        applicationName = "test-application",
-        name = "Test Entry $revision",
-        state = ProcessingType.IN_PROGRESS.of("In review"),
-        payload = serialize(payload = payload, mapper = objectMapper),
-        authorizations = listOf(),
-        updateModification = Modification(
-          time = OffsetDateTime.ofInstant(now, ZoneOffset.UTC).plus(10 + revision, ChronoUnit.SECONDS),
-          username = "ironman",
-          log = "Updated",
-          logNotes = "Updated the entry"
-        )
-      ),
-      metaData = RevisionValue(revision = revision).toMetaData()
+    eventStore.publish(
+      GenericEventMessage(
+        DataEntryUpdatedEvent(
+          entryType = "io.polyflow.test",
+          entryId = id,
+          type = "Test",
+          applicationName = "test-application",
+          name = "Test Entry $revision",
+          state = ProcessingType.IN_PROGRESS.of("In review"),
+          payload = serialize(payload = payload, mapper = objectMapper),
+          authorizations = listOf(),
+          updateModification = Modification(
+            time = OffsetDateTime.ofInstant(now, ZoneOffset.UTC).plus(10 + revision, ChronoUnit.SECONDS),
+            username = "ironman",
+            log = "Updated",
+            logNotes = "Updated the entry"
+          )
+        ),
+        RevisionValue(revision = revision).toMetaData()
+      )
     )
   }
 }

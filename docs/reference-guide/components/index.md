@@ -48,7 +48,6 @@ user tasks and business data items. They are typically deployed as a part of the
 * [JPA View](view-jpa.md)
 * [Mongo DB View](view-mongo.md)
 * [Property Form URL Resolver](view-form-url-resolver.md)
-* [View Filtering](view-filtering.md)
 
 ## Other Components
 

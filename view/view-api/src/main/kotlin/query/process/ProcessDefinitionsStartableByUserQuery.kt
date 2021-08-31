@@ -16,7 +16,7 @@ data class ProcessDefinitionsStartableByUserQuery(
     // start-able
     element.startableFromTasklist &&
       // candidate user
-      (element.candidateStarterUsers.contains(this.user.username))
+      (element.candidateStarterUsers.contains(this.user.username)
       // candidate groups
-      || (element.candidateStarterGroups.any { candidateGroup -> this.user.groups.contains(candidateGroup) })
+      || (element.candidateStarterGroups.any { candidateGroup -> this.user.groups.contains(candidateGroup) }))
 }

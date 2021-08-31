@@ -75,7 +75,7 @@ polyflow:
       tasklist-url: http://localhost:8081/polyflow/tasks
 
 logging.level:
-  io.holunda.camunda:
+  io.holunda.polyflow:
     taskpool:
       gateway: DEBUG
       sender: INFO

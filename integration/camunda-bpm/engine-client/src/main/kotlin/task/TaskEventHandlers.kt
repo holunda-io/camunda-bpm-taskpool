@@ -1,7 +1,7 @@
-package io.holunda.camunda.client.task
+package io.holunda.polyflow.client.camunda.task
 
-import io.holunda.camunda.client.CamundaEngineClientProperties
 import io.holunda.camunda.taskpool.api.task.*
+import io.holunda.polyflow.client.camunda.CamundaEngineClientProperties
 import mu.KLogging
 import org.axonframework.eventhandling.EventHandler
 import org.camunda.bpm.engine.ProcessEngineException

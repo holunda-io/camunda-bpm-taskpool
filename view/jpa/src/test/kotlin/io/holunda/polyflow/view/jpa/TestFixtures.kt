@@ -61,13 +61,16 @@ class DbCleaner(
 
 @Component
 @Transactional(propagation = Propagation.REQUIRES_NEW)
-class JpaPolyFlowJpaServiceTxFacade(private val implementation: JpaPolyflowViewService): DataEntryApi, DataEntryEventHandler {
+class JpaPolyflowViewServiceTxFacade(private val implementation: JpaPolyflowViewDataEntryService) : DataEntryApi, DataEntryEventHandler {
 
-  override fun query(query: DataEntryForIdentityQuery, metaData: MetaData): QueryResponseMessage<DataEntriesQueryResult> = implementation.query(query = query, metaData = metaData)
+  override fun query(query: DataEntryForIdentityQuery, metaData: MetaData): QueryResponseMessage<DataEntriesQueryResult> =
+    implementation.query(query = query, metaData = metaData)
 
-  override fun query(query: DataEntriesForUserQuery, metaData: MetaData): QueryResponseMessage<DataEntriesQueryResult> = implementation.query(query = query, metaData = metaData)
+  override fun query(query: DataEntriesForUserQuery, metaData: MetaData): QueryResponseMessage<DataEntriesQueryResult> =
+    implementation.query(query = query, metaData = metaData)
 
-  override fun query(query: DataEntriesQuery, metaData: MetaData): QueryResponseMessage<DataEntriesQueryResult> = implementation.query(query = query, metaData = metaData)
+  override fun query(query: DataEntriesQuery, metaData: MetaData): QueryResponseMessage<DataEntriesQueryResult> =
+    implementation.query(query = query, metaData = metaData)
 
   override fun on(event: DataEntryCreatedEvent, metaData: MetaData) = implementation.on(event = event, metaData = metaData)
 

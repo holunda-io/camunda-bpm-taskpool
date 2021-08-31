@@ -1,4 +1,4 @@
-package io.holunda.camunda.client
+package io.holunda.polyflow.client.camunda
 
 import org.mockito.kotlin.mock
 import org.assertj.core.api.Assertions

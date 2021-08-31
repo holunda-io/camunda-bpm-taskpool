@@ -5,11 +5,3 @@ package io.holunda.polyflow.view.query.task
  */
 class TaskCountByApplicationQuery
 
-/**
- * Response type.
- * FIXME: think of encapsulating it into a typed result instead of List<ApplicationWithTaskCount>
- */
-data class ApplicationWithTaskCount(
-  val application: String,
-  val taskCount: Int
-)
