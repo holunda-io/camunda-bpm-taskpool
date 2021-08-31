@@ -9,7 +9,6 @@ import io.holunda.polyflow.view.jpa.auth.AuthorizationPrincipal
 import io.holunda.polyflow.view.jpa.data.DataEntryId
 import io.holunda.polyflow.view.jpa.data.asGroupnames
 import io.holunda.polyflow.view.jpa.data.asUsernames
-import io.holunda.polyflow.view.jpa.data.toDataEntry
 import io.holunda.polyflow.view.jpa.payload.PayloadAttribute
 import io.holunda.polyflow.view.jpa.process.toSourceReference
 import io.holunda.polyflow.view.jpa.process.toSourceReferenceEmbeddable
@@ -58,21 +57,33 @@ fun TaskAttributeUpdatedEngineEvent.toEntity(
 ) = TaskEntity(
   taskId = this.id,
   taskDefinitionKey = this.taskDefinitionKey,
-  name = this.name ?: "",
-  priority = this.priority ?: 50,
   sourceReference = this.sourceReference.toSourceReferenceEmbeddable(),
   authorizedPrincipals = oldEntity.authorizedPrincipals,
-  correlations = this.correlations.map { entry -> DataEntryId(entryType = entry.key, entryId = "${entry.value}") }.toMutableSet(),
-  payload = this.payload.toPayloadJson(objectMapper),
-  payloadAttributes = this.payload.toJsonPathsWithValues(limit, filters).map { attr -> PayloadAttribute(attr) }.toMutableSet(),
   assignee = oldEntity.assignee,
-  businessKey = this.businessKey,
-  description = this.description,
+  name = this.name ?: oldEntity.name,
+  priority = this.priority ?: oldEntity.priority,
+  correlations = if (this.correlations.isNotEmpty()) {
+    this.correlations.map { entry -> DataEntryId(entryType = entry.key, entryId = "${entry.value}") }.toMutableSet()
+  } else {
+    oldEntity.correlations
+  },
+  payload = if (this.payload.isNotEmpty()) {
+    this.payload.toPayloadJson(objectMapper)
+  } else {
+    oldEntity.payload
+  },
+  payloadAttributes = if (this.payload.isNotEmpty()) {
+    this.payload.toJsonPathsWithValues(limit, filters).map { attr -> PayloadAttribute(attr) }.toMutableSet()
+  } else {
+    oldEntity.payloadAttributes
+  },
+  businessKey = this.businessKey ?: oldEntity.businessKey,
+  description = this.description ?: oldEntity.description,
   formKey = oldEntity.formKey,
   createdDate = oldEntity.createdDate,
-  followUpDate = this.followUpDate?.toInstant(),
-  dueDate = this.dueDate?.toInstant(),
-  owner = this.owner
+  followUpDate = this.followUpDate?.toInstant() ?: oldEntity.followUpDate,
+  dueDate = this.dueDate?.toInstant() ?: oldEntity.dueDate,
+  owner = this.owner ?: oldEntity.owner
 )
 
 /**
