@@ -20,7 +20,7 @@
     
     
       
-        <title>View API - Polyflow</title>
+        <title>View-API - Polyflow</title>
       
     
     
@@ -73,7 +73,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#purpose" class="md-skip">
+        <a href="#title-view-api-pageid-view-api" class="md-skip">
           Skip to content
         </a>
       
@@ -102,7 +102,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              View API
+              View-API
             
           </span>
         </div>
@@ -759,9 +759,22 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#title-view-api-pageid-view-api" class="md-nav__link">
+    title: View API pageId: view-api
+  </a>
+  
+    <nav class="md-nav" aria-label="title: View API pageId: view-api">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
   <a href="#purpose" class="md-nav__link">
     Purpose
   </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -769,18 +782,6 @@
   
 </nav>
       
-    </li>
-  
-
-          
-            
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="view-filtering.html" class="md-nav__link">
-        View Filtering
-      </a>
     </li>
   
 
@@ -1167,14 +1168,19 @@
                 
                   <h1>View-API</h1>
                 
-                <h3 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">#</a></h3>
-<p>The Polyflow View API defines the interfaces of the task-pool and data-pool query API. It defines the main queries of the common read-projections.
-Its main purpose is to create a public stable API which is independent of the implementations. There are multiple implementations available:</p>
+                <hr />
+<h2 id="title-view-api-pageid-view-api">title: View API pageId: view-api<a class="headerlink" href="#title-view-api-pageid-view-api" title="Permanent link">#</a></h2>
+<h3 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">#</a></h3>
+<p>The Polyflow View API defines the interfaces of the task-pool and data-pool query API. It defines the main queries of the common read-projections. Its main
+purpose is to create a public stable API which is independent of the implementations. There are multiple implementations available:</p>
 <ul>
 <li><a href="view-simple.html">In-Memory View</a></li>
 <li><a href="view-jpa.html">JPA View</a></li>
 <li><a href="view-mongo.html">Mongo DB View</a></li>
 </ul>
+<p>In addition, the API supplies filtering functionality for handling requests of filtering of view results in form of attribute filters (
+like <code>attribute=value&amp;attrubute2=value2&amp;task.name=taskname</code>). Especially it defines the main concepts like <code>Criteria</code> and <code>Operator</code>
+and allows classification of those. </p>
                 
                   
                     
@@ -1183,7 +1189,7 @@ Its main purpose is to create a public stable API which is independent of the im
 <div class="md-source-date">
   <small>
     
-      Last update: <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">August 26, 2021</span>
+      Last update: <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">August 31, 2021</span>
       
     
   </small>
@@ -1229,13 +1235,13 @@ Its main purpose is to create a public stable API which is independent of the im
       
       
         
-        <a href="view-filtering.html" class="md-footer__link md-footer__link--next" aria-label="Next: View Filtering" rel="next">
+        <a href="other-tasklist-url-resolver.html" class="md-footer__link md-footer__link--next" aria-label="Next: Tasklist URL Resolver" rel="next">
           <div class="md-footer__title">
             <div class="md-ellipsis">
               <span class="md-footer__direction">
                 Next
               </span>
-              View Filtering
+              Tasklist URL Resolver
             </div>
           </div>
           <div class="md-footer__button md-icon">

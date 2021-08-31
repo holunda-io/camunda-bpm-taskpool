@@ -820,18 +820,6 @@
   
 
           
-            
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="view-filtering.html" class="md-nav__link">
-        View Filtering
-      </a>
-    </li>
-  
-
-          
         </ul>
       </nav>
     </li>
@@ -1235,27 +1223,27 @@ a business data projection. In doing so, it collects and transmits it to Datapoo
 </code></pre></div>
 <p>Then activate the datapool collector by providing the annotation on any Spring Configuration:</p>
 <div class="highlight"><pre><span></span><code><span class="nd">@Configuration</span>
-<span class="nd">@EnableDataEntryCollector</span>
+<span class="nd">@EnableDataEntrySender</span>
 <span class="kd">class</span> <span class="nc">MyDataEntryCollectorConfiguration</span> <span class="p">{</span>
 
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="command-transmission">Command transmission<a class="headerlink" href="#command-transmission" title="Permanent link">#</a></h3>
 <p>In order to control sending of commands to command gateway, the command sender activation property
-<code>camunda.taskpool.dataentry.sender.enabled</code> (default is <code>true</code>) is available. If disabled, the command sender
+<code>polyflow.integration.sender.data-entry.enabled</code> (default is <code>true</code>) is available. If disabled, the command sender
 will log any command instead of sending it to the command gateway.</p>
-<p>In addition you can control by the property <code>camunda.taskpool.dataentry.sender.type</code> if you want to use the default command sender or provide your own implementation.
+<p>In addition, you can control by the property <code>polyflow.integration.sender.data-entry.type</code> if you want to use the default command sender or provide your own implementation.
 The default provided command sender (type: <code>simple</code>) just sends the commands synchronously using Axon Command Bus.</p>
 <p>TIP: If you want to implement a custom command sending, please provide your own implementation of the interface <code>DataEntryCommandSender</code>
-(register a Spring Component of the type) and set the property <code>camunda.taskpool.dataentry.sender.type</code> to <code>custom</code>.</p>
+(register a Spring Component of the type) and set the property <code>polyflow.integration.sender.data-entry.type</code> to <code>custom</code>.</p>
 <h4 id="handling-command-transmission">Handling command transmission<a class="headerlink" href="#handling-command-transmission" title="Permanent link">#</a></h4>
 <p>The commands sent by the <code>Datapool Collector</code> are received by Command Handlers. The latter may accept or reject commands, depending
 on the state of the aggregate and other components. The <code>SimpleDataEntryCommandSender</code> is informed about the command outcome. By default, it will log the outcome
 to console (success is logged in <code>DEBUG</code> log level, errors are using <code>ERROR</code> log level).</p>
 <p>In some situations it is required to take care of command outcome. A prominent example is to include a metric for command dispatching errors into monitoring. For doing so,
 it is possible to provide own handlers for success and error command outcome.</p>
-<p>For Data Entry Command Sender (as a part of <code>Datapool Collector</code>) please provide a Spring Bean implementing the <code>io.holunda.camunda.datapool.sender.DataEntryCommandSuccessHandler</code>
- and <code>io.holunda.camunda.datapool.sender.DataEntryCommandErrorHandler</code> accordingly.</p>
+<p>For Data Entry Command Sender (as a part of <code>Datapool Collector</code>) please provide a Spring Bean implementing the <code>io.holunda.polyflow.datapool.sender.DataEntryCommandSuccessHandler</code>
+ and <code>io.holunda.polyflow.datapool.sender.DataEntryCommandErrorHandler</code> accordingly.</p>
 <div class="highlight"><pre><span></span><code>  <span class="nd">@Bean</span>
   <span class="nd">@Primary</span>
   <span class="kd">fun</span> <span class="nf">dataEntryCommandSuccessHandler</span><span class="p">()</span> <span class="o">=</span> <span class="n">object</span><span class="p">:</span> <span class="n">DataEntryCommandResultHandler</span> <span class="p">{</span>
@@ -1282,7 +1270,7 @@ it is possible to provide own handlers for success and error command outcome.</p
 <div class="md-source-date">
   <small>
     
-      Last update: <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">August 26, 2021</span>
+      Last update: <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">August 31, 2021</span>
       
     
   </small>

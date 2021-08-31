@@ -733,18 +733,6 @@
   
 
           
-            
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../reference-guide/components/view-filtering.html" class="md-nav__link">
-        View Filtering
-      </a>
-    </li>
-  
-
-          
         </ul>
       </nav>
     </li>
@@ -1169,13 +1157,6 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#generate-sql-scripts" class="md-nav__link">
-    Generate SQL scripts
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#build-documentation" class="md-nav__link">
     Build Documentation
   </a>
@@ -1344,21 +1325,10 @@ automatically.</p>
 <h3 id="skip-frontend">Skip Frontend<a class="headerlink" href="#skip-frontend" title="Permanent link">#</a></h3>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Components for production use of camunda-bpm-taskpool are backend components only. Frontend components are only created for examples and demonstration purpose.</p>
+<p>Components for production use of Polyflow are backend components only. Frontend components are only created for examples and demonstration purpose.</p>
 </div>
 <p>If you are interested in backend only, specify the <code>-DskipFrontend</code> switch. This will accelerate the build
 significantly.</p>
-<h3 id="generate-sql-scripts">Generate SQL scripts<a class="headerlink" href="#generate-sql-scripts" title="Permanent link">#</a></h3>
-<p>The project uses <a href="https://flywaydb.org/">Flyway</a> for versioning of database changes. In doing so we provide the
-required SQL scripts for initialization of required database objects (including Camunda BPM schema, Axon schema and
-some example schema). If you change any of those you will need to create SQL scripts describing your change.
-For doing so, you can re-generate the scripts running:</p>
-<div class="highlight"><pre><span></span><code>./mvnw -Pgenerate-sql
-</code></pre></div>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>The existing scripts must not be replaced or changed, but new additional scripts needs to added.</p>
-</div>
 <h3 id="build-documentation">Build Documentation<a class="headerlink" href="#build-documentation" title="Permanent link">#</a></h3>
 <p>We are using MkDocs for generation of a static site documentation and rely on Markdown as much as possible.
 MkDocs is a written in Python 3 and needs to be installed on your machine. For the installation please run the following
@@ -1406,8 +1376,8 @@ docker-compose up
 <p>For the distributed scenario, the containers from the previous section needs to be started.
 To start applications, either use your IDE and create two run configurations for the classes (in this order):</p>
 <ul>
-<li><code>io.holunda.camunda.taskpool.example.process.ExampleTaskpoolApplicationDistributedWithAxonServer</code></li>
-<li><code>io.holunda.camunda.taskpool.example.process.ExampleProcessApplicationDistributedWithAxonServer</code></li>
+<li><code>io.holunda.polyflow.example.process.platform.ExampleTaskpoolApplicationDistributedWithAxonServer</code></li>
+<li><code>io.holunda.polyflow.example.process.approval.ExampleProcessApplicationDistributedWithAxonServer</code></li>
 </ul>
 <p>Alternatively, you can run them from the command line:</p>
 <div class="highlight"><pre><span></span><code>./mvnw spring-boot:run -f examples/scenarios/distributed-axon-server/taskpool-application
@@ -1417,7 +1387,7 @@ To start applications, either use your IDE and create two run configurations for
 <p>Travis CI is building all branches on commit hook. In addition, a private-hosted Jenkins CI
 is used to build the releases.</p>
 <h2 id="release-management">Release Management<a class="headerlink" href="#release-management" title="Permanent link">#</a></h2>
-<p>Release management has been set-up for use of Sonatype Nexus (= Maven Central)</p>
+<p>Release management has been setup for use of Sonatype Nexus (= Maven Central)</p>
 <h3 id="what-modules-get-deployed-to-repository">What modules get deployed to repository<a class="headerlink" href="#what-modules-get-deployed-to-repository" title="Permanent link">#</a></h3>
 <p>Every module is enabled by default. If you want to change this, please provide the property</p>
 <div class="highlight"><pre><span></span><code><span class="nt">&lt;maven.deploy.skip&gt;</span>true<span class="nt">&lt;/maven.deploy.skip&gt;</span>
@@ -1459,8 +1429,8 @@ to execute the following command on the <code>master</code> branch:</p>
 <p class="admonition-title">Warning</p>
 <p>This operation requires special permissions.</p>
 </div>
-<p>The deploy job will publish the artifacts to Nexus OSS staging repositories. Don't forget to close and release the
-repository to enable it's sync with Maven Central.</p>
+<p>The deployment job will publish the artifacts to Nexus OSS staging repositories. Currently, all snapshots get into OSS Sonatype Snapshot
+repository and all releases to Maven Central automatically.</p>
                 
                   
                     
@@ -1469,7 +1439,7 @@ repository to enable it's sync with Maven Central.</p>
 <div class="md-source-date">
   <small>
     
-      Last update: <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">August 26, 2021</span>
+      Last update: <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">August 31, 2021</span>
       
     
   </small>
