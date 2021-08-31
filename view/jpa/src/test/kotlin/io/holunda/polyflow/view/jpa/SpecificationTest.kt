@@ -4,7 +4,6 @@ import io.holunda.polyflow.view.filter.toCriteria
 import io.holunda.polyflow.view.jpa.auth.AuthorizationPrincipal.Companion.group
 import io.holunda.polyflow.view.jpa.auth.AuthorizationPrincipal.Companion.user
 import io.holunda.polyflow.view.jpa.data.DataEntryRepository
-import io.holunda.polyflow.view.jpa.data.toSpecification
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 
@@ -18,7 +17,7 @@ internal class SpecificationTest {
     val filters = listOf("data.state.state=In Progress")
     val criteria = toCriteria(filters)
 
-    val specification = criteria.toSpecification()
+    val specification = criteria.toDataEntrySpecification()
     assertThat(specification).isNotNull
   }
 
@@ -27,7 +26,7 @@ internal class SpecificationTest {
     val filters = listOf("data.state.state=In Progress", "data.state.processingType=IN_PROGRESS")
     val criteria = toCriteria(filters)
 
-    val specification = criteria.toSpecification()
+    val specification = criteria.toDataEntrySpecification()
     assertThat(specification).isNotNull
   }
 

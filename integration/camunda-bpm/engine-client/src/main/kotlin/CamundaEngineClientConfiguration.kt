@@ -1,4 +1,4 @@
-package io.holunda.camunda.client
+package io.holunda.polyflow.client.camunda
 
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.ComponentScan

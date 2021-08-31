@@ -1,4 +1,4 @@
-package io.holunda.camunda.client.process
+package io.holunda.polyflow.client.camunda.process
 
 import org.camunda.bpm.engine.RuntimeService
 import org.camunda.bpm.engine.variable.VariableMap

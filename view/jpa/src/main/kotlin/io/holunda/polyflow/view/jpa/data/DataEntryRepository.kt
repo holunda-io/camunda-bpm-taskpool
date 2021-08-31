@@ -2,6 +2,7 @@ package io.holunda.polyflow.view.jpa.data
 
 import io.holunda.camunda.taskpool.api.business.ProcessingType
 import io.holunda.polyflow.view.jpa.auth.AuthorizationPrincipal
+import io.holunda.polyflow.view.jpa.composeOr
 import io.holunda.polyflow.view.jpa.payload.PayloadAttribute
 import org.springframework.data.jpa.domain.Specification
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor
@@ -41,7 +42,7 @@ interface DataEntryRepository : CrudRepository<DataEntryEntity, DataEntryId>, Jp
     /**
      * Specification for checking the payload attribute.
      */
-    fun hasPayloadAttribute(name: String, value: String): Specification<DataEntryEntity> =
+    fun hasDataEntryPayloadAttribute(name: String, value: String): Specification<DataEntryEntity> =
       Specification { dataEntry, _, builder ->
         val join = dataEntry.join<DataEntryEntity, Set<PayloadAttribute>>(DataEntryEntity::payloadAttributes.name)
         val pathEquals = builder.equal(

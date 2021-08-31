@@ -2,6 +2,9 @@ package io.holunda.polyflow.view.query.data
 
 import io.holunda.polyflow.view.DataEntry
 import io.holunda.polyflow.view.auth.User
+import io.holunda.polyflow.view.filter.createDataEntryPredicates
+import io.holunda.polyflow.view.filter.filterByPredicate
+import io.holunda.polyflow.view.filter.toCriteria
 import io.holunda.polyflow.view.query.FilterQuery
 import io.holunda.polyflow.view.query.PageableSortableQuery
 
@@ -21,9 +24,15 @@ data class DataEntriesForUserQuery(
   val filters: List<String> = listOf()
 
 ) : FilterQuery<DataEntry>, PageableSortableQuery {
+
+  private val predicates by lazy { createDataEntryPredicates(toCriteria(filters)) }
+
   override fun applyFilter(element: DataEntry): Boolean =
-    // authorized users
-    element.authorizedUsers.contains(this.user.username)
-      // authorized groups
-      || (element.authorizedGroups.any { candidateGroup -> this.user.groups.contains(candidateGroup) })
+    // filter
+    filterByPredicate(element, predicates) && (
+      // authorized users
+      element.authorizedUsers.contains(this.user.username)
+        // authorized groups
+        || (element.authorizedGroups.any { candidateGroup -> this.user.groups.contains(candidateGroup) })
+      )
 }

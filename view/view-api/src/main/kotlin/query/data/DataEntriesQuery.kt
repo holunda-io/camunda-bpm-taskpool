@@ -1,6 +1,9 @@
 package io.holunda.polyflow.view.query.data
 
 import io.holunda.polyflow.view.DataEntry
+import io.holunda.polyflow.view.filter.createDataEntryPredicates
+import io.holunda.polyflow.view.filter.filterByPredicate
+import io.holunda.polyflow.view.filter.toCriteria
 import io.holunda.polyflow.view.query.FilterQuery
 import io.holunda.polyflow.view.query.PageableSortableQuery
 
@@ -16,7 +19,9 @@ data class DataEntriesQuery(
   override val size: Int = Int.MAX_VALUE,
   override val sort: String? = null,
   val filters: List<String> = listOf()
-
 ) : FilterQuery<DataEntry>, PageableSortableQuery {
-  override fun applyFilter(element: DataEntry): Boolean = false
+
+  private val predicates by lazy { createDataEntryPredicates(toCriteria(filters)) }
+
+  override fun applyFilter(element: DataEntry): Boolean = filterByPredicate(element, predicates)
 }

@@ -95,7 +95,7 @@ The events are transformed into corresponding commands and passed over to the pr
 Alongside with attributes received from the Camunda BPM engine, the engine task commands
 can be enriched with additional attributes.
 
-There are three enrichment modes available controlled by the `camunda.taskpool.task.collector.enricher.type` property:
+There are three enrichment modes available controlled by the `polyflow.integration.collector.camunda.task.enricher.type` property:
 
 * `no`: No enrichment takes place
 * `process-variables`: Enrichment of engine task commands with process variables

@@ -33,7 +33,7 @@ Then activate the datapool collector by providing the annotation on any Spring C
 ```java
 
 @Configuration
-@EnableDataEntryCollector
+@EnableDataEntrySender
 class MyDataEntryCollectorConfiguration {
 
 }
@@ -43,14 +43,14 @@ class MyDataEntryCollectorConfiguration {
 ### Command transmission
 
 In order to control sending of commands to command gateway, the command sender activation property
-`camunda.taskpool.dataentry.sender.enabled` (default is `true`) is available. If disabled, the command sender
+`polyflow.integration.sender.data-entry.enabled` (default is `true`) is available. If disabled, the command sender
 will log any command instead of sending it to the command gateway.
 
-In addition you can control by the property `camunda.taskpool.dataentry.sender.type` if you want to use the default command sender or provide your own implementation.
+In addition, you can control by the property `polyflow.integration.sender.data-entry.type` if you want to use the default command sender or provide your own implementation.
 The default provided command sender (type: `simple`) just sends the commands synchronously using Axon Command Bus.
 
 TIP: If you want to implement a custom command sending, please provide your own implementation of the interface `DataEntryCommandSender`
-(register a Spring Component of the type) and set the property `camunda.taskpool.dataentry.sender.type` to `custom`.
+(register a Spring Component of the type) and set the property `polyflow.integration.sender.data-entry.type` to `custom`.
 
 #### Handling command transmission
 
@@ -61,8 +61,8 @@ to console (success is logged in `DEBUG` log level, errors are using `ERROR` log
 In some situations it is required to take care of command outcome. A prominent example is to include a metric for command dispatching errors into monitoring. For doing so,
 it is possible to provide own handlers for success and error command outcome.
 
-For Data Entry Command Sender (as a part of `Datapool Collector`) please provide a Spring Bean implementing the `io.holunda.camunda.datapool.sender.DataEntryCommandSuccessHandler`
- and `io.holunda.camunda.datapool.sender.DataEntryCommandErrorHandler` accordingly.
+For Data Entry Command Sender (as a part of `Datapool Collector`) please provide a Spring Bean implementing the `io.holunda.polyflow.datapool.sender.DataEntryCommandSuccessHandler`
+ and `io.holunda.polyflow.datapool.sender.DataEntryCommandErrorHandler` accordingly.
 
 
 ```kotlin

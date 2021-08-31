@@ -1,4 +1,4 @@
-package io.holunda.camunda.client
+package io.holunda.polyflow.client.camunda
 
 import org.assertj.core.api.Assertions.assertThat
 import org.camunda.bpm.engine.RuntimeService

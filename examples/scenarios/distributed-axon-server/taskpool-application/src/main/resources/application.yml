@@ -25,8 +25,9 @@ polyflow:
           data-entries:
             io.holunda.camunda.taskpool.example.ApprovalRequest: "approval-request/${entryId}?userId=%userId%"
 
-logging.level.io.holunda.camunda.taskpool:
-  core: WARN
-  view.simple.service.DataEntryService : DEBUG
-  view.simple.service.TaskPoolService : INFO
-  example.tasklist: WARN
+logging.level:
+  io.holunda.polyflow.core:
+    taskpool: WARN
+    view.simple.service.DataEntryService : DEBUG
+    view.simple.service.TaskPoolService : INFO
+    example.tasklist: WARN
