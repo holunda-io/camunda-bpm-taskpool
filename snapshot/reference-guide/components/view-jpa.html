@@ -732,6 +732,13 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#entity-scan" class="md-nav__link">
+    Entity Scan
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#logging" class="md-nav__link">
     Logging
   </a>
@@ -867,6 +874,18 @@
     <li class="md-nav__item">
       <a href="../configuration/index.html" class="md-nav__link">
         Configuration Overview
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../configuration/persistence.html" class="md-nav__link">
+        Persistence Configuration
       </a>
     </li>
   
@@ -1235,6 +1254,11 @@ configuration of this indexing process by the following configuration options:</
 In addition, the <code>stored-items</code> property is holding a set of items to be persisted to the database. The possible values of 
 stored items are: <code>task</code>, <code>data-entry</code>, <code>process-instance</code> and <code>process-definition</code>. By setting this property, you can disable
 storage of items not required by your application and save space consumption of your database. The property defaults to <code>data-entry</code>.</p>
+<h3 id="entity-scan">Entity Scan<a class="headerlink" href="#entity-scan" title="Permanent link">#</a></h3>
+<p>The JPA View utilizes Spring Data repositories and Hibernate entities inside the persistence layer. As a result, it declares a <code>@EntityScan</code> 
+and <code>@EnableJpaRepositories</code> annotations pointing at the corresponding locations. If you are using Spring Data JPA on your own, you will
+need to add the <code>@EntityScan</code> and <code>@EnableJpaRepositores</code> annotation pointing at your packages. In addition, please check
+<a href="../configuration/persistence.html">Persistence configuration</a>.</p>
 <h3 id="logging">Logging<a class="headerlink" href="#logging" title="Permanent link">#</a></h3>
 <p>The view implementation provides runtime details using standard logging facility. If you
 want to increase the logging level, please setup it e.g. in your <code>application.yaml</code>:</p>
