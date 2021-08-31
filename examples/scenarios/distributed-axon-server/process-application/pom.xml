@@ -21,6 +21,14 @@
       <groupId>io.holunda.polyflow</groupId>
       <artifactId>polyflow-example-process-backend</artifactId>
     </dependency>
+    <dependency>
+      <groupId>io.holunda.polyflow</groupId>
+      <artifactId>polyflow-view-simple</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.holunda.polyflow</groupId>
+      <artifactId>polyflow-view-jpa</artifactId>
+    </dependency>
 
     <!-- DB and Flyway -->
     <dependency>

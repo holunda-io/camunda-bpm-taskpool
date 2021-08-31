@@ -49,7 +49,6 @@ interface TaskRepository : CrudRepository<TaskEntity, String>, JpaSpecificationE
         )
       }
 
-
     /**
      * Specification for checking the payload attribute.
      */

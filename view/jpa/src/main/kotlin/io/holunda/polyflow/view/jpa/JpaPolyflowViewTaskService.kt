@@ -17,6 +17,7 @@ import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.hasApplication
 import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.isAuthorizedFor
 import io.holunda.polyflow.view.jpa.task.toEntity
 import io.holunda.polyflow.view.jpa.task.toTask
+import io.holunda.polyflow.view.jpa.update.updateTaskQuery
 import io.holunda.polyflow.view.query.task.*
 import mu.KLogging
 import org.axonframework.config.ProcessingGroup
@@ -243,7 +244,7 @@ class JpaPolyflowViewTaskService(
   private fun getMaxRevision(elementRevisions: List<Long>): RevisionValue =
     elementRevisions.maxByOrNull { it }?.let { RevisionValue(it) } ?: RevisionValue.NO_REVISION
 
-  private fun emitTaskUpdate(entity: TaskEntity, deleted: Boolean = true) {
+  private fun emitTaskUpdate(entity: TaskEntity, deleted: Boolean = false) {
     queryUpdateEmitter.updateTaskQuery(
       TaskWithDataEntries(
         task = entity.toTask(objectMapper, deleted),

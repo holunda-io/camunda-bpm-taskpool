@@ -11,6 +11,7 @@ import io.holunda.polyflow.view.jpa.process.ProcessDefinitionRepository
 import io.holunda.polyflow.view.jpa.process.ProcessDefinitionRepository.Companion.isStarterAuthorizedFor
 import io.holunda.polyflow.view.jpa.process.toEntity
 import io.holunda.polyflow.view.jpa.process.toProcessDefinition
+import io.holunda.polyflow.view.jpa.update.updateProcessDefinitionQuery
 import io.holunda.polyflow.view.query.process.ProcessDefinitionApi
 import io.holunda.polyflow.view.query.process.ProcessDefinitionsStartableByUserQuery
 import mu.KLogging

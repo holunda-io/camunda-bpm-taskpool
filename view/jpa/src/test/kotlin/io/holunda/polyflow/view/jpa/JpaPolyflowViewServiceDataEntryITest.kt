@@ -44,15 +44,13 @@ import java.util.function.Predicate
 
 @RunWith(SpringRunner::class)
 @SpringBootTest(
-  classes = [TestApplication::class], properties = [
-    "polyflow.view.jpa.event-emitting-type=direct"
-  ]
+  classes = [TestApplication::class]
 )
 @ActiveProfiles("itest", "mock-query-emitter")
 @Transactional
 internal class JpaPolyflowViewServiceDataEntryITest {
 
-  val emittedQueryUpdates: MutableList<QueryUpdate<Any>> = mutableListOf()
+  private val emittedQueryUpdates: MutableList<QueryUpdate<Any>> = mutableListOf()
 
   @Autowired
   lateinit var queryUpdateEmitter: QueryUpdateEmitter

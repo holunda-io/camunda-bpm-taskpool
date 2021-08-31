@@ -13,6 +13,7 @@ import io.holunda.polyflow.view.jpa.auth.AuthorizationPrincipal.Companion.group
 import io.holunda.polyflow.view.jpa.auth.AuthorizationPrincipal.Companion.user
 import io.holunda.polyflow.view.jpa.data.*
 import io.holunda.polyflow.view.jpa.data.DataEntryRepository.Companion.isAuthorizedFor
+import io.holunda.polyflow.view.jpa.update.updateDataEntryQuery
 import io.holunda.polyflow.view.query.PageableSortableQuery
 import io.holunda.polyflow.view.query.data.*
 import mu.KLogging

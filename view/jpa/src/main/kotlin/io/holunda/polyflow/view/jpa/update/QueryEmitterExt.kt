@@ -1,4 +1,4 @@
-package io.holunda.polyflow.view.jpa
+package io.holunda.polyflow.view.jpa.update
 
 import io.holixon.axon.gateway.query.QueryResponseMessageResponseType
 import io.holixon.axon.gateway.query.RevisionValue
@@ -77,7 +77,7 @@ fun QueryUpdateEmitter.updateProcessInstanceQuery(entry: ProcessInstance) {
 
 /**
  * Updates subscription queries for tasks.
- * @param task task to update.
+ * @param entry task to send update about.
  */
 fun QueryUpdateEmitter.updateTaskQuery(entry: TaskWithDataEntries) {
 

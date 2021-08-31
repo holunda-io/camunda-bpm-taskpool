@@ -5,6 +5,7 @@ import io.holunda.camunda.taskpool.api.process.instance.*
 import io.holunda.polyflow.view.jpa.JpaPolyflowViewProcessInstanceService.Companion.PROCESSING_GROUP
 import io.holunda.polyflow.view.jpa.process.*
 import io.holunda.polyflow.view.jpa.process.ProcessInstanceRepository.Companion.hasStates
+import io.holunda.polyflow.view.jpa.update.updateProcessInstanceQuery
 import io.holunda.polyflow.view.query.process.ProcessInstanceApi
 import io.holunda.polyflow.view.query.process.ProcessInstanceQueryResult
 import io.holunda.polyflow.view.query.process.ProcessInstancesByStateQuery
