@@ -82,10 +82,7 @@ class JpaPolyflowViewDataEntryService(
   @Suppress("unused")
   @EventHandler
   override fun on(event: DataEntryCreatedEvent, metaData: MetaData) {
-    if (!polyflowJpaViewProperties.storedItems.contains(StoredItem.DATA_ENTRY)) {
-      logger.debug { "Data entry storage disabled by property." }
-      return
-    }
+    if (isDisabledByProperty()) return
 
     val savedEntity = dataEntryRepository.findByIdOrNull(DataEntryId(entryType = event.entryType, entryId = event.entryId))
     val entity = if (savedEntity == null || savedEntity.lastModifiedDate < event.createModification.time.toInstant()) {
@@ -111,10 +108,7 @@ class JpaPolyflowViewDataEntryService(
   @Suppress("unused")
   @EventHandler
   override fun on(event: DataEntryUpdatedEvent, metaData: MetaData) {
-    if (!polyflowJpaViewProperties.storedItems.contains(StoredItem.DATA_ENTRY)) {
-      logger.debug { "Data entry storage disabled by property." }
-      return
-    }
+    if (isDisabledByProperty()) return
 
     val savedEntity = dataEntryRepository.findByIdOrNull(DataEntryId(entryType = event.entryType, entryId = event.entryId))
     val entity = if (savedEntity == null || savedEntity.lastModifiedDate < event.updateModification.time.toInstant()) {
@@ -162,5 +156,13 @@ class JpaPolyflowViewDataEntryService(
 
   private fun emitDataEntryUpdate(entity: DataEntryEntity) {
     queryUpdateEmitter.updateDataEntryQuery(entity.toDataEntry(objectMapper), RevisionValue(entity.revision))
+  }
+
+  private fun isDisabledByProperty(): Boolean {
+    return !polyflowJpaViewProperties.storedItems.contains(StoredItem.DATA_ENTRY).also {
+      if (it) {
+        logger.debug { "Data entry storage disabled by property." }
+      }
+    }
   }
 }

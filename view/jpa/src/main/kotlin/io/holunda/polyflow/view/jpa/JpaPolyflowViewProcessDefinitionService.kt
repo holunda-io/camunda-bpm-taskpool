@@ -48,10 +48,7 @@ class JpaPolyflowViewProcessDefinitionService(
   @Suppress("unused")
   @EventHandler
   fun on(event: ProcessDefinitionRegisteredEvent) {
-    if (!polyflowJpaViewProperties.storedItems.contains(StoredItem.PROCESS_DEFINITION)) {
-      logger.debug { "Process definition storage disabled by property." }
-      return
-    }
+    if (isDisabledByProperty()) return
 
     val entity = processDefinitionRepository.save(
       event.toEntity()
@@ -61,6 +58,14 @@ class JpaPolyflowViewProcessDefinitionService(
 
   private fun emitProcessDefinitionUpdate(entity: ProcessDefinitionEntity) {
     queryUpdateEmitter.updateProcessDefinitionQuery(entity.toProcessDefinition())
+  }
+
+  private fun isDisabledByProperty(): Boolean {
+    return !polyflowJpaViewProperties.storedItems.contains(StoredItem.PROCESS_DEFINITION).also {
+      if (it) {
+        logger.debug { "Process definition storage disabled by property." }
+      }
+    }
   }
 
 }
