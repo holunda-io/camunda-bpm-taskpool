@@ -1226,25 +1226,20 @@ property paths (<code>myObj1.myProperty2.myOtherEmbeddedProperty3</code>) and th
 configuration of this indexing process by the following configuration options:</p>
 <div class="highlight"><pre><span></span><code>polyflow.view.jpa:
   payload-attribute-level-limit: 2
+  stored-items: task, data-entry, process-instance, process-definition
   data-entry-filter:
     include: myProperty2.myOtherEmbeddedProperty3, myProperty2.myOtherEmbeddedProperty2
 #    exclude: myProperty
 </code></pre></div>
-<p>In the example below you see the configuration of the limit of keying depth and usage of include/exclude filters of the keys.</p>
-<p>The events consumed by the JPA view change data inside the database. In addition, the view sends
-updates to subscription queries using the standard Axon Query Event Update Emitter mechanism. Since your
-application may use transactions, you might want to configure the moment when the events are sent using the
-following configuration options:
-<div class="highlight"><pre><span></span><code>polyflow.view.jpa:
-  event-emitting-type: AFTER_COMMIT # or DIRECT or BEFORE_COMMIT
-</code></pre></div></p>
-<p>The <code>DIRECT</code> option sends the events directly without any transaction synchronization,<br />
-the default <code>AFTER_COMMIT</code> option sends updates after the commit and <code>BEFORE_COMMIT</code> option 
-sends updates before the commit of the transaction, delivering the events.</p>
+<p>In the example below you see the configuration of the limit of keying depth and usage of include/exclude filters of the keys.
+In addition, the <code>stored-items</code> property is holding a set of items to be persisted to the database. The possible values of 
+stored items are: <code>task</code>, <code>data-entry</code>, <code>process-instance</code> and <code>process-definition</code>. By setting this property, you can disable
+storage of items not required by your application and save space consumption of your database. The property defaults to <code>data-entry</code>.</p>
 <h3 id="logging">Logging<a class="headerlink" href="#logging" title="Permanent link">#</a></h3>
 <p>The view implementation provides runtime details using standard logging facility. If you
 want to increase the logging level, please setup it e.g. in your <code>application.yaml</code>:</p>
-<div class="highlight"><pre><span></span><code>logging.level.io.holunda.polyflow.view.jpa: DEBUG
+<div class="highlight"><pre><span></span><code>logging.level:
+  io.holunda.polyflow.view.jpa: DEBUG
 </code></pre></div>
 <h3 id="db-tables">DB Tables<a class="headerlink" href="#db-tables" title="Permanent link">#</a></h3>
 <p>The JPA View uses several tables to store the results. These are:</p>
