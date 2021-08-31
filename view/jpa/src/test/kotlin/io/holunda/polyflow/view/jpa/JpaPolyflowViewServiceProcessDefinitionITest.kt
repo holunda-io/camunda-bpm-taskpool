@@ -17,7 +17,12 @@ import java.util.*
 import javax.transaction.Transactional
 
 @RunWith(SpringRunner::class)
-@SpringBootTest(classes = [TestApplication::class])
+@SpringBootTest(
+  classes = [TestApplication::class],
+  properties = [
+    "polyflow.view.jpa.stored-items=process-definition"
+  ]
+)
 @ActiveProfiles("itest", "mock-query-emitter")
 @Transactional
 internal class JpaPolyflowViewServiceProcessDefinitionITest {

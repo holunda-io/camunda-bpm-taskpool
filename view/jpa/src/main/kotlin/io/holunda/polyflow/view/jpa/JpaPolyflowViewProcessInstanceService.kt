@@ -25,6 +25,7 @@ import org.springframework.stereotype.Component
 class JpaPolyflowViewProcessInstanceService(
   val processInstanceRepository: ProcessInstanceRepository,
   val queryUpdateEmitter: QueryUpdateEmitter,
+  val polyflowJpaViewProperties: PolyflowJpaViewProperties
 ) : ProcessInstanceApi {
 
   companion object : KLogging() {
@@ -46,6 +47,11 @@ class JpaPolyflowViewProcessInstanceService(
   @Suppress("unused")
   @EventHandler
   fun on(event: ProcessInstanceStartedEvent) {
+    if (!polyflowJpaViewProperties.storedItems.contains(StoredItem.PROCESS_INSTANCE)) {
+      logger.debug { "Process instance storage disabled by property." }
+      return
+    }
+
     val entity = processInstanceRepository.save(
       event.toEntity()
     )
@@ -58,6 +64,11 @@ class JpaPolyflowViewProcessInstanceService(
   @Suppress("unused")
   @EventHandler
   fun on(event: ProcessInstanceCancelledEvent) {
+    if (!polyflowJpaViewProperties.storedItems.contains(StoredItem.PROCESS_INSTANCE)) {
+      logger.debug { "Process instance storage disabled by property." }
+      return
+    }
+
     processInstanceRepository.findById(event.processInstanceId).ifPresent {
       val entity = processInstanceRepository.save(
         it.cancelInstance(event)
@@ -72,6 +83,11 @@ class JpaPolyflowViewProcessInstanceService(
   @Suppress("unused")
   @EventHandler
   fun on(event: ProcessInstanceSuspendedEvent) {
+    if (!polyflowJpaViewProperties.storedItems.contains(StoredItem.PROCESS_INSTANCE)) {
+      logger.debug { "Process instance storage disabled by property." }
+      return
+    }
+
     processInstanceRepository.findById(event.processInstanceId).ifPresent {
       val entity = processInstanceRepository.save(
         it.suspendInstance()
@@ -86,6 +102,11 @@ class JpaPolyflowViewProcessInstanceService(
   @Suppress("unused")
   @EventHandler
   fun on(event: ProcessInstanceResumedEvent) {
+    if (!polyflowJpaViewProperties.storedItems.contains(StoredItem.PROCESS_INSTANCE)) {
+      logger.debug { "Process instance storage disabled by property." }
+      return
+    }
+
     processInstanceRepository.findById(event.processInstanceId).ifPresent {
       val entity = processInstanceRepository.save(
         it.resumeInstance()
@@ -100,6 +121,11 @@ class JpaPolyflowViewProcessInstanceService(
   @Suppress("unused")
   @EventHandler
   fun on(event: ProcessInstanceEndedEvent) {
+    if (!polyflowJpaViewProperties.storedItems.contains(StoredItem.PROCESS_INSTANCE)) {
+      logger.debug { "Process instance storage disabled by property." }
+      return
+    }
+
     processInstanceRepository.findById(event.processInstanceId).ifPresent {
       val entity = processInstanceRepository.save(
         it.finishInstance(event)

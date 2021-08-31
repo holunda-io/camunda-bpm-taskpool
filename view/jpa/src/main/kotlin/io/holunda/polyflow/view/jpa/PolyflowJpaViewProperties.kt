@@ -15,8 +15,9 @@ import org.springframework.boot.context.properties.NestedConfigurationProperty
 @ConfigurationProperties(prefix = "polyflow.view.jpa")
 data class PolyflowJpaViewProperties(
   val payloadAttributeLevelLimit: Int = -1,
+  val storedItems: Set<StoredItem> = setOf(StoredItem.DATA_ENTRY),
   @NestedConfigurationProperty
-  val dataEntryFilters: PayloadAttributeFilterPaths = PayloadAttributeFilterPaths()
+  private val dataEntryFilters: PayloadAttributeFilterPaths = PayloadAttributeFilterPaths()
 ) {
   /**
    * Extracts JSON path filters out of the properties.
@@ -34,3 +35,28 @@ data class PayloadAttributeFilterPaths(
   val include: List<String> = listOf(),
   val exclude: List<String> = listOf()
 )
+
+/**
+ * Stored item to configure what to save in the DB.
+ */
+enum class StoredItem {
+  /**
+   * Task.
+   */
+  TASK,
+
+  /**
+   * Process instance.
+   */
+  PROCESS_INSTANCE,
+
+  /**
+   * Process definition.
+   */
+  PROCESS_DEFINITION,
+
+  /**
+   * Data entry.
+   */
+  DATA_ENTRY
+}
