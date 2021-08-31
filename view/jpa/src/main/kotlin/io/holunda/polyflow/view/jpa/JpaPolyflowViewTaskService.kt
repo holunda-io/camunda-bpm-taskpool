@@ -105,7 +105,7 @@ class JpaPolyflowViewTaskService(
   fun on(event: TaskCreatedEngineEvent, metaData: MetaData) {
     logger.debug { "Task created $event received" }
     if (isDisabledByProperty()) return
-    
+
     taskRepository
       .findById(event.id)
       .ifEmpty {

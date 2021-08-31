@@ -71,6 +71,14 @@ In addition, the `stored-items` property is holding a set of items to be persist
 stored items are: `task`, `data-entry`, `process-instance` and `process-definition`. By setting this property, you can disable
 storage of items not required by your application and save space consumption of your database. The property defaults to `data-entry`.
 
+### Entity Scan
+
+The JPA View utilizes Spring Data repositories and Hibernate entities inside the persistence layer. As a result, it declares a `@EntityScan` 
+and `@EnableJpaRepositories` annotations pointing at the corresponding locations. If you are using Spring Data JPA on your own, you will
+need to add the `@EntityScan` and `@EnableJpaRepositores` annotation pointing at your packages. In addition, please check
+[Persistence configuration](../configuration/persistence.md).
+
+
 ### Logging
 
 The view implementation provides runtime details using standard logging facility. If you
