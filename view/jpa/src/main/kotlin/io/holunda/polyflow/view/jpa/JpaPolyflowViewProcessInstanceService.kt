@@ -25,6 +25,7 @@ import org.springframework.stereotype.Component
 class JpaPolyflowViewProcessInstanceService(
   val processInstanceRepository: ProcessInstanceRepository,
   val queryUpdateEmitter: QueryUpdateEmitter,
+  val polyflowJpaViewProperties: PolyflowJpaViewProperties
 ) : ProcessInstanceApi {
 
   companion object : KLogging() {
@@ -46,6 +47,8 @@ class JpaPolyflowViewProcessInstanceService(
   @Suppress("unused")
   @EventHandler
   fun on(event: ProcessInstanceStartedEvent) {
+    if (isDisabledByProperty()) return
+
     val entity = processInstanceRepository.save(
       event.toEntity()
     )
@@ -58,6 +61,8 @@ class JpaPolyflowViewProcessInstanceService(
   @Suppress("unused")
   @EventHandler
   fun on(event: ProcessInstanceCancelledEvent) {
+    if (isDisabledByProperty()) return
+
     processInstanceRepository.findById(event.processInstanceId).ifPresent {
       val entity = processInstanceRepository.save(
         it.cancelInstance(event)
@@ -72,6 +77,8 @@ class JpaPolyflowViewProcessInstanceService(
   @Suppress("unused")
   @EventHandler
   fun on(event: ProcessInstanceSuspendedEvent) {
+    if (isDisabledByProperty()) return
+
     processInstanceRepository.findById(event.processInstanceId).ifPresent {
       val entity = processInstanceRepository.save(
         it.suspendInstance()
@@ -86,6 +93,8 @@ class JpaPolyflowViewProcessInstanceService(
   @Suppress("unused")
   @EventHandler
   fun on(event: ProcessInstanceResumedEvent) {
+    if (isDisabledByProperty()) return
+
     processInstanceRepository.findById(event.processInstanceId).ifPresent {
       val entity = processInstanceRepository.save(
         it.resumeInstance()
@@ -100,6 +109,8 @@ class JpaPolyflowViewProcessInstanceService(
   @Suppress("unused")
   @EventHandler
   fun on(event: ProcessInstanceEndedEvent) {
+    if (isDisabledByProperty()) return
+
     processInstanceRepository.findById(event.processInstanceId).ifPresent {
       val entity = processInstanceRepository.save(
         it.finishInstance(event)
@@ -112,4 +123,11 @@ class JpaPolyflowViewProcessInstanceService(
     queryUpdateEmitter.updateProcessInstanceQuery(entity.toProcessInstance())
   }
 
+  private fun isDisabledByProperty(): Boolean {
+    return !polyflowJpaViewProperties.storedItems.contains(StoredItem.PROCESS_INSTANCE).also {
+      if (it) {
+        logger.debug { "Process instance storage disabled by property." }
+      }
+    }
+  }
 }

@@ -28,7 +28,8 @@ import org.springframework.stereotype.Component
 @ProcessingGroup(PROCESSING_GROUP)
 class JpaPolyflowViewProcessDefinitionService(
   val processDefinitionRepository: ProcessDefinitionRepository,
-  val queryUpdateEmitter: QueryUpdateEmitter
+  val queryUpdateEmitter: QueryUpdateEmitter,
+  val polyflowJpaViewProperties: PolyflowJpaViewProperties
 ) : ProcessDefinitionApi {
 
   companion object : KLogging() {
@@ -47,6 +48,8 @@ class JpaPolyflowViewProcessDefinitionService(
   @Suppress("unused")
   @EventHandler
   fun on(event: ProcessDefinitionRegisteredEvent) {
+    if (isDisabledByProperty()) return
+
     val entity = processDefinitionRepository.save(
       event.toEntity()
     )
@@ -55,6 +58,14 @@ class JpaPolyflowViewProcessDefinitionService(
 
   private fun emitProcessDefinitionUpdate(entity: ProcessDefinitionEntity) {
     queryUpdateEmitter.updateProcessDefinitionQuery(entity.toProcessDefinition())
+  }
+
+  private fun isDisabledByProperty(): Boolean {
+    return !polyflowJpaViewProperties.storedItems.contains(StoredItem.PROCESS_DEFINITION).also {
+      if (it) {
+        logger.debug { "Process definition storage disabled by property." }
+      }
+    }
   }
 
 }

@@ -35,7 +35,10 @@ import java.util.function.Predicate
 
 @RunWith(SpringRunner::class)
 @SpringBootTest(
-  classes = [TestApplication::class]
+  classes = [TestApplication::class],
+  properties = [
+    "polyflow.view.jpa.stored-items=TASK"
+  ]
 )
 @ActiveProfiles("itest", "mock-query-emitter")
 @Transactional

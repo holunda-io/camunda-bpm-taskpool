@@ -3,6 +3,10 @@ spring:
     open-in-view: true # disable JPA warning
     show-sql: false
 
+polyflow:
+  view:
+    jpa:
+      stored-items: TASK, DATA_ENTRY, PROCESS_INSTANCE, PROCESS_DEFINITION
 
 logging:
   level:

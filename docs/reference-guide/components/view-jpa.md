@@ -60,27 +60,23 @@ configuration of this indexing process by the following configuration options:
 ```yml
 polyflow.view.jpa:
   payload-attribute-level-limit: 2
+  stored-items: task, data-entry, process-instance, process-definition
   data-entry-filter:
     include: myProperty2.myOtherEmbeddedProperty3, myProperty2.myOtherEmbeddedProperty2
 #    exclude: myProperty
 ```
 
 In the example below you see the configuration of the limit of keying depth and usage of include/exclude filters of the keys.
+In addition, the `stored-items` property is holding a set of items to be persisted to the database. The possible values of 
+stored items are: `task`, `data-entry`, `process-instance` and `process-definition`. By setting this property, you can disable
+storage of items not required by your application and save space consumption of your database. The property defaults to `data-entry`.
 
+### Entity Scan
 
-The events consumed by the JPA view change data inside the database. In addition, the view sends
-updates to subscription queries using the standard Axon Query Event Update Emitter mechanism. Since your
-application may use transactions, you might want to configure the moment when the events are sent using the
-following configuration options:
-```yml
-polyflow.view.jpa:
-  event-emitting-type: AFTER_COMMIT # or DIRECT or BEFORE_COMMIT
-```
-
-The `DIRECT` option sends the events directly without any transaction synchronization,  
-the default `AFTER_COMMIT` option sends updates after the commit and `BEFORE_COMMIT` option 
-sends updates before the commit of the transaction, delivering the events.
-
+The JPA View utilizes Spring Data repositories and Hibernate entities inside the persistence layer. As a result, it declares a `@EntityScan` 
+and `@EnableJpaRepositories` annotations pointing at the corresponding locations. If you are using Spring Data JPA on your own, you will
+need to add the `@EntityScan` and `@EnableJpaRepositores` annotation pointing at your packages. In addition, please check
+[Persistence configuration](../configuration/persistence.md).
 
 
 ### Logging
@@ -89,7 +85,8 @@ The view implementation provides runtime details using standard logging facility
 want to increase the logging level, please setup it e.g. in your `application.yaml`:
 
 ```yml
-logging.level.io.holunda.polyflow.view.jpa: DEBUG
+logging.level:
+  io.holunda.polyflow.view.jpa: DEBUG
 ```
 
 ### DB Tables

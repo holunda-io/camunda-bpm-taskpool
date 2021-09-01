@@ -27,7 +27,7 @@ and activate its configuration by adding the following to a Spring configuration
 
 ```kotlin
 @Configuration
-@EnableDataPool
+@EnablePolyflowDataPool
 class MyConfiguration
 ```
 
@@ -39,7 +39,7 @@ activate the correlation provider by putting the following code snippet in the a
 
 ```kotlin
 @Configuration
-@EnableDataPool
+@EnablePolyflowDataPool
 class MyConfiguration {
 
   @Bean
@@ -56,5 +56,5 @@ class MyConfiguration {
 ```
 
 By doing so, if a command is sending revision information, it will be passed to the resulting event and will be received by the projection, so the
-latter will deliver revision information in query results. The use of `RevisionAwareQueryGateway` will allow to query for specific revisions in the data entry
+latter will deliver revision information in query results. The use of `RevisionAwareQueryGateway` will allow querying for specific revisions in the data entry
 projection, see documentation of `axon-gateway-extension` project.

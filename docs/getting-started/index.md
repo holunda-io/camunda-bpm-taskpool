@@ -27,7 +27,7 @@ to your `pom.xml`:
 
 ## Activate Polyflow Support
 
-Now, find your SpringBoot application class and add an additional annotation to it:
+Now, find your SpringBoot application class and add an annotation to it:
 
 
 ``` java

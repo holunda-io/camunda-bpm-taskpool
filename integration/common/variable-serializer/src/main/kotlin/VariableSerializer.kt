@@ -49,7 +49,7 @@ fun VariableMap.toJsonPathsWithValues(limit: Int = -1, filters: List<Pair<JsonPa
   val pathsWithValues: List<MutableMap<String, Any>> = this.entries.map {
     it.toJsonPathWithValue(prefix = "", limit = limit, filter = filters).toMap().toMutableMap()
   }
-  return pathsWithValues.reduce { result, memberList -> result.apply { putAll(memberList) } }.toMap()
+  return pathsWithValues.reduceOrNull { result, memberList -> result.apply { putAll(memberList) } }?.toMap() ?: mapOf()
 }
 
 internal fun MutableMap.MutableEntry<String, Any?>.toJsonPathWithValue(

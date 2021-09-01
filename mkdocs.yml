@@ -123,6 +123,7 @@ nav:
       - Tasklist URL Resolver: reference-guide/components/other-tasklist-url-resolver.md
       - Variable Serializer: reference-guide/components/other-variable-serializer.md
     - Configuration Overview: reference-guide/configuration/index.md
+    - Persistence Configuration: reference-guide/configuration/persistence.md
   - Examples:
     - Examples Overview: examples/index.md
     - Example Approval: examples/example-approval.md

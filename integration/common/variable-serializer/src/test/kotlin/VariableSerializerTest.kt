@@ -5,6 +5,7 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.holunda.camunda.variable.serializer.serialize
 import org.assertj.core.api.Assertions.assertThat
 import org.camunda.bpm.engine.variable.Variables
+import org.camunda.bpm.engine.variable.Variables.createVariables
 import org.junit.Test
 import java.text.SimpleDateFormat
 import java.time.Instant
@@ -16,6 +17,12 @@ class VariableSerializerTest {
   private val mapper = jacksonObjectMapper()
 
   @Test
+  fun `should return the empty map`() {
+    assertThat(serialize(createVariables(), mapper)).isEmpty()
+  }
+
+
+    @Test
   fun `should return the variables map`() {
 
     val map = Variables

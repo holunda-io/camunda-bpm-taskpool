@@ -104,6 +104,8 @@ class JpaPolyflowViewTaskService(
   @EventHandler
   fun on(event: TaskCreatedEngineEvent, metaData: MetaData) {
     logger.debug { "Task created $event received" }
+    if (isDisabledByProperty()) return
+
     taskRepository
       .findById(event.id)
       .ifEmpty {
@@ -129,6 +131,8 @@ class JpaPolyflowViewTaskService(
   @EventHandler
   fun on(event: TaskAssignedEngineEvent, metaData: MetaData) {
     logger.debug { "Task assigned $event received" }
+    if (isDisabledByProperty()) return
+
     taskRepository
       .findById(event.id)
       .ifEmpty {
@@ -147,6 +151,8 @@ class JpaPolyflowViewTaskService(
   @EventHandler
   fun on(event: TaskCompletedEngineEvent, metaData: MetaData) {
     logger.debug { "Task completed $event received" }
+    if (isDisabledByProperty()) return
+
     taskRepository
       .findById(event.id)
       .ifEmpty { "Cannot complete task '${event.id}' because it does not exist in the database" }
@@ -163,6 +169,8 @@ class JpaPolyflowViewTaskService(
   @EventHandler
   fun on(event: TaskDeletedEngineEvent, metaData: MetaData) {
     logger.debug { "Task deleted $event received" }
+    if (isDisabledByProperty()) return
+
     taskRepository
       .findById(event.id)
       .ifEmpty { "Cannot delete task '${event.id}' because it does not exist in the database" }
@@ -179,6 +187,8 @@ class JpaPolyflowViewTaskService(
   @EventHandler
   fun on(event: TaskAttributeUpdatedEngineEvent, metaData: MetaData) {
     logger.debug { "Task attributes updated $event received" }
+    if (isDisabledByProperty()) return
+
     taskRepository
       .findById(event.id)
       .ifEmpty { "Cannot update task '${event.id}' because it does not exist in the database" }
@@ -203,6 +213,8 @@ class JpaPolyflowViewTaskService(
   @EventHandler
   fun on(event: TaskCandidateGroupChanged, metaData: MetaData) {
     logger.debug { "Task candidate groups changed $event received" }
+    if (isDisabledByProperty()) return
+
     taskRepository
       .findById(event.id)
       .ifEmpty {
@@ -224,6 +236,8 @@ class JpaPolyflowViewTaskService(
   @EventHandler
   fun on(event: TaskCandidateUserChanged, metaData: MetaData) {
     logger.debug { "Task user groups changed $event received" }
+    if (isDisabledByProperty()) return
+
     taskRepository
       .findById(event.id)
       .ifEmpty {
@@ -258,5 +272,13 @@ class JpaPolyflowViewTaskService(
    */
   fun <T> Optional<T>.ifEmpty(execute: () -> Unit): Optional<T> = this.also {
     execute.invoke()
+  }
+
+  private fun isDisabledByProperty(): Boolean {
+    return !polyflowJpaViewProperties.storedItems.contains(StoredItem.TASK).also {
+      if (it) {
+        logger.debug { "Task storage disabled by property." }
+      }
+    }
   }
 }
