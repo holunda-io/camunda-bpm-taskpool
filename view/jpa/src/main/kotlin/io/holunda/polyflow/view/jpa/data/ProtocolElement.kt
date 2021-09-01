@@ -4,6 +4,9 @@ import java.time.Instant
 import java.util.*
 import javax.persistence.*
 
+/**
+ * Entity to store audit log of the changes on data entries.
+ */
 @Entity
 @Table(name = "PLF_DATA_ENTRY_PROTOCOL")
 class ProtocolElement(
