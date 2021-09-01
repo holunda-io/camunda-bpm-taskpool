@@ -45,6 +45,9 @@ class CockpitSPAConfiguration : WebFluxConfigurer {
   @Value("$STATIC_LOCATION/index.html")
   private lateinit var indexHtml: Resource
 
+  /**
+   * Webflux router configuration.
+   */
   @Bean
   fun cockpitSpaRouter() = router {
     GET("/$BASE_PATH/") {

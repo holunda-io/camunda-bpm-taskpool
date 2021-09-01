@@ -15,6 +15,9 @@ import org.springframework.context.annotation.Configuration
 @ComponentScan
 class DataPoolCoreConfiguration {
 
+  /**
+   * Provides an event sourcing repository for data entry aggregates.
+   */
   @Bean
   fun dataEntryAggregateRepository(eventStore: EventStore): EventSourcingRepository<DataEntryAggregate> {
     return EventSourcingRepository.builder(DataEntryAggregate::class.java).eventStore(eventStore).build()

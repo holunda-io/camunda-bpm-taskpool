@@ -33,6 +33,9 @@ data class EqualityPathFilter(
 
   override fun invoke(path: String): Boolean = path == this.path
 
+  /**
+   * Converts current filter into a pair used in filtering.
+   */
   fun asPair(): Pair<JsonPathFilterFunction, FilterType> {
     return this::invoke to type
   }

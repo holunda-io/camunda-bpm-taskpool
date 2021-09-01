@@ -27,6 +27,9 @@ class SimpleProcessDefinitionService(
   private val processDefinitions: MutableMap<String, TreeSet<ProcessDefinition>> = ConcurrentHashMap()
 
 
+  /**
+   * React on process definition registration.
+   */
   @Suppress("unused")
   @EventHandler
   fun on(event: ProcessDefinitionRegisteredEvent) {

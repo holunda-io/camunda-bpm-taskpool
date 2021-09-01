@@ -3,7 +3,9 @@ package io.holunda.camunda.taskpool.api.process.definition
 import io.holunda.camunda.taskpool.api.task.WithFormKey
 import org.axonframework.modelling.command.TargetAggregateIdentifier
 
-
+/**
+ * Any command about process definition should implement this interface.
+ */
 interface ProcessDefinitionCommand {
   val processDefinitionId: String
 }

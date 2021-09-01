@@ -25,6 +25,9 @@ data class DataEntryForIdentityQuery(
 // if id is specified, applyFilter by it
       && (this.entryId == null || element.entryId == this.entryId)
 
+  /**
+   * Construct query identity out of given query parameters.
+   */
   fun identity(): DataIdentity = QueryDataIdentity(entryType = entryType, entryId = entryId
     ?: throw IllegalArgumentException("Entry id is not specified. This query can't be used as data entry identity."))
 
