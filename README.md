@@ -1,5 +1,5 @@
 [![Build Status](https://github.com/holunda-io/camunda-bpm-taskpool/workflows/Development%20braches/badge.svg)](https://github.com/holunda-io/camunda-bpm-taskpool/actions)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.holunda.taskpool/camunda-bpm-taskpool/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.holunda.taskpool/camunda-bpm-taskpool)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.holunda.polyflow/polyflow-taskpool-dependencies/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.holunda.polyflow/polyflow-taskpool-dependencies/)
 [![Code Coverage](https://codecov.io/gh/holunda-io/camunda-bpm-taskpool/branch/master/graph/badge.svg)](https://codecov.io/gh/holunda-io/camunda-bpm-taskpool)
 [![Codacy](https://api.codacy.com/project/badge/Grade/653136bd5cad48c8a9f2621ee304ff26)](https://app.codacy.com/app/zambrovski/camunda-bpm-taskpool?utm_source=github.com&utm_medium=referral&utm_content=holunda-io/camunda-bpm-taskpool&utm_campaign=Badge_Grade_Dashboard)
 [![OpenHUB](https://www.openhub.net/p/camunda-bpm-taskpool/widgets/project_thin_badge.gif)](https://www.openhub.net/p/camunda-bpm-taskpool)
