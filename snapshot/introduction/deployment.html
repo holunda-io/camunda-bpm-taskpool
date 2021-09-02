@@ -16,7 +16,7 @@
         <link rel="canonical" href="https://www.holunda.io/camunda-bpm-taskpool/snapshot/introduction/deployment.html">
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.2.2, mkdocs-material-7.2.5">
+      <meta name="generator" content="mkdocs-1.2.2, mkdocs-material-7.2.6">
     
     
       
@@ -24,7 +24,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.be71726b.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.802231af.min.css">
       
         
         <link rel="stylesheet" href="../assets/stylesheets/palette.3f5d1f46.min.css">
@@ -1212,40 +1212,47 @@
                 
                   <h1>Deployment Strategies</h1>
                 
-                <p>Depending on your requirements and infrastructure available several deployment scenarios of the components are possible.</p>
+                <p>Several deployment scenarios of the components are possible depending on your requirements and available infrastructure.</p>
 <p>The simplest setup is to run all components on a single node. A more advanced scenario is to distribute components over the network and connect them.</p>
-<p>In doing so, one of the challenging issues for distribution and connecting microservices is a setup of messaging technology
-supporting required message exchange patterns (MEPs) for a CQRS system. Because of different semantics of commands,
-events and queries and additional requirements of event-sourced persistence a special implementation of
-command bus, event bus and event store is required. In particular, two scenarios can be distinguished: using Axon Server
-or using a different distribution technology.</p>
+<p>In doing so, one of the challenging issues for distribution and connecting microservices is a setup of messaging technology supporting required message exchange
+patterns (MEPs) for a CQRS system. Because of different semantics of commands, events and queries and additional requirements of event-sourced persistence a
+special implementation of command bus, event bus and event store is required. In particular, two scenarios can be distinguished: using Axon Server or using a
+different distribution technology.</p>
 <h2 id="single-node-deployment">Single node deployment<a class="headerlink" href="#single-node-deployment" title="Permanent link">#</a></h2>
-<p>The easiest scenario is the <strong>Single Node Deployment</strong>. It provides all functional features of the Polyflow library, but is not not addressing any of performance, scalability, autonomy and reliability requirements. It works almost without additional infrastructure and is ideal to start with.</p>
+<p>The easiest scenario is the <strong>Single Node Deployment</strong>. It provides all functional features of the Polyflow library, but is not addressing any of performance,
+scalability, autonomy and reliability requirements. It works almost without additional infrastructure and is ideal to start with.</p>
 <p>In a single node scenario the following configuration is used:</p>
 <ul>
 <li>All buses are local (command bus, event bus, query bus)</li>
 <li>Camunda BPM Integration components, Core components and View components are all deployed in the same node</li>
 <li>JPA-Based event storage is used, persisting the domain events in a RDBMS, along with Camunda-specific DB tables.</li>
-<li>Simple (In-memory) View is used to provide projections of <code>taskpool</code> and <code>datapool</code></li>
+<li>Simple (In-memory) View or JPA view is used to provide query projections of <code>taskpool</code> and <code>datapool</code></li>
 </ul>
 <p>Check the following diagram for more details:</p>
 <p><img alt="Deployment of all component in a single node" src="../img/deployment-single.png" /></p>
 <h2 id="multiple-node-deployment">Multiple node deployment<a class="headerlink" href="#multiple-node-deployment" title="Permanent link">#</a></h2>
-<p>The more advanced scenario is to separate the <strong>Process Platform components</strong> from <strong>Process Application components</strong>.</p>
-<p>It is helpful if you intend to build a central <strong>Process Platform</strong> and multiple <strong>Process applications</strong> using it.</p>
-<p>In general, this is the main use case for Polyflow framework itself, but the distribution aspects adds technical complexity to the resulting architecture. Especially, following the architecture blueprint of Axon Framework, the three buses (command bus, event bus and query bus) needs to be distributed and act as connecting infrastructure between components.</p>
+<p>The more advanced scenario is to separate the <strong>Process Platform components</strong> from <strong>Process Application components</strong>, compare
+the <a href="concepts.html">concepts section</a>. Especially, it is helpful if you intend to build a central <strong>Process Platform</strong> and multiple <strong>Process applications</strong> using
+it.</p>
+<p>In general, this is one of the main use cases for Polyflow framework itself, but the distribution aspects adds technical complexity to the resulting
+architecture. Especially, following the architecture blueprint of Axon Framework, the three buses (command bus, event bus and query bus) needs to be distributed
+and act as connecting infrastructure between components.</p>
 <h3 id="distribution-using-axon-server">Distribution using Axon Server<a class="headerlink" href="#distribution-using-axon-server" title="Permanent link">#</a></h3>
-<p>Axon Server provides an implementation for this requirement leading to a distributed buses and a central Event Store. It is easy to use, easy to configure and easy to run. If you need a HA setup, you will need the enterprise license of Axon Server. Essentially, if don't have another HA ready-to use messaging, this scenario might be your way to go.</p>
+<p>Axon Server provides an implementation for this requirement leading to a distributed buses and a central Event Store. It is easy to use, easy to configure and
+easy to run. If you need a HA setup, you will need the enterprise license of Axon Server. Essentially, if don't have another HA ready-to use messaging, this
+scenario might be your way to go.</p>
 <p>This scenario supports:</p>
 <ul>
-<li>central Process Platform components (including task pool and data pool)</li>
-<li>free choice for projection persistence (since Axon Server supports)</li>
-<li>no direct synchronous communication between <strong>Process Platform</strong> and <strong>Process Application</strong> is required (e.g. via REST, since it is routed via command bus)</li>
+<li>central Process Platform components (including task pool and data pool and their projections)</li>
+<li>free choice for projection persistence (since Axon Server supports event replay)</li>
+<li>no direct synchronous communication between <strong>Process Platform</strong> and <strong>Process Application</strong> is required (e.g. via REST, since it is routed via command, event
+  and query bus)</li>
 </ul>
 <p>The following diagram depicts the distribution of the components and the messaging:</p>
 <p><img alt="Deployment of Polyflow with Axon server" src="../img/deployment-axon-server.png" /></p>
 <h3 id="distribution-without-axon-server">Distribution without Axon Server<a class="headerlink" href="#distribution-without-axon-server" title="Permanent link">#</a></h3>
-<p>If you already have another messaging at place, like Kafka or RabbitMQ, you might skip the usage of Axon Server. In doing so, you will be responsible for distribution of events and will need to surrender some features.</p>
+<p>If you already have another messaging at place, like Kafka or RabbitMQ, you might skip the usage of Axon Server. In doing so, you will be responsible for
+distribution of events and will need to surrender some features.</p>
 <p>This scenario supports:</p>
 <ul>
 <li>distributed task pool / data pool</li>
@@ -1255,15 +1262,23 @@ or using a different distribution technology.</p>
 </ul>
 <p>The following diagram depicts the distribution of the components and the messaging.</p>
 <p><img alt="Deployment of taskpool with other messaging" src="../img/deployment-messaging.png" /></p>
-<p>The following diagram depicts the task run from Process Application to the end user, consuming it via Tasklist API.</p>
+<p>The following diagram depicts the task run from Process Application to the end user, consuming it via Tasklist API connected via Kafka and using Mongo DB for
+persistence of the query model.</p>
 <p><img alt="Kafka Message Run" src="../img/scenario_kafka_messaging_overview.png" /></p>
 <ul>
-<li>The <code>Camunda BPM Taskpool Collector</code> component listens to Camunda events, collects all relevant events that happen in a single transaction and registers a transaction synchronization to process them beforeCommit. Just before the transaction is committed, the collected events are accumulated and sent as Axon Commands through the <code>CommandGateway</code>.</li>
-<li>The <code>Taskpool Core</code> processes those commands and issues Axon Events through the EventGateway which are stored in Axon's database tables within the same transaction.</li>
-<li>The transaction commit finishes. If anything goes wrong before this point, the transaction rolls back and it is as though nothing ever happened.</li>
-<li>In the <code>Axon Kafka Extension</code>, a <code>TrackingEventProcessor</code> polls for events and sees them as soon as the transaction that created them is committed. It sends each event to Kafka and waits for an acknowledgment from Kafka. If sending fails or times out, the event processor goes into error mode and retries until it succeeds. This can lead to events being published to Kafka more than once but guarantees at-least-once delivery.</li>
-<li>Within the Tasklist API, the <code>Axon Kafka Extension</code> polls the events from Kafka and another TrackingEventProcessor forwards them to the <code>TaskPoolMongoService</code> where they are processed to update the Mongo DB accordingly.</li>
-<li>When a user queries the Tasklist API for tasks, two things happen: Firstly, the Mongo DB is queried for the current state of tasks for this user and these tasks are returned. Secondly, the Tasklist API subscribes to any changes to the Mongo DB. These changes are filtered for relevance to the user and relevant changes are returned after the current state as an infinite stream until the request is cancelled or interrupted for some reason.</li>
+<li>The <code>Camunda BPM Taskpool Collector</code> component listens to Camunda events, collects all relevant events that happen in a single transaction and registers a
+  transaction synchronization to process them <code>beforeCommit</code>. Just before the transaction is committed, the collected events are accumulated and sent as Axon
+  Commands through the <code>CommandGateway</code>.</li>
+<li>The <code>Taskpool Core</code> processes those commands and issues Axon Events which are stored in Axon's database tables within the same transaction.</li>
+<li>The transaction commit finishes. If anything goes wrong before this point, the transaction rolls back, and it is as though nothing ever happened.</li>
+<li>In the <code>Axon Kafka Extension</code>, a <code>TrackingEventProcessor</code> polls for events and sees them as soon as the transaction that created them is committed. It sends
+  each event to Kafka and waits for an acknowledgment from Kafka. If sending fails or times out, the event processor goes into error mode and retries until it
+  succeeds. This can lead to events being published to Kafka more than once but guarantees at-least-once delivery.</li>
+<li>Within the Tasklist API, the <code>Axon Kafka Extension</code> polls the events from Kafka and another TrackingEventProcessor forwards them to the <code>TaskPoolMongoService</code>
+  where they are processed to update the Mongo DB accordingly.</li>
+<li>When a user queries the Tasklist API for tasks, two things happen: Firstly, the Mongo DB is queried for the current state of tasks for this user and these
+  tasks are returned. Secondly, the Tasklist API subscribes to any changes to the Mongo DB. These changes are filtered for relevance to the user and relevant
+  changes are returned after the current state as an infinite stream until the request is cancelled or interrupted for some reason.</li>
 </ul>
 <p><img alt="Kafka Message Transaction Overview" src="../img/scenario_kafka_messaging_tx_view.png" /></p>
 <h4 id="from-process-application-to-kafka">From Process Application to Kafka<a class="headerlink" href="#from-process-application-to-kafka" title="Permanent link">#</a></h4>
@@ -1278,7 +1293,7 @@ or using a different distribution technology.</p>
 <div class="md-source-date">
   <small>
     
-      Last update: <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">September 1, 2021</span>
+      Last update: <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">September 2, 2021</span>
       
     
   </small>
@@ -1382,7 +1397,7 @@ or using a different distribution technology.</p>
     <script id="__config" type="application/json">{"base": "..", "features": ["navigation.instant", "navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.top", "toc.integrate"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../assets/javascripts/workers/search.409db549.min.js", "version": {"provider": "mike"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.56a63758.min.js"></script>
+      <script src="../assets/javascripts/bundle.756773cc.min.js"></script>
       
     
   </body>
