@@ -70,12 +70,12 @@ internal fun MutableMap.MutableEntry<String, Any?>.toJsonPathWithValue(
   }
 
   // check the filters
-  if (!filter.all { (filter, type) ->
-      when (type) {
-        FilterType.INCLUDE -> filter.invoke(key)
-        FilterType.EXCLUDE -> filter.invoke(key).not()
-      }
-    }) {
+  if (!filter.filter { (_, type) -> type == FilterType.EXCLUDE }.all { (filter, _) ->
+      filter.invoke(key).not()
+    } || (filter.any { (_, type) -> type == FilterType.INCLUDE } && filter.filter { (_, type) -> type == FilterType.INCLUDE }
+      .none { (filter, _) ->
+        filter.invoke(key)
+      })) {
     // found at least one filter that didn't match the key => exclude the key from processing
     return listOf()
   }
