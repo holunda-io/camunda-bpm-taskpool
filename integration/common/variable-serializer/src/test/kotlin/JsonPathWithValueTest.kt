@@ -5,6 +5,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.holunda.camunda.variable.serializer.EqualityPathFilter.Companion.all
 import io.holunda.camunda.variable.serializer.EqualityPathFilter.Companion.eqExclude
+import io.holunda.camunda.variable.serializer.EqualityPathFilter.Companion.eqInclude
 import io.holunda.camunda.variable.serializer.EqualityPathFilter.Companion.none
 import io.holunda.camunda.variable.serializer.toJsonPathsWithValues
 import org.assertj.core.api.Assertions.assertThat
@@ -147,6 +148,26 @@ internal class JsonPathWithValueTest {
     assertThat(payload.toJsonPathsWithValues(filters = listOf(eqExclude("to-ignore")))).containsOnlyKeys("key")
 
   }
+
+  @Test
+  fun `should include attribute by name`() {
+    val payload = createVariables().apply {
+      put("key", "value")
+      put("to-ignore", "should not be there")
+    }
+    assertThat(payload.toJsonPathsWithValues(filters = listOf(eqInclude("key")))).containsOnlyKeys("key")
+  }
+
+  @Test
+  fun `should include and exclude attribute by name`() {
+    val payload = createVariables().apply {
+      put("include1", "value")
+      put("include2", "value")
+      put("to-ignore", "should not be there")
+    }
+    assertThat(payload.toJsonPathsWithValues(filters = listOf(eqInclude("include1"), eqInclude("include2"), eqExclude("to-ignore")))).containsOnlyKeys("include1", "include2")
+  }
+
 
   @Test
   fun `should accept all attributes`() {

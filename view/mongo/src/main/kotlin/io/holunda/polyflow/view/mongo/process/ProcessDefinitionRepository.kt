@@ -13,6 +13,9 @@ import reactor.core.publisher.Flux
 @Repository
 interface ProcessDefinitionRepository : ReactiveMongoRepository<ProcessDefinitionDocument, String> {
 
+  /**
+   * Find all for given user.
+   */
   @Query("{ \$or: [ { 'candidateStarterUsers' : ?0 }, { 'candidateStarterGroups' : ?1} ] }")
   fun findAllForUser(@Param("username") username: String, @Param("groupNames") groupNames: Set<String>): Flux<ProcessDefinitionDocument>
 

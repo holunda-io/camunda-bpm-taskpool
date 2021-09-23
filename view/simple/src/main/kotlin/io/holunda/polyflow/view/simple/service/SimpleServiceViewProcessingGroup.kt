@@ -5,6 +5,9 @@ import org.axonframework.config.EventProcessingConfiguration
 import org.axonframework.eventhandling.TrackingEventProcessor
 import org.springframework.stereotype.Component
 
+/**
+ * Component responsible for offering replay functionality of the processor.
+ */
 @Component
 class SimpleServiceViewProcessingGroup(
   private val configuration: EventProcessingConfiguration

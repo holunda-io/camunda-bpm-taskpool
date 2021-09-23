@@ -208,6 +208,9 @@ class TaskAggregate() {
     }
   }
 
+  /**
+   * React on task creation.
+   */
   @EventSourcingHandler
   fun on(event: TaskCreatedEngineEvent) {
     this.id = event.id
@@ -230,16 +233,25 @@ class TaskAggregate() {
     this.priority = event.priority
   }
 
+  /**
+   * React on task assignment.
+   */
   @EventSourcingHandler
   fun on(event: TaskAssignedEngineEvent) {
     this.assignee = event.assignee
   }
 
+  /**
+   * React on task completion.
+   */
   @EventSourcingHandler
   fun on(event: TaskCompletedEngineEvent) {
     this.completed = true
   }
 
+  /**
+   * React on task deletion.
+   */
   @EventSourcingHandler
   fun on(event: TaskDeletedEngineEvent) {
     this.deleted = true

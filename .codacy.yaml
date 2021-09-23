@@ -4,4 +4,8 @@ engines:
     exclude_paths:
       - "**/src/test/kotlin/**"
 exclude_paths:
-  - ".github/ISSUE_TEMPLATE/**"
+  - "README.md"
+  - ".github/**"
+  - "examples/components/tasklist-angular/**"
+  - "examples/components/process-forms/**"
+  - "docs/**"

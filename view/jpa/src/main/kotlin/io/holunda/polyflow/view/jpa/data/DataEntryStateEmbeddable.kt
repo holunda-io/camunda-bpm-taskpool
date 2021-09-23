@@ -5,6 +5,9 @@ import java.io.Serializable
 import javax.persistence.Column
 import javax.persistence.Embeddable
 
+/**
+ * Represents stat of data entry.
+ */
 @Embeddable
 class DataEntryStateEmbeddable(
   @Column(name = "PROCESSING_TYPE", nullable = false)
@@ -13,6 +16,9 @@ class DataEntryStateEmbeddable(
   var state: String
 ) : Serializable {
   companion object {
+    /**
+     * Factory method.
+     */
     operator fun invoke(state: DataEntryState): DataEntryStateEmbeddable =
       DataEntryStateEmbeddable(processingType = state.processingType.name, state = state.state ?: "")
   }
