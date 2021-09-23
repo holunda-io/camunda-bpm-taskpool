@@ -61,7 +61,7 @@ configuration of this indexing process by the following configuration options:
 polyflow.view.jpa:
   payload-attribute-level-limit: 2
   stored-items: task, data-entry, process-instance, process-definition
-  data-entry-filter:
+  data-entry-filters:
     include: myProperty2.myOtherEmbeddedProperty3, myProperty2.myOtherEmbeddedProperty2
 #    exclude: myProperty
 ```
