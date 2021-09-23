@@ -40,7 +40,7 @@
     <camunda-bpm-data.version>1.2.3</camunda-bpm-data.version>
     <version.camunda.spin>1.11.0</version.camunda.spin>
 
-    <springboot.version>2.4.5</springboot.version>
+    <springboot.version>2.5.5</springboot.version>
 
     <springboot-swagger-starter.version>0.3.0</springboot-swagger-starter.version>
     <org.mapstruct.version>1.4.2.Final</org.mapstruct.version>
