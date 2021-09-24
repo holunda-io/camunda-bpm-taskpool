@@ -3,6 +3,8 @@ package io.holunda.polyflow.taskpool.core
 import com.fasterxml.jackson.annotation.JsonTypeInfo
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.module.SimpleModule
+import io.holunda.camunda.taskpool.api.business.DataEntryState
+import io.holunda.camunda.taskpool.api.business.DataEntryStateImpl
 import io.holunda.camunda.taskpool.api.task.SourceReference
 import org.camunda.bpm.engine.variable.VariableMap
 import org.camunda.bpm.engine.variable.impl.VariableMapImpl
@@ -22,6 +24,7 @@ fun ObjectMapper.configureTaskpoolJacksonObjectMapper(): ObjectMapper = this
 val variableMapModule = SimpleModule()
   .apply {
     addAbstractTypeMapping(VariableMap::class.java, VariableMapImpl::class.java)
+    addAbstractTypeMapping(DataEntryState::class.java, DataEntryStateImpl::class.java)
   }
 
 /**
