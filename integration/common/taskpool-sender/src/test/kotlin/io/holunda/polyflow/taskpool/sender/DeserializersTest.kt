@@ -4,9 +4,12 @@ import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.module.SimpleModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import io.holunda.camunda.taskpool.api.business.DataEntryState
+import io.holunda.camunda.taskpool.api.business.ProcessingType
 import io.holunda.polyflow.taskpool.KotlinTypeInfo
 import io.holunda.camunda.taskpool.api.task.ProcessReference
 import io.holunda.camunda.taskpool.api.task.SourceReference
+import io.holunda.polyflow.taskpool.configureTaskpoolJacksonObjectMapper
 import org.assertj.core.api.Assertions.assertThat
 import org.camunda.bpm.engine.variable.VariableMap
 import org.camunda.bpm.engine.variable.Variables
@@ -23,16 +26,8 @@ class DeserializersTest {
   @BeforeEach
   fun initMapper() {
     mapper = jacksonObjectMapper()
+      .configureTaskpoolJacksonObjectMapper()
       .addMixIn(MyStructure::class.java, KotlinTypeInfo::class.java)
-      .addMixIn(VariableMap::class.java, KotlinTypeInfo::class.java)
-      .addMixIn(SourceReference::class.java, KotlinTypeInfo::class.java)
-      .apply {
-        registerSubtypes(VariableMapImpl::class.java, VariableMapImpl::class.java)
-      }
-      .registerModule(SimpleModule()
-        .apply {
-          addAbstractTypeMapping(VariableMap::class.java, VariableMapImpl::class.java)
-        })
   }
 
   @Test
@@ -47,6 +42,20 @@ class DeserializersTest {
     val converted = mapper.convertValue(map, ProcessReference::class.java)
 
     assertThat(converted).isEqualTo(sourceReference)
+  }
+
+  @Test
+  fun `serialize and deserialize data entry state`() {
+
+    val dataEntryState: DataEntryState = ProcessingType.IN_PROGRESS.of("test")
+
+    // show written JSON
+    println(mapper.writeValueAsString(dataEntryState))
+
+    val map: Map<String, Any> = mapper.convertValue(dataEntryState, object : TypeReference<Map<String, Any>>() {})
+    val converted = mapper.convertValue(map, DataEntryState::class.java)
+
+    assertThat(converted).isEqualTo(dataEntryState)
   }
 
   @Disabled

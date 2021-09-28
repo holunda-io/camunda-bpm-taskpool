@@ -7,6 +7,7 @@ import io.holunda.polyflow.taskpool.collector.task.enricher.ProcessVariablesFilt
 import io.holunda.polyflow.taskpool.collector.task.enricher.ProcessVariablesTaskCommandEnricher
 import org.camunda.bpm.engine.RuntimeService
 import org.camunda.bpm.engine.TaskService
+import org.camunda.bpm.engine.impl.interceptor.CommandExecutor
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression
@@ -33,9 +34,9 @@ class CamundaTaskpoolCollectorConfiguration(
    */
   @Bean
   @ConditionalOnExpression("'\${polyflow.integration.collector.camunda.task.enricher.type}' != 'custom'")
-  fun processVariablesEnricher(runtimeService: RuntimeService, taskService: TaskService, filter: ProcessVariablesFilter, correlator: ProcessVariablesCorrelator): VariablesEnricher =
+  fun processVariablesEnricher(runtimeService: RuntimeService, taskService: TaskService, commandExecutor: CommandExecutor, filter: ProcessVariablesFilter, correlator: ProcessVariablesCorrelator): VariablesEnricher =
     when (properties.task.enricher.type) {
-      TaskCollectorEnricherType.processVariables -> ProcessVariablesTaskCommandEnricher(runtimeService, taskService, filter, correlator)
+      TaskCollectorEnricherType.processVariables -> ProcessVariablesTaskCommandEnricher(runtimeService, taskService, commandExecutor, filter, correlator)
       TaskCollectorEnricherType.no -> EmptyTaskCommandEnricher()
       else -> throw IllegalStateException("Could not initialize task enricher, used unknown ${properties.task.enricher.type} type.")
     }

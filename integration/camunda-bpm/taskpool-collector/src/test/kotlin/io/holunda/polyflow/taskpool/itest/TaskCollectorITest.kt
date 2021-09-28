@@ -1,8 +1,11 @@
 package io.holunda.polyflow.taskpool.itest
 
+import com.fasterxml.jackson.module.kotlin.convertValue
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.holunda.camunda.taskpool.api.task.*
 import io.holunda.camunda.taskpool.api.task.CamundaTaskEventType.Companion.CREATE
 import io.holunda.polyflow.taskpool.sender.gateway.CommandListGateway
+import org.assertj.core.api.Assertions
 import org.awaitility.Awaitility.await
 import org.awaitility.Awaitility.waitAtMost
 import org.camunda.bpm.engine.RepositoryService
@@ -27,10 +30,10 @@ import org.springframework.stereotype.Component
 import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit4.SpringRunner
-import java.io.Serializable
 import java.time.Instant.now
 import java.util.*
 import java.util.concurrent.TimeUnit
+import kotlin.collections.HashSet
 
 
 /**
@@ -367,6 +370,80 @@ class TaskCollectorITest {
   }
 
   /**
+   * Test case for the issue described in [io.holunda.polyflow.taskpool.collector.task.enricher.ProcessVariablesTaskCommandEnricher] where variable changes were
+   * flushed in the inner process engine context, causing an OptimisticLockingException.
+   */
+  @Test
+  fun `should not flush changes in separate context`() {
+
+    val businessKey = "BK1"
+    val processId = "processId"
+    val taskDefinitionKey = "userTask"
+
+    // deploy
+    repositoryService
+      .createDeployment()
+      .addModelInstance("process.bpmn",
+        createUserTaskProcess(processId,
+          taskDefinitionKey,
+          taskListeners = listOf(
+            Pair("create", "#{addCandidateUserPiggy}"),
+            Pair("create", "#{addCandidateGroupMuppetShow}")),
+          additionalUserTask = false,
+          asyncOnStart = true))
+      .deploy()
+
+    // start
+    val set = linkedSetOf("3", "2", "1")
+    // When Jackson reads the set as a Set (not a LinkedSet), the order changes
+    Assertions.assertThat(set.toList()).isNotEqualTo(jacksonObjectMapper().convertValue<Set<String>>(set).toList())
+    val instance = runtimeService
+      .startProcessInstanceByKey(
+        processId,
+        businessKey,
+        Variables
+          .putValue("key", "value")
+          .putValue("object", MyStructureWithSet("name", "key", 1, set))
+      )
+
+    // wait for async continuation: we must not trigger the execution of the job explicitly but instead await its execution
+    assertThat(instance).isNotNull
+    assertThat(instance).isStarted
+    await().untilAsserted { assertThat(job(instance)).isNull() }
+
+    // user task
+    assertThat(instance).isWaitingAt(taskDefinitionKey)
+
+    val createCommand = CreateTaskCommand(
+      id = task().id,
+      sourceReference = ProcessReference(
+        instanceId = instance.id,
+        executionId = task().executionId,
+        definitionId = task().processDefinitionId,
+        name = "My Process",
+        definitionKey = processId,
+        applicationName = "collector-test"
+      ),
+      name = task().name,
+      taskDefinitionKey = taskDefinitionKey,
+      candidateUsers = setOf("piggy"),
+      candidateGroups = setOf("muppetshow"),
+      enriched = true,
+      eventName = CREATE,
+      createTime = task().createTime,
+      businessKey = "BK1",
+      priority = 50, // default by camunda if not set in explicit
+      payload = Variables
+        .putValue("key", Variables.stringValue("value"))
+        // Jackson changes the order in the set so we need to get the iteration order that the elements would have in a normal HashSet
+        .putValue("object", mapOf(MyStructureWithSet::name.name to "name", MyStructureWithSet::key.name to "key", MyStructureWithSet::value.name to 1, MyStructureWithSet::set.name to HashSet(set).toList()))
+    )
+
+    // we need to take into account that dispatching the accumulated commands is done asynchronously and therefore we might have to wait a little bit
+    waitAtMost(1, TimeUnit.SECONDS).untilAsserted { verify(commandListGateway).sendToGateway(listOf(createCommand)) }
+  }
+
+  /**
    * The process is started and wait in a user task.
    * The assign command is send after the TX commit.
    */
@@ -448,4 +525,5 @@ class AddCandidateGroupMuppetShow : TaskListener {
   }
 }
 
-data class MyStructure(val name: String, val key: String, val value: Int) : Serializable
+data class MyStructure(val name: String, val key: String, val value: Int)
+data class MyStructureWithSet(val name: String, val key: String, val value: Int, val set: Set<String> = setOf())

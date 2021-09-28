@@ -2,11 +2,15 @@ package io.holunda.polyflow.taskpool.collector.task.enricher
 
 import io.holunda.camunda.taskpool.api.task.*
 import io.holunda.polyflow.taskpool.callInProcessEngineContext
-import io.holunda.polyflow.taskpool.putAllTyped
 import io.holunda.polyflow.taskpool.collector.task.VariablesEnricher
+import io.holunda.polyflow.taskpool.putAllTyped
 import mu.KLogging
 import org.camunda.bpm.engine.RuntimeService
 import org.camunda.bpm.engine.TaskService
+import org.camunda.bpm.engine.impl.db.entitymanager.DbEntityManager
+import org.camunda.bpm.engine.impl.interceptor.CommandContext
+import org.camunda.bpm.engine.impl.interceptor.CommandContextListener
+import org.camunda.bpm.engine.impl.interceptor.CommandExecutor
 import org.camunda.bpm.engine.variable.VariableMap
 import org.camunda.bpm.engine.variable.Variables.createVariables
 
@@ -18,6 +22,7 @@ import org.camunda.bpm.engine.variable.Variables.createVariables
 open class ProcessVariablesTaskCommandEnricher(
   private val runtimeService: RuntimeService,
   private val taskService: TaskService,
+  private val commandExecutor: CommandExecutor,
   private val processVariablesFilter: ProcessVariablesFilter,
   private val processVariablesCorrelator: ProcessVariablesCorrelator,
 ) : VariablesEnricher {
@@ -40,17 +45,35 @@ open class ProcessVariablesTaskCommandEnricher(
       // Caution: This will only work if the task is already flushed to the database, e.g. if it was created in a previous transaction.
       // It will also see only the state of the variables that is flushed to the database
       callInProcessEngineContext(newContext = true) {
-        val task = taskService.createTaskQuery().taskId(command.id).singleResult()
-        if (task != null) {
-          taskService.getVariablesTyped(command.id)
-        } else {
-          val execution = runtimeService.createExecutionQuery().executionId(command.sourceReference.executionId).singleResult()
-          if (execution != null) {
-            runtimeService.getVariablesTyped(command.sourceReference.executionId)
+        commandExecutor.execute { innerContext ->
+          val task = taskService.createTaskQuery().taskId(command.id).singleResult()
+          if (task != null) {
+            taskService.getVariablesTyped(command.id)
           } else {
-            logger.debug { "ENRICHER-004: Could not enrich variables from running execution ${command.sourceReference.executionId}, since it doesn't exist (anymore)." }
-            createVariables()
+            val execution = runtimeService.createExecutionQuery().executionId(command.sourceReference.executionId).singleResult()
+            if (execution != null) {
+              runtimeService.getVariablesTyped(command.sourceReference.executionId)
+            } else {
+              logger.debug { "ENRICHER-004: Could not enrich variables from running execution ${command.sourceReference.executionId}, since it doesn't exist (anymore)." }
+              createVariables()
+            }
           }
+            .also {
+              innerContext.registerCommandContextListener(object : CommandContextListener {
+                override fun onCommandContextClose(commandContext: CommandContext) {
+                  // Remove all cached entities from the inner context because we don't want to accidentally flush any changes that could cause
+                  // OptimisticLockingExceptions in the outer context.
+                  // (We don't change any variables but there are situations where _reading_ a variable also causes a change, e.g. when the serialized form of a
+                  // complex variable has changed because properties have been added since creation of the variable. Another example: A variable containing a Set
+                  // has been created and serialized from a LinkedHashSet with a specific order, but is deserialized to a HashSet with a different iteration order.
+                  // When this is serialized again, the serialized form will look different because the order has changed.
+                  (commandContext.sessions[DbEntityManager::class.java] as? DbEntityManager)?.dbEntityCache?.apply { cachedEntities.forEach { remove(it) } }
+                }
+
+                override fun onCommandFailed(commandContext: CommandContext, t: Throwable) {
+                }
+              })
+            }
         }
       }
     } else {
