@@ -14,6 +14,7 @@ import org.camunda.bpm.engine.variable.impl.VariableMapImpl
  */
 fun ObjectMapper.configureTaskpoolJacksonObjectMapper(): ObjectMapper = this
   .registerModule(variableMapModule)
+  .registerModule(dataEntryModule)
   .apply {
     addMixIn(SourceReference::class.java, KotlinTypeInfo::class.java)
   }
@@ -24,6 +25,13 @@ fun ObjectMapper.configureTaskpoolJacksonObjectMapper(): ObjectMapper = this
 val variableMapModule = SimpleModule()
   .apply {
     addAbstractTypeMapping(VariableMap::class.java, VariableMapImpl::class.java)
+  }
+
+/**
+ * Module to map data entry state.
+ */
+val dataEntryModule = SimpleModule()
+  .apply {
     addAbstractTypeMapping(DataEntryState::class.java, DataEntryStateImpl::class.java)
   }
 
