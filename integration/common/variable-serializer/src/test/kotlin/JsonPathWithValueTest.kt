@@ -165,7 +165,31 @@ internal class JsonPathWithValueTest {
       put("include2", "value")
       put("to-ignore", "should not be there")
     }
-    assertThat(payload.toJsonPathsWithValues(filters = listOf(eqInclude("include1"), eqInclude("include2"), eqExclude("to-ignore")))).containsOnlyKeys("include1", "include2")
+    assertThat(
+      payload.toJsonPathsWithValues(
+        filters = listOf(
+          eqInclude("include1"),
+          eqInclude("include2"),
+          eqExclude("to-ignore")
+        )
+      )
+    ).containsOnlyKeys("include1", "include2")
+  }
+
+  @Test
+  fun `should include nested attributes by name`() {
+    val payload = createVariables().apply {
+      put("include1", mapOf("ignore" to "should not be there", "key" to "value"))
+      put("include2", "value")
+    }
+    assertThat(
+      payload.toJsonPathsWithValues(
+        filters = listOf(
+          eqInclude("include1.key"),
+          eqInclude("include2"),
+        )
+      )
+    ).containsOnlyKeys("include1.key", "include2")
   }
 
 

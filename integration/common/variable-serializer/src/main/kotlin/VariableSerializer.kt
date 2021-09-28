@@ -69,19 +69,20 @@ internal fun MutableMap.MutableEntry<String, Any?>.toJsonPathWithValue(
     "$prefix.${this.key}"
   }
 
-  // check the filters
-  if (!filter.filter { (_, type) -> type == FilterType.EXCLUDE }.all { (filter, _) ->
-      filter.invoke(key).not()
-    } || (filter.any { (_, type) -> type == FilterType.INCLUDE } && filter.filter { (_, type) -> type == FilterType.INCLUDE }
-      .none { (filter, _) ->
-        filter.invoke(key)
-      })) {
-    // found at least one filter that didn't match the key => exclude the key from processing
-    return listOf()
-  }
-
   val value = this.value
   return if (value != null && value.isPrimitiveType()) {
+
+    // check the filters
+    if (!filter.filter { (_, type) -> type == FilterType.EXCLUDE }.all { (filter, _) ->
+        filter.invoke(key).not()
+      } || (filter.any { (_, type) -> type == FilterType.INCLUDE } && filter.filter { (_, type) -> type == FilterType.INCLUDE }
+        .none { (filter, _) ->
+          filter.invoke(key)
+        })) {
+      // found at least one filter that didn't match the key => exclude the key from processing
+      return listOf()
+    }
+
     listOf(key to value)
   } else if (value is Map<*, *>) {
     @Suppress("UNCHECKED_CAST")
