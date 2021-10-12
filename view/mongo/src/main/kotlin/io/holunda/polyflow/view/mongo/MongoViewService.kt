@@ -372,7 +372,7 @@ class MongoViewService(
       }
 
   private inline fun ifChangeTrackingByEventHandler(block: () -> Mono<Void>): Mono<Void> =
-    if (properties.changeTrackingMode == io.holunda.polyflow.view.mongo.ChangeTrackingMode.EVENT_HANDLER) block() else Mono.empty()
+    if (properties.changeTrackingMode == ChangeTrackingMode.EVENT_HANDLER) block() else Mono.empty()
 
   private fun updateTaskForUserQuery(task: Task): Mono<Void> = ifChangeTrackingByEventHandler {
     updateMapFilterQuery(task, TasksForUserQuery::class.java)
@@ -410,6 +410,10 @@ class MongoViewService(
 
   private fun tasksWithDataEntries(taskDocument: TaskDocument) = tasksWithDataEntries(taskDocument.task())
 
+  // MongoDB is eventually consistent. If we process two events for the same task within a short time interval, e.g. create and delete, we may not find the
+  // newly created task in the database yet by the time we process the delete event (especially when readPreference is secondary, so we read from another node
+  // than we write to). If we expect a task to exist and don't find it, we wait for a while and periodically try to find it again. Only if after a certain
+  // number of retries the task is still not there, we assume it was already deleted (e.g. because the event has been processed before).
   private inline fun <T> Mono<T>.retryIfEmpty(
     numRetries: Long = 5,
     firstBackoff: Duration = Duration.ofMillis(100),
