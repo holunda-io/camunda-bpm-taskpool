@@ -1,5 +1,7 @@
 package io.holunda.polyflow.client.camunda
 
+import com.thoughtworks.xstream.XStream
+import com.thoughtworks.xstream.security.AnyTypePermission
 import org.mockito.kotlin.mock
 import org.assertj.core.api.Assertions
 import org.axonframework.commandhandling.gateway.CommandGateway
@@ -65,7 +67,7 @@ class CamundaEngineClientPropertiesExtendedTest {
   private class TestMockConfiguration {
 
     @Bean
-    fun eventSerializer(): Serializer = XStreamSerializer.builder().build()
+    fun eventSerializer(): Serializer = XStreamSerializer.builder().xStream(XStream().apply { addPermission(AnyTypePermission.ANY) }).build()
 
     @Bean
     fun eventBus(): EventBus = mock()

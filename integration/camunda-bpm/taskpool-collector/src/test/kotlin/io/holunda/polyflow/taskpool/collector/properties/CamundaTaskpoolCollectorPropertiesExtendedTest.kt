@@ -1,5 +1,6 @@
 package io.holunda.polyflow.taskpool.collector.properties
 
+import com.thoughtworks.xstream.XStream
 import org.mockito.kotlin.mock
 import io.holunda.polyflow.taskpool.collector.CamundaTaskpoolCollectorConfiguration
 import io.holunda.polyflow.taskpool.collector.CamundaTaskpoolCollectorProperties
@@ -88,7 +89,7 @@ class CamundaTaskpoolCollectorPropertiesExtendedTest {
   private class TestMockConfiguration {
 
     @Bean
-    fun eventSerializer(): Serializer = XStreamSerializer.builder().build()
+    fun eventSerializer(): Serializer = XStreamSerializer.builder().xStream(XStream()).build()
 
     @Bean
     fun eventBus(): EventBus = mock()
