@@ -1,5 +1,6 @@
 package io.holunda.polyflow.taskpool.sender
 
+import com.thoughtworks.xstream.XStream
 import io.holunda.polyflow.taskpool.sender.gateway.CommandListGateway
 import io.holunda.polyflow.taskpool.sender.task.EngineTaskCommandSender
 import org.assertj.core.api.Assertions.assertThat
@@ -90,7 +91,7 @@ class SenderPropertiesExtendedTest {
     fun commandListGateway(): CommandListGateway = mock(CommandListGateway::class.java)
 
     @Bean
-    fun eventSerializer(): Serializer = XStreamSerializer.builder().build()
+    fun eventSerializer(): Serializer = XStreamSerializer.builder().xStream(XStream()).build()
 
     @Bean
     fun eventBus(): EventBus = mock(EventBus::class.java)
