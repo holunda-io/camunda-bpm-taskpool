@@ -4,7 +4,7 @@ import io.holunda.camunda.taskpool.api.process.instance.ProcessInstanceStartedEv
 import io.holunda.camunda.taskpool.api.process.instance.StartProcessInstanceCommand
 import io.holunda.camunda.taskpool.api.process.variable.*
 import io.holunda.camunda.taskpool.api.task.ProcessReference
-import io.holunda.polyflow.taskpool.core.EnablePolyflowTaskPool
+import io.holunda.polyflow.taskpool.core.TestApplication
 import org.assertj.core.api.Assertions.assertThat
 import org.axonframework.commandhandling.gateway.CommandGateway
 import org.axonframework.eventhandling.EventBus
@@ -14,7 +14,6 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit4.SpringRunner
@@ -26,7 +25,7 @@ import java.util.*
  * - if it does exist just load and handle the update command
  */
 @RunWith(SpringRunner::class)
-@SpringBootTest
+@SpringBootTest(classes = [TestApplication::class])
 @ActiveProfiles("itest")
 class ProcessInstanceVariableChangeAggregateITest {
 
@@ -137,10 +136,5 @@ class ProcessInstanceVariableChangeAggregateITest {
     assertThat((receivedEvents[0].payload as ProcessVariablesChangedEvent).variableChanges).isEqualTo(update.variableChanges)
 
   }
-
-
-  @SpringBootApplication
-  @EnablePolyflowTaskPool
-  class TestApplication
 
 }

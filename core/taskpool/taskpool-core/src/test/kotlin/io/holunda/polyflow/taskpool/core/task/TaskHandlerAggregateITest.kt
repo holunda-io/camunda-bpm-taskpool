@@ -5,7 +5,7 @@ import io.holunda.camunda.taskpool.api.business.newCorrelations
 import io.holunda.camunda.taskpool.api.task.CreateTaskCommand
 import io.holunda.camunda.taskpool.api.task.ProcessReference
 import io.holunda.camunda.taskpool.api.task.TaskCreatedEngineEvent
-import io.holunda.polyflow.taskpool.core.EnablePolyflowTaskPool
+import io.holunda.polyflow.taskpool.core.TestApplication
 import org.assertj.core.api.Assertions.assertThat
 import org.axonframework.commandhandling.gateway.CommandGateway
 import org.axonframework.eventhandling.EventBus
@@ -15,7 +15,6 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit4.SpringRunner
@@ -28,7 +27,7 @@ import java.util.*
  * - if it does exist (e.g. we run populate), just handle the create command
  */
 @RunWith(SpringRunner::class)
-@SpringBootTest
+@SpringBootTest(classes = [TestApplication::class])
 @ActiveProfiles("itest")
 class TaskHandlerAggregateITest {
 
@@ -85,8 +84,4 @@ class TaskHandlerAggregateITest {
     assertThat(receivedEvents.size).isEqualTo(2)
     assertThat((receivedEvents[1].payload as TaskCreatedEngineEvent).description).isEqualTo("Changed value")
   }
-
-  @SpringBootApplication
-  @EnablePolyflowTaskPool
-  class TestApplication
 }
