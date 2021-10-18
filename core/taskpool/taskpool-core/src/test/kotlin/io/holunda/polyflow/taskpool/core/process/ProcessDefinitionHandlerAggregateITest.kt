@@ -2,7 +2,7 @@ package io.holunda.polyflow.taskpool.core.process
 
 import io.holunda.camunda.taskpool.api.process.definition.ProcessDefinitionRegisteredEvent
 import io.holunda.camunda.taskpool.api.process.definition.RegisterProcessDefinitionCommand
-import io.holunda.polyflow.taskpool.core.EnablePolyflowTaskPool
+import io.holunda.polyflow.taskpool.core.TestApplication
 import org.assertj.core.api.Assertions.assertThat
 import org.axonframework.commandhandling.gateway.CommandGateway
 import org.axonframework.eventhandling.EventBus
@@ -11,7 +11,6 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit4.SpringRunner
@@ -22,7 +21,7 @@ import org.springframework.test.context.junit4.SpringRunner
  * - if it does exist (e.g. we run populate), just handle the create command
  */
 @RunWith(SpringRunner::class)
-@SpringBootTest
+@SpringBootTest(classes = [TestApplication::class])
 @ActiveProfiles("itest")
 class ProcessDefinitionHandlerAggregateITest {
 
@@ -65,7 +64,4 @@ class ProcessDefinitionHandlerAggregateITest {
     assertThat((receivedEvents[1].payload as ProcessDefinitionRegisteredEvent).processName).isEqualTo("new name")
   }
 
-  @SpringBootApplication
-  @EnablePolyflowTaskPool
-  class TestApplication
 }

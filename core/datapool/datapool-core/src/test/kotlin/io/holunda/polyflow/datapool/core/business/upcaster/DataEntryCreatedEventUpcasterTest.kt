@@ -1,5 +1,6 @@
 package io.holunda.polyflow.datapool.core.business.upcaster
 
+import com.thoughtworks.xstream.XStream
 import org.assertj.core.api.Assertions.assertThat
 import org.axonframework.eventhandling.GenericDomainEventEntry
 import org.axonframework.serialization.upcasting.event.InitialEventRepresentation
@@ -30,7 +31,7 @@ class DataEntryCreatedEventUpcasterTest {
       build_previous_event(),
       createDocument()
     )
-    val init = InitialEventRepresentation(data, XStreamSerializer.builder().build())
+    val init = InitialEventRepresentation(data, XStreamSerializer.builder().xStream(XStream()).build())
 
     // WHEN
     assertThat(upcaster.canUpcast(init)).isTrue

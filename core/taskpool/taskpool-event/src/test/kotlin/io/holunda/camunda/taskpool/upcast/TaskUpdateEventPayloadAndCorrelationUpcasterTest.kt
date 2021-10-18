@@ -1,7 +1,9 @@
 package io.holunda.camunda.taskpool.upcast
 
-import io.holunda.camunda.taskpool.api.task.*
-import io.holunda.camunda.taskpool.upcast.task.*
+import com.thoughtworks.xstream.XStream
+import com.thoughtworks.xstream.security.AnyTypePermission
+import io.holunda.camunda.taskpool.api.task.TaskAttributeUpdatedEngineEvent
+import io.holunda.camunda.taskpool.upcast.task.TaskAttributeUpdatedEngineEvent4To5Upcaster
 import org.assertj.core.api.Assertions.assertThat
 import org.axonframework.eventhandling.EventData
 import org.axonframework.messaging.MetaData
@@ -33,12 +35,12 @@ class TaskUpdateEventPayloadAndCorrelationUpcasterTest {
   /**
    * Run the test with the specified version of the event.
    */
-  private inline fun <reified T : Any> upcastAndReturn(eventClazz: KClass<T>) : T {
+  private inline fun <reified T : Any> upcastAndReturn(eventClazz: KClass<T>): T {
     val eventName: String = eventClazz.qualifiedName!!
     val xml = generateFakeOldEventXML(eventClazz)
     val document = SAXReader().read(StringReader(xml))
     val clazz = org.dom4j.Document::class.java
-    val serializer = XStreamSerializer.builder().lenientDeserialization().build()
+    val serializer = XStreamSerializer.builder().xStream(XStream().apply { addPermission(AnyTypePermission.ANY) }).build()
 
     val entry: EventData<Document> = SimpleEventData<Document>(
       metaData = SimpleSerializedObject(DocumentHelper.createDocument(), clazz, SimpleSerializedType(MetaData::class.java.name, null)),

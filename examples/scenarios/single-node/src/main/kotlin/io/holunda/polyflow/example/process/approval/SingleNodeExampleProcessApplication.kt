@@ -1,5 +1,7 @@
 package io.holunda.polyflow.example.process.approval
 
+import com.thoughtworks.xstream.XStream
+import com.thoughtworks.xstream.security.AnyTypePermission
 import io.holixon.axon.gateway.query.RevisionValue
 import io.holunda.polyflow.datapool.core.EnablePolyflowDataPool
 import io.holunda.polyflow.example.tasklist.EnableTasklist
@@ -11,6 +13,9 @@ import org.axonframework.messaging.correlation.CorrelationDataProvider
 import org.axonframework.messaging.correlation.MessageOriginProvider
 import org.axonframework.messaging.correlation.MultiCorrelationDataProvider
 import org.axonframework.messaging.correlation.SimpleCorrelationDataProvider
+import org.axonframework.serialization.Serializer
+import org.axonframework.serialization.xml.XStreamSerializer
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import org.springframework.context.annotation.Bean
@@ -52,5 +57,10 @@ class SingleNodeExampleProcessApplication {
       )
     )
   }
+
+  @Bean
+  @Qualifier("eventSerializer")
+  fun mySerializer(): Serializer = XStreamSerializer.builder().xStream(XStream().apply { addPermission(AnyTypePermission.ANY) }).build()
+
 }
 

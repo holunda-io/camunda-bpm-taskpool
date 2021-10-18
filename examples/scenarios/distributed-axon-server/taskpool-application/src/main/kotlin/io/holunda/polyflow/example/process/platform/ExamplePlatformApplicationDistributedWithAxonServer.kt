@@ -26,7 +26,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Import
 
 /**
- * Starts platofrm application.
+ * Starts platform application.
  */
 fun main(args: Array<String>) {
   SpringApplication.run(ExamplePlatformApplicationDistributedWithAxonServer::class.java, *args)

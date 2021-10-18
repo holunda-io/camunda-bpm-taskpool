@@ -1,5 +1,7 @@
 package io.holunda.camunda.taskpool.upcast
 
+import com.thoughtworks.xstream.XStream
+import com.thoughtworks.xstream.security.AnyTypePermission
 import io.holunda.camunda.taskpool.api.task.*
 import io.holunda.camunda.taskpool.upcast.task.*
 import org.assertj.core.api.Assertions
@@ -48,7 +50,7 @@ class TaskEventSourceReferenceUpcasterTest {
     val xml = generateFakeOldEventXML(clazz)
     val document = SAXReader().read(StringReader(xml))
     val dataTypeClazz = org.dom4j.Document::class.java
-    val serializer = XStreamSerializer.builder().lenientDeserialization().build()
+    val serializer = XStreamSerializer.builder().xStream(XStream().apply { addPermission(AnyTypePermission.ANY) }).build()
 
     val entry: EventData<Document> = SimpleEventData<Document>(
       metaData = SimpleSerializedObject(DocumentHelper.createDocument(), dataTypeClazz, SimpleSerializedType(MetaData::class.java.name, null)),

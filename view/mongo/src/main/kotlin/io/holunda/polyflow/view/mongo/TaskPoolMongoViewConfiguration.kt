@@ -1,5 +1,7 @@
 package io.holunda.polyflow.view.mongo
 
+import com.thoughtworks.xstream.XStream
+import com.thoughtworks.xstream.security.AnyTypePermission
 import io.holunda.polyflow.view.mongo.task.TaskDocument
 import mu.KLogging
 import org.axonframework.eventhandling.tokenstore.TokenStore
@@ -24,7 +26,7 @@ import javax.annotation.PostConstruct
 @Configuration
 @ComponentScan
 @EnableReactiveMongoRepositories
-@EnableConfigurationProperties(io.holunda.polyflow.view.mongo.TaskPoolMongoViewProperties::class)
+@EnableConfigurationProperties(TaskPoolMongoViewProperties::class)
 @EntityScan(basePackageClasses = [TaskDocument::class])
 class TaskPoolMongoViewConfiguration {
 
@@ -66,7 +68,7 @@ class TaskPoolMongoViewConfiguration {
     MongoTokenStore
       .builder()
       .mongoTemplate(mongoTemplate)
-      .serializer(XStreamSerializer.builder().build())
+      .serializer(XStreamSerializer.builder().xStream(XStream().apply { addPermission(AnyTypePermission.ANY) }).build())
       .build()
 
   /**
