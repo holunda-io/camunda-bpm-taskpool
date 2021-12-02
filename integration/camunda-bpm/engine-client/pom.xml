@@ -19,6 +19,12 @@
     <dependency>
       <groupId>org.axonframework</groupId>
       <artifactId>axon-spring-boot-starter</artifactId>
+      <exclusions>
+        <exclusion>
+          <groupId>org.axonframework</groupId>
+          <artifactId>axon-server-conector</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
