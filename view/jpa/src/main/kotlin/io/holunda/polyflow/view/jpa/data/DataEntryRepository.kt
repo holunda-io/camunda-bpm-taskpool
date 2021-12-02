@@ -2,7 +2,6 @@ package io.holunda.polyflow.view.jpa.data
 
 import io.holunda.camunda.taskpool.api.business.ProcessingType
 import io.holunda.polyflow.view.jpa.auth.AuthorizationPrincipal
-import io.holunda.polyflow.view.jpa.composeOr
 import io.holunda.polyflow.view.jpa.payload.PayloadAttribute
 import org.springframework.data.jpa.domain.Specification
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor
@@ -63,15 +62,12 @@ interface DataEntryRepository : CrudRepository<DataEntryEntity, DataEntryId>, Jp
      * Specification for checking authorization of multiple principals.
      */
     fun isAuthorizedFor(principals: Collection<AuthorizationPrincipal>): Specification<DataEntryEntity> =
-      composeOr(principals.map { principal ->
-        Specification { dataEntry, _, builder ->
-          builder.isMember(
-            "${principal.type}:${principal.name}",
-            dataEntry.get<List<String>>(DataEntryEntity::authorizedPrincipals.name)
-          )
+      if (principals.isEmpty())
+        Specification { _, _, _ -> null }
+      else
+        Specification { dataEntry, _, _ ->
+          dataEntry.join<DataEntryEntity, List<String>>(DataEntryEntity::authorizedPrincipals.name)
+            .`in`(principals.map { "${it.type}:${it.name}" })
         }
-      }) ?: Specification { _, _, _ -> null }
   }
 }
-
-
