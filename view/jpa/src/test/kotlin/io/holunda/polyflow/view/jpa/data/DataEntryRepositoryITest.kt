@@ -6,6 +6,7 @@ import io.holunda.camunda.variable.serializer.toJsonPathsWithValues
 import io.holunda.polyflow.view.jpa.auth.AuthorizationPrincipal.Companion.group
 import io.holunda.polyflow.view.jpa.auth.AuthorizationPrincipal.Companion.user
 import io.holunda.polyflow.view.jpa.data.DataEntryRepository.Companion.hasDataEntryPayloadAttribute
+import io.holunda.polyflow.view.jpa.data.DataEntryRepository.Companion.isAuthorizedFor
 import io.holunda.polyflow.view.jpa.itest.TestApplication
 import io.holunda.polyflow.view.jpa.payload.PayloadAttribute
 import org.assertj.core.api.Assertions.assertThat
@@ -156,6 +157,10 @@ internal class DataEntryRepositoryITest {
     val kermit = dataEntryRepository.findAllByAuthorizedPrincipalsIn(setOf(user("kermit").toString()))
     assertThat(kermit).containsExactly(dataEntry)
 
+    val muppetsOrKermit = dataEntryRepository.findAllByAuthorizedPrincipalsIn(setOf(group("muppets").toString(), user("kermit").toString()))
+    // the data entry is contained multiple times in the list
+    assertThat(muppetsOrKermit).containsOnly(dataEntry)
+
     val piggy = dataEntryRepository.findAllByAuthorizedPrincipalsIn(setOf(user("piggy").toString()))
     assertThat(piggy).containsExactlyInAnyOrderElementsOf(listOf(dataEntry, dataEntry2))
 
@@ -166,6 +171,31 @@ internal class DataEntryRepositoryITest {
     assertThat(unknownGroup).isEmpty()
 
     val unknownUser = dataEntryRepository.findAllByAuthorizedPrincipalsIn(setOf(user("unknown user").toString()))
+    assertThat(unknownUser).isEmpty()
+  }
+
+  @Test
+  fun `should find data entries by authorized specification`() {
+    val muppets = dataEntryRepository.findAll(isAuthorizedFor(setOf(group("muppets"))))
+    assertThat(muppets).containsExactly(dataEntry)
+
+    val kermit = dataEntryRepository.findAll(isAuthorizedFor(setOf(user("kermit"))))
+    assertThat(kermit).containsExactly(dataEntry)
+
+    val muppetsOrKermit = dataEntryRepository.findAll(isAuthorizedFor(setOf(group("muppets"), user("kermit"))))
+    // the data entry is contained multiple times in the list
+    assertThat(muppetsOrKermit).containsOnly(dataEntry)
+
+    val piggy = dataEntryRepository.findAll(isAuthorizedFor(setOf(user("piggy"))))
+    assertThat(piggy).containsExactlyInAnyOrderElementsOf(listOf(dataEntry, dataEntry2))
+
+    val avengers = dataEntryRepository.findAll(isAuthorizedFor(setOf(group("avengers"))))
+    assertThat(avengers).containsExactly(dataEntry2)
+
+    val unknownGroup = dataEntryRepository.findAll(isAuthorizedFor(setOf(group("unknown group"))))
+    assertThat(unknownGroup).isEmpty()
+
+    val unknownUser = dataEntryRepository.findAll(isAuthorizedFor(setOf(user("unknown user"))))
     assertThat(unknownUser).isEmpty()
   }
 
