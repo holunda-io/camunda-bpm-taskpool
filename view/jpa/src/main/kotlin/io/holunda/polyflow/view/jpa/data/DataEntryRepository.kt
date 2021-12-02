@@ -21,6 +21,39 @@ interface DataEntryRepository : CrudRepository<DataEntryEntity, DataEntryId>, Jp
   companion object {
 
     /**
+     * Specification for the entry id.
+     */
+    fun hasEntryId(entryId: String): Specification<DataEntryEntity> =
+      Specification { dataEntry, _, builder ->
+        builder.equal(
+          dataEntry.get<String>(DataEntryId::entryId.name),
+          entryId
+        )
+      }
+
+    /**
+     * Specification for the entry type.
+     */
+    fun hasEntryType(entryType: String): Specification<DataEntryEntity> =
+      Specification { dataEntry, _, builder ->
+        builder.equal(
+          dataEntry.get<String>(DataEntryId::entryType.name),
+          entryType
+        )
+      }
+
+    /**
+     * Specification for the type.
+     */
+    fun hasType(type: String): Specification<DataEntryEntity> =
+      Specification { dataEntry, _, builder ->
+        builder.equal(
+          dataEntry.get<DataEntryStateEmbeddable>(DataEntryEntity::state.name),
+          type
+        )
+      }
+
+    /**
      * Specification for the user-defined state.
      */
     fun hasState(state: String): Specification<DataEntryEntity> =
