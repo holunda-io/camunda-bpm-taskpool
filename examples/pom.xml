@@ -105,16 +105,15 @@
 
       <!-- Swagger -->
       <dependency>
-        <groupId>io.toolisticon.springboot</groupId>
-        <artifactId>springboot-swagger-starter</artifactId>
-        <version>${springboot-swagger-starter.version}</version>
-      </dependency>
-      <dependency>
         <groupId>org.openapitools</groupId>
         <artifactId>jackson-databind-nullable</artifactId>
         <version>0.2.1</version>
       </dependency>
-
+      <dependency>
+        <groupId>io.springfox</groupId>
+        <artifactId>springfox-swagger2</artifactId>
+        <version>2.8.0</version>
+      </dependency>
       <!-- Camunda BPM Data -->
       <dependency>
         <groupId>io.holunda.data</groupId>
@@ -127,6 +126,13 @@
         <groupId>org.mapstruct</groupId>
         <artifactId>mapstruct</artifactId>
         <version>${org.mapstruct.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.mockito.kotlin</groupId>
+        <artifactId>mockito-kotlin</artifactId>
+        <version>4.0.0</version>
+        <scope>test</scope>
       </dependency>
 
     </dependencies>
@@ -188,7 +194,7 @@
           <!-- Open API generator -->
           <groupId>org.openapitools</groupId>
           <artifactId>openapi-generator-maven-plugin</artifactId>
-          <version>5.2.1</version>
+          <version>5.3.0</version>
         </plugin>
 
         <plugin>

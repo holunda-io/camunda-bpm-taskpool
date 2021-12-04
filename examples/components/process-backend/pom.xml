@@ -52,12 +52,6 @@
       <artifactId>spring-boot-starter-data-jpa</artifactId>
     </dependency>
 
-    <!-- Swagger -->
-    <dependency>
-      <groupId>io.toolisticon.springboot</groupId>
-      <artifactId>springboot-swagger-starter</artifactId>
-    </dependency>
-
     <!-- Axon -->
     <dependency>
       <groupId>org.axonframework</groupId>
@@ -141,6 +135,13 @@
     <dependency>
       <groupId>com.fasterxml.jackson.module</groupId>
       <artifactId>jackson-module-kotlin</artifactId>
+    </dependency>
+
+    <!-- Swagger  -->
+    <dependency>
+      <groupId>io.swagger</groupId>
+      <artifactId>swagger-annotations</artifactId>
+      <version>1.6.3</version>
     </dependency>
     <dependency>
       <groupId>org.openapitools</groupId>

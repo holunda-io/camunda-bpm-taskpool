@@ -8,9 +8,12 @@ import de.flapdoodle.embed.mongo.MongodProcess
 import de.flapdoodle.embed.mongo.MongodStarter
 import de.flapdoodle.embed.mongo.config.*
 import de.flapdoodle.embed.mongo.distribution.Version
+import de.flapdoodle.embed.process.config.ImmutableRuntimeConfig
 import de.flapdoodle.embed.process.config.io.ProcessOutput
+import de.flapdoodle.embed.process.config.store.DownloadConfig
 import de.flapdoodle.embed.process.io.Processors
 import de.flapdoodle.embed.process.io.Slf4jLevel
+import de.flapdoodle.embed.process.store.ExtractedArtifactStore
 import mu.KLogging
 import org.awaitility.Awaitility.await
 import org.bson.Document
@@ -55,11 +58,11 @@ object MongoLauncher {
       return mock(MongodExecutable::class.java)
     }
 
-    val mongodConfig = MongodConfigBuilder()
+    val mongodConfig = ImmutableMongodConfig.builder()
       .version(Version.Main.PRODUCTION)
       .replication(if (asReplicaSet) Storage(null, "repembedded", 16) else Storage())
       .net(Net(MONGO_DEFAULT_PORT, false))
-      .cmdOptions(MongoCmdOptionsBuilder().useNoJournal(!asReplicaSet).build())
+      .cmdOptions(MongoCmdOptions.builder().useNoJournal(!asReplicaSet).build())
       // Increase timeout as default timeout seems not to be sufficient for shutdown in replicaSet mode
       .stopTimeoutInMillis(11000)
       .build()
@@ -71,17 +74,18 @@ object MongoLauncher {
     )
 
     val command = Command.MongoD
-    val runtimeConfig = RuntimeConfigBuilder()
-      .defaultsWithLogger(command, logger)
+
+    val runtimeConfig = ImmutableRuntimeConfig.builder()
+      //.defaultsWithLogger(command, logger)
       .processOutput(processOutput)
-      .artifactStore(ExtractedArtifactStoreBuilder()
-        .defaults(command)
-        .download(DownloadConfigBuilder().defaultsForCommand(command).build())
-        .executableNaming { prefix, postfix -> prefix + "_mongo_taskview_" + counter.getAndIncrement() + "_" + postfix })
-      .build()
+      .artifactStore(ExtractedArtifactStore.builder()
+        // .defaults(command)
+        .downloadConfig(DownloadConfig.builder() /*.defaultsForCommand(command)*/.build())
+        // .executableNaming { prefix, postfix -> prefix + "_mongo_taskview_" + counter.getAndIncrement() + "_" + postfix }
+        .build()
+      ).build()
 
     val runtime = MongodStarter.getInstance(runtimeConfig)
-
     return runtime.prepare(mongodConfig)
   }
 
