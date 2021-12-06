@@ -59,9 +59,9 @@ class JpaPolyflowViewDataEntryService(
     val specification = criteria.toDataEntrySpecification()
 
     val elements = if (specification != null) {
-      dataEntryRepository.findAll(specification.and(isAuthorizedFor(authorizedPrincipals)))
+      dataEntryRepository.findAll(specification.and(isAuthorizedFor(authorizedPrincipals))).distinct()
     } else {
-      dataEntryRepository.findAll(isAuthorizedFor(authorizedPrincipals))
+      dataEntryRepository.findAll(isAuthorizedFor(authorizedPrincipals)).distinct()
     }
     return constructDataEntryResponse(elements, query)
   }

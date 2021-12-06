@@ -5,7 +5,7 @@
 
   <groupId>io.holunda.polyflow</groupId>
   <artifactId>polyflow-root</artifactId>
-  <version>3.1.5</version>
+  <version>3.1.6</version>
   <packaging>pom</packaging>
 
   <name>POM: ${project.artifactId}</name>
@@ -20,10 +20,10 @@
     <version.java>${java.version}</version.java>
     <version.java>${java.version}</version.java>
 
-    <kotlin.version>1.5.31</kotlin.version>
+    <kotlin.version>1.6.0</kotlin.version>
     <kotlin.compiler.jvmTarget>${java.version}</kotlin.compiler.jvmTarget>
     <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
-    <kotlin-logging.version>2.0.11</kotlin-logging.version>
+    <kotlin-logging.version>2.1.14</kotlin-logging.version>
 
   </properties>
 
@@ -102,18 +102,6 @@
   </build>
 
   <profiles>
-    <!-- Examples are included only if this profile is enabled -->
-    <profile>
-      <id>examples</id>
-      <activation>
-        <property>
-          <name>!skipExamples</name>
-        </property>
-      </activation>
-      <modules>
-        <module>examples</module>
-      </modules>
-    </profile>
 
     <!-- Define I-Test profile -->
     <profile>
@@ -254,19 +242,6 @@
       <email>ah@hbt.de</email>
       <organization>HBT GmbH</organization>
       <organizationUrl>https://www.hbt.de/</organizationUrl>
-    </developer>
-    <developer>
-      <id>bignesta</id>
-      <name>Christoph Wolff</name>
-      <organization>Holisticon AG</organization>
-      <organizationUrl>https://www.holisticon.de</organizationUrl>
-    </developer>
-    <developer>
-      <id>dthuesen</id>
-      <name>Detlef von Thuesen</name>
-      <email>dthuesen@gmx.de</email>
-      <organization>Holisticon AG</organization>
-      <organizationUrl>https://www.holisticon.de</organizationUrl>
     </developer>
   </developers>
 </project>

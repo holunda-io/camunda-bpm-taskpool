@@ -1,4 +1,0 @@
-logging:
-  level:
-    root: INFO
-    org.springframework.test.util.ReflectionTestUtils: INFO

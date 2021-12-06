@@ -1,14 +1,24 @@
 package io.holunda.polyflow.client.camunda
 
+import com.thoughtworks.xstream.XStream
+import com.thoughtworks.xstream.security.AnyTypePermission
 import org.mockito.kotlin.mock
 import org.assertj.core.api.Assertions
+import org.axonframework.commandhandling.CommandBus
 import org.axonframework.commandhandling.gateway.CommandGateway
+import org.axonframework.config.Configurer
 import org.axonframework.eventhandling.EventBus
+import org.axonframework.queryhandling.QueryBus
+import org.axonframework.queryhandling.QueryGateway
 import org.axonframework.serialization.Serializer
 import org.axonframework.serialization.xml.XStreamSerializer
+import org.axonframework.spring.config.AxonConfiguration
+import org.axonframework.springboot.autoconfig.MetricsAutoConfiguration
 import org.camunda.bpm.engine.RuntimeService
 import org.camunda.bpm.engine.TaskService
 import org.junit.Test
+import org.springframework.boot.autoconfigure.AutoConfigurations
+import org.springframework.boot.autoconfigure.AutoConfigureBefore
 import org.springframework.boot.context.annotation.UserConfigurations
 import org.springframework.boot.test.context.runner.ApplicationContextRunner
 import org.springframework.context.annotation.Bean
@@ -16,12 +26,14 @@ import org.springframework.context.annotation.Bean
 class CamundaEngineClientPropertiesExtendedTest {
 
   private val contextRunner = ApplicationContextRunner()
-    .withConfiguration(UserConfigurations.of(CamundaEngineClientConfiguration::class.java))
+    .withConfiguration(AutoConfigurations.of(TestMockConfiguration::class.java))
+    .withUserConfiguration(
+      CamundaEngineClientConfiguration::class.java
+    )
 
   @Test
   fun testMinimal() {
     contextRunner
-      .withUserConfiguration(TestMockConfiguration::class.java)
       .withPropertyValues(
         "axon.axonserver.enabled=false",
         "spring.application.name=my-test-application"
@@ -37,8 +49,6 @@ class CamundaEngineClientPropertiesExtendedTest {
   @Test
   fun testAllChanged() {
     contextRunner
-      .withUserConfiguration(TestMockConfiguration::class.java)
-      .withUserConfiguration(AdditionalMockConfiguration::class.java)
       .withPropertyValues(
         "axon.axonserver.enabled=false",
         "spring.application.name=my-test-application",
@@ -55,23 +65,23 @@ class CamundaEngineClientPropertiesExtendedTest {
   /**
    * Config class without configuration annotation not to confuse others.
    */
-  private class AdditionalMockConfiguration {
-
-  }
-
-  /**
-   * Config class without configuration annotation not to confuse others.
-   */
-  private class TestMockConfiguration {
+  @AutoConfigureBefore(MetricsAutoConfiguration::class)
+  class TestMockConfiguration {
 
     @Bean
-    fun eventSerializer(): Serializer = XStreamSerializer.builder().build()
+    fun eventSerializer(): Serializer = XStreamSerializer.builder().xStream(XStream().apply { addPermission(AnyTypePermission.ANY) }).build()
 
     @Bean
     fun eventBus(): EventBus = mock()
 
     @Bean
+    fun commandBus(): CommandBus = mock()
+
+    @Bean
     fun commandGateway(): CommandGateway = mock()
+
+    @Bean
+    fun queryBus(): QueryBus = mock()
 
     @Bean
     fun runtimeService(): RuntimeService = mock()

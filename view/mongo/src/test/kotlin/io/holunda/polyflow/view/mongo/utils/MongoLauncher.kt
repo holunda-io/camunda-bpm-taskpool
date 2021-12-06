@@ -55,11 +55,17 @@ object MongoLauncher {
       return mock(MongodExecutable::class.java)
     }
 
-    val mongodConfig = MongodConfigBuilder()
+    val mongodConfig = ImmutableMongodConfig
+      .builder()
       .version(Version.Main.PRODUCTION)
       .replication(if (asReplicaSet) Storage(null, "repembedded", 16) else Storage())
       .net(Net(MONGO_DEFAULT_PORT, false))
-      .cmdOptions(MongoCmdOptionsBuilder().useNoJournal(!asReplicaSet).build())
+      .cmdOptions(
+        MongoCmdOptions
+          .builder()
+          .useNoJournal(!asReplicaSet)
+          .build()
+      )
       // Increase timeout as default timeout seems not to be sufficient for shutdown in replicaSet mode
       .stopTimeoutInMillis(11000)
       .build()
@@ -71,21 +77,30 @@ object MongoLauncher {
     )
 
     val command = Command.MongoD
-    val runtimeConfig = RuntimeConfigBuilder()
-      .defaultsWithLogger(command, logger)
+
+    val downloadConfig = Defaults
+      .downloadConfigFor(command)
+      .fileNaming { prefix, postfix -> prefix + "_mongo_taskview_" + counter.getAndIncrement() + "_" + postfix }
+      .build()
+
+    val artifactStore = Defaults
+      .extractedArtifactStoreFor(command)
+      .withDownloadConfig(downloadConfig)
+
+    val runtimeConfig = Defaults
+      .runtimeConfigFor(command, logger)
       .processOutput(processOutput)
-      .artifactStore(ExtractedArtifactStoreBuilder()
-        .defaults(command)
-        .download(DownloadConfigBuilder().defaultsForCommand(command).build())
-        .executableNaming { prefix, postfix -> prefix + "_mongo_taskview_" + counter.getAndIncrement() + "_" + postfix })
+      .artifactStore(artifactStore)
       .build()
 
     val runtime = MongodStarter.getInstance(runtimeConfig)
-
     return runtime.prepare(mongodConfig)
   }
 
-  open class MongoInstance(val asReplicaSet: Boolean, val databaseName: String) {
+  open class MongoInstance(
+    private val asReplicaSet: Boolean,
+    private val databaseName: String
+  ) {
 
     companion object : KLogging()
 
@@ -107,7 +122,7 @@ object MongoLauncher {
           MongoClients.create(
             MongoClientSettings
               .builder()
-              .applyConnectionString(ConnectionString("mongodb://$LOCALHOST:$MONGO_DEFAULT_PORT/?replicaSet=repembedded"))
+              .applyConnectionString(ConnectionString("mongodb://$LOCALHOST:$MONGO_DEFAULT_PORT"))
               .readPreference(ReadPreference.nearest())
               .writeConcern(WriteConcern.W2)
               .build()
@@ -137,8 +152,8 @@ object MongoLauncher {
      */
     fun clear() {
       MongoClients.create("mongodb://$LOCALHOST:$MONGO_DEFAULT_PORT").use {
-      val database = it.getDatabase(databaseName)
-      database.drop()
+        val database = it.getDatabase(databaseName)
+        database.drop()
       }
     }
 

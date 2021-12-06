@@ -7,8 +7,11 @@ import io.holunda.polyflow.view.filter.Criterion
 import io.holunda.polyflow.view.filter.EQUALS
 import io.holunda.polyflow.view.jpa.data.DataEntryEntity
 import io.holunda.polyflow.view.jpa.data.DataEntryRepository.Companion.hasDataEntryPayloadAttribute
+import io.holunda.polyflow.view.jpa.data.DataEntryRepository.Companion.hasEntryId
+import io.holunda.polyflow.view.jpa.data.DataEntryRepository.Companion.hasEntryType
 import io.holunda.polyflow.view.jpa.data.DataEntryRepository.Companion.hasProcessingType
 import io.holunda.polyflow.view.jpa.data.DataEntryRepository.Companion.hasState
+import io.holunda.polyflow.view.jpa.data.DataEntryRepository.Companion.hasType
 import io.holunda.polyflow.view.jpa.task.TaskEntity
 import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.hasBusinessKey
 import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.hasTaskPayloadAttribute
@@ -105,6 +108,9 @@ internal fun Criterion.PayloadEntryCriterion.toTaskSpecification(): Specificatio
  */
 internal fun Criterion.DataEntryCriterion.toDataEntrySpecification(): Specification<DataEntryEntity> {
   return when (this.name) {
+    DataEntry::entryId.name -> hasEntryId(this.value)
+    DataEntry::entryType.name -> hasEntryType(this.value)
+    DataEntry::type.name -> hasType(this.value)
     "${DataEntry::state.name}.${DataEntryState::state.name}" -> hasState(this.value)
     "${DataEntry::state.name}.${DataEntryState::processingType.name}" -> hasProcessingType(ProcessingType.valueOf(this.value))
     else -> throw IllegalArgumentException("JPA View found unsupported data entry attribute: ${this.name}.")
