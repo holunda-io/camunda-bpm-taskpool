@@ -8,12 +8,9 @@ import de.flapdoodle.embed.mongo.MongodProcess
 import de.flapdoodle.embed.mongo.MongodStarter
 import de.flapdoodle.embed.mongo.config.*
 import de.flapdoodle.embed.mongo.distribution.Version
-import de.flapdoodle.embed.process.config.ImmutableRuntimeConfig
 import de.flapdoodle.embed.process.config.io.ProcessOutput
-import de.flapdoodle.embed.process.config.store.DownloadConfig
 import de.flapdoodle.embed.process.io.Processors
 import de.flapdoodle.embed.process.io.Slf4jLevel
-import de.flapdoodle.embed.process.store.ExtractedArtifactStore
 import mu.KLogging
 import org.awaitility.Awaitility.await
 import org.bson.Document
@@ -58,11 +55,17 @@ object MongoLauncher {
       return mock(MongodExecutable::class.java)
     }
 
-    val mongodConfig = ImmutableMongodConfig.builder()
+    val mongodConfig = ImmutableMongodConfig
+      .builder()
       .version(Version.Main.PRODUCTION)
       .replication(if (asReplicaSet) Storage(null, "repembedded", 16) else Storage())
       .net(Net(MONGO_DEFAULT_PORT, false))
-      .cmdOptions(MongoCmdOptions.builder().useNoJournal(!asReplicaSet).build())
+      .cmdOptions(
+        MongoCmdOptions
+          .builder()
+          .useNoJournal(!asReplicaSet)
+          .build()
+      )
       // Increase timeout as default timeout seems not to be sufficient for shutdown in replicaSet mode
       .stopTimeoutInMillis(11000)
       .build()
@@ -75,21 +78,41 @@ object MongoLauncher {
 
     val command = Command.MongoD
 
-    val runtimeConfig = ImmutableRuntimeConfig.builder()
-      //.defaultsWithLogger(command, logger)
+    val downloadConfig = Defaults
+      .downloadConfigFor(command)
+      .fileNaming { prefix, postfix -> prefix + "_mongo_taskview_" + counter.getAndIncrement() + "_" + postfix }
+      .build()
+
+    val artifactStore = Defaults
+      .extractedArtifactStoreFor(command)
+      .withDownloadConfig(downloadConfig)
+
+    val runtimeConfig = Defaults
+      .runtimeConfigFor(command, logger)
       .processOutput(processOutput)
-      .artifactStore(ExtractedArtifactStore.builder()
-        // .defaults(command)
-        .downloadConfig(DownloadConfig.builder() /*.defaultsForCommand(command)*/.build())
-        // .executableNaming { prefix, postfix -> prefix + "_mongo_taskview_" + counter.getAndIncrement() + "_" + postfix }
-        .build()
-      ).build()
+      .artifactStore(artifactStore)
+      .build()
+
+
+//
+//    val runtimeConfig = ImmutableRuntimeConfig.builder()
+//      //.defaultsWithLogger(command, logger)
+//      .processOutput(processOutput)
+//      .artifactStore(ExtractedArtifactStore.builder()
+//        // .defaults(command)
+//        .downloadConfig(DownloadConfig.builder() /*.defaultsForCommand(command)*/.build())
+//        // .executableNaming { prefix, postfix -> prefix + "_mongo_taskview_" + counter.getAndIncrement() + "_" + postfix }
+//        .build()
+//      ).build()
 
     val runtime = MongodStarter.getInstance(runtimeConfig)
     return runtime.prepare(mongodConfig)
   }
 
-  open class MongoInstance(val asReplicaSet: Boolean, val databaseName: String) {
+  open class MongoInstance(
+    private val asReplicaSet: Boolean,
+    private val databaseName: String
+  ) {
 
     companion object : KLogging()
 
@@ -141,8 +164,8 @@ object MongoLauncher {
      */
     fun clear() {
       MongoClients.create("mongodb://$LOCALHOST:$MONGO_DEFAULT_PORT").use {
-      val database = it.getDatabase(databaseName)
-      database.drop()
+        val database = it.getDatabase(databaseName)
+        database.drop()
       }
     }
 
