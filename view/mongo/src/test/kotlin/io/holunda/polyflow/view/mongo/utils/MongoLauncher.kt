@@ -93,18 +93,6 @@ object MongoLauncher {
       .artifactStore(artifactStore)
       .build()
 
-
-//
-//    val runtimeConfig = ImmutableRuntimeConfig.builder()
-//      //.defaultsWithLogger(command, logger)
-//      .processOutput(processOutput)
-//      .artifactStore(ExtractedArtifactStore.builder()
-//        // .defaults(command)
-//        .downloadConfig(DownloadConfig.builder() /*.defaultsForCommand(command)*/.build())
-//        // .executableNaming { prefix, postfix -> prefix + "_mongo_taskview_" + counter.getAndIncrement() + "_" + postfix }
-//        .build()
-//      ).build()
-
     val runtime = MongodStarter.getInstance(runtimeConfig)
     return runtime.prepare(mongodConfig)
   }
@@ -134,7 +122,7 @@ object MongoLauncher {
           MongoClients.create(
             MongoClientSettings
               .builder()
-              .applyConnectionString(ConnectionString("mongodb://$LOCALHOST:$MONGO_DEFAULT_PORT/?replicaSet=repembedded"))
+              .applyConnectionString(ConnectionString("mongodb://$LOCALHOST:$MONGO_DEFAULT_PORT"))
               .readPreference(ReadPreference.nearest())
               .writeConcern(WriteConcern.W2)
               .build()
