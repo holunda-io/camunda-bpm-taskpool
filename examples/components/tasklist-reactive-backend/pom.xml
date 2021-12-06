@@ -16,7 +16,6 @@
     <application.api-location>../tasklist-backend/src/main/api</application.api-location>
     <application.base-package>io.holunda.polyflow.example.tasklist.rest</application.base-package>
     <maven.deploy.skip>true</maven.deploy.skip>
-    <commons-text.version>1.6</commons-text.version>
   </properties>
 
   <dependencies>
@@ -59,14 +58,13 @@
 
     <!-- Swagger -->
     <dependency>
-      <groupId>io.toolisticon.springboot</groupId>
-      <artifactId>springboot-swagger-starter</artifactId>
-    </dependency>
-    <dependency>
       <groupId>org.openapitools</groupId>
       <artifactId>jackson-databind-nullable</artifactId>
     </dependency>
-
+    <dependency>
+      <groupId>io.springfox</groupId>
+      <artifactId>springfox-swagger2</artifactId>
+    </dependency>
     <!-- Axon -->
     <dependency>
       <groupId>org.axonframework</groupId>

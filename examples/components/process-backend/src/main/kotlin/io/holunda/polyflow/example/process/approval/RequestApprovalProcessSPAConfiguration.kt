@@ -33,8 +33,8 @@ object Web {
     TASKS + ANY, // /tasks/...id...?userId=...
     APPROVAL_REQUEST + ANY // /approval-request/...id...?userId=...
   )
-  val STATIC_RESOURCES_LONG_CACHE = arrayOf("$ANY/*.css", "$ANY/*.js", "$ANY/*.woff2", "$ANY/*.woff", "$ANY/*.ttf")
-  val STATIC_RESOURCES_SHORT_CACHE = arrayOf("$ANY/*.png", "$ANY/*.jpg", "$ANY/*.ico", "$ANY/*.json")
+  val STATIC_RESOURCES_LONG_CACHE = arrayOf("/*.css", "/*.js", "/*.woff2", "/*.woff", "/*.ttf")
+  val STATIC_RESOURCES_SHORT_CACHE = arrayOf("/*/*.png", "/*/*.jpg", "/*/*.ico", "/*/*.json")
 
 
 }

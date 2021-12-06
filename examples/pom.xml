@@ -31,16 +31,16 @@
       <camunda-ee>false</camunda-ee>
       Use the system property: -Dcamunda-ee to enable EE
     -->
-    <camunda-ce.version>7.15.0</camunda-ce.version>
-    <camunda-ee.version>7.15.1-ee</camunda-ee.version>
+    <camunda-ce.version>7.16.0</camunda-ce.version>
+    <camunda-ee.version>7.16.1-ee</camunda-ee.version>
     <camunda-springboot.version>${camunda-ce.version}</camunda-springboot.version>
 
-    <camunda-bpm-assert.version>8.0.0</camunda-bpm-assert.version>
-    <camunda-bpm-mockito.version>4.13.0</camunda-bpm-mockito.version>
+    <camunda-bpm-assert.version>13.0.0</camunda-bpm-assert.version>
+    <camunda-bpm-mockito.version>5.16.0</camunda-bpm-mockito.version>
     <camunda-bpm-data.version>1.2.3</camunda-bpm-data.version>
-    <version.camunda.spin>1.11.0</version.camunda.spin>
+    <version.camunda.spin>1.12.0</version.camunda.spin>
 
-    <springboot.version>2.4.5</springboot.version>
+    <springboot.version>2.6.1</springboot.version>
 
     <springboot-swagger-starter.version>0.3.0</springboot-swagger-starter.version>
     <org.mapstruct.version>1.4.2.Final</org.mapstruct.version>
@@ -105,16 +105,15 @@
 
       <!-- Swagger -->
       <dependency>
-        <groupId>io.toolisticon.springboot</groupId>
-        <artifactId>springboot-swagger-starter</artifactId>
-        <version>${springboot-swagger-starter.version}</version>
-      </dependency>
-      <dependency>
         <groupId>org.openapitools</groupId>
         <artifactId>jackson-databind-nullable</artifactId>
         <version>0.2.1</version>
       </dependency>
-
+      <dependency>
+        <groupId>io.springfox</groupId>
+        <artifactId>springfox-swagger2</artifactId>
+        <version>2.8.0</version>
+      </dependency>
       <!-- Camunda BPM Data -->
       <dependency>
         <groupId>io.holunda.data</groupId>
@@ -127,6 +126,13 @@
         <groupId>org.mapstruct</groupId>
         <artifactId>mapstruct</artifactId>
         <version>${org.mapstruct.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.mockito.kotlin</groupId>
+        <artifactId>mockito-kotlin</artifactId>
+        <version>4.0.0</version>
+        <scope>test</scope>
       </dependency>
 
     </dependencies>
@@ -188,7 +194,7 @@
           <!-- Open API generator -->
           <groupId>org.openapitools</groupId>
           <artifactId>openapi-generator-maven-plugin</artifactId>
-          <version>5.2.1</version>
+          <version>5.3.0</version>
         </plugin>
 
         <plugin>

@@ -28,7 +28,7 @@ object Web {
     "/${BASE_PATH}/archive", "/${BASE_PATH}/archive/"
   )
   val STATIC_RESOURCES_LONG_CACHE = arrayOf("$BASE_PATH/*.css", "$BASE_PATH/*.js", "$BASE_PATH/*.woff2", "$BASE_PATH/*.woff", "$BASE_PATH/*.ttf")
-  val STATIC_RESOURCES_SHORT_CACHE = arrayOf("$BASE_PATH/**/*.png", "$BASE_PATH/**/*.jpg", "$BASE_PATH/*.ico", "$BASE_PATH/*.json")
+  val STATIC_RESOURCES_SHORT_CACHE = arrayOf("$BASE_PATH/assets/*.png", "$BASE_PATH/assets/*.jpg", "$BASE_PATH/*.ico", "$BASE_PATH/*.json")
 }
 
 /**

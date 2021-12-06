@@ -8,18 +8,12 @@ import io.holunda.polyflow.view.Task
 import io.holunda.polyflow.view.TaskWithDataEntries
 import io.holunda.polyflow.view.auth.User
 import io.holunda.polyflow.view.mongo.PolyflowMongoTestApplication
-import io.holunda.polyflow.view.mongo.utils.MongoLauncher
 import io.holunda.polyflow.view.query.task.*
 import org.camunda.bpm.engine.variable.VariableMap
 import org.camunda.bpm.engine.variable.Variables
-import org.junit.After
-import org.junit.AfterClass
-import org.junit.BeforeClass
 import org.junit.Test
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.annotation.DirtiesContext
-import org.springframework.test.context.ActiveProfiles
-import org.springframework.test.context.TestPropertySource
 import java.util.*
 
 @SpringBootTest(classes = [PolyflowMongoTestApplication::class])
@@ -359,66 +353,6 @@ abstract class PolyflowMongoServiceITestBase : SpringRuleScenarioTest<PolyflowGi
       .tasks_are_returned_for_application("app-1", TaskQueryResult(listOf(task1.asTask(), task3.asTask())))
   }
 
-}
-
-@TestPropertySource(
-  properties = [
-    "polyflow.view.mongo.changeTrackingMode=CHANGE_STREAM",
-    "spring.data.mongodb.database=TaskPoolMongoServiceChangeStreamChangeTrackingITest"
-  ]
-)
-@ActiveProfiles("itest-replicated")
-class PolyflowMongoServiceChangeStreamChangeTrackingITest : PolyflowMongoServiceITestBase() {
-  companion object {
-    private val mongo = MongoLauncher.MongoInstance(true, "TaskPoolMongoServiceChangeStreamChangeTrackingITest")
-
-    @BeforeClass
-    @JvmStatic
-    fun initMongo() {
-      mongo.init()
-    }
-
-    @AfterClass
-    @JvmStatic
-    fun stop() {
-      mongo.stop()
-    }
-  }
-
-  @After
-  fun clearMongo() {
-    mongo.clear()
-  }
-}
-
-@TestPropertySource(
-  properties = [
-    "polyflow.view.mongo.changeTrackingMode=EVENT_HANDLER",
-    "spring.data.mongodb.database=TaskPoolMongoServiceEventHandlerChangeTrackingITest"
-  ]
-)
-@ActiveProfiles("itest-standalone")
-class PolyflowMongoServiceEventHandlerChangeTrackingITest : PolyflowMongoServiceITestBase() {
-  companion object {
-    private val mongo = MongoLauncher.MongoInstance(false, "TaskPoolMongoServiceEventHandlerChangeTrackingITest")
-
-    @BeforeClass
-    @JvmStatic
-    fun initMongo() {
-      mongo.init()
-    }
-
-    @AfterClass
-    @JvmStatic
-    fun stop() {
-      mongo.stop()
-    }
-  }
-
-  @After
-  fun clearMongo() {
-    mongo.clear()
-  }
 }
 
 

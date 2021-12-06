@@ -20,10 +20,10 @@
     <version.java>${java.version}</version.java>
     <version.java>${java.version}</version.java>
 
-    <kotlin.version>1.5.31</kotlin.version>
+    <kotlin.version>1.6.0</kotlin.version>
     <kotlin.compiler.jvmTarget>${java.version}</kotlin.compiler.jvmTarget>
     <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
-    <kotlin-logging.version>2.0.11</kotlin-logging.version>
+    <kotlin-logging.version>2.1.0</kotlin-logging.version>
 
   </properties>
 

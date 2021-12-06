@@ -53,15 +53,23 @@
       <groupId>com.fasterxml.jackson.module</groupId>
       <artifactId>jackson-module-kotlin</artifactId>
     </dependency>
+
+    <!-- Swagger -->
     <dependency>
       <groupId>org.openapitools</groupId>
       <artifactId>jackson-databind-nullable</artifactId>
     </dependency>
+    <dependency>
+      <groupId>io.springfox</groupId>
+      <artifactId>springfox-swagger2</artifactId>
+    </dependency>
 
+    <!--
     <dependency>
       <groupId>io.toolisticon.springboot</groupId>
       <artifactId>springboot-swagger-starter</artifactId>
     </dependency>
+    -->
 
     <!-- Axon -->
     <dependency>
@@ -98,7 +106,6 @@
     <dependency>
       <groupId>org.mockito.kotlin</groupId>
       <artifactId>mockito-kotlin</artifactId>
-      <version>3.2.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -106,13 +113,6 @@
       <artifactId>mockito-core</artifactId>
       <scope>test</scope>
     </dependency>
-    <dependency>
-      <groupId>io.holunda.polyflow</groupId>
-      <artifactId>polyflow-example-tasklist-reactive-backend</artifactId>
-      <version>3.1.6-SNAPSHOT</version>
-      <scope>compile</scope>
-    </dependency>
-
   </dependencies>
 
   <build>
