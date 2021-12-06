@@ -227,12 +227,12 @@
               <dependency>
                 <groupId>com.microsoft.sqlserver</groupId>
                 <artifactId>mssql-jdbc</artifactId>
-                <version>9.4.0.jre11</version>
+                <version>9.5.0.jre11-preview</version>
               </dependency>
               <dependency>
                 <groupId>org.postgresql</groupId>
                 <artifactId>postgresql</artifactId>
-                <version>42.2.24</version>
+                <version>42.3.1</version>
               </dependency>
             </dependencies>
           </plugin>
