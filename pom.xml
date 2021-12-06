@@ -102,18 +102,6 @@
   </build>
 
   <profiles>
-    <!-- Examples are included only if this profile is enabled -->
-    <profile>
-      <id>examples</id>
-      <activation>
-        <property>
-          <name>!skipExamples</name>
-        </property>
-      </activation>
-      <modules>
-        <module>examples</module>
-      </modules>
-    </profile>
 
     <!-- Define I-Test profile -->
     <profile>
@@ -254,19 +242,6 @@
       <email>ah@hbt.de</email>
       <organization>HBT GmbH</organization>
       <organizationUrl>https://www.hbt.de/</organizationUrl>
-    </developer>
-    <developer>
-      <id>bignesta</id>
-      <name>Christoph Wolff</name>
-      <organization>Holisticon AG</organization>
-      <organizationUrl>https://www.holisticon.de</organizationUrl>
-    </developer>
-    <developer>
-      <id>dthuesen</id>
-      <name>Detlef von Thuesen</name>
-      <email>dthuesen@gmx.de</email>
-      <organization>Holisticon AG</organization>
-      <organizationUrl>https://www.holisticon.de</organizationUrl>
     </developer>
   </developers>
 </project>

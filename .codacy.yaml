@@ -6,6 +6,4 @@ engines:
 exclude_paths:
   - "README.md"
   - ".github/**"
-  - "examples/components/tasklist-angular/**"
-  - "examples/components/process-forms/**"
   - "docs/**"

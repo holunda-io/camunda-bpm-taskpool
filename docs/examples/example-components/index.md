@@ -6,6 +6,7 @@ title: Example Components
 For demonstration purposes we built several example components and reuse them to demonstrate the [Example application](../example-approval.md) in
 different [Usage Scenarios](../scenarios/). These components are not part of a polyflow distribution and serve demonstration
 purposes only. They still show implementation of components which needs to be implemented by you and are not part of the provided library.
+If you are interested in the source code, please visit the [Polyflow Repository](https://github.com/holunda-io/polyflow-examples).
 
 ## Process Application Example Components
 
