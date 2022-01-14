@@ -1,6 +1,7 @@
 package io.holunda.camunda.taskpool.upcast
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.thoughtworks.xstream.XStream
 import io.holunda.camunda.taskpool.api.process.definition.ProcessDefinitionRegisteredEvent
 import io.holunda.camunda.taskpool.upcast.definition.ProcessDefinitionEventJSONNullTo1Upcaster
 import io.holunda.camunda.taskpool.upcast.definition.ProcessDefinitionEventXMLNullTo1Upcaster
@@ -86,7 +87,11 @@ class ProcessDefinitionUpcasterTest {
 
     val document = SAXReader().read(StringReader(xml))
     val clazz = Document::class.java
-    val serializer = XStreamSerializer.defaultSerializer()
+    val serializer = XStreamSerializer.builder().xStream(
+      XStream().apply {
+       this.allowTypeHierarchy(Any::class.java)
+      }
+    ).build()
 
     val entry: EventData<Document> = SimpleEventData<Document>(
       metaData = SimpleSerializedObject(DocumentHelper.createDocument(), clazz, SimpleSerializedType(MetaData::class.java.name, null)),
