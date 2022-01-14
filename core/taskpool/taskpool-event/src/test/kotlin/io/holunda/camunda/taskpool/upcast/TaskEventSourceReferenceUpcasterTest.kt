@@ -83,7 +83,7 @@ class TaskEventSourceReferenceUpcasterTest {
     val result = upcaster.upcast(eventStream).toList()
     val event: T = serializer.deserialize(result[0].data)
 
-    Assertions.assertThat(event).isNotNull
+    assertThat(event).isNotNull
     return event
   }
 

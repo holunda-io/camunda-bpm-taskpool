@@ -471,6 +471,9 @@
           <groupId>org.jetbrains.kotlin</groupId>
           <version>${kotlin.version}</version>
           <configuration>
+            <jvmTarget>${java.version}</jvmTarget>
+            <apiVersion>1.5</apiVersion>
+            <languageVersion>1.5</languageVersion>
             <args>
               <arg>-Xjsr305=strict</arg>
             </args>
@@ -485,7 +488,6 @@
               <option>all-open:annotation=org.axonframework.queryhandling.QueryHandler</option>
               <option>all-open:annotation=com.tngtech.jgiven.integration.spring.JGivenStage</option>
             </pluginOptions>
-            <jvmTarget>${java.version}</jvmTarget>
           </configuration>
           <executions>
             <!--
@@ -550,7 +552,7 @@
 
         <plugin>
           <artifactId>maven-surefire-plugin</artifactId>
-          <version>3.0.0-M5</version>
+          <version>2.22.2</version>
           <dependencies>
             <dependency>
               <groupId>org.junit.vintage</groupId>
