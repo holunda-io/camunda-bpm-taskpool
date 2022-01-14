@@ -23,7 +23,13 @@ internal class SpecificationTest {
 
   @Test
   internal fun `should create multiple attribute specification`() {
-    val filters = listOf("data.state.state=In Progress", "data.state.processingType=IN_PROGRESS", "data.entryId=1234", "data.entryType=Some entry type", "data.type=Some type")
+    val filters = listOf(
+      "data.state.state=In Progress",
+      "data.state.processingType=IN_PROGRESS",
+      "data.entryId=1234",
+      "data.entryType=Some entry type",
+      "data.type=Some type"
+    )
     val criteria = toCriteria(filters)
 
     val specification = criteria.toDataEntrySpecification()
@@ -42,5 +48,4 @@ internal class SpecificationTest {
 
     assertThat(spec).isNotNull
   }
-
 }
