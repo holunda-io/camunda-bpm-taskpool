@@ -15,7 +15,7 @@
 
   <properties>
     <camunda-bpm.version>7.16.0</camunda-bpm.version>
-    <camunda-bpm-assert.version>13.0.0</camunda-bpm-assert.version>
+    <camunda-bpm-assert.version>14.0.0</camunda-bpm-assert.version>
     <!-- pin assert-core it because BPM Assert can't work with larger version -->
     <assert-core.version>3.18.1</assert-core.version>
     <camunda-bpm-mockito.version>5.16.0</camunda-bpm-mockito.version>
