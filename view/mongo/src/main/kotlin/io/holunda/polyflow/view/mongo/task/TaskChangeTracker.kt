@@ -1,7 +1,6 @@
 package io.holunda.polyflow.view.mongo.task
 
 import com.mongodb.MongoCommandException
-import com.mongodb.client.model.changestream.OperationType
 import io.holunda.camunda.taskpool.api.business.dataIdentityString
 import io.holunda.polyflow.view.Task
 import io.holunda.polyflow.view.TaskWithDataEntries
@@ -46,18 +45,7 @@ class TaskChangeTracker(
     // Unfortunately, there is no way to identify exactly this error because error codes and messages vary by Mongo server version.
     // The closest we can get is reacting on any MongoCommandException and resetting the token so that upon the next retry, we start without a token.
     .doOnError(MongoCommandException::class.java) { lastSeenResumeToken = null }
-    .filter { event ->
-      when (event.operationType) {
-        OperationType.INSERT, OperationType.UPDATE, OperationType.REPLACE -> {
-          logger.debug { "Got ${event.operationType?.value} event: $event" }
-          true
-        }
-        else -> {
-          logger.trace { "Ignoring ${event.operationType?.value} event: $event" }
-          false
-        }
-      }
-    }
+    .doOnNext { event -> logger.debug { "Got event: $event" } }
     .log(TaskChangeTracker::class.qualifiedName, Level.WARNING, SignalType.ON_ERROR)
     .retryWhen(Retry.backoff(Long.MAX_VALUE, Duration.ofMillis(100)).maxBackoff(Duration.ofSeconds(10)))
     .concatMap { event -> Mono.justOrEmpty(event.body) }

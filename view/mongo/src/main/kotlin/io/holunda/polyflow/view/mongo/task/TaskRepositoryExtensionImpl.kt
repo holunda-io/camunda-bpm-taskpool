@@ -1,13 +1,14 @@
 package io.holunda.polyflow.view.mongo.task
 
+import com.mongodb.client.model.changestream.OperationType
 import io.holunda.polyflow.view.query.task.ApplicationWithTaskCount
 import mu.KLogging
 import org.bson.BsonValue
 import org.springframework.data.mongodb.core.ChangeStreamEvent
 import org.springframework.data.mongodb.core.ChangeStreamOptions
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate
-import org.springframework.data.mongodb.core.aggregation.Aggregation
-import org.springframework.data.mongodb.core.query.Criteria
+import org.springframework.data.mongodb.core.aggregation.Aggregation.*
+import org.springframework.data.mongodb.core.query.Criteria.where
 import org.springframework.data.mongodb.core.query.isEqualTo
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
@@ -23,18 +24,18 @@ open class TaskRepositoryExtensionImpl(
   companion object : KLogging()
 
   private val notDeleted =
-    Aggregation.match(Criteria.where("deleted").ne(true))
+    match(where("deleted").ne(true))
 
   private val countGroupedByApplicationName = arrayOf(
-    Aggregation.group("sourceReference.applicationName").count().`as`("count"),
-    Aggregation.project().and("_id").`as`("application").and("count").`as`("taskCount")
+    group("sourceReference.applicationName").count().`as`("count"),
+    project().and("_id").`as`("application").and("count").`as`("taskCount")
   )
 
 
   override fun findTaskCountsByApplication(): Flux<ApplicationWithTaskCount> =
     mongoTemplate
       .aggregate(
-        Aggregation.newAggregation(
+        newAggregation(
           notDeleted,
           *countGroupedByApplicationName
         ),
@@ -45,7 +46,7 @@ open class TaskRepositoryExtensionImpl(
   override fun findTaskCountForApplication(applicationName: String): Mono<ApplicationWithTaskCount> =
     mongoTemplate
       .aggregate(
-        Aggregation.newAggregation(
+        newAggregation(
           notDeleted,
           matchApplicationName(applicationName),
           *countGroupedByApplicationName
@@ -65,10 +66,16 @@ open class TaskRepositoryExtensionImpl(
     if (resumeToken != null) {
       builder.resumeToken(resumeToken)
     }
+    builder.filter(
+      newAggregation(
+        match(where("operationType").`in`(OperationType.INSERT.value, OperationType.UPDATE.value, OperationType.REPLACE.value)),
+        project("fullDocument")
+      )
+    )
     return builder.build()
   }
 
   private fun matchApplicationName(applicationName: String) =
-    Aggregation.match(Criteria.where("sourceReference.applicationName").isEqualTo(applicationName))
+    match(where("sourceReference.applicationName").isEqualTo(applicationName))
 
 }

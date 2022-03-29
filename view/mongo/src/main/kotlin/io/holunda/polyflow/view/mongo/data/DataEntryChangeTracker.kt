@@ -1,19 +1,16 @@
 package io.holunda.polyflow.view.mongo.data
 
 import com.mongodb.MongoCommandException
-import com.mongodb.client.model.changestream.OperationType
 import io.holunda.polyflow.view.DataEntry
 import mu.KLogging
 import org.bson.BsonValue
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
-import org.springframework.data.mongodb.core.ChangeStreamEvent
 import org.springframework.stereotype.Component
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 import reactor.core.publisher.SignalType
 import reactor.util.retry.Retry
 import java.time.Duration
-import java.util.*
 import java.util.logging.Level
 
 /**
@@ -29,15 +26,17 @@ class DataEntryChangeTracker(
   companion object : KLogging()
 
   private var lastSeenResumeToken: BsonValue? = null
-  private val changeStream: Flux<DataEntryDocument> = Flux
+
+  private val changeStream: Flux<DataEntry> = Flux
     .defer { this.dataEntryRepository.getDataEntryUpdates(lastSeenResumeToken) }
     .doOnCancel { lastSeenResumeToken = null }
     .doOnNext { event -> lastSeenResumeToken = if (event.resumeToken != null) event.resumeToken else lastSeenResumeToken }
     .doOnError(MongoCommandException::class.java) { lastSeenResumeToken = null }
-    .filter { event -> filterChangeEvent(event) }
+    .doOnNext { event -> logger.debug { "Got event: $event" } }
     .log(DataEntryChangeTracker::class.java.canonicalName, Level.WARNING, SignalType.ON_ERROR)
     .retryWhen(Retry.backoff(Long.MAX_VALUE, Duration.ofMillis(100)).maxBackoff(Duration.ofSeconds(10)))
     .concatMap { event -> Mono.justOrEmpty(event.body) }
+    .map { it.dataEntry() }
     .share()
 
   /**
@@ -45,21 +44,5 @@ class DataEntryChangeTracker(
    *
    * @return data entry updates stream.
    */
-  fun trackDataEntryUpdates(): Flux<DataEntry> {
-    return changeStream.map { it.dataEntry() }
-  }
-
-  private fun filterChangeEvent(event: ChangeStreamEvent<DataEntryDocument>): Boolean {
-    return when (Objects.requireNonNull(event.operationType)) {
-      OperationType.INSERT, OperationType.UPDATE, OperationType.REPLACE -> {
-        logger.debug { "Got " + event.operationType + " event: " + event }
-        true
-      }
-      else -> {
-        logger.trace { "Ignoring " + event.operationType + " event: " + event }
-        false
-      }
-    }
-  }
-
+  fun trackDataEntryUpdates(): Flux<DataEntry> = changeStream
 }
