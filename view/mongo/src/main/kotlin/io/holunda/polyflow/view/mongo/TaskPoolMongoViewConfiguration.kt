@@ -1,15 +1,14 @@
 package io.holunda.polyflow.view.mongo
 
-import com.thoughtworks.xstream.XStream
-import com.thoughtworks.xstream.security.AnyTypePermission
 import io.holunda.polyflow.view.mongo.task.TaskDocument
 import mu.KLogging
 import org.axonframework.eventhandling.tokenstore.TokenStore
 import org.axonframework.extensions.mongo.DefaultMongoTemplate
 import org.axonframework.extensions.mongo.MongoTemplate
 import org.axonframework.extensions.mongo.eventsourcing.tokenstore.MongoTokenStore
-import org.axonframework.serialization.xml.XStreamSerializer
+import org.axonframework.serialization.Serializer
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.domain.EntityScan
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
@@ -49,6 +48,7 @@ class TaskPoolMongoViewConfiguration {
    * Axon Mongo template configuration.
    */
   @Bean
+  @ConditionalOnMissingBean
   fun configureAxonMongoTemplate(databaseFactory: MongoDatabaseFactory): MongoTemplate =
     DefaultMongoTemplate
       .builder()
@@ -64,13 +64,19 @@ class TaskPoolMongoViewConfiguration {
    * Axon Mongo Token store configuration.
    */
   @Bean
-  fun configureAxonMongoTokenStore(mongoTemplate: MongoTemplate): TokenStore =
+  @ConditionalOnMissingBean
+  fun configureAxonMongoTokenStore(
+    mongoTemplate: MongoTemplate,
+    properties: TaskPoolMongoViewProperties,
+    serializer: Serializer
+  ): TokenStore =
     MongoTokenStore
       .builder()
+      .ensureIndexes(properties.indexes.tokenStore)
       .mongoTemplate(mongoTemplate)
-      .serializer(XStreamSerializer.builder().xStream(XStream().apply { addPermission(AnyTypePermission.ANY) }).build())
+      .serializer(serializer)
       .build()
-
+  
   /**
    * Mongo Type Mapping.
    */
