@@ -6,7 +6,7 @@
   <parent>
     <groupId>io.holunda.polyflow</groupId>
     <artifactId>polyflow-root</artifactId>
-    <version>3.1.7</version>
+    <version>3.1.8</version>
     <relativePath>../../pom.xml</relativePath>
   </parent>
 
@@ -18,14 +18,14 @@
   <url>https://github.com/holunda-io/camunda-bpm-taskpool/</url>
 
   <properties>
-    <springboot.version>2.6.2</springboot.version>
+    <springboot.version>2.6.5</springboot.version>
     <camunda-commons-typed-values.version>7.16.0</camunda-commons-typed-values.version>
 
-    <axon.version>4.5.7</axon.version>
+    <axon.version>4.5.9</axon.version>
     <axon-kotlin.version>0.2.0</axon-kotlin.version>
     <axon-gateway-extension.version>0.0.5</axon-gateway-extension.version>
 
-    <awaitability.version>4.1.1</awaitability.version>
+    <awaitability.version>4.2.0</awaitability.version>
     <mockito-kotlin.version>4.0.0</mockito-kotlin.version>
     <pattern.class.itest>**/*ITest.*</pattern.class.itest>
     <pattern.package.itest>**/itest/**/*.*</pattern.package.itest>
@@ -359,7 +359,7 @@
           <!-- java compiler -->
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
-          <version>3.9.0</version>
+          <version>3.10.1</version>
           <configuration>
             <encoding>UTF-8</encoding>
             <source>${java.version}</source>
@@ -456,7 +456,7 @@
           <!-- for loading and unpacking artifacts -->
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-dependency-plugin</artifactId>
-          <version>3.2.0</version>
+          <version>3.3.0</version>
         </plugin>
 
         <plugin>

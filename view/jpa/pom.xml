@@ -6,7 +6,7 @@
   <parent>
     <groupId>io.holunda.polyflow</groupId>
     <artifactId>polyflow-view-parent</artifactId>
-    <version>3.1.7</version>
+    <version>3.1.8</version>
   </parent>
 
   <artifactId>polyflow-view-jpa</artifactId>
@@ -227,12 +227,12 @@
               <dependency>
                 <groupId>com.microsoft.sqlserver</groupId>
                 <artifactId>mssql-jdbc</artifactId>
-                <version>10.1.0.jre11-preview</version>
+                <version>10.2.0.jre11</version>
               </dependency>
               <dependency>
                 <groupId>org.postgresql</groupId>
                 <artifactId>postgresql</artifactId>
-                <version>42.3.1</version>
+                <version>42.3.3</version>
               </dependency>
             </dependencies>
           </plugin>

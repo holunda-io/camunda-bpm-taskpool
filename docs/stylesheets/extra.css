@@ -2,8 +2,9 @@
  * General customizations
  */
  /* Customize logo size */
-.md-header__button.md-logo img, .md-header__button.md-logo svg {
-  height: 100%;
+
+.md-header__button.md-logo :-webkit-any(img,svg) {
+  /* height: 100%; */
   width: 100%;
 }
 
