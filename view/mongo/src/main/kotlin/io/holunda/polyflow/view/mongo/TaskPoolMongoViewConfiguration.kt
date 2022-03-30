@@ -76,7 +76,7 @@ class TaskPoolMongoViewConfiguration {
       .mongoTemplate(mongoTemplate)
       .serializer(serializer)
       .build()
-  
+
   /**
    * Mongo Type Mapping.
    */
