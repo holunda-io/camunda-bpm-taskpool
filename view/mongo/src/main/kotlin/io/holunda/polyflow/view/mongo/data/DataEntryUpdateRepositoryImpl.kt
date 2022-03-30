@@ -1,9 +1,12 @@
 package io.holunda.polyflow.view.mongo.data
 
+import com.mongodb.client.model.changestream.OperationType
 import org.bson.BsonValue
 import org.springframework.data.mongodb.core.ChangeStreamEvent
 import org.springframework.data.mongodb.core.ChangeStreamOptions
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate
+import org.springframework.data.mongodb.core.aggregation.Aggregation.*
+import org.springframework.data.mongodb.core.query.Criteria.where
 import reactor.core.publisher.Flux
 
 /**
@@ -21,7 +24,12 @@ open class DataEntryUpdateRepositoryImpl(
     if (resumeToken != null) {
       builder.resumeToken(resumeToken)
     }
+    builder.filter(
+      newAggregation(
+        match(where("operationType").`in`(OperationType.INSERT.value, OperationType.UPDATE.value, OperationType.REPLACE.value)),
+        project("fullDocument")
+      )
+    )
     return builder.build()
   }
-
 }
