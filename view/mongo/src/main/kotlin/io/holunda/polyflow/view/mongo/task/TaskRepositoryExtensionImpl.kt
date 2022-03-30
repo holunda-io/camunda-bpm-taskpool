@@ -1,6 +1,5 @@
 package io.holunda.polyflow.view.mongo.task
 
-import com.mongodb.client.model.changestream.OperationType
 import io.holunda.polyflow.view.mongo.changeStreamOptions
 import io.holunda.polyflow.view.mongo.data.DataEntryDocument.Companion.authorizedPrincipals
 import io.holunda.polyflow.view.query.task.ApplicationWithTaskCount
@@ -8,7 +7,6 @@ import mu.KLogging
 import org.bson.BsonValue
 import org.springframework.data.domain.Pageable
 import org.springframework.data.mongodb.core.ChangeStreamEvent
-import org.springframework.data.mongodb.core.ChangeStreamOptions
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate
 import org.springframework.data.mongodb.core.aggregation.Aggregation.*
 import org.springframework.data.mongodb.core.query.Criteria
