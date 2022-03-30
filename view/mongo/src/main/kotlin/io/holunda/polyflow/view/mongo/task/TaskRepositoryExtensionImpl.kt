@@ -1,5 +1,7 @@
 package io.holunda.polyflow.view.mongo.task
 
+import com.mongodb.client.model.changestream.OperationType
+import io.holunda.polyflow.view.mongo.changeStreamOptions
 import io.holunda.polyflow.view.mongo.data.DataEntryDocument.Companion.authorizedPrincipals
 import io.holunda.polyflow.view.query.task.ApplicationWithTaskCount
 import mu.KLogging
@@ -10,6 +12,7 @@ import org.springframework.data.mongodb.core.ChangeStreamOptions
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate
 import org.springframework.data.mongodb.core.aggregation.Aggregation.*
 import org.springframework.data.mongodb.core.query.Criteria
+import org.springframework.data.mongodb.core.query.Criteria.where
 import org.springframework.data.mongodb.core.query.Query
 import org.springframework.data.mongodb.core.query.isEqualTo
 import reactor.core.publisher.Flux
@@ -25,7 +28,8 @@ open class TaskRepositoryExtensionImpl(
 
   companion object : KLogging()
 
-  private val notDeleted = match(Criteria.where("deleted").ne(true))
+  private val notDeleted = match(where("deleted").ne(true))
+
   private val countGroupedByApplicationName = arrayOf(
     group("sourceReference.applicationName").count().`as`("count"),
     project().and("_id").`as`("application").and("count").`as`("taskCount")
@@ -59,7 +63,7 @@ open class TaskRepositoryExtensionImpl(
 
   override fun getTaskUpdates(resumeToken: BsonValue?): Flux<ChangeStreamEvent<TaskDocument>> =
     mongoTemplate
-      .changeStream(TaskDocument.COLLECTION, changeStreamOptions(resumeToken), TaskDocument::class.java)
+      .changeStream(TaskDocument.COLLECTION, resumeToken.changeStreamOptions(), TaskDocument::class.java)
 
 
   override fun findForUser(
@@ -86,26 +90,17 @@ open class TaskRepositoryExtensionImpl(
   ): Criteria {
     val andOperands = ArrayList<Criteria>()
     // Note: the query for _deleted not equal to true_ looks weird, but effectively means _null or false_ so it also captures old documents where _deleted_ is not set at all
-    andOperands.add(Criteria.where("deleted").ne(true))
-    andOperands.add(Criteria.where("authorizedPrincipals").`in`(authorizedPrincipals(setOf(username), groupNames.toSet())))
+    andOperands.add(where("deleted").ne(true))
+    andOperands.add(where("authorizedPrincipals").`in`(authorizedPrincipals(setOf(username), groupNames.toSet())))
     if (businessKey != null) {
-      andOperands.add(Criteria.where("businessKey").`is`(businessKey))
+      andOperands.add(where("businessKey").`is`(businessKey))
     }
     if (priorities != null && !priorities.isEmpty()) {
-      andOperands.add(Criteria.where("priority").`in`(priorities))
+      andOperands.add(where("priority").`in`(priorities))
     }
     return Criteria().andOperator(andOperands)
   }
 
-
-  private fun changeStreamOptions(resumeToken: BsonValue?): ChangeStreamOptions {
-    val builder = ChangeStreamOptions.builder()
-    if (resumeToken != null) {
-      builder.resumeToken(resumeToken)
-    }
-    return builder.build()
-  }
-
   private fun matchApplicationName(applicationName: String) =
-    match(Criteria.where("sourceReference.applicationName").isEqualTo(applicationName))
+    match(where("sourceReference.applicationName").isEqualTo(applicationName))
 }
