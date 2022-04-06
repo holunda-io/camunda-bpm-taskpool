@@ -22,7 +22,8 @@ class TaskDocumentBuilder {
   private val owner = assignee
   private val dueDate = Instant.EPOCH
   private val followUpDate = Instant.EPOCH
-  private val deleted = false
+  private var deleted = false
+  private var deleteTime: Instant? = null
 
   fun id(id: String): TaskDocumentBuilder {
     this.id = id
@@ -51,6 +52,16 @@ class TaskDocumentBuilder {
 
   fun priority(priority: Int): TaskDocumentBuilder {
     this.priority = priority
+    return this
+  }
+
+  fun deleted(): TaskDocumentBuilder {
+    this.deleted = true
+    return this
+  }
+
+  fun deleteTime(deleteTime: Instant?): TaskDocumentBuilder {
+    this.deleteTime = deleteTime
     return this
   }
 
@@ -83,7 +94,8 @@ class TaskDocumentBuilder {
       owner,
       dueDate,
       followUpDate,
-      deleted
+      deleted,
+      deleteTime
     )
   }
 }

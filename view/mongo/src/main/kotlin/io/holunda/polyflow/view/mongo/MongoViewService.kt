@@ -33,6 +33,7 @@ import reactor.core.Disposable
 import reactor.core.publisher.Mono
 import reactor.kotlin.core.publisher.switchIfEmpty
 import reactor.util.retry.Retry
+import java.time.Clock
 import java.time.Duration
 import java.util.concurrent.CompletableFuture
 import javax.annotation.PostConstruct
@@ -53,7 +54,8 @@ class MongoViewService(
   @Autowired(required = false)
   private val dataEntryChangeTracker: DataEntryChangeTracker?,
   private val queryUpdateEmitter: QueryUpdateEmitter,
-  private val configuration: EventProcessingConfiguration
+  private val configuration: EventProcessingConfiguration,
+  private val clock: Clock
 ) : ReactiveTaskApi, ReactiveDataEntryApi {
 
   companion object : KLogging() {
@@ -261,7 +263,7 @@ class MongoViewService(
   private fun deleteTask(id: String, applicationName: String) {
     taskRepository.findNotDeletedById(id)
       .retryIfEmpty { "Cannot delete task '$id' because it does not exist in the database" }
-      .map { it.copy(deleted = true) }
+      .map { it.copy(deleted = true, deleteTime = clock.instant()) }
       .flatMap { taskDocument ->
         if (properties.changeTrackingMode == ChangeTrackingMode.CHANGE_STREAM) {
           taskRepository.save(taskDocument)

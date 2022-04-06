@@ -2,9 +2,8 @@ package io.holunda.polyflow.view.mongo.task
 
 import io.holunda.polyflow.view.mongo.PolyflowMongoTestApplication
 import io.holunda.polyflow.view.mongo.utils.MongoLauncher
-import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.*
-import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.runner.RunWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -12,7 +11,6 @@ import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.TestPropertySource
-import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.test.context.junit4.SpringRunner
 import reactor.core.publisher.Mono
 import java.time.Instant
@@ -80,14 +78,14 @@ class TaskRepositoryExtensionImplITest {
       listOf(PRIORITY_ONE),
       defaultPageRequest()
     ).collectList().block()!!
-    Assertions.assertThat(result).containsOnly(documents[0])
+    assertThat(result).containsOnly(documents[0])
   }
 
   @Test
   fun finds_by_nothing() {
     val documents = prepareDocuments(task().build())
     val result = taskRepository.findForUser(USER_ONE, listOf(GROUP_ONE), null, null, defaultPageRequest()).collectList().block()
-    Assertions.assertThat(result).containsOnly(documents[0])
+    assertThat(result).containsOnly(documents[0])
   }
 
   @Test
@@ -96,7 +94,7 @@ class TaskRepositoryExtensionImplITest {
       task().candidateUsers(setOf(USER_ONE)).candidateGroups(setOf()).build(), task().candidateUsers(setOf(USER_TWO)).candidateGroups(setOf()).build()
     )
     val result = taskRepository.findForUser(USER_ONE, listOf(GROUP_ONE), null, null, defaultPageRequest()).collectList().block()
-    Assertions.assertThat(result).containsOnly(documents[0])
+    assertThat(result).containsOnly(documents[0])
   }
 
   @Test
@@ -110,7 +108,7 @@ class TaskRepositoryExtensionImplITest {
     val result = taskRepository.findForUser(
       USER_ONE, listOf(GROUP_ONE, GROUP_TWO), null, null, defaultPageRequest()
     ).collectList().block()
-    Assertions.assertThat(result).containsOnly(documents[0], documents[1], documents[2])
+    assertThat(result).containsOnly(documents[0], documents[1], documents[2])
   }
 
   @Test
@@ -121,7 +119,7 @@ class TaskRepositoryExtensionImplITest {
     val result = taskRepository.findForUser(
       USER_ONE, listOf(GROUP_ONE), BUSINESS_KEY_ONE, null, defaultPageRequest()
     ).collectList().block()!!
-    Assertions.assertThat(result).containsOnly(documents[0], documents[2])
+    assertThat(result).containsOnly(documents[0], documents[2])
   }
 
   @Test
@@ -137,17 +135,30 @@ class TaskRepositoryExtensionImplITest {
         PRIORITY_ONE, PRIORITY_TWO
       ), defaultPageRequest()
     ).collectList().block()!!
-    Assertions.assertThat(result).containsOnly(documents[0], documents[1], documents[3])
+    assertThat(result).containsOnly(documents[0], documents[1], documents[3])
   }
 
   @Test
   fun sorts_by_createTime_and_pages() {
     val documents = prepareDocuments(*LongRange(0, 100).map { task().createTime(Instant.EPOCH.plusSeconds(it)).build() }.toTypedArray())
-    Assertions.assertThat(findPage(0, 15, Sort.Direction.ASC, "createTime")).containsExactlyElementsOf(documents.subList(0, 15))
-    Assertions.assertThat(findPage(1, 15, Sort.Direction.ASC, "createTime")).containsExactlyElementsOf(documents.subList(15, 30))
-    Assertions.assertThat(findPage(1, 15, Sort.Direction.DESC, "createTime")).containsExactlyElementsOf(reverse(documents).subList(15, 30))
-    Assertions.assertThat(findPage(6, 15, Sort.Direction.ASC, "createTime")).containsExactlyElementsOf(documents.subList(90, 101))
-    Assertions.assertThat(findPage(7, 15, Sort.Direction.ASC, "createTime")).isEmpty()
+    assertThat(findPage(0, 15, Sort.Direction.ASC, "createTime")).containsExactlyElementsOf(documents.subList(0, 15))
+    assertThat(findPage(1, 15, Sort.Direction.ASC, "createTime")).containsExactlyElementsOf(documents.subList(15, 30))
+    assertThat(findPage(1, 15, Sort.Direction.DESC, "createTime")).containsExactlyElementsOf(reverse(documents).subList(15, 30))
+    assertThat(findPage(6, 15, Sort.Direction.ASC, "createTime")).containsExactlyElementsOf(documents.subList(90, 101))
+    assertThat(findPage(7, 15, Sort.Direction.ASC, "createTime")).isEmpty()
+  }
+
+  @Test
+  fun finds_deleted_tasks() {
+    val documents = prepareDocuments(
+      task().deleted().deleteTime(Instant.EPOCH).build(),
+      task().deleted().deleteTime(null).build(),
+      task().deleted().deleteTime(Instant.EPOCH.minusSeconds(10)).build(),
+      task().deleted().deleteTime(Instant.EPOCH.plusSeconds(10)).build()
+    )
+    val result = taskRepository.findDeletedBefore(Instant.EPOCH).collectList().block()!!
+    assertThat(result).hasSize(3).extracting("deleteTime").containsOnly(Instant.EPOCH, null, Instant.EPOCH.minusSeconds(10))
+    assertThat(result).hasSize(3).containsOnly(documents[0], documents[1], documents[2])
   }
 
   private fun <T> reverse(list: List<T?>): List<T?> {

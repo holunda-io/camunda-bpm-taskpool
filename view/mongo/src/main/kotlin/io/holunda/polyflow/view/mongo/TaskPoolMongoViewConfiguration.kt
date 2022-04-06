@@ -17,6 +17,7 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.data.mongodb.MongoDatabaseFactory
 import org.springframework.data.mongodb.core.convert.MappingMongoConverter
 import org.springframework.data.mongodb.repository.config.EnableReactiveMongoRepositories
+import java.time.Clock
 import javax.annotation.PostConstruct
 
 /**
@@ -43,6 +44,10 @@ class TaskPoolMongoViewConfiguration {
   fun info() {
     logger.info { "VIEW-MONGO-001: Initialized mongo view" }
   }
+
+  @Bean
+  @ConditionalOnMissingBean
+  fun clock(): Clock = Clock.systemUTC()
 
   /**
    * Axon Mongo template configuration.

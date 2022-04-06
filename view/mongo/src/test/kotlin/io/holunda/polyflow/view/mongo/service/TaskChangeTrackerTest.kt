@@ -4,35 +4,48 @@ import com.mongodb.MongoCommandException
 import com.mongodb.ServerAddress
 import com.mongodb.client.model.changestream.ChangeStreamDocument
 import com.mongodb.client.model.changestream.OperationType
-import org.mockito.kotlin.any
-import org.mockito.kotlin.eq
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.whenever
 import io.holunda.camunda.taskpool.api.task.ProcessReference
 import io.holunda.polyflow.view.Task
+import io.holunda.polyflow.view.mongo.ClearDeletedTasksMode
+import io.holunda.polyflow.view.mongo.TaskPoolMongoViewProperties
 import io.holunda.polyflow.view.mongo.data.DataEntryRepository
 import io.holunda.polyflow.view.mongo.task.ProcessReferenceDocument
 import io.holunda.polyflow.view.mongo.task.TaskChangeTracker
 import io.holunda.polyflow.view.mongo.task.TaskDocument
 import io.holunda.polyflow.view.mongo.task.TaskRepository
+import org.assertj.core.api.Assertions
 import org.bson.BsonDocument
 import org.bson.BsonString
 import org.bson.Document
 import org.junit.Test
+import org.mockito.kotlin.*
 import org.springframework.data.mongodb.core.ChangeStreamEvent
 import org.springframework.data.mongodb.core.convert.MongoConverter
+import org.springframework.scheduling.TaskScheduler
+import org.springframework.scheduling.Trigger
+import org.springframework.scheduling.support.CronExpression
+import org.springframework.scheduling.support.SimpleTriggerContext
 import reactor.core.Disposable
+import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 import reactor.test.StepVerifier
 import reactor.test.publisher.TestPublisher
+import java.time.Clock
 import java.time.Duration
+import java.time.Instant
+import java.time.ZoneOffset
+import java.util.*
 
 internal class TaskChangeTrackerTest {
   private val taskRepository: TaskRepository = mock()
   private val dataEntryRepository: DataEntryRepository = mock()
+  private var properties = TaskPoolMongoViewProperties()
+  private val scheduler: TaskScheduler = mock<TaskScheduler>().apply {
+    whenever(clock).thenReturn(Clock.fixed(Instant.EPOCH, ZoneOffset.UTC))
+  }
 
   // Lazy initialization is needed for StepVerifier.withVirtualTime to work properly
-  private val taskChangeTracker by lazy { TaskChangeTracker(taskRepository, dataEntryRepository) }
+  private val taskChangeTracker by lazy { TaskChangeTracker(taskRepository, dataEntryRepository, properties, scheduler) }
 
   @Test
   fun `subscribes only once to mongo change stream`() {
@@ -116,8 +129,33 @@ internal class TaskChangeTrackerTest {
 
     StepVerifier.withVirtualTime { taskChangeTracker.trackTaskUpdates() }
       .expectSubscription()
-      .then { initialPublisher.next(changeStreamEvent(1, "123", deleted = true)) }
+      .then { initialPublisher.next(changeStreamEvent(1, "123", deleted = true, deleteTime = Instant.EPOCH)) }
       .expectNext(task("123", deleted = true))
+      .then { deleteResult.assertWasSubscribed() }
+      .verifyTimeout(10.seconds)
+  }
+
+  @Test
+  fun `waits before deleting tasks that were marked as deleted`() {
+    properties = properties.copy(
+      changeStream = properties.changeStream.copy(
+        clearDeletedTasks = properties.changeStream.clearDeletedTasks.copy(
+          after = Duration.ofMinutes(5)
+        )
+      )
+    )
+    val initialPublisher = publisherForResumeToken(null)
+    val deleteResult = TestPublisher.createCold<Void>().complete()
+    whenever(taskRepository.deleteById("123")).thenReturn(deleteResult.mono())
+
+    StepVerifier.withVirtualTime { taskChangeTracker.trackTaskUpdates() }
+      .expectSubscription()
+      .then { initialPublisher.next(changeStreamEvent(1, "123", deleted = true, deleteTime = Instant.EPOCH.minus(Duration.ofMinutes(1)))) }
+      .expectNext(task("123", deleted = true))
+      .then { deleteResult.assertWasNotSubscribed() }
+      .thenAwait(Duration.ofMinutes(4).minusNanos(1))
+      .then { deleteResult.assertWasNotSubscribed() }
+      .thenAwait(Duration.ofNanos(1))
       .then { deleteResult.assertWasSubscribed() }
       .verifyTimeout(10.seconds)
   }
@@ -131,12 +169,47 @@ internal class TaskChangeTrackerTest {
 
     StepVerifier.withVirtualTime { taskChangeTracker.trackTaskUpdates() }
       .expectSubscription()
-      .then { initialPublisher.next(changeStreamEvent(1, "123", deleted = true)) }
+      .then { initialPublisher.next(changeStreamEvent(1, "123", deleted = true, deleteTime = Instant.EPOCH)) }
       .expectNext(task("123", deleted = true))
-      .then { initialPublisher.next(changeStreamEvent(1, "456", deleted = true)) }
+      .then { initialPublisher.next(changeStreamEvent(1, "456", deleted = true, deleteTime = Instant.EPOCH)) }
       .expectNext(task("456", deleted = true))
       .then { deleteResult.assertWasSubscribed() }
       .verifyTimeout(10.seconds)
+  }
+
+  @Test
+  fun `schedules job for deleting leftover tasks`() {
+    properties = properties.copy(
+      changeStream = properties.changeStream.copy(
+        clearDeletedTasks = properties.changeStream.clearDeletedTasks.copy(
+          mode = ClearDeletedTasksMode.BOTH,
+          after = Duration.ofHours(1),
+          jobSchedule = CronExpression.parse("@daily"),
+          jobJitter = Duration.ofHours(1),
+          jobTimezone = ZoneOffset.UTC
+        )
+      )
+    )
+    whenever(scheduler.clock).thenReturn(Clock.fixed(Instant.EPOCH, ZoneOffset.UTC))
+    whenever(taskRepository.findDeletedBefore(Instant.EPOCH.minus(Duration.ofHours(1))))
+      .thenReturn(Flux.just(taskDocument("123", deleted = true, Instant.EPOCH.minus(Duration.ofHours(2)))))
+    val deleteResult = TestPublisher.createCold<Void>().complete()
+    whenever(taskRepository.deleteById("123")).thenReturn(deleteResult.mono())
+
+    val deleteRunnableCaptor = argumentCaptor<Runnable>()
+    val triggerCaptor = argumentCaptor<Trigger>()
+    taskChangeTracker.initCleanupJob()
+    verify(scheduler).schedule(deleteRunnableCaptor.capture(), triggerCaptor.capture())
+    val trigger = triggerCaptor.firstValue
+    Assertions.assertThat(trigger.nextExecutionTime(SimpleTriggerContext(Clock.fixed(Instant.EPOCH, ZoneOffset.UTC)).apply {
+      update(
+        Date.from(Instant.EPOCH.minus(Duration.ofHours(24))),
+        Date.from(Instant.EPOCH.minus(Duration.ofHours(24))),
+        Date.from(Instant.EPOCH.minus(Duration.ofHours(23)))
+      )
+    })).isBetween(Instant.EPOCH, Instant.EPOCH.plus(Duration.ofHours(1)))
+    deleteRunnableCaptor.firstValue.run()
+    deleteResult.assertWasSubscribed()
   }
 
   private fun publisherForResumeToken(resumeToken: Int? = null): TestPublisher<ChangeStreamEvent<TaskDocument>> =
@@ -148,18 +221,37 @@ internal class TaskChangeTrackerTest {
     whenever(taskRepository.getTaskUpdates(resumeToken?.let { resumeToken(it) })).thenReturn(this.flux())
   }
 
-  private fun changeStreamEvent(resumeToken: Int, taskId: String, deleted: Boolean = false): ChangeStreamEvent<TaskDocument> {
+  private fun changeStreamEvent(
+    resumeToken: Int,
+    taskId: String,
+    deleted: Boolean = false,
+    deleteTime: Instant? = if (deleted) Instant.now() else null
+  ): ChangeStreamEvent<TaskDocument> {
     val converter: MongoConverter = mock()
     whenever(converter.read(eq(TaskDocument::class.java), any())).thenAnswer { (it.arguments[1] as Document)["body"] }
-    return ChangeStreamEvent(ChangeStreamDocument(OperationType.INSERT, resumeToken(resumeToken), null, null, Document("body", taskDocument(taskId, deleted)), null, null, null, null, null), TaskDocument::class.java, converter)
+    return ChangeStreamEvent(
+      ChangeStreamDocument(
+        OperationType.INSERT,
+        resumeToken(resumeToken),
+        null,
+        null,
+        Document("body", taskDocument(taskId, deleted, deleteTime)),
+        null,
+        null,
+        null,
+        null,
+        null
+      ), TaskDocument::class.java, converter
+    )
   }
 
-  private fun taskDocument(id: String, deleted: Boolean = false) =
+  private fun taskDocument(id: String, deleted: Boolean = false, deleteTime: Instant?) =
     TaskDocument(
       id,
       sourceReference = ProcessReferenceDocument("", "", "", "", "", ""),
       taskDefinitionKey = "",
-      deleted = deleted
+      deleted = deleted,
+      deleteTime = deleteTime
     )
 
   private fun task(id: String, deleted: Boolean = false) =
