@@ -95,6 +95,9 @@ enum class ChangeTrackingMode {
   NONE
 }
 
+/**
+ * Defines mode for deletion of tasks in MongoDB.
+ */
 enum class ClearDeletedTasksMode {
   /**
    * Subscribe to the change stream and clear any tasks that are marked deleted after the duration configured in [ChangeStream.clearDeletedTasksAfter].

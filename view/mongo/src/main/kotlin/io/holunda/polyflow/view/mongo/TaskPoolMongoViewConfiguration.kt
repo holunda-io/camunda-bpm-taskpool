@@ -45,6 +45,9 @@ class TaskPoolMongoViewConfiguration {
     logger.info { "VIEW-MONGO-001: Initialized mongo view" }
   }
 
+  /**
+   * System clock runs on UTC by default.
+   */
   @Bean
   @ConditionalOnMissingBean
   fun clock(): Clock = Clock.systemUTC()

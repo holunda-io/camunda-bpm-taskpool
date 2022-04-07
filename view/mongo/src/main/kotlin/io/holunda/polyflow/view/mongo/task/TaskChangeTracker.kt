@@ -66,6 +66,7 @@ class TaskChangeTracker(
     .share()
 
   // Truly delete documents that have been marked deleted
+  @Suppress("LeakingThis")
   private val trulyDeleteChangeStreamSubscription: Disposable? =
     if (properties.changeStream.clearDeletedTasks.mode.usesChangeStream)
       changeStream
@@ -83,6 +84,9 @@ class TaskChangeTracker(
     else
       null
 
+  /**
+   * Initializes scheduling of the clean-up if configured via properties.
+   */
   @PostConstruct
   fun initCleanupJob() {
     if (properties.changeStream.clearDeletedTasks.mode.usesCleanupJob) {
@@ -148,19 +152,23 @@ class TaskChangeTracker(
         .collectList()
         .map { TaskWithDataEntries(task = task, dataEntries = it) }
     }
-}
 
-data class CronTriggerWithJitter(val expression: CronExpression, val jitter: Duration, val zoneId: ZoneId = ZoneOffset.UTC) : Trigger {
-  override fun nextExecutionTime(triggerContext: TriggerContext): Date? {
-    val lastCompletionTime = triggerContext.lastCompletionTime()
-    val lastCompletionTimeAdjusted = (lastCompletionTime?.coerceAtLeast(triggerContext.lastScheduledExecutionTime() ?: lastCompletionTime)?.toInstant()
-      ?: triggerContext.clock.instant()).atZone(zoneId)
-    val cronNextExecutionTime = expression.next(lastCompletionTimeAdjusted) ?: return null
+  /**
+   * Trigger based on cron expression and jitter.
+   */
+  data class CronTriggerWithJitter(val expression: CronExpression, val jitter: Duration, val zoneId: ZoneId = ZoneOffset.UTC) : Trigger {
+    override fun nextExecutionTime(triggerContext: TriggerContext): Date? {
+      val lastCompletionTime = triggerContext.lastCompletionTime()
+      val lastCompletionTimeAdjusted = (lastCompletionTime?.coerceAtLeast(triggerContext.lastScheduledExecutionTime() ?: lastCompletionTime)?.toInstant()
+        ?: triggerContext.clock.instant()).atZone(zoneId)
+      val cronNextExecutionTime = expression.next(lastCompletionTimeAdjusted) ?: return null
 
-    val offset = Random.nextLong(0..jitter.toNanos())
-    return Date.from(cronNextExecutionTime.toInstant().plusNanos(offset))
+      val offset = Random.nextLong(0..jitter.toNanos())
+      return Date.from(cronNextExecutionTime.toInstant().plusNanos(offset))
+    }
   }
+
+  internal val ClearDeletedTasksMode.usesCleanupJob get() = this == ClearDeletedTasksMode.SCHEDULED_JOB || this == ClearDeletedTasksMode.BOTH
+  internal val ClearDeletedTasksMode.usesChangeStream get() = this == ClearDeletedTasksMode.CHANGE_STREAM_SUBSCRIPTION || this == ClearDeletedTasksMode.BOTH
 }
 
-val ClearDeletedTasksMode.usesCleanupJob get() = this == ClearDeletedTasksMode.SCHEDULED_JOB || this == ClearDeletedTasksMode.BOTH
-val ClearDeletedTasksMode.usesChangeStream get() = this == ClearDeletedTasksMode.CHANGE_STREAM_SUBSCRIPTION || this == ClearDeletedTasksMode.BOTH
