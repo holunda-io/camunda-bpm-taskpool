@@ -51,7 +51,7 @@ data class ClearDeletedTasks(
   /**
    * Cron expression to configure how often the job run that clears deleted tasks should run. Only relevant if [mode] is `SCHEDULED_JOB` or `BOTH`
    */
-  val jobSchedule: CronExpression = CronExpression.parse("@daily"),
+  val jobSchedule: String = "@daily",
 
   /**
    * The cleanup job execution time will randomly be delayed after what is determined by the cron expression by [0..this duration].

@@ -184,7 +184,7 @@ internal class TaskChangeTrackerTest {
         clearDeletedTasks = properties.changeStream.clearDeletedTasks.copy(
           mode = ClearDeletedTasksMode.BOTH,
           after = Duration.ofHours(1),
-          jobSchedule = CronExpression.parse("@daily"),
+          jobSchedule = "@daily",
           jobJitter = Duration.ofHours(1),
           jobTimezone = ZoneOffset.UTC
         )

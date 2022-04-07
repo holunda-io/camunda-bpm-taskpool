@@ -93,7 +93,7 @@ class TaskChangeTracker(
             .subscribe()
         },
         CronTriggerWithJitter(
-          properties.changeStream.clearDeletedTasks.jobSchedule,
+          CronExpression.parse(properties.changeStream.clearDeletedTasks.jobSchedule),
           properties.changeStream.clearDeletedTasks.jobJitter,
           properties.changeStream.clearDeletedTasks.jobTimezone
         )
