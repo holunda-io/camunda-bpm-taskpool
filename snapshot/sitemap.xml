@@ -151,6 +151,11 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://www.holunda.io/camunda-bpm-taskpool/snapshot/reference-guide/components/other-bus-jackson.html</loc>
+         <lastmod>2022-04-08</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://www.holunda.io/camunda-bpm-taskpool/snapshot/reference-guide/components/other-tasklist-url-resolver.html</loc>
          <lastmod>2022-04-08</lastmod>
          <changefreq>daily</changefreq>
