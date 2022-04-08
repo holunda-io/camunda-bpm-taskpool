@@ -15,7 +15,7 @@ site_description: >-
  or multiple process engines (like Camunda BPM) providing a holistic enterprise-wide
  task pool and data entry pool.
 
-copyright: Copyright &copy; 2016 - 2021, Holisticon AG
+copyright: Copyright &copy; 2016 - 2022, Holisticon AG
 
 use_directory_urls: false
 
@@ -122,6 +122,7 @@ nav:
     - Other Components:
       - Tasklist URL Resolver: reference-guide/components/other-tasklist-url-resolver.md
       - Variable Serializer: reference-guide/components/other-variable-serializer.md
+      - Bus Jackson: reference-guide/components/other-bus-jackson.md
     - Configuration Overview: reference-guide/configuration/index.md
     - Persistence Configuration: reference-guide/configuration/persistence.md
   - Examples:

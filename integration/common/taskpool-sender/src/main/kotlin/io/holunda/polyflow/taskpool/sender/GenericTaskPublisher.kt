@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component
 /**
  * Emits Task Commands
  */
-@Component
 class GenericTaskPublisher(private val applicationEventPublisher: ApplicationEventPublisher) {
   /**
    * Fires create command.

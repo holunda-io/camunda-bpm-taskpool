@@ -124,7 +124,7 @@ class JpaPolyflowViewProcessInstanceService(
   }
 
   private fun isDisabledByProperty(): Boolean {
-    return !polyflowJpaViewProperties.storedItems.contains(StoredItem.PROCESS_INSTANCE).also {
+    return (!polyflowJpaViewProperties.storedItems.contains(StoredItem.PROCESS_INSTANCE)).also {
       if (it) {
         logger.debug { "Process instance storage disabled by property." }
       }

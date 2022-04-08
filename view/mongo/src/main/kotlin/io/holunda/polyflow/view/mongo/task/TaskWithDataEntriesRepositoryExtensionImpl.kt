@@ -85,7 +85,7 @@ open class TaskWithDataEntriesRepositoryExtensionImpl(
             .orOperator(*filterPropertyCriteria)
         )
     } else {
-      tasksForUserCriteria
+      tasksForUserCriteria.and("deleted").ne(true)
     }
 
 

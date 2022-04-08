@@ -50,7 +50,9 @@ data class TaskDocument(
   val dueDate: Instant? = null,
   @Indexed
   val followUpDate: Instant? = null,
-  val deleted: Boolean = false
+  val deleted: Boolean = false,
+  @Indexed
+  val deleteTime: Instant? = null
 ) {
   companion object {
     const val COLLECTION = "tasks"

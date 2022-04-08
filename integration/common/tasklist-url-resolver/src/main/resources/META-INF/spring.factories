@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  io.holunda.polyflow.urlresolver.FallbackTasklistUrlResolverConfiguration
+  io.holunda.polyflow.urlresolver.FallbackTasklistUrlResolverAutoConfiguration

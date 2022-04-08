@@ -12,6 +12,9 @@ import org.axonframework.messaging.MetaData
 import org.junit.Test
 import org.mockito.kotlin.*
 import reactor.core.publisher.Mono
+import java.time.Clock
+import java.time.Instant
+import java.time.ZoneOffset
 import java.util.*
 
 
@@ -26,7 +29,8 @@ class PolyflowMongoServiceRetryTest {
     taskChangeTracker = mock(),
     dataEntryChangeTracker = mock(),
     queryUpdateEmitter = mock(),
-    configuration = mock()
+    configuration = mock(),
+    clock = Clock.fixed(Instant.EPOCH, ZoneOffset.UTC)
   )
 
   private val taskId = "some-id"
@@ -44,7 +48,7 @@ class PolyflowMongoServiceRetryTest {
       )
     )
     whenever(taskRepository.findNotDeletedById(taskId)).thenReturn(Mono.defer { results.poll() })
-    whenever(taskRepository.save(any<TaskDocument>())).thenAnswer { Mono.just(it.getArgument<TaskDocument>(0)) }
+    whenever(taskRepository.save(any())).thenAnswer { Mono.just(it.getArgument<TaskDocument>(0)) }
     mongoViewService.on(TaskAssignedEngineEvent(taskId, processReference, "foo:bar"), MetaData.emptyInstance())
     verify(taskRepository).save(taskDocument)
   }
@@ -53,6 +57,6 @@ class PolyflowMongoServiceRetryTest {
   fun `stops retrying after five attempts`() {
     whenever(taskRepository.findNotDeletedById(taskId)).thenReturn(Mono.empty())
     mongoViewService.on(TaskAssignedEngineEvent(taskId, processReference, "foo:bar"), MetaData.emptyInstance())
-    verify(taskRepository, never()).save(any<TaskDocument>())
+    verify(taskRepository, never()).save(any())
   }
 }

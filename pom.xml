@@ -5,7 +5,7 @@
 
   <groupId>io.holunda.polyflow</groupId>
   <artifactId>polyflow-root</artifactId>
-  <version>3.1.8</version>
+  <version>3.2.0</version>
   <packaging>pom</packaging>
 
   <name>POM: ${project.artifactId}</name>
@@ -20,7 +20,7 @@
     <version.java>${java.version}</version.java>
     <version.java>${java.version}</version.java>
 
-    <kotlin.version>1.6.10</kotlin.version>
+    <kotlin.version>1.6.20</kotlin.version>
     <kotlin.compiler.jvmTarget>${java.version}</kotlin.compiler.jvmTarget>
     <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
     <kotlin-logging.version>2.1.21</kotlin-logging.version>
@@ -40,7 +40,7 @@
           <!-- cleaning -->
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-clean-plugin</artifactId>
-          <version>3.1.0</version>
+          <version>3.2.0</version>
         </plugin>
         <!-- gitflow -->
         <plugin>
@@ -112,6 +112,9 @@
       <properties>
         <skipFrontend>true</skipFrontend>
       </properties>
+      <build>
+        <defaultGoal>integration-test failsafe:verify</defaultGoal>
+      </build>
     </profile>
 
 

@@ -1,7 +1,7 @@
 package io.holunda.polyflow.taskpool.sender
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import io.holunda.polyflow.bus.jackson.config.FallbackPayloadObjectMapperAutoConfiguration.Companion.PAYLOAD_OBJECT_MAPPER
 import io.holunda.polyflow.taskpool.sender.gateway.*
 import io.holunda.polyflow.taskpool.sender.process.definition.ProcessDefinitionCommandSender
 import io.holunda.polyflow.taskpool.sender.process.definition.SimpleProcessDefinitionCommandSender
@@ -18,39 +18,39 @@ import io.holunda.polyflow.taskpool.sender.task.accumulator.ProjectingCommandAcc
 import org.axonframework.commandhandling.gateway.CommandGateway
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.context.properties.EnableConfigurationProperties
+import org.springframework.context.ApplicationEventPublisher
 import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
 import javax.annotation.PostConstruct
 
 /**
  * Main configuration of the taskpool sender component.
  */
-@Configuration
-@ComponentScan
 @EnableConfigurationProperties(SenderProperties::class)
 class SenderConfiguration(private val senderProperties: SenderProperties) {
 
   private val logger: Logger = LoggerFactory.getLogger(SenderConfiguration::class.java)
 
   /**
-   * Conditional object mapper, if not defined by the user.
+   * Creates generic task publisher.
    */
   @Bean
-  @ConditionalOnMissingBean(ObjectMapper::class)
-  fun taskCollectorObjectMapper(): ObjectMapper = jacksonObjectMapper().findAndRegisterModules()
+  fun genericTaskPublisher(applicationEventPublisher: ApplicationEventPublisher) =
+    GenericTaskPublisher(applicationEventPublisher = applicationEventPublisher)
 
   /**
-   * Create task accumulator.
+   * Creates task accumulator.
    */
   @Bean
-  fun taskCommandAccumulator(objectMapper: ObjectMapper): EngineTaskCommandAccumulator = ProjectingCommandAccumulator(objectMapper = objectMapper)
+  fun taskCommandAccumulator(@Qualifier(PAYLOAD_OBJECT_MAPPER) objectMapper: ObjectMapper): EngineTaskCommandAccumulator =
+    ProjectingCommandAccumulator(objectMapper = objectMapper)
 
   /**
-   * Create a command list gateway, if none is provided.
+   * Creates a command list gateway, if none is provided.
    */
   @Bean
   @ConditionalOnMissingBean(CommandListGateway::class)
@@ -67,7 +67,7 @@ class SenderConfiguration(private val senderProperties: SenderProperties) {
   )
 
   /**
-   * Create command sender for tasks.
+   * Creates command sender for tasks.
    */
   @Bean
   @ConditionalOnExpression("'\${polyflow.integration.sender.task.type}' != 'custom'")
@@ -79,7 +79,7 @@ class SenderConfiguration(private val senderProperties: SenderProperties) {
     }
 
   /**
-   * Create command sender for process definitions.
+   * Creates command sender for process definitions.
    */
   @Bean
   @ConditionalOnExpression("'\${polyflow.integration.sender.process-definition.type}' != 'custom'")
@@ -90,7 +90,7 @@ class SenderConfiguration(private val senderProperties: SenderProperties) {
     }
 
   /**
-   * Create command sender for process instances.
+   * Creates command sender for process instances.
    */
   @Bean
   @ConditionalOnExpression("'\${polyflow.integration.sender.process-instance.type}' != 'custom'")
@@ -101,11 +101,14 @@ class SenderConfiguration(private val senderProperties: SenderProperties) {
     }
 
   /**
-   * Create command sender for process instances.
+   * Creates command sender for process instances.
    */
   @Bean
   @ConditionalOnExpression("'\${polyflow.integration.sender.process-variable.type}' != 'custom'")
-  fun processVariableCommandSender(commandListGateway: CommandListGateway, objectMapper: ObjectMapper): ProcessVariableCommandSender =
+  fun processVariableCommandSender(
+    commandListGateway: CommandListGateway,
+    @Qualifier(PAYLOAD_OBJECT_MAPPER) objectMapper: ObjectMapper
+  ): ProcessVariableCommandSender =
     when (senderProperties.processVariable.type) {
       SenderType.simple -> SimpleProcessVariableCommandSender(commandListGateway, senderProperties, objectMapper)
       SenderType.tx -> TxAwareAccumulatingProcessVariableCommandSender(commandListGateway, senderProperties, objectMapper)
@@ -152,6 +155,5 @@ class SenderConfiguration(private val senderProperties: SenderProperties) {
   @Bean
   @ConditionalOnMissingBean(CommandErrorHandler::class)
   fun loggingTaskCommandErrorHandler(): CommandErrorHandler = LoggingTaskCommandErrorHandler(logger)
-
 
 }

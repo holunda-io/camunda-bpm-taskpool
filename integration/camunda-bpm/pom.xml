@@ -5,7 +5,7 @@
   <parent>
     <groupId>io.holunda.polyflow</groupId>
     <artifactId>polyflow-parent</artifactId>
-    <version>3.1.8</version>
+    <version>3.2.0</version>
     <relativePath>../../bom/parent/pom.xml</relativePath>
   </parent>
 
@@ -25,11 +25,17 @@
     <module>taskpool-collector</module>
     <module>engine-client</module>
     <module>springboot-starter</module>
+    <module>springboot-autoconfigure</module>
   </modules>
 
   <dependencyManagement>
     <dependencies>
 
+      <dependency>
+        <groupId>io.holunda.polyflow</groupId>
+        <artifactId>polyflow-camunda-bpm-springboot-autoconfigure</artifactId>
+        <version>${project.version}</version>
+      </dependency>
       <dependency>
         <groupId>io.holunda.polyflow</groupId>
         <artifactId>polyflow-camunda-bpm-engine-client</artifactId>

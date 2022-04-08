@@ -159,7 +159,7 @@ class JpaPolyflowViewDataEntryService(
   }
 
   private fun isDisabledByProperty(): Boolean {
-    return !polyflowJpaViewProperties.storedItems.contains(StoredItem.DATA_ENTRY).also {
+    return (!polyflowJpaViewProperties.storedItems.contains(StoredItem.DATA_ENTRY)).also {
       if (it) {
         logger.debug { "Data entry storage disabled by property." }
       }

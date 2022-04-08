@@ -6,7 +6,7 @@
   <parent>
     <groupId>io.holunda.polyflow</groupId>
     <artifactId>polyflow-parent</artifactId>
-    <version>3.1.8</version>
+    <version>3.2.0</version>
     <relativePath>../parent/pom.xml</relativePath>
   </parent>
 
@@ -23,7 +23,11 @@
         <scope>import</scope>
         <type>pom</type>
       </dependency>
-
+      <dependency>
+        <groupId>io.holunda.polyflow</groupId>
+        <artifactId>polyflow-bus-jackson</artifactId>
+        <version>${project.version}</version>
+      </dependency>
       <dependency>
         <groupId>io.holunda.polyflow</groupId>
         <artifactId>polyflow-taskpool-api</artifactId>
