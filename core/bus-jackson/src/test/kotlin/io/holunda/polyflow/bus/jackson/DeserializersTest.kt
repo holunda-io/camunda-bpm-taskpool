@@ -1,19 +1,15 @@
-package io.holunda.polyflow.taskpool.sender
+package io.holunda.polyflow.bus.jackson
 
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.databind.module.SimpleModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.holunda.camunda.taskpool.api.business.DataEntryState
 import io.holunda.camunda.taskpool.api.business.ProcessingType
-import io.holunda.polyflow.taskpool.KotlinTypeInfo
 import io.holunda.camunda.taskpool.api.task.ProcessReference
 import io.holunda.camunda.taskpool.api.task.SourceReference
-import io.holunda.polyflow.taskpool.configureTaskpoolJacksonObjectMapper
 import org.assertj.core.api.Assertions.assertThat
 import org.camunda.bpm.engine.variable.VariableMap
 import org.camunda.bpm.engine.variable.Variables
-import org.camunda.bpm.engine.variable.impl.VariableMapImpl
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
