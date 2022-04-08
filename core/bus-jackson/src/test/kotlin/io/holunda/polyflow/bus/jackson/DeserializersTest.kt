@@ -22,7 +22,7 @@ class DeserializersTest {
   @BeforeEach
   fun initMapper() {
     mapper = jacksonObjectMapper()
-      .configureTaskpoolJacksonObjectMapper()
+      .configurePolyflowJacksonObjectMapper()
       .addMixIn(MyStructure::class.java, KotlinTypeInfo::class.java)
   }
 

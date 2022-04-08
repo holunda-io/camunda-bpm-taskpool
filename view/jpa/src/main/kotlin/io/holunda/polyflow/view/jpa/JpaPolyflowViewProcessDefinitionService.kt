@@ -61,7 +61,7 @@ class JpaPolyflowViewProcessDefinitionService(
   }
 
   private fun isDisabledByProperty(): Boolean {
-    return !polyflowJpaViewProperties.storedItems.contains(StoredItem.PROCESS_DEFINITION).also {
+    return (!polyflowJpaViewProperties.storedItems.contains(StoredItem.PROCESS_DEFINITION)).also {
       if (it) {
         logger.debug { "Process definition storage disabled by property." }
       }

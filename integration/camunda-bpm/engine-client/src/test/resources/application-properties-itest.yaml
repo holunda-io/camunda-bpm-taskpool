@@ -5,3 +5,7 @@ spring:
 axon:
   axonserver:
     enabled: false
+
+camunda:
+  bpm:
+    enabled: false

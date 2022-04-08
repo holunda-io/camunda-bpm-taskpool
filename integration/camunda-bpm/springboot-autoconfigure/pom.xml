@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>io.holunda.polyflow</groupId>
+    <artifactId>polyflow-integration-camunda-bpm-engine-parent</artifactId>
+    <version>3.1.9-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>polyflow-camunda-bpm-springboot-autoconfigure</artifactId>
+  <name>integration/camunda-bpm/${project.artifactId}</name>
+
+  <dependencies>
+    <dependency>
+      <groupId>io.holunda.polyflow</groupId>
+      <artifactId>polyflow-camunda-bpm-taskpool-collector</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.holunda.polyflow</groupId>
+      <artifactId>polyflow-datapool-sender</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter</artifactId>
+    </dependency>
+  </dependencies>
+
+</project>

@@ -15,24 +15,7 @@
   <dependencies>
     <dependency>
       <groupId>io.holunda.polyflow</groupId>
-      <artifactId>polyflow-camunda-bpm-taskpool-collector</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.holunda.polyflow</groupId>
-      <artifactId>polyflow-tasklist-url-resolver</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.holunda.polyflow</groupId>
-      <artifactId>polyflow-camunda-bpm-engine-client</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.holunda.polyflow</groupId>
-      <artifactId>polyflow-datapool-sender</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter</artifactId>
+      <artifactId>polyflow-camunda-bpm-springboot-autoconfigure</artifactId>
     </dependency>
   </dependencies>
 

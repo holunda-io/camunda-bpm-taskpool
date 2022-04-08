@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Bean
  */
 @ConditionalOnMissingBean(TasklistUrlResolver::class)
 @EnableConfigurationProperties(TasklistUrlProperties::class)
-class FallbackTasklistUrlResolverConfiguration {
+class FallbackTasklistUrlResolverAutoConfiguration {
 
   /**
    * Property-based Tasklist URL resolver.

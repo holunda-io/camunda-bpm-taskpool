@@ -20,7 +20,6 @@ import javax.annotation.PostConstruct
 /**
  * Configuration of collector.
  */
-@Configuration
 @ComponentScan
 @EnableConfigurationProperties(CamundaTaskpoolCollectorProperties::class)
 class CamundaTaskpoolCollectorConfiguration(
