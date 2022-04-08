@@ -21,6 +21,9 @@ class DataEntrySenderConfiguration(
   val properties: DataEntrySenderProperties
 ) {
 
+  /**
+   * Initializes the projector.
+   */
   @Bean
   fun dataEntryProjector(suppliers: List<DataEntryProjectionSupplier>) = DataEntryProjector(suppliers)
 
