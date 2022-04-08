@@ -38,6 +38,7 @@
     <module>../../integration/camunda-bpm</module>
     <module>../../core/taskpool</module>
     <module>../../core/datapool</module>
+    <module>../../core/bus-jackson</module>
     <module>../../view</module>
     <module>../taskpool-dependencies</module>
     <module>../datapool-dependencies</module>
@@ -94,6 +95,11 @@
       <dependency>
         <groupId>io.holunda.polyflow</groupId>
         <artifactId>polyflow-variable-serializer</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.holunda.polyflow</groupId>
+        <artifactId>polyflow-bus-jackson</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>

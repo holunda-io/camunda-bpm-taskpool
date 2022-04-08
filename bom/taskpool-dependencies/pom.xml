@@ -23,7 +23,11 @@
         <scope>import</scope>
         <type>pom</type>
       </dependency>
-
+      <dependency>
+        <groupId>io.holunda.polyflow</groupId>
+        <artifactId>polyflow-bus-jackson</artifactId>
+        <version>${project.version}</version>
+      </dependency>
       <dependency>
         <groupId>io.holunda.polyflow</groupId>
         <artifactId>polyflow-taskpool-api</artifactId>
