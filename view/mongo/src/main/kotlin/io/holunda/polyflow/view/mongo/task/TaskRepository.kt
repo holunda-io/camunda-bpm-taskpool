@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Repository
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
+import java.time.Instant
 
 
 /**
@@ -33,5 +34,11 @@ interface TaskRepository : ReactiveMongoRepository<TaskDocument, String>, TaskRe
    */
   @Query("{ '_id': ?0, 'deleted': {\$ne: true} }")
   fun findNotDeletedById(id: String): Mono<TaskDocument>
+
+  /**
+   * Find all tasks that were deleted before the specified instant.
+   */
+  @Query("{ 'deleted': true, 'deleteTime': { \$not: { \$gt: ?0 } } }")
+  fun findDeletedBefore(deleteTime: Instant): Flux<TaskDocument>
 }
 

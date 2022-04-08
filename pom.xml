@@ -112,6 +112,9 @@
       <properties>
         <skipFrontend>true</skipFrontend>
       </properties>
+      <build>
+        <defaultGoal>integration-test failsafe:verify</defaultGoal>
+      </build>
     </profile>
 
 
