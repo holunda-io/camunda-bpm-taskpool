@@ -15,6 +15,10 @@
   <dependencies>
     <dependency>
       <groupId>io.holunda.polyflow</groupId>
+      <artifactId>polyflow-bus-jackson</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.holunda.polyflow</groupId>
       <artifactId>polyflow-view-api</artifactId>
       <version>${project.version}</version>
     </dependency>

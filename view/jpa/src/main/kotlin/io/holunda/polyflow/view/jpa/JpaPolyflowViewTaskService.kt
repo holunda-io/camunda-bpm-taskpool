@@ -275,7 +275,7 @@ class JpaPolyflowViewTaskService(
   }
 
   private fun isDisabledByProperty(): Boolean {
-    return !polyflowJpaViewProperties.storedItems.contains(StoredItem.TASK).also {
+    return (!polyflowJpaViewProperties.storedItems.contains(StoredItem.TASK)).also {
       if (it) {
         logger.debug { "Task storage disabled by property." }
       }

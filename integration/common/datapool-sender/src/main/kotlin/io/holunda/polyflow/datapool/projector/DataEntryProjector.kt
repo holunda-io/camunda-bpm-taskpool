@@ -6,7 +6,6 @@ import org.springframework.stereotype.Component
 /**
  * Component responsible for retrieving property projectors for given entry types.
  */
-@Component
 class DataEntryProjector(private val suppliers: List<DataEntryProjectionSupplier>) {
   /**
    * Retrieve a list of projection suppliers for a given entry type.

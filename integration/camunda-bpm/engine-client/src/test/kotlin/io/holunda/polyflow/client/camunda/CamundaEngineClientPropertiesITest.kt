@@ -4,16 +4,21 @@ import org.assertj.core.api.Assertions.assertThat
 import org.camunda.bpm.engine.RuntimeService
 import org.camunda.bpm.engine.TaskService
 import org.junit.jupiter.api.Test
-import org.mockito.kotlin.mock
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment.MOCK
-import org.springframework.context.annotation.Bean
+import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.test.context.ActiveProfiles
 
-@SpringBootTest(classes = [CamundaEngineClientPropertiesTestApplication::class, CamundaMockConfiguration::class], webEnvironment = MOCK)
+@SpringBootTest(classes = [CamundaEngineClientPropertiesTestApplication::class], webEnvironment = MOCK)
 @ActiveProfiles("properties-itest")
 class CamundaEngineClientPropertiesITest {
+
+  @MockBean
+  lateinit var runtimeService: RuntimeService
+
+  @MockBean
+  lateinit var taskService: TaskService
 
   @Autowired
   lateinit var props: CamundaEngineClientProperties
@@ -23,12 +28,3 @@ class CamundaEngineClientPropertiesITest {
     assertThat(props.applicationName).isEqualTo("Foo")
   }
 }
-
-class CamundaMockConfiguration {
-  @Bean
-  fun runtimeService(): RuntimeService = mock()
-
-  @Bean
-  fun taskService(): TaskService = mock()
-}
-

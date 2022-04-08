@@ -53,3 +53,4 @@ user tasks and business data items. They are typically deployed as a part of the
 
 * [Variable Serializer](other-variable-serializer.md)
 * [Tasklist URL Resolver](other-tasklist-url-resolver.md)
+* [Bus Jackson](other-bus-jackson.md)

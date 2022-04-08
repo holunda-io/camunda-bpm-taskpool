@@ -1,6 +1,7 @@
 package io.holunda.polyflow.taskpool.sender
 
 import com.thoughtworks.xstream.XStream
+import io.holunda.polyflow.bus.jackson.config.FallbackPayloadObjectMapperAutoConfiguration
 import io.holunda.polyflow.taskpool.sender.gateway.CommandListGateway
 import io.holunda.polyflow.taskpool.sender.task.EngineTaskCommandSender
 import org.assertj.core.api.Assertions.assertThat
@@ -17,7 +18,7 @@ import org.springframework.context.annotation.Bean
 class SenderPropertiesExtendedTest {
 
   private val contextRunner = ApplicationContextRunner()
-    .withConfiguration(UserConfigurations.of(SenderConfiguration::class.java))
+    .withConfiguration(UserConfigurations.of(SenderConfiguration::class.java, FallbackPayloadObjectMapperAutoConfiguration::class.java))
 
   @Test
   fun testMinimal() {

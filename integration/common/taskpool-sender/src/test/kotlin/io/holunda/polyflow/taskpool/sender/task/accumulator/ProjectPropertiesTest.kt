@@ -1,7 +1,7 @@
 package io.holunda.polyflow.taskpool.sender.task.accumulator
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import io.holunda.polyflow.taskpool.configureTaskpoolJacksonObjectMapper
+import io.holunda.polyflow.bus.jackson.configurePolyflowJacksonObjectMapper
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import java.util.*
@@ -9,7 +9,7 @@ import kotlin.reflect.KClass
 
 class PropertiesProjectorTest {
 
-  private val objectMapper = jacksonObjectMapper().configureTaskpoolJacksonObjectMapper()
+  private val objectMapper = jacksonObjectMapper().configurePolyflowJacksonObjectMapper()
 
   @Test
   fun `should return the command if details are empty`() {

@@ -1,7 +1,9 @@
 package io.holunda.polyflow.urlresolver
 
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.databind.ObjectMapper
+import io.holunda.polyflow.bus.jackson.config.FallbackPayloadObjectMapperAutoConfiguration.Companion.PAYLOAD_OBJECT_MAPPER
 import io.holunda.polyflow.view.FormUrlResolver
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
@@ -19,5 +21,6 @@ class PropertyBasedFormUrlResolverConfiguration {
    */
   @Bean
   @ConditionalOnMissingBean(FormUrlResolver::class)
-  fun taskUrlResolver(props: FormUrlResolverProperties) = PropertyBasedFormUrlResolver(props, jacksonObjectMapper())
+  fun taskUrlResolver(props: FormUrlResolverProperties, @Qualifier(PAYLOAD_OBJECT_MAPPER) objectMapper: ObjectMapper) =
+    PropertyBasedFormUrlResolver(props, objectMapper)
 }

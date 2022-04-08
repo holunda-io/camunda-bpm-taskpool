@@ -3,8 +3,8 @@ package io.holunda.polyflow.client.camunda
 import org.springframework.context.annotation.Import
 
 /**
- * Starts camunda client component.
+ * Starts camunda client component accepting interaction commands.
  */
 @MustBeDocumented
-@Import(CamundaEngineClientConfiguration::class)
+@Import(CamundaEngineClientAutoConfiguration::class)
 annotation class EnableCamundaEngineClient

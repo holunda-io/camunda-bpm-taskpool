@@ -2,8 +2,6 @@ package io.holunda.polyflow.taskpool.sender.task.accumulator
 
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import io.holunda.polyflow.taskpool.configureTaskpoolJacksonObjectMapper
 import org.slf4j.LoggerFactory
 import kotlin.reflect.KClass
 import kotlin.reflect.full.memberProperties
@@ -101,19 +99,15 @@ fun <T : Any> projectProperties(
 /**
  * Default Jackson Mapper (object to map).
  */
-fun <T> jacksonMapper(objectMapper: ObjectMapper = jacksonObjectMapper()): Mapper<T> = {
-  objectMapper
-    .configureTaskpoolJacksonObjectMapper()
-    .convertValue(it, object : TypeReference<MutableMap<String, Any?>>() {})
+fun <T> jacksonMapper(objectMapper: ObjectMapper): Mapper<T> = {
+  objectMapper.convertValue(it, object : TypeReference<MutableMap<String, Any?>>() {})
 }
 
 /**
  * Default Jackson Unmapper (map to object).
  */
-fun <T> jacksonUnmapper(clazz: Class<T>, objectMapper: ObjectMapper = jacksonObjectMapper()): Unmapper<T> = {
-  objectMapper
-    .configureTaskpoolJacksonObjectMapper()
-    .convertValue(it, clazz)
+fun <T> jacksonUnmapper(clazz: Class<T>, objectMapper: ObjectMapper): Unmapper<T> = {
+  objectMapper.convertValue(it, clazz)
 }
 
 /**
