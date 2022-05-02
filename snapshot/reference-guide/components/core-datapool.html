@@ -15,7 +15,7 @@
         <link rel="canonical" href="https://www.holunda.io/camunda-bpm-taskpool/snapshot/reference-guide/components/core-datapool.html">
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.3.0, mkdocs-material-8.2.9">
+      <meta name="generator" content="mkdocs-1.3.0, mkdocs-material-8.2.13">
     
     
       
@@ -23,10 +23,10 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.120efc48.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.e411adfe.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.9647289d.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.cc9b2e1e.min.css">
         
       
     
@@ -1377,29 +1377,29 @@ parties interested in changes.</p>
 <span class="nt">&lt;/dependency&gt;</span>
 </code></pre></div>
 <p>and activate its configuration by adding the following to a Spring configuration:</p>
-<div class="highlight"><pre><span></span><code><span class="nd">@Configuration</span>
-<span class="nd">@EnablePolyflowDataPool</span>
-<span class="kd">class</span> <span class="nc">MyConfiguration</span>
+<div class="highlight"><pre><span></span><code><span class="nd">@Configuration</span><span class="w"></span>
+<span class="nd">@EnablePolyflowDataPool</span><span class="w"></span>
+<span class="kd">class</span><span class="w"> </span><span class="nc">MyConfiguration</span><span class="w"></span>
 </code></pre></div>
 <h4 id="revision-aware-projection">Revision-Aware Projection<a class="headerlink" href="#revision-aware-projection" title="Permanent link">#</a></h4>
 <p>The in-memory data entry projection is supporting revision-aware projection queries. To activate this, you need
 to activate the correlation of revision attributes between your data entries commands and the data entry events. To do so, please
 activate the correlation provider by putting the following code snippet in the application containing the Datapool Core Component:</p>
-<div class="highlight"><pre><span></span><code><span class="nd">@Configuration</span>
-<span class="nd">@EnablePolyflowDataPool</span>
-<span class="kd">class</span> <span class="nc">MyConfiguration</span> <span class="p">{</span>
+<div class="highlight"><pre><span></span><code><span class="nd">@Configuration</span><span class="w"></span>
+<span class="nd">@EnablePolyflowDataPool</span><span class="w"></span>
+<span class="kd">class</span><span class="w"> </span><span class="nc">MyConfiguration</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
 
-  <span class="nd">@Bean</span>
-  <span class="kd">fun</span> <span class="nf">revisionAwareCorrelationDataProvider</span><span class="p">():</span> <span class="n">CorrelationDataProvider</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="n">MultiCorrelationDataProvider</span><span class="o">&lt;</span><span class="n">CommandMessage</span><span class="o">&lt;</span><span class="kt">Any</span><span class="o">&gt;&gt;</span><span class="p">(</span>
-      <span class="n">listOf</span><span class="p">(</span>
-        <span class="n">MessageOriginProvider</span><span class="p">(),</span>
-        <span class="n">SimpleCorrelationDataProvider</span><span class="p">(</span><span class="n">RevisionValue</span><span class="p">.</span><span class="na">REVISION_KEY</span><span class="p">)</span>
-      <span class="p">)</span>
-    <span class="p">)</span>
-  <span class="p">}</span>
+<span class="w">  </span><span class="nd">@Bean</span><span class="w"></span>
+<span class="w">  </span><span class="kd">fun</span><span class="w"> </span><span class="nf">revisionAwareCorrelationDataProvider</span><span class="p">():</span><span class="w"> </span><span class="n">CorrelationDataProvider</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">MultiCorrelationDataProvider</span><span class="o">&lt;</span><span class="n">CommandMessage</span><span class="o">&lt;</span><span class="kt">Any</span><span class="o">&gt;&gt;</span><span class="p">(</span><span class="w"></span>
+<span class="w">      </span><span class="n">listOf</span><span class="p">(</span><span class="w"></span>
+<span class="w">        </span><span class="n">MessageOriginProvider</span><span class="p">(),</span><span class="w"></span>
+<span class="w">        </span><span class="n">SimpleCorrelationDataProvider</span><span class="p">(</span><span class="n">RevisionValue</span><span class="p">.</span><span class="na">REVISION_KEY</span><span class="p">)</span><span class="w"></span>
+<span class="w">      </span><span class="p">)</span><span class="w"></span>
+<span class="w">    </span><span class="p">)</span><span class="w"></span>
+<span class="w">  </span><span class="p">}</span><span class="w"></span>
 
-<span class="p">}</span>
+<span class="p">}</span><span class="w"></span>
 </code></pre></div>
 <p>By doing so, if a command is sending revision information, it will be passed to the resulting event and will be received by the projection, so the
 latter will deliver revision information in query results. The use of <code>RevisionAwareQueryGateway</code> will allow querying for specific revisions in the data entry
@@ -1410,7 +1410,7 @@ projection, see documentation of <code>axon-gateway-extension</code> project.</p
   <small>
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">April 20, 2022</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">May 2, 2022</span>
       
     
   </small>
@@ -1508,7 +1508,7 @@ projection, see documentation of <code>axon-gateway-extension</code> project.</p
     <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.instant", "navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.top", "toc.integrate"], "search": "../../assets/javascripts/workers/search.2a1c317c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.6e54b5cd.min.js"></script>
+      <script src="../../assets/javascripts/bundle.ed9748b7.min.js"></script>
       
     
   </body>

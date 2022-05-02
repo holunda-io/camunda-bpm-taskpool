@@ -15,7 +15,7 @@
         <link rel="canonical" href="https://www.holunda.io/camunda-bpm-taskpool/snapshot/reference-guide/components/common-datapool-sender.html">
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.3.0, mkdocs-material-8.2.9">
+      <meta name="generator" content="mkdocs-1.3.0, mkdocs-material-8.2.13">
     
     
       
@@ -23,10 +23,10 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.120efc48.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.e411adfe.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.9647289d.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.cc9b2e1e.min.css">
         
       
     
@@ -1387,11 +1387,11 @@ a business data projection. In doing so, it collects and transmits it to Datapoo
     <span class="nt">&lt;/dependency&gt;</span>
 </code></pre></div>
 <p>Then activate the datapool collector by providing the annotation on any Spring Configuration:</p>
-<div class="highlight"><pre><span></span><code><span class="nd">@Configuration</span>
-<span class="nd">@EnableDataEntrySender</span>
-<span class="kd">class</span> <span class="nc">MyDataEntryCollectorConfiguration</span> <span class="p">{</span>
+<div class="highlight"><pre><span></span><code><span class="nd">@Configuration</span><span class="w"></span>
+<span class="nd">@EnableDataEntrySender</span><span class="w"></span>
+<span class="kd">class</span> <span class="nc">MyDataEntryCollectorConfiguration</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
 
-<span class="p">}</span>
+<span class="p">}</span><span class="w"></span>
 </code></pre></div>
 <h3 id="command-transmission">Command transmission<a class="headerlink" href="#command-transmission" title="Permanent link">#</a></h3>
 <p>In order to control sending of commands to command gateway, the command sender activation property
@@ -1409,23 +1409,23 @@ to console (success is logged in <code>DEBUG</code> log level, errors are using 
 it is possible to provide own handlers for success and error command outcome.</p>
 <p>For Data Entry Command Sender (as a part of <code>Datapool Collector</code>) please provide a Spring Bean implementing the <code>io.holunda.polyflow.datapool.sender.DataEntryCommandSuccessHandler</code>
  and <code>io.holunda.polyflow.datapool.sender.DataEntryCommandErrorHandler</code> accordingly.</p>
-<div class="highlight"><pre><span></span><code>  <span class="nd">@Bean</span>
-  <span class="nd">@Primary</span>
-  <span class="kd">fun</span> <span class="nf">dataEntryCommandSuccessHandler</span><span class="p">()</span> <span class="o">=</span> <span class="n">object</span><span class="p">:</span> <span class="n">DataEntryCommandResultHandler</span> <span class="p">{</span>
-    <span class="kd">override</span> <span class="kd">fun</span> <span class="nf">apply</span><span class="p">(</span><span class="n">commandMessage</span><span class="p">:</span> <span class="kt">Any</span><span class="p">,</span> <span class="n">commandResultMessage</span><span class="p">:</span> <span class="n">CommandResultMessage</span><span class="o">&lt;</span><span class="k">out</span> <span class="kt">Any?</span><span class="o">&gt;</span><span class="p">)</span> <span class="p">{</span>
-      <span class="c1">// do something here</span>
-      <span class="n">logger</span><span class="p">.</span><span class="na">info</span> <span class="p">{</span> <span class="s">&quot;Success&quot;</span> <span class="p">}</span>
-    <span class="p">}</span>
-  <span class="p">}</span>
+<div class="highlight"><pre><span></span><code><span class="w">  </span><span class="nd">@Bean</span><span class="w"></span>
+<span class="w">  </span><span class="nd">@Primary</span><span class="w"></span>
+<span class="w">  </span><span class="kd">fun</span><span class="w"> </span><span class="nf">dataEntryCommandSuccessHandler</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">object</span><span class="p">:</span><span class="w"> </span><span class="n">DataEntryCommandResultHandler</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="kd">override</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">apply</span><span class="p">(</span><span class="n">commandMessage</span><span class="p">:</span><span class="w"> </span><span class="kt">Any</span><span class="p">,</span><span class="w"> </span><span class="n">commandResultMessage</span><span class="p">:</span><span class="w"> </span><span class="n">CommandResultMessage</span><span class="o">&lt;</span><span class="k">out</span><span class="w"> </span><span class="kt">Any?</span><span class="o">&gt;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">      </span><span class="c1">// do something here</span><span class="w"></span>
+<span class="w">      </span><span class="n">logger</span><span class="p">.</span><span class="na">info</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s">&quot;Success&quot;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="w">  </span><span class="p">}</span><span class="w"></span>
 
-  <span class="nd">@Bean</span>
-  <span class="nd">@Primary</span>
-  <span class="kd">fun</span> <span class="nf">dataEntryCommandErrorHandler</span><span class="p">()</span> <span class="o">=</span> <span class="n">object</span><span class="p">:</span> <span class="n">DataEntryCommandErrorHandler</span> <span class="p">{</span>
-    <span class="kd">override</span> <span class="kd">fun</span> <span class="nf">apply</span><span class="p">(</span><span class="n">commandMessage</span><span class="p">:</span> <span class="kt">Any</span><span class="p">,</span> <span class="n">commandResultMessage</span><span class="p">:</span> <span class="n">CommandResultMessage</span><span class="o">&lt;</span><span class="k">out</span> <span class="kt">Any?</span><span class="o">&gt;</span><span class="p">)</span> <span class="p">{</span>
-      <span class="c1">// do something here</span>
-      <span class="n">logger</span><span class="p">.</span><span class="na">error</span> <span class="p">{</span> <span class="s">&quot;Error&quot;</span> <span class="p">}</span>
-    <span class="p">}</span>
-  <span class="p">}</span>
+<span class="w">  </span><span class="nd">@Bean</span><span class="w"></span>
+<span class="w">  </span><span class="nd">@Primary</span><span class="w"></span>
+<span class="w">  </span><span class="kd">fun</span><span class="w"> </span><span class="nf">dataEntryCommandErrorHandler</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">object</span><span class="p">:</span><span class="w"> </span><span class="n">DataEntryCommandErrorHandler</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="kd">override</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">apply</span><span class="p">(</span><span class="n">commandMessage</span><span class="p">:</span><span class="w"> </span><span class="kt">Any</span><span class="p">,</span><span class="w"> </span><span class="n">commandResultMessage</span><span class="p">:</span><span class="w"> </span><span class="n">CommandResultMessage</span><span class="o">&lt;</span><span class="k">out</span><span class="w"> </span><span class="kt">Any?</span><span class="o">&gt;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">      </span><span class="c1">// do something here</span><span class="w"></span>
+<span class="w">      </span><span class="n">logger</span><span class="p">.</span><span class="na">error</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s">&quot;Error&quot;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="w">  </span><span class="p">}</span><span class="w"></span>
 </code></pre></div>
 
   <hr>
@@ -1433,7 +1433,7 @@ it is possible to provide own handlers for success and error command outcome.</p
   <small>
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">April 20, 2022</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">May 2, 2022</span>
       
     
   </small>
@@ -1531,7 +1531,7 @@ it is possible to provide own handlers for success and error command outcome.</p
     <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.instant", "navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.top", "toc.integrate"], "search": "../../assets/javascripts/workers/search.2a1c317c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.6e54b5cd.min.js"></script>
+      <script src="../../assets/javascripts/bundle.ed9748b7.min.js"></script>
       
     
   </body>
