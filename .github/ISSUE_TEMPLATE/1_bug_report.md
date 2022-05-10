@@ -3,7 +3,7 @@ name: 'Bug report'
 about: 'Report a bug in camunda-bpm-taskpool'
 title:
 labels: 'type: bug :bug:'
-assignees: zambrovski
+assignees:
 
 ---
 

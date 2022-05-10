@@ -1,15 +1,15 @@
 [![Build Status](https://github.com/holunda-io/camunda-bpm-taskpool/workflows/Development%20braches/badge.svg)](https://github.com/holunda-io/camunda-bpm-taskpool/actions)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.holunda.polyflow/polyflow-taskpool-dependencies/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.holunda.polyflow/polyflow-taskpool-dependencies/)
 [![Code Coverage](https://codecov.io/gh/holunda-io/camunda-bpm-taskpool/branch/master/graph/badge.svg)](https://codecov.io/gh/holunda-io/camunda-bpm-taskpool)
-[![Codacy](https://api.codacy.com/project/badge/Grade/653136bd5cad48c8a9f2621ee304ff26)](https://app.codacy.com/app/zambrovski/camunda-bpm-taskpool?utm_source=github.com&utm_medium=referral&utm_content=holunda-io/camunda-bpm-taskpool&utm_campaign=Badge_Grade_Dashboard)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/6e15ca2f4ab64cfe85a736f324136086)](https://www.codacy.com/gh/holunda-io/camunda-bpm-taskpool/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=holunda-io/camunda-bpm-taskpool&amp;utm_campaign=Badge_Grade)
 [![OpenHUB](https://www.openhub.net/p/camunda-bpm-taskpool/widgets/project_thin_badge.gif)](https://www.openhub.net/p/camunda-bpm-taskpool)
 
 ![Logo](docs/img/Positive@2x.png)
 ## Polyflow Taskpool and Datapool
 
-> A component library for building enterprise-wide process platforms with multiple process engines like Camunda BPM.
+> A component library for building enterprise-wide process platforms with multiple process engines like Camunda Platform.
 
-In the last five years, we built different process applications on behalf of the customer several times. It turned out that some issues occurred every
+In the last years, we built different process applications on behalf of the customer several times. It turned out that some issues occurred every
 time during the implementation.
 
 These were:
@@ -63,7 +63,7 @@ the [Example Section](https://www.holunda.io/camunda-bpm-taskpool/stable/example
 
 This library is developed under
 
-[![Apache 2.0 License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://www.holunda.io/camunda-bpm-taskpool/license)
+[![Apache 2.0 License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](/LICENSE)
 
 ### Contribution
 
