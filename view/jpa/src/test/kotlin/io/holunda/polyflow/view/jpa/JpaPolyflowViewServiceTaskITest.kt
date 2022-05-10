@@ -43,7 +43,7 @@ import java.util.function.Predicate
 @SpringBootTest(
   classes = [TestApplication::class],
   properties = [
-    "polyflow.view.jpa.stored-items=TASK,data-entry"
+    "polyflow.view.jpa.stored-items=task,data-entry"
   ]
 )
 @ActiveProfiles("itest", "mock-query-emitter")
@@ -88,18 +88,7 @@ internal class JpaPolyflowViewServiceTaskITest {
       )
     )
 
-    val dataEntry = DataEntry(
-      entryType = "entryType",
-      entryId = "entryId",
-      name = "name",
-      type = "type",
-      applicationName = "applicationName",
-      description = "description"
-    )
-
-
-
-    jpaPolyflowViewService.on(
+     jpaPolyflowViewService.on(
       event = TaskCreatedEngineEvent(
         id = id,
         taskDefinitionKey = "task.def.0815",

@@ -13,7 +13,7 @@ import org.springframework.boot.context.properties.NestedConfigurationProperty
 class CamundaTaskpoolCollectorProperties(
 
   /**
-   * Denotes the (logical) name of the process application.
+   * Denotes the (logical) name of the process application, defaults to "spring.application.name".
    */
   @Value("\${spring.application.name:unset-application-name}")
   var applicationName: String,

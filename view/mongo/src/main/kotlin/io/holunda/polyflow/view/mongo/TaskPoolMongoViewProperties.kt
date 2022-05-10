@@ -15,13 +15,17 @@ import java.time.ZoneOffset
 @ConstructorBinding
 data class TaskPoolMongoViewProperties(
   /**
-   * Tracking mode.
+   * Tracking mode, defaults to event handler.
    */
   val changeTrackingMode: ChangeTrackingMode = ChangeTrackingMode.EVENT_HANDLER,
-
+  /**
+   * Configuration of the change stream.
+   */
   @NestedConfigurationProperty
   val changeStream: ChangeStream = ChangeStream(),
-
+  /**
+   * Configuration for the indexes.
+   */
   @NestedConfigurationProperty
   val indexes: Indexes = Indexes()
 )
@@ -31,6 +35,9 @@ data class TaskPoolMongoViewProperties(
  */
 @ConstructorBinding
 data class ChangeStream(
+  /**
+   * Configures mode to tasks deletion.
+   */
   val clearDeletedTasks: ClearDeletedTasks = ClearDeletedTasks()
 )
 
@@ -41,13 +48,11 @@ data class ChangeStream(
 data class ClearDeletedTasks(
   /** How long should we keep deleted tasks around before clearing them? Default: immediately. */
   val after: Duration = Duration.ZERO,
-
   /**
    * How exactly should we clear deleted tasks? See [ClearDeletedTasksMode] for an explanation of the options. Default: use a change stream subscription and a
    * job to clean up any leftovers.
    */
   val mode: ClearDeletedTasksMode = ClearDeletedTasksMode.CHANGE_STREAM_SUBSCRIPTION,
-
   /**
    * Cron expression to configure how often the job run that clears deleted tasks should run. Only relevant if [mode] is `SCHEDULED_JOB` or `BOTH`
    */
