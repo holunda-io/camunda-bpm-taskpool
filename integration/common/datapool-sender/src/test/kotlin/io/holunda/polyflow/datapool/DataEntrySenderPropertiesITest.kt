@@ -1,7 +1,5 @@
-package io.holunda.polyflow.taskpool.collector.properties
+package io.holunda.polyflow.datapool
 
-import io.holunda.polyflow.taskpool.collector.CamundaTaskpoolCollectorProperties
-import io.holunda.polyflow.taskpool.collector.TaskCollectorEnricherType
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -15,19 +13,16 @@ import org.springframework.test.context.junit4.SpringRunner
 @SpringBootTest(classes = [PropertiesTestApplication::class], webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @ActiveProfiles("properties-itest")
 @PropertySource
-class CamundaTaskpoolCollectorPropertiesITest {
+class DataEntrySenderPropertiesITest {
 
   @Autowired
-  lateinit var props: CamundaTaskpoolCollectorProperties
+  lateinit var props: DataEntrySenderProperties
 
   @Test
   fun `should use defaults without properties in yaml`() {
     assertThat(props.applicationName).isEqualTo("Foo")
-    assertThat(props.task.enabled).isTrue
-    assertThat(props.task.enricher.type).isEqualTo(TaskCollectorEnricherType.processVariables)
-    assertThat(props.processInstance.enabled).isTrue
-    assertThat(props.processVariable.enabled).isTrue
-    assertThat(props.processDefinition.enabled).isFalse
+    assertThat(props.enabled).isFalse
+    assertThat(props.type).isEqualTo(DataEntrySenderType.simple)
   }
 }
 
