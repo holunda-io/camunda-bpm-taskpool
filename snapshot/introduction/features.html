@@ -845,20 +845,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference-guide/components/view-cockpit.html" class="md-nav__link">
-        Cockpit View
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../reference-guide/components/view-form-url-resolver.html" class="md-nav__link">
         Form URL Resolver
       </a>
@@ -1244,20 +1230,6 @@
 
             
           
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../examples/scenarios/distributed-no-axon-server.html" class="md-nav__link">
-        Distributed without Axon Server
-      </a>
-    </li>
-  
-
-            
-          
         </ul>
       </nav>
     </li>
@@ -1356,7 +1328,10 @@
 <h2 id="taskpool">Taskpool<a class="headerlink" href="#taskpool" title="Permanent link">#</a></h2>
 <p>A task list is an application that shows a list of tasks for each individual user, based on the user's profile, roles and authorizations. Polyflow's <code>taskpool</code>
 library provides a backend from which task lists can be served.</p>
-<p>!!! note If you are using taskpool with Camunda BPM, it can be seen as a replacement resp. add-on for Camunda's <code>TaskService</code>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you are using taskpool with Camunda Platform 7, it can be seen as a replacement resp. add-on for Camunda's <code>TaskService</code>.</p>
+</div>
 <p>The <code>taskpool</code> library provides the following features:</p>
 <ul>
 <li>Task mirroring: provides a list of tasks in the system including all standard task attributes provided by the process engine</li>
@@ -1392,7 +1367,7 @@ provides the following features:</p>
 <h2 id="process-variable-pool">Process Variable Pool<a class="headerlink" href="#process-variable-pool" title="Permanent link">#</a></h2>
 <p>Along with business data entities being modified during the execution of the business processes, the business process instance itself holds a collection of
 so-called process variables, representing the state of the execution. In contrast to the business data entities, their lifecycle is bound to the lifecycle of
-the business process instance. For different reasons the requirement might exist to have a rapid access to the <strong>process variables</strong> of a running process
+the business process instance. For different reasons the requirement might exist to have rapid access to the <strong>process variables</strong> of a running process
 instance, which is provided by the <code>taskpool</code> library.</p>
 <h2 id="integration">Integration<a class="headerlink" href="#integration" title="Permanent link">#</a></h2>
 <ul>

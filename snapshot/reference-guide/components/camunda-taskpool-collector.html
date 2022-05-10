@@ -907,20 +907,6 @@
   
   
     <li class="md-nav__item">
-      <a href="view-cockpit.html" class="md-nav__link">
-        Cockpit View
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
       <a href="view-form-url-resolver.html" class="md-nav__link">
         Form URL Resolver
       </a>
@@ -1306,20 +1292,6 @@
 
             
           
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../examples/scenarios/distributed-no-axon-server.html" class="md-nav__link">
-        Distributed without Axon Server
-      </a>
-    </li>
-  
-
-            
-          
         </ul>
       </nav>
     </li>
@@ -1420,14 +1392,14 @@
 <p>Taskpool Collector is a component deployed as a part of the process application
 (aside with Camunda BPM Engine) that is responsible for collecting information from
 the Camunda BPM Engine. It detects the <em>intent</em> of the operations executed inside the engine
-and creates the corresponding commands for the taskpool. The commands are enriched with data and transmitted to
+and creates the corresponding commands for the Taskpool. The commands are enriched with data and transmitted to
 other taskpool components (via Axon Command Bus).</p>
 <p>In the following description, we use the terms <em>event</em> and <em>command</em>. Event denotes an entity
 received from Camunda BPM Engine (from delegate event listener or from history event listener)
 which is passed over to the Taskpool Collector using internal Spring eventing mechanism. The Taskpool
 Collector converts the series of such events into a Taskpool Command - an entity carrying an intent
-of change inside of the taskpool core. Please note that <em>event</em> has another meaning in CQRS/ES systems
-and other components of the taskpool, but in the context of Taskpool collector an event alway originates from
+of change inside the Taskpool core. Please note that <em>event</em> has another meaning in CQRS/ES systems
+and other components of the Taskpool, but in the context of Taskpool collector an event always originates from
 Spring eventing.</p>
 <h3 id="features">Features<a class="headerlink" href="#features" title="Permanent link">#</a></h3>
 <ul>
@@ -1443,23 +1415,24 @@ Spring eventing.</p>
 </ul>
 <h3 id="architecture">Architecture<a class="headerlink" href="#architecture" title="Permanent link">#</a></h3>
 <p><img alt="Taskpool collector building blocks" src="/img/collector-building-blocks.png" /></p>
-<p>The Taskpool Collector consists of several components which can be devided into the following groups:</p>
+<p>The Taskpool Collector consists of several components which can be divided into the following groups:</p>
 <ul>
 <li>Event collectors receive are responsible for gathering information and form commands</li>
-<li>Processors performs the command enrichment with payload and data correlation</li>
+<li>Processor performs the command enrichment with payload and data correlation</li>
 <li>Command senders are responsible for accumulating commands and sending them to Command Gateway</li>
 </ul>
 <h3 id="usage-and-configuration">Usage and configuration<a class="headerlink" href="#usage-and-configuration" title="Permanent link">#</a></h3>
 <p>In order to enable collector component, include the Maven dependency to your process application:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">&lt;dependency&gt;</span>
-  <span class="nt">&lt;groupId&gt;</span>io.holunda.taskpool<span class="nt">&lt;groupId&gt;</span>
-  <span class="nt">&lt;artifactId&gt;</span>camunda-bpm-taskpool-collector<span class="nt">&lt;/artifactId&gt;</span>
-  <span class="nt">&lt;version&gt;</span>${camunda-taskpool.version}<span class="nt">&lt;/version&gt;</span>
-<span class="nt">&lt;dependency&gt;</span>
+  <span class="nt">&lt;groupId&gt;</span>io.holunda.polyflow
+    <span class="nt">&lt;groupId&gt;</span>
+      <span class="nt">&lt;artifactId&gt;</span>polyflow-camunda-bpm-taskpool-collector<span class="nt">&lt;/artifactId&gt;</span>
+      <span class="nt">&lt;version&gt;</span>${camunda-taskpool.version}<span class="nt">&lt;/version&gt;</span>
+      <span class="nt">&lt;dependency&gt;</span>
 </code></pre></div>
 <p>Then activate the taskpool collector by providing the annotation on any Spring Configuration:</p>
 <div class="highlight"><pre><span></span><code><span class="nd">@Configuration</span><span class="w"></span>
-<span class="nd">@EnableTaskpoolCollector</span><span class="w"></span>
+<span class="nd">@Import</span><span class="p">(</span><span class="n">CamundaTaskpoolCollectorConfiguration</span><span class="p">.</span><span class="na">class</span><span class="p">)</span><span class="w"></span>
 <span class="kd">class</span> <span class="nc">MyProcessApplicationConfiguration</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
 
 <span class="p">}</span><span class="w"></span>
@@ -1468,16 +1441,16 @@ Spring eventing.</p>
 <p>Taskpool Collector registers Spring Event Listener to the following events, fired by Camunda Eventing Engine Plugin:</p>
 <ul>
 <li><code>DelegateTask</code> events:
-<strong> create
-</strong> assign
-<strong> delete
-</strong> complete</li>
+  <strong> create
+  </strong> assign
+  <strong> delete
+  </strong> complete</li>
 <li><code>HistoryEvent</code> events:
-<strong> HistoricTaskInstanceEvent
-</strong> HistoricIdentityLinkLogEvent
-<strong> HistoricProcessInstanceEventEntity
-</strong> HistoricVariableUpdateEventEntity
-** HistoricDetailVariableInstanceUpdateEntity</li>
+  <strong> HistoricTaskInstanceEvent
+  </strong> HistoricIdentityLinkLogEvent
+  <strong> HistoricProcessInstanceEventEntity
+  </strong> HistoricVariableUpdateEventEntity
+  ** HistoricDetailVariableInstanceUpdateEntity</li>
 </ul>
 <p>The events are transformed into corresponding commands and passed over to the processor layer.</p>
 <h3 id="task-commands-enrichment">Task commands enrichment<a class="headerlink" href="#task-commands-enrichment" title="Permanent link">#</a></h3>
@@ -1490,7 +1463,9 @@ can be enriched with additional attributes.</p>
 <li><code>custom</code>: User provides own implementation</li>
 </ul>
 <h4 id="process-variable-enrichment">Process variable enrichment<a class="headerlink" href="#process-variable-enrichment" title="Permanent link">#</a></h4>
-<p>In particular cases, the data enclosed into task attibutes is not sufficient for the task list or other user-related components. The information may be available as process variables and need to be attached to the task in the taskpool. This is where <em>Process Variable Task Enricher</em> can be used. For this purpose, active it setting the property <code>camunda.taskpool.collector.task.enricher.type</code> to <code>process-variables</code> and the enricher will
+<p>In particular cases, the data enclosed into task attributes is not sufficient for the task list or other user-related components. The information may be
+available as process variables and need to be attached to the task in the taskpool. This is where <em>Process Variable Task Enricher</em> can be used. For this
+purpose, active it, setting the property <code>polyflow.integration.collector.camunda.task.enricher.type</code> to <code>process-variables</code> and the enricher will
 put process variables into the task payload.</p>
 <p>You can control what variables will be put into task command payload by providing the Process Variables Filter.
 The <code>ProcessVariablesFilter</code> is a Spring bean holding a list of individual <code>VariableFilter</code> - at most one per
@@ -1499,56 +1474,60 @@ a default filter is used which is an empty <code>EXCLUDE</code> filter, resultin
 <p>A <code>VariableFilter</code> can be of the following type:</p>
 <ul>
 <li><code>TaskVariableFilter</code>:
-<strong> <code>INCLUDE</code>: task-level include filter, denoting a list of variables to be added for the task defined in the filter.
-</strong> <code>EXCLUDE</code>: task-level exclude filter, denoting a list of variables to be ignored for the task defined in the filter. All other variables are included.</li>
+  <strong> <code>INCLUDE</code>: task-level include filter, denoting a list of variables to be added for the task defined in the filter.
+  </strong> <code>EXCLUDE</code>: task-level exclude filter, denoting a list of variables to be ignored for the task defined in the filter. All other variables are included.</li>
 <li><code>ProcessVariableFilter</code> with process definition key:
-<strong> <code>INCLUDE</code>: process-level include filter, denoting a list of variables to be added for all tasks of the process.
-</strong> <code>EXCLUDE</code>: process-level exclude filter, denoting a list of variables to be ignored for all tasks of the process.</li>
+  <strong> <code>INCLUDE</code>: process-level include filter, denoting a list of variables to be added for all tasks of the process.
+  </strong> <code>EXCLUDE</code>: process-level exclude filter, denoting a list of variables to be ignored for all tasks of the process.</li>
 <li><code>ProcessVariableFilter</code> <em>without</em> process definition key:
-<strong> <code>INCLUDE</code>: global include filter, denoting a list of variables to be added for all tasks of all processes for which no dedicated <code>ProcessVariableFilter</code> is defined.
-</strong> <code>EXCLUDE</code>: global exclude filter, denoting a list of variables to be ignored for all tasks of all processes for which no dedicated <code>ProcessVariableFilter</code> is defined.</li>
+  <strong> <code>INCLUDE</code>: global include filter, denoting a list of variables to be added for all tasks of all processes for which no dedicated <code>ProcessVariableFilter</code> is
+  defined.
+  </strong> <code>EXCLUDE</code>: global exclude filter, denoting a list of variables to be ignored for all tasks of all processes for which no dedicated <code>ProcessVariableFilter</code>
+  is defined.</li>
 </ul>
 <p>Here is an example, how the process variable filter can configure the enrichment:</p>
 <div class="highlight"><pre><span></span><code><span class="w">  </span><span class="nd">@Configuration</span><span class="w"></span>
-<span class="w">  </span><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">MyTaskCollectorConfiguration</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">MyTaskCollectorConfiguration</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
 
-<span class="w">    </span><span class="nd">@Bean</span><span class="w"></span>
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">ProcessVariablesFilter</span><span class="w"> </span><span class="nf">myProcessVariablesFilter</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nd">@Bean</span><span class="w"></span>
+<span class="w">  </span><span class="kd">public</span><span class="w"> </span><span class="n">ProcessVariablesFilter</span><span class="w"> </span><span class="nf">myProcessVariablesFilter</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
 
-<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ProcessVariablesFilter</span><span class="p">(</span><span class="w"></span>
-<span class="w">        </span><span class="c1">// define a variable filter for every process</span><span class="w"></span>
-<span class="w">        </span><span class="k">new</span><span class="w"> </span><span class="n">VariableFilter</span><span class="o">[]</span><span class="p">{</span><span class="w"></span>
-<span class="w">          </span><span class="c1">// define for every process definition</span><span class="w"></span>
-<span class="w">          </span><span class="c1">// either a TaskVariableFilter or ProcessVariableFilter</span><span class="w"></span>
-<span class="w">          </span><span class="k">new</span><span class="w"> </span><span class="n">TaskVariableFilter</span><span class="p">(</span><span class="w"></span>
-<span class="w">            </span><span class="n">ProcessApproveRequest</span><span class="p">.</span><span class="na">KEY</span><span class="p">,</span><span class="w"></span>
-<span class="w">            </span><span class="c1">// filter type</span><span class="w"></span>
-<span class="w">            </span><span class="n">FilterType</span><span class="p">.</span><span class="na">INCLUDE</span><span class="p">,</span><span class="w"></span>
-<span class="w">            </span><span class="n">ImmutableMap</span><span class="p">.</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;&gt;</span><span class="n">builder</span><span class="p">()</span><span class="w"></span>
-<span class="w">              </span><span class="c1">// define a variable filter for every task of the process</span><span class="w"></span>
-<span class="w">              </span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">ProcessApproveRequest</span><span class="p">.</span><span class="na">Elements</span><span class="p">.</span><span class="na">APPROVE_REQUEST</span><span class="p">,</span><span class="w"> </span><span class="n">Lists</span><span class="p">.</span><span class="na">newArrayList</span><span class="p">(</span><span class="w"></span>
-<span class="w">                </span><span class="n">ProcessApproveRequest</span><span class="p">.</span><span class="na">Variables</span><span class="p">.</span><span class="na">REQUEST_ID</span><span class="p">,</span><span class="w"></span>
-<span class="w">                </span><span class="n">ProcessApproveRequest</span><span class="p">.</span><span class="na">Variables</span><span class="p">.</span><span class="na">ORIGINATOR</span><span class="p">)</span><span class="w"></span>
-<span class="w">              </span><span class="p">)</span><span class="w"></span>
-<span class="w">              </span><span class="c1">// and again</span><span class="w"></span>
-<span class="w">              </span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">ProcessApproveRequest</span><span class="p">.</span><span class="na">Elements</span><span class="p">.</span><span class="na">AMEND_REQUEST</span><span class="p">,</span><span class="w"> </span><span class="n">Lists</span><span class="p">.</span><span class="na">newArrayList</span><span class="p">(</span><span class="w"></span>
-<span class="w">                </span><span class="n">ProcessApproveRequest</span><span class="p">.</span><span class="na">Variables</span><span class="p">.</span><span class="na">REQUEST_ID</span><span class="p">,</span><span class="w"></span>
-<span class="w">                </span><span class="n">ProcessApproveRequest</span><span class="p">.</span><span class="na">Variables</span><span class="p">.</span><span class="na">COMMENT</span><span class="p">,</span><span class="w"></span>
-<span class="w">                </span><span class="n">ProcessApproveRequest</span><span class="p">.</span><span class="na">Variables</span><span class="p">.</span><span class="na">APPLICANT</span><span class="p">)</span><span class="w"></span>
-<span class="w">              </span><span class="p">).</span><span class="na">build</span><span class="p">()</span><span class="w"></span>
-<span class="w">          </span><span class="p">),</span><span class="w"></span>
-<span class="w">          </span><span class="c1">// optionally add a global filter for all processes</span><span class="w"></span>
-<span class="w">          </span><span class="c1">// for that no individual filter was created</span><span class="w"></span>
-<span class="w">          </span><span class="k">new</span><span class="w"> </span><span class="n">ProcessVariableFilter</span><span class="p">(</span><span class="n">FilterType</span><span class="p">.</span><span class="na">INCLUDE</span><span class="p">,</span><span class="w"></span>
-<span class="w">            </span><span class="n">Lists</span><span class="p">.</span><span class="na">newArrayList</span><span class="p">(</span><span class="n">CommonProcessVariables</span><span class="p">.</span><span class="na">CUSTOMER_ID</span><span class="p">))</span><span class="w"></span>
-<span class="w">        </span><span class="p">}</span><span class="w"></span>
-<span class="w">      </span><span class="p">);</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"></span>
-
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ProcessVariablesFilter</span><span class="p">(</span><span class="w"></span>
+<span class="w">      </span><span class="c1">// define a variable filter for every process</span><span class="w"></span>
+<span class="w">      </span><span class="k">new</span><span class="w"> </span><span class="n">VariableFilter</span><span class="o">[]</span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="c1">// define for every process definition</span><span class="w"></span>
+<span class="w">        </span><span class="c1">// either a TaskVariableFilter or ProcessVariableFilter</span><span class="w"></span>
+<span class="w">        </span><span class="k">new</span><span class="w"> </span><span class="n">TaskVariableFilter</span><span class="p">(</span><span class="w"></span>
+<span class="w">          </span><span class="n">ProcessApproveRequest</span><span class="p">.</span><span class="na">KEY</span><span class="p">,</span><span class="w"></span>
+<span class="w">          </span><span class="c1">// filter type</span><span class="w"></span>
+<span class="w">          </span><span class="n">FilterType</span><span class="p">.</span><span class="na">INCLUDE</span><span class="p">,</span><span class="w"></span>
+<span class="w">          </span><span class="n">ImmutableMap</span><span class="p">.</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;&gt;</span><span class="n">builder</span><span class="p">()</span><span class="w"></span>
+<span class="w">                      </span><span class="c1">// define a variable filter for every task of the process</span><span class="w"></span>
+<span class="w">                      </span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">ProcessApproveRequest</span><span class="p">.</span><span class="na">Elements</span><span class="p">.</span><span class="na">APPROVE_REQUEST</span><span class="p">,</span><span class="w"> </span><span class="n">Lists</span><span class="p">.</span><span class="na">newArrayList</span><span class="p">(</span><span class="w"></span>
+<span class="w">                        </span><span class="n">ProcessApproveRequest</span><span class="p">.</span><span class="na">Variables</span><span class="p">.</span><span class="na">REQUEST_ID</span><span class="p">,</span><span class="w"></span>
+<span class="w">                        </span><span class="n">ProcessApproveRequest</span><span class="p">.</span><span class="na">Variables</span><span class="p">.</span><span class="na">ORIGINATOR</span><span class="p">)</span><span class="w"></span>
+<span class="w">                      </span><span class="p">)</span><span class="w"></span>
+<span class="w">                      </span><span class="c1">// and again</span><span class="w"></span>
+<span class="w">                      </span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">ProcessApproveRequest</span><span class="p">.</span><span class="na">Elements</span><span class="p">.</span><span class="na">AMEND_REQUEST</span><span class="p">,</span><span class="w"> </span><span class="n">Lists</span><span class="p">.</span><span class="na">newArrayList</span><span class="p">(</span><span class="w"></span>
+<span class="w">                        </span><span class="n">ProcessApproveRequest</span><span class="p">.</span><span class="na">Variables</span><span class="p">.</span><span class="na">REQUEST_ID</span><span class="p">,</span><span class="w"></span>
+<span class="w">                        </span><span class="n">ProcessApproveRequest</span><span class="p">.</span><span class="na">Variables</span><span class="p">.</span><span class="na">COMMENT</span><span class="p">,</span><span class="w"></span>
+<span class="w">                        </span><span class="n">ProcessApproveRequest</span><span class="p">.</span><span class="na">Variables</span><span class="p">.</span><span class="na">APPLICANT</span><span class="p">)</span><span class="w"></span>
+<span class="w">                      </span><span class="p">).</span><span class="na">build</span><span class="p">()</span><span class="w"></span>
+<span class="w">        </span><span class="p">),</span><span class="w"></span>
+<span class="w">        </span><span class="c1">// optionally add a global filter for all processes</span><span class="w"></span>
+<span class="w">        </span><span class="c1">// for that no individual filter was created</span><span class="w"></span>
+<span class="w">        </span><span class="k">new</span><span class="w"> </span><span class="n">ProcessVariableFilter</span><span class="p">(</span><span class="n">FilterType</span><span class="p">.</span><span class="na">INCLUDE</span><span class="p">,</span><span class="w"></span>
+<span class="w">                                  </span><span class="n">Lists</span><span class="p">.</span><span class="na">newArrayList</span><span class="p">(</span><span class="n">CommonProcessVariables</span><span class="p">.</span><span class="na">CUSTOMER_ID</span><span class="p">))</span><span class="w"></span>
+<span class="w">      </span><span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="p">);</span><span class="w"></span>
 <span class="w">  </span><span class="p">}</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 </code></pre></div>
-<p>TIP: If you want to implement a custom enrichment, please provide your own implementation of the interface <code>VariablesEnricher</code>
-(register a Spring Component of the type) and set the property <code>camunda.taskpool.collector.task.enricher.type</code> to <code>custom</code>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you want to implement a custom enrichment, please provide your own implementation of the interface <code>VariablesEnricher</code>
+  (register a Spring Component of the type) and set the property <code>polyflow.integration.collector.camunda.task.enricher.type</code> to <code>custom</code>.</p>
+</div>
 <h3 id="data-correlation">Data Correlation<a class="headerlink" href="#data-correlation" title="Permanent link">#</a></h3>
 <p>Apart from task payload attached by the enricher, the so-called <em>Correlation</em> with data entries can
 be configured. The data correlation allows to attach one or several references (that is a pair of values <code>entryType</code> and <code>entryId</code>) of
@@ -1556,43 +1535,45 @@ business data entry(ies) to a task. In the projection (which is used for queryin
 information from business data events can be shown together with task information.</p>
 <p>The correlation to data events can be configured by providing a <code>ProcessVariablesCorrelator</code> bean. Here is
 an example how this can be done:</p>
-<p><div class="highlight"><pre><span></span><code><span class="nd">@Bean</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="nd">@Bean</span><span class="w"></span>
 <span class="kd">fun</span><span class="w"> </span><span class="nf">processVariablesCorrelator</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ProcessVariablesCorrelator</span><span class="p">(</span><span class="w"></span>
-
-<span class="w">  </span><span class="n">ProcessVariableCorrelation</span><span class="p">(</span><span class="n">ProcessApproveRequest</span><span class="p">.</span><span class="na">KEY</span><span class="p">,</span><span class="w"> </span><span class="o">&lt;</span><span class="m">1</span><span class="o">&gt;</span><span class="w"></span>
-<span class="w">    </span><span class="n">mapOf</span><span class="p">(</span><span class="w"></span>
-<span class="w">      </span><span class="n">ProcessApproveRequest</span><span class="p">.</span><span class="na">Elements</span><span class="p">.</span><span class="na">APPROVE_REQUEST</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">mapOf</span><span class="p">(</span><span class="w"> </span><span class="o">&lt;</span><span class="m">2</span><span class="o">&gt;</span><span class="w"></span>
-<span class="w">        </span><span class="n">ProcessApproveRequest</span><span class="p">.</span><span class="na">Variables</span><span class="p">.</span><span class="na">REQUEST_ID</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">BusinessDataEntry</span><span class="p">.</span><span class="na">REQUEST</span><span class="w"></span>
-<span class="w">      </span><span class="p">)</span><span class="w"></span>
-<span class="w">    </span><span class="p">),</span><span class="w"></span>
-<span class="w">    </span><span class="n">mapOf</span><span class="p">(</span><span class="n">ProcessApproveRequest</span><span class="p">.</span><span class="na">Variables</span><span class="p">.</span><span class="na">REQUEST_ID</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">BusinessDataEntry</span><span class="p">.</span><span class="na">REQUEST</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;</span><span class="m">3</span><span class="o">&gt;</span><span class="w"></span>
+<span class="w">    </span><span class="c1">// define correlation for every process</span><span class="w"></span>
+<span class="w">    </span><span class="n">ProcessVariableCorrelation</span><span class="p">(</span><span class="w"></span>
+<span class="w">      </span><span class="n">ProcessApproveRequest</span><span class="p">.</span><span class="na">KEY</span><span class="p">,</span><span class="w"></span>
+<span class="w">      </span><span class="n">mapOf</span><span class="p">(</span><span class="w"></span>
+<span class="w">        </span><span class="c1">// define a correlation for every task needed</span><span class="w"></span>
+<span class="w">        </span><span class="n">ProcessApproveRequest</span><span class="p">.</span><span class="na">Elements</span><span class="p">.</span><span class="na">APPROVE_REQUEST</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">mapOf</span><span class="p">(</span><span class="w"></span>
+<span class="w">          </span><span class="n">ProcessApproveRequest</span><span class="p">.</span><span class="na">Variables</span><span class="p">.</span><span class="na">REQUEST_ID</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">BusinessDataEntry</span><span class="p">.</span><span class="na">REQUEST</span><span class="w"></span>
+<span class="w">        </span><span class="p">)</span><span class="w"></span>
+<span class="w">      </span><span class="p">),</span><span class="w"></span>
+<span class="w">      </span><span class="c1">// define a correlation globally (for the whole process)</span><span class="w"></span>
+<span class="w">      </span><span class="n">mapOf</span><span class="p">(</span><span class="n">ProcessApproveRequest</span><span class="p">.</span><span class="na">Variables</span><span class="p">.</span><span class="na">REQUEST_ID</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">BusinessDataEntry</span><span class="p">.</span><span class="na">REQUEST</span><span class="p">)</span><span class="w"></span>
+<span class="w">    </span><span class="p">)</span><span class="w"></span>
 <span class="w">  </span><span class="p">)</span><span class="w"></span>
-<span class="p">)</span><span class="w"></span>
 </code></pre></div>
-&lt;1&gt; define correlation for every process
-&lt;2&gt; define a correlation for every task needed
-&lt;3&gt; define a correlation globally (for the whole process)</p>
 <p>The process variable correlator holds a list of process variable correlations - one for every process
-definition key. Every <code>ProcessVariableCorrelation</code> configures for all tasks or for an individual taskby providing a so-called correlation
+definition key. Every <code>ProcessVariableCorrelation</code> configures for all tasks or for an individual task by providing a so-called correlation
 map. A correlation map is keyed by the name of a process variable inside Camunda Process Engine and holds the type of business data entry as value.</p>
 <p>Here is an example. Imagine the process instance is storing the id of an approval request in a process variable called
 <code>varRequestId</code>. The system responsible for storing approval requests fires data entry events supplying the
 data and using the entry type <code>io.my.approvalRequest</code> and the id of the request as <code>entryId</code>. In order to
 create a correlation in task <code>task_approve_request</code> of the <code>process_approval_process</code> we would provide the following configuration
 of the correlator:</p>
-<p><div class="highlight"><pre><span></span><code><span class="nd">@Bean</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="nd">@Bean</span><span class="w"></span>
 <span class="kd">fun</span><span class="w"> </span><span class="nf">processVariablesCorrelator</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ProcessVariablesCorrelator</span><span class="p">(</span><span class="w"></span>
 
-<span class="w">  </span><span class="n">ProcessVariableCorrelation</span><span class="p">(</span><span class="s">&quot;process_approval_process&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w">    </span><span class="n">mapOf</span><span class="p">(</span><span class="w"></span>
-<span class="w">      </span><span class="s">&quot;task_approve_request&quot;</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">mapOf</span><span class="p">(</span><span class="w"></span>
-<span class="w">        </span><span class="s">&quot;varRequestId&quot;</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="s">&quot;io.my.approvalRequest&quot;</span><span class="w"> </span><span class="c1">// process variable &#39;varRequestId&#39; holds the id of a data entry of type &#39;io.my.approvalRequest&#39;</span><span class="w"></span>
+<span class="w">    </span><span class="n">ProcessVariableCorrelation</span><span class="p">(</span><span class="w"></span>
+<span class="w">      </span><span class="s">&quot;process_approval_process&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">      </span><span class="n">mapOf</span><span class="p">(</span><span class="w"></span>
+<span class="w">        </span><span class="s">&quot;task_approve_request&quot;</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">mapOf</span><span class="p">(</span><span class="w"></span>
+<span class="w">          </span><span class="c1">// process variable &#39;varRequestId&#39; holds the id of a data entry of type &#39;io.my.approvalRequest&#39;</span><span class="w"></span>
+<span class="w">          </span><span class="s">&quot;varRequestId&quot;</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="s">&quot;io.my.approvalRequest&quot;</span><span class="w"></span>
+<span class="w">        </span><span class="p">)</span><span class="w"></span>
 <span class="w">      </span><span class="p">)</span><span class="w"></span>
 <span class="w">    </span><span class="p">)</span><span class="w"></span>
 <span class="w">  </span><span class="p">)</span><span class="w"></span>
-<span class="p">)</span><span class="w"></span>
 </code></pre></div>
-If the process instance now contains the approval request id <code>"4711"</code> in the process variable <code>varRequestId</code>
+<p>If the process instance now contains the approval request id <code>"4711"</code> in the process variable <code>varRequestId</code>
 and the process reaches the task <code>task_approve_request</code>, the task will get the following correlation created
 (here written in JSON):</p>
 <div class="highlight"><pre><span></span><code><span class="nt">&quot;correlations&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
@@ -1601,32 +1582,38 @@ and the process reaches the task <code>task_approve_request</code>, the task wil
 </code></pre></div>
 <h3 id="command-aggregation">Command aggregation<a class="headerlink" href="#command-aggregation" title="Permanent link">#</a></h3>
 <p>In order to control sending of commands to command sender, the command sender activation property
-<code>camunda.taskpool.collector.task.enabled</code> is available. If disabled, the command sender
+<code>polyflow.integration.sender.task.enabled</code> is available. If disabled, the command sender
 will log any command instead of aggregating sending it to the command gateway.</p>
-<p>In addition you can control by the property <code>camunda.taskpool.collector.task.sender.type</code> if you want to use the default command sender or provide your own implementation.
+<p>In addition, you can control by the property <code>polyflow.integration.task.sender.type</code> if you want to use the default command sender or provide your own
+implementation.
 The default provided command sender (type: <code>tx</code>) is collects all task commands during one transaction, group them by task id
 and accumulates by creating one command reflecting the intent of the task operation. It uses Axon Command Bus (encapsulated
 by the <code>AxonCommandListGateway</code> for sending the result over to the Axon command gateway.</p>
 <p>TIP: If you want to implement a custom command sending, please provide your own implementation of the interface <code>EngineTaskCommandSender</code>
-(register a Spring Component of the type) and set the property <code>camunda.taskpool.collector.task.sender.type</code> to <code>custom</code>.</p>
+(register a Spring Component of the type) and set the property <code>polyflow.integration.task.sender.type</code> to <code>custom</code>.</p>
 <p>The Spring event listeners receiving events from the Camunda Engine plugin are called before the engine commits the transaction.
 Since all processing inside collector component and enricher is performed synchronously, the sender must waits until transaction to
 be successfully committed before sending any commands to the Command Gateway. Otherwise, on any error
 the transaction would be rolled-back and the command would create an inconsistency between the taskpool and the engine.</p>
 <p>Depending on your deployment scenario, you may want to control the exact point in time when the commands are sent to command gateway.
-The property <code>camunda.taskpool.collector.task.sender.send-within-transaction</code> is designed to influence this. If set to <code>true</code>, the commands
+The property <code>polyflow.integration.task.sender.send-within-transaction</code> is designed to influence this. If set to <code>true</code>, the commands
 are sent <em>before</em> the process engine transaction is committed, otherwise commands are sent <em>after</em> the process engine transaction is committed.</p>
-<p>WARNING: Never send commands over remote messaging before the transaction is committed, since you may produce unexpected results if Camunda fails
-to commit the transaction.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Never send commands over remote messaging before the transaction is committed, since you may produce unexpected results if Camunda fails
+  to commit the transaction.</p>
+</div>
 <h4 id="handling-command-transmission">Handling command transmission<a class="headerlink" href="#handling-command-transmission" title="Permanent link">#</a></h4>
 <p>The commands sent via gateway (e.g. <code>AxonCommandListGateway</code>) are received by Command Handlers. The latter may accept or reject commands, depending
 on the state of the aggregate and other components. The <code>AxonCommandListGateway</code> is informed about the command outcome. By default, it will log the outcome
 to console (success is logged in <code>DEBUG</code> log level, errors are using <code>ERROR</code> log level).</p>
-<p>In some situations it is required to take care of command outcome. A prominent example is to include a metric for command dispatching errors into monitoring. For doing so, it is possible to provide own handlers for success and error command outcome. For this purpose, please provide a Spring Bean implementing the <code>CommandSuccessHandler</code>and <code>CommandErrorHandler</code> accordingly.</p>
+<p>In some situations it is required to take care of command outcome. A prominent example is to include a metric for command dispatching errors into monitoring.
+For doing so, it is possible to provide own handlers for success and error command outcome. For this purpose, please provide a Spring Bean implementing
+the <code>CommandSuccessHandler</code>and <code>CommandErrorHandler</code> accordingly.</p>
 <p>Here is an example, how such a handler may look like:</p>
 <div class="highlight"><pre><span></span><code><span class="w">  </span><span class="nd">@Bean</span><span class="w"></span>
-<span class="w">  </span><span class="nd">@Primary</span><span class="w"></span>
-<span class="w">  </span><span class="kd">fun</span><span class="w"> </span><span class="nf">taskCommandErrorHandler</span><span class="p">():</span><span class="w"> </span><span class="n">TaskCommandErrorHandler</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="nc">LoggingTaskCommandErrorHandler</span><span class="p">(</span><span class="n">logger</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="nd">@Primary</span><span class="w"></span>
+<span class="kd">fun</span><span class="w"> </span><span class="nf">taskCommandErrorHandler</span><span class="p">():</span><span class="w"> </span><span class="n">TaskCommandErrorHandler</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="nc">LoggingTaskCommandErrorHandler</span><span class="p">(</span><span class="n">logger</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
 <span class="w">    </span><span class="kd">override</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">apply</span><span class="p">(</span><span class="n">commandMessage</span><span class="p">:</span><span class="w"> </span><span class="kt">Any</span><span class="p">,</span><span class="w"> </span><span class="n">commandResultMessage</span><span class="p">:</span><span class="w"> </span><span class="n">CommandResultMessage</span><span class="o">&lt;</span><span class="k">out</span><span class="w"> </span><span class="kt">Any?</span><span class="o">&gt;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
 <span class="w">      </span><span class="n">logger</span><span class="p">.</span><span class="na">info</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s">&quot;&lt;--------- CUSTOM ERROR HANDLER REPORT ---------&gt;&quot;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
 <span class="w">      </span><span class="k">super</span><span class="p">.</span><span class="na">apply</span><span class="p">(</span><span class="n">commandMessage</span><span class="p">,</span><span class="w"> </span><span class="n">commandResultMessage</span><span class="p">)</span><span class="w"></span>

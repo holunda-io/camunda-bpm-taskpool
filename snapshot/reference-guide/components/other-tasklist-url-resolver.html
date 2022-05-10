@@ -773,20 +773,6 @@
   
   
     <li class="md-nav__item">
-      <a href="view-cockpit.html" class="md-nav__link">
-        Cockpit View
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
       <a href="view-form-url-resolver.html" class="md-nav__link">
         Form URL Resolver
       </a>
@@ -1231,20 +1217,6 @@
 
             
           
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../examples/scenarios/distributed-no-axon-server.html" class="md-nav__link">
-        Distributed without Axon Server
-      </a>
-    </li>
-  
-
-            
-          
         </ul>
       </nav>
     </li>
@@ -1349,7 +1321,7 @@ after completion.</p>
 <p>To use Tasklist URL Resolver please add the following artifact to your classpath:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">&lt;dependency&gt;</span>
   <span class="nt">&lt;groupId&gt;</span>io.holunda.polyflow<span class="nt">&lt;/groupId&gt;</span>
-  <span class="nt">&lt;artifactId&gt;</span>polyflow-camunda-bpm-engine-client<span class="nt">&lt;/artifactId&gt;</span>
+  <span class="nt">&lt;artifactId&gt;</span>polyflow-tasklist-url-resolver<span class="nt">&lt;/artifactId&gt;</span>
 <span class="nt">&lt;/dependency&gt;</span>
 </code></pre></div>
 <p>In your <code>application.yml</code> either configure the property for the static tasklist URL:</p>
@@ -1358,7 +1330,19 @@ after completion.</p>
     tasklist:
       tasklist-url: http://my-task-list.application.url/
 </code></pre></div>
-<p>or provide your own implementation of the <code>TasklistUrlResolver</code> interface as Spring Bean.</p>
+<p>or provide your own implementation of the <code>TasklistUrlResolver</code> interface as Spring Bean in your configuration:</p>
+<p><div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">java.beans.BeanProperty</span><span class="p">;</span><span class="w"></span>
+
+<span class="nd">@Configuration</span><span class="w"></span>
+<span class="kd">class</span> <span class="nc">MyConfiguration</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+
+<span class="w">  </span><span class="nd">@Bean</span><span class="w"></span>
+<span class="w">  </span><span class="kd">public</span><span class="w"> </span><span class="n">TasklistUrlResolver</span><span class="w"> </span><span class="nf">myTasklistUrlResolver</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="n">MyTasklistUrlResolver</span><span class="p">();</span><span class="w"></span>
+<span class="w">  </span><span class="p">}</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+</code></pre></div>
+.</p>
 
   <hr>
 <div class="md-source-file">

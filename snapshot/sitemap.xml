@@ -66,11 +66,6 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://www.holunda.io/camunda-bpm-taskpool/snapshot/examples/scenarios/distributed-no-axon-server.html</loc>
-         <lastmod>2022-05-10</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
          <loc>https://www.holunda.io/camunda-bpm-taskpool/snapshot/examples/scenarios/single-node.html</loc>
          <lastmod>2022-05-10</lastmod>
          <changefreq>daily</changefreq>
@@ -167,11 +162,6 @@
     </url>
     <url>
          <loc>https://www.holunda.io/camunda-bpm-taskpool/snapshot/reference-guide/components/view-api.html</loc>
-         <lastmod>2022-05-10</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://www.holunda.io/camunda-bpm-taskpool/snapshot/reference-guide/components/view-cockpit.html</loc>
          <lastmod>2022-05-10</lastmod>
          <changefreq>daily</changefreq>
     </url>
