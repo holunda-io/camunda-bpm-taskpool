@@ -16,8 +16,6 @@
   <properties>
     <camunda-bpm.version>7.17.0</camunda-bpm.version>
     <camunda-bpm-assert.version>15.0.0</camunda-bpm-assert.version>
-    <!-- pin assert-core it because BPM Assert can't work with larger version -->
-    <assert-core.version>3.18.1</assert-core.version>
     <camunda-bpm-mockito.version>5.16.0</camunda-bpm-mockito.version>
   </properties>
 
@@ -73,13 +71,6 @@
         <version>${camunda-bpm-assert.version}</version>
         <scope>test</scope>
       </dependency>
-      <dependency>
-        <groupId>org.assertj</groupId>
-        <artifactId>assertj-core</artifactId>
-        <version>${assert-core.version}</version>
-        <scope>test</scope>
-      </dependency>
-
 
     </dependencies>
   </dependencyManagement>
