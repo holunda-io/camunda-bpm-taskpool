@@ -11,31 +11,24 @@ modules and provides meaningful defaults for their options.
 
 ### Configuration
 
-In order to enable the starter, please put the following annotation on any `@Configuration` annotated
-class of your SpringBoot application.
+In order to enable the starter, please put the following dependency on your class path:
 
-
-```java
-@SpringBootApplication
-@EnableProcessApplication
-@EnableTaskpoolEngineSupport
-public class MyApplication {
-
-  public static void main(String... args) {
-    SpringApplication.run(MyApplication.class, args);
-  }
-}
+```xml
+<dependency>
+  <groupId>io.holunda.polyflow</groupId>
+  <artifactId>polyflow-integration-camunda-bpm-springboot-starter</artifactId>
+</dependency>
 ```
-<1> Annotation to enable the engine support.
+
+The included `TaskpoolEngineSupportConfiguration` is a SpringBoot AutoConfiguration that configures the required components.
+If you want to configure it manually, please add the `@EnableTaskpoolEngineSupport` annotation on any `@Configuration` annotated
+class of your SpringBoot application.
 
 The `@EnableTaskpoolEngineSupport` annotation has the same effect as the following block of annotations:
 
-
 ```java
-@EnableCamundaSpringEventing
-@EnableCamundaEngineClient
-@EnableTaskCollector
-@EnableDataEntryCollector
+@EnableCamundaTaskpoolCollector
+@EnableDataEntrySender
 public class MyApplication {
   //...
 }

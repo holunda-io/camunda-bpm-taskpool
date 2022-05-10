@@ -13,7 +13,7 @@ To use Tasklist URL Resolver please add the following artifact to your classpath
 ```xml
 <dependency>
   <groupId>io.holunda.polyflow</groupId>
-  <artifactId>polyflow-camunda-bpm-engine-client</artifactId>
+  <artifactId>polyflow-tasklist-url-resolver</artifactId>
 </dependency>
 ```
 
@@ -26,5 +26,22 @@ polyflow:
       tasklist-url: http://my-task-list.application.url/
 ```
 
-or provide your own implementation of the `TasklistUrlResolver` interface as Spring Bean.
+or provide your own implementation of the `TasklistUrlResolver` interface as Spring Bean in your configuration:
+
+```java
+
+import java.beans.BeanProperty;
+
+@Configuration
+class MyConfiguration {
+
+  @Bean
+  public TasklistUrlResolver myTasklistUrlResolver() {
+      return MyTasklistUrlResolver();
+  }
+}
+
+
+```
+.
 

@@ -1,7 +1,7 @@
 ## Why should I use this?
 
 * You are building a process application or platform that comprises multiple process engines?
-* You are building a custom task list for your Camunda process application?
+* You are building a custom task list for your Camunda Platform 7 process application?
 * You want to include custom business object attributes to your tasks in the task list?
 * You have performance issues with your task list?
 * You need to provide a view on the business objects processed by your processes?

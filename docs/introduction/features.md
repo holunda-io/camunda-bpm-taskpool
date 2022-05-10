@@ -7,7 +7,8 @@ title: Features
 A task list is an application that shows a list of tasks for each individual user, based on the user's profile, roles and authorizations. Polyflow's `taskpool`
 library provides a backend from which task lists can be served.
 
-!!! note If you are using taskpool with Camunda BPM, it can be seen as a replacement resp. add-on for Camunda's `TaskService`.
+!!! note 
+    If you are using taskpool with Camunda Platform 7, it can be seen as a replacement resp. add-on for Camunda's `TaskService`.
 
 The `taskpool` library provides the following features:
 
@@ -49,7 +50,7 @@ All process instances started, suspended, resumed, completed aor deleted in the 
 
 Along with business data entities being modified during the execution of the business processes, the business process instance itself holds a collection of
 so-called process variables, representing the state of the execution. In contrast to the business data entities, their lifecycle is bound to the lifecycle of
-the business process instance. For different reasons the requirement might exist to have a rapid access to the **process variables** of a running process
+the business process instance. For different reasons the requirement might exist to have rapid access to the **process variables** of a running process
 instance, which is provided by the `taskpool` library.
 
 ## Integration

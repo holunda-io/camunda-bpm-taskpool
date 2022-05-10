@@ -39,7 +39,7 @@ and act as connecting infrastructure between components.
 ### Distribution using Axon Server
 
 Axon Server provides an implementation for this requirement leading to a distributed buses and a central Event Store. It is easy to use, easy to configure and
-easy to run. If you need a HA setup, you will need the enterprise license of Axon Server. Essentially, if don't have another HA ready-to use messaging, this
+easy to run. If you need a HA setup, you will need the enterprise license of Axon Server. Essentially, if you don't have another HA ready-to use messaging, this
 scenario might be your way to go.
 
 This scenario supports:

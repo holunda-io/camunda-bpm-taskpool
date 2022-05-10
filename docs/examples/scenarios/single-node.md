@@ -18,8 +18,7 @@ Before you begin, please build the entire project with `./mvnw clean install` fr
 The demo application consists of one Maven module which can be started by running from command line in
 the `examples/scenarios/single-node` directory using Maven. Alternatively you can start the packaged application using:
 
-[source,bash]
-```
+```bash
 java -jar target/*.jar
 ```
 
