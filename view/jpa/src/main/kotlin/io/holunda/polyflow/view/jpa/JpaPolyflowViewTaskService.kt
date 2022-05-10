@@ -11,6 +11,8 @@ import io.holunda.polyflow.view.jpa.JpaPolyflowViewTaskService.Companion.PROCESS
 import io.holunda.polyflow.view.jpa.auth.AuthorizationPrincipal
 import io.holunda.polyflow.view.jpa.auth.AuthorizationPrincipal.Companion.group
 import io.holunda.polyflow.view.jpa.auth.AuthorizationPrincipal.Companion.user
+import io.holunda.polyflow.view.jpa.data.DataEntryRepository
+import io.holunda.polyflow.view.jpa.data.toDataEntry
 import io.holunda.polyflow.view.jpa.task.TaskEntity
 import io.holunda.polyflow.view.jpa.task.TaskRepository
 import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.hasApplication
@@ -36,6 +38,7 @@ import java.util.*
 @ProcessingGroup(PROCESSING_GROUP)
 class JpaPolyflowViewTaskService(
   val taskRepository: TaskRepository,
+  val dataEntryRepository: DataEntryRepository,
   val objectMapper: ObjectMapper,
   val queryUpdateEmitter: QueryUpdateEmitter,
   val polyflowJpaViewProperties: PolyflowJpaViewProperties
@@ -58,8 +61,17 @@ class JpaPolyflowViewTaskService(
         taskRepository.findAll(isAuthorizedFor(authorizedPrincipals))
       }
         .map { taskEntity ->
-          // FIXME -> data entries
-          TaskWithDataEntries(task = taskEntity.toTask(objectMapper), dataEntries = listOf())
+          TaskWithDataEntries(
+            task = taskEntity.toTask(objectMapper),
+            dataEntries = taskEntity.correlations.map { id ->
+              dataEntryRepository.findAll(
+                DataEntryRepository
+                  .isAuthorizedFor(authorizedPrincipals)
+                  .and(DataEntryRepository.hasEntryId(id.entryId))
+                  .and(DataEntryRepository.hasEntryType(id.entryType))
+              )
+            }.flatten().map { it.toDataEntry(objectMapper) }
+          )
         }
     )
   }
@@ -67,8 +79,10 @@ class JpaPolyflowViewTaskService(
   @QueryHandler
   override fun query(query: TaskWithDataEntriesForIdQuery): TaskWithDataEntries? {
     return taskRepository.findByIdOrNull(query.id)?.let { taskEntity ->
-      // FIXME -> data entries...
-      TaskWithDataEntries(task = taskEntity.toTask(objectMapper), dataEntries = listOf())
+      TaskWithDataEntries(
+        task = taskEntity.toTask(objectMapper),
+        dataEntries = taskEntity.correlations.map { id -> dataEntryRepository.findById(id) }.filter { it.isPresent }.map { it.get().toDataEntry(objectMapper) }
+      )
     }
   }
 
