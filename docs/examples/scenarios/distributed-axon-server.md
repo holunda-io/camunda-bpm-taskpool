@@ -67,9 +67,10 @@ java -jar process-application/target/*.jar
 ## Useful URLs
 
 ### Process Platform
-* [http://localhost:8081/taskpool/](http://localhost:8081/polyflow/)
-* [http://localhost:8081/swagger-ui/](http://localhost:8081/swagger-ui/)
+* [http://localhost:8081/polyflow/tasks](http://localhost:8081/polyflow/tasks)
+* [http://localhost:8081/polyflow/archive](http://localhost:8081/polyflow/archive)
+* [http://localhost:8081/swagger-ui.html](http://localhost:8081/swagger-ui.html)
 
 ### Process Application
 * [http://localhost:8080/camunda/app/](http://localhost:8080/camunda/app/)
-* [http://localhost:8080/swagger-ui/](http://localhost:8080/swagger-ui/)
+* [http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)
