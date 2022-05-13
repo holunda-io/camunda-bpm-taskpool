@@ -7,15 +7,31 @@ import org.springframework.boot.context.properties.NestedConfigurationProperty
 
 /**
  * Properties responsible for resolution of form URL.
+ * On the top level, the defaults are provided.
  */
 @ConfigurationProperties(prefix = "polyflow.integration.form-url-resolver")
 @ConstructorBinding
 data class FormUrlResolverProperties(
+  /**
+   * URL template for the task as default.
+   */
   val defaultTaskTemplate: String = "",
+  /**
+   * URL template for application as default.
+   */
   val defaultApplicationTemplate: String = "",
+  /**
+   * URL template for process starter form as default.
+   */
   val defaultProcessTemplate: String = "",
+  /**
+   * URL template for data entry form as default.
+   */
   val defaultDataEntryTemplate: String = "",
 
+  /**
+   * Application-specific configuration.
+   */
   @NestedConfigurationProperty
   val applications: Map<String, Application> = mutableMapOf()
 ) {
@@ -68,9 +84,21 @@ data class FormUrlResolverProperties(
    */
   @ConstructorBinding
   data class Application(
+    /**
+     * Base URL template of the application.
+     */
     val url: String? = null,
+    /**
+     * Task URL configuration for this application, keyed by taskDefinitionId. The value represents the URL template.
+     */
     val tasks: Map<String, String> = mutableMapOf(),
+    /**
+     * Processes URL configuration for this application keyed by the processDefinitionKey. The value represents the URL template.
+     */
     val processes: Map<String, String> = mutableMapOf(),
+    /**
+     * Data entry URL configuration for this application keyed by the dataEntryType. The value represents the URL template.
+     */
     val dataEntries: Map<String, String> = mutableMapOf()
   )
 }

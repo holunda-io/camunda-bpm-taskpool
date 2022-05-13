@@ -10,8 +10,17 @@ import org.springframework.boot.context.properties.ConstructorBinding
 @ConfigurationProperties(prefix = "polyflow.integration.sender.data-entry")
 @ConstructorBinding
 data class DataEntrySenderProperties(
+  /**
+   * Flag to activate or de-activate the entire sender.
+   */
   val enabled: Boolean = false,
+  /**
+   * Sender type. Defaults to "simple" and can be changed to "custom", if you want to use your own implementation.
+   */
   val type: DataEntrySenderType = DataEntrySenderType.simple,
+  /**
+   * Application name used as a source of the data entries. Defaults to "spring.application.name".
+   */
   @Value("\${spring.application.name:unset-application-name}")
   val applicationName: String
 )
@@ -21,7 +30,7 @@ data class DataEntrySenderProperties(
  */
 enum class DataEntrySenderType {
   /**
-   * Provided.
+   * Provided implementation.
    */
   simple,
 
