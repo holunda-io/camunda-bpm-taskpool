@@ -8,7 +8,7 @@ import mu.KLogging
 /**
  * Sends commands using the gateway.
  */
-internal class SimpleEngineTaskCommandSender(
+class SimpleEngineTaskCommandSender(
   private val commandListGateway: CommandListGateway,
   private val senderProperties: SenderProperties
 ) : EngineTaskCommandSender {
