@@ -9,7 +9,6 @@ import org.springframework.context.annotation.Bean
  * No @Configuration required.
  * Configuration used via auto-configuration.
  */
-@ConditionalOnMissingBean(TasklistUrlResolver::class)
 @EnableConfigurationProperties(TasklistUrlProperties::class)
 class FallbackTasklistUrlResolverAutoConfiguration {
 
@@ -17,6 +16,7 @@ class FallbackTasklistUrlResolverAutoConfiguration {
    * Property-based Tasklist URL resolver.
    */
   @Bean
+  @ConditionalOnMissingBean(TasklistUrlResolver::class)
   fun propertyBasedTasklistUrlResolver(properties: TasklistUrlProperties): TasklistUrlResolver {
     return if (properties.tasklistUrl == null) {
       throw IllegalStateException("Either set polyflow.integration.tasklist.tasklist-url property or provide own implementation of TasklistUrlResolver")
