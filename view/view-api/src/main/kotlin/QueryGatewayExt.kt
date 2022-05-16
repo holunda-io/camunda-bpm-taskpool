@@ -60,6 +60,9 @@ object QueryGatewayExt {
     ResponseTypes.instanceOf(ProcessInstanceQueryResult::class.java)
   )
 
+  /**
+   * @see [ProcessDefinitionsStartableByUserQuery"]
+   */
   fun QueryGateway.processDefinitionsStartableByUser(query: ProcessDefinitionsStartableByUserQuery): CompletableFuture<List<ProcessDefinition>> = query(
     query,
     ResponseTypes.multipleInstancesOf(ProcessDefinition::class.java)
