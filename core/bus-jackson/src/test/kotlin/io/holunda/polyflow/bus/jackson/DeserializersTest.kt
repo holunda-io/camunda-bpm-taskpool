@@ -54,8 +54,8 @@ class DeserializersTest {
     assertThat(converted).isEqualTo(dataEntryState)
   }
 
-  @Disabled
   @Test
+  @Disabled("fails with: Could not resolve type id 'io.holunda.polyflow.bus.jackson.MyStructure' as a subtype of `java.util.Map<java.lang.String,java.lang.Object>`: Not a subtype at [Source: UNKNOWN; byte offset: #UNKNOWN]")
   fun `serialize and deserialize variable complex object`() {
 
     mapper.activateDefaultTypingAsProperty(mapper.polymorphicTypeValidator, ObjectMapper.DefaultTyping.NON_FINAL, "@class")

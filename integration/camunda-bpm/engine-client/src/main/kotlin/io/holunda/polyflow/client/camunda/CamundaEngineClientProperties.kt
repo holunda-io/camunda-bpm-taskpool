@@ -2,6 +2,7 @@ package io.holunda.polyflow.client.camunda
 
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.context.properties.ConfigurationProperties
+import org.springframework.boot.context.properties.ConstructorBinding
 
 /**
  * Properties to configure Camunda to receive interaction commands via Axon.

@@ -16,6 +16,5 @@ The provided [Example application](../example-approval) is implemented several t
 
 * [Single Node Scenario](single-node)
 * [Distributed Scenario using Axon Server](distributed-axon-server)
-* [Distributed Scenario without Axon Server](distributed-no-axon-server)
 
 It is a good idea to understand the single node scenario first and then move on to more elaborated scenarios.

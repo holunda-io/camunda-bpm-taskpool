@@ -1,6 +1,7 @@
 package io.holunda.polyflow.taskpool.collector.properties
 
 import io.holunda.polyflow.taskpool.collector.CamundaTaskpoolCollectorProperties
+import io.holunda.polyflow.taskpool.collector.TaskCollectorEnricherType
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -20,8 +21,13 @@ class CamundaTaskpoolCollectorPropertiesITest {
   lateinit var props: CamundaTaskpoolCollectorProperties
 
   @Test
-  fun test_properties() {
+  fun `should use defaults without properties in yaml`() {
     assertThat(props.applicationName).isEqualTo("Foo")
+    assertThat(props.task.enabled).isTrue
+    assertThat(props.task.enricher.type).isEqualTo(TaskCollectorEnricherType.processVariables)
+    assertThat(props.processInstance.enabled).isTrue
+    assertThat(props.processVariable.enabled).isTrue
+    assertThat(props.processDefinition.enabled).isFalse
   }
 }
 

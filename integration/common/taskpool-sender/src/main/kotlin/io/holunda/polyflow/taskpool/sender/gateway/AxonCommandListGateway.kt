@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory
 /**
  * Sends  a list commands via AXON command gateway one-by-one, only if the sender property is enabled.
  */
-internal class AxonCommandListGateway(
+class AxonCommandListGateway(
   private val commandGateway: CommandGateway,
   private val senderProperties: SenderProperties,
   private val commandSuccessHandler: CommandSuccessHandler,

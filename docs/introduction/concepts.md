@@ -2,7 +2,7 @@
 title: Concepts
 ---
 
-There are many scenarios in which the usage of a process engine as a component inside of the orchestration layer makes sence. Depending on the scenario the
+There are many scenarios in which the usage of a process engine as a component inside the orchestration layer makes a lot of sense. Depending on the scenario the
 resulting architecture of your application may vary. The following section explains the core concepts and building blocks of the architecture we want to support
 and address by the Polyflow libraries.
 
@@ -11,7 +11,7 @@ and address by the Polyflow libraries.
 The two main building blocks of the solution are **Process Application** and **Process Platform**. Sometimes you unite them inside the same deployment unit, but
 we differentiate them to make their responsibilities more clear.
 
-A **Process Application** implements the main business logic of the solution. It integrate the process engine that is responsible for execution the processes.
+A **Process Application** implements the main business logic of the solution. It integrates the process engine that is responsible for execution the processes.
 During this execution user tasks are created and performed by the user and the business data objects are modified. For this purpose, the process application
 provides user interfaces for user tasks and business data operations.
 

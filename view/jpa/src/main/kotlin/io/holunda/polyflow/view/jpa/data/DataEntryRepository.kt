@@ -25,7 +25,9 @@ interface DataEntryRepository : CrudRepository<DataEntryEntity, DataEntryId>, Jp
     fun hasEntryId(entryId: String): Specification<DataEntryEntity> =
       Specification { dataEntry, _, builder ->
         builder.equal(
-          dataEntry.get<DataEntryStateEmbeddable>(DataEntryId::entryId.name),
+          dataEntry
+            .get<DataEntryStateEmbeddable>(DataEntryEntity::dataEntryId.name)
+            .get<String>(DataEntryId::entryId.name),
           entryId
         )
       }
@@ -36,7 +38,9 @@ interface DataEntryRepository : CrudRepository<DataEntryEntity, DataEntryId>, Jp
     fun hasEntryType(entryType: String): Specification<DataEntryEntity> =
       Specification { dataEntry, _, builder ->
         builder.equal(
-          dataEntry.get<DataEntryStateEmbeddable>(DataEntryId::entryType.name),
+          dataEntry
+            .get<DataEntryStateEmbeddable>(DataEntryEntity::dataEntryId.name)
+            .get<String>(DataEntryId::entryType.name),
           entryType
         )
       }

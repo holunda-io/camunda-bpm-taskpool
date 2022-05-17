@@ -116,7 +116,6 @@ nav:
       - In-Memory View: reference-guide/components/view-simple.md
       - JPA View: reference-guide/components/view-jpa.md
       - Mongo DB View: reference-guide/components/view-mongo.md
-      - Cockpit View: reference-guide/components/view-cockpit.md
       - Form URL Resolver: reference-guide/components/view-form-url-resolver.md
       - View-API: reference-guide/components/view-api.md
     - Other Components:
@@ -139,7 +138,6 @@ nav:
       - Scenarios Overview: examples/scenarios/index.md
       - Single Node: examples/scenarios/single-node.md
       - Distributed using Axon Server: examples/scenarios/distributed-axon-server.md
-      - Distributed without Axon Server: examples/scenarios/distributed-no-axon-server.md
   - Developers:
     - Contribution: developer-guide/contribution.md
     - Project Setup: developer-guide/project-setup.md

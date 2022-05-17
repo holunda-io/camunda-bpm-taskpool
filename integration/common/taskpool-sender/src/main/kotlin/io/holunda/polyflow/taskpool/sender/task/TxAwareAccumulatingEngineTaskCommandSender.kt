@@ -11,7 +11,7 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
 /**
  * Collects commands of one transaction, accumulates them to one command and sends it after TX commit.
  */
-internal class TxAwareAccumulatingEngineTaskCommandSender(
+class TxAwareAccumulatingEngineTaskCommandSender(
   private val commandListGateway: CommandListGateway,
   private val engineTaskCommandAccumulator: EngineTaskCommandAccumulator,
   private val senderProperties: SenderProperties

@@ -13,7 +13,7 @@ data class SenderProperties(
   /**
    * Global value to control the command gateway.
    */
-  var enabled: Boolean = true,
+  val enabled: Boolean = true,
   /**
    * Sending tasks.
    */

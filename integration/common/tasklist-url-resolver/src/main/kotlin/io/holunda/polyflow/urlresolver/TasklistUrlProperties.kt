@@ -9,5 +9,8 @@ import org.springframework.boot.context.properties.ConstructorBinding
 @ConfigurationProperties(prefix = "polyflow.integration.tasklist")
 @ConstructorBinding
 data class TasklistUrlProperties(
+  /**
+   * URL of the task list.
+   */
   val tasklistUrl: String? = null
 )
