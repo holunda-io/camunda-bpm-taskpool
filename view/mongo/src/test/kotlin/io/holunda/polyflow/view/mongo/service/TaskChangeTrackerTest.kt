@@ -14,6 +14,7 @@ import io.holunda.polyflow.view.mongo.task.TaskChangeTracker
 import io.holunda.polyflow.view.mongo.task.TaskDocument
 import io.holunda.polyflow.view.mongo.task.TaskRepository
 import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
 import org.bson.BsonDocument
 import org.bson.BsonString
 import org.bson.Document
@@ -23,7 +24,6 @@ import org.springframework.data.mongodb.core.ChangeStreamEvent
 import org.springframework.data.mongodb.core.convert.MongoConverter
 import org.springframework.scheduling.TaskScheduler
 import org.springframework.scheduling.Trigger
-import org.springframework.scheduling.support.CronExpression
 import org.springframework.scheduling.support.SimpleTriggerContext
 import reactor.core.Disposable
 import reactor.core.publisher.Flux
@@ -157,6 +157,52 @@ internal class TaskChangeTrackerTest {
       .then { deleteResult.assertWasNotSubscribed() }
       .thenAwait(Duration.ofNanos(1))
       .then { deleteResult.assertWasSubscribed() }
+      .verifyTimeout(10.seconds)
+  }
+
+  @Test
+  fun `does not backpressure while waiting to delete tasks`() {
+    properties = properties.copy(
+      changeStream = properties.changeStream.copy(
+        clearDeletedTasks = properties.changeStream.clearDeletedTasks.copy(
+          after = Duration.ofMinutes(5),
+          bufferSize = 100
+        )
+      )
+    )
+    val initialPublisher = publisherForResumeToken(null)
+    val deleteResults = mutableMapOf<String, TestPublisher<Void>>()
+    whenever(taskRepository.deleteById(any<String>())).thenAnswer {
+      deleteResults.computeIfAbsent(it.getArgument(0)) {
+        TestPublisher.createCold<Void>().complete()
+      }.mono()
+    }
+
+    StepVerifier.withVirtualTime { taskChangeTracker.trackTaskUpdates() }
+      .expectSubscription()
+      // 100 tasks fit in the buffer, plus a few (currently 32) that fit in other buffers/queues in the Flux chain
+      // All tasks exceeding this limit (currently tasks 133 to 200) are dropped and not deleted
+      .then {
+        (1..200).forEach {
+          initialPublisher.next(
+            changeStreamEvent(
+              it,
+              "$it",
+              deleted = true,
+              deleteTime = Instant.EPOCH.minus(Duration.ofMinutes(1))
+            )
+          )
+        }
+      }
+      .expectNextCount(200)
+      .then { deleteResults.values.forEach { it.assertWasNotSubscribed() } }
+      .thenAwait(Duration.ofMinutes(4).minusNanos(1))
+      .then { deleteResults.values.forEach { it.assertWasNotSubscribed() } }
+      .thenAwait(Duration.ofNanos(1))
+      .then {
+        deleteResults.values.forEach { it.assertWasSubscribed() }
+        assertThat(deleteResults).hasSizeBetween(100, 199)
+      }
       .verifyTimeout(10.seconds)
   }
 
