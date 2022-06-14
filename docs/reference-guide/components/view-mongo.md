@@ -14,6 +14,9 @@ the Taskpool and Datapool View API and persists the projection as document colle
 * provides subscription query API (reactive)
 * switchable subscription query API (AxonServer or MongoDB ChangeStream)
 
+!!! warning
+    Mongo DB View is currently **NOT SUPPORTING** Revision Aware queries.
+
 
 ### Configuration options
 

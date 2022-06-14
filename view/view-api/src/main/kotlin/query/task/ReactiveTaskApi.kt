@@ -2,10 +2,13 @@ package io.holunda.polyflow.view.query.task
 
 import io.holunda.polyflow.view.Task
 import io.holunda.polyflow.view.TaskWithDataEntries
+import io.holunda.polyflow.view.query.process.ProcessDefinitionApi
 import java.util.concurrent.CompletableFuture
 
 /**
  * Reactive API to retrieve tasks.
+ * @see TaskApi
+ * For the client, there is no difference in definition of the query, but the implementer has a different method to reflect the reactive nature.
  */
 interface ReactiveTaskApi {
 
