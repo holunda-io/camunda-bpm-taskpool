@@ -18,14 +18,18 @@ import org.springframework.scheduling.TriggerContext
 import org.springframework.scheduling.support.CronExpression
 import org.springframework.stereotype.Component
 import reactor.core.Disposable
+import reactor.core.publisher.BufferOverflowStrategy
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 import reactor.core.publisher.SignalType
+import reactor.core.scheduler.Schedulers
 import reactor.util.retry.Retry
 import java.time.Duration
+import java.time.Instant
 import java.time.ZoneId
 import java.time.ZoneOffset
 import java.util.*
+import java.util.concurrent.TimeUnit
 import java.util.logging.Level
 import javax.annotation.PostConstruct
 import javax.annotation.PreDestroy
@@ -71,18 +75,27 @@ class TaskChangeTracker(
     if (properties.changeStream.clearDeletedTasks.mode.usesChangeStream)
       changeStream
         .filter { it.deleted }
-        .delayUntil {
+        .map { it.deleteTime to it.id }
+        .onBackpressureBuffer(
+          properties.changeStream.clearDeletedTasks.bufferSize,
+          { (_, taskId) -> logger.warn { "Too many tasks waiting to be deleted from MongoDB after being marked as deleted. Dropping latest task $taskId - manual cleanup may be required." } },
+          BufferOverflowStrategy.DROP_LATEST
+        )
+        .delayUntil { (deleteTime, _) ->
           Mono.delay(
             Duration.between(
-              scheduler.clock.instant(),
-              (it.deleteTime ?: scheduler.clock.instant()).plus(properties.changeStream.clearDeletedTasks.after)
+              now(),
+              (deleteTime ?: now()).plus(properties.changeStream.clearDeletedTasks.after)
             )
           )
         }
-        .flatMap({ deleteTask(it) }, 10)
+        .flatMap({ (_, taskId) -> deleteTask(taskId) }, 10)
         .subscribe()
     else
       null
+
+  // This will return the current time of the VirtualTimeScheduler if that is enabled in a test.
+  private fun now() = Instant.ofEpochMilli(Schedulers.parallel().now(TimeUnit.MILLISECONDS))
 
   /**
    * Initializes scheduling of the clean-up if configured via properties.
@@ -93,7 +106,7 @@ class TaskChangeTracker(
       scheduler.schedule(
         {
           taskRepository.findDeletedBefore(scheduler.clock.instant().minus(properties.changeStream.clearDeletedTasks.after))
-            .flatMap({ deleteTask(it) }, 10)
+            .flatMap({ deleteTask(it.id) }, 10)
             .subscribe()
         },
         CronTriggerWithJitter(
@@ -113,12 +126,12 @@ class TaskChangeTracker(
     trulyDeleteChangeStreamSubscription?.dispose()
   }
 
-  private fun deleteTask(task: TaskDocument): Mono<Void> {
-    return taskRepository.deleteById(task.id)
-      .doOnSuccess { logger.trace { "Deleted task ${task.id} from database." } }
-      .doOnError { e -> logger.debug(e) { "Deleting task ${task.id} from database failed." } }
+  private fun deleteTask(taskId: String): Mono<Void> {
+    return taskRepository.deleteById(taskId)
+      .doOnSuccess { logger.trace { "Deleted task $taskId from database." } }
+      .doOnError { e -> logger.debug(e) { "Deleting task $taskId from database failed." } }
       .retryWhen(Retry.backoff(5, Duration.ofMillis(50)))
-      .doOnError { e -> logger.warn(e) { "Deleting task ${task.id} from database failed and retries are exhausted." } }
+      .doOnError { e -> logger.warn(e) { "Deleting task $taskId from database failed and retries are exhausted." } }
       .onErrorResume { Mono.empty() }
   }
 
