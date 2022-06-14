@@ -277,7 +277,7 @@ internal class TaskChangeTrackerTest {
     whenever(converter.read(eq(TaskDocument::class.java), any())).thenAnswer { (it.arguments[1] as Document)["body"] }
     return ChangeStreamEvent(
       ChangeStreamDocument(
-        OperationType.INSERT,
+        OperationType.INSERT.value,
         resumeToken(resumeToken),
         null,
         null,

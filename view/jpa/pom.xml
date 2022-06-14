@@ -51,6 +51,7 @@
     <dependency>
       <groupId>com.h2database</groupId>
       <artifactId>h2</artifactId>
+      <version>1.4.200</version> <!-- pin until the auto-ddl / hibernate setup is working -->
       <scope>test</scope>
     </dependency>
     <dependency>
