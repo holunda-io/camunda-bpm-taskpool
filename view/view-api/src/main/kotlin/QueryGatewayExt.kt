@@ -1,5 +1,7 @@
 package io.holunda.polyflow.view
 
+import io.holixon.axon.gateway.query.QueryResponseMessageResponseType
+import io.holixon.axon.gateway.query.RevisionQueryParameters
 import io.holunda.polyflow.view.query.data.DataEntriesForUserQuery
 import io.holunda.polyflow.view.query.data.DataEntriesQuery
 import io.holunda.polyflow.view.query.data.DataEntriesQueryResult
@@ -10,6 +12,7 @@ import io.holunda.polyflow.view.query.process.ProcessInstancesByStateQuery
 import io.holunda.polyflow.view.query.process.variable.ProcessVariableQueryResult
 import io.holunda.polyflow.view.query.process.variable.ProcessVariablesForInstanceQuery
 import io.holunda.polyflow.view.query.task.*
+import org.axonframework.messaging.GenericMessage
 import org.axonframework.messaging.responsetypes.ResponseTypes
 import org.axonframework.queryhandling.QueryGateway
 import java.util.concurrent.CompletableFuture
@@ -23,25 +26,25 @@ object QueryGatewayExt {
   /**
    * @see [DataEntriesForUserQuery]
    */
-  fun QueryGateway.dataEntriesForUser(query: DataEntriesForUserQuery): CompletableFuture<DataEntriesQueryResult> = query(
-    query,
-    ResponseTypes.instanceOf(DataEntriesQueryResult::class.java)
+  fun QueryGateway.dataEntriesForUser(query: DataEntriesForUserQuery, revisionQuery: RevisionQueryParameters): CompletableFuture<DataEntriesQueryResult> = query(
+    GenericMessage.asMessage(query).andMetaData(revisionQuery.toMetaData()),
+    QueryResponseMessageResponseType.queryResponseMessageResponseType<DataEntriesQueryResult>()
   )
 
   /**
    * @see [DataEntriesQuery]
    */
-  fun QueryGateway.dataEntries(query: DataEntriesQuery): CompletableFuture<DataEntriesQueryResult> = query(
-    query,
-    ResponseTypes.instanceOf(DataEntriesQueryResult::class.java)
+  fun QueryGateway.dataEntries(query: DataEntriesQuery, revisionQuery: RevisionQueryParameters): CompletableFuture<DataEntriesQueryResult> = query(
+    GenericMessage.asMessage(query).andMetaData(revisionQuery.toMetaData()),
+    QueryResponseMessageResponseType.queryResponseMessageResponseType<DataEntriesQueryResult>()
   )
 
   /**
    * @see [DataEntryForIdentityQuery]
    */
-  fun QueryGateway.dataEntryForIdentity(query: DataEntryForIdentityQuery): CompletableFuture<DataEntriesQueryResult> = query(
-    query,
-    ResponseTypes.instanceOf(DataEntriesQueryResult::class.java)
+  fun QueryGateway.dataEntryForIdentity(query: DataEntryForIdentityQuery, revisionQuery: RevisionQueryParameters): CompletableFuture<DataEntriesQueryResult> = query(
+    GenericMessage.asMessage(query).andMetaData(revisionQuery.toMetaData()),
+    QueryResponseMessageResponseType.queryResponseMessageResponseType<DataEntriesQueryResult>()
   )
 
   /**
@@ -49,7 +52,7 @@ object QueryGatewayExt {
    */
   fun QueryGateway.processVariablesForInstance(query: ProcessVariablesForInstanceQuery): CompletableFuture<ProcessVariableQueryResult> = query(
     query,
-    ResponseTypes.instanceOf(ProcessVariableQueryResult::class.java)
+    QueryResponseMessageResponseType.queryResponseMessageResponseType<ProcessVariableQueryResult>()
   )
 
   /**

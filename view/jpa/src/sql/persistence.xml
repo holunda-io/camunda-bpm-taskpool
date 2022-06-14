@@ -1,5 +1,14 @@
 <persistence xmlns="http://xmlns.jcp.org/xml/ns/persistence" version="2.1">
   <persistence-unit name="default">
+
+    <!--
+    Uncomment this to generate the SQL for Axon Framework entities
+    <class>org.axonframework.eventsourcing.eventstore.jpa.DomainEventEntry</class>
+    <class>org.axonframework.eventsourcing.eventstore.jpa.SnapshotEventEntry</class>
+    <class>org.axonframework.modelling.saga.repository.jpa.SagaEntry</class>
+    <class>org.axonframework.modelling.saga.repository.jpa.AssociationValueEntry</class>
+    <class>org.axonframework.eventhandling.tokenstore.jpa.TokenEntry</class>
+    -->
     <class>io.holunda.polyflow.view.jpa.data.DataEntryEntity</class>
     <class>io.holunda.polyflow.view.jpa.data.ProtocolElement</class>
     <class>io.holunda.polyflow.view.jpa.process.ProcessDefinitionEntity</class>

@@ -2,6 +2,15 @@ spring:
   jpa:
     open-in-view: true # disable JPA warning
     show-sql: false
+    database-platform: org.hibernate.dialect.H2Dialect
+  datasource:
+    url: jdbc:h2:mem:itest
+    username: sa
+    password:
+    driverClassName: org.h2.Driver
+  test:
+    database:
+      replace: none
 
 polyflow:
   view:

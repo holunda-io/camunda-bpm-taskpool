@@ -6,7 +6,7 @@
   <parent>
     <groupId>io.holunda.polyflow</groupId>
     <artifactId>polyflow-view-parent</artifactId>
-    <version>3.2.1</version>
+    <version>3.2.2</version>
   </parent>
 
   <artifactId>polyflow-view-jpa</artifactId>
@@ -51,6 +51,7 @@
     <dependency>
       <groupId>com.h2database</groupId>
       <artifactId>h2</artifactId>
+      <version>1.4.200</version> <!-- pin until the auto-ddl / hibernate setup is working -->
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -232,7 +233,7 @@
               <dependency>
                 <groupId>org.postgresql</groupId>
                 <artifactId>postgresql</artifactId>
-                <version>42.3.5</version>
+                <version>42.4.0</version>
               </dependency>
             </dependencies>
           </plugin>

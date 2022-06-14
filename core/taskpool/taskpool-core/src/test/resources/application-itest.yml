@@ -2,7 +2,7 @@ spring:
   application:
     name: taskpool-core-itest
   datasource:
-    url: jdbc:h2:mem:itest
+    url: jdbc:h2:mem:itest;
     username: sa
     password:
   jpa:

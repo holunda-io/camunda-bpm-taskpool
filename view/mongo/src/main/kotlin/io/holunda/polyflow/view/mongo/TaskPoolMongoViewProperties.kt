@@ -54,7 +54,14 @@ data class ClearDeletedTasks(
    */
   val mode: ClearDeletedTasksMode = ClearDeletedTasksMode.CHANGE_STREAM_SUBSCRIPTION,
   /**
-   * Cron expression to configure how often the job run that clears deleted tasks should run. Only relevant if [mode] is `SCHEDULED_JOB` or `BOTH`
+   * While the change tracker waits for tasks that have been marked deleted to become due for clearing, it needs to buffer them. This property defines the
+   * buffer capacity. If more than [bufferSize] tasks are deleted within the time window defined by [after], the buffer will overflow and the latest task(s)
+   * will be dropped. These task(s) will not be automatically cleared in `CHANGE_STREAM_SUBSCRIPTION` [mode]. In `BOTH` [mode], the scheduled job will pick them
+   * up and clear them eventually. Only relevant if [mode] is `CHANGE_STREAM_SUBSCRIPTION` or `BOTH`.
+   */
+  val bufferSize: Int = 10_000,
+  /**
+   * Cron expression to configure how often the job run that clears deleted tasks should run. Only relevant if [mode] is `SCHEDULED_JOB` or `BOTH`.
    */
   val jobSchedule: String = "@daily",
 

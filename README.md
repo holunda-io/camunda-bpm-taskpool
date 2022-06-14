@@ -1,3 +1,4 @@
+[![stable](https://img.shields.io/badge/lifecycle-STABLE-green.svg)](https://github.com/holisticon#open-source-lifecycle)
 [![Build Status](https://github.com/holunda-io/camunda-bpm-taskpool/workflows/Development%20braches/badge.svg)](https://github.com/holunda-io/camunda-bpm-taskpool/actions)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.holunda.polyflow/polyflow-taskpool-dependencies/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.holunda.polyflow/polyflow-taskpool-dependencies/)
 [![Code Coverage](https://codecov.io/gh/holunda-io/camunda-bpm-taskpool/branch/master/graph/badge.svg)](https://codecov.io/gh/holunda-io/camunda-bpm-taskpool)
