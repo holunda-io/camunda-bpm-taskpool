@@ -1,5 +1,8 @@
 ## Purpose
 
+!!! note
+    If you are looking for a convenient way to send out queries (API for **callers**), please check the [View API Client](view-api-client.md)
+
 The Polyflow View API defines the interfaces for the **implementers** of the task-pool and the data-pool query API. It defines the main query types of the 
 common read-projections. Its main purpose is to create a public stable API which is independent of the implementations. There are multiple implementations 
 available:
