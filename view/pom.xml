@@ -21,6 +21,7 @@
 
   <modules>
     <module>view-api</module>
+    <module>view-api-client</module>
     <module>simple</module>
     <module>jpa</module>
     <module>mongo</module>
