@@ -15,7 +15,7 @@
         <link rel="canonical" href="https://www.holunda.io/camunda-bpm-taskpool/snapshot/reference-guide/components/view-mongo.html">
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.3.0, mkdocs-material-8.3.4">
+      <meta name="generator" content="mkdocs-1.3.0, mkdocs-material-8.3.5">
     
     
       
@@ -993,10 +993,59 @@
   
   
   
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_8" type="checkbox" id="__nav_4_8" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4_8">
+          Configuration
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Configuration" data-md-level="2">
+        <label class="md-nav__title" for="__nav_4_8">
+          <span class="md-nav__icon md-icon"></span>
+          Configuration
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../configuration/view-mongo.html" class="md-nav__link">
+        Mongo DB View Configuration
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
     <li class="md-nav__item">
       <a href="../configuration/persistence.html" class="md-nav__link">
         Persistence Configuration
       </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
     </li>
   
 
@@ -1358,6 +1407,8 @@ the Taskpool and Datapool View API and persists the projection as document colle
 <li>provides subscription query API (reactive)</li>
 <li>switchable subscription query API (AxonServer or MongoDB ChangeStream)</li>
 </ul>
+<p>!!! warning:
+    Please note, that currently Mongo View is <strong>NOT SUPPORTING</strong> revision-aware queries.</p>
 <h3 id="configuration-options">Configuration options<a class="headerlink" href="#configuration-options" title="Permanent link">#</a></h3>
 <p>In order to activate the Mongo implementation, please include the following dependency on your classpath:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">&lt;dependency&gt;</span>
@@ -1390,14 +1441,10 @@ the following annotation to any class marked as Spring Configuration loaded duri
       port: 27017
 </code></pre></div>
 <p>The view implementation provides runtime details using standard logging facility. If you
-want to increase the logging level, please setup it e.g. in your <code>application.yaml</code>:</p>
+want to increase the logging level, please set up it e.g. in your <code>application.yaml</code>:</p>
 <div class="highlight"><pre><span></span><code>logging.level.io.holunda.polyflow.view.mongo: DEBUG
 </code></pre></div>
-<p>Depending on your setup, you might want to use Axon Query Bus for subscription queries or not. MongoDB provides
-a change stream if run in a replication set. Using the property <code>camunda.taskpool.view.mongo.change-tracking-mode</code>
-you can control, whether you use subscription query based on Axon Query Bus (value <code>EVENT_HANDLER</code>, default) or based
-on Mongo Change Stream (value <code>CHANGE_STREAM</code>). If you are not interested in publication of any subscription queries
-you might choose to disable it by setting the option to value <code>NONE</code>.</p>
+<p>For further configuration, please check <a href="../configuration/view-mongo.html">Mongo DB View Configuration</a></p>
 <h3 id="collections">Collections<a class="headerlink" href="#collections" title="Permanent link">#</a></h3>
 <p>The Mongo View uses several collections to store the results. These are:</p>
 <ul>
@@ -1531,7 +1578,7 @@ following format:</p>
   <small>
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">June 14, 2022</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">June 15, 2022</span>
       
     
   </small>
@@ -1631,7 +1678,7 @@ following format:</p>
     <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.instant", "navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.top", "toc.integrate"], "search": "../../assets/javascripts/workers/search.85cb4492.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.f758a944.min.js"></script>
+      <script src="../../assets/javascripts/bundle.431f3d41.min.js"></script>
       
     
   </body>
