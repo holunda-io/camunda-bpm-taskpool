@@ -14,6 +14,9 @@ the Taskpool and Datapool View API and persists the projection as document colle
 * provides subscription query API (reactive)
 * switchable subscription query API (AxonServer or MongoDB ChangeStream)
 
+!!! warning:
+    Please note, that currently Mongo View is **NOT SUPPORTING** revision-aware queries.
+
 
 ### Configuration options
 
@@ -57,20 +60,14 @@ spring:
 ```
 
 The view implementation provides runtime details using standard logging facility. If you
-want to increase the logging level, please setup it e.g. in your `application.yaml`:
+want to increase the logging level, please set up it e.g. in your `application.yaml`:
 
 
 ```yml
 logging.level.io.holunda.polyflow.view.mongo: DEBUG
 ```
 
-
-
-Depending on your setup, you might want to use Axon Query Bus for subscription queries or not. MongoDB provides
-a change stream if run in a replication set. Using the property `camunda.taskpool.view.mongo.change-tracking-mode`
-you can control, whether you use subscription query based on Axon Query Bus (value `EVENT_HANDLER`, default) or based
-on Mongo Change Stream (value `CHANGE_STREAM`). If you are not interested in publication of any subscription queries
-you might choose to disable it by setting the option to value `NONE`.
+For further configuration, please check [Mongo DB View Configuration](../configuration/view-mongo.md)
 
 
 ### Collections

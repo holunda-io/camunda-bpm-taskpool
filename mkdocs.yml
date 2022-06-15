@@ -123,7 +123,9 @@ nav:
       - Variable Serializer: reference-guide/components/other-variable-serializer.md
       - Bus Jackson: reference-guide/components/other-bus-jackson.md
     - Configuration Overview: reference-guide/configuration/index.md
-    - Persistence Configuration: reference-guide/configuration/persistence.md
+    - Configuration:
+      - Mongo DB View Configuration: reference-guide/configuration/view-mongo.md
+      - Persistence Configuration: reference-guide/configuration/persistence.md
   - Examples:
     - Examples Overview: examples/index.md
     - Example Approval: examples/example-approval.md

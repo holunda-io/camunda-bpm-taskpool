@@ -112,13 +112,13 @@ enum class ChangeTrackingMode {
  */
 enum class ClearDeletedTasksMode {
   /**
-   * Subscribe to the change stream and clear any tasks that are marked deleted after the duration configured in [ChangeStream.clearDeletedTasksAfter].
+   * Subscribe to the change stream and clear any tasks that are marked deleted after the duration configured in [ChangeStream.after].
    */
   CHANGE_STREAM_SUBSCRIPTION,
 
   /**
-   * Run a scheduled job to clear any tasks that are marked as deleted if the deletion timestamp is at least [ChangeStream.clearDeletedTasksAfter] in the past.
-   * The job is run according to the cron expression defined in
+   * Run a scheduled job to clear any tasks that are marked as deleted if the deletion timestamp is at least [ChangeStream.after] in the past.
+   * The job is run according to the cron expression defined in [ClearDeletedTasks.jobSchedule]
    */
   SCHEDULED_JOB,
 
