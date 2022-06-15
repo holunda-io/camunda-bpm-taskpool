@@ -19,7 +19,7 @@
     
     
       
-        <title>View-API - Polyflow</title>
+        <title>View API - Polyflow</title>
       
     
     
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              View-API
+              View API
             
           </span>
         </div>
@@ -732,6 +732,140 @@
               
   
   
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          View API
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="view-api.html" class="md-nav__link md-nav__link--active">
+        View API
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#purpose" class="md-nav__link">
+    Purpose
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#feature-support-matrix" class="md-nav__link">
+    Feature support matrix
+  </a>
+  
+    <nav class="md-nav" aria-label="Feature support matrix">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#task-api" class="md-nav__link">
+    Task API
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#process-definition-api" class="md-nav__link">
+    Process Definition API
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#process-instance-api" class="md-nav__link">
+    Process Instance API
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#process-variable-api-incubation" class="md-nav__link">
+    Process Variable API (incubation)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#data-entry-api" class="md-nav__link">
+    Data Entry API
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#revision-aware-query-support" class="md-nav__link">
+    Revision-aware query support
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="view-api-client.html" class="md-nav__link">
+        View API Client
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="view-form-url-resolver.html" class="md-nav__link">
+        Form URL Resolver
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
   
     <li class="md-nav__item">
       <a href="view-simple.html" class="md-nav__link">
@@ -765,71 +899,6 @@
       <a href="view-mongo.html" class="md-nav__link">
         Mongo DB View
       </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="view-form-url-resolver.html" class="md-nav__link">
-        Form URL Resolver
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-    
-  
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
-      
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          View-API
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="view-api.html" class="md-nav__link md-nav__link--active">
-        View-API
-      </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
-    Purpose
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1340,19 +1409,210 @@
 
 
 
-  <h1>View-API</h1>
+  <h1>View API</h1>
 
-<h3 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">#</a></h3>
-<p>The Polyflow View API defines the interfaces of the task-pool and data-pool query API. It defines the main queries of the common read-projections. Its main
-purpose is to create a public stable API which is independent of the implementations. There are multiple implementations available:</p>
+<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">#</a></h2>
+<p>The Polyflow View API defines the interfaces for the <strong>implementers</strong> of the task-pool and the data-pool query API. It defines the main query types of the 
+common read-projections. Its main purpose is to create a public stable API which is independent of the implementations. There are multiple implementations 
+available:</p>
 <ul>
 <li><a href="view-simple.html">In-Memory View</a></li>
 <li><a href="view-jpa.html">JPA View</a></li>
 <li><a href="view-mongo.html">Mongo DB View</a></li>
 </ul>
 <p>In addition, the API supplies filtering functionality for handling requests of filtering of view results in form of attribute filters (
-like <code>attribute=value&amp;attrubute2=value2&amp;task.name=taskname</code>). Especially it defines the main concepts like <code>Criteria</code> and <code>Operator</code>
-and allows classification of those. </p>
+like <code>attribute=value&amp;attrubute2=value2&amp;task.name=taskname</code>). Especially, it defines the main concepts like <code>Criteria</code> and <code>Operator</code>
+and generic query paging and sorting.</p>
+<h2 id="feature-support-matrix">Feature support matrix<a class="headerlink" href="#feature-support-matrix" title="Permanent link">#</a></h2>
+<h4 id="task-api">Task API<a class="headerlink" href="#task-api" title="Permanent link">#</a></h4>
+<p>The Task API allows to query for tasks handled by the task-pool.</p>
+<table>
+<thead>
+<tr>
+<th>Query Type</th>
+<th>Description</th>
+<th>Payload types</th>
+<th>In-Memory</th>
+<th>JPA</th>
+<th>Mongo DB</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>TasksForUserQuery</td>
+<td>Retrieves a list of tasks accessible by the user (filters on username and groups only)</td>
+<td>List<Task></td>
+<td>yes</td>
+<td>yes</td>
+<td>yes</td>
+</tr>
+<tr>
+<td>TaskForIdQuery</td>
+<td>Retrieves a task by id (without any other filters)</td>
+<td>Task or null</td>
+<td>yes</td>
+<td>yes</td>
+<td>yes</td>
+</tr>
+<tr>
+<td>TasksForApplicationQuery</td>
+<td>Retrieves all tasks by given application name (without any further filters)</td>
+<td>List<Task></td>
+<td>yes</td>
+<td>yes</td>
+<td>yes</td>
+</tr>
+<tr>
+<td>TaskWithDataEntriesForIdQuery</td>
+<td>Retrieves a task by id and correlates result with data entries, if available</td>
+<td>(Task, List<DataEntry>) or null</td>
+<td>yes</td>
+<td>yes</td>
+<td>yes</td>
+</tr>
+<tr>
+<td>TasksWithDataEntriesForUserQuery</td>
+<td>Retrieves a list of tasks accessible by the user and applying additional filters and correlates result with data entries, if available</td>
+<td>List&lt;(Task, List<DataEntry>)</td>
+<td>yes</td>
+<td>incubation</td>
+<td>yes</td>
+</tr>
+<tr>
+<td>TaskCountByApplicationQuery</td>
+<td>Counts tasks grouped by application names, useful for monitoring</td>
+<td>List&lt;(ApplicationName, Count)&gt;</td>
+<td>yes</td>
+<td>no</td>
+<td>yes</td>
+</tr>
+</tbody>
+</table>
+<h4 id="process-definition-api">Process Definition API<a class="headerlink" href="#process-definition-api" title="Permanent link">#</a></h4>
+<p>The Process Definition API allows to query for process definitions handled by the task-pool.</p>
+<table>
+<thead>
+<tr>
+<th>Query Type</th>
+<th>Description</th>
+<th>Payload types</th>
+<th>In-Memory</th>
+<th>JPA</th>
+<th>Mongo DB</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ProcessDefinitionsStartableByUserQuery</td>
+<td>Retrieves a list of process definitions start-able by user</td>
+<td>List<ProcessDefinition></td>
+<td>yes</td>
+<td>yes</td>
+<td>yes</td>
+</tr>
+</tbody>
+</table>
+<h4 id="process-instance-api">Process Instance API<a class="headerlink" href="#process-instance-api" title="Permanent link">#</a></h4>
+<p>The Process Instance API allows to query for process instances handled by the task-pool.</p>
+<table>
+<thead>
+<tr>
+<th>Query Type</th>
+<th>Description</th>
+<th>Payload types</th>
+<th>In-Memory</th>
+<th>JPA</th>
+<th>Mongo DB</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ProcessInstancesByStateQuery</td>
+<td>Retrieves a list of process instances by state (started, finished, etc)</td>
+<td>List<ProcessInstance></td>
+<td>yes</td>
+<td>yes</td>
+<td>no</td>
+</tr>
+</tbody>
+</table>
+<h4 id="process-variable-api-incubation">Process Variable API (incubation)<a class="headerlink" href="#process-variable-api-incubation" title="Permanent link">#</a></h4>
+<p>The Process Variable API allows to query for process variables handled by the task-pool.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The Process Variable API is supporting revision-aware queries, which are currently only supported by JPA and In-Memory implementations.  </p>
+</div>
+<table>
+<thead>
+<tr>
+<th>Query Type</th>
+<th>Description</th>
+<th>Payload types</th>
+<th>In-Memory</th>
+<th>JPA</th>
+<th>Mongo DB</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ProcessVariablesForInstanceQuery</td>
+<td>Retrieves a list of process variables for given process instance and matching provided filters</td>
+<td>List<ProcessVariable></td>
+<td>yes</td>
+<td>no</td>
+<td>no</td>
+</tr>
+</tbody>
+</table>
+<h4 id="data-entry-api">Data Entry API<a class="headerlink" href="#data-entry-api" title="Permanent link">#</a></h4>
+<p>The Data Entry API allows to query for data entries handled by the data-pool.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The Data Entry API is supporting revision-aware queries, which are currently only supported by JPA and In-Memory implementations.</p>
+</div>
+<table>
+<thead>
+<tr>
+<th>Query Type</th>
+<th>Description</th>
+<th>Payload types</th>
+<th>In-Memory</th>
+<th>JPA</th>
+<th>Mongo DB</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DataEntriesForUserQuery</td>
+<td>Retrieves a list of data entries accessible by the user with some additional filters.</td>
+<td>List<DataEntry></td>
+<td>yes</td>
+<td>yes</td>
+<td>yes</td>
+</tr>
+<tr>
+<td>DataEntryForIdentityQuery</td>
+<td>Retrieves a a list by type and an optional id (without any other filters)</td>
+<td>List<DataEntry></td>
+<td>yes</td>
+<td>yes</td>
+<td>yes</td>
+</tr>
+<tr>
+<td>DataEntriesQuery</td>
+<td>Retrieves a list of data entries matching filters</td>
+<td>List<DataEntry></td>
+<td>yes</td>
+<td>yes</td>
+<td>yes</td>
+</tr>
+</tbody>
+</table>
+<h2 id="revision-aware-query-support">Revision-aware query support<a class="headerlink" href="#revision-aware-query-support" title="Permanent link">#</a></h2>
+<p>Projections can be built in a way, that they support and store event revision information transported by the event metadata. By doing so, you might send an
+update of the model by specifying the update revision and are waiting for the eventually consistent event delivery to the projection of this update.
+In order to achieve this, you might specify the minimum revision the query result must fulfill in order to match your query request. See <a href="https://github.com/holixon/axon-gateway-extension">axon-gateway-extension</a>
+for more details. Please note, that not all implementations are implementing this feature. Especially, Mongo DB View is currently <strong>NOT SUPPORTING</strong> Revision Aware queries. </p>
 
   <hr>
 <div class="md-source-file">
@@ -1384,7 +1644,7 @@ and allows classification of those. </p>
     <nav class="md-footer__inner md-grid" aria-label="Footer" >
       
         
-        <a href="view-form-url-resolver.html" class="md-footer__link md-footer__link--prev" aria-label="Previous: Form URL Resolver" rel="prev">
+        <a href="core-datapool.html" class="md-footer__link md-footer__link--prev" aria-label="Previous: Datapool Core" rel="prev">
           <div class="md-footer__button md-icon">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
           </div>
@@ -1393,20 +1653,20 @@ and allows classification of those. </p>
               <span class="md-footer__direction">
                 Previous
               </span>
-              Form URL Resolver
+              Datapool Core
             </div>
           </div>
         </a>
       
       
         
-        <a href="other-tasklist-url-resolver.html" class="md-footer__link md-footer__link--next" aria-label="Next: Tasklist URL Resolver" rel="next">
+        <a href="view-api-client.html" class="md-footer__link md-footer__link--next" aria-label="Next: View API Client" rel="next">
           <div class="md-footer__title">
             <div class="md-ellipsis">
               <span class="md-footer__direction">
                 Next
               </span>
-              Tasklist URL Resolver
+              View API Client
             </div>
           </div>
           <div class="md-footer__button md-icon">
