@@ -72,7 +72,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#configuration-of-mongo-view" class="md-skip">
+        <a href="#configuration-properties" class="md-skip">
           Skip to content
         </a>
       
@@ -974,29 +974,23 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#configuration-of-mongo-view" class="md-nav__link">
-    Configuration of Mongo View
+  <a href="#configuration-properties" class="md-nav__link">
+    Configuration properties
   </a>
   
-    <nav class="md-nav" aria-label="Configuration of Mongo View">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
+</li>
+      
+        <li class="md-nav__item">
   <a href="#change-tracking-mode" class="md-nav__link">
     Change Tracking Mode
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
+      
+        <li class="md-nav__item">
   <a href="#clear-deleted-tasks" class="md-nav__link">
     Clear deleted tasks
   </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -1376,13 +1370,13 @@
 
   <h1>Mongo DB View Configuration</h1>
 
-<h2 id="configuration-of-mongo-view">Configuration of Mongo View<a class="headerlink" href="#configuration-of-mongo-view" title="Permanent link">#</a></h2>
 <p>The use of Mongo database or a Cosmos DB in Mongo mode as a persistence for the read projection of task-pool and data-pool may require some additional configuration, depending
-on your scenario. </p>
+on your scenario.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>We strongly recommend to use a clustered Mongo DB or Cosmos DB installation for persistence to avoid data loss.</p>
 </div>
+<h3 id="configuration-properties">Configuration properties<a class="headerlink" href="#configuration-properties" title="Permanent link">#</a></h3>
 <p>The configuration of View Mongo is performed via application properties of the component, that includes the <code>polyflow-view-mongo</code>. All configuration
 properties have the prefix <code>polyflow.view.mongo</code>. Here is the example with all properties:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">polyflow</span><span class="p">:</span><span class="w"></span>
@@ -1441,7 +1435,7 @@ properties have the prefix <code>polyflow.view.mongo</code>. Here is the example
 </tr>
 <tr>
 <td><code>change-stream.clear-deleted-tasks.timezone</code></td>
-<td>TimeZone to use for resolving the cron expression. Default: UTC.</td>
+<td>Time zone to use for resolving the cron expression. Default: UTC.</td>
 <td>Timezone</td>
 <td>UTC</td>
 <td>CET</td>
