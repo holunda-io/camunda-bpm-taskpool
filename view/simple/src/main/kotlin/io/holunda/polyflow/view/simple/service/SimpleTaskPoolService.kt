@@ -226,6 +226,16 @@ class SimpleTaskPoolService(
     }
   }
 
+  /**
+   * Read-only stored data.
+   */
+  fun getDataEntries(): Map<String, DataEntry> = dataEntries.toMap()
+
+  /**
+   * Read-only stored data.
+   */
+  fun getTasks(): Map<String, Task> = tasks.toMap()
+
   private fun updateTaskForUserQuery(taskId: String) {
     queryUpdateEmitter.updateMapFilterQuery(tasks, taskId, TasksForUserQuery::class.java)
 

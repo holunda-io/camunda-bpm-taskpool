@@ -106,6 +106,10 @@ class SimpleProcessInstanceService(
     updateProcessInstanceQuery(event.processInstanceId)
   }
 
+  /**
+   * Read-only stored data.
+   */
+  fun getProcessInstances(): Map<String, ProcessInstance> = processInstances.toMap()
 
   private fun updateProcessInstanceQuery(processInstanceId: String) {
     val revisionValue = revisionSupport.getRevisionMax(setOf(processInstanceId))

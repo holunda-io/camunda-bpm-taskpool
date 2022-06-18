@@ -1,6 +1,7 @@
 package io.holunda.polyflow.view.simple.service
 
 import io.holunda.camunda.taskpool.api.process.definition.ProcessDefinitionRegisteredEvent
+import io.holunda.polyflow.view.DataEntry
 import io.holunda.polyflow.view.ProcessDefinition
 import io.holunda.polyflow.view.query.process.ProcessDefinitionApi
 import io.holunda.polyflow.view.query.process.ProcessDefinitionsStartableByUserQuery
@@ -63,4 +64,9 @@ class SimpleProcessDefinitionService(
       .values
       .map { it.last() }
       .filter { query.applyFilter(it) }
+
+  /**
+   * Read-only stored data.
+   */
+  fun getProcessDefinitions(): Map<String, Set<ProcessDefinition>> = processDefinitions.toMap()
 }
