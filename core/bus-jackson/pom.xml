@@ -25,6 +25,11 @@
       <version>${project.version}</version>
     </dependency>
     <dependency>
+      <groupId>io.holunda.polyflow</groupId>
+      <artifactId>polyflow-view-api</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-databind</artifactId>
       <scope>provided</scope>
