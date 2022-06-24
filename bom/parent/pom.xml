@@ -21,7 +21,8 @@
     <springboot.version>2.7.0</springboot.version>
     <camunda-commons-typed-values.version>7.17.0</camunda-commons-typed-values.version>
 
-    <axon.version>4.5.10</axon.version>
+    <axon-bom.version>4.5.13</axon-bom.version>
+
     <axon-kotlin.version>0.2.0</axon-kotlin.version>
     <axon-gateway-extension.version>0.0.5</axon-gateway-extension.version>
 
@@ -157,44 +158,14 @@
         <version>${camunda-commons-typed-values.version}</version>
       </dependency>
 
-      <!-- Axon Framework -->
-      <!-- FIXME: replace with BOM as soon as released -->
       <dependency>
         <groupId>org.axonframework</groupId>
-        <artifactId>axon-messaging</artifactId>
-        <version>${axon.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.axonframework</groupId>
-        <artifactId>axon-eventsourcing</artifactId>
-        <version>${axon.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.axonframework</groupId>
-        <artifactId>axon-modelling</artifactId>
-        <version>${axon.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.axonframework</groupId>
-        <artifactId>axon-configuration</artifactId>
-        <version>${axon.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.axonframework</groupId>
-        <artifactId>axon-spring-boot-starter</artifactId>
-        <version>${axon.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.axonframework</groupId>
-        <artifactId>axon-spring</artifactId>
-        <version>${axon.version}</version>
+        <artifactId>axon-bom</artifactId>
+        <version>${axon-bom.version}</version>
+        <scope>import</scope>
+        <type>pom</type>
       </dependency>
 
-      <dependency>
-        <groupId>org.axonframework.extensions.kotlin</groupId>
-        <artifactId>axon-kotlin</artifactId>
-        <version>${axon-kotlin.version}</version>
-      </dependency>
       <dependency>
         <groupId>io.holixon</groupId>
         <artifactId>axon-gateway-extension</artifactId>
@@ -232,11 +203,7 @@
         <version>${springboot.version}</version>
         <scope>test</scope>
       </dependency>
-      <dependency>
-        <groupId>org.axonframework</groupId>
-        <artifactId>axon-test</artifactId>
-        <version>${axon.version}</version>
-      </dependency>
+
       <dependency>
         <groupId>org.awaitility</groupId>
         <artifactId>awaitility</artifactId>
