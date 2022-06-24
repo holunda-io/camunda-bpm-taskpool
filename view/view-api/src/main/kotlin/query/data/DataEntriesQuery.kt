@@ -21,6 +21,7 @@ data class DataEntriesQuery(
   val filters: List<String> = listOf()
 ) : FilterQuery<DataEntry>, PageableSortableQuery {
 
+  // jackson serialization works because delegate property is private
   private val predicates by lazy { createDataEntryPredicates(toCriteria(filters)) }
 
   override fun applyFilter(element: DataEntry): Boolean = filterByPredicate(element, predicates)

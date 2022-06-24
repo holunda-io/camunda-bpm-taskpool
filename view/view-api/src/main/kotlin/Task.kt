@@ -32,9 +32,6 @@ data class Task(
   val deleted: Boolean = false
 ) : TaskIdentity, WithPayload, WithCorrelations {
 
-  val correlationIdentities by lazy {
-    correlations.map { dataIdentityString(it.key, it.value as EntryId) }.toSet()
-  }
+  val correlationIdentities: Set<String> = correlations.map { dataIdentityString(it.key, it.value as EntryId) }.toSet()
 
 }
-

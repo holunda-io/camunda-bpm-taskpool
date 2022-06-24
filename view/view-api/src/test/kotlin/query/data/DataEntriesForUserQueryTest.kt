@@ -1,6 +1,10 @@
 package io.holunda.polyflow.view.query.data
 
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.module.kotlin.readValue
+import io.holunda.polyflow.bus.jackson.configurePolyflowJacksonObjectMapper
 import io.holunda.polyflow.view.DataEntry
+import io.holunda.polyflow.view.Task
 import io.holunda.polyflow.view.auth.User
 import org.assertj.core.api.Assertions.assertThat
 import org.camunda.bpm.engine.variable.Variables
@@ -57,5 +61,19 @@ internal class DataEntriesForUserQueryTest {
     assertThat(DataEntriesForUserQuery(filters = listOf("cas=4711"), user = User("ironman", setOf("avengers"))).applyFilter(dataEntry)).isFalse
     assertThat(DataEntriesForUserQuery(filters = listOf("case=4712"), user = User("ironman", setOf("avengers"))).applyFilter(dataEntry)).isFalse
 
+  }
+
+
+  @Test
+  fun `can serialize and deserialize query with jackson`() {
+    val query = DataEntriesForUserQuery(user = User("kermit", setOf("muppets")), filters = listOf("foo"))
+
+    val om = jacksonObjectMapper().configurePolyflowJacksonObjectMapper()
+
+    val json = om.writeValueAsString(query)
+
+    val deserialized = om.readValue<DataEntriesForUserQuery>(json)
+
+    assertThat(deserialized).isEqualTo(query)
   }
 }
