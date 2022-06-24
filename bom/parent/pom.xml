@@ -23,7 +23,7 @@
 
     <axon.version>4.5.10</axon.version>
     <axon-kotlin.version>0.2.0</axon-kotlin.version>
-    <axon-gateway-extension.version>0.0.5</axon-gateway-extension.version>
+    <axon-gateway-extension.version>0.1.0</axon-gateway-extension.version>
 
     <awaitability.version>4.2.0</awaitability.version>
     <mockito-kotlin.version>4.0.0</mockito-kotlin.version>
@@ -196,12 +196,13 @@
         <version>${axon-kotlin.version}</version>
       </dependency>
       <dependency>
-        <groupId>io.holixon</groupId>
+        <groupId>io.holixon.axon.gateway</groupId>
         <artifactId>axon-gateway-extension</artifactId>
         <version>${axon-gateway-extension.version}</version>
       </dependency>
+
       <dependency>
-        <groupId>io.holixon</groupId>
+        <groupId>io.holixon.axon.gateway</groupId>
         <artifactId>axon-gateway-spring-boot-starter</artifactId>
         <version>${axon-gateway-extension.version}</version>
       </dependency>
