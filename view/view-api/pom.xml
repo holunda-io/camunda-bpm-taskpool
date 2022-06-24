@@ -34,11 +34,5 @@
       <groupId>org.assertj</groupId>
       <artifactId>assertj-core</artifactId>
     </dependency>
-    <dependency>
-      <groupId>io.holunda.polyflow</groupId>
-      <artifactId>polyflow-bus-jackson</artifactId>
-      <scope>test</scope>
-    </dependency>
-
   </dependencies>
 </project>
