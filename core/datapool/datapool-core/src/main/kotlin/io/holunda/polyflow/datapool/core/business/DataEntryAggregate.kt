@@ -1,6 +1,7 @@
 package io.holunda.polyflow.datapool.core.business
 
 import io.holunda.camunda.taskpool.api.business.*
+import io.holunda.polyflow.datapool.core.DataPoolCoreConfiguration
 import org.axonframework.commandhandling.CommandHandler
 import org.axonframework.eventsourcing.EventSourcingHandler
 import org.axonframework.modelling.command.AggregateIdentifier
@@ -10,7 +11,7 @@ import org.axonframework.spring.stereotype.Aggregate
 /**
  * Aggregate representing a data entry.
  */
-@Aggregate
+@Aggregate(snapshotTriggerDefinition = DataPoolCoreConfiguration.SNAPSHOT_TRIGGER_DEFINITION)
 class DataEntryAggregate() {
 
   @AggregateIdentifier
@@ -21,20 +22,22 @@ class DataEntryAggregate() {
    */
   @CommandHandler
   constructor(command: CreateDataEntryCommand) : this() {
-    AggregateLifecycle.apply(DataEntryCreatedEvent(
-      entryId = command.dataEntryChange.entryId,
-      entryType = command.dataEntryChange.entryType,
-      name = command.dataEntryChange.name,
-      type = command.dataEntryChange.type,
-      applicationName = command.dataEntryChange.applicationName,
-      state = command.dataEntryChange.state,
-      description = command.dataEntryChange.description,
-      payload = command.dataEntryChange.payload,
-      correlations = command.dataEntryChange.correlations,
-      createModification = command.dataEntryChange.modification,
-      authorizations = command.dataEntryChange.authorizationChanges,
-      formKey = command.dataEntryChange.formKey
-    ))
+    AggregateLifecycle.apply(
+      DataEntryCreatedEvent(
+        entryId = command.dataEntryChange.entryId,
+        entryType = command.dataEntryChange.entryType,
+        name = command.dataEntryChange.name,
+        type = command.dataEntryChange.type,
+        applicationName = command.dataEntryChange.applicationName,
+        state = command.dataEntryChange.state,
+        description = command.dataEntryChange.description,
+        payload = command.dataEntryChange.payload,
+        correlations = command.dataEntryChange.correlations,
+        createModification = command.dataEntryChange.modification,
+        authorizations = command.dataEntryChange.authorizationChanges,
+        formKey = command.dataEntryChange.formKey
+      )
+    )
   }
 
   /**
@@ -42,20 +45,22 @@ class DataEntryAggregate() {
    */
   @CommandHandler
   fun handle(command: UpdateDataEntryCommand) {
-    AggregateLifecycle.apply(DataEntryUpdatedEvent(
-      entryId = command.dataEntryChange.entryId,
-      entryType = command.dataEntryChange.entryType,
-      name = command.dataEntryChange.name,
-      type = command.dataEntryChange.type,
-      applicationName = command.dataEntryChange.applicationName,
-      state = command.dataEntryChange.state,
-      description = command.dataEntryChange.description,
-      payload = command.dataEntryChange.payload,
-      correlations = command.dataEntryChange.correlations,
-      updateModification = command.dataEntryChange.modification,
-      authorizations = command.dataEntryChange.authorizationChanges,
-      formKey = command.dataEntryChange.formKey
-    ))
+    AggregateLifecycle.apply(
+      DataEntryUpdatedEvent(
+        entryId = command.dataEntryChange.entryId,
+        entryType = command.dataEntryChange.entryType,
+        name = command.dataEntryChange.name,
+        type = command.dataEntryChange.type,
+        applicationName = command.dataEntryChange.applicationName,
+        state = command.dataEntryChange.state,
+        description = command.dataEntryChange.description,
+        payload = command.dataEntryChange.payload,
+        correlations = command.dataEntryChange.correlations,
+        updateModification = command.dataEntryChange.modification,
+        authorizations = command.dataEntryChange.authorizationChanges,
+        formKey = command.dataEntryChange.formKey
+      )
+    )
   }
 
   /**
