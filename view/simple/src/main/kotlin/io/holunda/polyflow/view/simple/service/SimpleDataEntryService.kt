@@ -35,6 +35,7 @@ class SimpleDataEntryService(
   private val revisionSupport = RevisionSupport()
   private val dataEntries = ConcurrentHashMap<String, DataEntry>()
 
+
   /**
    * Creates new data entry.
    */
@@ -159,4 +160,9 @@ class SimpleDataEntryService(
       )
     )
   }
+
+  /**
+   * Read-only stored data.
+   */
+  fun getDataEntries(): Map<String, DataEntry> = dataEntries.toMap()
 }

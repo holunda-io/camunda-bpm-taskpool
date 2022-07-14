@@ -21,8 +21,7 @@
     <springboot.version>2.7.1</springboot.version>
     <camunda-commons-typed-values.version>7.17.0</camunda-commons-typed-values.version>
 
-    <!-- Don't use, it is providing deprecated libraries -->
-    <axon.version>4.5.12</axon.version>
+    <axon.version>4.5.14</axon.version>
 
     <axon-kotlin.version>0.2.0</axon-kotlin.version>
     <axon-gateway-extension.version>0.1.0</axon-gateway-extension.version>
@@ -162,38 +161,10 @@
       <!-- Axon Framework -->
       <dependency>
         <groupId>org.axonframework</groupId>
-        <artifactId>axon-messaging</artifactId>
+        <artifactId>axon-bom</artifactId>
         <version>${axon.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.axonframework</groupId>
-        <artifactId>axon-eventsourcing</artifactId>
-        <version>${axon.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.axonframework</groupId>
-        <artifactId>axon-modelling</artifactId>
-        <version>${axon.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.axonframework</groupId>
-        <artifactId>axon-configuration</artifactId>
-        <version>${axon.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.axonframework</groupId>
-        <artifactId>axon-spring-boot-starter</artifactId>
-        <version>${axon.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.axonframework</groupId>
-        <artifactId>axon-spring</artifactId>
-        <version>${axon.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.axonframework</groupId>
-        <artifactId>axon-server-connector</artifactId>
-        <version>${axon.version}</version>
+        <scope>import</scope>
+        <type>pom</type>
       </dependency>
 
       <dependency>
@@ -206,6 +177,7 @@
         <artifactId>axon-gateway-extension</artifactId>
         <version>${axon-gateway-extension.version}</version>
       </dependency>
+
       <dependency>
         <groupId>io.holixon.axon.gateway</groupId>
         <artifactId>axon-gateway-spring-boot-starter</artifactId>
@@ -612,7 +584,7 @@
         <plugin>
           <groupId>org.jetbrains.dokka</groupId>
           <artifactId>dokka-maven-plugin</artifactId>
-          <version>1.6.21</version>
+          <version>1.7.0</version>
           <executions>
             <execution>
               <id>attach-javadocs</id>

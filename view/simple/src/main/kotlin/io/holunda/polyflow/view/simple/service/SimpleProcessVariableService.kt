@@ -67,6 +67,10 @@ class SimpleProcessVariableService(
     updateProcessVariableQuery(event.sourceReference.instanceId)
   }
 
+  /**
+   * Read-only stored data.
+   */
+  fun getProcessVariables(): Map<String, Set<ProcessVariable>> = processVariables.toMap()
 
   private fun updateProcessVariableQuery(processInstanceId: String) {
     if (processVariables.contains(processInstanceId)) {

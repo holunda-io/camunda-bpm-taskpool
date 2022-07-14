@@ -1,7 +1,9 @@
 package io.holunda.polyflow.bus.jackson
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import io.holunda.camunda.taskpool.api.business.AuthorizationChange
 import io.holunda.camunda.taskpool.api.task.SourceReference
+import io.holunda.polyflow.view.filter.Criterion
 
 /**
  * Configures object mapper.
@@ -11,6 +13,8 @@ fun ObjectMapper.configurePolyflowJacksonObjectMapper(): ObjectMapper = this
   .registerModule(DataEntryStateTypeMappingModule())
   .apply {
     addMixIn(SourceReference::class.java, KotlinTypeInfo::class.java)
+    addMixIn(AuthorizationChange::class.java, KotlinTypeInfo::class.java)
+    addMixIn(Criterion::class.java, KotlinTypeInfo::class.java)
   }
 
 /**

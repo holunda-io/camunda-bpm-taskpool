@@ -234,11 +234,15 @@ class PolyflowThenStage<SELF : PolyflowThenStage<SELF>> : PolyflowStage<SELF>() 
   @As("the following query updates have been emitted for query \$query: \$updates")
   fun <T : Any> query_updates_have_been_emitted(query: T, vararg updates: Any): SELF {
     captureEmittedQueryUpdates()
-    assertThat(emittedQueryUpdates
+
+    val captured = emittedQueryUpdates
       .filter { it.queryType == query::class.java }
       .filter { it.predicate.test(query) }
-      .map { it.update })
+      .map { it.update }
+
+    assertThat(captured)
       .`as`("Query updates for query $query")
+      .usingRecursiveFieldByFieldElementComparatorIgnoringFields()
       .contains(*updates)
     return self()
   }
