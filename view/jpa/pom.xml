@@ -95,7 +95,7 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>io.holixon</groupId>
+      <groupId>io.holixon.axon.gateway</groupId>
       <artifactId>axon-gateway-spring-boot-starter</artifactId>
       <scope>test</scope>
     </dependency>

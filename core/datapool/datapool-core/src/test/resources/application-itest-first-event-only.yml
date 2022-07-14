@@ -1,0 +1,28 @@
+spring:
+  application:
+    name: taskpool-core-itest
+  datasource:
+    url: jdbc:h2:mem:itest;
+    username: sa
+    password:
+  jpa:
+    generate-ddl: false
+    hibernate.ddl-auto: validate
+    show-sql: false
+    open-in-view: false
+  flyway:
+    enabled: true
+    locations: "classpath:db/migrations"
+
+polyflow:
+  core:
+    data-entry:
+      event-sourcing-repository-type: io.holunda.polyflow.datapool.core.repository.FirstEventOnlyEventSourcingRepository
+
+logging.level:
+  io.holunda.polyflow:
+    datapool:
+      core:
+        business:
+          DataEntryAggregate: DEBUG
+          CreateOrUpdateCommandHandler: TRACE
