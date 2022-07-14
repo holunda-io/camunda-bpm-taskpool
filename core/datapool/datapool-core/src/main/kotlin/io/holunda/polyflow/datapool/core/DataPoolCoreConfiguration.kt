@@ -47,6 +47,9 @@ class DataPoolCoreConfiguration {
 
   }
 
+  /**
+   * Provides a standard event sourcing repository for data entry aggregate.
+   */
   @ConditionalOnProperty(
     name = ["polyflow.core.data-entry.event-sourcing-repository-type"],
     havingValue = "org.axonframework.eventsourcing.EventSourcingRepository",

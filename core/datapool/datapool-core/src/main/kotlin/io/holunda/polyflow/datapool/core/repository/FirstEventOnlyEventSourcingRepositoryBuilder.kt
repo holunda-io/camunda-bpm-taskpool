@@ -13,9 +13,24 @@ import java.util.function.Predicate
  */
 class FirstEventOnlyEventSourcingRepositoryBuilder<T>(clazz: Class<T>) : EventSourcingRepository.Builder<T>(clazz) {
 
+  /**
+   * Internal snapshotter trigger definition exposed to the users.
+   */
   fun internalSnapshotTriggerDefinition(): SnapshotTriggerDefinition = super.snapshotTriggerDefinition
+
+  /**
+   * Internal event store exposed to the users.
+   */
   fun internalEventStore(): EventStore = super.eventStore
+
+  /**
+   * Internal repository provider exposed to the users.
+   */
   fun internalRepositoryProvider(): RepositoryProvider? = super.repositoryProvider
+
+  /**
+   * Internal event stream filter exposed to the user.
+   */
   fun internalEventStreamFilter(): Predicate<in DomainEventMessage<*>>? = super.eventStreamFilter
 
   override fun eventStore(eventStore: EventStore?): FirstEventOnlyEventSourcingRepositoryBuilder<T> {
