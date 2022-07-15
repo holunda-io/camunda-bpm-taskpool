@@ -28,10 +28,10 @@
 
     <awaitability.version>4.2.0</awaitability.version>
     <mockito-kotlin.version>4.0.0</mockito-kotlin.version>
-    <pattern.class.itest>**/*ITest.*</pattern.class.itest>
-    <pattern.package.itest>**/itest/**/*.*</pattern.package.itest>
     <jgiven.version>1.2.2</jgiven.version>
 
+    <pattern.class.itest>**/*ITest.*</pattern.class.itest>
+    <pattern.package.itest>**/itest/**/*.*</pattern.package.itest>
   </properties>
 
   <modules>
@@ -158,6 +158,7 @@
         <version>${camunda-commons-typed-values.version}</version>
       </dependency>
 
+      <!-- Axon Framework -->
       <dependency>
         <groupId>org.axonframework</groupId>
         <artifactId>axon-bom</artifactId>
@@ -166,6 +167,11 @@
         <type>pom</type>
       </dependency>
 
+      <dependency>
+        <groupId>org.axonframework.extensions.kotlin</groupId>
+        <artifactId>axon-kotlin</artifactId>
+        <version>${axon-kotlin.version}</version>
+      </dependency>
       <dependency>
         <groupId>io.holixon.axon.gateway</groupId>
         <artifactId>axon-gateway-extension</artifactId>
@@ -204,7 +210,6 @@
         <version>${springboot.version}</version>
         <scope>test</scope>
       </dependency>
-
       <dependency>
         <groupId>org.awaitility</groupId>
         <artifactId>awaitility</artifactId>
@@ -266,6 +271,7 @@
   </dependencies>
 
   <build>
+    <defaultGoal>clean package</defaultGoal>
     <pluginManagement>
       <plugins>
         <!-- Coverage metering -->
@@ -276,6 +282,7 @@
           <executions>
             <execution>
               <id>pre-unit-test</id>
+              <phase>initialize</phase>
               <goals>
                 <goal>prepare-agent</goal>
               </goals>
