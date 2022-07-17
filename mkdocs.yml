@@ -128,6 +128,7 @@ nav:
     - Configuration:
       - Mongo DB View Configuration: reference-guide/configuration/view-mongo.md
       - Persistence Configuration: reference-guide/configuration/persistence.md
+      - Datapool Aggregate Tuning: reference-guide/configuration/core-datapool-aggregate-tuning.md
   - Examples:
     - Examples Overview: examples/index.md
     - Example Approval: examples/example-approval.md
