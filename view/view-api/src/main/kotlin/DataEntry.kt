@@ -3,7 +3,6 @@ package io.holunda.polyflow.view
 import io.holunda.camunda.taskpool.api.business.*
 import org.camunda.bpm.engine.variable.VariableMap
 import org.camunda.bpm.engine.variable.Variables
-import java.util.*
 
 /**
  * Data entry projection.
@@ -64,7 +63,5 @@ data class DataEntry(
   val protocol: List<ProtocolEntry> = listOf()
 
 ) : DataIdentity {
-  val identity by lazy {
-    dataIdentityString(entryType, entryId)
-  }
+  val identity: String = dataIdentityString(entryType, entryId)
 }

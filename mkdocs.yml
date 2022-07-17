@@ -113,17 +113,22 @@ nav:
       - Taskpool Core: reference-guide/components/core-taskpool.md
       - Datapool Core: reference-guide/components/core-datapool.md
     - View Components:
+      - View API: reference-guide/components/view-api.md
+      - View API Client: reference-guide/components/view-api-client.md
+      - Form URL Resolver: reference-guide/components/view-form-url-resolver.md
       - In-Memory View: reference-guide/components/view-simple.md
       - JPA View: reference-guide/components/view-jpa.md
       - Mongo DB View: reference-guide/components/view-mongo.md
-      - Form URL Resolver: reference-guide/components/view-form-url-resolver.md
-      - View-API: reference-guide/components/view-api.md
+
     - Other Components:
       - Tasklist URL Resolver: reference-guide/components/other-tasklist-url-resolver.md
       - Variable Serializer: reference-guide/components/other-variable-serializer.md
       - Bus Jackson: reference-guide/components/other-bus-jackson.md
     - Configuration Overview: reference-guide/configuration/index.md
-    - Persistence Configuration: reference-guide/configuration/persistence.md
+    - Configuration:
+      - Mongo DB View Configuration: reference-guide/configuration/view-mongo.md
+      - Persistence Configuration: reference-guide/configuration/persistence.md
+      - Datapool Aggregate Tuning: reference-guide/configuration/core-datapool-aggregate-tuning.md
   - Examples:
     - Examples Overview: examples/index.md
     - Example Approval: examples/example-approval.md

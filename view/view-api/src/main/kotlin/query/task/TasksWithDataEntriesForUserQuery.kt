@@ -19,15 +19,13 @@ data class TasksWithDataEntriesForUserQuery(
   override val page: Int = 1,
   override val size: Int = Int.MAX_VALUE,
   override val sort: String? = null,
-  val filters: List<String> = listOf(),
-  val filterMethod: (TaskWithDataEntries) -> Boolean = { element ->
-    element.task.assignee == user.username
+  val filters: List<String> = listOf()
+) : FilterQuery<TaskWithDataEntries>, PageableSortableQuery {
+
+  override fun applyFilter(element: TaskWithDataEntries): Boolean = element.task.assignee == user.username
       // candidate user
       || (element.task.candidateUsers.contains(user.username))
       // candidate groups
       || (element.task.candidateGroups.any { candidateGroup -> user.groups.contains(candidateGroup) })
-  }
-) : FilterQuery<TaskWithDataEntries>, PageableSortableQuery {
 
-  override fun applyFilter(element: TaskWithDataEntries): Boolean = filterMethod(element)
 }

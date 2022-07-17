@@ -6,6 +6,8 @@ import java.util.concurrent.CompletableFuture
 
 /**
  * Reactive API for process definitions.
+ * @see ProcessDefinitionApi
+ * For the client, there is no difference in definition of the query, but the implementer has a different method to reflect the reactive nature.
  */
 interface ReactiveProcessDefinitionApi {
 

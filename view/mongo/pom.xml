@@ -6,7 +6,7 @@
   <parent>
     <groupId>io.holunda.polyflow</groupId>
     <artifactId>polyflow-view-parent</artifactId>
-    <version>3.2.2</version>
+    <version>3.3.0</version>
   </parent>
 
   <artifactId>polyflow-view-mongo</artifactId>
@@ -24,7 +24,6 @@
     <dependency>
       <groupId>org.axonframework.extensions.mongo</groupId>
       <artifactId>axon-mongo</artifactId>
-      <version>${axon-mongo.version}</version>
     </dependency>
     <dependency>
       <groupId>org.axonframework</groupId>

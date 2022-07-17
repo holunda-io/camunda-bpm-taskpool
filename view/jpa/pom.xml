@@ -6,7 +6,7 @@
   <parent>
     <groupId>io.holunda.polyflow</groupId>
     <artifactId>polyflow-view-parent</artifactId>
-    <version>3.2.2</version>
+    <version>3.3.0</version>
   </parent>
 
   <artifactId>polyflow-view-jpa</artifactId>
@@ -95,7 +95,7 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>io.holixon</groupId>
+      <groupId>io.holixon.axon.gateway</groupId>
       <artifactId>axon-gateway-spring-boot-starter</artifactId>
       <scope>test</scope>
     </dependency>
