@@ -71,6 +71,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#core-datapool-aggregate-tuning" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -974,9 +979,58 @@
       
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Datapool Aggregate Tuning
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="core-datapool-aggregate-tuning.html" class="md-nav__link md-nav__link--active">
         Datapool Aggregate Tuning
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#core-datapool-aggregate-tuning" class="md-nav__link">
+    Core Datapool Aggregate Tuning
+  </a>
+  
+    <nav class="md-nav" aria-label="Core Datapool Aggregate Tuning">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#configuration-properties" class="md-nav__link">
+    Configuration properties
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#event-souring-repository" class="md-nav__link">
+    Event Souring Repository
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1336,7 +1390,41 @@
 
   <h1>Datapool Aggregate Tuning</h1>
 
-
+<h2 id="core-datapool-aggregate-tuning">Core Datapool Aggregate Tuning<a class="headerlink" href="#core-datapool-aggregate-tuning" title="Permanent link">#</a></h2>
+<p>Data pool is implemented using DDD Aggregate pattern following the CQRS/ES style. By doing so, the event sourced aggregate
+replays all events to restore its state. In case of Data Entry the aggregate is currently not storing any state, required for
+command validation, so it is possible to optimize the loading process. For this purpose the following options are provided.</p>
+<h3 id="configuration-properties">Configuration properties<a class="headerlink" href="#configuration-properties" title="Permanent link">#</a></h3>
+<table>
+<thead>
+<tr>
+<th>Property (prefixed by <code>polyflow.core.data-entry</code>)</th>
+<th>Description</th>
+<th>Value</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>snapshot-threshold</code></td>
+<td>Threshold of events to create a snapshot of the dat entry aggregate</td>
+<td>Long</td>
+<td>5</td>
+</tr>
+<tr>
+<td><code>event-sourcing-repository-type</code></td>
+<td>The full-qualified class name of the repository. <code>org.axonframework.eventsourcing.EventSourcingRepository</code> or <code>io.holunda.polyflow.datapool.core.repository.FirstEventOnlyEventSourcingRepository</code></td>
+<td>String</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="event-souring-repository">Event Souring Repository<a class="headerlink" href="#event-souring-repository" title="Permanent link">#</a></h3>
+<p>By default, the <code>EventSourcingRepository</code> for every Aggregate is provided by Axon Framework. This repository is supporting
+loading from snapshots and will load tha last snapshot and all events occurred after the snapshot. Alternatively, you can set
+the repository to <code>io.holunda.polyflow.datapool.core.repository.FirstEventOnlyEventSourcingRepository</code>. This repository loads
+the first event only to restore the state. This special repository is using the first event and saves space by not creating any
+snaphsots. </p>
 
   <hr>
 <div class="md-source-file">
