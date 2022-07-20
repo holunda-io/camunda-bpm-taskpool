@@ -6,7 +6,7 @@
   <parent>
     <groupId>io.holunda.polyflow</groupId>
     <artifactId>polyflow-root</artifactId>
-    <version>3.3.0</version>
+    <version>3.3.1</version>
     <relativePath>../../pom.xml</relativePath>
   </parent>
 
@@ -24,7 +24,7 @@
     <axon-bom.version>4.5.16</axon-bom.version>
 
     <axon-kotlin.version>0.2.0</axon-kotlin.version>
-    <axon-gateway-extension.version>0.1.0</axon-gateway-extension.version>
+    <axon-gateway-extension.version>0.1.1</axon-gateway-extension.version>
 
     <awaitability.version>4.2.0</awaitability.version>
     <mockito-kotlin.version>4.0.0</mockito-kotlin.version>
@@ -634,7 +634,7 @@
         <!-- Install -->
         <plugin>
           <artifactId>maven-install-plugin</artifactId>
-          <version>2.5.2</version>
+          <version>3.0.0</version>
         </plugin>
       </plugins>
     </pluginManagement>

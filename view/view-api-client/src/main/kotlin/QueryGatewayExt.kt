@@ -24,20 +24,20 @@ object QueryGatewayExt {
   /**
    * @see [DataEntriesForUserQuery]
    */
-  fun QueryGateway.dataEntriesForUser(query: DataEntriesForUserQuery, revisionQuery: RevisionQueryParameters): CompletableFuture<DataEntriesQueryResult> =
+  fun QueryGateway.dataEntriesForUser(query: DataEntriesForUserQuery, revisionQuery: RevisionQueryParameters? = null): CompletableFuture<DataEntriesQueryResult> =
     DataEntryQueryClient(this).query(query, revisionQuery)
 
 
   /**
    * @see [DataEntriesQuery]
    */
-  fun QueryGateway.dataEntries(query: DataEntriesQuery, revisionQuery: RevisionQueryParameters): CompletableFuture<DataEntriesQueryResult> =
+  fun QueryGateway.dataEntries(query: DataEntriesQuery, revisionQuery: RevisionQueryParameters? = null): CompletableFuture<DataEntriesQueryResult> =
     DataEntryQueryClient(this).query(query, revisionQuery)
 
   /**
    * @see [DataEntryForIdentityQuery]
    */
-  fun QueryGateway.dataEntryForIdentity(query: DataEntryForIdentityQuery, revisionQuery: RevisionQueryParameters): CompletableFuture<DataEntriesQueryResult> =
+  fun QueryGateway.dataEntryForIdentity(query: DataEntryForIdentityQuery, revisionQuery: RevisionQueryParameters? = null): CompletableFuture<DataEntriesQueryResult> =
     DataEntryQueryClient(this).query(query, revisionQuery)
 
   /**
