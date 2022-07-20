@@ -15,7 +15,7 @@
         <link rel="canonical" href="https://www.holunda.io/camunda-bpm-taskpool/snapshot/reference-guide/components/common-taskpool-sender.html">
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.3.0, mkdocs-material-8.3.9">
+      <meta name="generator" content="mkdocs-1.3.1, mkdocs-material-8.3.9">
     
     
       
@@ -1452,130 +1452,130 @@
 <tr>
 <th>Message Code</th>
 <th>Severity</th>
-<th style="text-align: left;">Logger*</th>
-<th style="text-align: left;">Description</th>
-<th style="text-align: left;">Meaning</th>
+<th align="left">Logger*</th>
+<th align="left">Description</th>
+<th align="left">Meaning</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>SENDER-001</code></td>
 <td><code>DEBUG</code></td>
-<td style="text-align: left;"><code>.gateway</code></td>
-<td style="text-align: left;">Sending command over gateway disabled by property. Would have sent command <code>payload</code>.</td>
-<td style="text-align: left;">Sending of any commands is disabled.</td>
+<td align="left"><code>.gateway</code></td>
+<td align="left">Sending command over gateway disabled by property. Would have sent command <code>payload</code>.</td>
+<td align="left">Sending of any commands is disabled.</td>
 </tr>
 <tr>
 <td><code>SENDER-002</code></td>
 <td><code>DEBUG</code></td>
-<td style="text-align: left;"><code>.gateway</code></td>
-<td style="text-align: left;">Successfully submitted command <code>payload</code>.</td>
-<td style="text-align: left;">Logging the successfully sent command.</td>
+<td align="left"><code>.gateway</code></td>
+<td align="left">Successfully submitted command <code>payload</code>.</td>
+<td align="left">Logging the successfully sent command.</td>
 </tr>
 <tr>
 <td><code>SENDER-003</code></td>
 <td><code>ERROR</code></td>
-<td style="text-align: left;"><code>.gateway</code></td>
-<td style="text-align: left;">Sending command $commandMessage resulted in error</td>
-<td style="text-align: left;">Error sending command.</td>
+<td align="left"><code>.gateway</code></td>
+<td align="left">Sending command $commandMessage resulted in error</td>
+<td align="left">Error sending command.</td>
 </tr>
 <tr>
 <td><code>SENDER-004</code></td>
 <td><code>DEBUG</code></td>
-<td style="text-align: left;"><code>.task</code></td>
-<td style="text-align: left;">Process task sending is disabled by property. Would have sent $command.</td>
-<td style="text-align: left;"></td>
+<td align="left"><code>.task</code></td>
+<td align="left">Process task sending is disabled by property. Would have sent $command.</td>
+<td align="left"></td>
 </tr>
 <tr>
 <td><code>SENDER-005</code></td>
 <td><code>DEBUG</code></td>
-<td style="text-align: left;"><code>.task</code></td>
-<td style="text-align: left;">Handling ${taskCommands.size} commands for task $taskId using command accumulator $accumulatorName</td>
-<td style="text-align: left;"></td>
+<td align="left"><code>.task</code></td>
+<td align="left">Handling ${taskCommands.size} commands for task $taskId using command accumulator $accumulatorName</td>
+<td align="left"></td>
 </tr>
 <tr>
 <td><code>SENDER-006</code></td>
 <td><code>DEBUG</code></td>
-<td style="text-align: left;"><code>.task</code></td>
-<td style="text-align: left;">Handling ${taskCommands.size} commands for task $taskId using command accumulator $accumulatorName</td>
-<td style="text-align: left;"></td>
+<td align="left"><code>.task</code></td>
+<td align="left">Handling ${taskCommands.size} commands for task $taskId using command accumulator $accumulatorName</td>
+<td align="left"></td>
 </tr>
 <tr>
 <td><code>SENDER-007</code></td>
 <td><code>DEBUG</code></td>
-<td style="text-align: left;"><code>.process.definition</code></td>
-<td style="text-align: left;">Process definition sending is disabled by property. Would have sent $command.</td>
-<td style="text-align: left;"></td>
+<td align="left"><code>.process.definition</code></td>
+<td align="left">Process definition sending is disabled by property. Would have sent $command.</td>
+<td align="left"></td>
 </tr>
 <tr>
 <td><code>SENDER-007</code></td>
 <td><code>DEBUG</code></td>
-<td style="text-align: left;"><code>.process.instance</code></td>
-<td style="text-align: left;">Process instance sending is disabled by property. Would have sent $command.</td>
-<td style="text-align: left;"></td>
+<td align="left"><code>.process.instance</code></td>
+<td align="left">Process instance sending is disabled by property. Would have sent $command.</td>
+<td align="left"></td>
 </tr>
 <tr>
 <td><code>SENDER-009</code></td>
 <td><code>DEBUG</code></td>
-<td style="text-align: left;"><code>.process.variable</code></td>
-<td style="text-align: left;">Process variable sending is disabled by property. Would have sent $command.</td>
-<td style="text-align: left;"></td>
+<td align="left"><code>.process.variable</code></td>
+<td align="left">Process variable sending is disabled by property. Would have sent $command.</td>
+<td align="left"></td>
 </tr>
 <tr>
 <td><code>SENDER-011</code></td>
 <td><code>INFO</code></td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;">Taskpool task commands will be distributed over command bus.</td>
-<td style="text-align: left;"></td>
+<td align="left"></td>
+<td align="left">Taskpool task commands will be distributed over command bus.</td>
+<td align="left"></td>
 </tr>
 <tr>
 <td><code>SENDER-012</code></td>
 <td><code>INFO</code></td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;">Taskpool task command distribution is disabled by property.</td>
-<td style="text-align: left;"></td>
+<td align="left"></td>
+<td align="left">Taskpool task command distribution is disabled by property.</td>
+<td align="left"></td>
 </tr>
 <tr>
 <td><code>SENDER-013</code></td>
 <td><code>INFO</code></td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;">Taskpool process definition commands will be distributed over command bus.</td>
-<td style="text-align: left;"></td>
+<td align="left"></td>
+<td align="left">Taskpool process definition commands will be distributed over command bus.</td>
+<td align="left"></td>
 </tr>
 <tr>
 <td><code>SENDER-014</code></td>
 <td><code>INFO</code></td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;">Taskpool process definition command distribution is disabled by property.</td>
-<td style="text-align: left;"></td>
+<td align="left"></td>
+<td align="left">Taskpool process definition command distribution is disabled by property.</td>
+<td align="left"></td>
 </tr>
 <tr>
 <td><code>SENDER-015</code></td>
 <td><code>INFO</code></td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;">Taskpool process instance commands will be distributed over command bus.</td>
-<td style="text-align: left;"></td>
+<td align="left"></td>
+<td align="left">Taskpool process instance commands will be distributed over command bus.</td>
+<td align="left"></td>
 </tr>
 <tr>
 <td><code>SENDER-016</code></td>
 <td><code>INFO</code></td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;">Taskpool process instance command distribution is disabled by property.</td>
-<td style="text-align: left;"></td>
+<td align="left"></td>
+<td align="left">Taskpool process instance command distribution is disabled by property.</td>
+<td align="left"></td>
 </tr>
 <tr>
 <td><code>SENDER-017</code></td>
 <td><code>INFO</code></td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;">Taskpool process variable commands will be distributed over command bus.</td>
-<td style="text-align: left;"></td>
+<td align="left"></td>
+<td align="left">Taskpool process variable commands will be distributed over command bus.</td>
+<td align="left"></td>
 </tr>
 <tr>
 <td><code>SENDER-018</code></td>
 <td><code>INFO</code></td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;">Taskpool process variable command distribution is disabled by property.</td>
-<td style="text-align: left;"></td>
+<td align="left"></td>
+<td align="left">Taskpool process variable command distribution is disabled by property.</td>
+<td align="left"></td>
 </tr>
 </tbody>
 </table>
@@ -1585,7 +1585,7 @@
   <small>
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">July 17, 2022</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">July 20, 2022</span>
       
     
   </small>
