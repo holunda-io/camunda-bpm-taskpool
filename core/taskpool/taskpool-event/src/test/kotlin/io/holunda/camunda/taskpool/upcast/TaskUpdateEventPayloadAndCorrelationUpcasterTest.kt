@@ -18,6 +18,7 @@ import org.dom4j.DocumentHelper
 import org.dom4j.io.SAXReader
 import org.junit.jupiter.api.Test
 import java.io.StringReader
+import java.util.stream.Collectors
 import java.util.stream.Stream
 import kotlin.reflect.KClass
 
@@ -54,7 +55,7 @@ class TaskUpdateEventPayloadAndCorrelationUpcasterTest {
     val upcaster = EventUpcasterChain(
       TaskAttributeUpdatedEngineEvent4To5Upcaster(),
     )
-    val result = upcaster.upcast(eventStream).toList()
+    val result = upcaster.upcast(eventStream).collect(Collectors.toList())
     val event: T = serializer.deserialize(result[0].data)
 
     assertThat(event).isNotNull

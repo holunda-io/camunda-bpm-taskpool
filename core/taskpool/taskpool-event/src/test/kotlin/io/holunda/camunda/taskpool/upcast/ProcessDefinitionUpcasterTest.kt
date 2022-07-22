@@ -23,6 +23,7 @@ import org.junit.jupiter.api.Test
 import java.io.StringReader
 import java.time.Instant
 import java.util.*
+import java.util.stream.Collectors
 import java.util.stream.Stream
 
 class ProcessDefinitionUpcasterTest {
@@ -65,7 +66,7 @@ class ProcessDefinitionUpcasterTest {
     val upcaster = EventUpcasterChain(
       ProcessDefinitionEventJSONNullTo1Upcaster(),
     )
-    val result = upcaster.upcast(eventStream).toList()
+    val result = upcaster.upcast(eventStream).collect(Collectors.toList())
     val event: ProcessDefinitionRegisteredEvent = serializer.deserialize(result[0].data)
     assertThat(event).isNotNull
   }
@@ -106,7 +107,7 @@ class ProcessDefinitionUpcasterTest {
       )
     )
     val upcaster = EventUpcasterChain(ProcessDefinitionEventXMLNullTo1Upcaster())
-    val result = upcaster.upcast(eventStream).toList()
+    val result = upcaster.upcast(eventStream).collect(Collectors.toList())
     val event: ProcessDefinitionRegisteredEvent = serializer.deserialize(result[0].data)
 
     assertThat(event).isNotNull
