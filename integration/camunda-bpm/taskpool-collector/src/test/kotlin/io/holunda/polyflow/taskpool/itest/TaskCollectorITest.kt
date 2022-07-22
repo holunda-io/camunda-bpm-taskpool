@@ -20,7 +20,7 @@ import org.camunda.bpm.engine.variable.Variables
 import org.camunda.bpm.model.bpmn.Bpmn
 import org.camunda.bpm.model.xml.instance.ModelElementInstance
 import org.junit.jupiter.api.Test
-import org.junit.runner.RunWith
+import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mockito.reset
 import org.mockito.Mockito.verify
 import org.springframework.beans.factory.annotation.Autowired
@@ -29,7 +29,7 @@ import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.stereotype.Component
 import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.ActiveProfiles
-import org.springframework.test.context.junit4.SpringRunner
+import org.springframework.test.context.junit.jupiter.SpringExtension
 import java.time.Instant.now
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -38,7 +38,7 @@ import java.util.concurrent.TimeUnit
 /**
  * This ITests simulates work of Camunda collector including variable enrichment.
  */
-@RunWith(SpringRunner::class)
+@ExtendWith(SpringExtension::class)
 @SpringBootTest(classes = [CollectorTestApplication::class], webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @ActiveProfiles("collector-itest")
 @DirtiesContext
@@ -160,10 +160,14 @@ class TaskCollectorITest {
     // deploy
     repositoryService
       .createDeployment()
-      .addModelInstance("process.bpmn",
-        createUserTaskProcess(processId,
+      .addModelInstance(
+        "process.bpmn",
+        createUserTaskProcess(
+          processId,
           taskDefinitionKey,
-          true))
+          true
+        )
+      )
       .deploy()
 
     // start
@@ -204,10 +208,14 @@ class TaskCollectorITest {
     // deploy
     repositoryService
       .createDeployment()
-      .addModelInstance("process.bpmn",
-        createUserTaskProcess(processId,
+      .addModelInstance(
+        "process.bpmn",
+        createUserTaskProcess(
+          processId,
           taskDefinitionKey,
-          true))
+          true
+        )
+      )
       .deploy()
 
     // start
@@ -253,10 +261,14 @@ class TaskCollectorITest {
     // deploy
     repositoryService
       .createDeployment()
-      .addModelInstance("process.bpmn",
-        createUserTaskProcess(processId,
+      .addModelInstance(
+        "process.bpmn",
+        createUserTaskProcess(
+          processId,
           taskDefinitionKey,
-          false))
+          false
+        )
+      )
       .deploy()
 
     // start
@@ -312,14 +324,19 @@ class TaskCollectorITest {
     // deploy
     repositoryService
       .createDeployment()
-      .addModelInstance("process.bpmn",
-        createUserTaskProcess(processId,
+      .addModelInstance(
+        "process.bpmn",
+        createUserTaskProcess(
+          processId,
           taskDefinitionKey,
           taskListeners = listOf(
             Pair("create", "#{addCandidateUserPiggy}"),
-            Pair("create", "#{addCandidateGroupMuppetShow}")),
+            Pair("create", "#{addCandidateGroupMuppetShow}")
+          ),
           additionalUserTask = false,
-          asyncOnStart = true))
+          asyncOnStart = true
+        )
+      )
       .deploy()
 
     // start
@@ -382,14 +399,19 @@ class TaskCollectorITest {
     // deploy
     repositoryService
       .createDeployment()
-      .addModelInstance("process.bpmn",
-        createUserTaskProcess(processId,
+      .addModelInstance(
+        "process.bpmn",
+        createUserTaskProcess(
+          processId,
           taskDefinitionKey,
           taskListeners = listOf(
             Pair("create", "#{addCandidateUserPiggy}"),
-            Pair("create", "#{addCandidateGroupMuppetShow}")),
+            Pair("create", "#{addCandidateGroupMuppetShow}")
+          ),
           additionalUserTask = false,
-          asyncOnStart = true))
+          asyncOnStart = true
+        )
+      )
       .deploy()
 
     // start
@@ -435,7 +457,15 @@ class TaskCollectorITest {
       payload = Variables
         .putValue("key", Variables.stringValue("value"))
         // Jackson changes the order in the set so we need to get the iteration order that the elements would have in a normal HashSet
-        .putValue("object", mapOf(MyStructureWithSet::name.name to "name", MyStructureWithSet::key.name to "key", MyStructureWithSet::value.name to 1, MyStructureWithSet::set.name to HashSet(set).toList()))
+        .putValue(
+          "object",
+          mapOf(
+            MyStructureWithSet::name.name to "name",
+            MyStructureWithSet::key.name to "key",
+            MyStructureWithSet::value.name to 1,
+            MyStructureWithSet::set.name to HashSet(set).toList()
+          )
+        )
     )
 
     // we need to take into account that dispatching the accumulated commands is done asynchronously and therefore we might have to wait a little bit
@@ -456,10 +486,14 @@ class TaskCollectorITest {
     // deploy
     repositoryService
       .createDeployment()
-      .addModelInstance("process.bpmn",
-        createUserTaskProcess(processId,
+      .addModelInstance(
+        "process.bpmn",
+        createUserTaskProcess(
+          processId,
           taskDefinitionKey,
-          additionalUserTask = false))
+          additionalUserTask = false
+        )
+      )
       .deploy()
 
     // start
@@ -487,8 +521,10 @@ class TaskCollectorITest {
   /**
    * Creates a process model instance with start -> user-task -> (optional: another-user-task) -> end
    */
-  fun createUserTaskProcess(processId: String, taskDefinitionKey: String, additionalUserTask: Boolean = false, asyncOnStart: Boolean = false,
-                            candidateGroups: String = "", candidateUsers: String = "", taskListeners: List<Pair<String, String>> = listOf()) =
+  fun createUserTaskProcess(
+    processId: String, taskDefinitionKey: String, additionalUserTask: Boolean = false, asyncOnStart: Boolean = false,
+    candidateGroups: String = "", candidateUsers: String = "", taskListeners: List<Pair<String, String>> = listOf()
+  ) =
     Bpmn
       .createExecutableProcess(processId)
       .startEvent("start").camundaAsyncAfter(asyncOnStart)
