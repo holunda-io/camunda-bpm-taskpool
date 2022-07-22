@@ -2,7 +2,10 @@ package io.holunda.polyflow.view.jpa.update
 
 import io.holixon.axon.gateway.query.QueryResponseMessageResponseType
 import io.holixon.axon.gateway.query.RevisionValue
-import io.holunda.polyflow.view.*
+import io.holunda.polyflow.view.DataEntry
+import io.holunda.polyflow.view.ProcessDefinition
+import io.holunda.polyflow.view.ProcessInstance
+import io.holunda.polyflow.view.TaskWithDataEntries
 import io.holunda.polyflow.view.query.data.DataEntriesForUserQuery
 import io.holunda.polyflow.view.query.data.DataEntriesQuery
 import io.holunda.polyflow.view.query.data.DataEntriesQueryResult
@@ -22,7 +25,7 @@ fun QueryUpdateEmitter.updateProcessDefinitionQuery(entry: ProcessDefinition) {
   this.emit(
     ProcessDefinitionsStartableByUserQuery::class.java,
     { query -> query.applyFilter(entry) },
-    QueryResponseMessageResponseType.asSubscriptionUpdateMessage(
+    QueryResponseMessageResponseType.asSubscriptionUpdateMessage<ProcessDefinition>(
       payload = listOf(entry)
     )
   )
@@ -69,7 +72,7 @@ fun QueryUpdateEmitter.updateProcessInstanceQuery(entry: ProcessInstance) {
   this.emit(
     ProcessInstancesByStateQuery::class.java,
     { query -> query.applyFilter(entry) },
-    QueryResponseMessageResponseType.asSubscriptionUpdateMessage(
+    QueryResponseMessageResponseType.asSubscriptionUpdateMessage<ProcessInstanceQueryResult>(
       payload = ProcessInstanceQueryResult(listOf(entry))
     )
   )
@@ -84,7 +87,7 @@ fun QueryUpdateEmitter.updateTaskQuery(entry: TaskWithDataEntries) {
   this.emit(
     TaskForIdQuery::class.java,
     { query -> query.applyFilter(entry.task) },
-    QueryResponseMessageResponseType.asSubscriptionUpdateMessage(
+    QueryResponseMessageResponseType.asSubscriptionUpdateMessage<TaskWithDataEntries>(
       payload = entry.task
     )
   )
@@ -92,7 +95,7 @@ fun QueryUpdateEmitter.updateTaskQuery(entry: TaskWithDataEntries) {
   this.emit(
     TasksForApplicationQuery::class.java,
     { query -> query.applyFilter(entry.task) },
-    QueryResponseMessageResponseType.asSubscriptionUpdateMessage(
+    QueryResponseMessageResponseType.asSubscriptionUpdateMessage<TaskQueryResult>(
       payload = TaskQueryResult(elements = listOf(entry.task))
     )
   )
@@ -100,7 +103,7 @@ fun QueryUpdateEmitter.updateTaskQuery(entry: TaskWithDataEntries) {
   this.emit(
     TasksForUserQuery::class.java,
     { query -> query.applyFilter(entry.task) },
-    QueryResponseMessageResponseType.asSubscriptionUpdateMessage(
+    QueryResponseMessageResponseType.asSubscriptionUpdateMessage<TaskQueryResult>(
       payload = TaskQueryResult(elements = listOf(entry.task))
     )
   )
@@ -108,7 +111,7 @@ fun QueryUpdateEmitter.updateTaskQuery(entry: TaskWithDataEntries) {
   this.emit(
     TaskWithDataEntriesForIdQuery::class.java,
     { query -> query.applyFilter(entry) },
-    QueryResponseMessageResponseType.asSubscriptionUpdateMessage(
+    QueryResponseMessageResponseType.asSubscriptionUpdateMessage<TaskWithDataEntries>(
       payload = entry
     )
   )
@@ -116,11 +119,10 @@ fun QueryUpdateEmitter.updateTaskQuery(entry: TaskWithDataEntries) {
   this.emit(
     TasksWithDataEntriesForUserQuery::class.java,
     { query -> query.applyFilter(entry) },
-    QueryResponseMessageResponseType.asSubscriptionUpdateMessage(
+    QueryResponseMessageResponseType.asSubscriptionUpdateMessage<TasksWithDataEntriesQueryResult>(
       payload = TasksWithDataEntriesQueryResult(
         elements = listOf(entry)
       )
     )
   )
-
 }
