@@ -1,9 +1,5 @@
 package io.holunda.polyflow.view.mongo.service
 
-import org.mockito.kotlin.argumentCaptor
-import org.mockito.kotlin.atLeast
-import org.mockito.kotlin.clearInvocations
-import org.mockito.kotlin.verify
 import com.tngtech.jgiven.Stage
 import com.tngtech.jgiven.annotation.*
 import com.tngtech.jgiven.integration.spring.JGivenStage
@@ -20,6 +16,10 @@ import org.awaitility.core.ConditionTimeoutException
 import org.axonframework.messaging.MetaData
 import org.axonframework.queryhandling.QueryUpdateEmitter
 import org.camunda.bpm.engine.variable.VariableMap
+import org.mockito.kotlin.argumentCaptor
+import org.mockito.kotlin.atLeast
+import org.mockito.kotlin.clearInvocations
+import org.mockito.kotlin.verify
 import org.springframework.beans.factory.annotation.Autowired
 import java.util.concurrent.TimeUnit
 import java.util.function.Predicate
@@ -139,7 +139,7 @@ class PolyflowWhenStage<SELF : PolyflowWhenStage<SELF>> : PolyflowStage<SELF>() 
   private fun query(page: Int, size: Int) = TasksWithDataEntriesForUserQuery(User("kermit", setOf()), page, size)
 
   @As("Page $ is queried with a page size of $")
-  open fun tasks_queried(page: Int, size: Int): SELF {
+  fun tasks_queried(page: Int, size: Int): SELF {
     queriedTasks.addAll(TasksWithDataEntriesQueryResult(tasks).slice(query(page, size)).elements)
     return self()
   }

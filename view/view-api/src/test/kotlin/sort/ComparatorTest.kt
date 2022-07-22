@@ -4,8 +4,8 @@ import io.holunda.camunda.taskpool.api.task.ProcessReference
 import io.holunda.polyflow.view.Task
 import io.holunda.polyflow.view.TaskWithDataEntries
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import java.time.Instant
 
 
@@ -23,7 +23,7 @@ class ComparatorTest {
   private val descriptionComparator = taskComparator("+task.description")!!
   private val dueDateComparator = taskComparator("+task.dueDate")!!
 
-  @Before
+  @BeforeEach
   fun precondition() {
     assertThat(nameComparator).isNotNull
     assertThat(priorityComparator).isNotNull

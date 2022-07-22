@@ -19,7 +19,7 @@ import org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.*
 import org.camunda.bpm.engine.variable.Variables
 import org.camunda.bpm.model.bpmn.Bpmn
 import org.camunda.bpm.model.xml.instance.ModelElementInstance
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import org.junit.runner.RunWith
 import org.mockito.Mockito.reset
 import org.mockito.Mockito.verify
@@ -33,7 +33,6 @@ import org.springframework.test.context.junit4.SpringRunner
 import java.time.Instant.now
 import java.util.*
 import java.util.concurrent.TimeUnit
-import kotlin.collections.HashSet
 
 
 /**

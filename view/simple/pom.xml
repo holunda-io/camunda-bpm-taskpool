@@ -45,7 +45,7 @@
     </dependency>
     <dependency>
       <groupId>com.tngtech.jgiven</groupId>
-      <artifactId>jgiven-junit</artifactId>
+      <artifactId>jgiven-junit5</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -55,7 +55,7 @@
     </dependency>
     <dependency>
       <groupId>com.tngtech.jgiven</groupId>
-      <artifactId>jgiven-spring-junit4</artifactId>
+      <artifactId>jgiven-spring-junit5</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>

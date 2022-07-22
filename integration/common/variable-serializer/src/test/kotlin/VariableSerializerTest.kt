@@ -1,15 +1,14 @@
 package io.holunda.polyflow.variable.serializer
+
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.holunda.camunda.variable.serializer.serialize
 import org.assertj.core.api.Assertions.assertThat
-import org.camunda.bpm.engine.variable.Variables
 import org.camunda.bpm.engine.variable.Variables.createVariables
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import java.text.SimpleDateFormat
 import java.time.Instant
-import java.time.OffsetDateTime
 import java.time.ZoneOffset
 
 class VariableSerializerTest {
@@ -22,11 +21,10 @@ class VariableSerializerTest {
   }
 
 
-    @Test
+  @Test
   fun `should return the variables map`() {
 
-    val map = Variables
-      .createVariables()
+    val map = createVariables()
       .putValue("key", "value")
       .putValue("another-key", 4711)
 
@@ -105,8 +103,7 @@ class VariableSerializerTest {
 
   @Test
   fun `should transform variable map with complex pojos to map of maps`() {
-    val map = Variables
-      .createVariables()
+    val map = createVariables()
       .putValue("key", "value")
       .putValue("another-key", Pojo1(key = "key", anotherKey = listOf(Pojo2(keyZUZUZ = "p2", children = listOf()))))
 

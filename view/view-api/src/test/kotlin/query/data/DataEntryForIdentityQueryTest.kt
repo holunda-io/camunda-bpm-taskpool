@@ -2,7 +2,7 @@ package io.holunda.polyflow.view.query.data
 
 import io.holunda.polyflow.view.DataEntry
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 internal class DataEntryForIdentityQueryTest {
 

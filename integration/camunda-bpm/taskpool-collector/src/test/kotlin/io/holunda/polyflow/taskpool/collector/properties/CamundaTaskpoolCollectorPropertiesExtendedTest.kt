@@ -1,7 +1,6 @@
 package io.holunda.polyflow.taskpool.collector.properties
 
 import com.thoughtworks.xstream.XStream
-import org.mockito.kotlin.mock
 import io.holunda.polyflow.taskpool.collector.CamundaTaskpoolCollectorConfiguration
 import io.holunda.polyflow.taskpool.collector.CamundaTaskpoolCollectorProperties
 import io.holunda.polyflow.taskpool.collector.TaskCollectorEnricherType
@@ -15,8 +14,9 @@ import org.axonframework.commandhandling.gateway.CommandGateway
 import org.axonframework.eventhandling.EventBus
 import org.axonframework.serialization.Serializer
 import org.axonframework.serialization.xml.XStreamSerializer
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import org.mockito.Mockito.mock
+import org.mockito.kotlin.mock
 import org.springframework.boot.context.annotation.UserConfigurations
 import org.springframework.boot.test.context.runner.ApplicationContextRunner
 import org.springframework.context.annotation.Bean

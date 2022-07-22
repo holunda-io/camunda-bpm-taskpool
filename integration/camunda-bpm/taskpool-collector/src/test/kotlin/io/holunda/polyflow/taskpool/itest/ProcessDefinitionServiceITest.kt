@@ -8,7 +8,7 @@ import org.camunda.bpm.engine.RepositoryService
 import org.camunda.bpm.engine.impl.cfg.ProcessEngineConfigurationImpl
 import org.camunda.bpm.model.bpmn.Bpmn
 import org.camunda.bpm.model.xml.instance.ModelElementInstance
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.runner.RunWith
 import org.springframework.beans.factory.annotation.Autowired

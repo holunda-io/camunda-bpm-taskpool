@@ -5,18 +5,18 @@ import io.holunda.polyflow.view.auth.User
 import io.holunda.polyflow.view.jpa.itest.TestApplication
 import io.holunda.polyflow.view.query.process.ProcessDefinitionsStartableByUserQuery
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.After
-import org.junit.Before
-import org.junit.Test
-import org.junit.runner.RunWith
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
-import org.springframework.test.context.junit4.SpringRunner
+import org.springframework.test.context.junit.jupiter.SpringExtension
 import java.util.*
 import javax.transaction.Transactional
 
-@RunWith(SpringRunner::class)
+@ExtendWith(SpringExtension::class)
 @SpringBootTest(
   classes = [TestApplication::class],
   properties = [
@@ -35,7 +35,7 @@ internal class JpaPolyflowViewServiceProcessDefinitionITest {
 
   private val procDefId = UUID.randomUUID().toString()
 
-  @Before
+  @BeforeEach
   fun `ingest events`() {
 
     jpaPolyflowViewService.on(
@@ -55,7 +55,7 @@ internal class JpaPolyflowViewServiceProcessDefinitionITest {
 
   }
 
-  @After
+  @AfterEach
   fun `cleanup projection`() {
     dbCleaner.cleanup()
   }

@@ -1,9 +1,9 @@
 package io.holunda.polyflow.view.mongo.service
 
 import io.holunda.polyflow.view.mongo.utils.MongoLauncher
-import org.junit.After
-import org.junit.AfterClass
-import org.junit.BeforeClass
+import org.junit.jupiter.api.AfterAll
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeAll
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.TestPropertySource
 
@@ -18,20 +18,20 @@ class PolyflowMongoServiceEventHandlerChangeTrackingITest : PolyflowMongoService
   companion object {
     private val mongo = MongoLauncher.MongoInstance(false, "TaskPoolMongoServiceEventHandlerChangeTrackingITest")
 
-    @BeforeClass
+    @BeforeAll
     @JvmStatic
     fun initMongo() {
       mongo.init()
     }
 
-    @AfterClass
+    @AfterAll
     @JvmStatic
     fun stop() {
       mongo.stop()
     }
   }
 
-  @After
+  @AfterEach
   fun clearMongo() {
     mongo.clear()
   }

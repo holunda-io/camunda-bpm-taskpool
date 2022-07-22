@@ -213,7 +213,7 @@
       </dependency>
       <dependency>
         <groupId>com.tngtech.jgiven</groupId>
-        <artifactId>jgiven-junit</artifactId>
+        <artifactId>jgiven-junit5</artifactId>
         <version>${jgiven.version}</version>
         <scope>test</scope>
       </dependency>
@@ -225,7 +225,7 @@
       </dependency>
       <dependency>
         <groupId>com.tngtech.jgiven</groupId>
-        <artifactId>jgiven-spring-junit4</artifactId>
+        <artifactId>jgiven-spring-junit5</artifactId>
         <version>${jgiven.version}</version>
         <scope>test</scope>
       </dependency>
@@ -256,11 +256,6 @@
     <dependency>
       <groupId>org.jetbrains.kotlin</groupId>
       <artifactId>kotlin-test-junit</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.junit.vintage</groupId>
-      <artifactId>junit-vintage-engine</artifactId>
       <scope>test</scope>
     </dependency>
   </dependencies>
@@ -522,13 +517,6 @@
         <plugin>
           <artifactId>maven-surefire-plugin</artifactId>
           <version>2.22.2</version>
-          <dependencies>
-            <dependency>
-              <groupId>org.junit.vintage</groupId>
-              <artifactId>junit-vintage-engine</artifactId>
-              <version>5.8.2</version>
-            </dependency>
-          </dependencies>
           <configuration>
             <useSystemClassLoader>false</useSystemClassLoader>
             <runOrder>random</runOrder>

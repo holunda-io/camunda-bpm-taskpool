@@ -3,7 +3,7 @@ package io.holunda.polyflow.view
 import io.holunda.camunda.taskpool.api.business.Modification
 import io.holunda.camunda.taskpool.api.business.ProcessingType
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import java.time.Instant
 import java.time.ZoneOffset
 

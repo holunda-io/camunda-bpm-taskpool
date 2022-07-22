@@ -3,7 +3,7 @@ package io.holunda.polyflow.datapool.core.business
 import io.holunda.camunda.taskpool.api.business.*
 import org.axonframework.test.aggregate.AggregateTestFixture
 import org.camunda.bpm.engine.variable.Variables
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import java.util.*
 
 class DataEntryAggregateTest {

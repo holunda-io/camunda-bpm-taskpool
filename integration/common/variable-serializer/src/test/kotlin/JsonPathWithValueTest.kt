@@ -10,8 +10,8 @@ import io.holunda.camunda.variable.serializer.EqualityPathFilter.Companion.none
 import io.holunda.camunda.variable.serializer.toJsonPathsWithValues
 import org.assertj.core.api.Assertions.assertThat
 import org.camunda.bpm.engine.variable.Variables.createVariables
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import java.text.SimpleDateFormat
 import java.time.Instant
 import java.util.*
@@ -21,7 +21,7 @@ internal class JsonPathWithValueTest {
   private val now = Date.from(Instant.now())
   private val mapper = jacksonObjectMapper()
 
-  @Before
+  @BeforeEach
   fun `setup jackson`() {
     mapper.dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'")
     mapper.registerModule(JavaTimeModule())

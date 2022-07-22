@@ -16,11 +16,10 @@ import org.axonframework.serialization.xml.XStreamSerializer
 import org.dom4j.Document
 import org.dom4j.DocumentHelper
 import org.dom4j.io.SAXReader
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import java.io.StringReader
 import java.util.stream.Stream
 import kotlin.reflect.KClass
-import kotlin.streams.toList
 
 class TaskUpdateEventPayloadAndCorrelationUpcasterTest {
 
