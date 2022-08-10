@@ -1,6 +1,10 @@
 package io.holunda.polyflow.taskpool.sender.task.accumulator
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import io.holunda.camunda.taskpool.api.task.ProcessReference
+import io.holunda.camunda.taskpool.api.task.SourceReference
+import io.holunda.camunda.taskpool.api.task.TaskIdentity
 import io.holunda.polyflow.bus.jackson.configurePolyflowJacksonObjectMapper
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -15,7 +19,12 @@ class PropertiesProjectorTest {
   fun `should return the command if details are empty`() {
 
     val model = model("Foo", "My foo model")
-    val result = projectProperties(model, projectionErrorDetector = object:ProjectionErrorDetector{}, mapper = jacksonMapper(objectMapper), unmapper = jacksonUnmapper(model::class.java, objectMapper))
+    val result = projectProperties(
+      model,
+      projectionErrorDetector = object : ProjectionErrorDetector {},
+      mapper = jacksonMapper(objectMapper),
+      unmapper = jacksonUnmapper(model::class.java, objectMapper)
+    )
 
     assertThat(result).isEqualTo(model)
   }
@@ -24,7 +33,13 @@ class PropertiesProjectorTest {
   fun `should replace a detail`() {
 
     val model = model("Foo", "My foo model")
-    val result = projectProperties(model, listOf(named(name = "new name", id = model.id)), projectionErrorDetector = object:ProjectionErrorDetector{}, mapper = jacksonMapper(objectMapper), unmapper = jacksonUnmapper(model::class.java, objectMapper))
+    val result = projectProperties(
+      model,
+      listOf(named(name = "new name", id = model.id)),
+      projectionErrorDetector = object : ProjectionErrorDetector {},
+      mapper = jacksonMapper(objectMapper),
+      unmapper = jacksonUnmapper(model::class.java, objectMapper)
+    )
 
     assertThat(result).isEqualTo(model.copy(name = "new name"))
   }
@@ -33,10 +48,12 @@ class PropertiesProjectorTest {
   fun `should replace a detail with the last value`() {
 
     val model = model("Foo", "My foo model")
-    val result = projectProperties(model, listOf(
-      named(name = "wrong name", id = model.id),
-      named(name = "new name", id = model.id)),
-      projectionErrorDetector = object:ProjectionErrorDetector{},
+    val result = projectProperties(
+      model, listOf(
+        named(name = "wrong name", id = model.id),
+        named(name = "new name", id = model.id)
+      ),
+      projectionErrorDetector = object : ProjectionErrorDetector {},
       mapper = jacksonMapper(objectMapper), unmapper = jacksonUnmapper(model::class.java, objectMapper)
     )
 
@@ -47,10 +64,15 @@ class PropertiesProjectorTest {
   fun `should replace detail map`() {
 
     val model = model("Foo", "My foo model", payload = mutableMapOf("foo" to "bar"))
-    val result = projectProperties(model, listOf(
-      payload(payload = mutableMapOf("zee" to "test"), id = model.id),
-      named(name = "new name", id = model.id)),
-      projectionErrorDetector = object:ProjectionErrorDetector{}, mapper = jacksonMapper(objectMapper), unmapper = jacksonUnmapper(model::class.java, objectMapper)
+    val result = projectProperties(
+      model,
+      listOf(
+        payload(payload = mutableMapOf("zee" to "test"), id = model.id),
+        named(name = "new name", id = model.id)
+      ),
+      projectionErrorDetector = object : ProjectionErrorDetector {},
+      mapper = jacksonMapper(objectMapper),
+      unmapper = jacksonUnmapper(model::class.java, objectMapper)
     )
 
     assertThat(result).isEqualTo(model.copy(name = "new name", enriched = true, payload = mutableMapOf("zee" to "test")))
@@ -60,9 +82,11 @@ class PropertiesProjectorTest {
   fun `should add a detail to a map`() {
 
     val model = model("Foo", "My foo model", payload = mutableMapOf("foo" to "bar"))
-    val result = projectProperties(model, listOf(
-      payload(payload = mutableMapOf("zee" to "test"), id = model.id),
-      named(name = "new name", id = model.id)),
+    val result = projectProperties(model,
+      listOf(
+        payload(payload = mutableMapOf("zee" to "test"), id = model.id),
+        named(name = "new name", id = model.id)
+      ),
 
       mutableMapOf(
         Payload::class to { map, key, value ->
@@ -73,7 +97,9 @@ class PropertiesProjectorTest {
           }
         }
       ),
-      projectionErrorDetector = object:ProjectionErrorDetector{}, mapper = jacksonMapper(objectMapper), unmapper = jacksonUnmapper(model::class.java, objectMapper)
+      projectionErrorDetector = object : ProjectionErrorDetector {},
+      mapper = jacksonMapper(objectMapper),
+      unmapper = jacksonUnmapper(model::class.java, objectMapper)
     )
 
     assertThat(result).isEqualTo(model.copy(name = "new name", enriched = true, payload = mutableMapOf("foo" to "bar", "zee" to "test")))
@@ -84,12 +110,14 @@ class PropertiesProjectorTest {
   fun `should remove a detail from a map`() {
 
     val model = model("Foo", "My foo model", payload = mutableMapOf("foo" to "bar"), users = mutableListOf("kermit", "gonzo"))
-    val result = projectProperties(model, listOf(
+    val result = projectProperties(model,
+      listOf(
 
-      // use payload
-      payload(payload = mutableMapOf("foo" to "bar"), id = model.id, users = mutableListOf("gonzo")),
+        // use payload
+        payload(payload = mutableMapOf("foo" to "bar"), id = model.id, users = mutableListOf("gonzo")),
 
-      named(name = "new name", id = model.id)),
+        named(name = "new name", id = model.id)
+      ),
 
       // to remove elements
       mutableMapOf<KClass<out Any>, PropertyOperation>(
@@ -102,24 +130,64 @@ class PropertiesProjectorTest {
           }
         }
       ),
-      projectionErrorDetector = object:ProjectionErrorDetector{}, mapper = jacksonMapper(objectMapper), unmapper = jacksonUnmapper(model::class.java, objectMapper)
+      projectionErrorDetector = object : ProjectionErrorDetector {},
+      mapper = jacksonMapper(objectMapper),
+      unmapper = jacksonUnmapper(model::class.java, objectMapper)
     )
 
     // map elements should vanish, kermit remains alone in the list
     assertThat(result).isEqualTo(model.copy(name = "new name", enriched = true, payload = mutableMapOf(), users = mutableListOf("kermit")))
   }
 
+  @Test
+  fun `should merge two models that have a source reference`() {
+
+    val fooModel = model(
+      name = "Foo",
+      description = "My foo model",
+      sourceReference = ProcessReference("foo", "bar", "foo", "bar", "foo", "bar")
+    )
+    val barModel = model(
+      id = fooModel.id,
+      name = "Bar",
+      description = "My bar model",
+      sourceReference = ProcessReference("bar", "foo", "bar", "foo", "bar", "foo")
+    )
+    val mapper = jacksonMapper(objectMapper)
+    val result = projectProperties(
+      fooModel,
+      listOf(barModel),
+      projectionErrorDetector = object : ProjectionErrorDetector {},
+      defaultPropertyOperation = { map, key, value ->
+        if (key == TaskIdentity::sourceReference.name) {
+          map[key] = value?.let { mapper.invoke(it) }
+        } else {
+          map[key] = value
+        }
+      },
+      mapper = mapper,
+      unmapper = jacksonUnmapper(fooModel::class.java, objectMapper)
+    )
+
+    assertThat(result).isEqualTo(barModel)
+  }
+    interface SR {
+      val x: String
+    }
 }
 
 internal fun model(
-  name: String, description: String = "",
+  name: String,
+  description: String = "",
   id: String = UUID.randomUUID().toString(),
   payload: MutableMap<String, Any> = mutableMapOf(),
-  users: MutableList<String> = mutableListOf()
+  users: MutableList<String> = mutableListOf(),
+  sourceReference: SourceReference = ProcessReference("foo", "bar", "foo", "bar", "foo", "bar")
 ) = Model(
   id = id,
   name = name,
   description = description,
+  sourceReference = sourceReference,
   payload = payload,
   users = users,
   enriched = payload.isNotEmpty()
@@ -139,6 +207,7 @@ internal data class Model(
   override val id: String,
   val name: String,
   val description: String,
+  val sourceReference: SourceReference,
   override var enriched: Boolean = false,
   override val payload: MutableMap<String, Any> = mutableMapOf(),
   override val users: MutableList<String> = mutableListOf()
