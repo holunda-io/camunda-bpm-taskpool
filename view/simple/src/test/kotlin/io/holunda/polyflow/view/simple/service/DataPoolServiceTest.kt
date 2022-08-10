@@ -1,7 +1,7 @@
 package io.holunda.polyflow.view.simple.service
 
-import com.tngtech.jgiven.junit.ScenarioTest
-import org.junit.Test
+import com.tngtech.jgiven.junit5.ScenarioTest
+import org.junit.jupiter.api.Test
 
 class DataPoolServiceTest : ScenarioTest<DataPoolGivenStage<*>, DataPoolWhenStage<*>, DataPoolThenStage<*>>() {
 

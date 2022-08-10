@@ -11,22 +11,22 @@ import io.holunda.polyflow.view.jpa.itest.TestApplication
 import io.holunda.polyflow.view.jpa.payload.PayloadAttribute
 import org.assertj.core.api.Assertions.assertThat
 import org.camunda.bpm.engine.variable.Variables.createVariables
-import org.junit.After
-import org.junit.Before
-import org.junit.Test
-import org.junit.runner.RunWith
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.data.jpa.domain.Specification.where
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.ContextConfiguration
-import org.springframework.test.context.junit4.SpringRunner
+import org.springframework.test.context.junit.jupiter.SpringExtension
 import java.time.Instant
 import java.util.*
 import javax.persistence.EntityManager
 
-@RunWith(SpringRunner::class)
+@ExtendWith(SpringExtension::class)
 @DataJpaTest
 @ContextConfiguration(classes = [TestApplication::class])
 @ActiveProfiles("itest", "mock-query-emitter")
@@ -40,7 +40,7 @@ internal class DataEntryRepositoryITest {
   lateinit var dataEntry: DataEntryEntity
   lateinit var dataEntry2: DataEntryEntity
 
-  @Before
+  @BeforeEach
   fun `insert entries`() {
 
     val id = UUID.randomUUID().toString()
@@ -136,7 +136,7 @@ internal class DataEntryRepositoryITest {
     entityManager.flush()
   }
 
-  @After
+  @AfterEach
   fun `remove all stuff`() {
     dataEntryRepository.deleteAll()
     entityManager.flush()

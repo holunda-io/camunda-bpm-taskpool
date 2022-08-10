@@ -3,15 +3,15 @@ package io.holunda.polyflow.view.mongo.task
 import io.holunda.polyflow.view.mongo.PolyflowMongoTestApplication
 import io.holunda.polyflow.view.mongo.utils.MongoLauncher
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.*
-import org.junit.runner.RunWith
+import org.junit.jupiter.api.*
+import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.TestPropertySource
-import org.springframework.test.context.junit4.SpringRunner
+import org.springframework.test.context.junit.jupiter.SpringExtension
 import reactor.core.publisher.Mono
 import java.time.Instant
 import java.util.*
@@ -24,7 +24,7 @@ import java.util.*
 )
 @SpringBootTest(classes = [PolyflowMongoTestApplication::class])
 @ActiveProfiles("itest-standalone")
-@RunWith(SpringRunner::class)
+@ExtendWith(SpringExtension::class)
 class TaskRepositoryExtensionImplITest {
 
   companion object {
@@ -41,20 +41,20 @@ class TaskRepositoryExtensionImplITest {
 
     private val mongo = MongoLauncher.MongoInstance(false, "TaskRepositoryExtensionImplITest")
 
-    @BeforeClass
+    @BeforeAll
     @JvmStatic
     fun initMongo() {
       mongo.init()
     }
 
-    @AfterClass
+    @AfterAll
     @JvmStatic
     fun stop() {
       mongo.stop()
     }
   }
 
-  @Before
+  @BeforeEach
   fun beforeEach() {
     taskRepository.deleteAll().block()
   }
@@ -62,7 +62,7 @@ class TaskRepositoryExtensionImplITest {
   @Autowired
   lateinit var taskRepository: TaskRepository
 
-  @After
+  @AfterEach
   fun clearMongo() {
     mongo.clear()
   }

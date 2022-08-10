@@ -13,12 +13,11 @@ import io.holunda.polyflow.view.mongo.task.ProcessReferenceDocument
 import io.holunda.polyflow.view.mongo.task.TaskChangeTracker
 import io.holunda.polyflow.view.mongo.task.TaskDocument
 import io.holunda.polyflow.view.mongo.task.TaskRepository
-import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
 import org.bson.BsonDocument
 import org.bson.BsonString
 import org.bson.Document
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import org.mockito.kotlin.*
 import org.springframework.data.mongodb.core.ChangeStreamEvent
 import org.springframework.data.mongodb.core.convert.MongoConverter
@@ -247,7 +246,7 @@ internal class TaskChangeTrackerTest {
     taskChangeTracker.initCleanupJob()
     verify(scheduler).schedule(deleteRunnableCaptor.capture(), triggerCaptor.capture())
     val trigger = triggerCaptor.firstValue
-    Assertions.assertThat(trigger.nextExecutionTime(SimpleTriggerContext(Clock.fixed(Instant.EPOCH, ZoneOffset.UTC)).apply {
+    assertThat(trigger.nextExecutionTime(SimpleTriggerContext(Clock.fixed(Instant.EPOCH, ZoneOffset.UTC)).apply {
       update(
         Date.from(Instant.EPOCH.minus(Duration.ofHours(24))),
         Date.from(Instant.EPOCH.minus(Duration.ofHours(24))),

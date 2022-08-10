@@ -2,7 +2,7 @@ package io.holunda.polyflow.view.jpa.data
 
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 internal class DataEntryIdTest {
 

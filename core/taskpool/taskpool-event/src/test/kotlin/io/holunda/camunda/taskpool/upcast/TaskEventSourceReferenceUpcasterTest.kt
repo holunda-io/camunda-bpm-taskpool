@@ -4,7 +4,6 @@ import com.thoughtworks.xstream.XStream
 import com.thoughtworks.xstream.security.AnyTypePermission
 import io.holunda.camunda.taskpool.api.task.*
 import io.holunda.camunda.taskpool.upcast.task.*
-import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
 import org.axonframework.eventhandling.EventData
 import org.axonframework.messaging.MetaData
@@ -17,11 +16,11 @@ import org.axonframework.serialization.xml.XStreamSerializer
 import org.dom4j.Document
 import org.dom4j.DocumentHelper
 import org.dom4j.io.SAXReader
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import java.io.StringReader
+import java.util.stream.Collectors
 import java.util.stream.Stream
 import kotlin.reflect.KClass
-import kotlin.streams.toList
 
 // TODO: Move out test setup into separate project.
 class TaskEventSourceReferenceUpcasterTest {
@@ -79,8 +78,8 @@ class TaskEventSourceReferenceUpcasterTest {
       TaskDeferredEvent2To4Upcaster(),
       TaskUndeferredEvent2To4Upcaster(),
 
-    )
-    val result = upcaster.upcast(eventStream).toList()
+      )
+    val result = upcaster.upcast(eventStream).collect(Collectors.toList())
     val event: T = serializer.deserialize(result[0].data)
 
     assertThat(event).isNotNull

@@ -7,7 +7,6 @@ import io.holunda.camunda.taskpool.api.task.TaskAssignedEngineEvent
 import io.holunda.camunda.taskpool.api.task.TaskCompletedEngineEvent
 import io.holunda.camunda.taskpool.api.task.TaskCreatedEngineEvent
 import io.holunda.camunda.variable.serializer.serialize
-import io.holunda.polyflow.view.DataEntry
 import io.holunda.polyflow.view.Task
 import io.holunda.polyflow.view.TaskWithDataEntries
 import io.holunda.polyflow.view.auth.User
@@ -20,10 +19,10 @@ import org.axonframework.queryhandling.GenericSubscriptionQueryUpdateMessage
 import org.axonframework.queryhandling.QueryUpdateEmitter
 import org.axonframework.queryhandling.SubscriptionQueryUpdateMessage
 import org.camunda.bpm.engine.variable.Variables.createVariables
-import org.junit.After
-import org.junit.Before
-import org.junit.Test
-import org.junit.runner.RunWith
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.atLeast
 import org.mockito.kotlin.clearInvocations
@@ -31,7 +30,7 @@ import org.mockito.kotlin.verify
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
-import org.springframework.test.context.junit4.SpringRunner
+import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.transaction.annotation.Transactional
 import java.time.Instant
 import java.time.OffsetDateTime
@@ -39,7 +38,7 @@ import java.time.ZoneOffset
 import java.util.*
 import java.util.function.Predicate
 
-@RunWith(SpringRunner::class)
+@ExtendWith(SpringExtension::class)
 @SpringBootTest(
   classes = [TestApplication::class],
   properties = [
@@ -77,7 +76,7 @@ internal class JpaPolyflowViewServiceTaskITest {
   private val dataType2 = "io.polyflow.test2"
   private val now = Instant.now()
 
-  @Before
+  @BeforeEach
   fun `ingest events`() {
     val payload = mapOf(
       "key" to "value",
@@ -88,7 +87,7 @@ internal class JpaPolyflowViewServiceTaskITest {
       )
     )
 
-     jpaPolyflowViewService.on(
+    jpaPolyflowViewService.on(
       event = TaskCreatedEngineEvent(
         id = id,
         taskDefinitionKey = "task.def.0815",
@@ -233,7 +232,7 @@ internal class JpaPolyflowViewServiceTaskITest {
     )
   }
 
-  @After
+  @AfterEach
   fun `cleanup projection`() {
     dbCleaner.cleanup()
     // clear updates
@@ -263,11 +262,11 @@ internal class JpaPolyflowViewServiceTaskITest {
     assertThat(zoro.elements).isNotEmpty.hasSize(1)
     assertThat(zoro.elements[0].task.id).isEqualTo(id4)
     assertThat(zoro.elements[0].task.name).isEqualTo("task name 4")
-    assertThat(zoro.elements[0].dataEntries).isNotEmpty.hasSize(1);
-    assertThat(zoro.elements[0].dataEntries[0].entryId).isEqualTo(dataId2);
+    assertThat(zoro.elements[0].dataEntries).isNotEmpty.hasSize(1)
+    assertThat(zoro.elements[0].dataEntries[0].entryId).isEqualTo(dataId2)
     val strawhats = jpaPolyflowViewService.query(TasksWithDataEntriesForUserQuery(user = User("other", setOf("strawhats"))))
     assertThat(strawhats.elements).isNotEmpty.hasSize(2)
-    assertThat(strawhats.elements.map { it.task.id }).contains(id3,id4)
+    assertThat(strawhats.elements.map { it.task.id }).contains(id3, id4)
     assertThat(strawhats.elements[0].dataEntries).hasSize(1)
     assertThat(strawhats.elements[0].dataEntries[0].entryId).isEqualTo(dataId1)
     assertThat(strawhats.elements[1].dataEntries).hasSize(1)

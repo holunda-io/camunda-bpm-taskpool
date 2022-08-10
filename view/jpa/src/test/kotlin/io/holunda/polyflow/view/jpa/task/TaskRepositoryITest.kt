@@ -16,19 +16,19 @@ import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.hasTaskPayload
 import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.isAuthorizedFor
 import org.assertj.core.api.Assertions.assertThat
 import org.camunda.bpm.engine.variable.Variables.createVariables
-import org.junit.After
-import org.junit.Before
-import org.junit.Test
-import org.junit.runner.RunWith
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.ContextConfiguration
-import org.springframework.test.context.junit4.SpringRunner
+import org.springframework.test.context.junit.jupiter.SpringExtension
 import java.util.*
 import javax.persistence.EntityManager
 
-@RunWith(SpringRunner::class)
+@ExtendWith(SpringExtension::class)
 @DataJpaTest
 @ContextConfiguration(classes = [TestApplicationDataJpa::class])
 @ActiveProfiles("itest", "mock-query-emitter")
@@ -48,7 +48,7 @@ class TaskRepositoryITest {
   lateinit var task1: TaskEntity
   lateinit var task2: TaskEntity
 
-  @Before
+  @BeforeEach
   fun `insert entries`() {
 
     val payload = createVariables().apply {
@@ -86,7 +86,7 @@ class TaskRepositoryITest {
   }
 
 
-  @After
+  @AfterEach
   fun `clean up`() {
     dbCleaner.cleanup()
   }

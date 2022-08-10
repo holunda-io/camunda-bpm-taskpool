@@ -7,20 +7,20 @@ import org.assertj.core.api.Assertions.assertThat
 import org.axonframework.commandhandling.gateway.CommandGateway
 import org.axonframework.eventhandling.EventBus
 import org.axonframework.eventhandling.EventMessage
-import org.junit.Before
-import org.junit.Test
-import org.junit.runner.RunWith
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
-import org.springframework.test.context.junit4.SpringRunner
+import org.springframework.test.context.junit.jupiter.SpringExtension
 
 /**
  * This test makes sure that the process definition handler behaves correctly:
  * - if task doesn't exist, create it and handle the register command
  * - if it does exist (e.g. we run populate), just handle the create command
  */
-@RunWith(SpringRunner::class)
+@ExtendWith(SpringExtension::class)
 @SpringBootTest(classes = [TestApplication::class])
 @ActiveProfiles("itest")
 class ProcessDefinitionHandlerAggregateITest {
@@ -33,7 +33,7 @@ class ProcessDefinitionHandlerAggregateITest {
 
   private val receivedEvents: MutableList<EventMessage<*>> = mutableListOf()
 
-  @Before
+  @BeforeEach
   fun registerHandler() {
     eventBus.subscribe { messages -> receivedEvents.addAll(messages) }
   }

@@ -1,35 +1,35 @@
 package io.holunda.polyflow.view.jpa.process
 
 import io.holunda.polyflow.view.ProcessInstanceState
-import io.holunda.polyflow.view.jpa.itest.MockQueryEmitterConfiguration
 import io.holunda.polyflow.view.jpa.itest.TestApplicationDataJpa
 import io.holunda.polyflow.view.jpa.process.ProcessInstanceRepository.Companion.hasStates
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.After
-import org.junit.Before
-import org.junit.Test
-import org.junit.runner.RunWith
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.ContextConfiguration
-import org.springframework.test.context.junit4.SpringRunner
+import org.springframework.test.context.junit.jupiter.SpringExtension
 import java.util.*
 import javax.persistence.EntityManager
 
-@RunWith(SpringRunner::class)
+@ExtendWith(SpringExtension::class)
 @DataJpaTest
 @ContextConfiguration(classes = [TestApplicationDataJpa::class])
 @ActiveProfiles("itest", "mock-query-emitter")
 class ProcessInstanceRepositoryITest {
   @Autowired
   lateinit var entityManager: EntityManager
+
   @Autowired
   lateinit var processInstanceRepository: ProcessInstanceRepository
 
   lateinit var processInstance: ProcessInstanceEntity
 
-  @Before
+  @BeforeEach
   fun `insert entity`() {
 
     val id = UUID.randomUUID().toString()
@@ -59,7 +59,7 @@ class ProcessInstanceRepositoryITest {
     entityManager.flush()
   }
 
-  @After
+  @AfterEach
   fun `clean up`() {
     processInstanceRepository.deleteAll()
     entityManager.flush()

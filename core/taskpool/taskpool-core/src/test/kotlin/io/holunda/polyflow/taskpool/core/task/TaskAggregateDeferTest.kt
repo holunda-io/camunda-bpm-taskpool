@@ -5,8 +5,8 @@ import io.holunda.camunda.taskpool.api.business.newCorrelations
 import io.holunda.camunda.taskpool.api.task.*
 import org.axonframework.test.aggregate.AggregateTestFixture
 import org.camunda.bpm.engine.variable.Variables
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import java.util.*
 
 class TaskAggregateDeferTest {
@@ -24,7 +24,7 @@ class TaskAggregateDeferTest {
     applicationName = "myExample"
   )
 
-  @Before
+  @BeforeEach
   fun setUp() {
     now = Date()
   }

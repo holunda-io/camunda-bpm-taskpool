@@ -10,13 +10,13 @@ import org.axonframework.commandhandling.gateway.CommandGateway
 import org.axonframework.eventhandling.EventBus
 import org.axonframework.eventhandling.EventMessage
 import org.camunda.bpm.engine.variable.Variables
-import org.junit.Before
-import org.junit.Test
-import org.junit.runner.RunWith
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
-import org.springframework.test.context.junit4.SpringRunner
+import org.springframework.test.context.junit.jupiter.SpringExtension
 import java.util.*
 
 /**
@@ -24,7 +24,7 @@ import java.util.*
  * - if task doesn't exist, create it and handle the update command
  * - if it does exist just load and handle the update command
  */
-@RunWith(SpringRunner::class)
+@ExtendWith(SpringExtension::class)
 @SpringBootTest(classes = [TestApplication::class])
 @ActiveProfiles("itest")
 class ProcessInstanceVariableChangeAggregateITest {
@@ -38,7 +38,7 @@ class ProcessInstanceVariableChangeAggregateITest {
   private val receivedEvents: MutableList<EventMessage<*>> = mutableListOf()
   private lateinit var processReference: ProcessReference
 
-  @Before
+  @BeforeEach
   fun registerHandler() {
     eventBus.subscribe { messages -> receivedEvents.addAll(messages) }
     processReference = ProcessReference(

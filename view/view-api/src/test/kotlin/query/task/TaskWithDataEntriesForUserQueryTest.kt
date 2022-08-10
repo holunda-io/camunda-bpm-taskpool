@@ -6,7 +6,7 @@ import io.holunda.polyflow.view.Task
 import io.holunda.polyflow.view.TaskWithDataEntries
 import io.holunda.polyflow.view.auth.User
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class TaskWithDataEntriesForUserQueryTest {
 

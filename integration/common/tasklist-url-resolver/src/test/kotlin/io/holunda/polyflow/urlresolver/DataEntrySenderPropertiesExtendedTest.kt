@@ -1,7 +1,7 @@
 package io.holunda.polyflow.urlresolver
 
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import org.mockito.kotlin.mock
 import org.springframework.boot.autoconfigure.AutoConfigurations
 import org.springframework.boot.context.annotation.UserConfigurations

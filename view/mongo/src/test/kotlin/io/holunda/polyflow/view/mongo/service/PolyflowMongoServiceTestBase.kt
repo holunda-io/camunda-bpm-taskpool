@@ -1,6 +1,7 @@
 package io.holunda.polyflow.view.mongo.service
 
-import com.tngtech.jgiven.integration.spring.SpringRuleScenarioTest
+import com.tngtech.jgiven.integration.spring.junit5.SpringScenarioTest
+import com.tngtech.jgiven.junit5.JGivenExtension
 import io.holunda.camunda.taskpool.api.business.CorrelationMap
 import io.holunda.camunda.taskpool.api.task.*
 import io.holunda.polyflow.view.DataEntry
@@ -11,14 +12,16 @@ import io.holunda.polyflow.view.mongo.PolyflowMongoTestApplication
 import io.holunda.polyflow.view.query.task.*
 import org.camunda.bpm.engine.variable.VariableMap
 import org.camunda.bpm.engine.variable.Variables
-import org.junit.Test
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.annotation.DirtiesContext
 import java.util.*
 
+@ExtendWith(JGivenExtension::class)
 @SpringBootTest(classes = [PolyflowMongoTestApplication::class])
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-abstract class PolyflowMongoServiceITestBase : SpringRuleScenarioTest<PolyflowGivenStage<*>, PolyflowWhenStage<*>, PolyflowThenStage<*>>() {
+abstract class PolyflowMongoServiceITestBase : SpringScenarioTest<PolyflowGivenStage<*>, PolyflowWhenStage<*>, PolyflowThenStage<*>>() {
 
   @Test
   fun `a task is created on receiving TaskCreatedEngineEvent`() {
