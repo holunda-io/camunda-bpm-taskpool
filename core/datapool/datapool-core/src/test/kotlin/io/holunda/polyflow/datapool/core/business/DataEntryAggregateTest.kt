@@ -8,7 +8,7 @@ import java.util.*
 
 class DataEntryAggregateTest {
 
-  val fixture = AggregateTestFixture(DataEntryAggregate::class.java)
+  private val fixture = AggregateTestFixture(DataEntryAggregate::class.java)
 
   @Test
   fun `should create aggregate`() {
