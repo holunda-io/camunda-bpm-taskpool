@@ -5,7 +5,7 @@
   <parent>
     <groupId>io.holunda.polyflow</groupId>
     <artifactId>polyflow-view-parent</artifactId>
-    <version>3.3.1</version>
+    <version>3.3.2</version>
   </parent>
 
   <artifactId>polyflow-view-simple</artifactId>
@@ -45,7 +45,7 @@
     </dependency>
     <dependency>
       <groupId>com.tngtech.jgiven</groupId>
-      <artifactId>jgiven-junit</artifactId>
+      <artifactId>jgiven-junit5</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -55,7 +55,7 @@
     </dependency>
     <dependency>
       <groupId>com.tngtech.jgiven</groupId>
-      <artifactId>jgiven-spring-junit4</artifactId>
+      <artifactId>jgiven-spring-junit5</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>

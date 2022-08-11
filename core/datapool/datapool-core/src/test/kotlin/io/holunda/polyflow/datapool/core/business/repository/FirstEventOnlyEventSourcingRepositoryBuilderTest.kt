@@ -5,7 +5,7 @@ import io.holunda.polyflow.datapool.core.repository.FirstEventOnlyEventSourcingR
 import org.assertj.core.api.Assertions.assertThat
 import org.axonframework.eventsourcing.NoSnapshotTriggerDefinition
 import org.axonframework.eventsourcing.eventstore.EventStore
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import org.mockito.kotlin.mock
 
 internal class FirstEventOnlyEventSourcingRepositoryBuilderTest {

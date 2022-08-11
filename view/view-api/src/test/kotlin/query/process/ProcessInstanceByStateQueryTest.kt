@@ -4,7 +4,7 @@ import io.holunda.camunda.taskpool.api.task.ProcessReference
 import io.holunda.polyflow.view.ProcessInstance
 import io.holunda.polyflow.view.ProcessInstanceState
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 internal class ProcessInstanceByStateQueryTest {
 

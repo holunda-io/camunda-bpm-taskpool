@@ -2,7 +2,7 @@ package io.holunda.polyflow.taskpool.collector.task.enricher
 
 import org.camunda.bpm.engine.variable.Variables
 import org.camunda.bpm.model.xml.test.assertions.ModelAssertions.assertThat
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class ProcessVariablesCorrelatorTest {
 

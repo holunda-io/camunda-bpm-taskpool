@@ -4,7 +4,7 @@ import io.holunda.camunda.taskpool.api.business.AddAuthorization
 import io.holunda.camunda.taskpool.api.business.DataEntryCreatedEvent
 import io.holunda.polyflow.view.mongo.toDocument
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import java.util.*
 
 internal class DataEntryConverterTest {

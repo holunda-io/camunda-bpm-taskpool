@@ -19,13 +19,12 @@ import org.axonframework.serialization.xml.XStreamSerializer
 import org.dom4j.Document
 import org.dom4j.DocumentHelper
 import org.dom4j.io.SAXReader
-import org.junit.Ignore
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import java.io.StringReader
 import java.time.Instant
 import java.util.*
+import java.util.stream.Collectors
 import java.util.stream.Stream
-import kotlin.streams.toList
 
 class ProcessDefinitionUpcasterTest {
 
@@ -52,7 +51,11 @@ class ProcessDefinitionUpcasterTest {
 
     val entry: EventData<String> = SimpleEventData<String>(
       metaData = SimpleSerializedObject("{}", String::class.java, SimpleSerializedType(MetaData::class.java.name, null)),
-      payload = SimpleSerializedObject(json, String::class.java, SimpleSerializedType("io.holunda.camunda.taskpool.api.task.ProcessDefinitionRegisteredEvent", null))
+      payload = SimpleSerializedObject(
+        json,
+        String::class.java,
+        SimpleSerializedType("io.holunda.camunda.taskpool.api.task.ProcessDefinitionRegisteredEvent", null)
+      )
     )
     val eventStream: Stream<IntermediateEventRepresentation> = Stream.of(
       InitialEventRepresentation(
@@ -63,7 +66,7 @@ class ProcessDefinitionUpcasterTest {
     val upcaster = EventUpcasterChain(
       ProcessDefinitionEventJSONNullTo1Upcaster(),
     )
-    val result = upcaster.upcast(eventStream).toList()
+    val result = upcaster.upcast(eventStream).collect(Collectors.toList())
     val event: ProcessDefinitionRegisteredEvent = serializer.deserialize(result[0].data)
     assertThat(event).isNotNull
   }
@@ -89,7 +92,7 @@ class ProcessDefinitionUpcasterTest {
     val clazz = Document::class.java
     val serializer = XStreamSerializer.builder().xStream(
       XStream().apply {
-       this.allowTypeHierarchy(Any::class.java)
+        this.allowTypeHierarchy(Any::class.java)
       }
     ).build()
 
@@ -104,7 +107,7 @@ class ProcessDefinitionUpcasterTest {
       )
     )
     val upcaster = EventUpcasterChain(ProcessDefinitionEventXMLNullTo1Upcaster())
-    val result = upcaster.upcast(eventStream).toList()
+    val result = upcaster.upcast(eventStream).collect(Collectors.toList())
     val event: ProcessDefinitionRegisteredEvent = serializer.deserialize(result[0].data)
 
     assertThat(event).isNotNull

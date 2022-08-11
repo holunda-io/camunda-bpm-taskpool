@@ -2,7 +2,7 @@ package io.holunda.polyflow.view.jpa.task
 
 import io.holunda.polyflow.view.jpa.emptyTask
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import java.time.Instant
 
 internal class TaskEntityTest {

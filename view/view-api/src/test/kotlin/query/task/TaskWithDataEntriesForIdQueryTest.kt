@@ -5,7 +5,7 @@ import io.holunda.polyflow.view.DataEntry
 import io.holunda.polyflow.view.Task
 import io.holunda.polyflow.view.TaskWithDataEntries
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class TaskWithDataEntriesForIdQueryTest {
   private val taskWithDataEntries = TaskWithDataEntries(

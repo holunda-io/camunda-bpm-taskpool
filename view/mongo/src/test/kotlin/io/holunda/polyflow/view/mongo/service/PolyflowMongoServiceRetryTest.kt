@@ -9,7 +9,7 @@ import io.holunda.polyflow.view.mongo.task.ProcessReferenceDocument
 import io.holunda.polyflow.view.mongo.task.TaskDocument
 import io.holunda.polyflow.view.mongo.task.TaskRepository
 import org.axonframework.messaging.MetaData
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import org.mockito.kotlin.*
 import reactor.core.publisher.Mono
 import java.time.Clock

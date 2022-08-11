@@ -2,7 +2,7 @@ package io.holunda.polyflow.taskpool.sender
 
 import io.holunda.camunda.taskpool.api.task.*
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import java.util.*
 
 class CommandSorterTest {

@@ -36,59 +36,69 @@ class ProjectingCommandAccumulator(
    * Take the original command and updates the properties based on the properties of details.
    */
   @Suppress("UNCHECKED_CAST")
-  private fun <T : EngineTaskCommand> projectCommandProperties(command: T, details: List<T>): T = projectProperties(
-    original = command,
-    details = details,
-    /**
-     * Configuration to change default behavior of replacing the property.
-     * For delta-commands (add/delete candidate groups/users), the lists has to be adjusted
-     */
-    propertyOperationConfig = mutableMapOf<KClass<out Any>, PropertyOperation>().apply {
-      // a delete command should remove one element from candidate user
-      put(DeleteCandidateUsersCommand::class) { map, key, value ->
-        if (key == DeleteCandidateUsersCommand::candidateUsers.name) {
-          val candidateUsers = (map[key] as Collection<String>).minus(value as Collection<String>)
-          map[key] = candidateUsers
+  private fun <T : EngineTaskCommand> projectCommandProperties(command: T, details: List<T>): T {
+    val mapper = jacksonMapper(objectMapper = objectMapper)
+    return projectProperties(
+      original = command,
+      details = details,
+      /**
+       * Configuration to change default behavior of replacing the property.
+       * For delta-commands (add/delete candidate groups/users), the lists has to be adjusted
+       */
+      propertyOperationConfig = mutableMapOf<KClass<out Any>, PropertyOperation>().apply {
+        // a delete command should remove one element from candidate user
+        put(DeleteCandidateUsersCommand::class) { map, key, value ->
+          if (key == DeleteCandidateUsersCommand::candidateUsers.name) {
+            val candidateUsers = (map[key] as Collection<String>).minus(value as Collection<String>)
+            map[key] = candidateUsers
+          }
         }
-      }
-      // a delete command should remove one element from candidate group
-      put(DeleteCandidateGroupsCommand::class) { map, key, value ->
-        if (key == DeleteCandidateGroupsCommand::candidateGroups.name) {
-          val candidateGroups = (map[key] as Collection<String>).minus(value as Collection<String>)
-          map[key] = candidateGroups
+        // a delete command should remove one element from candidate group
+        put(DeleteCandidateGroupsCommand::class) { map, key, value ->
+          if (key == DeleteCandidateGroupsCommand::candidateGroups.name) {
+            val candidateGroups = (map[key] as Collection<String>).minus(value as Collection<String>)
+            map[key] = candidateGroups
+          }
         }
-      }
-      // add command should add one element to candidate user
-      put(AddCandidateUsersCommand::class) { map, key, value ->
-        if (key == AddCandidateUsersCommand::candidateUsers.name) {
-          val candidateUsers = (map[key] as Collection<String>).plus(value as Collection<String>)
-          map[key] = candidateUsers
+        // add command should add one element to candidate user
+        put(AddCandidateUsersCommand::class) { map, key, value ->
+          if (key == AddCandidateUsersCommand::candidateUsers.name) {
+            val candidateUsers = (map[key] as Collection<String>).plus(value as Collection<String>)
+            map[key] = candidateUsers
+          }
         }
-      }
-      // add command should add one element to candidate group
-      put(AddCandidateGroupsCommand::class) { map, key, value ->
-        if (key == AddCandidateGroupsCommand::candidateGroups.name) {
-          val candidateGroups = (map[key] as Collection<String>).plus(value as Collection<String>)
-          map[key] = candidateGroups
+        // add command should add one element to candidate group
+        put(AddCandidateGroupsCommand::class) { map, key, value ->
+          if (key == AddCandidateGroupsCommand::candidateGroups.name) {
+            val candidateGroups = (map[key] as Collection<String>).plus(value as Collection<String>)
+            map[key] = candidateGroups
+          }
         }
-      }
-    },
-    ignoredProperties = listOf(
-      WithTaskId::id.name,
-      CamundaTaskEventType::eventName.name,
-      EngineTaskCommand::order.name,
-      // no reason to overwrite correlation information or payload ever
-      // the initial command (create, update) already contains the entire information.
-      WithCorrelations::correlations.name,
-      WithPayload::payload.name,
-      // there is no reason to overwrite a business key so far
-      // its initial value is read and send during task creation
-      WithPayload::businessKey.name
-    ),
-    projectionErrorDetector = EngineTaskCommandProjectionErrorDetector,
-    mapper = jacksonMapper(objectMapper = objectMapper),
-    unmapper = jacksonUnmapper(clazz = command::class.java, objectMapper = objectMapper)
-  )
+      },
+      defaultPropertyOperation = { map, key, value ->
+        if (key == TaskIdentity::sourceReference.name) {
+          map[key] = value?.let { mapper.invoke(it) }
+        } else {
+          map[key] = value
+        }
+      },
+      ignoredProperties = listOf(
+        WithTaskId::id.name,
+        CamundaTaskEventType::eventName.name,
+        EngineTaskCommand::order.name,
+        // no reason to overwrite correlation information or payload ever
+        // the initial command (create, update) already contains the entire information.
+        WithCorrelations::correlations.name,
+        WithPayload::payload.name,
+        // there is no reason to overwrite a business key so far
+        // its initial value is read and send during task creation
+        WithPayload::businessKey.name
+      ),
+      projectionErrorDetector = EngineTaskCommandProjectionErrorDetector,
+      mapper = mapper,
+      unmapper = jacksonUnmapper(clazz = command::class.java, objectMapper = objectMapper)
+    )
+  }
 
   /**
    * Handle payload and serializes it using provided object mapper (e.g. to JSON)

@@ -1,11 +1,11 @@
 package io.holunda.polyflow.view.simple.service
 
-import com.tngtech.jgiven.junit.ScenarioTest
+import com.tngtech.jgiven.junit5.ScenarioTest
 import io.holunda.camunda.taskpool.api.task.CamundaTaskEventType
 import io.holunda.camunda.taskpool.api.task.ProcessReference
 import io.holunda.polyflow.view.query.task.ApplicationWithTaskCount
 import org.camunda.bpm.engine.variable.Variables
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import java.util.*
 
 class TaskPoolServiceTest : ScenarioTest<TaskPoolGivenStage<*>, TaskPoolWhenStage<*>, TaskPoolThenStage<*>>() {

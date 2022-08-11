@@ -7,7 +7,7 @@ import org.axonframework.serialization.upcasting.event.InitialEventRepresentatio
 import org.axonframework.serialization.xml.XStreamSerializer
 import org.dom4j.Document
 import org.dom4j.DocumentHelper.*
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import java.time.Instant
 import java.util.*
 import java.util.stream.Stream

@@ -6,7 +6,7 @@
   <parent>
     <groupId>io.holunda.polyflow</groupId>
     <artifactId>polyflow-view-parent</artifactId>
-    <version>3.3.1</version>
+    <version>3.3.2</version>
   </parent>
 
   <artifactId>polyflow-view-jpa</artifactId>
@@ -56,7 +56,7 @@
     </dependency>
     <dependency>
       <groupId>com.tngtech.jgiven</groupId>
-      <artifactId>jgiven-junit</artifactId>
+      <artifactId>jgiven-junit5</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -66,7 +66,7 @@
     </dependency>
     <dependency>
       <groupId>com.tngtech.jgiven</groupId>
-      <artifactId>jgiven-spring-junit4</artifactId>
+      <artifactId>jgiven-spring-junit5</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -134,7 +134,7 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-resources-plugin</artifactId>
-            <version>3.2.0</version>
+            <version>3.3.0</version>
             <executions>
               <execution>
                 <id>copy persistence xml</id>
@@ -228,12 +228,12 @@
               <dependency>
                 <groupId>com.microsoft.sqlserver</groupId>
                 <artifactId>mssql-jdbc</artifactId>
-                <version>10.2.0.jre11</version>
+                <version>11.2.0.jre11</version>
               </dependency>
               <dependency>
                 <groupId>org.postgresql</groupId>
                 <artifactId>postgresql</artifactId>
-                <version>42.4.0</version>
+                <version>42.4.1</version>
               </dependency>
             </dependencies>
           </plugin>

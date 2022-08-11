@@ -3,7 +3,7 @@ package io.holunda.polyflow.taskpool.core.process
 import io.holunda.camunda.taskpool.api.process.instance.*
 import io.holunda.camunda.taskpool.api.task.ProcessReference
 import org.axonframework.test.aggregate.AggregateTestFixture
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class ProcessInstanceAggregateTest {
 
@@ -34,14 +34,16 @@ class ProcessInstanceAggregateTest {
     fixture
       .givenNoPriorActivity()
       .`when`(command)
-      .expectEvents(ProcessInstanceStartedEvent(
-        command.processInstanceId,
-        command.sourceReference,
-        command.businessKey,
-        command.startUserId,
-        command.superInstanceId,
-        command.startActivityId
-      ))
+      .expectEvents(
+        ProcessInstanceStartedEvent(
+          command.processInstanceId,
+          command.sourceReference,
+          command.businessKey,
+          command.startUserId,
+          command.superInstanceId,
+          command.startActivityId
+        )
+      )
   }
 
   @Test
@@ -64,10 +66,12 @@ class ProcessInstanceAggregateTest {
         )
       )
       .`when`(command)
-      .expectEvents(ProcessInstanceSuspendedEvent(
-        command.processInstanceId,
-        command.sourceReference,
-      ))
+      .expectEvents(
+        ProcessInstanceSuspendedEvent(
+          command.processInstanceId,
+          command.sourceReference,
+        )
+      )
   }
 
 
@@ -95,10 +99,12 @@ class ProcessInstanceAggregateTest {
         )
       )
       .`when`(command)
-      .expectEvents(ProcessInstanceResumedEvent(
-        command.processInstanceId,
-        command.sourceReference,
-      ))
+      .expectEvents(
+        ProcessInstanceResumedEvent(
+          command.processInstanceId,
+          command.sourceReference,
+        )
+      )
   }
 
 
@@ -125,13 +131,15 @@ class ProcessInstanceAggregateTest {
         )
       )
       .`when`(command)
-      .expectEvents(ProcessInstanceEndedEvent(
-        command.processInstanceId,
-        command.sourceReference,
-        command.businessKey,
-        command.superInstanceId,
-        command.endActivityId
-      ))
+      .expectEvents(
+        ProcessInstanceEndedEvent(
+          command.processInstanceId,
+          command.sourceReference,
+          command.businessKey,
+          command.superInstanceId,
+          command.endActivityId
+        )
+      )
   }
 
   @Test
@@ -158,14 +166,16 @@ class ProcessInstanceAggregateTest {
         )
       )
       .`when`(command)
-      .expectEvents(ProcessInstanceCancelledEvent(
-        command.processInstanceId,
-        command.sourceReference,
-        command.businessKey,
-        command.superInstanceId,
-        command.endActivityId,
-        command.deleteReason
-      ))
+      .expectEvents(
+        ProcessInstanceCancelledEvent(
+          command.processInstanceId,
+          command.sourceReference,
+          command.businessKey,
+          command.superInstanceId,
+          command.endActivityId,
+          command.deleteReason
+        )
+      )
   }
 
 }

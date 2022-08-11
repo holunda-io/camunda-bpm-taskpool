@@ -6,8 +6,8 @@ import io.holunda.camunda.taskpool.api.task.*
 import org.axonframework.test.aggregate.AggregateTestFixture
 import org.camunda.bpm.engine.variable.Variables
 import org.camunda.bpm.engine.variable.Variables.stringValue
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import java.time.Instant
 import java.util.*
 
@@ -26,7 +26,7 @@ class TaskAggregateEngineCommandTest {
     applicationName = "myExample"
   )
 
-  @Before
+  @BeforeEach
   fun setUp() {
     now = Date()
     now2 = Date.from(Instant.now().plusSeconds(1000))

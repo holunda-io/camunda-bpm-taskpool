@@ -12,7 +12,7 @@ import org.axonframework.serialization.xml.XStreamSerializer
 import org.axonframework.springboot.autoconfig.MetricsAutoConfiguration
 import org.camunda.bpm.engine.RuntimeService
 import org.camunda.bpm.engine.TaskService
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import org.mockito.kotlin.mock
 import org.springframework.boot.autoconfigure.AutoConfigurations
 import org.springframework.boot.autoconfigure.AutoConfigureBefore

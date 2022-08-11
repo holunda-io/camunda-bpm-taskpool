@@ -4,7 +4,7 @@ import io.holunda.polyflow.view.DataEntry
 import io.holunda.polyflow.view.auth.User
 import org.assertj.core.api.Assertions.assertThat
 import org.camunda.bpm.engine.variable.Variables
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 internal class DataEntriesForUserQueryTest {
 

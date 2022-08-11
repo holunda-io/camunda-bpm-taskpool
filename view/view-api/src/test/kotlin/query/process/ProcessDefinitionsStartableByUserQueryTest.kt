@@ -3,7 +3,7 @@ package io.holunda.polyflow.view.query.process
 import io.holunda.polyflow.view.ProcessDefinition
 import io.holunda.polyflow.view.auth.User
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 internal class ProcessDefinitionsStartableByUserQueryTest {
 

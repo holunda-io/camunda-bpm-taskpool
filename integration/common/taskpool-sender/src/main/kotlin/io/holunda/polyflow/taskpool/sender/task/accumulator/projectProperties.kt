@@ -23,7 +23,7 @@ typealias PropertyOperationConfiguration = Map<KClass<out Any>, PropertyOperatio
 /**
  * Reads a command and returns its properties as a map.
  */
-typealias Mapper<T> = (value: T) -> MutableMap<String, Any?>
+typealias Mapper = (value: Any) -> MutableMap<String, Any?>
 
 /**
  * Reads a map and returns a command.
@@ -37,7 +37,8 @@ fun <T : Any> projectProperties(
   original: T,
   details: List<Any> = emptyList(),
   propertyOperationConfig: PropertyOperationConfiguration = mapOf(),
-  mapper: Mapper<T>,
+  defaultPropertyOperation: PropertyOperation = { map, key, value -> map[key] = value },
+  mapper: Mapper,
   unmapper: Unmapper<T>,
   ignoredProperties: List<String> = emptyList(),
   projectionErrorDetector: ProjectionErrorDetector
@@ -79,13 +80,14 @@ fun <T : Any> projectProperties(
     // - or a property is a collection or a map
     val matchingProperties = potentialMatchingProperties.filter { detailProperty ->
       originalProperties.any {
+        // TODO: Shouldn't we check the name here also?
         it.returnType == detailProperty.returnType && it.get(original) != detailProperty.get(detail)
           || (detailProperty.get(detail) is MutableMap<*, *> || detailProperty.get(detail) is MutableCollection<*>)
       }
     }
 
     // determine property operation
-    val propertyOperation = propertyOperationConfig.getOrDefault(detail.javaClass.kotlin) { map, key, value -> map[key] = value }
+    val propertyOperation = propertyOperationConfig.getOrDefault(detail.javaClass.kotlin, defaultPropertyOperation)
 
     // store values in a map
     matchingProperties.forEach { matchingProperty ->
@@ -99,7 +101,7 @@ fun <T : Any> projectProperties(
 /**
  * Default Jackson Mapper (object to map).
  */
-fun <T> jacksonMapper(objectMapper: ObjectMapper): Mapper<T> = {
+fun jacksonMapper(objectMapper: ObjectMapper): Mapper = {
   objectMapper.convertValue(it, object : TypeReference<MutableMap<String, Any?>>() {})
 }
 

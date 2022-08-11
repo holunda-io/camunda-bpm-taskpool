@@ -6,7 +6,7 @@
   <parent>
     <groupId>io.holunda.polyflow</groupId>
     <artifactId>polyflow-taskpool-parent</artifactId>
-    <version>3.3.1</version>
+    <version>3.3.2</version>
   </parent>
 
   <artifactId>polyflow-taskpool-core</artifactId>
@@ -43,10 +43,6 @@
     <dependency>
       <groupId>org.axonframework</groupId>
       <artifactId>axon-test</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
     </dependency>
     <dependency>
       <groupId>org.mockito</groupId>
