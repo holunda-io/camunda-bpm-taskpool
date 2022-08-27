@@ -34,7 +34,7 @@
 
 
   <build>
-    <defaultGoal>clean jacoco:prepare-agent package</defaultGoal>
+    <defaultGoal>clean package</defaultGoal>
     <pluginManagement>
       <plugins>
         <plugin>
