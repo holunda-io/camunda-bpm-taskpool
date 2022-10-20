@@ -7,7 +7,7 @@ import org.camunda.bpm.engine.variable.Variables
 /**
  * Data entry projection.
  */
-data class DataEntry(
+data class  DataEntry(
   /**
    * Type of entry.
    */
