@@ -1,4 +1,4 @@
-name: CI for branches
+name: CI for special branches
 
 on:
   push:
@@ -6,8 +6,9 @@ on:
       - '!master'
       - '!develop'
       - '!release/*'
-      - '*'
-      - '**/*'
+      - 'dependabot/**'
+      - 'feature/**'
+      - 'bugfix/**'
 
 jobs:
   build:
