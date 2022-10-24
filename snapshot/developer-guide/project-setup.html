@@ -1363,8 +1363,8 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#skip-frontend" class="md-nav__link">
-    Skip Frontend
+  <a href="#generate-sql-ddl" class="md-nav__link">
+    Generate SQL DDL
   </a>
   
 </li>
@@ -1372,47 +1372,6 @@
           <li class="md-nav__item">
   <a href="#build-documentation" class="md-nav__link">
     Build Documentation
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#examples" class="md-nav__link">
-    Examples
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#local-start" class="md-nav__link">
-    Local Start
-  </a>
-  
-    <nav class="md-nav" aria-label="Local Start">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#pre-requirements" class="md-nav__link">
-    Pre-requirements
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#start-containers" class="md-nav__link">
-    Start containers
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#starting-application-distributed-scenario" class="md-nav__link">
-    Starting application (distributed scenario)
   </a>
   
 </li>
@@ -1531,7 +1490,7 @@ it. Please squash your commits before submitting and use semantic commit message
 <p>By default, the build command will ignore the run of <code>failsafe</code> Maven plugin executing the integration tests
 (usual JUnit tests with class names ending with ITest). In order to run integration tests, please
 call from your command line:</p>
-<div class="highlight"><pre><span></span><code>./mvnw integration-test failsafe:verify -Pitest -DskipFrontend
+<div class="highlight"><pre><span></span><code>./mvnw integration-test failsafe:verify -Pitest
 </code></pre></div>
 <h2 id="project-build-modes-and-profiles">Project build modes and profiles<a class="headerlink" href="#project-build-modes-and-profiles" title="Permanent link">#</a></h2>
 <h3 id="camunda-version">Camunda Version<a class="headerlink" href="#camunda-version" title="Permanent link">#</a></h3>
@@ -1539,13 +1498,12 @@ call from your command line:</p>
 version is a Community Edition. Specify <code>-Pcamunda-ee</code> to switch to Camunda Enterprise edition. This will
 require a valid Camunda license. You can put it into a file <code>~/.camunda/license.txt</code> and it will be detected
 automatically.</p>
-<h3 id="skip-frontend">Skip Frontend<a class="headerlink" href="#skip-frontend" title="Permanent link">#</a></h3>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Components for production use of Polyflow are backend components only. Frontend components are only created for examples and demonstration purpose.</p>
-</div>
-<p>If you are interested in backend only, specify the <code>-DskipFrontend</code> switch. This will accelerate the build
-significantly.</p>
+<h3 id="generate-sql-ddl">Generate SQL DDL<a class="headerlink" href="#generate-sql-ddl" title="Permanent link">#</a></h3>
+<p>If you are using RDBMS (for example for the Polyflow JPA View or/and JPA storage of Axon Entities), you will require the SQL DDL.
+Consider to edit the <code>view/jpa/src/sql/persistence.xml</code> descriptor to control what to include into DDL generation.
+You can generate this by executing the following build command:</p>
+<div class="highlight"><pre><span></span><code>./mvnw -Pgenerate-sql -f view/jpa
+</code></pre></div>
 <h3 id="build-documentation">Build Documentation<a class="headerlink" href="#build-documentation" title="Permanent link">#</a></h3>
 <p>We are using MkDocs for generation of a static site documentation and rely on Markdown as much as possible.
 MkDocs is a written in Python 3 and needs to be installed on your machine. For the installation please run the following
@@ -1561,50 +1519,11 @@ python3 -m pip install -r ./docs/requirements.txt
 <p class="admonition-title">Note</p>
 <p>If you want to develop your docs in 'live' mode, run <code>mkdocs serve</code> and access the <a href="http://localhost:8000/">http://localhost:8000/</a> from your browser.</p>
 </div>
-<h3 id="examples">Examples<a class="headerlink" href="#examples" title="Permanent link">#</a></h3>
-<p>Polyflow provides a series of examples demonstrating different features of the library. By default, the examples are
-built during the project build. If you want to skip the examples, please add the following parameter to your command
-line or disable the <code>examples</code> module in your IDE.</p>
-<div class="highlight"><pre><span></span><code>./mvnw clean package -DskipExamples
-</code></pre></div>
-<h2 id="local-start">Local Start<a class="headerlink" href="#local-start" title="Permanent link">#</a></h2>
-<div class="admonition important">
-<p class="admonition-title">Important</p>
-<p>If you want to run examples locally, you will need <code>docker</code> and <code>docker-compose</code>.</p>
-</div>
-<h3 id="pre-requirements">Pre-requirements<a class="headerlink" href="#pre-requirements" title="Permanent link">#</a></h3>
-<p>Before starting the example applications, make sure the required infrastructure is set up and running.
-Please run the following from your command line:</p>
-<div class="highlight"><pre><span></span><code>./.docker/setup.sh
-</code></pre></div>
-<p>This will create required docker volumes and network.</p>
-<h3 id="start-containers">Start containers<a class="headerlink" href="#start-containers" title="Permanent link">#</a></h3>
-<p>In order to operate, the distributed example applications will require several containers. These are:</p>
-<ul>
-<li>Axon Server</li>
-<li>PostgreSQL Database</li>
-<li>Mongo Database (if used in projection)</li>
-</ul>
-<p>Please start the required containers executing the corresponding command from <code>examples/scenarios/distributed-axon-server</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="nb">cd</span> ./examples/scenarios/distributed-axon-server
-docker-compose up
-</code></pre></div>
-<h3 id="starting-application-distributed-scenario">Starting application (distributed scenario)<a class="headerlink" href="#starting-application-distributed-scenario" title="Permanent link">#</a></h3>
-<p>For the distributed scenario, the containers from the previous section needs to be started.
-To start applications, either use your IDE and create two run configurations for the classes (in this order):</p>
-<ul>
-<li><code>io.holunda.polyflow.example.process.platform.ExampleTaskpoolApplicationDistributedWithAxonServer</code></li>
-<li><code>io.holunda.polyflow.example.process.approval.ExampleProcessApplicationDistributedWithAxonServer</code></li>
-</ul>
-<p>Alternatively, you can run them from the command line:</p>
-<div class="highlight"><pre><span></span><code>./mvnw spring-boot:run -f examples/scenarios/distributed-axon-server/taskpool-application
-./mvnw spring-boot:run -f examples/scenarios/distributed-axon-server/process-application
-</code></pre></div>
 <h2 id="continuous-integration">Continuous Integration<a class="headerlink" href="#continuous-integration" title="Permanent link">#</a></h2>
 <p>Travis CI is building all branches on commit hook. In addition, a private-hosted Jenkins CI
 is used to build the releases.</p>
 <h2 id="release-management">Release Management<a class="headerlink" href="#release-management" title="Permanent link">#</a></h2>
-<p>Release management has been setup for use of Sonatype Nexus (= Maven Central)</p>
+<p>Release management has been set up for use of Sonatype Nexus (= Maven Central)</p>
 <h3 id="what-modules-get-deployed-to-repository">What modules get deployed to repository<a class="headerlink" href="#what-modules-get-deployed-to-repository" title="Permanent link">#</a></h3>
 <p>Every module is enabled by default. If you want to change this, please provide the property</p>
 <div class="highlight"><pre><span></span><code><span class="nt">&lt;maven.deploy.skip&gt;</span>true<span class="nt">&lt;/maven.deploy.skip&gt;</span>
