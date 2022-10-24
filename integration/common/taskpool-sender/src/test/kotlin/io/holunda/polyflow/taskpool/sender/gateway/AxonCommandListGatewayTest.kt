@@ -67,14 +67,14 @@ class AxonCommandListGatewayTest {
     wrapper.sendToGateway(listOf(createTaskCommand, assignTaskCommand))
 
     // and verify that (only) the first of the two was sent
-    verify(commandGateway).send(eq(createTaskCommand), any() as? CommandCallback<CreateTaskCommand, *>)
+    verify(commandGateway).send<CreateTaskCommand, Void>(eq(createTaskCommand), any())
     verifyNoMoreInteractions(commandGateway)
 
     // for the other one to be sent, we have to manually trigger the command callback ourselves since we mock the Axon command gateway
     callbackMatcher.value.onResult(GenericCommandMessage.asCommandMessage(createTaskCommand), GenericCommandResultMessage("some-id"))
 
     // verify that the other command was send, too
-    verify(commandGateway).send(eq(assignTaskCommand), any() as? CommandCallback<AssignTaskCommand, *>)
+    verify(commandGateway).send<AssignTaskCommand, Void>(eq(assignTaskCommand), any())
     verifyNoMoreInteractions(commandGateway)
   }
 

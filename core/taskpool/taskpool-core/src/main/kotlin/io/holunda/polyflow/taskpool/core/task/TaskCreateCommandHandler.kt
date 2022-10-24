@@ -6,12 +6,14 @@ import io.holunda.polyflow.taskpool.core.loadOptional
 import org.axonframework.commandhandling.CommandHandler
 import org.axonframework.eventsourcing.EventSourcingRepository
 import org.springframework.stereotype.Component
+import org.springframework.context.annotation.Lazy
 
 /**
  * Handler allowing to re-submit a create command for already existing task.
  */
 @Component
-class CreateTaskCommandHandler(
+class TaskCreateCommandHandler(
+  @Lazy
   val eventSourcingRepository: EventSourcingRepository<TaskAggregate>
 ) {
 

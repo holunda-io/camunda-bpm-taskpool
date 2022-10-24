@@ -2,6 +2,7 @@ package io.holunda.polyflow.taskpool.core.task
 
 import io.holunda.camunda.taskpool.api.business.CorrelationMap
 import io.holunda.camunda.taskpool.api.task.*
+import io.holunda.polyflow.taskpool.core.TaskPoolCoreConfiguration
 import mu.KLogging
 import org.axonframework.commandhandling.CommandHandler
 import org.axonframework.eventsourcing.EventSourcingHandler
@@ -14,7 +15,7 @@ import java.util.*
 /**
  * Main representation of the tasks available in the system.
  */
-@Aggregate
+@Aggregate(repository = TaskPoolCoreConfiguration.TASK_AGGREGATE_REPOSITORY)
 class TaskAggregate() {
 
   companion object : KLogging()
@@ -388,9 +389,18 @@ class TaskAggregate() {
         dueDate = command.dueDate,
         followUpDate = command.followUpDate,
         businessKey = this.businessKey,
-        correlations = if (command.enriched) { command.correlations } else { this.correlations },
-        payload = if (command.enriched) { command.payload } else { this.payload }
-      ))
+        correlations = if (command.enriched) {
+          command.correlations
+        } else {
+          this.correlations
+        },
+        payload = if (command.enriched) {
+          command.payload
+        } else {
+          this.payload
+        }
+      )
+    )
   }
 
   private fun claim(assignee: String) =
@@ -457,6 +467,7 @@ class TaskAggregate() {
           groupId = command.candidateGroups.first(),
           assignmentUpdateType = CamundaTaskEventType.CANDIDATE_GROUP_ADD
         )
+
         is DeleteCandidateGroupsCommand -> TaskCandidateGroupChanged(
           id = this.id,
           taskDefinitionKey = this.taskDefinitionKey,
@@ -464,6 +475,7 @@ class TaskAggregate() {
           groupId = command.candidateGroups.first(),
           assignmentUpdateType = CamundaTaskEventType.CANDIDATE_GROUP_DELETE
         )
+
         is AddCandidateUsersCommand -> TaskCandidateUserChanged(
           id = this.id,
           taskDefinitionKey = this.taskDefinitionKey,
@@ -471,6 +483,7 @@ class TaskAggregate() {
           userId = command.candidateUsers.first(),
           assignmentUpdateType = CamundaTaskEventType.CANDIDATE_USER_ADD
         )
+
         is DeleteCandidateUsersCommand -> TaskCandidateUserChanged(
           id = this.id,
           taskDefinitionKey = this.taskDefinitionKey,

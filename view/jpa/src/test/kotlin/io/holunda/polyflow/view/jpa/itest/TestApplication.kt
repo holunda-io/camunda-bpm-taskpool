@@ -2,6 +2,7 @@ package io.holunda.polyflow.view.jpa.itest
 
 import com.thoughtworks.xstream.XStream
 import com.thoughtworks.xstream.security.AnyTypePermission
+import org.axonframework.eventhandling.deadletter.jpa.DeadLetterEntry
 import org.axonframework.eventhandling.tokenstore.jpa.TokenEntry
 import org.axonframework.eventsourcing.eventstore.jpa.DomainEventEntry
 import org.axonframework.modelling.saga.repository.jpa.SagaEntry
@@ -19,7 +20,7 @@ import org.springframework.context.annotation.Import
 @Import(ObjectMapperConfiguration::class)
 @ComponentScan(basePackages = ["io.holunda.polyflow.view.jpa"])
 @EntityScan(
-  basePackageClasses = [TokenEntry::class, SagaEntry::class, DomainEventEntry::class]
+  basePackageClasses = [TokenEntry::class, SagaEntry::class, DomainEventEntry::class, DeadLetterEntry::class]
 )
 class TestApplication {
 

@@ -33,7 +33,7 @@ By default, the build command will ignore the run of `failsafe` Maven plugin exe
 call from your command line:
 
 ```bash
-./mvnw integration-test failsafe:verify -Pitest -DskipFrontend
+./mvnw integration-test failsafe:verify -Pitest
 ```
 
 ## Project build modes and profiles
@@ -45,13 +45,17 @@ version is a Community Edition. Specify `-Pcamunda-ee` to switch to Camunda Ente
 require a valid Camunda license. You can put it into a file `~/.camunda/license.txt` and it will be detected
 automatically.
 
-### Skip Frontend
+### Generate SQL DDL
 
-!!! note
-    Components for production use of Polyflow are backend components only. Frontend components are only created for examples and demonstration purpose.
+If you are using RDBMS (for example for the Polyflow JPA View or/and JPA storage of Axon Entities), you will require the SQL DDL.
+Consider to edit the `view/jpa/src/sql/persistence.xml` descriptor to control what to include into DDL generation.
+You can generate this by executing the following build command:
 
-If you are interested in backend only, specify the `-DskipFrontend` switch. This will accelerate the build
-significantly.
+```bash
+./mvnw -Pgenerate-sql -f view/jpa
+```
+
+
 
 ### Build Documentation
 
@@ -75,62 +79,6 @@ The docs are generated into `site` directory.
 !!! note
     If you want to develop your docs in 'live' mode, run `mkdocs serve` and access the [http://localhost:8000/](http://localhost:8000/) from your browser.
 
-### Examples
-
-Polyflow provides a series of examples demonstrating different features of the library. By default, the examples are
-built during the project build. If you want to skip the examples, please add the following parameter to your command
-line or disable the `examples` module in your IDE.
-
-```bash
-./mvnw clean package -DskipExamples
-```
-
-## Local Start
-
-!!! important
-    If you want to run examples locally, you will need `docker` and `docker-compose`.
-
-### Pre-requirements
-
-Before starting the example applications, make sure the required infrastructure is set up and running.
-Please run the following from your command line:
-
-```bash
-./.docker/setup.sh
-```
-
-This will create required docker volumes and network.
-
-### Start containers
-
-In order to operate, the distributed example applications will require several containers. These are:
-
-* Axon Server
-* PostgreSQL Database
-* Mongo Database (if used in projection)
-
-Please start the required containers executing the corresponding command from `examples/scenarios/distributed-axon-server`:
-
-```bash
-cd ./examples/scenarios/distributed-axon-server
-docker-compose up
-```
-
-### Starting application (distributed scenario)
-
-For the distributed scenario, the containers from the previous section needs to be started.
-To start applications, either use your IDE and create two run configurations for the classes (in this order):
-
-* `io.holunda.polyflow.example.process.platform.ExampleTaskpoolApplicationDistributedWithAxonServer`
-* `io.holunda.polyflow.example.process.approval.ExampleProcessApplicationDistributedWithAxonServer`
-
-Alternatively, you can run them from the command line:
-
-```bash
-./mvnw spring-boot:run -f examples/scenarios/distributed-axon-server/taskpool-application
-./mvnw spring-boot:run -f examples/scenarios/distributed-axon-server/process-application
-```
-
 ## Continuous Integration
 
 Travis CI is building all branches on commit hook. In addition, a private-hosted Jenkins CI
@@ -138,7 +86,7 @@ is used to build the releases.
 
 ## Release Management
 
-Release management has been setup for use of Sonatype Nexus (= Maven Central)
+Release management has been set up for use of Sonatype Nexus (= Maven Central)
 
 ### What modules get deployed to repository
 

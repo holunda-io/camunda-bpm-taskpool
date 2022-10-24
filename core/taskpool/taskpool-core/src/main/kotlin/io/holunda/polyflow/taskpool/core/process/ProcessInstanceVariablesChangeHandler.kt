@@ -5,6 +5,7 @@ import io.holunda.polyflow.taskpool.core.ifPresentOrElse
 import io.holunda.polyflow.taskpool.core.loadOptional
 import org.axonframework.commandhandling.CommandHandler
 import org.axonframework.eventsourcing.EventSourcingRepository
+import org.springframework.context.annotation.Lazy
 import org.springframework.stereotype.Component
 
 /**
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Component
  */
 @Component
 class ProcessInstanceVariablesChangeHandler(
+  @Lazy
   val eventSourcingRepository: EventSourcingRepository<ProcessInstanceAggregate>
 ) {
 

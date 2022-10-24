@@ -3,6 +3,7 @@ package io.holunda.polyflow.taskpool.core.process
 import io.holunda.camunda.taskpool.api.process.instance.*
 import io.holunda.camunda.taskpool.api.process.variable.ChangeProcessVariablesForExecutionCommand
 import io.holunda.camunda.taskpool.api.process.variable.ProcessVariablesChangedEvent
+import io.holunda.polyflow.taskpool.core.TaskPoolCoreConfiguration
 import mu.KLogging
 import org.axonframework.commandhandling.CommandHandler
 import org.axonframework.eventsourcing.EventSourcingHandler
@@ -13,7 +14,7 @@ import org.axonframework.spring.stereotype.Aggregate
 /**
  * Aggregate representing the process instance.
  */
-@Aggregate
+@Aggregate(repository = TaskPoolCoreConfiguration.PROCESS_INSTANCE_AGGREGATE_REPOSITORY)
 class ProcessInstanceAggregate() {
 
   companion object : KLogging()

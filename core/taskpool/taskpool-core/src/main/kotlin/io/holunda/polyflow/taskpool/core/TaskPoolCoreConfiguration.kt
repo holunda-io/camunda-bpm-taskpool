@@ -1,7 +1,10 @@
 package io.holunda.polyflow.taskpool.core
 
+import io.holunda.polyflow.taskpool.core.process.ProcessDefinitionRegisterCommandHandler
 import io.holunda.polyflow.taskpool.core.process.ProcessDefinitionAggregate
 import io.holunda.polyflow.taskpool.core.process.ProcessInstanceAggregate
+import io.holunda.polyflow.taskpool.core.process.ProcessInstanceVariablesChangeHandler
+import io.holunda.polyflow.taskpool.core.task.TaskCreateCommandHandler
 import io.holunda.polyflow.taskpool.core.task.TaskAggregate
 import org.axonframework.eventsourcing.EventSourcingRepository
 import org.axonframework.eventsourcing.eventstore.EventStore
@@ -10,6 +13,7 @@ import org.axonframework.modelling.command.AggregateNotFoundException
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.Import
 import java.util.*
 
 /**
@@ -19,10 +23,16 @@ import java.util.*
 @ComponentScan
 class TaskPoolCoreConfiguration {
 
+  companion object {
+    const val TASK_AGGREGATE_REPOSITORY = "taskAggregateRepository"
+    const val PROCESS_DEFINITION_AGGREGATE_REPOSITORY = "processDefinitionAggregateRepository"
+    const val PROCESS_INSTANCE_AGGREGATE_REPOSITORY = "processInstanceAggregateRepository"
+  }
+
   /**
    * Provide repository for task aggregates.
    */
-  @Bean
+  @Bean(TASK_AGGREGATE_REPOSITORY)
   fun taskAggregateRepository(eventStore: EventStore): EventSourcingRepository<TaskAggregate> {
     return EventSourcingRepository
       .builder(TaskAggregate::class.java)
@@ -33,7 +43,7 @@ class TaskPoolCoreConfiguration {
   /**
    * Provide repository for process definition aggregates.
    */
-  @Bean
+  @Bean(PROCESS_DEFINITION_AGGREGATE_REPOSITORY)
   fun processDefinitionAggregateRepository(eventStore: EventStore): EventSourcingRepository<ProcessDefinitionAggregate> {
     return EventSourcingRepository
       .builder(ProcessDefinitionAggregate::class.java)
@@ -44,7 +54,7 @@ class TaskPoolCoreConfiguration {
   /**
    * Provide repository for process instance aggregates.
    */
-  @Bean
+  @Bean(PROCESS_INSTANCE_AGGREGATE_REPOSITORY)
   fun processInstanceAggregateRepository(eventStore: EventStore): EventSourcingRepository<ProcessInstanceAggregate> {
     return EventSourcingRepository
       .builder(ProcessInstanceAggregate::class.java)

@@ -5,13 +5,15 @@ import io.holunda.polyflow.taskpool.core.loadOptional
 import io.holunda.polyflow.taskpool.core.ifPresentOrElse
 import org.axonframework.commandhandling.CommandHandler
 import org.axonframework.eventsourcing.EventSourcingRepository
+import org.springframework.context.annotation.Lazy
 import org.springframework.stereotype.Component
 
 /**
  * Handler allowing to register existing definition multiple times.
  */
 @Component
-class CreateProcessDefinitionCommandHandler(
+class ProcessDefinitionRegisterCommandHandler(
+  @Lazy
   val eventSourcingRepository: EventSourcingRepository<ProcessDefinitionAggregate>
 ) {
 
