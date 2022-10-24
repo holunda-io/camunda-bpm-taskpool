@@ -14,7 +14,7 @@
   <packaging>pom</packaging>
 
   <properties>
-    <camunda-bpm.version>7.17.0</camunda-bpm.version>
+    <camunda-bpm.version>7.18.0</camunda-bpm.version>
     <camunda-bpm-assert.version>15.0.0</camunda-bpm-assert.version>
     <camunda-bpm-mockito.version>5.16.0</camunda-bpm-mockito.version>
   </properties>
