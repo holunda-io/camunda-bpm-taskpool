@@ -189,8 +189,16 @@ fun Task.updateAttributesEvent(task: Task, enriched: Boolean): TaskAttributeUpda
   owner = task.owner,
   dueDate = task.dueDate,
   followUpDate = task.followUpDate,
-  businessKey = task.businessKey,
-  formKey = task.formKey,
+  businessKey = if (task.businessKey != null) {
+    task.businessKey
+  } else {
+    this.businessKey
+  },
+  formKey = if (task.formKey != null) {
+    task.formKey
+  } else {
+    this.formKey
+  },
   correlations = if (enriched) {
     task.correlations
   } else {

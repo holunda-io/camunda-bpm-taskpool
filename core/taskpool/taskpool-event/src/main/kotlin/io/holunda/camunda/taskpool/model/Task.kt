@@ -50,7 +50,9 @@ class Task {
     owner = task.owner
     dueDate = task.dueDate
     followUpDate = task.followUpDate
-    businessKey = task.businessKey
+    if (task.businessKey != null) {
+      businessKey = task.businessKey
+    }
     correlations = task.correlations
     payload = task.payload
 

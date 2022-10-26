@@ -89,6 +89,7 @@ class TaskAttributeUpdateTest {
       sourceReference = updatedProcessReference,
       priority = 49,
       description = "Another task",
+      formKey = "some",
       dueDate = due,
       payload = createdEvent.payload,
       correlations = createdEvent.correlations,
