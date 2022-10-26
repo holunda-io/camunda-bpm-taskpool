@@ -14,7 +14,7 @@ import java.util.*
  */
 class TaskAssignmentChangeTest {
 
-  private val fixture: AggregateTestFixture<TaskAggregate> = AggregateTestFixture<TaskAggregate>(TaskAggregate::class.java)
+  private val fixture: AggregateTestFixture<TaskAggregate> = AggregateTestFixture(TaskAggregate::class.java)
   private val processReference = ProcessReference(
     definitionKey = "process_key",
     instanceId = "0815",

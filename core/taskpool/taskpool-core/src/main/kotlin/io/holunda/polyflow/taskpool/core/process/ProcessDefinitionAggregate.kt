@@ -2,6 +2,7 @@ package io.holunda.polyflow.taskpool.core.process
 
 import io.holunda.camunda.taskpool.api.process.definition.ProcessDefinitionRegisteredEvent
 import io.holunda.camunda.taskpool.api.process.definition.RegisterProcessDefinitionCommand
+import io.holunda.camunda.taskpool.mapper.process.registerEvent
 import io.holunda.polyflow.taskpool.core.TaskPoolCoreConfiguration
 import org.axonframework.commandhandling.CommandHandler
 import org.axonframework.eventsourcing.EventSourcingHandler
@@ -23,19 +24,7 @@ class ProcessDefinitionAggregate() {
    * @param command registration command.
    */
   fun handle(command: RegisterProcessDefinitionCommand) {
-    AggregateLifecycle.apply(ProcessDefinitionRegisteredEvent(
-      processDefinitionId = command.processDefinitionId,
-      processDefinitionKey = command.processDefinitionKey,
-      processDefinitionVersion = command.processDefinitionVersion,
-      processDescription = command.processDescription,
-      processName = command.processName,
-      processVersionTag = command.processVersionTag,
-      applicationName = command.applicationName,
-      candidateStarterGroups = command.candidateStarterGroups,
-      candidateStarterUsers = command.candidateStarterUsers,
-      formKey = command.formKey,
-      startableFromTasklist = command.startableFromTasklist
-    ))
+    AggregateLifecycle.apply(command.registerEvent())
   }
 
   /**

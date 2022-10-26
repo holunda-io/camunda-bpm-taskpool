@@ -32,20 +32,7 @@ class DataEntryAggregate() {
   @CommandHandler
   constructor(command: CreateDataEntryCommand) : this() {
     AggregateLifecycle.apply(
-      DataEntryCreatedEvent(
-        entryId = command.dataEntryChange.entryId,
-        entryType = command.dataEntryChange.entryType,
-        name = command.dataEntryChange.name,
-        type = command.dataEntryChange.type,
-        applicationName = command.dataEntryChange.applicationName,
-        state = command.dataEntryChange.state,
-        description = command.dataEntryChange.description,
-        payload = command.dataEntryChange.payload,
-        correlations = command.dataEntryChange.correlations,
-        createModification = command.dataEntryChange.modification,
-        authorizations = command.dataEntryChange.authorizationChanges,
-        formKey = command.dataEntryChange.formKey
-      )
+      command.createdEvent()
     )
   }
 
@@ -55,20 +42,7 @@ class DataEntryAggregate() {
   @CommandHandler
   fun handle(command: UpdateDataEntryCommand) {
     AggregateLifecycle.apply(
-      DataEntryUpdatedEvent(
-        entryId = command.dataEntryChange.entryId,
-        entryType = command.dataEntryChange.entryType,
-        name = command.dataEntryChange.name,
-        type = command.dataEntryChange.type,
-        applicationName = command.dataEntryChange.applicationName,
-        state = command.dataEntryChange.state,
-        description = command.dataEntryChange.description,
-        payload = command.dataEntryChange.payload,
-        correlations = command.dataEntryChange.correlations,
-        updateModification = command.dataEntryChange.modification,
-        authorizations = command.dataEntryChange.authorizationChanges,
-        formKey = command.dataEntryChange.formKey
-      )
+      command.updatedEvent()
     )
   }
 

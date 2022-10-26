@@ -13,7 +13,7 @@ import java.util.*
 
 class TaskAggregateEngineCommandTest {
 
-  private val fixture: AggregateTestFixture<TaskAggregate> = AggregateTestFixture<TaskAggregate>(TaskAggregate::class.java)
+  private val fixture: AggregateTestFixture<TaskAggregate> = AggregateTestFixture(TaskAggregate::class.java)
   private lateinit var now: Date
   private lateinit var now2: Date
 
