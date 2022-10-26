@@ -4,6 +4,7 @@ import org.axonframework.queryhandling.QueryUpdateEmitter
 import org.mockito.Mockito
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.Primary
 import org.springframework.context.annotation.Profile
 
 @Configuration
@@ -11,5 +12,6 @@ import org.springframework.context.annotation.Profile
 class MockQueryEmitterConfiguration {
 
   @Bean
-  fun queryUpdateEmitter(): QueryUpdateEmitter = Mockito.mock(QueryUpdateEmitter::class.java)
+  @Primary
+  fun mockingQueryUpdateEmitter(): QueryUpdateEmitter = Mockito.mock(QueryUpdateEmitter::class.java)
 }

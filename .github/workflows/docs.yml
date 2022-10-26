@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Set up Python
         uses: actions/setup-python@v2
@@ -29,10 +29,10 @@ jobs:
         run: echo "::set-output name=dir::$(pip cache dir)"
 
       - name: Cache dependencies
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ${{ steps.pip-cache.outputs.dir }}
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          key: ${{ runner.os }}-pip-${{ hashFiles('./docs/requirements.txt') }}
           restore-keys: |
             ${{ runner.os }}-pip-
 
@@ -58,6 +58,7 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/')
         run: echo ::set-output name=TAG_NAME::${GITHUB_REF/refs\/tags\//}
 
+      # This is for a tagged version
       - name: Create a new version of documentation and push to GH pages.
         if: startsWith(github.ref, 'refs/tags/')
         run: mike deploy ${{ steps.get_tag_name.outputs.TAG_NAME }} stable --push --rebase --update-aliases
@@ -66,6 +67,7 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/')
         run: mike set-default stable --push --rebase
 
+      # This is for develop
       - name: Deploy latest develop snapshot docs to GH pages.
         if: github.ref == 'refs/heads/develop'
-        run: mike deploy snapshot --push --rebase
+        run: mike deploy snapshot --push --rebase --update-aliases

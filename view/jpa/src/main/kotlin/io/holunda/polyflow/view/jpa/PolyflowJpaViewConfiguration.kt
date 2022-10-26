@@ -1,6 +1,7 @@
 package io.holunda.polyflow.view.jpa
 
 import mu.KLogging
+import org.axonframework.eventhandling.deadletter.jpa.DeadLetterEntry
 import org.axonframework.eventhandling.tokenstore.jpa.TokenEntry
 import org.axonframework.modelling.saga.repository.jpa.SagaEntry
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
@@ -23,7 +24,9 @@ import javax.persistence.EntityManagerFactory
     // for the token
     TokenEntry::class,
     // we are a projection, Sagas might be needed too.
-    SagaEntry::class
+    SagaEntry::class,
+    // Dead letter
+    DeadLetterEntry::class
   ]
 )
 @EnableJpaRepositories(

@@ -58,6 +58,8 @@ create table token_entry
   token_type     varchar(255),
   primary key (processor_name, segment)
 );
+
+
 create index IDXk45eqnxkgd8hpdn6xixn8sgft on association_value_entry (saga_type, association_key, association_value);
 create index IDXgv5k1v2mh6frxuy5c0hgbau94 on association_value_entry (saga_id, saga_type);
 

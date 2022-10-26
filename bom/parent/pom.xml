@@ -6,7 +6,7 @@
   <parent>
     <groupId>io.holunda.polyflow</groupId>
     <artifactId>polyflow-root</artifactId>
-    <version>3.3.2</version>
+    <version>3.3.3</version>
     <relativePath>../../pom.xml</relativePath>
   </parent>
 
@@ -18,17 +18,17 @@
   <url>https://github.com/holunda-io/camunda-bpm-taskpool/</url>
 
   <properties>
-    <springboot.version>2.7.2</springboot.version>
-    <camunda-commons-typed-values.version>7.17.0</camunda-commons-typed-values.version>
+    <springboot.version>2.7.5</springboot.version>
+    <camunda-commons-typed-values.version>7.18.0</camunda-commons-typed-values.version>
 
-    <axon-bom.version>4.5.17</axon-bom.version>
+    <axon-bom.version>4.6.1</axon-bom.version>
 
-    <axon-kotlin.version>0.2.0</axon-kotlin.version>
+    <axon-kotlin.version>4.6.0</axon-kotlin.version>
     <axon-gateway-extension.version>0.1.1</axon-gateway-extension.version>
 
     <awaitability.version>4.2.0</awaitability.version>
     <mockito-kotlin.version>4.0.0</mockito-kotlin.version>
-    <jgiven.version>1.2.2</jgiven.version>
+    <jgiven.version>1.2.4</jgiven.version>
 
     <pattern.class.itest>**/*ITest.*</pattern.class.itest>
     <pattern.package.itest>**/itest/**/*.*</pattern.package.itest>
@@ -387,7 +387,7 @@
           <!-- jar -->
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-jar-plugin</artifactId>
-          <version>3.2.2</version>
+          <version>3.3.0</version>
           <configuration>
             <archive>
               <manifest>
@@ -572,7 +572,7 @@
         <plugin>
           <groupId>org.jetbrains.dokka</groupId>
           <artifactId>dokka-maven-plugin</artifactId>
-          <version>1.7.10</version>
+          <version>1.7.20</version>
           <executions>
             <execution>
               <id>attach-javadocs</id>

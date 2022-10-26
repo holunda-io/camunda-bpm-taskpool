@@ -27,7 +27,7 @@ data class DataEntryCreatedEvent(
    */
   val applicationName: String,
   /**
-   * Human readable identifier or name, e.g. "BANF-4711 - TV for meeting room"
+   * Human-readable identifier or name, e.g. "BANF-4711 - TV for meeting room"
    */
   val name: String,
   /**
@@ -82,7 +82,7 @@ data class DataEntryUpdatedEvent(
    */
   val applicationName: String,
   /**
-   * Human readable identifier or name, e.g. "BANF-4711 - TV for meeting room"
+   * Human-readable identifier or name, e.g. "BANF-4711 - TV for meeting room"
    */
   val name: String,
   /**

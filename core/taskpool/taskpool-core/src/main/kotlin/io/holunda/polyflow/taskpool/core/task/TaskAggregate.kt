@@ -1,46 +1,27 @@
 package io.holunda.polyflow.taskpool.core.task
 
-import io.holunda.camunda.taskpool.api.business.CorrelationMap
 import io.holunda.camunda.taskpool.api.task.*
+import io.holunda.camunda.taskpool.mapper.task.*
+import io.holunda.camunda.taskpool.model.Task
+import io.holunda.polyflow.taskpool.core.TaskPoolCoreConfiguration
 import mu.KLogging
 import org.axonframework.commandhandling.CommandHandler
 import org.axonframework.eventsourcing.EventSourcingHandler
 import org.axonframework.modelling.command.AggregateIdentifier
 import org.axonframework.modelling.command.AggregateLifecycle
 import org.axonframework.spring.stereotype.Aggregate
-import org.camunda.bpm.engine.variable.VariableMap
-import java.util.*
 
 /**
  * Main representation of the tasks available in the system.
  */
-@Aggregate
+@Aggregate(repository = TaskPoolCoreConfiguration.TASK_AGGREGATE_REPOSITORY)
 class TaskAggregate() {
 
   companion object : KLogging()
 
   @AggregateIdentifier
   private lateinit var id: String
-
-  private lateinit var sourceReference: SourceReference
-  private lateinit var taskDefinitionKey: String
-  private var formKey: String? = null
-
-  private var assignee: String? = null
-  private var businessKey: String? = null
-  private lateinit var candidateUsers: Set<String>
-  private lateinit var candidateGroups: Set<String>
-  private lateinit var correlations: CorrelationMap
-  private var createTime: Date? = null
-  private var description: String? = null
-  private var dueDate: Date? = null
-
-  private var followUpDate: Date? = null
-  private var name: String? = null
-  private var owner: String? = null
-  private lateinit var payload: VariableMap
-  private var priority: Int? = 0
-
+  private lateinit var task: Task
 
   private var deleted = false
   private var completed = false
@@ -52,7 +33,9 @@ class TaskAggregate() {
    */
   fun handle(command: CreateTaskCommand) {
     logger.debug { "Created new aggregate for task ${command.id}" }
-    create(command)
+    AggregateLifecycle.apply(
+      Task.from(command).createdEvent().also { logger.debug { "Created task $it" } }
+    )
   }
 
   /**
@@ -61,8 +44,10 @@ class TaskAggregate() {
   @CommandHandler
   fun handle(command: AssignTaskCommand) {
     if (!deleted && !completed) {
-      if (assignee != command.assignee) {
-        assign(command)
+      if (task.assignee != command.assignee) {
+        AggregateLifecycle.apply(
+          task.assignedEvent(command.assignee).also { logger.debug { "Assigned task ${it.id} to ${it.assignee}" } }
+        )
       }
     }
   }
@@ -73,7 +58,14 @@ class TaskAggregate() {
   @CommandHandler
   fun handle(command: CompleteTaskCommand) {
     if (!deleted && !completed) {
-      complete(command.assignee)
+      if (command.assignee != null) {
+        AggregateLifecycle.apply(
+          task.assignedEvent(command.assignee)
+        )
+      }
+      AggregateLifecycle.apply(
+        task.completedEvent().also { logger.debug { "Completed task ${it.id} by $it.assignee" } }
+      )
     }
   }
 
@@ -83,7 +75,9 @@ class TaskAggregate() {
   @CommandHandler
   fun handle(command: DeleteTaskCommand) {
     if (!deleted && !completed) {
-      delete(command)
+      AggregateLifecycle.apply(
+        task.deletedEvent(command.deleteReason).also { logger.debug { "Deleted task ${it.id} with reason ${it.deleteReason}" } }
+      )
     }
   }
 
@@ -93,8 +87,10 @@ class TaskAggregate() {
   @CommandHandler
   fun handle(command: UpdateAttributeTaskCommand) {
     if (!deleted && !completed) {
-      logger.debug { "Received updateAttributes intent for task $this.id of type ${command.javaClass}" }
-      updateAttributes(command)
+      logger.debug { "Received updateAttributes intent for task $task.id of type ${command.javaClass}" }
+      AggregateLifecycle.apply(
+        task.updateAttributesEvent(Task.from(command), command.enriched)
+      )
     }
   }
 
@@ -104,12 +100,16 @@ class TaskAggregate() {
   @CommandHandler
   fun handle(command: ClaimInteractionTaskCommand) {
     if (!deleted && !completed) {
-      if (command.assignee != assignee) {
+      if (command.assignee != task.assignee) {
         // task is assigned to a different user, un-claim it first
-        if (assignee != null) {
-          unclaim()
+        if (task.assignee != null) {
+          AggregateLifecycle.apply(
+            task.unclaimedEvent()
+          )
         }
-        claim(command.assignee)
+        AggregateLifecycle.apply(
+          task.claimedEvent(command.assignee)
+        )
       }
     }
   }
@@ -119,8 +119,10 @@ class TaskAggregate() {
    */
   @CommandHandler
   fun handle(command: UnclaimInteractionTaskCommand) {
-    if (!deleted && !completed && assignee != null) {
-      unclaim()
+    if (!deleted && !completed && task.assignee != null) {
+      AggregateLifecycle.apply(
+        task.unclaimedEvent()
+      )
     }
   }
 
@@ -134,17 +136,23 @@ class TaskAggregate() {
       if (command.assignee != null) {
         // task assignment if the assignee is set in the command
 
-        if (command.assignee != this.assignee) {
+        if (command.assignee != task.assignee) {
 
-          if (this.assignee != null) {
+          if (task.assignee != null) {
             // task is assigned, but to a different user, un-claim it first.
-            unclaim()
+            AggregateLifecycle.apply(
+              task.unclaimedEvent()
+            )
           }
           // Smart cast is not possible here, because it is a public API declared in a different module.
-          claim(command.assignee!!)
+          AggregateLifecycle.apply(
+            task.claimedEvent(command.assignee!!)
+          )
         }
       }
-      markToBeCompleted(command)
+      AggregateLifecycle.apply(
+        task.markToBeCompletedEvent(command.payload)
+      )
     }
   }
 
@@ -154,7 +162,9 @@ class TaskAggregate() {
   @CommandHandler
   fun handle(command: DeferInteractionTaskCommand) {
     if (!deleted && !completed) {
-      defer(command)
+      AggregateLifecycle.apply(
+        task.deferredEvent(command.followUpDate)
+      )
     }
   }
 
@@ -164,7 +174,9 @@ class TaskAggregate() {
   @CommandHandler
   fun handle(command: UndeferInteractionTaskCommand) {
     if (!deleted && !completed) {
-      undefer()
+      AggregateLifecycle.apply(
+        task.undeferredEvent()
+      )
     }
   }
 
@@ -213,24 +225,8 @@ class TaskAggregate() {
    */
   @EventSourcingHandler
   fun on(event: TaskCreatedEngineEvent) {
-    this.id = event.id
-    this.sourceReference = event.sourceReference
-    this.taskDefinitionKey = event.taskDefinitionKey
-    this.formKey = event.formKey
-
-    this.assignee = event.assignee
-    this.businessKey = event.businessKey
-    this.candidateGroups = event.candidateGroups
-    this.candidateUsers = event.candidateUsers
-    this.correlations = event.correlations
-    this.createTime = event.createTime
-    this.description = event.description
-    this.dueDate = event.dueDate
-    this.followUpDate = event.followUpDate
-    this.name = event.name
-    this.owner = event.owner
-    this.payload = event.payload
-    this.priority = event.priority
+    this.id = event.id // axon framework requirement
+    this.task = Task.from(event)
   }
 
   /**
@@ -238,7 +234,7 @@ class TaskAggregate() {
    */
   @EventSourcingHandler
   fun on(event: TaskAssignedEngineEvent) {
-    this.assignee = event.assignee
+    task.assignee = event.assignee
   }
 
   /**
@@ -257,224 +253,37 @@ class TaskAggregate() {
     this.deleted = true
   }
 
-  private fun assign(command: AssignTaskCommand) =
-    AggregateLifecycle.apply(
-      TaskAssignedEngineEvent(
-        id = this.id,
-        taskDefinitionKey = this.taskDefinitionKey,
-        sourceReference = this.sourceReference,
-        formKey = this.formKey,
-        name = this.name,
-        description = this.description,
-        priority = this.priority,
-        owner = this.owner,
-        dueDate = this.dueDate,
-        createTime = this.createTime,
-        candidateUsers = this.candidateUsers,
-        candidateGroups = this.candidateGroups,
-        assignee = command.assignee,
-        payload = this.payload,
-        correlations = this.correlations,
-        businessKey = this.businessKey,
-        followUpDate = this.followUpDate
-      ).also { logger.debug { "Assigned task ${it.id} to ${it.assignee}" } }
-    )
-
-  private fun create(command: CreateTaskCommand) =
-    AggregateLifecycle.apply(
-      TaskCreatedEngineEvent(
-        id = command.id,
-        taskDefinitionKey = command.taskDefinitionKey,
-        sourceReference = command.sourceReference,
-        formKey = command.formKey,
-        name = command.name,
-        description = command.description,
-        priority = command.priority,
-        owner = command.owner,
-        dueDate = command.dueDate,
-        createTime = command.createTime,
-        candidateUsers = command.candidateUsers,
-        candidateGroups = command.candidateGroups,
-        assignee = command.assignee,
-        payload = command.payload,
-        correlations = command.correlations,
-        businessKey = command.businessKey,
-        followUpDate = command.followUpDate
-      ).also { logger.debug { "Created task $it" } }
-    )
-
-  private fun complete(assignee: String?) {
-    if (assignee != null) {
-      AggregateLifecycle.apply(
-        TaskAssignedEngineEvent(
-          id = this.id,
-          taskDefinitionKey = this.taskDefinitionKey,
-          sourceReference = this.sourceReference,
-          formKey = this.formKey,
-          name = this.name,
-          description = this.description,
-          priority = this.priority,
-          owner = this.owner,
-          dueDate = this.dueDate,
-          createTime = this.createTime,
-          candidateUsers = this.candidateUsers,
-          candidateGroups = this.candidateGroups,
-          assignee = assignee,
-          payload = this.payload,
-          correlations = this.correlations,
-          businessKey = this.businessKey,
-          followUpDate = this.followUpDate
-        )
-      )
-    }
-    AggregateLifecycle.apply(
-      TaskCompletedEngineEvent(
-        id = this.id,
-        taskDefinitionKey = this.taskDefinitionKey,
-        sourceReference = this.sourceReference,
-        formKey = this.formKey,
-        name = this.name,
-        description = this.description,
-        priority = this.priority,
-        owner = this.owner,
-        dueDate = this.dueDate,
-        createTime = this.createTime,
-        candidateUsers = this.candidateUsers,
-        candidateGroups = this.candidateGroups,
-        assignee = this.assignee,
-        payload = this.payload,
-        correlations = this.correlations,
-        businessKey = this.businessKey,
-        followUpDate = this.followUpDate
-      ).also { logger.debug { "Completed task ${it.id} by $it.assignee" } }
-    )
-  }
-
-  private fun delete(command: DeleteTaskCommand) =
-    AggregateLifecycle.apply(
-      TaskDeletedEngineEvent(
-        id = this.id,
-        taskDefinitionKey = this.taskDefinitionKey,
-        sourceReference = this.sourceReference,
-        formKey = this.formKey,
-        name = this.name,
-        description = this.description,
-        priority = this.priority,
-        owner = this.owner,
-        dueDate = this.dueDate,
-        createTime = this.createTime,
-        candidateUsers = this.candidateUsers,
-        candidateGroups = this.candidateGroups,
-        assignee = this.assignee,
-        payload = this.payload,
-        correlations = this.correlations,
-        businessKey = this.businessKey,
-        followUpDate = this.followUpDate,
-
-        deleteReason = command.deleteReason
-      ).also { logger.debug { "Deleted task ${it.id} with reason ${it.deleteReason}" } }
-    )
-
-  private fun updateAttributes(command: UpdateAttributeTaskCommand) {
-    AggregateLifecycle.apply(
-      TaskAttributeUpdatedEngineEvent(
-        id = this.id,
-        taskDefinitionKey = command.taskDefinitionKey,
-        sourceReference = command.sourceReference,
-        name = command.name,
-        description = command.description,
-        priority = command.priority,
-        owner = command.owner,
-        dueDate = command.dueDate,
-        followUpDate = command.followUpDate,
-        businessKey = this.businessKey,
-        correlations = if (command.enriched) { command.correlations } else { this.correlations },
-        payload = if (command.enriched) { command.payload } else { this.payload }
-      ))
-  }
-
-  private fun claim(assignee: String) =
-    AggregateLifecycle.apply(
-      TaskClaimedEvent(
-        id = this.id,
-        taskDefinitionKey = this.taskDefinitionKey,
-        sourceReference = this.sourceReference,
-        formKey = this.formKey,
-        assignee = assignee
-      )
-    )
-
-  private fun unclaim() =
-    AggregateLifecycle.apply(
-      TaskUnclaimedEvent(
-        id = this.id,
-        taskDefinitionKey = this.taskDefinitionKey,
-        sourceReference = this.sourceReference,
-        formKey = this.formKey
-      )
-    )
-
-  private fun markToBeCompleted(command: CompleteInteractionTaskCommand) =
-    AggregateLifecycle.apply(
-      TaskToBeCompletedEvent(
-        id = this.id,
-        taskDefinitionKey = this.taskDefinitionKey,
-        sourceReference = this.sourceReference,
-        formKey = this.formKey,
-        payload = command.payload
-      )
-    )
-
-  private fun defer(command: DeferInteractionTaskCommand) =
-    AggregateLifecycle.apply(
-      TaskDeferredEvent(
-        id = this.id,
-        taskDefinitionKey = this.taskDefinitionKey,
-        sourceReference = this.sourceReference,
-        formKey = this.formKey,
-        followUpDate = command.followUpDate
-      )
-    )
-
-  private fun undefer() =
-    AggregateLifecycle.apply(
-      TaskUndeferredEvent(
-        id = this.id,
-        taskDefinitionKey = this.taskDefinitionKey,
-        sourceReference = this.sourceReference,
-        formKey = this.formKey
-      )
-    )
-
-  // FIXME change representation of groups and users in events?
   private fun changeAssignment(command: UpdateAssignmentTaskCommand) =
     AggregateLifecycle.apply(
       when (command) {
         is AddCandidateGroupsCommand -> TaskCandidateGroupChanged(
-          id = this.id,
-          taskDefinitionKey = this.taskDefinitionKey,
-          sourceReference = this.sourceReference,
+          id = task.id,
+          taskDefinitionKey = task.taskDefinitionKey,
+          sourceReference = task.sourceReference,
           groupId = command.candidateGroups.first(),
           assignmentUpdateType = CamundaTaskEventType.CANDIDATE_GROUP_ADD
         )
+
         is DeleteCandidateGroupsCommand -> TaskCandidateGroupChanged(
-          id = this.id,
-          taskDefinitionKey = this.taskDefinitionKey,
-          sourceReference = this.sourceReference,
+          id = task.id,
+          taskDefinitionKey = task.taskDefinitionKey,
+          sourceReference = task.sourceReference,
           groupId = command.candidateGroups.first(),
           assignmentUpdateType = CamundaTaskEventType.CANDIDATE_GROUP_DELETE
         )
+
         is AddCandidateUsersCommand -> TaskCandidateUserChanged(
-          id = this.id,
-          taskDefinitionKey = this.taskDefinitionKey,
-          sourceReference = this.sourceReference,
+          id = task.id,
+          taskDefinitionKey = task.taskDefinitionKey,
+          sourceReference = task.sourceReference,
           userId = command.candidateUsers.first(),
           assignmentUpdateType = CamundaTaskEventType.CANDIDATE_USER_ADD
         )
+
         is DeleteCandidateUsersCommand -> TaskCandidateUserChanged(
-          id = this.id,
-          taskDefinitionKey = this.taskDefinitionKey,
-          sourceReference = this.sourceReference,
+          id = task.id,
+          taskDefinitionKey = task.taskDefinitionKey,
+          sourceReference = task.sourceReference,
           userId = command.candidateUsers.first(),
           assignmentUpdateType = CamundaTaskEventType.CANDIDATE_USER_DELETE
         )
