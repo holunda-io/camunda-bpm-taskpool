@@ -3,6 +3,9 @@ package io.holunda.camunda.taskpool.mapper.process
 import io.holunda.camunda.taskpool.api.process.definition.ProcessDefinitionRegisteredEvent
 import io.holunda.camunda.taskpool.api.process.definition.RegisterProcessDefinitionCommand
 
+/**
+ * Maps command to event.
+ */
 fun RegisterProcessDefinitionCommand.registerEvent(): ProcessDefinitionRegisteredEvent =
   ProcessDefinitionRegisteredEvent(
     processDefinitionId = this.processDefinitionId,
