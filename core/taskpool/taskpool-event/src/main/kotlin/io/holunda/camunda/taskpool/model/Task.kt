@@ -5,6 +5,9 @@ import io.holunda.camunda.taskpool.api.task.*
 import org.camunda.bpm.engine.variable.VariableMap
 import java.util.*
 
+/**
+ * Command Model representation of the task.
+ */
 class Task {
 
   // anchor for static extension functions.
