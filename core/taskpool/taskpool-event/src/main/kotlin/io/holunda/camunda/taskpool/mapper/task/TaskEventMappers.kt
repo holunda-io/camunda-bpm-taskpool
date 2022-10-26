@@ -189,7 +189,8 @@ fun Task.updateAttributesEvent(task: Task, enriched: Boolean): TaskAttributeUpda
   owner = task.owner,
   dueDate = task.dueDate,
   followUpDate = task.followUpDate,
-  businessKey = this.businessKey,
+  businessKey = task.businessKey,
+  formKey = task.formKey,
   correlations = if (enriched) {
     task.correlations
   } else {
@@ -200,4 +201,56 @@ fun Task.updateAttributesEvent(task: Task, enriched: Boolean): TaskAttributeUpda
   } else {
     this.payload
   }
+)
+
+/**
+ * Creates event filled with data from the task and additional values passed in.
+ * @param groupId group to add to candidate group list.
+ * @return event.
+ */
+fun Task.addCandidateGroupEvent(groupId: String): TaskCandidateGroupChanged = TaskCandidateGroupChanged(
+  id = this.id,
+  taskDefinitionKey = this.taskDefinitionKey,
+  sourceReference = this.sourceReference,
+  groupId = groupId,
+  assignmentUpdateType = CamundaTaskEventType.CANDIDATE_GROUP_ADD
+)
+
+/**
+ * Creates event filled with data from the task and additional values passed in.
+ * @param groupId group to remove from candidate group list.
+ * @return event.
+ */
+fun Task.removeCandidateGroupEvent(groupId: String): TaskCandidateGroupChanged = TaskCandidateGroupChanged(
+  id = this.id,
+  taskDefinitionKey = this.taskDefinitionKey,
+  sourceReference = this.sourceReference,
+  groupId = groupId,
+  assignmentUpdateType = CamundaTaskEventType.CANDIDATE_GROUP_DELETE
+)
+
+/**
+ * Creates event filled with data from the task and additional values passed in.
+ * @param userId user to add to candidate user list.
+ * @return event.
+ */
+fun Task.addCandidateUserEvent(userId: String): TaskCandidateUserChanged = TaskCandidateUserChanged(
+  id = this.id,
+  taskDefinitionKey = this.taskDefinitionKey,
+  sourceReference = this.sourceReference,
+  userId = userId,
+  assignmentUpdateType = CamundaTaskEventType.CANDIDATE_USER_ADD
+)
+
+/**
+ * Creates event filled with data from the task and additional values passed in.
+ * @param userId user to remove from candidate user list.
+ * @return event.
+ */
+fun Task.removeCandidateUserEvent(userId: String): TaskCandidateUserChanged = TaskCandidateUserChanged(
+  id = this.id,
+  taskDefinitionKey = this.taskDefinitionKey,
+  sourceReference = this.sourceReference,
+  userId = userId,
+  assignmentUpdateType = CamundaTaskEventType.CANDIDATE_USER_DELETE
 )
