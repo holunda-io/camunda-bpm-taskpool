@@ -133,7 +133,7 @@ data class TaskDeletedEngineEvent(
 /**
  * Changes of task attributes (but not assignment).
  */
-@Revision("5")
+@Revision("6")
 data class TaskAttributeUpdatedEngineEvent(
   override val id: String,
   override val sourceReference: SourceReference,
@@ -143,6 +143,7 @@ data class TaskAttributeUpdatedEngineEvent(
   override val businessKey: String? = null,
   val name: String? = null,
   val description: String? = null,
+  val formKey: String? = null,
   val priority: Int? = 0,
   val owner: String? = null,
   val dueDate: Date? = null,

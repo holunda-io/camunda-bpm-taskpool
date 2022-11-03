@@ -21,7 +21,7 @@ class TaskAggregate() {
 
   @AggregateIdentifier
   private lateinit var id: String
-  private lateinit var task: Task
+  internal lateinit var task: Task
 
   private var deleted = false
   private var completed = false
@@ -186,7 +186,9 @@ class TaskAggregate() {
   @CommandHandler
   fun handle(command: AddCandidateGroupsCommand) {
     if (!deleted && !completed) {
-      changeAssignment(command)
+      AggregateLifecycle.apply(
+        task.addCandidateGroupEvent(command.candidateGroups.first())
+      )
     }
   }
 
@@ -196,7 +198,9 @@ class TaskAggregate() {
   @CommandHandler
   fun handle(command: DeleteCandidateGroupsCommand) {
     if (!deleted && !completed) {
-      changeAssignment(command)
+      AggregateLifecycle.apply(
+        task.removeCandidateGroupEvent(command.candidateGroups.first())
+      )
     }
   }
 
@@ -206,7 +210,9 @@ class TaskAggregate() {
   @CommandHandler
   fun handle(command: AddCandidateUsersCommand) {
     if (!deleted && !completed) {
-      changeAssignment(command)
+      AggregateLifecycle.apply(
+        task.addCandidateUserEvent(command.candidateUsers.first())
+      )
     }
   }
 
@@ -216,7 +222,9 @@ class TaskAggregate() {
   @CommandHandler
   fun handle(command: DeleteCandidateUsersCommand) {
     if (!deleted && !completed) {
-      changeAssignment(command)
+      AggregateLifecycle.apply(
+        task.removeCandidateUserEvent(command.candidateUsers.first())
+      )
     }
   }
 
@@ -229,12 +237,17 @@ class TaskAggregate() {
     this.task = Task.from(event)
   }
 
+  @EventSourcingHandler
+  fun on(event: TaskAttributeUpdatedEngineEvent) {
+    this.task.update(Task.from(event))
+  }
+
   /**
    * React on task assignment.
    */
   @EventSourcingHandler
   fun on(event: TaskAssignedEngineEvent) {
-    task.assignee = event.assignee
+    this.task.assignee = event.assignee
   }
 
   /**
@@ -253,40 +266,4 @@ class TaskAggregate() {
     this.deleted = true
   }
 
-  private fun changeAssignment(command: UpdateAssignmentTaskCommand) =
-    AggregateLifecycle.apply(
-      when (command) {
-        is AddCandidateGroupsCommand -> TaskCandidateGroupChanged(
-          id = task.id,
-          taskDefinitionKey = task.taskDefinitionKey,
-          sourceReference = task.sourceReference,
-          groupId = command.candidateGroups.first(),
-          assignmentUpdateType = CamundaTaskEventType.CANDIDATE_GROUP_ADD
-        )
-
-        is DeleteCandidateGroupsCommand -> TaskCandidateGroupChanged(
-          id = task.id,
-          taskDefinitionKey = task.taskDefinitionKey,
-          sourceReference = task.sourceReference,
-          groupId = command.candidateGroups.first(),
-          assignmentUpdateType = CamundaTaskEventType.CANDIDATE_GROUP_DELETE
-        )
-
-        is AddCandidateUsersCommand -> TaskCandidateUserChanged(
-          id = task.id,
-          taskDefinitionKey = task.taskDefinitionKey,
-          sourceReference = task.sourceReference,
-          userId = command.candidateUsers.first(),
-          assignmentUpdateType = CamundaTaskEventType.CANDIDATE_USER_ADD
-        )
-
-        is DeleteCandidateUsersCommand -> TaskCandidateUserChanged(
-          id = task.id,
-          taskDefinitionKey = task.taskDefinitionKey,
-          sourceReference = task.sourceReference,
-          userId = command.candidateUsers.first(),
-          assignmentUpdateType = CamundaTaskEventType.CANDIDATE_USER_DELETE
-        )
-      }
-    )
 }
