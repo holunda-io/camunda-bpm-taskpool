@@ -1,9 +1,6 @@
 package io.holunda.polyflow.view.mongo
 
-import io.holunda.camunda.taskpool.api.business.AuthorizationChange
-import io.holunda.camunda.taskpool.api.business.DataEntryCreatedEvent
-import io.holunda.camunda.taskpool.api.business.DataEntryUpdatedEvent
-import io.holunda.camunda.taskpool.api.business.dataIdentityString
+import io.holunda.camunda.taskpool.api.business.*
 import io.holunda.polyflow.view.ProtocolEntry
 import io.holunda.polyflow.view.Task
 import io.holunda.polyflow.view.TaskWithDataEntries
@@ -38,7 +35,7 @@ fun DataEntryCreatedEvent.toDocument() = DataEntryDocument(
 )
 
 /**
- * Creates the document.
+ * Updated event to document.
  */
 fun DataEntryUpdatedEvent.toDocument(oldDocument: DataEntryDocument?) = if (oldDocument != null) {
   val authorizedUsers = AuthorizationChange.applyUserAuthorization(oldDocument.getAuthorizedUsers(), this.authorizations)
@@ -105,4 +102,16 @@ fun TaskWithDataEntriesDocument.taskWithDataEntries() = TaskWithDataEntries(
   ),
   dataEntries = this.dataEntries.map { it.dataEntry() }
 )
+
+
+/**
+ * Deleted event to document.
+ */
+fun DataEntryDeletedEvent.toDocument(oldDocument: DataEntryDocument): DataEntryDocument =
+  oldDocument.copy(
+    deletedDate = this.deleteModification.time.toInstant(),
+    protocol = oldDocument.protocol.map { it.toProtocol() }.addModification(this.deleteModification, this.state).map { it.toProtocolElement() },
+    state = this.state.state,
+    statusType = this.state.processingType.name
+  )
 

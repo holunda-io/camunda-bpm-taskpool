@@ -93,7 +93,13 @@ fun DataEntryCreatedEvent.toEntity(objectMapper: ObjectMapper, revisionValue: Re
 /**
  * Event to entity for an update, if an optional entry exists.
  */
-fun DataEntryUpdatedEvent.toEntity(objectMapper: ObjectMapper, revisionValue: RevisionValue, oldEntry: DataEntryEntity?, limit: Int, filters: List<Pair<JsonPathFilterFunction, FilterType>>) = if (oldEntry == null) {
+fun DataEntryUpdatedEvent.toEntity(
+  objectMapper: ObjectMapper,
+  revisionValue: RevisionValue,
+  oldEntry: DataEntryEntity?,
+  limit: Int,
+  filters: List<Pair<JsonPathFilterFunction, FilterType>>
+) = if (oldEntry == null) {
   DataEntryEntity(
     dataEntryId = DataEntryId(entryType = this.entryType, entryId = this.entryId),
     payload = this.payload.toPayloadJson(objectMapper),
@@ -164,3 +170,22 @@ fun MutableList<ProtocolElement>.addModification(dataEntry: DataEntryEntity, mod
       }
     }
   }
+
+/**
+ * Creates an entity marked as deleted.
+ */
+fun DataEntryDeletedEvent.toEntity(
+  revisionValue: RevisionValue,
+  oldEntry: DataEntryEntity,
+): DataEntryEntity = oldEntry.also {
+  it.state = this.state.toState()
+  it.lastModifiedDate = this.deleteModification.time.toInstant()
+  it.deletedDate = this.deleteModification.time.toInstant()
+  it.revision = if (revisionValue != RevisionValue.NO_REVISION) {
+    revisionValue.revision
+  } else {
+    it.revision
+  }
+}.apply {
+  this.protocol = this.protocol.addModification(this, this@toEntity.deleteModification, this@toEntity.state)
+}

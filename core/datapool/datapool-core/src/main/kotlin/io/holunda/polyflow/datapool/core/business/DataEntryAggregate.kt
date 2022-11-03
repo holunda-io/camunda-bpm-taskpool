@@ -21,7 +21,7 @@ import org.axonframework.spring.stereotype.Aggregate
 )
 class DataEntryAggregate() {
 
-  companion object: KLogging()
+  companion object : KLogging()
 
   @AggregateIdentifier
   private lateinit var dataIdentity: String
@@ -37,7 +37,7 @@ class DataEntryAggregate() {
   }
 
   /**
-   * Handle update command.
+   * Handle update.
    */
   @CommandHandler
   fun handle(command: UpdateDataEntryCommand) {
@@ -47,22 +47,31 @@ class DataEntryAggregate() {
   }
 
   /**
-   * React on create event.
+   * Handle delete.
    */
-  @EventSourcingHandler
-  fun on(event: DataEntryCreatedEvent) {
-    val identity = dataIdentityString(entryType = event.entryType, entryId = event.entryId)
-    if (logger.isDebugEnabled) {
-      logger.debug { "Created $identity." }
-    }
-    if (logger.isTraceEnabled) {
-      logger.trace { "Created $identity with: $event" }
-    }
-    this.dataIdentity = identity
+  @CommandHandler
+  fun handle(command: DeleteDataEntryCommand) {
+    AggregateLifecycle.apply(
+      command.deletedEvent()
+    )
   }
 
   /**
-   * React on update event.
+   * React on created event.
+   */
+  @EventSourcingHandler
+  fun on(event: DataEntryCreatedEvent) {
+    this.dataIdentity = dataIdentityString(entryType = event.entryType, entryId = event.entryId)
+    if (logger.isDebugEnabled) {
+      logger.debug { "Created $dataIdentity." }
+    }
+    if (logger.isTraceEnabled) {
+      logger.trace { "Created $dataIdentity with: $event" }
+    }
+  }
+
+  /**
+   * React on updated event.
    */
   @EventSourcingHandler
   fun on(event: DataEntryUpdatedEvent) {
@@ -72,5 +81,19 @@ class DataEntryAggregate() {
     if (logger.isTraceEnabled) {
       logger.trace { "Updated $dataIdentity with: $event" }
     }
+  }
+
+  /**
+   * React on deleted event.
+   */
+  @EventSourcingHandler
+  fun on(event: DataEntryDeletedEvent) {
+    if (logger.isDebugEnabled) {
+      logger.debug { "Deleted $dataIdentity." }
+    }
+    if (logger.isTraceEnabled) {
+      logger.trace { "Deleted $dataIdentity with: $event" }
+    }
+    AggregateLifecycle.markDeleted()
   }
 }

@@ -23,6 +23,10 @@ data class PolyflowJpaViewProperties(
    */
   val storedItems: Set<StoredItem> = setOf(StoredItem.DATA_ENTRY),
   /**
+   * Flag to configure if the deleted data entries should be deleted from the database.
+   */
+  val deleteDeletedDataEntries: Boolean = true,
+  /**
    * Filters for the paths for indexing.
    */
   @NestedConfigurationProperty

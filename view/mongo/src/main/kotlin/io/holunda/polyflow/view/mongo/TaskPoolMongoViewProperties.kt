@@ -27,7 +27,12 @@ data class TaskPoolMongoViewProperties(
    * Configuration for the indexes.
    */
   @NestedConfigurationProperty
-  val indexes: Indexes = Indexes()
+  val indexes: Indexes = Indexes(),
+
+  /**
+   * Flag indicating if the data entry deletion event should delete elements.
+   */
+  val deleteDeletedDataEntries: Boolean = true
 )
 
 /**

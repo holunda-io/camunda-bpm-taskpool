@@ -114,3 +114,27 @@ data class DataEntryUpdatedEvent(
    */
   val formKey: String? = null
 )
+
+
+/**
+ * Data entry deleted.
+ */
+@Revision("1")
+data class DataEntryDeletedEvent(
+  /**
+   * Entry type
+   */
+  val entryType: EntryType,
+  /**
+   * Entry id.
+   */
+  val entryId: EntryId,
+  /**
+   * Modification information.
+   */
+  val deleteModification: Modification = Modification.now(),
+  /**
+   * State of data entry.
+   */
+  val state: DataEntryState = ProcessingType.UNDEFINED.of("")
+)

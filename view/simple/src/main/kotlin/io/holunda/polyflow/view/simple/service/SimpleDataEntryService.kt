@@ -3,6 +3,7 @@ package io.holunda.polyflow.view.simple.service
 import io.holixon.axon.gateway.query.QueryResponseMessageResponseType
 import io.holixon.axon.gateway.query.RevisionValue
 import io.holunda.camunda.taskpool.api.business.DataEntryCreatedEvent
+import io.holunda.camunda.taskpool.api.business.DataEntryDeletedEvent
 import io.holunda.camunda.taskpool.api.business.DataEntryUpdatedEvent
 import io.holunda.camunda.taskpool.api.business.dataIdentityString
 import io.holunda.polyflow.view.DataEntry
@@ -57,12 +58,20 @@ class SimpleDataEntryService(
   @Suppress("unused")
   @EventHandler
   fun on(event: DataEntryUpdatedEvent, metaData: MetaData) {
-
     logger.debug { "SIMPLE-VIEW-32: Business data entry updated $event" }
     val entryId = dataIdentityString(entryType = event.entryType, entryId = event.entryId)
     dataEntries[entryId] = event.toDataEntry(dataEntries[entryId])
     revisionSupport.updateRevision(entryId, RevisionValue.fromMetaData(metaData))
     updateDataEntryQuery(entryId)
+  }
+
+  @Suppress("unused")
+  @EventHandler
+  fun on(event: DataEntryDeletedEvent, metaData: MetaData) {
+    logger.debug { "SIMPLE-VIEW-33: Business data entry deleted $event" }
+    val entryId = dataIdentityString(entryType = event.entryType, entryId = event.entryId)
+    dataEntries.remove(entryId)
+    revisionSupport.deleteRevision(entryId)
   }
 
   /**

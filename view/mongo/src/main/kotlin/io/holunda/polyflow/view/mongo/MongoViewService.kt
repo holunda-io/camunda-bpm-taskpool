@@ -1,9 +1,6 @@
 package io.holunda.polyflow.view.mongo
 
-import io.holunda.camunda.taskpool.api.business.DataEntryCreatedEvent
-import io.holunda.camunda.taskpool.api.business.DataEntryUpdatedEvent
-import io.holunda.camunda.taskpool.api.business.DataIdentity
-import io.holunda.camunda.taskpool.api.business.dataIdentityString
+import io.holunda.camunda.taskpool.api.business.*
 import io.holunda.camunda.taskpool.api.task.*
 import io.holunda.polyflow.view.Task
 import io.holunda.polyflow.view.TaskWithDataEntries
@@ -354,6 +351,24 @@ class MongoViewService(
       .flatMap { dataEntryRepository.save(it) }
       .then(updateDataEntryQuery(QueryDataIdentity(entryType = event.entryType, entryId = event.entryId)))
       .block()
+  }
+
+  /**
+   * Delivers data entry deleted event.
+   */
+  @Suppress("unused")
+  @EventHandler
+  fun on(event: DataEntryDeletedEvent, metaData: MetaData) {
+    logger.debug { "Business data entry deleted $event" }
+    if (properties.deleteDeletedDataEntries) {
+      dataEntryRepository.deleteById(dataIdentityString(entryType = event.entryType, entryId = event.entryId))
+        .block()
+    } else {
+      dataEntryRepository.findById(dataIdentityString(entryType = event.entryType, entryId = event.entryId))
+        .map { oldEntry -> event.toDocument(oldEntry) }
+        .flatMap { dataEntryRepository.save(it) }
+        .block()
+    }
   }
 
   /**
