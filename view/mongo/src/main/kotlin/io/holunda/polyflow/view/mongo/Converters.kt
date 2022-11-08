@@ -102,16 +102,3 @@ fun TaskWithDataEntriesDocument.taskWithDataEntries() = TaskWithDataEntries(
   ),
   dataEntries = this.dataEntries.map { it.dataEntry() }
 )
-
-
-/**
- * Deleted event to document.
- */
-fun DataEntryDeletedEvent.toDocument(oldDocument: DataEntryDocument): DataEntryDocument =
-  oldDocument.copy(
-    deletedDate = this.deleteModification.time.toInstant(),
-    protocol = oldDocument.protocol.map { it.toProtocol() }.addModification(this.deleteModification, this.state).map { it.toProtocolElement() },
-    state = this.state.state,
-    statusType = this.state.processingType.name
-  )
-

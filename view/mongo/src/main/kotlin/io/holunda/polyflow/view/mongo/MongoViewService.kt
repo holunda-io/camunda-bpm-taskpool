@@ -113,7 +113,6 @@ class MongoViewService(
       .map { DataEntriesQueryResult(elements = it).slice(query) }
       .toFuture()
 
-
   /**
    * Retrieves a list of all data entries of given entry type (and optional id).
    */
@@ -137,7 +136,7 @@ class MongoViewService(
    */
   @QueryHandler
   override fun query(query: DataEntriesQuery, metaData: MetaData): CompletableFuture<DataEntriesQueryResult> =
-    dataEntryRepository.findAll(sort(query.sort))
+    dataEntryRepository.findNotDeleted(sort(query.sort))
       .map { it.dataEntry() }
       .collectList()
       .map { DataEntriesQueryResult(elements = it) }
@@ -345,7 +344,7 @@ class MongoViewService(
   @EventHandler
   fun on(event: DataEntryUpdatedEvent, metaData: MetaData) {
     logger.debug { "Business data entry updated $event" }
-    dataEntryRepository.findById(dataIdentityString(entryType = event.entryType, entryId = event.entryId))
+    dataEntryRepository.findNotDeletedById(dataIdentityString(entryType = event.entryType, entryId = event.entryId))
       .map { oldEntry -> event.toDocument(oldEntry) }
       .switchIfEmpty { Mono.just(event.toDocument(null)) }
       .flatMap { dataEntryRepository.save(it) }
@@ -360,15 +359,22 @@ class MongoViewService(
   @EventHandler
   fun on(event: DataEntryDeletedEvent, metaData: MetaData) {
     logger.debug { "Business data entry deleted $event" }
-    if (properties.deleteDeletedDataEntries) {
-      dataEntryRepository.deleteById(dataIdentityString(entryType = event.entryType, entryId = event.entryId))
-        .block()
-    } else {
-      dataEntryRepository.findById(dataIdentityString(entryType = event.entryType, entryId = event.entryId))
-        .map { oldEntry -> event.toDocument(oldEntry) }
-        .flatMap { dataEntryRepository.save(it) }
-        .block()
-    }
+    deleteDataEntry(dataIdentityString(entryType = event.entryType, entryId = event.entryId))
+  }
+
+  private fun deleteDataEntry(id: String) {
+    dataEntryRepository.findNotDeletedById(id)
+      .retryIfEmpty { "Cannot delete data entry '$id' because it does not exist in the database" }
+      .map { it.copy(deleted = true, deleteTime = clock.instant()) }
+      .flatMap { dataEntryDocument ->
+        if (properties.changeTrackingMode == ChangeTrackingMode.CHANGE_STREAM) {
+          dataEntryRepository.save(dataEntryDocument)
+        } else {
+          dataEntryRepository.delete(dataEntryDocument)
+            .doOnSuccess { updateMapFilterQuery(dataEntryDocument.dataEntry(), DataEntriesForUserQuery::class.java) }
+        }
+      }
+      .block()
   }
 
   /**
@@ -420,34 +426,33 @@ class MongoViewService(
   }
 
   private fun tasksWithDataEntries(task: Task) =
-    this.dataEntryRepository.findAllById(task.correlations.map { dataIdentityString(entryType = it.key, entryId = it.value.toString()) })
+    this.dataEntryRepository.findNotDeletedById(task.correlations.map { dataIdentityString(entryType = it.key, entryId = it.value.toString()) })
       .map { it.dataEntry() }
       .collectList()
       .map { TaskWithDataEntries(task = task, dataEntries = it) }
 
-  private fun tasksWithDataEntries(taskDocument: TaskDocument) = tasksWithDataEntries(taskDocument.task())
-
-  // MongoDB is eventually consistent. If we process two events for the same task within a short time interval, e.g. create and delete, we may not find the
-  // newly created task in the database yet by the time we process the delete event (especially when readPreference is secondary, so we read from another node
-  // than we write to). If we expect a task to exist and don't find it, we wait for a while and periodically try to find it again. Only if after a certain
-  // number of retries the task is still not there, we assume it was already deleted (e.g. because the event has been processed before).
+  // MongoDB is eventually consistent. If we process two events for the same task/data entry within a short time interval, e.g. create and delete, we may not
+  // find the newly created document in the database yet by the time we process the delete event (especially when readPreference is secondary, so we read from
+  // another node than we write to). If we expect a document to exist and don't find it, we wait for a while and periodically try to find it again. Only if
+  // after a certain number of retries the document is still not there, we assume it was already deleted (e.g. because the event has been processed before).
   private inline fun <T> Mono<T>.retryIfEmpty(
     numRetries: Long = 5,
     firstBackoff: Duration = Duration.ofMillis(100),
     crossinline logMessage: () -> String
-  ): Mono<T> =
-    this.switchIfEmpty {
+  ): Mono<T> {
+    return this.switchIfEmpty {
       logger.debug { "${logMessage()}, but will retry." }
-      Mono.error(TaskNotFoundException())
+      Mono.error(MonoIsEmptyException())
     }.retryWhen(Retry.backoff(numRetries, firstBackoff))
-      .onErrorMap { if (it is IllegalStateException && it.cause is TaskNotFoundException) it.cause else it }
-      .onErrorResume(TaskNotFoundException::class.java) {
+      .onErrorMap { if (it is IllegalStateException && it.cause is MonoIsEmptyException) it.cause else it }
+      .onErrorResume(MonoIsEmptyException::class.java) {
         logger.warn { "${logMessage()} and retries are exhausted." }
         Mono.empty()
       }
+  }
 }
 
-internal class TaskNotFoundException : RuntimeException()
+internal class MonoIsEmptyException : RuntimeException()
 
 internal fun sort(sort: String?): Sort =
   if (sort != null && sort.length > 1) {
