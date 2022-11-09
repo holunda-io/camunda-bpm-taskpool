@@ -139,22 +139,8 @@ class JpaPolyflowViewDataEntryService(
     if (isDisabledByProperty()) return
 
     val identity = DataEntryId(entryType = event.entryType, entryId = event.entryId)
-    if (polyflowJpaViewProperties.deleteDeletedDataEntries) {
-      dataEntryRepository.deleteById(identity)
-      logger.debug { "JPA-VIEW-43: Business data entry deleted $event" }
-    } else {
-      dataEntryRepository.findByIdOrNull(identity)?.let { entity ->
-        dataEntryRepository.save(
-          event.toEntity(
-            revisionValue = RevisionValue.fromMetaData(metaData),
-            oldEntry = entity,
-          )
-        ).apply {
-          logger.debug { "JPA-VIEW-44: Business data entry deleted $event" }
-        }
-        emitDataEntryUpdate(entity)
-      }
-    }
+    dataEntryRepository.deleteById(identity)
+    logger.debug { "JPA-VIEW-43: Business data entry deleted $event" }
   }
 
   /**

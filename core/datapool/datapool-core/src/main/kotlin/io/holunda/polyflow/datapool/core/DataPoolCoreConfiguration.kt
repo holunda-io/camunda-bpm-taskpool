@@ -75,5 +75,25 @@ class DataPoolCoreConfiguration {
   @Bean(DATA_ENTRY_CACHE)
   fun dataEntryCache(): Cache = WeakReferenceCache()
 
+  @ConditionalOnProperty(
+    name = ["polyflow.core.data-entry.deletion-strategy"],
+    havingValue = "lax",
+    matchIfMissing = true
+  )
+  @Bean
+  fun laxDeletionStrategy(): DeletionStrategy = object : DeletionStrategy {
+    override fun strictMode(): Boolean = false
+  }
+
+  @ConditionalOnProperty(
+    name = ["polyflow.core.data-entry.deletion-strategy"],
+    havingValue = "strict",
+    matchIfMissing = false
+  )
+  @Bean
+  fun strictDeletionStrategy(): DeletionStrategy = object : DeletionStrategy {
+    override fun strictMode(): Boolean = false
+  }
+
 }
 

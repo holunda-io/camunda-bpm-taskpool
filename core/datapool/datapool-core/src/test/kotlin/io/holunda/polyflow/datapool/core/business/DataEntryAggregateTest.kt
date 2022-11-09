@@ -1,6 +1,7 @@
 package io.holunda.polyflow.datapool.core.business
 
 import io.holunda.camunda.taskpool.api.business.*
+import io.holunda.polyflow.datapool.core.DeletionStrategy
 import org.axonframework.eventsourcing.AggregateDeletedException
 import org.axonframework.test.aggregate.AggregateTestFixture
 import org.camunda.bpm.engine.variable.Variables
@@ -11,6 +12,15 @@ import java.util.*
 class DataEntryAggregateTest {
 
   private val fixture = AggregateTestFixture(DataEntryAggregate::class.java)
+
+  companion object {
+    val LAX_POLICY = object : DeletionStrategy {
+      override fun strictMode(): Boolean = false
+    }
+    val STRICT_POLICY = object : DeletionStrategy {
+      override fun strictMode(): Boolean = true
+    }
+  }
 
   @Test
   fun `should create aggregate`() {
@@ -63,6 +73,7 @@ class DataEntryAggregateTest {
       )
     )
     fixture
+      .registerInjectableResource(LAX_POLICY)
       .given(
         DataEntryCreatedEvent(
           entryId = command.dataEntryChange.entryId,
@@ -119,6 +130,7 @@ class DataEntryAggregateTest {
     )
 
     fixture
+      .registerInjectableResource(LAX_POLICY)
       .given(
         DataEntryCreatedEvent(
           entryId = dataEntryChange.entryId,
@@ -143,12 +155,11 @@ class DataEntryAggregateTest {
           deleteModification = command.modification,
           state = command.state
         )
-      ).expectMarkedDeleted()
-
+      )
   }
 
   @Test
-  fun `should not delete deleted aggregate`() {
+  fun `should not delete deleted aggregate in strict mode`() {
 
     val dataEntryChange = DataEntryChange(
       entryType = "io.holunda.My",
@@ -176,6 +187,7 @@ class DataEntryAggregateTest {
 
 
     fixture
+      .registerInjectableResource(STRICT_POLICY)
       .given(
         DataEntryCreatedEvent(
           entryId = dataEntryChange.entryId,
@@ -204,7 +216,7 @@ class DataEntryAggregateTest {
   }
 
   @Test
-  fun `should not update deleted aggregate`() {
+  fun `should not update deleted aggregate on strict deletion policy`() {
 
     val dataEntryChange = DataEntryChange(
       entryType = "io.holunda.My",
@@ -225,8 +237,8 @@ class DataEntryAggregateTest {
 
     val updateCommand = UpdateDataEntryCommand(
       dataEntryChange = DataEntryChange(
-        entryType = "io.holunda.My",
-        entryId = UUID.randomUUID().toString(),
+        entryType = dataEntryChange.entryType,
+        entryId = dataEntryChange.entryId,
         applicationName = "myApp",
         name = "My Entry 4711",
         type = "My",
@@ -237,6 +249,7 @@ class DataEntryAggregateTest {
 
 
     fixture
+      .registerInjectableResource(STRICT_POLICY)
       .given(
         DataEntryCreatedEvent(
           entryId = dataEntryChange.entryId,
@@ -262,6 +275,82 @@ class DataEntryAggregateTest {
       .`when`(updateCommand)
       .expectException(AggregateDeletedException::class.java)
 
+  }
+
+  @Test
+  fun `should recover deleted aggregate on update by lax deletion policy`() {
+
+    val dataEntryChange = DataEntryChange(
+      entryType = "io.holunda.My",
+      entryId = UUID.randomUUID().toString(),
+      applicationName = "myApp",
+      name = "My Entry 4711",
+      type = "My",
+      payload = Variables.createVariables(),
+      correlations = newCorrelations()
+    )
+
+    val command = DeleteDataEntryCommand(
+      entryType = dataEntryChange.entryType,
+      entryId = dataEntryChange.entryId,
+      modification = Modification(OffsetDateTime.now(), "kermit", "kermit decided to delete", logNotes = "Let us delete this item"),
+      state = ProcessingType.DELETED.of("deleted as irrelevant")
+    )
+
+    val updateCommand = UpdateDataEntryCommand(
+      dataEntryChange = DataEntryChange(
+        entryType = dataEntryChange.entryType,
+        entryId = dataEntryChange.entryId,
+        applicationName = "myApp",
+        name = "My Entry 4711",
+        type = "My",
+        payload = Variables.createVariables(),
+        correlations = newCorrelations()
+      )
+    )
+
+
+    fixture
+      .registerInjectableResource(LAX_POLICY)
+      .given(
+        DataEntryCreatedEvent(
+          entryId = dataEntryChange.entryId,
+          entryType = dataEntryChange.entryType,
+          name = "Some name",
+          type = "Another",
+          applicationName = "Different application",
+          state = dataEntryChange.state,
+          description = dataEntryChange.description,
+          payload = dataEntryChange.payload,
+          correlations = dataEntryChange.correlations,
+          createModification = dataEntryChange.modification,
+          authorizations = dataEntryChange.authorizationChanges,
+          formKey = dataEntryChange.formKey
+        ),
+        DataEntryDeletedEvent(
+          entryId = command.entryId,
+          entryType = command.entryType,
+          deleteModification = command.modification,
+          state = command.state
+        )
+      )
+      .`when`(updateCommand)
+      .expectEvents(
+        DataEntryUpdatedEvent(
+          entryId = updateCommand.dataEntryChange.entryId,
+          entryType = updateCommand.dataEntryChange.entryType,
+          name = updateCommand.dataEntryChange.name,
+          type = updateCommand.dataEntryChange.type,
+          applicationName = updateCommand.dataEntryChange.applicationName,
+          state = updateCommand.dataEntryChange.state,
+          description = updateCommand.dataEntryChange.description,
+          payload = updateCommand.dataEntryChange.payload,
+          correlations = updateCommand.dataEntryChange.correlations,
+          updateModification = updateCommand.dataEntryChange.modification,
+          authorizations = updateCommand.dataEntryChange.authorizationChanges,
+          formKey = updateCommand.dataEntryChange.formKey
+        )
+      )
   }
 
 
