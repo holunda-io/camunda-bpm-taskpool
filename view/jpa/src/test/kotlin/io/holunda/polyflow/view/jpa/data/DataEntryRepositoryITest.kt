@@ -6,6 +6,8 @@ import io.holunda.camunda.variable.serializer.toJsonPathsWithValues
 import io.holunda.polyflow.view.jpa.auth.AuthorizationPrincipal.Companion.group
 import io.holunda.polyflow.view.jpa.auth.AuthorizationPrincipal.Companion.user
 import io.holunda.polyflow.view.jpa.data.DataEntryRepository.Companion.hasDataEntryPayloadAttribute
+import io.holunda.polyflow.view.jpa.data.DataEntryRepository.Companion.hasProcessingType
+import io.holunda.polyflow.view.jpa.data.DataEntryRepository.Companion.hasState
 import io.holunda.polyflow.view.jpa.data.DataEntryRepository.Companion.isAuthorizedFor
 import io.holunda.polyflow.view.jpa.itest.TestApplication
 import io.holunda.polyflow.view.jpa.payload.PayloadAttribute
@@ -206,38 +208,38 @@ internal class DataEntryRepositoryITest {
   }
 
   @Test
-  fun `should find by filter`() {
-//    val byStateInProgress = dataEntryRepository.findAll(where(hasState("In progress")))
-//    assertThat(byStateInProgress).containsExactlyInAnyOrderElementsOf(listOf(dataEntry))
-//
-//    val byStateInReview = dataEntryRepository.findAll(where(hasState("In review")))
-//    assertThat(byStateInReview).containsExactlyInAnyOrderElementsOf(listOf(dataEntry2))
-//
-//    val byProcessingTypeInProgress = dataEntryRepository.findAll(where(hasProcessingType(ProcessingType.IN_PROGRESS)))
-//    assertThat(byProcessingTypeInProgress).containsExactlyInAnyOrderElementsOf(listOf(dataEntry, dataEntry2))
-//
-//    val byProcessingTypeCompleted = dataEntryRepository.findAll(where(hasProcessingType(ProcessingType.COMPLETED)))
-//    assertThat(byProcessingTypeCompleted).isEmpty()
-//
-////    val byPayloadFilterByChildKeyNumberValue = dataEntryRepository.findAll(where(hasPayloadAttribute("child.key-number", "42")))
-//    val byPayloadFilterByChildKeyNumberValue = dataEntryRepository.findAll(where(hasPayloadAttribute("child.key-number", "42")))
-//    assertThat(byPayloadFilterByChildKeyNumberValue).containsExactlyInAnyOrderElementsOf(listOf(dataEntry, dataEntry2))
+  fun `should find by filter state`() {
+    val byStateInProgress = dataEntryRepository.findAll(where(hasState("In progress")))
+    assertThat(byStateInProgress).containsExactlyInAnyOrderElementsOf(listOf(dataEntry))
+
+    val byStateInReview = dataEntryRepository.findAll(where(hasState("In review")))
+    assertThat(byStateInReview).containsExactlyInAnyOrderElementsOf(listOf(dataEntry2))
+
+  }
+
+  @Test
+  fun `should find by filter processing type`() {
+    val byProcessingTypeInProgress = dataEntryRepository.findAll(where(hasProcessingType(ProcessingType.IN_PROGRESS)))
+    assertThat(byProcessingTypeInProgress).containsExactlyInAnyOrderElementsOf(listOf(dataEntry, dataEntry2))
+
+    val byProcessingTypeCompleted = dataEntryRepository.findAll(where(hasProcessingType(ProcessingType.COMPLETED)))
+    assertThat(byProcessingTypeCompleted).isEmpty()
+
+  }
+
+  @Test
+  fun `should find by filter payload attribute`() {
+
+    val byPayloadFilterByChildKeyNumberValue = dataEntryRepository.findAll(where(hasDataEntryPayloadAttribute("child.key-number", "42")))
+    assertThat(byPayloadFilterByChildKeyNumberValue).containsExactlyInAnyOrderElementsOf(listOf(dataEntry, dataEntry2))
 
     val byPayloadFilterByChildKeyValue =
       dataEntryRepository.findAll(
-//        where(hasPayloadAttribute("child.key", "value"))
-//          .and(hasPayloadAttribute("id", dataEntry.dataEntryId.entryId))
         where(hasDataEntryPayloadAttribute("child.key", "value"))
           .and(hasDataEntryPayloadAttribute("id", dataEntry.dataEntryId.entryId))
       )
     assertThat(byPayloadFilterByChildKeyValue).containsExactlyInAnyOrderElementsOf(listOf(dataEntry))
-
-//    val piggy = dataEntryRepository.findAll(isAuthorizedFor(setOf(user("piggy"))))
-//    assertThat(piggy).containsExactlyInAnyOrderElementsOf(listOf(dataEntry, dataEntry2))
-//
-//    val kermitOrAvengers = dataEntryRepository.findAll(isAuthorizedFor(setOf(user("kermit"), group("avengers"))))
-//    assertThat(kermitOrAvengers).containsExactlyInAnyOrderElementsOf(listOf(dataEntry, dataEntry2))
-
   }
+
 
 }

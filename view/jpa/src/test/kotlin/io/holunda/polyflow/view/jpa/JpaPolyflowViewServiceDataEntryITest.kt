@@ -2,12 +2,9 @@ package io.holunda.polyflow.view.jpa
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.holixon.axon.gateway.query.RevisionValue
+import io.holunda.camunda.taskpool.api.business.*
 import io.holunda.camunda.taskpool.api.business.AuthorizationChange.Companion.addGroup
 import io.holunda.camunda.taskpool.api.business.AuthorizationChange.Companion.addUser
-import io.holunda.camunda.taskpool.api.business.DataEntryCreatedEvent
-import io.holunda.camunda.taskpool.api.business.DataEntryUpdatedEvent
-import io.holunda.camunda.taskpool.api.business.Modification
-import io.holunda.camunda.taskpool.api.business.ProcessingType
 import io.holunda.camunda.variable.serializer.serialize
 import io.holunda.polyflow.view.DataEntry
 import io.holunda.polyflow.view.auth.User
@@ -69,6 +66,7 @@ internal class JpaPolyflowViewServiceDataEntryITest {
 
   private val id = UUID.randomUUID().toString()
   private val id2 = UUID.randomUUID().toString()
+  private val id3 = UUID.randomUUID().toString()
   private val now = Instant.now()
 
   @BeforeEach
@@ -149,6 +147,43 @@ internal class JpaPolyflowViewServiceDataEntryITest {
       ),
       metaData = MetaData.emptyInstance()
     )
+
+    jpaPolyflowViewService.on(
+      event = DataEntryCreatedEvent(
+        entryType = "io.polyflow.test",
+        entryId = id3,
+        type = "Test of deleted",
+        applicationName = "test-application",
+        name = "Test Entry 3",
+        state = ProcessingType.IN_PROGRESS.of("In review"),
+        payload = serialize(payload = mapOf("key-int" to 2, "key" to "value"), mapper = objectMapper),
+        authorizations = listOf(
+          addUser("piggy"),
+          addGroup("muppets")
+        ),
+        createModification = Modification(
+          time = OffsetDateTime.ofInstant(now, ZoneOffset.UTC),
+          username = "piggy",
+          log = "Created",
+          logNotes = "Created the entry"
+        )
+      ),
+      metaData = MetaData.emptyInstance()
+    )
+
+    jpaPolyflowViewService.on(
+      event = DataEntryDeletedEvent(
+        entryType = "io.polyflow.test",
+        entryId = id3,
+        deleteModification = Modification(
+          time = OffsetDateTime.ofInstant(now, ZoneOffset.UTC),
+          log = "Deleted",
+          logNotes = "Created by mistake"
+        ),
+        state = ProcessingType.DELETED.of("Create error")
+      ),
+      metaData = MetaData.emptyInstance()
+    )
   }
 
   @AfterEach
@@ -217,6 +252,15 @@ internal class JpaPolyflowViewServiceDataEntryITest {
     )
   }
 
+  @Test
+  fun `should not find the deleted entry`() {
+    assertResultIsEmpty(
+      jpaPolyflowViewService.query(
+        DataEntryForIdentityQuery(entryType = "io.polyflow.test", entryId = id3)
+      )
+    )
+  }
+
 
   private fun <T : Any> query_updates_have_been_emitted(query: T, id: String, revision: Long) {
     captureEmittedQueryUpdates()
@@ -230,6 +274,10 @@ internal class JpaPolyflowViewServiceDataEntryITest {
     assertThat(updates)
       .`as`("Query updates for query $query")
       .containsAnyElementsOf(listOf(listOf(id) to revision))
+  }
+
+  private fun assertResultIsEmpty(result: QueryResponseMessage<DataEntriesQueryResult>) {
+    assertThat(result.payload.elements).isEmpty()
   }
 
 
