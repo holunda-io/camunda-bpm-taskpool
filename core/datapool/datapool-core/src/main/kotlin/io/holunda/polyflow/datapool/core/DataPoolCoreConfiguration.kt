@@ -44,7 +44,6 @@ class DataPoolCoreConfiguration {
   @Bean(DATA_ENTRY_REPOSITORY)
   fun firstEventDataEntryAggregateRepository(eventStore: EventStore): EventSourcingRepository<DataEntryAggregate> {
     return FirstEventOnlyEventSourcingRepository.builder(DataEntryAggregate::class.java).eventStore(eventStore).build()
-
   }
 
   /**
@@ -75,6 +74,9 @@ class DataPoolCoreConfiguration {
   @Bean(DATA_ENTRY_CACHE)
   fun dataEntryCache(): Cache = WeakReferenceCache()
 
+  /**
+   * Deletion strategy for lax handling of updates after deletion (default).
+   */
   @ConditionalOnProperty(
     name = ["polyflow.core.data-entry.deletion-strategy"],
     havingValue = "lax",
@@ -85,6 +87,9 @@ class DataPoolCoreConfiguration {
     override fun strictMode(): Boolean = false
   }
 
+  /**
+   * Deletion strategy for strict handling of updates after deletion.
+   */
   @ConditionalOnProperty(
     name = ["polyflow.core.data-entry.deletion-strategy"],
     havingValue = "strict",
@@ -94,6 +99,5 @@ class DataPoolCoreConfiguration {
   fun strictDeletionStrategy(): DeletionStrategy = object : DeletionStrategy {
     override fun strictMode(): Boolean = false
   }
-
 }
 

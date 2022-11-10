@@ -65,6 +65,9 @@ class SimpleDataEntryService(
     updateDataEntryQuery(entryId)
   }
 
+  /**
+   * Deletes data entry.
+   */
   @Suppress("unused")
   @EventHandler
   fun on(event: DataEntryDeletedEvent, metaData: MetaData) {

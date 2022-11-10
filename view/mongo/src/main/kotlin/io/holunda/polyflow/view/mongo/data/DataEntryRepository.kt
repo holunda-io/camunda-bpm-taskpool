@@ -61,6 +61,9 @@ interface DataEntryRepository :
   @Query("{ \$or: [ { 'authorizedUsers' : ?0 }, { 'authorizedGroups' : { \$in: ?1 } } ], 'deleted': { \$ne: true } }")
   fun findAllForUser(@Param("username") username: String, @Param("groupNames") groupNames: Set<String>, pageable: Pageable? = null): Flux<DataEntryDocument>
 
+  /**
+   * Finds all data deleted entries, deleted before specified time.
+   */
   @Query("{ 'deleted': true, 'deleteTime': { \$not: { \$gt: ?0 } } }")
   fun findDeletedBefore(deleteTime: Instant): Flux<DataEntryDocument>
 }
