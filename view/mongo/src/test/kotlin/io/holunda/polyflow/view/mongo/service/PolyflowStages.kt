@@ -3,11 +3,17 @@ package io.holunda.polyflow.view.mongo.service
 import com.tngtech.jgiven.Stage
 import com.tngtech.jgiven.annotation.*
 import com.tngtech.jgiven.integration.spring.JGivenStage
+import io.holunda.camunda.taskpool.api.business.DataEntryCreatedEvent
+import io.holunda.camunda.taskpool.api.business.DataEntryDeletedEvent
+import io.holunda.camunda.taskpool.api.business.DataEntryUpdatedEvent
 import io.holunda.camunda.taskpool.api.task.*
+import io.holunda.polyflow.view.DataEntry
 import io.holunda.polyflow.view.Task
 import io.holunda.polyflow.view.TaskWithDataEntries
 import io.holunda.polyflow.view.auth.User
 import io.holunda.polyflow.view.mongo.MongoViewService
+import io.holunda.polyflow.view.query.data.DataEntriesForUserQuery
+import io.holunda.polyflow.view.query.data.DataEntryForIdentityQuery
 import io.holunda.polyflow.view.query.task.*
 import mu.KLogging
 import org.assertj.core.api.Assertions.assertThat
@@ -73,9 +79,25 @@ open class PolyflowStage<SELF : PolyflowStage<SELF>> : Stage<SELF>() {
       Awaitility.await().atMost(2, TimeUnit.SECONDS).until {
         captureEmittedQueryUpdates().any { queryType.isAssignableFrom(it.queryType) }
       }
+      logger.info { "Emitted query updates: $emittedQueryUpdates" }
     } catch (e: ConditionTimeoutException) {
       logger.warn { "Query update was not emitted within 2 seconds" }
     }
+    return self()
+  }
+
+  open fun data_entry_created_event_is_received(event: DataEntryCreatedEvent): SELF {
+    testee.on(event, MetaData.emptyInstance())
+    return self()
+  }
+
+  open fun data_entry_updated_event_is_received(event: DataEntryUpdatedEvent): SELF {
+    testee.on(event, MetaData.emptyInstance())
+    return self()
+  }
+
+  open fun data_entry_deleted_event_is_received(event: DataEntryDeletedEvent): SELF {
+    testee.on(event, MetaData.emptyInstance())
     return self()
   }
 
@@ -92,7 +114,7 @@ open class PolyflowStage<SELF : PolyflowStage<SELF>> : Stage<SELF>() {
         QueryUpdate(queryType, predicate, update)
       }
 
-    emittedQueryUpdates += foundUpdates
+    emittedQueryUpdates = emittedQueryUpdates + foundUpdates
     return foundUpdates
   }
 
@@ -105,8 +127,8 @@ class PolyflowGivenStage<SELF : PolyflowGivenStage<SELF>> : PolyflowStage<SELF>(
   @ProvidedScenarioState(resolution = ScenarioState.Resolution.NAME)
   private lateinit var tasks: List<TaskWithDataEntries>
 
-  private val procRef = ProcessReference("instance1", "exec1", "def1", "def-key", "proce1", "app")
-  private fun task(i: Int) = TaskWithDataEntries(Task(id = "id$i", sourceReference = procRef, taskDefinitionKey = "task-key-$i", businessKey = "BUS-$i"))
+  @ProvidedScenarioState(resolution = ScenarioState.Resolution.NAME)
+  private lateinit var dataEntries: List<DataEntry>
 
   @AfterStage
   fun resetEmittedQueryUpdates() {
@@ -119,53 +141,17 @@ class PolyflowGivenStage<SELF : PolyflowGivenStage<SELF>> : PolyflowStage<SELF>(
     return self()
   }
 
-  @As("$ tasks exist")
-  fun tasks_exist(numTasks: Int): SELF {
-    tasks = (0 until numTasks).map { task(it) }
+  fun no_data_entry_exists(): SELF {
+    dataEntries = listOf()
     return self()
   }
-
 }
 
 @JGivenStage
-class PolyflowWhenStage<SELF : PolyflowWhenStage<SELF>> : PolyflowStage<SELF>() {
-
-  @ExpectedScenarioState(resolution = ScenarioState.Resolution.NAME, required = true)
-  private lateinit var tasks: List<TaskWithDataEntries>
-
-  @ProvidedScenarioState(resolution = ScenarioState.Resolution.NAME)
-  private var queriedTasks: MutableList<TaskWithDataEntries> = mutableListOf()
-
-  private fun query(page: Int, size: Int) = TasksWithDataEntriesForUserQuery(User("kermit", setOf()), page, size)
-
-  @As("Page $ is queried with a page size of $")
-  fun tasks_queried(page: Int, size: Int): SELF {
-    queriedTasks.addAll(TasksWithDataEntriesQueryResult(tasks).slice(query(page, size)).elements)
-    return self()
-  }
-
-}
+class PolyflowWhenStage<SELF : PolyflowWhenStage<SELF>> : PolyflowStage<SELF>()
 
 @JGivenStage
 class PolyflowThenStage<SELF : PolyflowThenStage<SELF>> : PolyflowStage<SELF>() {
-
-  @ExpectedScenarioState(resolution = ScenarioState.Resolution.NAME, required = true)
-  private lateinit var tasks: List<TaskWithDataEntries>
-
-  @ExpectedScenarioState(resolution = ScenarioState.Resolution.NAME, required = true)
-  private lateinit var queriedTasks: List<TaskWithDataEntries>
-
-  @As("$ tasks are returned")
-  fun num_tasks_are_returned(numTasks: Int): SELF {
-    assertThat(queriedTasks.size).isEqualTo(numTasks)
-    return self()
-  }
-
-  @As("all tasks are returned once")
-  fun all_tasks_are_returned(): SELF {
-    assertThat(queriedTasks).isEqualTo(tasks)
-    return self()
-  }
 
   fun task_is_created(task: Task): SELF {
     assertThat(testee.query(TaskForIdQuery(task.id)).join()).isEqualTo(task)
@@ -215,8 +201,22 @@ class PolyflowThenStage<SELF : PolyflowThenStage<SELF>> : PolyflowStage<SELF>() 
     return self()
   }
 
+  fun data_entries_visible_to_user(username: String, expectedDataEntries: List<DataEntry>): SELF {
+    assertThat(testee.query(DataEntriesForUserQuery(User(username = username, groups = emptySet()))).join().elements).containsExactlyElementsOf(
+      expectedDataEntries
+    )
+    return self()
+  }
+
   fun tasks_visible_to_candidate_group(groupName: String, expectedTasks: List<Task>): SELF {
     assertThat(testee.query(TasksForUserQuery(User(username = "<unmet>", groups = setOf(groupName)))).join().elements).containsExactlyElementsOf(expectedTasks)
+    return self()
+  }
+
+  fun data_entries_visible_to_group(groupName: String, expectedDataEntries: List<DataEntry>): SELF {
+    assertThat(testee.query(DataEntriesForUserQuery(User(username = "<unmet>", groups = setOf(groupName)))).join().elements).containsExactlyElementsOf(
+      expectedDataEntries
+    )
     return self()
   }
 
@@ -250,6 +250,16 @@ class PolyflowThenStage<SELF : PolyflowThenStage<SELF>> : PolyflowStage<SELF>() 
   fun no_query_update_has_been_emitted() {
     captureEmittedQueryUpdates()
     assertThat(emittedQueryUpdates).isEmpty()
+  }
+
+  fun data_entry_is_created(dataEntry: DataEntry): SELF {
+    assertThat(testee.query(DataEntryForIdentityQuery(dataEntry.entryType, dataEntry.entryId)).join().elements).containsExactly(dataEntry)
+    return self()
+  }
+
+  fun data_entry_does_not_exist(dataEntry: DataEntry): SELF {
+    assertThat(testee.query(DataEntryForIdentityQuery(dataEntry.entryType, dataEntry.entryId)).join().elements).isEmpty()
+    return self()
   }
 
 }

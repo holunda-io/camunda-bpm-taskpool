@@ -120,7 +120,7 @@ class MongoViewService(
   override fun query(query: DataEntryForIdentityQuery, metaData: MetaData): CompletableFuture<DataEntriesQueryResult> =
     (if (query.entryId != null) {
       dataEntryRepository
-        .findByIdentity(query.identity())
+        .findNotDeletedById(query.identity().asString())
         .map { it.dataEntry() }
         .map { listOf(it) }
         .defaultIfEmpty(listOf())
@@ -405,7 +405,7 @@ class MongoViewService(
   }
 
   private fun updateDataEntryQuery(identity: DataIdentity): Mono<Void> = ifChangeTrackingByEventHandler {
-    dataEntryRepository.findByIdentity(identity)
+    dataEntryRepository.findNotDeletedById(identity.asString())
       .map { it.dataEntry() }
       .doOnNext { dataEntry ->
         updateMapFilterQuery(dataEntry, DataEntriesForUserQuery::class.java)

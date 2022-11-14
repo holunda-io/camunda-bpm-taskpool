@@ -21,11 +21,6 @@ interface DataEntryRepository :
   ReactiveMongoRepository<DataEntryDocument, String>, DataEntryUpdateRepository {
 
   /**
-   * Reactive finder by identity.
-   */
-  fun findByIdentity(identity: DataIdentity): Mono<DataEntryDocument> = findNotDeletedById(dataIdentityString(entryId = identity.entryId, entryType = identity.entryType))
-
-  /**
    * Find by id excluding entries marked as deleted.
    */
   @Query("{ '_id': ?0, 'deleted': { \$ne: true } }")
