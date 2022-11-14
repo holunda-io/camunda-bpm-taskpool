@@ -1291,6 +1291,34 @@
 
             
           
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/scenarios/distributed-axon-server-local.html" class="md-nav__link">
+        Distributed using Axon Server Event Bus only
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/scenarios/distributed-with-kafka.html" class="md-nav__link">
+        Distributed using Kafka
+      </a>
+    </li>
+  
+
+            
+          
         </ul>
       </nav>
     </li>
@@ -1408,6 +1436,14 @@ properties have the prefix <code>polyflow.view.mongo</code>. Here is the example
 <span class="w">          </span><span class="nt">job-jitter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PT1H</span><span class="w"></span>
 <span class="w">          </span><span class="nt">job-timezone</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">UTC</span><span class="w"></span>
 <span class="w">          </span><span class="nt">mode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SCHEDULED_JOB</span><span class="w">          </span>
+<span class="w">        </span><span class="nt">clear-deleted-data-entries</span><span class="p">:</span><span class="w"></span>
+<span class="w">          </span><span class="nt">after</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PT1H</span><span class="w"></span>
+<span class="w">          </span><span class="nt">buffer-size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">100000</span><span class="w"></span>
+<span class="w">          </span><span class="nt">job-schedule</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;@daily&#39;</span><span class="w"></span>
+<span class="w">          </span><span class="nt">job-jitter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PT1H</span><span class="w"></span>
+<span class="w">          </span><span class="nt">job-timezone</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">UTC</span><span class="w"></span>
+<span class="w">          </span><span class="nt">mode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SCHEDULED_JOB</span><span class="w"></span>
+
 <span class="w">      </span><span class="nt">change-tracking-mode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CHANGE_STREAM</span><span class="w"></span>
 <span class="w">      </span><span class="nt">indexes</span><span class="p">:</span><span class="w"></span>
 <span class="w">        </span><span class="nt">token-store</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w"></span>
@@ -1466,6 +1502,48 @@ properties have the prefix <code>polyflow.view.mongo</code>. Here is the example
 <td>see <a href="#clear-deleted-tasks">below</a></td>
 </tr>
 <tr>
+<td><code>change-stream.clear-deleted-data-entries.after</code></td>
+<td>How long should we keep deleted data entries around before clearing them</td>
+<td>Duration</td>
+<td>Duration.ZERO</td>
+<td>PT1H</td>
+</tr>
+<tr>
+<td><code>change-stream.clear-deleted-data-entries.buffer-size</code></td>
+<td>While the change tracker waits for data entries that have been marked deleted to become due for clearing, it needs to buffer them. This property defines the buffer capacity. If more than [bufferSize] data entries are deleted within the time window defined by [after], the buffer will overflow and the latest data entries(s) will be dropped. These data entries(s) will not be automatically cleared in <code>CHANGE_STREAM_SUBSCRIPTION</code> [mode]. In <code>BOTH</code> [mode], the scheduled job will pick them up and clear them eventually. Only relevant if [mode] is <code>CHANGE_STREAM_SUBSCRIPTION</code> or <code>BOTH</code>.</td>
+<td>Long</td>
+<td>10000</td>
+<td>200</td>
+</tr>
+<tr>
+<td><code>change-stream.clear-deleted-data-entries.job-schedule</code></td>
+<td>Cron expression to configure how often the job run that clears deleted data entries should run. Only relevant if [mode] is <code>SCHEDULED_JOB</code> or <code>BOTH</code>.</td>
+<td>Cron expression</td>
+<td>@daily</td>
+<td>@hourly</td>
+</tr>
+<tr>
+<td><code>change-stream.clear-deleted-data-entries.job-jitter</code></td>
+<td>The cleanup job execution time will randomly be delayed after what is determined by the cron expression by [0..this duration].</td>
+<td>Duration</td>
+<td>PT5M</td>
+<td>PT3M</td>
+</tr>
+<tr>
+<td><code>change-stream.clear-deleted-data-entries.timezone</code></td>
+<td>Time zone to use for resolving the cron expression. Default: UTC.</td>
+<td>Timezone</td>
+<td>UTC</td>
+<td>CET</td>
+</tr>
+<tr>
+<td><code>change-stream.clear-deleted-data-entries.mode</code></td>
+<td>How exactly should we clear deleted data entries.</td>
+<td>see <a href="#clear-deleted-tasks">below</a></td>
+<td>see <a href="#clear-deleted-tasks">below</a></td>
+<td>see <a href="#clear-deleted-tasks">below</a></td>
+</tr>
+<tr>
 <td><code>change-tracking-mode</code></td>
 <td>Mode to use for event tracking.</td>
 <td>see <a href="#change-tracking-mode">below</a></td>
@@ -1510,8 +1588,7 @@ written to all nodes. If you are reading the documents by the component triggere
 </table>
 <h3 id="clear-deleted-tasks">Clear deleted tasks<a class="headerlink" href="#clear-deleted-tasks" title="Permanent link">#</a></h3>
 <p>Removal of elements from collection is a costly operation in distributed Mongo DB cluster. For this purpose, if the user task gets deleted, it is marked by a <code>deleted</code> flag and immediately
-excluded from the selection. A later job is responsible for real wiping it out from the collection. The deletion mode controls how this operation is performed.  <br />
-Set the mode for task deletion by selecting from one of the following values: </p>
+excluded from the selection. A later job is responsible for real wiping it out from the collection. The deletion mode controls how this operation is performed. Set the mode for task deletion by selecting from one of the following values: </p>
 <table>
 <thead>
 <tr>

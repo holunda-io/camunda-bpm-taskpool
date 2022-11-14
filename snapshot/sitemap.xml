@@ -61,7 +61,17 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://www.holunda.io/camunda-bpm-taskpool/snapshot/examples/scenarios/distributed-axon-server-local.html</loc>
+         <lastmod>2022-11-14</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://www.holunda.io/camunda-bpm-taskpool/snapshot/examples/scenarios/distributed-axon-server.html</loc>
+         <lastmod>2022-11-14</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://www.holunda.io/camunda-bpm-taskpool/snapshot/examples/scenarios/distributed-with-kafka.html</loc>
          <lastmod>2022-11-14</lastmod>
          <changefreq>daily</changefreq>
     </url>
@@ -197,6 +207,11 @@
     </url>
     <url>
          <loc>https://www.holunda.io/camunda-bpm-taskpool/snapshot/reference-guide/configuration/core-datapool-aggregate-tuning.html</loc>
+         <lastmod>2022-11-14</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://www.holunda.io/camunda-bpm-taskpool/snapshot/reference-guide/configuration/local-core-deployment.html</loc>
          <lastmod>2022-11-14</lastmod>
          <changefreq>daily</changefreq>
     </url>

@@ -12,14 +12,14 @@
         <meta name="author" content="Holisticon BPM Craftsman">
       
       
-        <link rel="canonical" href="https://www.holunda.io/camunda-bpm-taskpool/snapshot/reference-guide/components/common-taskpool-sender.html">
+        <link rel="canonical" href="https://www.holunda.io/camunda-bpm-taskpool/snapshot/reference-guide/configuration/local-core-deployment.html">
       
       <link rel="icon" href="../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-8.5.10">
     
     
       
-        <title>Taskpool Sender - Polyflow</title>
+        <title>Local core deployment - Polyflow</title>
       
     
     
@@ -74,7 +74,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#purpose" class="md-skip">
+        <a href="#transactional-support-of-integration-components" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Taskpool Sender
+              Local core deployment
             
           </span>
         </div>
@@ -242,15 +242,13 @@
         
   
   
-    
-  
 
 
   
   
   
     <li class="md-tabs__item">
-      <a href="../index.html" class="md-tabs__link md-tabs__link--active">
+      <a href="../index.html" class="md-tabs__link">
         Reference
       </a>
     </li>
@@ -480,14 +478,12 @@
 
   
   
-    
-  
   
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4" type="checkbox" id="__nav_4" checked>
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4" type="checkbox" id="__nav_4" >
       
       
       
@@ -524,7 +520,7 @@
   
   
     <li class="md-nav__item">
-      <a href="index.html" class="md-nav__link">
+      <a href="../components/index.html" class="md-nav__link">
         Component Overview
       </a>
     </li>
@@ -536,16 +532,14 @@
               
   
   
-    
-  
   
     
       
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_3" type="checkbox" id="__nav_4_3" checked>
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_3" type="checkbox" id="__nav_4_3" >
       
       
       
@@ -568,7 +562,7 @@
   
   
     <li class="md-nav__item">
-      <a href="camunda-interaction-client.html" class="md-nav__link">
+      <a href="../components/camunda-interaction-client.html" class="md-nav__link">
         Camunda BPM Engine Interaction Client
       </a>
     </li>
@@ -582,7 +576,7 @@
   
   
     <li class="md-nav__item">
-      <a href="camunda-taskpool-collector.html" class="md-nav__link">
+      <a href="../components/camunda-taskpool-collector.html" class="md-nav__link">
         Camunda BPM Engine Taskpool Collector
       </a>
     </li>
@@ -596,7 +590,7 @@
   
   
     <li class="md-nav__item">
-      <a href="camunda-starter.html" class="md-nav__link">
+      <a href="../components/camunda-starter.html" class="md-nav__link">
         Camunda BPM Engine Taskpool SpringBoot Starter
       </a>
     </li>
@@ -608,89 +602,11 @@
               
   
   
-    
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
-      
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          Taskpool Sender
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="common-taskpool-sender.html" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../components/common-taskpool-sender.html" class="md-nav__link">
         Taskpool Sender
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
-    Purpose
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#features" class="md-nav__link">
-    Features
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#usage-and-configuration" class="md-nav__link">
-    Usage and configuration
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#command-aggregation" class="md-nav__link">
-    Command aggregation
-  </a>
-  
-    <nav class="md-nav" aria-label="Command aggregation">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#handling-command-transmission" class="md-nav__link">
-    Handling command transmission
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#message-codes" class="md-nav__link">
-    Message codes
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -702,7 +618,7 @@
   
   
     <li class="md-nav__item">
-      <a href="common-datapool-sender.html" class="md-nav__link">
+      <a href="../components/common-datapool-sender.html" class="md-nav__link">
         Datapool Sender
       </a>
     </li>
@@ -751,7 +667,7 @@
   
   
     <li class="md-nav__item">
-      <a href="core-taskpool.html" class="md-nav__link">
+      <a href="../components/core-taskpool.html" class="md-nav__link">
         Taskpool Core
       </a>
     </li>
@@ -765,7 +681,7 @@
   
   
     <li class="md-nav__item">
-      <a href="core-datapool.html" class="md-nav__link">
+      <a href="../components/core-datapool.html" class="md-nav__link">
         Datapool Core
       </a>
     </li>
@@ -814,7 +730,7 @@
   
   
     <li class="md-nav__item">
-      <a href="view-api.html" class="md-nav__link">
+      <a href="../components/view-api.html" class="md-nav__link">
         View API
       </a>
     </li>
@@ -828,7 +744,7 @@
   
   
     <li class="md-nav__item">
-      <a href="view-api-client.html" class="md-nav__link">
+      <a href="../components/view-api-client.html" class="md-nav__link">
         View API Client
       </a>
     </li>
@@ -842,7 +758,7 @@
   
   
     <li class="md-nav__item">
-      <a href="view-form-url-resolver.html" class="md-nav__link">
+      <a href="../components/view-form-url-resolver.html" class="md-nav__link">
         Form URL Resolver
       </a>
     </li>
@@ -856,7 +772,7 @@
   
   
     <li class="md-nav__item">
-      <a href="view-simple.html" class="md-nav__link">
+      <a href="../components/view-simple.html" class="md-nav__link">
         In-Memory View
       </a>
     </li>
@@ -870,7 +786,7 @@
   
   
     <li class="md-nav__item">
-      <a href="view-jpa.html" class="md-nav__link">
+      <a href="../components/view-jpa.html" class="md-nav__link">
         JPA View
       </a>
     </li>
@@ -884,7 +800,7 @@
   
   
     <li class="md-nav__item">
-      <a href="view-mongo.html" class="md-nav__link">
+      <a href="../components/view-mongo.html" class="md-nav__link">
         Mongo DB View
       </a>
     </li>
@@ -933,7 +849,7 @@
   
   
     <li class="md-nav__item">
-      <a href="other-tasklist-url-resolver.html" class="md-nav__link">
+      <a href="../components/other-tasklist-url-resolver.html" class="md-nav__link">
         Tasklist URL Resolver
       </a>
     </li>
@@ -947,7 +863,7 @@
   
   
     <li class="md-nav__item">
-      <a href="other-variable-serializer.html" class="md-nav__link">
+      <a href="../components/other-variable-serializer.html" class="md-nav__link">
         Variable Serializer
       </a>
     </li>
@@ -961,7 +877,7 @@
   
   
     <li class="md-nav__item">
-      <a href="other-bus-jackson.html" class="md-nav__link">
+      <a href="../components/other-bus-jackson.html" class="md-nav__link">
         Bus Jackson
       </a>
     </li>
@@ -982,7 +898,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../configuration/index.html" class="md-nav__link">
+      <a href="index.html" class="md-nav__link">
         Configuration Overview
       </a>
     </li>
@@ -1024,7 +940,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../configuration/view-mongo.html" class="md-nav__link">
+      <a href="view-mongo.html" class="md-nav__link">
         Mongo DB View Configuration
       </a>
     </li>
@@ -1038,7 +954,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../configuration/persistence.html" class="md-nav__link">
+      <a href="persistence.html" class="md-nav__link">
         Persistence Configuration
       </a>
     </li>
@@ -1052,7 +968,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../configuration/core-datapool-aggregate-tuning.html" class="md-nav__link">
+      <a href="core-datapool-aggregate-tuning.html" class="md-nav__link">
         Datapool Aggregate Tuning
       </a>
     </li>
@@ -1435,217 +1351,80 @@
                 
                   
 
-  <a href="https://github.com/holunda-io/camunda-bpm-taskpool/edit/develop/docs/reference-guide/components/common-taskpool-sender.md" title="Edit this page" class="md-content__button md-icon">
+  <a href="https://github.com/holunda-io/camunda-bpm-taskpool/edit/develop/docs/reference-guide/configuration/local-core-deployment.md" title="Edit this page" class="md-content__button md-icon">
     
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25Z"/></svg>
   </a>
 
 
-  <h1>Taskpool Sender</h1>
+  <h1>Local core deployment</h1>
 
-<h3 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">#</a></h3>
-<p>Taskpool sender is a component usually deployed as a part of the process application that
-is responsible for sending tasks collected e.G. by <a href="camunda-taskpool-collector.html">Camunda Taskpool Collector</a> to <a href="core-taskpool.html">Taskpool Core Components</a>
-as commands.</p>
-<h3 id="features">Features<a class="headerlink" href="#features" title="Permanent link">#</a></h3>
+<p>As described in <a href="../../introduction/deployment.html#distribution-using-axon-server-core-component-as-part-of-process-engine">Distribution using Axon Server (core component as part of process engine)</a> 
+you might want to deploy your Polyflow Core Components (Taskpool Core and Datapool Core) inside your process application. If you are doing so,
+you should there are two important decisions to make:</p>
 <ul>
-<li>Allows fine-grained control of transactional behaviour during command sending</li>
-<li>Allows to integrate custom success and error handling</li>
+<li>How the Camunda transaction is related to Transaction (Unit of Work) or Polyflow?</li>
+<li>How to isolate Polyflow Core components from each other if deployed multiple times?</li>
 </ul>
-<h3 id="usage-and-configuration">Usage and configuration<a class="headerlink" href="#usage-and-configuration" title="Permanent link">#</a></h3>
-<div class="highlight"><pre><span></span><code><span class="nt">&lt;dependency&gt;</span>
-  <span class="nt">&lt;groupId&gt;</span>io.holunda.polyflow<span class="nt">&lt;/groupId&gt;</span>
-  <span class="nt">&lt;artifactId&gt;</span>polyflow-taskpool-sender<span class="nt">&lt;/artifactId&gt;</span>
-  <span class="nt">&lt;version&gt;</span>${camunda-taskpool.version}<span class="nt">&lt;/version&gt;</span>
-<span class="nt">&lt;/dependency&gt;</span>
+<h2 id="transactional-support-of-integration-components">Transactional support of integration components<a class="headerlink" href="#transactional-support-of-integration-components" title="Permanent link">#</a></h2>
+<p>The integration components support different transactional behavior inside the command sender components. To be more precise, 
+after the task collector has collected the commands from the integration points with Camunda, you can set up if the data is passed 
+to the Command Dispatching component (command bus) inside the same transaction or in a separate transaction.</p>
+<p>The relevant property to set this up is <code>polyflow.integration.sender.task.send-within-transaction</code>, like you can see in the following example: </p>
+<div class="highlight"><pre><span></span><code><span class="nt">polyflow</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="nt">integration</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">sender</span><span class="p">:</span><span class="w"></span>
+<span class="w">      </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
+<span class="w">      </span><span class="nt">task</span><span class="p">:</span><span class="w"></span>
+<span class="w">        </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">tx</span><span class="w"></span>
+<span class="w">        </span><span class="nt">send-within-transaction</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"> </span>
 </code></pre></div>
-<p>Then activate the taskpool sender by providing the annotation on any Spring Configuration:</p>
-<div class="highlight"><pre><span></span><code><span class="nd">@Configuration</span><span class="w"></span>
-<span class="nd">@EnableTaskpoolSender</span><span class="w"></span>
-<span class="kd">class</span> <span class="nc">MyDataEntryCollectorConfiguration</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-
-<span class="p">}</span><span class="w"></span>
-</code></pre></div>
-<h3 id="command-aggregation">Command aggregation<a class="headerlink" href="#command-aggregation" title="Permanent link">#</a></h3>
-<p>In order to control sending of commands to command sender, the command sender activation property
-<code>polyflow.integration.sender.task.enabled</code> is available. If disabled, the command sender
-will log any command instead of aggregating sending it to the command gateway.</p>
-<p>In addition, you can control by the property <code>polyflow.integration.task.sender.type</code> if you want to use the default command sender or provide your own
-implementation.
-The default provided command sender (type: <code>tx</code>) is collects all task commands during one transaction, group them by task id
-and accumulates by creating one command reflecting the intent of the task operation. It uses Axon Command Bus (encapsulated
-by the <code>AxonCommandListGateway</code> for sending the result over to the Axon command gateway.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>If you want to implement a custom command sending, please provide your own implementation of the interface <code>EngineTaskCommandSender</code>
-  (register a Spring Component of the type) and set the property <code>polyflow.integration.task.sender.type</code> to <code>custom</code>.</p>
-</div>
-<p>The Spring event listeners receiving events from the Camunda Engine plugin are called before the engine commits the transaction.
-Since all processing inside collector component and enricher is performed synchronously, the sender must waits until transaction to
-be successfully committed before sending any commands to the Command Gateway. Otherwise, on any error
-the transaction would be rolled-back and the command would create an inconsistency between the taskpool and the engine.</p>
-<p>Depending on your deployment scenario, you may want to control the exact point in time when the commands are sent to command gateway.
-The property <code>polyflow.integration.task.sender.send-within-transaction</code> is designed to influence this. If set to <code>true</code>, the commands
-are sent <em>before</em> the process engine transaction is committed, otherwise commands are sent <em>after</em> the process engine transaction is committed.</p>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>Never send commands over remote messaging before the transaction is committed, since you may produce unexpected results if Camunda fails
-  to commit the transaction.</p>
-</div>
-<h4 id="handling-command-transmission">Handling command transmission<a class="headerlink" href="#handling-command-transmission" title="Permanent link">#</a></h4>
-<p>The commands sent via gateway (e.g. <code>AxonCommandListGateway</code>) are received by Command Handlers. The latter may accept or reject commands, depending
-on the state of the aggregate and other components. The <code>AxonCommandListGateway</code> is informed about the command outcome. By default, it will log the outcome
-to console (success is logged in <code>DEBUG</code> log level, errors are using <code>ERROR</code> log level).</p>
-<p>In some situations it is required to take care of command outcome. A prominent example is to include a metric for command dispatching errors into monitoring.
-For doing so, it is possible to provide own handlers for success and error command outcome. For this purpose, please provide a Spring Bean implementing
-the <code>CommandSuccessHandler</code>and <code>CommandErrorHandler</code> accordingly.</p>
-<p>Here is an example, how such a handler may look like:</p>
-<div class="highlight"><pre><span></span><code><span class="nd">@Bean</span><span class="w"></span>
-<span class="nd">@Primary</span><span class="w"></span>
-<span class="kd">fun</span><span class="w"> </span><span class="nf">taskCommandErrorHandler</span><span class="p">():</span><span class="w"> </span><span class="n">CommandErrorHandler</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="nc">LoggingTaskCommandErrorHandler</span><span class="p">(</span><span class="n">logger</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<p>If set to true, the transaction will be shared between the Camunda Task Lifecycle and command dispatching components. The commands are passed to
+a special <code>CommandListGateway</code> responsible for sending commands one by one. This component allows to integrate a success and failure handlers to 
+react to command sending and any failures there. To do so, you need to implement two interfaces and provide bean factories for them:</p>
+<p><div class="highlight"><pre><span></span><code><span class="w">  </span><span class="nd">@Bean</span><span class="w"></span>
+<span class="w">  </span><span class="nd">@Primary</span><span class="w"></span>
+<span class="w">  </span><span class="kd">fun</span><span class="w"> </span><span class="nf">myCommandSuccessHandler</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="nc">CommandErrorHandler</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
 <span class="w">    </span><span class="kd">override</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">apply</span><span class="p">(</span><span class="n">commandMessage</span><span class="p">:</span><span class="w"> </span><span class="kt">Any</span><span class="p">,</span><span class="w"> </span><span class="n">commandResultMessage</span><span class="p">:</span><span class="w"> </span><span class="n">CommandResultMessage</span><span class="o">&lt;</span><span class="k">out</span><span class="w"> </span><span class="kt">Any?</span><span class="o">&gt;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">      </span><span class="n">logger</span><span class="p">.</span><span class="na">info</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s">&quot;&lt;--------- CUSTOM ERROR HANDLER REPORT ---------&gt;&quot;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
-<span class="w">      </span><span class="k">super</span><span class="p">.</span><span class="na">apply</span><span class="p">(</span><span class="n">commandMessage</span><span class="p">,</span><span class="w"> </span><span class="n">commandResultMessage</span><span class="p">)</span><span class="w"></span>
-<span class="w">      </span><span class="n">logger</span><span class="p">.</span><span class="na">info</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s">&quot;&lt;------------------- END -----------------------&gt;&quot;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
+<span class="w">      </span><span class="n">logger</span><span class="p">.</span><span class="na">trace</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s">&quot;Everything went smooth&quot;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="w">  </span><span class="p">}</span><span class="w"></span>
+
+<span class="w">  </span><span class="cm">/**</span>
+<span class="cm">   * </span>
+<span class="cm">   */</span><span class="w"></span>
+<span class="w">  </span><span class="nd">@Bean</span><span class="w"></span>
+<span class="w">  </span><span class="nd">@Primary</span><span class="w"></span>
+<span class="w">  </span><span class="kd">fun</span><span class="w"> </span><span class="nf">myCommandErrorHandler</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="nc">CommandSuccessHandler</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="kd">override</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">apply</span><span class="p">(</span><span class="n">commandMessage</span><span class="p">:</span><span class="w"> </span><span class="kt">Any</span><span class="p">,</span><span class="w"> </span><span class="n">commandResultMessage</span><span class="p">:</span><span class="w"> </span><span class="n">CommandResultMessage</span><span class="o">&lt;</span><span class="k">out</span><span class="w"> </span><span class="kt">Any?</span><span class="o">&gt;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">      </span><span class="k">throw</span><span class="w"> </span><span class="n">IllegalStateException</span><span class="p">(</span><span class="s">&quot;Something bad happened&quot;</span><span class="p">)</span><span class="w"></span>
 <span class="w">    </span><span class="p">}</span><span class="w"></span>
 <span class="w">  </span><span class="p">}</span><span class="w"></span>
 </code></pre></div>
-<h3 id="message-codes">Message codes<a class="headerlink" href="#message-codes" title="Permanent link">#</a></h3>
-<blockquote>
-<p>Please note that the logger root hierarchy is <code>io.holunda.camunda.taskpool.sender</code></p>
-</blockquote>
-<table>
-<thead>
-<tr>
-<th>Message Code</th>
-<th>Severity</th>
-<th align="left">Logger*</th>
-<th align="left">Description</th>
-<th align="left">Meaning</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>SENDER-001</code></td>
-<td><code>DEBUG</code></td>
-<td align="left"><code>.gateway</code></td>
-<td align="left">Sending command over gateway disabled by property. Would have sent command <code>payload</code>.</td>
-<td align="left">Sending of any commands is disabled.</td>
-</tr>
-<tr>
-<td><code>SENDER-002</code></td>
-<td><code>DEBUG</code></td>
-<td align="left"><code>.gateway</code></td>
-<td align="left">Successfully submitted command <code>payload</code>.</td>
-<td align="left">Logging the successfully sent command.</td>
-</tr>
-<tr>
-<td><code>SENDER-003</code></td>
-<td><code>ERROR</code></td>
-<td align="left"><code>.gateway</code></td>
-<td align="left">Sending command $commandMessage resulted in error</td>
-<td align="left">Error sending command.</td>
-</tr>
-<tr>
-<td><code>SENDER-004</code></td>
-<td><code>DEBUG</code></td>
-<td align="left"><code>.task</code></td>
-<td align="left">Process task sending is disabled by property. Would have sent $command.</td>
-<td align="left"></td>
-</tr>
-<tr>
-<td><code>SENDER-005</code></td>
-<td><code>DEBUG</code></td>
-<td align="left"><code>.task</code></td>
-<td align="left">Handling ${taskCommands.size} commands for task $taskId using command accumulator $accumulatorName</td>
-<td align="left"></td>
-</tr>
-<tr>
-<td><code>SENDER-006</code></td>
-<td><code>DEBUG</code></td>
-<td align="left"><code>.task</code></td>
-<td align="left">Handling ${taskCommands.size} commands for task $taskId using command accumulator $accumulatorName</td>
-<td align="left"></td>
-</tr>
-<tr>
-<td><code>SENDER-007</code></td>
-<td><code>DEBUG</code></td>
-<td align="left"><code>.process.definition</code></td>
-<td align="left">Process definition sending is disabled by property. Would have sent $command.</td>
-<td align="left"></td>
-</tr>
-<tr>
-<td><code>SENDER-007</code></td>
-<td><code>DEBUG</code></td>
-<td align="left"><code>.process.instance</code></td>
-<td align="left">Process instance sending is disabled by property. Would have sent $command.</td>
-<td align="left"></td>
-</tr>
-<tr>
-<td><code>SENDER-009</code></td>
-<td><code>DEBUG</code></td>
-<td align="left"><code>.process.variable</code></td>
-<td align="left">Process variable sending is disabled by property. Would have sent $command.</td>
-<td align="left"></td>
-</tr>
-<tr>
-<td><code>SENDER-011</code></td>
-<td><code>INFO</code></td>
-<td align="left"></td>
-<td align="left">Taskpool task commands will be distributed over command bus.</td>
-<td align="left"></td>
-</tr>
-<tr>
-<td><code>SENDER-012</code></td>
-<td><code>INFO</code></td>
-<td align="left"></td>
-<td align="left">Taskpool task command distribution is disabled by property.</td>
-<td align="left"></td>
-</tr>
-<tr>
-<td><code>SENDER-013</code></td>
-<td><code>INFO</code></td>
-<td align="left"></td>
-<td align="left">Taskpool process definition commands will be distributed over command bus.</td>
-<td align="left"></td>
-</tr>
-<tr>
-<td><code>SENDER-014</code></td>
-<td><code>INFO</code></td>
-<td align="left"></td>
-<td align="left">Taskpool process definition command distribution is disabled by property.</td>
-<td align="left"></td>
-</tr>
-<tr>
-<td><code>SENDER-015</code></td>
-<td><code>INFO</code></td>
-<td align="left"></td>
-<td align="left">Taskpool process instance commands will be distributed over command bus.</td>
-<td align="left"></td>
-</tr>
-<tr>
-<td><code>SENDER-016</code></td>
-<td><code>INFO</code></td>
-<td align="left"></td>
-<td align="left">Taskpool process instance command distribution is disabled by property.</td>
-<td align="left"></td>
-</tr>
-<tr>
-<td><code>SENDER-017</code></td>
-<td><code>INFO</code></td>
-<td align="left"></td>
-<td align="left">Taskpool process variable commands will be distributed over command bus.</td>
-<td align="left"></td>
-</tr>
-<tr>
-<td><code>SENDER-018</code></td>
-<td><code>INFO</code></td>
-<td align="left"></td>
-<td align="left">Taskpool process variable command distribution is disabled by property.</td>
-<td align="left"></td>
-</tr>
-</tbody>
-</table>
+By doing so, you can propagate the exception and prevent the initial transaction from commit, if something goes wrong during command dispatch.</p>
+<p>Another approach for dealing with errors is to minimize their occurrence, by deploying the Core Components inside the same deployment unit as the 
+process engine itself. To demonstrate this scenario, we created a scenario in Polyflow examples <a href="../../examples/scenarios/distributed-axon-server-local.html">Distributed with Axon Server Events Only</a>.</p>
+<p>By using this deployment strategy, ever process engine deployment includes the <a href="../components/core-taskpool.html">Core components</a> and are taking
+care of maintaining their state and receiving commands from the integration components. By doing so, you preserve a mean of locality of the tasks
+originated in a process engine.</p>
+<h2 id="isolating-polyflow-components">Isolating Polyflow Components<a class="headerlink" href="#isolating-polyflow-components" title="Permanent link">#</a></h2>
+<p>One of the problems that occurs if you use this deployment strategy with Axon Server is that you will get multiple Command Handlers in runtime
+which are capable of receiving Engine Task Commands. A good way to solve this problem is to prevent Polyflow from registering the Command Handlers 
+in Axon Server.</p>
+<p>Since we are using the <code>Axon-Gateway-Extension</code> library in the Polyflow, you can make use of the <code>DispatchAwareCommandBus</code> by configuring the 
+following properties, which limit the registration of Polyflow Command Handlers in Axon Server:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">axon-gateway</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="nt">command</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">dispatch-aware</span><span class="p">:</span><span class="w"></span>
+<span class="w">      </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
+<span class="w">      </span><span class="nt">strategy</span><span class="p">:</span><span class="w"></span>
+<span class="w">        </span><span class="nt">exclude-command-packages</span><span class="p">:</span><span class="w"></span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">io.holunda.camunda.taskpool.api</span><span class="w"></span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">io.holunda.camunda.datapool.api</span><span class="w"></span>
+</code></pre></div>
+<p>By doing so, the Polyflow Command Handlers (parts of the Core Components) are registered on the local segmet of the command bus only and don't 
+interfere with each other.</p>
 
   <hr>
 <div class="md-source-file">
@@ -1677,42 +1456,6 @@ the <code>CommandSuccessHandler</code>and <code>CommandErrorHandler</code> accor
       </main>
       
         <footer class="md-footer">
-  
-    
-    <nav class="md-footer__inner md-grid" aria-label="Footer" >
-      
-        
-        <a href="camunda-starter.html" class="md-footer__link md-footer__link--prev" aria-label="Previous: Camunda BPM Engine Taskpool SpringBoot Starter" rel="prev">
-          <div class="md-footer__button md-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
-          </div>
-          <div class="md-footer__title">
-            <div class="md-ellipsis">
-              <span class="md-footer__direction">
-                Previous
-              </span>
-              Camunda BPM Engine Taskpool SpringBoot Starter
-            </div>
-          </div>
-        </a>
-      
-      
-        
-        <a href="common-datapool-sender.html" class="md-footer__link md-footer__link--next" aria-label="Next: Datapool Sender" rel="next">
-          <div class="md-footer__title">
-            <div class="md-ellipsis">
-              <span class="md-footer__direction">
-                Next
-              </span>
-              Datapool Sender
-            </div>
-          </div>
-          <div class="md-footer__button md-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
-          </div>
-        </a>
-      
-    </nav>
   
   <div class="md-footer-meta md-typeset">
     <div class="md-footer-meta__inner md-grid">

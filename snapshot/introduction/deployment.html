@@ -492,8 +492,15 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#distribution-using-axon-server" class="md-nav__link">
-    Distribution using Axon Server
+  <a href="#distribution-using-axon-server-core-component-as-part-of-process-platform" class="md-nav__link">
+    Distribution using Axon Server (core component as part of process platform)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#distribution-using-axon-server-core-component-as-part-of-process-engine" class="md-nav__link">
+    Distribution using Axon Server (core component as part of process engine)
   </a>
   
 </li>
@@ -502,26 +509,6 @@
   <a href="#distribution-without-axon-server" class="md-nav__link">
     Distribution without Axon Server
   </a>
-  
-    <nav class="md-nav" aria-label="Distribution without Axon Server">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#from-process-application-to-kafka" class="md-nav__link">
-    From Process Application to Kafka
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#from-kafka-to-tasklist-api" class="md-nav__link">
-    From Kafka to Tasklist API
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
         
@@ -1322,6 +1309,34 @@
 
             
           
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/scenarios/distributed-axon-server-local.html" class="md-nav__link">
+        Distributed using Axon Server Event Bus only
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/scenarios/distributed-with-kafka.html" class="md-nav__link">
+        Distributed using Kafka
+      </a>
+    </li>
+  
+
+            
+          
         </ul>
       </nav>
     </li>
@@ -1442,56 +1457,59 @@ scalability, autonomy and reliability requirements. It works almost without addi
 the <a href="concepts.html">concepts section</a>. Especially, it is helpful if you intend to build a central <strong>Process Platform</strong> and multiple <strong>Process applications</strong> using
 it.</p>
 <p>In general, this is one of the main use cases for Polyflow framework itself, but the distribution aspects adds technical complexity to the resulting
-architecture. Especially, following the architecture blueprint of Axon Framework, the three buses (command bus, event bus and query bus) needs to be distributed
+architecture. Especially, following the architecture blueprint of Axon Framework, the three buses (Command bus, Event bus and Query bus) needs to be distributed
 and act as connecting infrastructure between components.</p>
-<h3 id="distribution-using-axon-server">Distribution using Axon Server<a class="headerlink" href="#distribution-using-axon-server" title="Permanent link">#</a></h3>
+<h3 id="distribution-using-axon-server-core-component-as-part-of-process-platform">Distribution using Axon Server (core component as part of process platform)<a class="headerlink" href="#distribution-using-axon-server-core-component-as-part-of-process-platform" title="Permanent link">#</a></h3>
+<p>Requirements:</p>
+<ul>
+<li>Event Store</li>
+<li>distributed command bus</li>
+<li>distributed event bus</li>
+</ul>
 <p>Axon Server provides an implementation for this requirement leading to a distributed buses and a central Event Store. It is easy to use, easy to configure and
-easy to run. If you need a HA setup, you will need the enterprise license of Axon Server. Essentially, if you don't have another HA ready-to use messaging, this
+easy to run. If you need a HA setup, you will need the Enterprise license of Axon Server. Essentially, if you don't have another HA ready-to use messaging, this
 scenario might be your way to go.</p>
 <p>This scenario supports:</p>
 <ul>
-<li>central Process Platform components (including task pool and data pool and their projections)</li>
+<li>central Process Platform components (core components and their projections)</li>
 <li>free choice for projection persistence (since Axon Server supports event replay)</li>
 <li>no direct synchronous communication between <strong>Process Platform</strong> and <strong>Process Application</strong> is required (e.g. via REST, since it is routed via command, event
   and query bus)</li>
+<li>central components should to be HA available </li>
+<li>support routing of interaction task commands</li>
 </ul>
 <p>The following diagram depicts the distribution of the components and the messaging:</p>
-<p><img alt="Deployment of Polyflow with Axon server" src="../img/deployment-axon-server.png" /></p>
+<p><img alt="Deployment of Polyflow with Axon server, central core components" src="../img/deployment-axon-server.png" /></p>
+<h3 id="distribution-using-axon-server-core-component-as-part-of-process-engine">Distribution using Axon Server (core component as part of process engine)<a class="headerlink" href="#distribution-using-axon-server-core-component-as-part-of-process-engine" title="Permanent link">#</a></h3>
+<p>Requirements:</p>
+<ul>
+<li>Event store</li>
+<li>distributed event bus</li>
+</ul>
+<p>Axon Server provides an implementation for this requirement leading to a distributed buses and a central Event Store. It is easy to use, easy to configure and
+easy to run. If you need a HA setup, you will need the Enterprise license of Axon Server. Essentially, if you don't have another HA ready-to use messaging, this
+scenario might be your way to go.</p>
+<p>This scenario supports:</p>
+<ul>
+<li>Core components deployed locally to the process engine (including task pool and data pool and their projections)</li>
+<li>free choice for projection persistence (since Axon Server supports event replay)</li>
+<li>direct communication between task list / engines required (addressing, routing)</li>
+<li>local core components for higher resilience (nothing can fail in local task and data entry processing)</li>
+</ul>
+<p>The following diagram depicts the distribution of the components and the messaging:</p>
+<p><img alt="Deployment of Polyflow with Axon server, local core components" src="../img/deployment-axon-server-events-only.png" /></p>
 <h3 id="distribution-without-axon-server">Distribution without Axon Server<a class="headerlink" href="#distribution-without-axon-server" title="Permanent link">#</a></h3>
 <p>If you already have another messaging at place, like Kafka or RabbitMQ, you might skip the usage of Axon Server. In doing so, you will be responsible for
 distribution of events and will need to surrender some features.</p>
 <p>This scenario supports:</p>
 <ul>
-<li>distributed task pool / data pool</li>
+<li>Core components deployed locally to the process engine (including task pool and data pool and their projections)</li>
 <li>view <strong>MUST</strong> be persistent (no replay supported)</li>
 <li>direct communication between task list / engines required (addressing, routing)</li>
-<li>concurrent access to engines might become a problem (no unit of work guarantees)</li>
+<li>local core components for higher resilience (nothing can fail in local task and data entry processing)</li>
 </ul>
-<p>The following diagram depicts the distribution of the components and the messaging.</p>
-<p><img alt="Deployment of taskpool with other messaging" src="../img/deployment-messaging.png" /></p>
-<p>The following diagram depicts the task run from Process Application to the end user, consuming it via Tasklist API connected via Kafka and using Mongo DB for
-persistence of the query model.</p>
-<p><img alt="Kafka Message Run" src="../img/scenario_kafka_messaging_overview.png" /></p>
-<ul>
-<li>The <code>Camunda BPM Taskpool Collector</code> component listens to Camunda events, collects all relevant events that happen in a single transaction and registers a
-  transaction synchronization to process them <code>beforeCommit</code>. Just before the transaction is committed, the collected events are accumulated and sent as Axon
-  Commands through the <code>CommandGateway</code>.</li>
-<li>The <code>Taskpool Core</code> processes those commands and issues Axon Events which are stored in Axon's database tables within the same transaction.</li>
-<li>The transaction commit finishes. If anything goes wrong before this point, the transaction rolls back, and it is as though nothing ever happened.</li>
-<li>In the <code>Axon Kafka Extension</code>, a <code>TrackingEventProcessor</code> polls for events and sees them as soon as the transaction that created them is committed. It sends
-  each event to Kafka and waits for an acknowledgment from Kafka. If sending fails or times out, the event processor goes into error mode and retries until it
-  succeeds. This can lead to events being published to Kafka more than once but guarantees at-least-once delivery.</li>
-<li>Within the Tasklist API, the <code>Axon Kafka Extension</code> polls the events from Kafka and another TrackingEventProcessor forwards them to the <code>TaskPoolMongoService</code>
-  where they are processed to update the Mongo DB accordingly.</li>
-<li>When a user queries the Tasklist API for tasks, two things happen: Firstly, the Mongo DB is queried for the current state of tasks for this user and these
-  tasks are returned. Secondly, the Tasklist API subscribes to any changes to the Mongo DB. These changes are filtered for relevance to the user and relevant
-  changes are returned after the current state as an infinite stream until the request is cancelled or interrupted for some reason.</li>
-</ul>
-<p><img alt="Kafka Message Transaction Overview" src="../img/scenario_kafka_messaging_tx_view.png" /></p>
-<h4 id="from-process-application-to-kafka">From Process Application to Kafka<a class="headerlink" href="#from-process-application-to-kafka" title="Permanent link">#</a></h4>
-<p><img alt="Process Application to Kafka Messaging" src="../img/scenario_process_application_to_kafka_detail.png" /></p>
-<h4 id="from-kafka-to-tasklist-api">From Kafka to Tasklist API<a class="headerlink" href="#from-kafka-to-tasklist-api" title="Permanent link">#</a></h4>
-<p><img alt="Kafka to Tasklist API Messaging" src="../img/scenario_kafka_to_tasklist_detail.png" /></p>
+<p>The following diagram depicts the distribution of the components and the messaging. See <a href="../examples/scenarios/distributed-with-kafka.html">Distributed using Kafka</a></p>
+<p><img alt="Deployment of Polyflow with other messaging" src="../img/deployment-messaging.png" /></p>
 
   <hr>
 <div class="md-source-file">

@@ -1282,6 +1282,34 @@
 
             
           
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/scenarios/distributed-axon-server-local.html" class="md-nav__link">
+        Distributed using Axon Server Event Bus only
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/scenarios/distributed-with-kafka.html" class="md-nav__link">
+        Distributed using Kafka
+      </a>
+    </li>
+  
+
+            
+          
         </ul>
       </nav>
     </li>
@@ -1385,16 +1413,15 @@ and address by the Polyflow libraries.</p>
 <h2 id="the-10000-feet-view">The 10,000 feet view<a class="headerlink" href="#the-10000-feet-view" title="Permanent link">#</a></h2>
 <p>The two main building blocks of the solution are <strong>Process Application</strong> and <strong>Process Platform</strong>. Sometimes you unite them inside the same deployment unit, but
 we differentiate them to make their responsibilities more clear.</p>
-<p>A <strong>Process Application</strong> implements the main business logic of the solution. It integrates the process engine that is responsible for execution the processes.
-During this execution user tasks are created and performed by the user and the business data objects are modified. For this purpose, the process application
-provides user interfaces for user tasks and business data operations.</p>
-<p>A <strong>Process Platform</strong> serves as an integration point of one or multiple process applications. It might integrate with a company's Single Sign-On solution and
-Identity Management, be part of Intranet portal solution. It provides <strong>process agnostic</strong> user <strong>task list</strong> and <strong>business object list</strong>.</p>
+<p>A <strong>Process Application</strong> implements the main business logic of the solution. It integrates the process engine that is responsible for execution the processes 
+and orchestrates the business functions. During this execution user tasks are created and performed by the user and the business data objects are modified. 
+For this purpose, the process application provides user interfaces for user tasks and business data operations.</p>
+<p>A <strong>Process Platform</strong> serves as an integration point of one or multiple process applications. It might integrate with a company's Single Sign-On (SSO) solution and
+Identity &amp; Authorization Management, be part of Intranet portal solution. It provides <strong>process agnostic</strong> user <strong>task list</strong> and <strong>business object list</strong>.</p>
 <h2 id="task-oriented-applications">Task-oriented applications<a class="headerlink" href="#task-oriented-applications" title="Permanent link">#</a></h2>
-<p>The main idea of a task-oriented solution is to model the underlying business process and to split the user interaction into parts represented by the <strong>user
-tasks</strong>. Every user task is an abstraction of an operation needed to be performed by the user. Usually, they include some sort of call-to-action including the
-input fields to be able to input user's decision. Examples of user tasks are <strong>
-Confirm Order</strong>, <strong>Verify Quotation</strong>, <strong>Validate Document</strong>.</p>
+<p>The core concept of a task-oriented solution is to model the underlying business process and to split the user interaction into parts represented by the <strong>user
+tasks</strong>. Every user task is an abstraction of an operation needed to be performed by the user of the system. Usually, they include some sort of call-to-action 
+including the input fields to be able to input user's decision. Examples of user tasks are <strong>Confirm Order</strong>, <strong>Verify Quotation</strong>, <strong>Validate Document</strong>.</p>
 <p>User experience plays a significant role in acceptance of the overall solution. In order to access the user task a special UI, called <strong>user task form</strong> is
 used. Every <strong>user task form</strong> is presenting only that limited part of the overall information to the user which is required to complete the user task. This
 limitation is important in order to avoid distraction and foster focus on the user task.</p>

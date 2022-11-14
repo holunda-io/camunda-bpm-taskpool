@@ -74,7 +74,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#datapool-core" class="md-skip">
+        <a href="#purpose" class="md-skip">
           Skip to content
         </a>
       
@@ -717,21 +717,13 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#datapool-core" class="md-nav__link">
-    Datapool Core
-  </a>
-  
-    <nav class="md-nav" aria-label="Datapool Core">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
   <a href="#purpose" class="md-nav__link">
     Purpose
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
+      
+        <li class="md-nav__item">
   <a href="#configuration" class="md-nav__link">
     Configuration
   </a>
@@ -757,11 +749,6 @@
   <a href="#strategies-to-optimize-data-entry-access" class="md-nav__link">
     Strategies to optimize data entry access
   </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
         
@@ -1324,6 +1311,34 @@
 
             
           
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/scenarios/distributed-axon-server-local.html" class="md-nav__link">
+        Distributed using Axon Server Event Bus only
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/scenarios/distributed-with-kafka.html" class="md-nav__link">
+        Distributed using Kafka
+      </a>
+    </li>
+  
+
+            
+          
         </ul>
       </nav>
     </li>
@@ -1421,15 +1436,14 @@
 
   <h1>Datapool Core</h1>
 
-<h2 id="datapool-core">Datapool Core<a class="headerlink" href="#datapool-core" title="Permanent link">#</a></h2>
-<h3 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">#</a></h3>
+<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">#</a></h2>
 <p>The component is responsible for maintaining and storing the consistent state of the datapool
 core concept of Business Data Entry.</p>
 <p>The component receives all commands and emits events, if changes are performed on underlying entities.
 The event stream is used to store all changes (purely event-sourced) and should be used by all other
 parties interested in changes.</p>
-<h3 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">#</a></h3>
-<h4 id="component-activation">Component activation<a class="headerlink" href="#component-activation" title="Permanent link">#</a></h4>
+<h2 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">#</a></h2>
+<h3 id="component-activation">Component activation<a class="headerlink" href="#component-activation" title="Permanent link">#</a></h3>
 <p>In order to activate Datapool Core component, please include the following dependency to your application</p>
 <div class="highlight"><pre><span></span><code><span class="nt">&lt;dependency&gt;</span>
   <span class="nt">&lt;groupId&gt;</span>io.holunda.taskpool<span class="nt">&lt;/grouId&gt;</span>
@@ -1442,7 +1456,7 @@ parties interested in changes.</p>
 <span class="nd">@EnablePolyflowDataPool</span><span class="w"></span>
 <span class="kd">class</span><span class="w"> </span><span class="nc">MyConfiguration</span><span class="w"></span>
 </code></pre></div>
-<h4 id="revision-aware-projection">Revision-Aware Projection<a class="headerlink" href="#revision-aware-projection" title="Permanent link">#</a></h4>
+<h3 id="revision-aware-projection">Revision-Aware Projection<a class="headerlink" href="#revision-aware-projection" title="Permanent link">#</a></h3>
 <p>The in-memory data entry projection is supporting revision-aware projection queries. To activate this, you need
 to activate the correlation of revision attributes between your data entries commands and the data entry events. To do so, please
 activate the correlation provider by putting the following code snippet in the application containing the Datapool Core Component:</p>
@@ -1465,7 +1479,7 @@ activate the correlation provider by putting the following code snippet in the a
 <p>By doing so, if a command is sending revision information, it will be passed to the resulting event and will be received by the projection, so the
 latter will deliver revision information in query results. The use of <code>RevisionAwareQueryGateway</code> will allow querying for specific revisions in the data entry
 projection, see documentation of <code>axon-gateway-extension</code> project.</p>
-<h4 id="strategies-to-optimize-data-entry-access">Strategies to optimize data entry access<a class="headerlink" href="#strategies-to-optimize-data-entry-access" title="Permanent link">#</a></h4>
+<h3 id="strategies-to-optimize-data-entry-access">Strategies to optimize data entry access<a class="headerlink" href="#strategies-to-optimize-data-entry-access" title="Permanent link">#</a></h3>
 <p>The Business Data Entry is implemented using an <code>Aggregate</code> pattern and the corresponding projection as a part of the view component. By default, 
 the <a href="common-datapool-sender.html">Datapool Sender</a> is used to send commands expressing the change of a Business Data Entry to the <code>Aggregate Root</code>, 
 which is emitting the corresponding event. If you are dealing with Business Data Entries with a very long lifetime, the number of events emitted by 

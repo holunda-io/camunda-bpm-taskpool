@@ -74,7 +74,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#taskpool-collector" class="md-skip">
+        <a href="#purpose" class="md-skip">
           Skip to content
         </a>
       
@@ -612,49 +612,41 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#taskpool-collector" class="md-nav__link">
-    Taskpool Collector
-  </a>
-  
-    <nav class="md-nav" aria-label="Taskpool Collector">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
   <a href="#purpose" class="md-nav__link">
     Purpose
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
+      
+        <li class="md-nav__item">
   <a href="#features" class="md-nav__link">
     Features
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
+      
+        <li class="md-nav__item">
   <a href="#architecture" class="md-nav__link">
     Architecture
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
+      
+        <li class="md-nav__item">
   <a href="#usage-and-configuration" class="md-nav__link">
     Usage and configuration
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
+      
+        <li class="md-nav__item">
   <a href="#event-collection" class="md-nav__link">
     Event collection
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
+      
+        <li class="md-nav__item">
   <a href="#task-commands-enrichment" class="md-nav__link">
     Task commands enrichment
   </a>
@@ -673,43 +665,18 @@
     </nav>
   
 </li>
-        
-          <li class="md-nav__item">
+      
+        <li class="md-nav__item">
   <a href="#data-correlation" class="md-nav__link">
     Data Correlation
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#command-aggregation" class="md-nav__link">
-    Command aggregation
-  </a>
-  
-    <nav class="md-nav" aria-label="Command aggregation">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#handling-command-transmission" class="md-nav__link">
-    Handling command transmission
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
+      
+        <li class="md-nav__item">
   <a href="#message-codes" class="md-nav__link">
     Message codes
   </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -1372,6 +1339,34 @@
 
             
           
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/scenarios/distributed-axon-server-local.html" class="md-nav__link">
+        Distributed using Axon Server Event Bus only
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/scenarios/distributed-with-kafka.html" class="md-nav__link">
+        Distributed using Kafka
+      </a>
+    </li>
+  
+
+            
+          
         </ul>
       </nav>
     </li>
@@ -1469,16 +1464,15 @@
 
   <h1>Camunda BPM Engine Taskpool Collector</h1>
 
-<h2 id="taskpool-collector">Taskpool Collector<a class="headerlink" href="#taskpool-collector" title="Permanent link">#</a></h2>
 <h3 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">#</a></h3>
 <p>Taskpool Collector is a component deployed as a part of the process application
 (aside with Camunda BPM Engine) that is responsible for collecting information from
 the Camunda BPM Engine. It detects the <em>intent</em> of the operations executed inside the engine
 and creates the corresponding commands for the Taskpool. The commands are enriched with data and transmitted to
-other taskpool components (via Axon Command Bus).</p>
+other taskpool components (via Command Bus).</p>
 <p>In the following description, we use the terms <em>event</em> and <em>command</em>. Event denotes an entity
 received from Camunda BPM Engine (from delegate event listener or from history event listener)
-which is passed over to the Taskpool Collector using internal Spring eventing mechanism. The Taskpool
+which is passed over to the Taskpool Collector using internal <strong>Spring eventing</strong> mechanism. The Taskpool
 Collector converts the series of such events into a Taskpool Command - an entity carrying an intent
 of change inside the Taskpool core. Please note that <em>event</em> has another meaning in CQRS/ES systems
 and other components of the Taskpool, but in the context of Taskpool collector an event always originates from
@@ -1496,7 +1490,7 @@ Spring eventing.</p>
 <li>Provision of properties for process application</li>
 </ul>
 <h3 id="architecture">Architecture<a class="headerlink" href="#architecture" title="Permanent link">#</a></h3>
-<p><img alt="Taskpool collector building blocks" src="/img/collector-building-blocks.png" /></p>
+<p><img alt="Taskpool collector building blocks" src="../../img/collector-building-blocks.png" /></p>
 <p>The Taskpool Collector consists of several components which can be divided into the following groups:</p>
 <ul>
 <li>Event collectors receive are responsible for gathering information and form commands</li>
@@ -1613,7 +1607,7 @@ a default filter is used which is an empty <code>EXCLUDE</code> filter, resultin
 <h3 id="data-correlation">Data Correlation<a class="headerlink" href="#data-correlation" title="Permanent link">#</a></h3>
 <p>Apart from task payload attached by the enricher, the so-called <em>Correlation</em> with data entries can
 be configured. The data correlation allows to attach one or several references (that is a pair of values <code>entryType</code> and <code>entryId</code>) of
-business data entry(ies) to a task. In the projection (which is used for querying of tasks) this correlations is be resolved and the
+business data entry(ies) to a task. In the projection (which is used for querying of tasks) these correlations are resolved and the
 information from business data events can be shown together with task information.</p>
 <p>The correlation to data events can be configured by providing a <code>ProcessVariablesCorrelator</code> bean. Here is
 an example how this can be done:</p>
@@ -1661,47 +1655,6 @@ and the process reaches the task <code>task_approve_request</code>, the task wil
 <div class="highlight"><pre><span></span><code><span class="nt">&quot;correlations&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
 <span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;entryType&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;approvalRequest&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;entryId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;4711&quot;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
 <span class="p">]</span><span class="w"></span>
-</code></pre></div>
-<h3 id="command-aggregation">Command aggregation<a class="headerlink" href="#command-aggregation" title="Permanent link">#</a></h3>
-<p>In order to control sending of commands to command sender, the command sender activation property
-<code>polyflow.integration.sender.task.enabled</code> is available. If disabled, the command sender
-will log any command instead of aggregating sending it to the command gateway.</p>
-<p>In addition, you can control by the property <code>polyflow.integration.task.sender.type</code> if you want to use the default command sender or provide your own
-implementation.
-The default provided command sender (type: <code>tx</code>) is collects all task commands during one transaction, group them by task id
-and accumulates by creating one command reflecting the intent of the task operation. It uses Axon Command Bus (encapsulated
-by the <code>AxonCommandListGateway</code> for sending the result over to the Axon command gateway.</p>
-<p>TIP: If you want to implement a custom command sending, please provide your own implementation of the interface <code>EngineTaskCommandSender</code>
-(register a Spring Component of the type) and set the property <code>polyflow.integration.task.sender.type</code> to <code>custom</code>.</p>
-<p>The Spring event listeners receiving events from the Camunda Engine plugin are called before the engine commits the transaction.
-Since all processing inside collector component and enricher is performed synchronously, the sender must waits until transaction to
-be successfully committed before sending any commands to the Command Gateway. Otherwise, on any error
-the transaction would be rolled-back and the command would create an inconsistency between the taskpool and the engine.</p>
-<p>Depending on your deployment scenario, you may want to control the exact point in time when the commands are sent to command gateway.
-The property <code>polyflow.integration.task.sender.send-within-transaction</code> is designed to influence this. If set to <code>true</code>, the commands
-are sent <em>before</em> the process engine transaction is committed, otherwise commands are sent <em>after</em> the process engine transaction is committed.</p>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>Never send commands over remote messaging before the transaction is committed, since you may produce unexpected results if Camunda fails
-  to commit the transaction.</p>
-</div>
-<h4 id="handling-command-transmission">Handling command transmission<a class="headerlink" href="#handling-command-transmission" title="Permanent link">#</a></h4>
-<p>The commands sent via gateway (e.g. <code>AxonCommandListGateway</code>) are received by Command Handlers. The latter may accept or reject commands, depending
-on the state of the aggregate and other components. The <code>AxonCommandListGateway</code> is informed about the command outcome. By default, it will log the outcome
-to console (success is logged in <code>DEBUG</code> log level, errors are using <code>ERROR</code> log level).</p>
-<p>In some situations it is required to take care of command outcome. A prominent example is to include a metric for command dispatching errors into monitoring.
-For doing so, it is possible to provide own handlers for success and error command outcome. For this purpose, please provide a Spring Bean implementing
-the <code>CommandSuccessHandler</code>and <code>CommandErrorHandler</code> accordingly.</p>
-<p>Here is an example, how such a handler may look like:</p>
-<div class="highlight"><pre><span></span><code><span class="w">  </span><span class="nd">@Bean</span><span class="w"></span>
-<span class="nd">@Primary</span><span class="w"></span>
-<span class="kd">fun</span><span class="w"> </span><span class="nf">taskCommandErrorHandler</span><span class="p">():</span><span class="w"> </span><span class="n">TaskCommandErrorHandler</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="nc">LoggingTaskCommandErrorHandler</span><span class="p">(</span><span class="n">logger</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="kd">override</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">apply</span><span class="p">(</span><span class="n">commandMessage</span><span class="p">:</span><span class="w"> </span><span class="kt">Any</span><span class="p">,</span><span class="w"> </span><span class="n">commandResultMessage</span><span class="p">:</span><span class="w"> </span><span class="n">CommandResultMessage</span><span class="o">&lt;</span><span class="k">out</span><span class="w"> </span><span class="kt">Any?</span><span class="o">&gt;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">      </span><span class="n">logger</span><span class="p">.</span><span class="na">info</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s">&quot;&lt;--------- CUSTOM ERROR HANDLER REPORT ---------&gt;&quot;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
-<span class="w">      </span><span class="k">super</span><span class="p">.</span><span class="na">apply</span><span class="p">(</span><span class="n">commandMessage</span><span class="p">,</span><span class="w"> </span><span class="n">commandResultMessage</span><span class="p">)</span><span class="w"></span>
-<span class="w">      </span><span class="n">logger</span><span class="p">.</span><span class="na">info</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s">&quot;&lt;------------------- END -----------------------&gt;&quot;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"></span>
-<span class="w">  </span><span class="p">}</span><span class="w"></span>
 </code></pre></div>
 <h3 id="message-codes">Message codes<a class="headerlink" href="#message-codes" title="Permanent link">#</a></h3>
 <blockquote>
