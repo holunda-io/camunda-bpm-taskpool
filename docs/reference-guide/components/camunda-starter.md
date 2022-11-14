@@ -5,7 +5,7 @@ pageId: engine-starter
 
 ### Purpose
 
-The Camunda Engine Taskpool Support SpringBoot Starter is a convenience module providing a single
+The Polyflow Camunda Platform 7 SpringBoot Starter is a convenience module providing a single
 module dependency to be included in the process application. It includes all process application
 modules and provides meaningful defaults for their options.
 
@@ -16,7 +16,7 @@ In order to enable the starter, please put the following dependency on your clas
 ```xml
 <dependency>
   <groupId>io.holunda.polyflow</groupId>
-  <artifactId>polyflow-integration-camunda-bpm-springboot-starter</artifactId>
+  <artifactId>polyflow-camunda-bpm-springboot-starter</artifactId>
 </dependency>
 ```
 

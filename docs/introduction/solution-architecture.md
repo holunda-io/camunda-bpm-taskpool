@@ -6,8 +6,8 @@ title: Solution Architecture
 
 The implementation of a single (small) process application can be easily done using the process engine library itself (for example like Camunda BPM). If the
 solution becomes larger, for example by setting up multiple engines for different processes or if the load on a single process engine becomes unmanageable, it
-is worth to separate the solution into __process specific__ and __process agnostic__ parts. We call the __process specific__ part of the solution "Process
-Application" and the __process agnostic__ part "Process Platform", as described in the [concept section](concepts.md).
+is worth to separate the solution into **process specific** and **process agnostic** parts. We call the process specific part of the solution **Process
+Application** and the process agnostic part **Process Platform**, as described in the [concept section](concepts.md).
 
 Based on the assumption of the asymmetric read/write characteristics of task-oriented process applications, we decided to apply the Command Query Responsibility
 Segregation (CQRS) pattern for the architectural design. As a result, we supply components to collect the information from the process engines and create a
