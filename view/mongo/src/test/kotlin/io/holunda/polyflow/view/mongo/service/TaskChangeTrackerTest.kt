@@ -6,7 +6,7 @@ import com.mongodb.client.model.changestream.ChangeStreamDocument
 import com.mongodb.client.model.changestream.OperationType
 import io.holunda.camunda.taskpool.api.task.ProcessReference
 import io.holunda.polyflow.view.Task
-import io.holunda.polyflow.view.mongo.ClearDeletedTasksMode
+import io.holunda.polyflow.view.mongo.ClearDeletedDocumentsMode
 import io.holunda.polyflow.view.mongo.TaskPoolMongoViewProperties
 import io.holunda.polyflow.view.mongo.data.DataEntryRepository
 import io.holunda.polyflow.view.mongo.task.ProcessReferenceDocument
@@ -227,7 +227,7 @@ internal class TaskChangeTrackerTest {
     properties = properties.copy(
       changeStream = properties.changeStream.copy(
         clearDeletedTasks = properties.changeStream.clearDeletedTasks.copy(
-          mode = ClearDeletedTasksMode.BOTH,
+          mode = ClearDeletedDocumentsMode.BOTH,
           after = Duration.ofHours(1),
           jobSchedule = "@daily",
           jobJitter = Duration.ofHours(1),

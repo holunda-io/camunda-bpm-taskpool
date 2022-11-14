@@ -35,3 +35,13 @@ fun UpdateDataEntryCommand.updatedEvent() = DataEntryUpdatedEvent(
   authorizations = this.dataEntryChange.authorizationChanges,
   formKey = this.dataEntryChange.formKey
 )
+
+/**
+ * Maps command to event.
+ */
+fun DeleteDataEntryCommand.deletedEvent() = DataEntryDeletedEvent(
+  entryId = this.entryId,
+  entryType = this.entryType,
+  deleteModification = this.modification,
+  state = this.state
+)

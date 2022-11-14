@@ -237,6 +237,9 @@ class TaskAggregate() {
     this.task = Task.from(event)
   }
 
+  /**
+   * React on attribute updates.
+   */
   @EventSourcingHandler
   fun on(event: TaskAttributeUpdatedEngineEvent) {
     this.task.update(Task.from(event))

@@ -3,6 +3,7 @@ package io.holunda.polyflow.datapool.core.business
 import io.holunda.camunda.taskpool.api.business.CreateDataEntryCommand
 import io.holunda.camunda.taskpool.api.business.CreateOrUpdateDataEntryCommand
 import io.holunda.camunda.taskpool.api.business.UpdateDataEntryCommand
+import io.holunda.polyflow.datapool.core.DeletionStrategy
 import io.holunda.polyflow.datapool.ifPresentOrElse
 import mu.KLogging
 import org.axonframework.commandhandling.CommandHandler
@@ -18,7 +19,8 @@ import java.util.*
  */
 @Component
 class CreateOrUpdateCommandHandler(
-  private val eventSourcingRepository: EventSourcingRepository<DataEntryAggregate>
+  private val eventSourcingRepository: EventSourcingRepository<DataEntryAggregate>,
+  private val deletionStrategy: DeletionStrategy
 ) {
 
   companion object: KLogging()
@@ -38,7 +40,8 @@ class CreateOrUpdateCommandHandler(
         logger.trace { "Aggregate found. Updating it passing command $updateCommand" }
         aggregate.invoke {
           it.handle(
-            command = updateCommand
+            command = updateCommand,
+            deletionStrategy = deletionStrategy
           )
         }
       },

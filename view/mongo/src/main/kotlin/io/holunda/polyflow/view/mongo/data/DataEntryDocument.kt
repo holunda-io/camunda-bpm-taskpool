@@ -39,6 +39,9 @@ data class DataEntryDocument(
   val authorizedPrincipals: Set<String> = authorizedPrincipals(authorizedUsers, authorizedGroups),
   val createdDate: Instant,
   val lastModifiedDate: Instant,
+  val deleted: Boolean = false,
+  @Indexed
+  val deleteTime: Instant? = null,
   val protocol: List<ProtocolElement> = listOf()
 ) {
   companion object {

@@ -23,7 +23,11 @@ enum class ProcessingType {
   /**
    * Undefined status.
    */
-  UNDEFINED;
+  UNDEFINED,
+  /**
+   * Data entry is deleted.
+   */
+  DELETED;
 
   /**
    * Factory method.
