@@ -90,7 +90,8 @@ fun DataEntryDocument.dataEntry() =
         formKey = formKey,
         applicationName = applicationName,
         state = mapState(state, statusType),
-        protocol = protocol.map { it.toProtocol() }
+        protocol = protocol.map { it.toProtocol() },
+        deleted = deleted
       )
     }
   } else {
