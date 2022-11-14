@@ -1025,6 +1025,13 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#deletion-strategy" class="md-nav__link">
+    Deletion strategy
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1421,6 +1428,12 @@ command validation, so it is possible to optimize the loading process. For this 
 <td>String</td>
 <td></td>
 </tr>
+<tr>
+<td><code>deletion-strategy</code></td>
+<td>Controls how the deletion of data entries is handled. Valid values are <code>lax</code> (default) and <code>strict</code>. See deletion strategy section below.</td>
+<td>String</td>
+<td>strict</td>
+</tr>
 </tbody>
 </table>
 <h3 id="event-souring-repository">Event Souring Repository<a class="headerlink" href="#event-souring-repository" title="Permanent link">#</a></h3>
@@ -1428,7 +1441,9 @@ command validation, so it is possible to optimize the loading process. For this 
 loading from snapshots and will load tha last snapshot and all events occurred after the snapshot. Alternatively, you can set
 the repository to <code>io.holunda.polyflow.datapool.core.repository.FirstEventOnlyEventSourcingRepository</code>. This repository loads
 the first event only to restore the state. This special repository is using the first event and saves space by not creating any
-snaphsots. </p>
+snapshots.</p>
+<h3 id="deletion-strategy">Deletion strategy<a class="headerlink" href="#deletion-strategy" title="Permanent link">#</a></h3>
+<p>The data entries can be marked as deleted. If set to <code>strict</code>, no updates can be sent to this data entry, otherwise the update will undelete (re-create) the data entry.</p>
 
   <hr>
 <div class="md-source-file">
