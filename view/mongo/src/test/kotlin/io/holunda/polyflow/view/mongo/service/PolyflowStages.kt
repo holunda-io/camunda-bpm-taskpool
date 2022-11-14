@@ -3,11 +3,15 @@ package io.holunda.polyflow.view.mongo.service
 import com.tngtech.jgiven.Stage
 import com.tngtech.jgiven.annotation.*
 import com.tngtech.jgiven.integration.spring.JGivenStage
+import io.holunda.camunda.taskpool.api.business.DataEntryCreatedEvent
 import io.holunda.camunda.taskpool.api.task.*
+import io.holunda.polyflow.view.DataEntry
 import io.holunda.polyflow.view.Task
 import io.holunda.polyflow.view.TaskWithDataEntries
 import io.holunda.polyflow.view.auth.User
 import io.holunda.polyflow.view.mongo.MongoViewService
+import io.holunda.polyflow.view.query.data.DataEntriesForUserQuery
+import io.holunda.polyflow.view.query.data.DataEntryForIdentityQuery
 import io.holunda.polyflow.view.query.task.*
 import mu.KLogging
 import org.assertj.core.api.Assertions.assertThat
@@ -73,9 +77,15 @@ open class PolyflowStage<SELF : PolyflowStage<SELF>> : Stage<SELF>() {
       Awaitility.await().atMost(2, TimeUnit.SECONDS).until {
         captureEmittedQueryUpdates().any { queryType.isAssignableFrom(it.queryType) }
       }
+      logger.info { "Emitted query updates: $emittedQueryUpdates" }
     } catch (e: ConditionTimeoutException) {
       logger.warn { "Query update was not emitted within 2 seconds" }
     }
+    return self()
+  }
+
+  open fun data_entry_created_event_is_received(event: DataEntryCreatedEvent): SELF {
+    testee.on(event, MetaData.emptyInstance())
     return self()
   }
 
@@ -105,6 +115,9 @@ class PolyflowGivenStage<SELF : PolyflowGivenStage<SELF>> : PolyflowStage<SELF>(
   @ProvidedScenarioState(resolution = ScenarioState.Resolution.NAME)
   private lateinit var tasks: List<TaskWithDataEntries>
 
+  @ProvidedScenarioState(resolution = ScenarioState.Resolution.NAME)
+  private lateinit var dataEntries: List<DataEntry>
+
   private val procRef = ProcessReference("instance1", "exec1", "def1", "def-key", "proce1", "app")
   private fun task(i: Int) = TaskWithDataEntries(Task(id = "id$i", sourceReference = procRef, taskDefinitionKey = "task-key-$i", businessKey = "BUS-$i"))
 
@@ -116,6 +129,11 @@ class PolyflowGivenStage<SELF : PolyflowGivenStage<SELF>> : PolyflowStage<SELF>(
 
   fun no_task_exists(): SELF {
     tasks = listOf()
+    return self()
+  }
+
+  fun no_data_entry_exists(): SELF {
+    dataEntries = listOf()
     return self()
   }
 
@@ -215,8 +233,22 @@ class PolyflowThenStage<SELF : PolyflowThenStage<SELF>> : PolyflowStage<SELF>() 
     return self()
   }
 
+  fun data_entries_visible_to_user(username: String, expectedDataEntries: List<DataEntry>): SELF {
+    assertThat(testee.query(DataEntriesForUserQuery(User(username = username, groups = emptySet()))).join().elements).containsExactlyElementsOf(
+      expectedDataEntries
+    )
+    return self()
+  }
+
   fun tasks_visible_to_candidate_group(groupName: String, expectedTasks: List<Task>): SELF {
     assertThat(testee.query(TasksForUserQuery(User(username = "<unmet>", groups = setOf(groupName)))).join().elements).containsExactlyElementsOf(expectedTasks)
+    return self()
+  }
+
+  fun data_entries_visible_to_group(groupName: String, expectedDataEntries: List<DataEntry>): SELF {
+    assertThat(testee.query(DataEntriesForUserQuery(User(username = "<unmet>", groups = setOf(groupName)))).join().elements).containsExactlyElementsOf(
+      expectedDataEntries
+    )
     return self()
   }
 
@@ -250,6 +282,11 @@ class PolyflowThenStage<SELF : PolyflowThenStage<SELF>> : PolyflowStage<SELF>() 
   fun no_query_update_has_been_emitted() {
     captureEmittedQueryUpdates()
     assertThat(emittedQueryUpdates).isEmpty()
+  }
+
+  fun data_entry_is_created(dataEntry: DataEntry): SELF {
+    assertThat(testee.query(DataEntryForIdentityQuery(dataEntry.entryType, dataEntry.entryId)).join().elements).containsExactly(dataEntry)
+    return self()
   }
 
 }

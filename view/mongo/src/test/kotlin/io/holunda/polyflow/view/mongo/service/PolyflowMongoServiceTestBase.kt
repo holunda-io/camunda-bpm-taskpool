@@ -2,13 +2,15 @@ package io.holunda.polyflow.view.mongo.service
 
 import com.tngtech.jgiven.integration.spring.junit5.SpringScenarioTest
 import com.tngtech.jgiven.junit5.JGivenExtension
-import io.holunda.camunda.taskpool.api.business.CorrelationMap
+import io.holunda.camunda.taskpool.api.business.*
 import io.holunda.camunda.taskpool.api.task.*
 import io.holunda.polyflow.view.DataEntry
+import io.holunda.polyflow.view.ProtocolEntry
 import io.holunda.polyflow.view.Task
 import io.holunda.polyflow.view.TaskWithDataEntries
 import io.holunda.polyflow.view.auth.User
 import io.holunda.polyflow.view.mongo.PolyflowMongoTestApplication
+import io.holunda.polyflow.view.query.data.DataEntriesForUserQuery
 import io.holunda.polyflow.view.query.task.*
 import org.camunda.bpm.engine.variable.VariableMap
 import org.camunda.bpm.engine.variable.Variables
@@ -16,6 +18,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.annotation.DirtiesContext
+import java.time.OffsetDateTime
 import java.util.*
 
 @ExtendWith(JGivenExtension::class)
@@ -356,6 +359,32 @@ abstract class PolyflowMongoServiceITestBase : SpringScenarioTest<PolyflowGivenS
       .tasks_are_returned_for_application("app-1", TaskQueryResult(listOf(task1.asTask(), task3.asTask())))
   }
 
+  @Test
+  fun `a data entry is created on receiving DataEntryCreatedEvent`() {
+
+    val testData = TestDataEntryData(entryId = "some-id", entryType = "some-type")
+    val expected = testData.asDataEntry()
+
+    given()
+      .no_data_entry_exists()
+      .and()
+      .no_task_exists()
+
+    `when`()
+      .data_entry_created_event_is_received(testData.asDataEntryCreatedEvent())
+      .and()
+      .time_passes_until_query_update_is_emitted(DataEntriesForUserQuery::class.java)
+
+    then()
+      .data_entry_is_created(expected)
+      .and()
+      .data_entries_visible_to_user("kermit", listOf(expected))
+      .and()
+      .data_entries_visible_to_group("muppetshow", listOf(expected))
+      .and()
+      .query_updates_have_been_emitted(DataEntriesForUserQuery(User("kermit", setOf("muppetshow"))), expected)
+  }
+
 }
 
 
@@ -506,6 +535,66 @@ private fun processReference(
     definitionKey,
     name,
     applicationName
+  )
+}
+
+data class TestDataEntryData(
+  val entryType: String,
+  val entryId: String,
+  val type: String = "data-entry-type",
+  val applicationName: String = "application-name",
+  val name: String = "data-entry-name",
+  val correlations: CorrelationMap = Variables.fromMap(mapOf(Pair("correlationKey", "correlationValue"))),
+  val payload: VariableMap = Variables.fromMap(mapOf(Pair("variableKey", "variableValue"))),
+  val description: String? = "some data entry description",
+  val state: DataEntryState = ProcessingType.IN_PROGRESS.of("Started"),
+  val createModification: Modification = Modification(time = OffsetDateTime.parse("2022-11-14T10:56:00.000Z")),
+  val authorizations: List<AuthorizationChange> = listOf(
+    AuthorizationChange.addUser("kermit"),
+    AuthorizationChange.addUser("piggy"),
+    AuthorizationChange.addGroup("muppetshow")
+  ),
+  val formKey: String? = "app:form-key"
+) {
+
+  fun asDataEntryCreatedEvent() = DataEntryCreatedEvent(
+    entryType = entryType,
+    entryId = entryId,
+    type = type,
+    applicationName = applicationName,
+    name = name,
+    correlations = correlations,
+    payload = payload,
+    description = description,
+    state = state,
+    createModification = createModification,
+    authorizations = authorizations,
+    formKey = formKey
+  )
+
+
+  fun asDataEntry() = DataEntry(
+    entryType = entryType,
+    entryId = entryId,
+    type = type,
+    applicationName = applicationName,
+    name = name,
+    correlations = correlations,
+    payload = payload,
+    description = description,
+    state = state,
+    authorizedUsers = AuthorizationChange.applyUserAuthorization(setOf(), authorizations),
+    authorizedGroups = AuthorizationChange.applyGroupAuthorization(setOf(), authorizations),
+    formKey = formKey,
+    protocol = listOf(
+      ProtocolEntry(
+        time = createModification.time.toInstant(),
+        state = state,
+        username = createModification.username,
+        logMessage = createModification.log,
+        logDetails = createModification.logNotes
+      )
+    ),
   )
 }
 
