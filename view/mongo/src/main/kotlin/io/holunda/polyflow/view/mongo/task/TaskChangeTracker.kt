@@ -4,17 +4,15 @@ import com.mongodb.MongoCommandException
 import io.holunda.camunda.taskpool.api.business.dataIdentityString
 import io.holunda.polyflow.view.Task
 import io.holunda.polyflow.view.TaskWithDataEntries
-import io.holunda.polyflow.view.mongo.ClearDeletedTasksMode
 import io.holunda.polyflow.view.mongo.TaskPoolMongoViewProperties
 import io.holunda.polyflow.view.mongo.data.DataEntryRepository
 import io.holunda.polyflow.view.mongo.data.dataEntry
+import io.holunda.polyflow.view.mongo.util.CronTriggerWithJitter
 import io.holunda.polyflow.view.query.task.ApplicationWithTaskCount
 import mu.KLogging
 import org.bson.BsonValue
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.scheduling.TaskScheduler
-import org.springframework.scheduling.Trigger
-import org.springframework.scheduling.TriggerContext
 import org.springframework.scheduling.support.CronExpression
 import org.springframework.stereotype.Component
 import reactor.core.Disposable
@@ -26,15 +24,10 @@ import reactor.core.scheduler.Schedulers
 import reactor.util.retry.Retry
 import java.time.Duration
 import java.time.Instant
-import java.time.ZoneId
-import java.time.ZoneOffset
-import java.util.*
 import java.util.concurrent.TimeUnit
 import java.util.logging.Level
 import javax.annotation.PostConstruct
 import javax.annotation.PreDestroy
-import kotlin.random.Random
-import kotlin.random.nextLong
 
 /**
  * Observes the change stream on the mongo db and provides `Flux`es of changes for the various result types of queries. Also makes sure that tasks marked as
@@ -70,7 +63,6 @@ class TaskChangeTracker(
     .share()
 
   // Truly delete documents that have been marked deleted
-  @Suppress("LeakingThis")
   private val trulyDeleteChangeStreamSubscription: Disposable? =
     if (properties.changeStream.clearDeletedTasks.mode.usesChangeStream)
       changeStream
@@ -166,22 +158,5 @@ class TaskChangeTracker(
         .map { TaskWithDataEntries(task = task, dataEntries = it) }
     }
 
-  /**
-   * Trigger based on cron expression and jitter.
-   */
-  data class CronTriggerWithJitter(val expression: CronExpression, val jitter: Duration, val zoneId: ZoneId = ZoneOffset.UTC) : Trigger {
-    override fun nextExecutionTime(triggerContext: TriggerContext): Date? {
-      val lastCompletionTime = triggerContext.lastCompletionTime()
-      val lastCompletionTimeAdjusted = (lastCompletionTime?.coerceAtLeast(triggerContext.lastScheduledExecutionTime() ?: lastCompletionTime)?.toInstant()
-        ?: triggerContext.clock.instant()).atZone(zoneId)
-      val cronNextExecutionTime = expression.next(lastCompletionTimeAdjusted) ?: return null
-
-      val offset = Random.nextLong(0..jitter.toNanos())
-      return Date.from(cronNextExecutionTime.toInstant().plusNanos(offset))
-    }
-  }
-
-  internal val ClearDeletedTasksMode.usesCleanupJob get() = this == ClearDeletedTasksMode.SCHEDULED_JOB || this == ClearDeletedTasksMode.BOTH
-  internal val ClearDeletedTasksMode.usesChangeStream get() = this == ClearDeletedTasksMode.CHANGE_STREAM_SUBSCRIPTION || this == ClearDeletedTasksMode.BOTH
 }
 

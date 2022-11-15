@@ -1,5 +1,8 @@
 package io.holunda.camunda.taskpool.api.business
 
+/**
+ * Maps command to event.
+ */
 fun CreateDataEntryCommand.createdEvent() = DataEntryCreatedEvent(
   entryId = this.dataEntryChange.entryId,
   entryType = this.dataEntryChange.entryType,
@@ -15,6 +18,9 @@ fun CreateDataEntryCommand.createdEvent() = DataEntryCreatedEvent(
   formKey = this.dataEntryChange.formKey
 )
 
+/**
+ * Maps command to event.
+ */
 fun UpdateDataEntryCommand.updatedEvent() = DataEntryUpdatedEvent(
   entryId = this.dataEntryChange.entryId,
   entryType = this.dataEntryChange.entryType,
@@ -28,4 +34,14 @@ fun UpdateDataEntryCommand.updatedEvent() = DataEntryUpdatedEvent(
   updateModification = this.dataEntryChange.modification,
   authorizations = this.dataEntryChange.authorizationChanges,
   formKey = this.dataEntryChange.formKey
+)
+
+/**
+ * Maps command to event.
+ */
+fun DeleteDataEntryCommand.deletedEvent() = DataEntryDeletedEvent(
+  entryId = this.entryId,
+  entryType = this.entryType,
+  deleteModification = this.modification,
+  state = this.state
 )

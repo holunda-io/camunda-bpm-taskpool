@@ -1,6 +1,7 @@
 package io.holunda.polyflow.view.jpa.data
 
 import io.holunda.camunda.taskpool.api.business.DataEntryCreatedEvent
+import io.holunda.camunda.taskpool.api.business.DataEntryDeletedEvent
 import io.holunda.camunda.taskpool.api.business.DataEntryUpdatedEvent
 import org.axonframework.messaging.MetaData
 
@@ -18,4 +19,9 @@ interface DataEntryEventHandler {
    * Data entry updated.
    */
   fun on(event: DataEntryUpdatedEvent, metaData: MetaData)
+
+  /**
+   * Data entry deleted.
+   */
+  fun on(event: DataEntryDeletedEvent, metaData: MetaData)
 }

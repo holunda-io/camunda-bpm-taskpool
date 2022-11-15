@@ -189,7 +189,7 @@ internal class JpaPolyflowViewServiceDataEntryRevisionSupportITest {
   }
 
   @Test
-  fun `should not find the entry becasue of the path filter exclude`() {
+  fun `should not find the entry because of the path filter exclude`() {
 
     val user = User("kermit", setOf("muppets"))
     val filters = listOf("secret=very-secret")

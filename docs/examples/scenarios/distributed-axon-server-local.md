@@ -1,5 +1,5 @@
 ---
-title: Distributed Scenario using Axon Server
+title: Distributed Scenario using Axon Server using Local
 ---
 
 This example is demonstrating the usage of the Polyflow components distributed with help of Axon Server.
@@ -8,12 +8,13 @@ Both applications are built as SpringBoot applications.
 
 The following configuration is used in the distributed scenario with Axon Server:
 
-* Bus distribution is provided by Axon Server Connector (command bus, event bus, query bus)
+* Bus distribution is provided by Axon Server Connector (event bus only)
+* Polyflow Core Components (task pool and data pool) are deployed **aside the process application**
 * Axon Server is used as Event Store
 * Postgresql is used as a database for:
     - Camunda BPM Engine
     - Process Application Datasource
-* Mongo is used as persistence for projection view (`mongo-view`)
+* JPA is used as persistence for projection view (`view-jpa`)
 
 
 ### System Requirements
@@ -26,15 +27,15 @@ The following configuration is used in the distributed scenario with Axon Server
 
 Before you begin, please build the entire project with `mvn clean install` from the command line in the project root directory.
 
-You will need some backing services (Axon Server, PostgreSQL, MongoDB) and you can easily start them locally
+You will need some backing services (Axon Server, PostgreSQL) and you can easily start them locally
 by using the provided `docker-compose.yml` file.
 
-Before you start change the directory to `examples/scenarios/distributed-axon-server` and run a preparation script `.docker/setup.sh`.
+Before you start change the directory to `examples/scenarios/distributed-axon-server-local-polyflow` and run a preparation script `.docker/setup.sh`.
 You can do it with the following code from your command line (you need to do it once):
 
 
 ```bash
-cd examples/scenarios/distributed-axon-server
+cd examples/scenarios/distributed-axon-server-local-polyflow
 .docker/setup.sh
 ```
 
@@ -53,16 +54,16 @@ the Axon Server administration console.
 The demo application consists of several Maven modules. In order to start the example, you will need to start only two
 of them in the following order:
 
-1. taskpool-application (process platform)
-2. process-application (example process application)
+1. process-platform-view-only (process platform)
+2. process-application-local-polyflow (example process application)
 
-The modules can be started by running from command line in the `examples/scenarios/distributed-axon-server` directory using Maven or start the
+The modules can be started by running from command line in the `examples/scenarios/distributed-axon-server-local-polyflow` directory using Maven or start the
 packaged application using:
 
 
 ```bash
-java -jar taskpool-application/target/*.jar
-java -jar process-application/target/*.jar
+java -jar process-platform-view-only/target/*.jar
+java -jar process-application-local-polyflow/target/*.jar
 ```
 
 ## Useful URLs

@@ -1,10 +1,7 @@
 package io.holunda.polyflow.taskpool.core
 
-import io.holunda.polyflow.taskpool.core.process.ProcessDefinitionRegisterCommandHandler
 import io.holunda.polyflow.taskpool.core.process.ProcessDefinitionAggregate
 import io.holunda.polyflow.taskpool.core.process.ProcessInstanceAggregate
-import io.holunda.polyflow.taskpool.core.process.ProcessInstanceVariablesChangeHandler
-import io.holunda.polyflow.taskpool.core.task.TaskCreateCommandHandler
 import io.holunda.polyflow.taskpool.core.task.TaskAggregate
 import org.axonframework.eventsourcing.EventSourcingRepository
 import org.axonframework.eventsourcing.eventstore.EventStore
@@ -13,7 +10,6 @@ import org.axonframework.modelling.command.AggregateNotFoundException
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
-import org.springframework.context.annotation.Import
 import java.util.*
 
 /**

@@ -1,5 +1,3 @@
-## Bus Jackson
-
 ### Purpose
 
 The component is a helper component if you configure your Axon busses (command, event, query) to use Jackson for serialization of messages.

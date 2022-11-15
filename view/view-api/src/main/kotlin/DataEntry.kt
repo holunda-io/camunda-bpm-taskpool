@@ -7,7 +7,7 @@ import org.camunda.bpm.engine.variable.Variables
 /**
  * Data entry projection.
  */
-data class  DataEntry(
+data class DataEntry(
   /**
    * Type of entry.
    */
@@ -60,7 +60,10 @@ data class  DataEntry(
   /**
    * Protocol of changes.
    */
-  val protocol: List<ProtocolEntry> = listOf()
+  val protocol: List<ProtocolEntry> = listOf(),
+
+  /** Deleted flag for query updates. **/
+  val deleted: Boolean = false
 
 ) : DataIdentity {
   val identity: String = dataIdentityString(entryType, entryId)

@@ -34,11 +34,14 @@ data class DataEntryDocument(
   private val authorizedUsers: Set<String>,
   @Deprecated(message = "Please use authorizedPrincipals instead", replaceWith = ReplaceWith("DataEntryDocument.authorizedPrincipals"))
   private val authorizedGroups: Set<String>,
-
+  val formKey: String?,
 // Mongo DB permits only one array-type field in a compound index. To use an index for the search, we need to put users and groups together in one array that we can index. See #367.
   val authorizedPrincipals: Set<String> = authorizedPrincipals(authorizedUsers, authorizedGroups),
   val createdDate: Instant,
   val lastModifiedDate: Instant,
+  val deleted: Boolean = false,
+  @Indexed
+  val deleteTime: Instant? = null,
   val protocol: List<ProtocolElement> = listOf()
 ) {
   companion object {
@@ -84,9 +87,11 @@ fun DataEntryDocument.dataEntry() =
         type = type,
         authorizedUsers = getAuthorizedUsers(),
         authorizedGroups = getAuthorizedGroups(),
+        formKey = formKey,
         applicationName = applicationName,
         state = mapState(state, statusType),
-        protocol = protocol.map { it.toProtocol() }
+        protocol = protocol.map { it.toProtocol() },
+        deleted = deleted
       )
     }
   } else {

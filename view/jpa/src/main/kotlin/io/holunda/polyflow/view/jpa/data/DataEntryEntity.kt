@@ -32,9 +32,10 @@ class DataEntryEntity(
 
   @Column(name = "DATE_CREATED", nullable = false)
   var createdDate: Instant = Instant.now(),
-
   @Column(name = "DATE_LAST_MODIFIED", nullable = false)
   var lastModifiedDate: Instant = Instant.now(),
+  @Column(name = "DATE_DELETED", nullable = true)
+  var deletedDate: Instant? = null,
 
   @ElementCollection(fetch = FetchType.EAGER)
   @CollectionTable(

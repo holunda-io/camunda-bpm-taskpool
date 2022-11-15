@@ -1,10 +1,13 @@
 package io.holunda.camunda.taskpool.model
 
 import io.holunda.camunda.taskpool.api.business.CorrelationMap
-import io.holunda.camunda.taskpool.api.task.*
+import io.holunda.camunda.taskpool.api.task.SourceReference
 import org.camunda.bpm.engine.variable.VariableMap
 import java.util.*
 
+/**
+ * Command Model representation of the task.
+ */
 class Task {
 
   // anchor for static extension functions.
@@ -32,5 +35,30 @@ class Task {
   var name: String? = null
   var owner: String? = null
   var priority: Int? = 0
+
+  /**
+   * Updates task with data supplied by event.
+   * @param task task containing new attributes.
+   */
+  fun update(task: Task) {
+    id = task.id
+    taskDefinitionKey = task.taskDefinitionKey
+    sourceReference = task.sourceReference
+    name = task.name
+    description = task.description
+    priority = task.priority
+    owner = task.owner
+    dueDate = task.dueDate
+    followUpDate = task.followUpDate
+    if (task.businessKey != null) {
+      businessKey = task.businessKey
+    }
+    correlations = task.correlations
+    payload = task.payload
+
+    if (task.formKey != null) {
+      this.formKey = task.formKey
+    }
+  }
 
 }

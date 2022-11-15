@@ -143,6 +143,8 @@ nav:
       - Scenarios Overview: examples/scenarios/index.md
       - Single Node: examples/scenarios/single-node.md
       - Distributed using Axon Server: examples/scenarios/distributed-axon-server.md
+      - Distributed using Axon Server Event Bus only: examples/scenarios/distributed-axon-server-local.md
+      - Distributed using Kafka: examples/scenarios/distributed-with-kafka.md
   - Developers:
     - Contribution: developer-guide/contribution.md
     - Project Setup: developer-guide/project-setup.md

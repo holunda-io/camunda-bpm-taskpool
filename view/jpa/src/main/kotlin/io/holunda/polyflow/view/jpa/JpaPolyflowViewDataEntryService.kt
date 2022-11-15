@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import io.holixon.axon.gateway.query.QueryResponseMessageResponseType
 import io.holixon.axon.gateway.query.RevisionValue
 import io.holunda.camunda.taskpool.api.business.DataEntryCreatedEvent
+import io.holunda.camunda.taskpool.api.business.DataEntryDeletedEvent
 import io.holunda.camunda.taskpool.api.business.DataEntryUpdatedEvent
 import io.holunda.polyflow.view.filter.Criterion
 import io.holunda.polyflow.view.filter.toCriteria
@@ -130,6 +131,16 @@ class JpaPolyflowViewDataEntryService(
       savedEntity
     }
     emitDataEntryUpdate(entity)
+  }
+
+  @Suppress("unused")
+  @EventHandler
+  override fun on(event: DataEntryDeletedEvent, metaData: MetaData) {
+    if (isDisabledByProperty()) return
+
+    val identity = DataEntryId(entryType = event.entryType, entryId = event.entryId)
+    dataEntryRepository.deleteById(identity)
+    logger.debug { "JPA-VIEW-43: Business data entry deleted $event" }
   }
 
   /**

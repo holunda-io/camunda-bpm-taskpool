@@ -11,19 +11,18 @@ and address by the Polyflow libraries.
 The two main building blocks of the solution are **Process Application** and **Process Platform**. Sometimes you unite them inside the same deployment unit, but
 we differentiate them to make their responsibilities more clear.
 
-A **Process Application** implements the main business logic of the solution. It integrates the process engine that is responsible for execution the processes.
-During this execution user tasks are created and performed by the user and the business data objects are modified. For this purpose, the process application
-provides user interfaces for user tasks and business data operations.
+A **Process Application** implements the main business logic of the solution. It integrates the process engine that is responsible for execution the processes 
+and orchestrates the business functions. During this execution user tasks are created and performed by the user and the business data objects are modified. 
+For this purpose, the process application provides user interfaces for user tasks and business data operations.
 
-A **Process Platform** serves as an integration point of one or multiple process applications. It might integrate with a company's Single Sign-On solution and
-Identity Management, be part of Intranet portal solution. It provides __process agnostic__ user **task list** and **business object list**.
+A **Process Platform** serves as an integration point of one or multiple process applications. It might integrate with a company's Single Sign-On (SSO) solution and
+Identity & Authorization Management, be part of Intranet portal solution. It provides __process agnostic__ user **task list** and **business object list**.
 
 ## Task-oriented applications
 
-The main idea of a task-oriented solution is to model the underlying business process and to split the user interaction into parts represented by the **user
-tasks**. Every user task is an abstraction of an operation needed to be performed by the user. Usually, they include some sort of call-to-action including the
-input fields to be able to input user's decision. Examples of user tasks are **
-Confirm Order**, **Verify Quotation**, **Validate Document**.
+The core concept of a task-oriented solution is to model the underlying business process and to split the user interaction into parts represented by the **user
+tasks**. Every user task is an abstraction of an operation needed to be performed by the user of the system. Usually, they include some sort of call-to-action 
+including the input fields to be able to input user's decision. Examples of user tasks are **Confirm Order**, **Verify Quotation**, **Validate Document**.
 
 User experience plays a significant role in acceptance of the overall solution. In order to access the user task a special UI, called **user task form** is
 used. Every **user task form** is presenting only that limited part of the overall information to the user which is required to complete the user task. This

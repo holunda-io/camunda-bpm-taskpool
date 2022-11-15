@@ -107,7 +107,8 @@ Here is an example:
         "gonzo",
         "hulk"
     ],
-    "authorizedGroups" : [],
+    "authorizedGroups" : [], 
+    "deleted" : false,
     "protocol" : [
         {
             "time" : ISODate("2019-08-21T09:12:54.779Z"),

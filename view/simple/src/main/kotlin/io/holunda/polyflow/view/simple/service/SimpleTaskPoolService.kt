@@ -1,6 +1,7 @@
 package io.holunda.polyflow.view.simple.service
 
 import io.holunda.camunda.taskpool.api.business.DataEntryCreatedEvent
+import io.holunda.camunda.taskpool.api.business.DataEntryDeletedEvent
 import io.holunda.camunda.taskpool.api.business.DataEntryUpdatedEvent
 import io.holunda.camunda.taskpool.api.business.dataIdentityString
 import io.holunda.camunda.taskpool.api.task.*
@@ -226,6 +227,20 @@ class SimpleTaskPoolService(
     }
   }
 
+  /**
+   * Delete data entry.
+   */
+  @Suppress("unused")
+  @EventHandler
+  fun on(event: DataEntryDeletedEvent) {
+    logger.debug { "SIMPLE-VIEW-34: Business data entry deleted $event" }
+    val entryId = dataIdentityString(entryType = event.entryType, entryId = event.entryId)
+    dataEntries.remove(entryId)
+    findTasksForDataEntry(entryId).forEach { taskId ->
+      val task = tasks[taskId]!!
+      updateTaskForUserQuery(task.id)
+    }
+  }
   /**
    * Read-only stored data.
    */

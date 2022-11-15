@@ -1,9 +1,6 @@
 package io.holunda.polyflow.view.mongo
 
-import io.holunda.camunda.taskpool.api.business.AuthorizationChange
-import io.holunda.camunda.taskpool.api.business.DataEntryCreatedEvent
-import io.holunda.camunda.taskpool.api.business.DataEntryUpdatedEvent
-import io.holunda.camunda.taskpool.api.business.dataIdentityString
+import io.holunda.camunda.taskpool.api.business.*
 import io.holunda.polyflow.view.ProtocolEntry
 import io.holunda.polyflow.view.Task
 import io.holunda.polyflow.view.TaskWithDataEntries
@@ -29,6 +26,7 @@ fun DataEntryCreatedEvent.toDocument() = DataEntryDocument(
   type = this.type,
   authorizedUsers = AuthorizationChange.applyUserAuthorization(setOf(), this.authorizations),
   authorizedGroups = AuthorizationChange.applyGroupAuthorization(setOf(), this.authorizations),
+  formKey = this.formKey,
   protocol = listOf<ProtocolEntry>().addModification(this.createModification, this.state).map { it.toProtocolElement() },
   createdDate = this.createModification.time.toInstant(),
   lastModifiedDate = this.createModification.time.toInstant(),
@@ -38,7 +36,7 @@ fun DataEntryCreatedEvent.toDocument() = DataEntryDocument(
 )
 
 /**
- * Creates the document.
+ * Updated event to document.
  */
 fun DataEntryUpdatedEvent.toDocument(oldDocument: DataEntryDocument?) = if (oldDocument != null) {
   val authorizedUsers = AuthorizationChange.applyUserAuthorization(oldDocument.getAuthorizedUsers(), this.authorizations)
@@ -53,6 +51,7 @@ fun DataEntryUpdatedEvent.toDocument(oldDocument: DataEntryDocument?) = if (oldD
     authorizedUsers = authorizedUsers,
     authorizedGroups = authorizedGroups,
     authorizedPrincipals = DataEntryDocument.authorizedPrincipals(authorizedUsers, authorizedGroups),
+    formKey = this.formKey,
     protocol = oldDocument.protocol.map { it.toProtocol() }.addModification(this.updateModification, this.state).map { it.toProtocolElement() },
     lastModifiedDate = this.updateModification.time.toInstant(),
     applicationName = this.applicationName,
@@ -71,6 +70,7 @@ fun DataEntryUpdatedEvent.toDocument(oldDocument: DataEntryDocument?) = if (oldD
     type = this.type,
     authorizedUsers = AuthorizationChange.applyUserAuthorization(setOf(), this.authorizations),
     authorizedGroups = AuthorizationChange.applyGroupAuthorization(setOf(), this.authorizations),
+    formKey = this.formKey,
     protocol = listOf<ProtocolEntry>().addModification(this.updateModification, this.state).map { it.toProtocolElement() },
     createdDate = this.updateModification.time.toInstant(),
     lastModifiedDate = this.updateModification.time.toInstant(),
@@ -105,4 +105,3 @@ fun TaskWithDataEntriesDocument.taskWithDataEntries() = TaskWithDataEntries(
   ),
   dataEntries = this.dataEntries.map { it.dataEntry() }
 )
-

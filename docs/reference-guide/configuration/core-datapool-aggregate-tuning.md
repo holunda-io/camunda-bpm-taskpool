@@ -10,6 +10,7 @@ command validation, so it is possible to optimize the loading process. For this 
 |---------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------|---------|
 | `snapshot-threshold`                              | Threshold of events to create a snapshot of the dat entry aggregate                                                                                                                                | Long   | 5       |  
 | `event-sourcing-repository-type`                  | The full-qualified class name of the repository. `org.axonframework.eventsourcing.EventSourcingRepository` or `io.holunda.polyflow.datapool.core.repository.FirstEventOnlyEventSourcingRepository` | String |         |
+| `deletion-strategy`                               | Controls how the deletion of data entries is handled. Valid values are `lax` (default) and `strict`. See deletion strategy section below.                                                          | String | strict  |
 
 ### Event Souring Repository
 
@@ -17,4 +18,8 @@ By default, the `EventSourcingRepository` for every Aggregate is provided by Axo
 loading from snapshots and will load tha last snapshot and all events occurred after the snapshot. Alternatively, you can set
 the repository to `io.holunda.polyflow.datapool.core.repository.FirstEventOnlyEventSourcingRepository`. This repository loads
 the first event only to restore the state. This special repository is using the first event and saves space by not creating any
-snaphsots. 
+snapshots.
+
+### Deletion strategy
+
+The data entries can be marked as deleted. If set to `strict`, no updates can be sent to this data entry, otherwise the update will undelete (re-create) the data entry.

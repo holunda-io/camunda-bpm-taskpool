@@ -4,9 +4,6 @@ title: Taskpool Core
 pageId: core-taskpool
 
 ---
-
-## Taskpool Core
-
 ### Purpose
 
 The component is responsible for maintaining and storing the consistent state of the taskpool

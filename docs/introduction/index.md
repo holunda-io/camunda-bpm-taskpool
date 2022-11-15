@@ -3,19 +3,19 @@ title: Motivation and Goals
 ---
 
 Over the last years, we built various process applications and whole process platforms for our customers using a modern process engine - Camunda Platform 7. In
-doing so, we were observed common requirements, in particular with respect to task-oriented frontend applications and were able to extract them. These were
+doing so, we observed common requirements, in particular with respect to task-oriented frontend applications and were able to extract them. These were
 basic requirements independent of the used frontend technology, and it turned out that some issues occurred every time during the implementation.
 
 These were:
 
-* Coping with performance issues of Camunda Platform 7 engine when it comes to big amounts of tasks to be shown
-* Creating high-performance custom queries for preloading process variables for tasks
-* Creating high-performance custom queries to preload business data associated with the running process instances
+* Coping with performance issues of Camunda Platform 7 engine when it comes to **big amounts** of tasks to be shown
+* Creating high-performance custom queries for preloading **process variables** for tasks
+* Creating high-performance custom queries to preload **business data** associated with the running process instances
 * High-performance re-ordering (sorting) of user tasks
-* High-performance retrieval of tasks from several process engines
+* High-performance retrieval of **tasks from multiple process engines** to display in a **single task list**
 * Repetitive queries with the same result
-* Creating a custom view on the business data items handled during the process execution
-* Creating a custom audit log for the changes performed on the business data items
+* Creating a custom view on the **business data items** handled during the process execution
+* Creating a custom **audit log** for the changes performed on the business data items
 
 In our projects we developed solutions to those requirements and gathered experience in applying
 different approaches for that. Some issues listed above result from the fact that data on a single user task is being read
@@ -28,5 +28,4 @@ consistency (and working with eventual-consistent task list). Another component 
 
 We successfully applied this approach at multiple customers but identified the high initial invest as a main drawback of the solution. The goal of this project
 is to provide such components as free and open source libraries, to be used as a foundation for creation of process platforms for Camunda Platform 7 and other
-engines.
-They can also be used as an integration layer for custom process applications, custom user task lists and other components of process automation solutions.
+engines. They can also be used as an integration layer for custom process applications, custom user task lists and other components of process automation solutions.

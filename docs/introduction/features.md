@@ -2,7 +2,7 @@
 title: Features
 ---
 
-## Taskpool
+## Task Pool
 
 A task list is an application that shows a list of tasks for each individual user, based on the user's profile, roles and authorizations. Polyflow's `taskpool`
 library provides a backend from which task lists can be served.
@@ -23,7 +23,7 @@ The `taskpool` library provides the following features:
   contrast to that, the usage of the `taskpool` library with a data enrichment plugin mechanism allows for caching additional business data along with the task
   information.
 
-## Datapool
+## Data Pool
 
 Each process instance works on one or more business objects and a business object's lifecycle usually spans a longer period of time than the process instance
 runtime. It's a common requirement to search for these business objects (independently of process tasks) and get a list of these objects including their current

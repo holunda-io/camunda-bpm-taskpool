@@ -2,20 +2,17 @@
 title: Taskpool Collector
 pageId: engine-datapool-collector
 ---
-
-## Taskpool Collector
-
 ### Purpose
 
 Taskpool Collector is a component deployed as a part of the process application
 (aside with Camunda BPM Engine) that is responsible for collecting information from
 the Camunda BPM Engine. It detects the _intent_ of the operations executed inside the engine
 and creates the corresponding commands for the Taskpool. The commands are enriched with data and transmitted to
-other taskpool components (via Axon Command Bus).
+other taskpool components (via Command Bus).
 
 In the following description, we use the terms _event_ and _command_. Event denotes an entity
 received from Camunda BPM Engine (from delegate event listener or from history event listener)
-which is passed over to the Taskpool Collector using internal Spring eventing mechanism. The Taskpool
+which is passed over to the Taskpool Collector using internal **Spring eventing** mechanism. The Taskpool
 Collector converts the series of such events into a Taskpool Command - an entity carrying an intent
 of change inside the Taskpool core. Please note that _event_ has another meaning in CQRS/ES systems
 and other components of the Taskpool, but in the context of Taskpool collector an event always originates from
@@ -35,7 +32,7 @@ Spring eventing.
 
 ### Architecture
 
-![Taskpool collector building blocks](/img/collector-building-blocks.png)
+![Taskpool collector building blocks](../../img/collector-building-blocks.png)
 
 The Taskpool Collector consists of several components which can be divided into the following groups:
 
@@ -173,7 +170,7 @@ public class MyTaskCollectorConfiguration {
 
 Apart from task payload attached by the enricher, the so-called _Correlation_ with data entries can
 be configured. The data correlation allows to attach one or several references (that is a pair of values `entryType` and `entryId`) of
-business data entry(ies) to a task. In the projection (which is used for querying of tasks) this correlations is be resolved and the
+business data entry(ies) to a task. In the projection (which is used for querying of tasks) these correlations are resolved and the
 information from business data events can be shown together with task information.
 
 The correlation to data events can be configured by providing a `ProcessVariablesCorrelator` bean. Here is
@@ -233,76 +230,22 @@ and the process reaches the task `task_approve_request`, the task will get the f
 ]
 ```
 
-### Command aggregation
-
-In order to control sending of commands to command sender, the command sender activation property
-`polyflow.integration.sender.task.enabled` is available. If disabled, the command sender
-will log any command instead of aggregating sending it to the command gateway.
-
-In addition, you can control by the property `polyflow.integration.task.sender.type` if you want to use the default command sender or provide your own
-implementation.
-The default provided command sender (type: `tx`) is collects all task commands during one transaction, group them by task id
-and accumulates by creating one command reflecting the intent of the task operation. It uses Axon Command Bus (encapsulated
-by the `AxonCommandListGateway` for sending the result over to the Axon command gateway.
-
-TIP: If you want to implement a custom command sending, please provide your own implementation of the interface `EngineTaskCommandSender`
-(register a Spring Component of the type) and set the property `polyflow.integration.task.sender.type` to `custom`.
-
-The Spring event listeners receiving events from the Camunda Engine plugin are called before the engine commits the transaction.
-Since all processing inside collector component and enricher is performed synchronously, the sender must waits until transaction to
-be successfully committed before sending any commands to the Command Gateway. Otherwise, on any error
-the transaction would be rolled-back and the command would create an inconsistency between the taskpool and the engine.
-
-Depending on your deployment scenario, you may want to control the exact point in time when the commands are sent to command gateway.
-The property `polyflow.integration.task.sender.send-within-transaction` is designed to influence this. If set to `true`, the commands
-are sent _before_ the process engine transaction is committed, otherwise commands are sent _after_ the process engine transaction is committed.
-
-!!! warning
-      Never send commands over remote messaging before the transaction is committed, since you may produce unexpected results if Camunda fails
-      to commit the transaction.
-
-#### Handling command transmission
-
-The commands sent via gateway (e.g. `AxonCommandListGateway`) are received by Command Handlers. The latter may accept or reject commands, depending
-on the state of the aggregate and other components. The `AxonCommandListGateway` is informed about the command outcome. By default, it will log the outcome
-to console (success is logged in `DEBUG` log level, errors are using `ERROR` log level).
-
-In some situations it is required to take care of command outcome. A prominent example is to include a metric for command dispatching errors into monitoring.
-For doing so, it is possible to provide own handlers for success and error command outcome. For this purpose, please provide a Spring Bean implementing
-the `CommandSuccessHandler`and `CommandErrorHandler` accordingly.
-
-Here is an example, how such a handler may look like:
-
-```kotlin
-  @Bean
-@Primary
-fun taskCommandErrorHandler(): TaskCommandErrorHandler = object : LoggingTaskCommandErrorHandler(logger) {
-    override fun apply(commandMessage: Any, commandResultMessage: CommandResultMessage<out Any?>) {
-      logger.info { "<--------- CUSTOM ERROR HANDLER REPORT --------->" }
-      super.apply(commandMessage, commandResultMessage)
-      logger.info { "<------------------- END ----------------------->" }
-    }
-  }
-```
-
 ### Message codes
 
 > Please note that the logger root hierarchy is `io.holunda.camunda.taskpool.collector`
 
-Message Code  | Severity  | Logger*  | Description   | Meaning
---- | --- | :--- | :--- | :--- 
-`COLLECTOR-001` | `INFO`     |   | Task commands will be collected. |
-`COLLECTOR-002` | `INFO`     |   | Task commands not be collected.   |
-`COLLECTOR-005` | `DEBUG`    | `.process.definition`  | Process definition collecting has been disabled by property, skipping ${command.processDefinitionId}. |
-`COLLECTOR-006` | `DEBUG`    | `.process.instance`  | Process instance collecting has been disabled by property, skipping ${command.processInstanceId}. |
-`COLLECTOR-007` | `DEBUG`    | `.process.variable`  | Process variable collecting has been disabled by property, skipping ${command.processInstanceId}. |
-`COLLECTOR-008` | `DEBUG`    | `.task`  | Task command collecting is disabled by property, would have enriched and sent command $command. |
-`ENRICHER-001`  | `INFO`     |   | Task commands will be enriched with process variables.   |
-`ENRICHER-002`  | `INFO`     |   | Task commands will not be enriched.   |
-`ENRICHER-003`  | `INFO`     |   | Task commands will be enriched by a custom enricher.   |
-`ENRICHER-004`  | `DEBUG`    | `.task.enricher`   | Could not enrich variables from running execution ${command.sourceReference.executionId}, since it doesn't exist (anymore).   |
-
-
+| Message Code     | Severity | Logger*               | Description                                                                                                                 | Meaning |
+|------------------|----------|:----------------------|:----------------------------------------------------------------------------------------------------------------------------|:--------| 
+| `COLLECTOR-001`  | `INFO`   |                       | Task commands will be collected.                                                                                            |         |
+| `COLLECTOR-002`  | `INFO`   |                       | Task commands not be collected.                                                                                             |         |
+| `COLLECTOR-005`  | `DEBUG`  | `.process.definition` | Process definition collecting has been disabled by property, skipping ${command.processDefinitionId}.                       |         |
+| `COLLECTOR-006`  | `DEBUG`  | `.process.instance`   | Process instance collecting has been disabled by property, skipping ${command.processInstanceId}.                           |         |
+| `COLLECTOR-007`  | `DEBUG`  | `.process.variable`   | Process variable collecting has been disabled by property, skipping ${command.processInstanceId}.                           |         |
+| `COLLECTOR-008`  | `DEBUG`  | `.task`               | Task command collecting is disabled by property, would have enriched and sent command $command.                             |         |
+| `ENRICHER-001`   | `INFO`   |                       | Task commands will be enriched with process variables.                                                                      |         |
+| `ENRICHER-002`   | `INFO`   |                       | Task commands will not be enriched.                                                                                         |         |
+| `ENRICHER-003`   | `INFO`   |                       | Task commands will be enriched by a custom enricher.                                                                        |         |
+| `ENRICHER-004`   | `DEBUG`  | `.task.enricher`      | Could not enrich variables from running execution ${command.sourceReference.executionId}, since it doesn't exist (anymore). |         |
 
 
 

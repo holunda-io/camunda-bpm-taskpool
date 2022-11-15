@@ -33,6 +33,13 @@ class RevisionSupport {
   }
 
   /**
+   * Deletes revision information for this entry.
+   */
+  fun deleteRevision(elementKey: String) {
+    revisionInfo.remove(elementKey)
+  }
+
+  /**
    * Retrieve the highest revision for given set of element keys.
    * @param elementKeys keys of elements.
    * @return highest revision value.

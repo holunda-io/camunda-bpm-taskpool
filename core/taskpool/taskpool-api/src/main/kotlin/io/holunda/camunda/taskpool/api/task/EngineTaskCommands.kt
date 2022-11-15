@@ -188,6 +188,10 @@ data class UpdateAttributeTaskCommand(
    */
   override var enriched: Boolean = false,
   /**
+   * Form key used to create a task URL.
+   */
+  override val formKey: String? = null,
+  /**
    * Optional task name.
    */
   val description: String?,
@@ -212,7 +216,7 @@ data class UpdateAttributeTaskCommand(
    */
   val priority: Int?,
 
-) : TaskIdentityWithPayloadAndCorrelations, EngineTaskCommand
+) : TaskIdentityWithPayloadAndCorrelations, EngineTaskCommand, WithFormKey
 
 
 /**
