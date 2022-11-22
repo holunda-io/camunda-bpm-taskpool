@@ -14,6 +14,7 @@
   <name>core/bus/${project.artifactId}</name>
 
   <dependencies>
+    <!-- Polyflow API -->
     <dependency>
       <groupId>io.holunda.polyflow</groupId>
       <artifactId>polyflow-datapool-api</artifactId>
@@ -29,6 +30,8 @@
       <artifactId>polyflow-view-api</artifactId>
       <version>${project.version}</version>
     </dependency>
+
+    <!-- Jackson -->
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-databind</artifactId>
@@ -44,11 +47,25 @@
       <artifactId>jackson-module-kotlin</artifactId>
       <scope>provided</scope>
     </dependency>
+
+    <!-- Spring boot -->
     <dependency>
-      <groupId>org.assertj</groupId>
-      <artifactId>assertj-core</artifactId>
-      <scope>test</scope>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-beans</artifactId>
+      <scope>provided</scope>
     </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-context</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-autoconfigure</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+    <!-- For test only -->
     <dependency>
       <groupId>com.fasterxml.jackson.datatype</groupId>
       <artifactId>jackson-datatype-jsr310</artifactId>

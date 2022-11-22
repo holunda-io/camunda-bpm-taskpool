@@ -1,7 +1,7 @@
 package io.holunda.camunda.taskpool.upcast.task
 
-import io.holunda.camunda.taskpool.upcast.definition.AnnotatedEventUpcaster
-import io.holunda.camunda.taskpool.upcast.definition.AnnotationBasedSingleEventUpcaster
+import io.holunda.camunda.taskpool.upcast.AnnotatedEventUpcaster
+import io.holunda.camunda.taskpool.upcast.AnnotationBasedSingleEventUpcaster
 import mu.KLogging
 import org.axonframework.serialization.SimpleSerializedType
 import org.axonframework.serialization.upcasting.event.IntermediateEventRepresentation

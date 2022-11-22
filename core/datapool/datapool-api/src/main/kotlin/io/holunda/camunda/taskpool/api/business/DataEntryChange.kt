@@ -16,7 +16,7 @@ data class DataEntryChange(
    */
   val entryId: EntryId,
   /**
-   * Human readable type e.g. "purchase order"
+   * Human-readable type e.g. "purchase order"
    */
   val type: String,
   /**
@@ -24,7 +24,7 @@ data class DataEntryChange(
    */
   val applicationName: String,
   /**
-   * Human readable identifier or name, e.g. "BANF-4711 - TV for meeting room"
+   * Human-readable identifier or name, e.g. "BANF-4711 - TV for meeting room"
    */
   val name: String,
   /**
