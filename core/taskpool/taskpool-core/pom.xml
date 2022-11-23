@@ -6,7 +6,7 @@
   <parent>
     <groupId>io.holunda.polyflow</groupId>
     <artifactId>polyflow-taskpool-parent</artifactId>
-    <version>3.4.1</version>
+    <version>3.4.2</version>
   </parent>
 
   <artifactId>polyflow-taskpool-core</artifactId>
@@ -48,11 +48,6 @@
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-core</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.assertj</groupId>
-      <artifactId>assertj-core</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>

@@ -1,6 +1,9 @@
 package io.holunda.camunda.taskpool.upcast.definition
 
-import io.holunda.camunda.taskpool.upcast.definition.RepresentationContentType.JSON
+import io.holunda.camunda.taskpool.upcast.AnnotatedEventUpcaster
+import io.holunda.camunda.taskpool.upcast.AnnotationBasedSingleEventUpcaster
+import io.holunda.camunda.taskpool.upcast.RepresentationContentType
+import io.holunda.camunda.taskpool.upcast.RepresentationContentType.JSON
 import mu.KLogging
 import org.axonframework.serialization.SimpleSerializedType
 import org.axonframework.serialization.upcasting.event.IntermediateEventRepresentation
@@ -24,7 +27,8 @@ class ProcessDefinitionEventXMLNullTo1Upcaster : AnnotationBasedSingleEventUpcas
   override fun doUpcast(representation: IntermediateEventRepresentation): IntermediateEventRepresentation {
     return representation.upcastPayload(
       SimpleSerializedType(RESULT_OBJECT_TYPE, "1"),
-      Document::class.java)
+      Document::class.java
+    )
     // XStream writes the event types into the event.
     { document ->
       document.apply {

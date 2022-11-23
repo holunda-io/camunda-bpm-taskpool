@@ -1,6 +1,7 @@
 package io.holunda.polyflow.datapool.core.business
 
 import io.holunda.camunda.taskpool.api.business.*
+import io.holunda.polyflow.datapool.core.DataPoolCoreAxonConfiguration
 import io.holunda.polyflow.datapool.core.DataPoolCoreConfiguration
 import io.holunda.polyflow.datapool.core.DeletionStrategy
 import mu.KLogging
@@ -10,6 +11,7 @@ import org.axonframework.eventsourcing.EventSourcingHandler
 import org.axonframework.modelling.command.AggregateIdentifier
 import org.axonframework.modelling.command.AggregateLifecycle
 import org.axonframework.spring.stereotype.Aggregate
+import org.springframework.beans.factory.annotation.Autowired
 
 /**
  * Aggregate representing a data entry.
@@ -17,9 +19,9 @@ import org.axonframework.spring.stereotype.Aggregate
  * The aggregate is manually created by the CreateOrUpdateCommandHandler.
  */
 @Aggregate(
-  repository = DataPoolCoreConfiguration.DATA_ENTRY_REPOSITORY,
-  snapshotTriggerDefinition = DataPoolCoreConfiguration.DATA_ENTRY_SNAPSHOTTER,
-  cache = DataPoolCoreConfiguration.DATA_ENTRY_CACHE,
+  repository = DataPoolCoreAxonConfiguration.DATA_ENTRY_REPOSITORY,
+  snapshotTriggerDefinition = DataPoolCoreAxonConfiguration.DATA_ENTRY_SNAPSHOTTER,
+  cache = DataPoolCoreAxonConfiguration.DATA_ENTRY_CACHE,
 )
 class DataEntryAggregate() {
 
@@ -43,7 +45,7 @@ class DataEntryAggregate() {
    * Handle update.
    */
   @CommandHandler
-  fun handle(command: UpdateDataEntryCommand, deletionStrategy: DeletionStrategy) {
+  fun handle(command: UpdateDataEntryCommand, @Autowired deletionStrategy: DeletionStrategy) {
     if (deletionStrategy.strictMode()) {
       if (deleted) {
         throw AggregateDeletedException(this.dataIdentity, "The data entry has already been deleted")
@@ -58,7 +60,7 @@ class DataEntryAggregate() {
    * Handle delete.
    */
   @CommandHandler
-  fun handle(command: DeleteDataEntryCommand, deletionStrategy: DeletionStrategy) {
+  fun handle(command: DeleteDataEntryCommand, @Autowired deletionStrategy: DeletionStrategy) {
     if (deletionStrategy.strictMode()) {
       if (deleted) {
         throw AggregateDeletedException(this.dataIdentity, "The data entry has already been deleted")

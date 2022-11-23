@@ -1,7 +1,7 @@
 package io.holunda.camunda.taskpool.upcast.task
 
-import io.holunda.camunda.taskpool.upcast.definition.AnnotatedEventUpcaster
-import io.holunda.camunda.taskpool.upcast.definition.AnnotationBasedSingleEventUpcaster
+import io.holunda.camunda.taskpool.upcast.AnnotatedEventUpcaster
+import io.holunda.camunda.taskpool.upcast.AnnotationBasedSingleEventUpcaster
 import mu.KLogging
 import org.axonframework.serialization.SimpleSerializedType
 import org.axonframework.serialization.upcasting.event.IntermediateEventRepresentation
@@ -24,7 +24,8 @@ class TaskAttributeUpdatedEngineEvent4To5Upcaster : AnnotationBasedSingleEventUp
   override fun doUpcast(representation: IntermediateEventRepresentation): IntermediateEventRepresentation {
     return representation.upcastPayload(
       SimpleSerializedType(RESULT_OBJECT_TYPE, "5"),
-      Document::class.java) { document ->
+      Document::class.java
+    ) { document ->
       document.apply {
         if (document.selectNodes("//correlations").isEmpty()) {
           document.rootElement.addElement("correlations").apply {
@@ -41,5 +42,4 @@ class TaskAttributeUpdatedEngineEvent4To5Upcaster : AnnotationBasedSingleEventUp
       }
     }
   }
-
 }
