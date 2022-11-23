@@ -6,5 +6,8 @@ import org.springframework.context.annotation.Import
  * Starts data pool component.
  */
 @MustBeDocumented
-@Import(DataPoolCoreConfiguration::class)
+@Import(
+  DataPoolCoreConfiguration::class,
+  DataPoolCoreAxonConfiguration::class
+)
 annotation class EnablePolyflowDataPool
