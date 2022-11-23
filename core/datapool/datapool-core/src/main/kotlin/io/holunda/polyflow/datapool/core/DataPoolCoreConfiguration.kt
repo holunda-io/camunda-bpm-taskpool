@@ -97,7 +97,7 @@ class DataPoolCoreConfiguration {
   )
   @Bean
   fun strictDeletionStrategy(): DeletionStrategy = object : DeletionStrategy {
-    override fun strictMode(): Boolean = false
+    override fun strictMode(): Boolean = true
   }
 }
 

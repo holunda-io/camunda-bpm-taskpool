@@ -20,5 +20,10 @@ data class DataPoolProperties(
    * Defaults to [org.axonframework.eventsourcing.EventSourcingRepository].
    * Consider to use [io.holunda.polyflow.datapool.core.repository.FirstEventOnlyEventSourcingRepository] if you want to load the aggregate with first event only.
    */
-  val eventSourcingRepositoryType: String = EventSourcingRepository::class.java.canonicalName
+  val eventSourcingRepositoryType: String = EventSourcingRepository::class.java.canonicalName,
+
+  /**
+   * Specifies the deletion strategy for data entries.
+   */
+  val deletionStrategy: DeletionStrategyValue? = DeletionStrategyValue.lax
 )
