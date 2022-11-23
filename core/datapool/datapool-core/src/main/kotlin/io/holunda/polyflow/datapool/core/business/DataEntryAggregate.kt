@@ -11,6 +11,7 @@ import org.axonframework.eventsourcing.EventSourcingHandler
 import org.axonframework.modelling.command.AggregateIdentifier
 import org.axonframework.modelling.command.AggregateLifecycle
 import org.axonframework.spring.stereotype.Aggregate
+import org.springframework.beans.factory.annotation.Autowired
 
 /**
  * Aggregate representing a data entry.
@@ -44,7 +45,7 @@ class DataEntryAggregate() {
    * Handle update.
    */
   @CommandHandler
-  fun handle(command: UpdateDataEntryCommand, deletionStrategy: DeletionStrategy) {
+  fun handle(command: UpdateDataEntryCommand, @Autowired deletionStrategy: DeletionStrategy) {
     if (deletionStrategy.strictMode()) {
       if (deleted) {
         throw AggregateDeletedException(this.dataIdentity, "The data entry has already been deleted")
@@ -59,7 +60,7 @@ class DataEntryAggregate() {
    * Handle delete.
    */
   @CommandHandler
-  fun handle(command: DeleteDataEntryCommand, deletionStrategy: DeletionStrategy) {
+  fun handle(command: DeleteDataEntryCommand, @Autowired deletionStrategy: DeletionStrategy) {
     if (deletionStrategy.strictMode()) {
       if (deleted) {
         throw AggregateDeletedException(this.dataIdentity, "The data entry has already been deleted")

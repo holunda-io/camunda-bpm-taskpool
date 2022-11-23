@@ -12,13 +12,11 @@ import org.axonframework.eventsourcing.EventSourcingRepository
 import org.axonframework.eventsourcing.SnapshotTriggerDefinition
 import org.axonframework.eventsourcing.Snapshotter
 import org.axonframework.eventsourcing.eventstore.EventStore
-import org.springframework.boot.autoconfigure.AutoConfigureAfter
+import org.axonframework.messaging.annotation.ParameterResolverFactory
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
-import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
-import org.springframework.context.annotation.DependsOn
 import org.springframework.context.annotation.Import
 
 
@@ -31,8 +29,9 @@ import org.springframework.context.annotation.Import
   CreateOrUpdateCommandHandler::class,
   DataEntryCreatedEventUpcaster::class
 )
-class DataPoolCoreAxonConfiguration {
-
+class DataPoolCoreAxonConfiguration(
+  deletionStrategy: DeletionStrategy
+) {
   companion object : KLogging() {
     const val DATA_ENTRY_REPOSITORY = "dataEntryEventSourcingRepository"
     const val DATA_ENTRY_SNAPSHOTTER = "dataEntrySnapshotter"
@@ -48,8 +47,19 @@ class DataPoolCoreAxonConfiguration {
     havingValue = "io.holunda.polyflow.datapool.core.repository.FirstEventOnlyEventSourcingRepository"
   )
   @Bean(DATA_ENTRY_REPOSITORY)
-  fun firstEventDataEntryAggregateRepository(eventStore: EventStore): EventSourcingRepository<DataEntryAggregate> {
-    return FirstEventOnlyEventSourcingRepository.builder(DataEntryAggregate::class.java).eventStore(eventStore).build()
+  fun firstEventDataEntryAggregateRepository(
+    eventStore: EventStore,
+    factory: ParameterResolverFactory,
+    @Qualifier(DATA_ENTRY_CACHE) dataEntryCache: Cache,
+    @Qualifier(DATA_ENTRY_SNAPSHOTTER) dataEntryAggregateSnapshotterTriggerDefinition: SnapshotTriggerDefinition
+  ): EventSourcingRepository<DataEntryAggregate> {
+    return FirstEventOnlyEventSourcingRepository
+      .builder(DataEntryAggregate::class.java)
+      .parameterResolverFactory(factory)
+      .cache(dataEntryCache)
+      .snapshotTriggerDefinition(dataEntryAggregateSnapshotterTriggerDefinition)
+      .eventStore(eventStore)
+      .build()
   }
 
   /**
@@ -61,8 +71,19 @@ class DataPoolCoreAxonConfiguration {
     matchIfMissing = true
   )
   @Bean(DATA_ENTRY_REPOSITORY)
-  fun dataEntryAggregateRepository(eventStore: EventStore): EventSourcingRepository<DataEntryAggregate> {
-    return EventSourcingRepository.builder(DataEntryAggregate::class.java).eventStore(eventStore).build()
+  fun dataEntryAggregateRepository(
+    eventStore: EventStore,
+    factory: ParameterResolverFactory,
+    @Qualifier(DATA_ENTRY_CACHE) dataEntryCache: Cache,
+    @Qualifier(DATA_ENTRY_SNAPSHOTTER) dataEntryAggregateSnapshotterTriggerDefinition: SnapshotTriggerDefinition
+  ): EventSourcingRepository<DataEntryAggregate> {
+    return EventSourcingRepository
+      .builder(DataEntryAggregate::class.java)
+      .parameterResolverFactory(factory)
+      .cache(dataEntryCache)
+      .snapshotTriggerDefinition(dataEntryAggregateSnapshotterTriggerDefinition)
+      .eventStore(eventStore)
+      .build()
   }
 
   /**
