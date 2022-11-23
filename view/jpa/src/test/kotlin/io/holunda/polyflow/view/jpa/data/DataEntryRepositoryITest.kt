@@ -21,15 +21,19 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.data.jpa.domain.Specification.where
 import org.springframework.data.repository.findByIdOrNull
+import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import java.time.Instant
 import java.util.*
 import javax.persistence.EntityManager
+import javax.transaction.Transactional
 
 @ExtendWith(SpringExtension::class)
 @DataJpaTest
+@Transactional
+@DirtiesContext
 @ContextConfiguration(classes = [TestApplication::class])
 @ActiveProfiles("itest", "mock-query-emitter")
 internal class DataEntryRepositoryITest {
