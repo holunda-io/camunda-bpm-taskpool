@@ -1,4 +1,4 @@
-package io.holunda.polyflow.datapool
+package io.holunda.polyflow.datapool.core.itest
 
 import com.thoughtworks.xstream.XStream
 import com.thoughtworks.xstream.security.AnyTypePermission

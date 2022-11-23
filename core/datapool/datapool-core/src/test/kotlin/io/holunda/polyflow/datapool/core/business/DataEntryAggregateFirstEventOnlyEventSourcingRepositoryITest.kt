@@ -1,7 +1,7 @@
 package io.holunda.polyflow.datapool.core.business
 
 import io.holunda.camunda.taskpool.api.business.*
-import io.holunda.polyflow.datapool.TestApplication
+import io.holunda.polyflow.datapool.core.itest.TestApplication
 import mu.KLogging
 import org.assertj.core.api.Assertions.assertThat
 import org.axonframework.commandhandling.gateway.CommandGateway
