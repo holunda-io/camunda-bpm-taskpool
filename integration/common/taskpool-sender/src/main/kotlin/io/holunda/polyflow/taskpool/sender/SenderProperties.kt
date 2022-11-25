@@ -54,7 +54,11 @@ data class TaskSenderProperties(
    * or not (value false, default, after commit). This setting is required if you move the command bus
    * and the command handling on the engine side.
    */
-  val sendWithinTransaction: Boolean = false
+  val sendWithinTransaction: Boolean = false,
+  /**
+   * Serialize payload to `Map<String, Object>`. Defaults to true.
+   */
+  val serializePayload: Boolean = true
 )
 
 /**
