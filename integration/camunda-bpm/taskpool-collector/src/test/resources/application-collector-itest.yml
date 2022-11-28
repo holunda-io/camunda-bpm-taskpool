@@ -7,6 +7,8 @@ camunda:
       enabled: false
     id-generator: strong
     history-level: full
+    eventing:
+      task: false
     metrics:
       enabled: false
       db-reporter-activate: false
