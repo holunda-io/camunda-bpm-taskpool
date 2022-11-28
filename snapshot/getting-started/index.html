@@ -1416,12 +1416,12 @@
 connect to <strong>existing Process Platform</strong>.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>The following steps assume that you have already choosen one of the distribution scenarios and setup the <strong>Core components</strong>. This is a pre-requirement for the following steps to work.</p>
+<p>The following steps assume that you have already chosen one of the distribution scenarios and set-up the <strong>Core components</strong>. This is a pre-requirement for the following steps to work.</p>
 </div>
 <h2 id="add-dependency-to-polyflow-integration-starter">Add dependency to Polyflow integration starter<a class="headerlink" href="#add-dependency-to-polyflow-integration-starter" title="Permanent link">#</a></h2>
 <p>Apart from the example application, you might be interested in integrating Polyflow Taskpool and Datapool into your existing
 application. To do so, you need to enable your Camunda BPM process engine to use the library.
-For doing so, add the <code>polyflow-integration-camunda-bpm-engine-parent</code> library. In Maven, add the following dependency
+For doing so, add the <code>polyflow-integration-camunda-bpm-springboot-starter</code> library. In Maven, add the following dependency
 to your <code>pom.xml</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">&lt;dependency&gt;</span>
   <span class="nt">&lt;groupId&gt;</span>io.holunda.polyflow<span class="nt">&lt;/groupId&gt;</span>
@@ -1446,6 +1446,8 @@ to your <code>pom.xml</code>:</p>
 <span class="w">  </span><span class="nt">bpm</span><span class="p">:</span><span class="w"></span>
 <span class="w">    </span><span class="nt">default-serialization-format</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">application/json</span><span class="w"></span>
 <span class="w">    </span><span class="nt">history-level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">full</span><span class="w"></span>
+<span class="w">    </span><span class="nt">eventing</span><span class="p">:</span><span class="w"></span>
+<span class="w">      </span><span class="nt">task</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w"></span>
 
 <span class="nt">polyflow</span><span class="p">:</span><span class="w"></span>
 <span class="w">  </span><span class="nt">integration</span><span class="p">:</span><span class="w"></span>
@@ -1494,7 +1496,7 @@ to your <code>pom.xml</code>:</p>
   <small>
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">November 23, 2022</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">November 28, 2022</span>
       
     
   </small>

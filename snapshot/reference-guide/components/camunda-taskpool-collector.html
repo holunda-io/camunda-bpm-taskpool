@@ -1528,7 +1528,9 @@ Spring eventing.</p>
   </strong> HistoricVariableUpdateEventEntity
   ** HistoricDetailVariableInstanceUpdateEntity</li>
 </ul>
-<p>The events are transformed into corresponding commands and passed over to the processor layer.</p>
+<p>The events are transformed into corresponding commands and passed over to the processor layer. Until Camunda Platform 7.19, the eventing
+is fired using custom listeners only and polyflow components don't rely on that but rather on own implementation of built-in (unskippable) listeners.
+For this purpose, it is important to disable Camunda Platform custom listeners by setting <code>camunda.bpm.eventing.task</code> property to <code>false</code>.   </p>
 <h3 id="task-commands-enrichment">Task commands enrichment<a class="headerlink" href="#task-commands-enrichment" title="Permanent link">#</a></h3>
 <p>Alongside with attributes received from the Camunda BPM engine, the engine task commands
 can be enriched with additional attributes.</p>
@@ -1749,7 +1751,7 @@ and the process reaches the task <code>task_approve_request</code>, the task wil
   <small>
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">November 23, 2022</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">November 28, 2022</span>
       
     
   </small>
