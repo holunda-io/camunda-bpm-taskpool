@@ -82,7 +82,9 @@ Taskpool Collector registers Spring Event Listener to the following events, fire
   ** HistoricVariableUpdateEventEntity
   ** HistoricDetailVariableInstanceUpdateEntity
 
-The events are transformed into corresponding commands and passed over to the processor layer.
+The events are transformed into corresponding commands and passed over to the processor layer. Until Camunda Platform 7.19, the eventing
+is fired using custom listeners only and polyflow components don't rely on that but rather on own implementation of built-in (unskippable) listeners.
+For this purpose, it is important to disable Camunda Platform custom listeners by setting `camunda.bpm.eventing.task` property to `false`.   
 
 ### Task commands enrichment
 

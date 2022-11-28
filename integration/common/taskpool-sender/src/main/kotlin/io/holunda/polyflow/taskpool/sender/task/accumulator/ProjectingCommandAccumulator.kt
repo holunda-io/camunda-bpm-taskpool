@@ -12,7 +12,8 @@ import kotlin.reflect.KClass
  * @param objectMapper optional object mapper used for serialization.
  */
 class ProjectingCommandAccumulator(
-  val objectMapper: ObjectMapper
+  val objectMapper: ObjectMapper,
+  val serializePayload: Boolean
 ) : EngineTaskCommandAccumulator {
 
   private val sorter: EngineTaskCommandAccumulator = SortingCommandAccumulator()
@@ -29,7 +30,7 @@ class ProjectingCommandAccumulator(
     }.map {
       // serialize the content of payload and convert it to a map of key/value in order to be able
       // to deserializes without knowing the concrete classes
-      serializePayload(it)
+      serializePayloadIfNeeded(it)
     }
 
   /**
@@ -104,12 +105,16 @@ class ProjectingCommandAccumulator(
    * Handle payload and serializes it using provided object mapper (e.g. to JSON)
    */
   @Suppress("UNCHECKED_CAST")
-  fun <T : EngineTaskCommand> serializePayload(command: T): T =
+  fun <T : EngineTaskCommand> serializePayloadIfNeeded(command: T): T =
     // FIXME: is there a way in Kotlin to avoid code duplication and make this check not type specific (but e.g. based on common interfaces)?
-    when (command) {
-      is CreateTaskCommand -> command.copy(payload = serialize(payload = command.payload, mapper = objectMapper)) as T
-      is UpdateAttributeTaskCommand -> command.copy(payload = serialize(payload = command.payload, mapper = objectMapper)) as T
-      else -> command
+    if (serializePayload) {
+      when (command) {
+        is CreateTaskCommand -> command.copy(payload = serialize(payload = command.payload, mapper = objectMapper)) as T
+        is UpdateAttributeTaskCommand -> command.copy(payload = serialize(payload = command.payload, mapper = objectMapper)) as T
+        else -> command
+      }
+    } else {
+      command
     }
 }
 

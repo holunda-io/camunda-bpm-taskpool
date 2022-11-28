@@ -59,6 +59,13 @@ are sent _before_ the process engine transaction is committed, otherwise command
       Never send commands over remote messaging before the transaction is committed, since you may produce unexpected results if Camunda fails
       to commit the transaction.
 
+#### Serialization of payload
+
+By default, the data entry sender will serialize payload of the `DataEntry` into a JSON-Map structure, in order to be received by projections (Data Pool View)
+and storage of it, independent of the classes which might be not on the classpath of the projection (generic structure instead of a typed Java object structure).
+This serialization can be disabled by the sender property `polyflow.integration.task.sender.serialize-payload=false`.
+
+
 #### Handling command transmission
 
 The commands sent via gateway (e.g. `AxonCommandListGateway`) are received by Command Handlers. The latter may accept or reject commands, depending

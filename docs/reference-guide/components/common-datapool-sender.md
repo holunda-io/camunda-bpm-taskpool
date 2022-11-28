@@ -50,6 +50,12 @@ The default provided command sender (type: `simple`) just sends the commands syn
        If you want to implement a custom command sending, please provide your own implementation of the interface `DataEntryCommandSender`
        (register a Spring Component of the type) and set the property `polyflow.integration.sender.data-entry.type` to `custom`.
 
+#### Serialization of payload
+
+By default, the data entry sender will serialize payload of the `DataEntry` into a JSON-Map structure, in order to be received by projections (Data Pool View) 
+and storage of it, independent of the classes which might be not on the classpath of the projection (generic structure instead of a typed Java object structure).
+This serialization can be disabled by the sender property `polyflow.integration.sender.data-entry.serialize-payload=false`. 
+
 #### Handling command transmission
 
 The commands sent by the `Datapool Sender` are received by Command Handlers. The latter may accept or reject commands, depending

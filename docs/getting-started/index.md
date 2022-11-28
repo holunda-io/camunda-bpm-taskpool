@@ -7,14 +7,14 @@ This guide is describing steps required to configure an existing Camunda BPM Spr
 connect to **existing Process Platform**.
 
 !!! note
-    The following steps assume that you have already choosen one of the distribution scenarios and setup the **Core components**. This is a pre-requirement for the following steps to work.
+    The following steps assume that you have already chosen one of the distribution scenarios and set-up the **Core components**. This is a pre-requirement for the following steps to work.
 
 
 ## Add dependency to Polyflow integration starter
 
 Apart from the example application, you might be interested in integrating Polyflow Taskpool and Datapool into your existing
 application. To do so, you need to enable your Camunda BPM process engine to use the library.
-For doing so, add the `polyflow-integration-camunda-bpm-engine-parent` library. In Maven, add the following dependency
+For doing so, add the `polyflow-integration-camunda-bpm-springboot-starter` library. In Maven, add the following dependency
 to your `pom.xml`:
 
 ``` xml
@@ -52,6 +52,8 @@ camunda:
   bpm:
     default-serialization-format: application/json
     history-level: full
+    eventing:
+      task: false
 
 polyflow:
   integration:
