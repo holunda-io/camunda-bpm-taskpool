@@ -31,7 +31,8 @@ class CamundaTaskpoolCollectorPropertiesExtendedTest {
     contextRunner
       .withUserConfiguration(TestMockConfiguration::class.java)
       .withPropertyValues(
-        "spring.application.name=my-test-application"
+        "spring.application.name=my-test-application",
+        "camunda.bpm.eventing.task=false"
       ).run {
 
         assertThat(it.getBean(CamundaTaskpoolCollectorProperties::class.java)).isNotNull
@@ -53,6 +54,7 @@ class CamundaTaskpoolCollectorPropertiesExtendedTest {
       .withUserConfiguration(AdditionalMockConfiguration::class.java)
       .withPropertyValues(
         "spring.application.name=my-test-application",
+        "camunda.bpm.eventing.task=false",
         "polyflow.integration.collector.camunda.applicationName=another-than-spring",
         "polyflow.integration.collector.camunda.process-definition.enabled=true",
         "polyflow.integration.collector.camunda.process-instance.enabled=false",

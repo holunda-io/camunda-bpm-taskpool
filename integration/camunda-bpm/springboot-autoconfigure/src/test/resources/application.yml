@@ -1,0 +1,4 @@
+camunda:
+  bpm:
+    eventing:
+      task: false
