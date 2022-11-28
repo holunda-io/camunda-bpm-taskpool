@@ -669,6 +669,13 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#serialization-of-payload" class="md-nav__link">
+    Serialization of payload
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#handling-command-transmission" class="md-nav__link">
     Handling command transmission
   </a>
@@ -1492,6 +1499,10 @@ are sent <em>before</em> the process engine transaction is committed, otherwise 
 <p>Never send commands over remote messaging before the transaction is committed, since you may produce unexpected results if Camunda fails
   to commit the transaction.</p>
 </div>
+<h4 id="serialization-of-payload">Serialization of payload<a class="headerlink" href="#serialization-of-payload" title="Permanent link">#</a></h4>
+<p>By default, the data entry sender will serialize payload of the <code>DataEntry</code> into a JSON-Map structure, in order to be received by projections (Data Pool View)
+and storage of it, independent of the classes which might be not on the classpath of the projection (generic structure instead of a typed Java object structure).
+This serialization can be disabled by the sender property <code>polyflow.integration.task.sender.serialize-payload=false</code>.</p>
 <h4 id="handling-command-transmission">Handling command transmission<a class="headerlink" href="#handling-command-transmission" title="Permanent link">#</a></h4>
 <p>The commands sent via gateway (e.g. <code>AxonCommandListGateway</code>) are received by Command Handlers. The latter may accept or reject commands, depending
 on the state of the aggregate and other components. The <code>AxonCommandListGateway</code> is informed about the command outcome. By default, it will log the outcome
