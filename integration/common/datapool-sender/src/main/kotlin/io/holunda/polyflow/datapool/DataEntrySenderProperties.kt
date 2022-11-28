@@ -20,7 +20,11 @@ data class DataEntrySenderProperties(
    * Application name used as a source of the data entries. Defaults to "spring.application.name".
    */
   @Value("\${spring.application.name:unset-application-name}")
-  var applicationName: String
+  var applicationName: String,
+  /**
+   * Serialize payload to `Map<String, Object>`. Defaults to true.
+   */
+  val serializePayload: Boolean = true
 )
 
 
