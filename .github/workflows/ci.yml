@@ -38,9 +38,9 @@ jobs:
         run: mkdir -p target/jgiven-reports/json
 
       - name: Run I-Tests with Maven
-        run: ./mvnw integration-test failsafe:verify -Pitest -B
+        run: ./mvnw integration-test failsafe:verify -Pitest -B -T4
 
       - name: Upload coverage information
         uses: codecov/codecov-action@v3
         with:
-          token: ${{ secrets.CODECOV_TOKEN }} #required
+          token: "${{ secrets.CODECOV_TOKEN }}"
