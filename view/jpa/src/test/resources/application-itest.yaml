@@ -28,4 +28,9 @@ logging:
 axon:
   axonserver:
     enabled: false
+  eventhandling:
+    processors:
+      [io.holunda.polyflow.view.jpa.service.data]:
+        mode: subscribing
+        source: eventBus
 
