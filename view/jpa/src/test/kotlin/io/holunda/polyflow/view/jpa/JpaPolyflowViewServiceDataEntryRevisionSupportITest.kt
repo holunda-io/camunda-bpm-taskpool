@@ -51,7 +51,6 @@ import javax.transaction.Transactional
 )
 @Transactional
 @ActiveProfiles("itest")
-@EnableRevisionAwareQueryGateway
 internal class JpaPolyflowViewServiceDataEntryRevisionSupportITest {
 
   companion object : KLogging()
