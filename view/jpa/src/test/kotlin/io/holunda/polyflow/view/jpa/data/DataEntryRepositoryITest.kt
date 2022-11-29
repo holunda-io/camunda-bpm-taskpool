@@ -31,7 +31,7 @@ import javax.persistence.EntityManager
 import javax.transaction.Transactional
 
 @ExtendWith(SpringExtension::class)
-@DataJpaTest
+@DataJpaTest(showSql = false)
 @Transactional
 @DirtiesContext
 @ContextConfiguration(classes = [TestApplication::class])

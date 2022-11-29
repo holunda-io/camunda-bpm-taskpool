@@ -29,7 +29,7 @@ import java.util.*
 import javax.persistence.EntityManager
 
 @ExtendWith(SpringExtension::class)
-@DataJpaTest
+@DataJpaTest(showSql = false)
 @ContextConfiguration(classes = [TestApplicationDataJpa::class])
 @ActiveProfiles("itest", "mock-query-emitter")
 class TaskRepositoryITest {
