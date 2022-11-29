@@ -53,6 +53,9 @@ internal class JpaPolyflowViewServiceDataEntryITest {
   private val emittedQueryUpdates: MutableList<QueryUpdate<Any>> = mutableListOf()
 
   @Autowired
+  lateinit var eventProcessorController: EventProcessorController
+
+  @Autowired
   lateinit var queryUpdateEmitter: QueryUpdateEmitter
 
   @Autowired
@@ -191,6 +194,8 @@ internal class JpaPolyflowViewServiceDataEntryITest {
     dbCleaner.cleanup()
     // clear updates
     emittedQueryUpdates.clear()
+
+    eventProcessorController.shutdown()
   }
 
   @Test

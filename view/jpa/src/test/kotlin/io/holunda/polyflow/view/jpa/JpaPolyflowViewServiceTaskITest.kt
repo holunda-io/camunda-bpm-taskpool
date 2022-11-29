@@ -14,6 +14,7 @@ import io.holunda.polyflow.view.jpa.itest.TestApplication
 import io.holunda.polyflow.view.jpa.process.toSourceReference
 import io.holunda.polyflow.view.query.task.*
 import org.assertj.core.api.Assertions.assertThat
+import org.axonframework.config.EventProcessingConfiguration
 import org.axonframework.messaging.MetaData
 import org.axonframework.queryhandling.GenericSubscriptionQueryUpdateMessage
 import org.axonframework.queryhandling.QueryUpdateEmitter
@@ -50,6 +51,9 @@ import java.util.function.Predicate
 internal class JpaPolyflowViewServiceTaskITest {
 
   private val emittedQueryUpdates: MutableList<QueryUpdate<Any>> = mutableListOf()
+
+  @Autowired
+  lateinit var eventProcessorController: EventProcessorController
 
   @Autowired
   lateinit var queryUpdateEmitter: QueryUpdateEmitter
@@ -234,6 +238,7 @@ internal class JpaPolyflowViewServiceTaskITest {
 
   @AfterEach
   fun `cleanup projection`() {
+    eventProcessorController.shutdown()
     dbCleaner.cleanup()
     // clear updates
     emittedQueryUpdates.clear()

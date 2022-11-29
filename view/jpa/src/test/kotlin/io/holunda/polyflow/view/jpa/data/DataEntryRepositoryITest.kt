@@ -3,6 +3,7 @@ package io.holunda.polyflow.view.jpa.data
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.holunda.camunda.taskpool.api.business.ProcessingType
 import io.holunda.camunda.variable.serializer.toJsonPathsWithValues
+import io.holunda.polyflow.view.jpa.EventProcessorController
 import io.holunda.polyflow.view.jpa.auth.AuthorizationPrincipal.Companion.group
 import io.holunda.polyflow.view.jpa.auth.AuthorizationPrincipal.Companion.user
 import io.holunda.polyflow.view.jpa.data.DataEntryRepository.Companion.hasDataEntryPayloadAttribute
@@ -12,6 +13,7 @@ import io.holunda.polyflow.view.jpa.data.DataEntryRepository.Companion.isAuthori
 import io.holunda.polyflow.view.jpa.itest.TestApplication
 import io.holunda.polyflow.view.jpa.payload.PayloadAttribute
 import org.assertj.core.api.Assertions.assertThat
+import org.axonframework.config.EventProcessingConfiguration
 import org.camunda.bpm.engine.variable.Variables.createVariables
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
@@ -37,6 +39,9 @@ import javax.transaction.Transactional
 @ContextConfiguration(classes = [TestApplication::class])
 @ActiveProfiles("itest", "mock-query-emitter")
 internal class DataEntryRepositoryITest {
+  @Autowired
+  lateinit var eventProcessorController: EventProcessorController
+
   @Autowired
   lateinit var entityManager: EntityManager
 
@@ -144,6 +149,7 @@ internal class DataEntryRepositoryITest {
 
   @AfterEach
   fun `remove all stuff`() {
+    eventProcessorController.shutdown()
     dataEntryRepository.deleteAll()
     entityManager.flush()
   }

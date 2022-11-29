@@ -11,6 +11,7 @@ import io.holunda.polyflow.view.jpa.process.SourceReferenceEmbeddable
 import io.holunda.polyflow.view.jpa.task.TaskEntity
 import io.holunda.polyflow.view.jpa.task.TaskRepository
 import io.holunda.polyflow.view.query.data.*
+import org.axonframework.config.EventProcessingModule
 import org.axonframework.messaging.MetaData
 import org.axonframework.queryhandling.QueryResponseMessage
 import org.springframework.stereotype.Component
@@ -57,6 +58,16 @@ class DbCleaner(
     taskRepository.deleteAll()
     processDefinitionRepository.deleteAll()
     processInstanceRepository.deleteAll()
+  }
+}
+
+@Component
+class EventProcessorController(
+  val module: EventProcessingModule
+) {
+
+  fun shutdown() {
+    module.eventProcessors().forEach { (_, processor) -> processor.shutDown() }
   }
 }
 

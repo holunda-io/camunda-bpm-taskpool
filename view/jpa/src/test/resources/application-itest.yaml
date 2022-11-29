@@ -3,14 +3,18 @@ spring:
     open-in-view: true # disable JPA warning
     show-sql: false
     database-platform: org.hibernate.dialect.H2Dialect
+    properties:
+      hibernate:
+        format_sql: true
   datasource:
-    url: jdbc:h2:mem:itest
+    url: jdbc:h2:mem:itest;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
     username: sa
     password:
     driverClassName: org.h2.Driver
   test:
     database:
       replace: none
+
 
 polyflow:
   view:
@@ -31,6 +35,15 @@ axon:
   eventhandling:
     processors:
       [io.holunda.polyflow.view.jpa.service.data]:
+        mode: subscribing
+        source: eventBus
+      [io.holunda.polyflow.view.jpa.service.process.definition]:
+        mode: subscribing
+        source: eventBus
+      [io.holunda.polyflow.view.jpa.service.process.instance]:
+        mode: subscribing
+        source: eventBus
+      [io.holunda.polyflow.view.jpa.service.task]:
         mode: subscribing
         source: eventBus
 

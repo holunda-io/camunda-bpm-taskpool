@@ -5,6 +5,7 @@ import io.holunda.polyflow.view.auth.User
 import io.holunda.polyflow.view.jpa.itest.TestApplication
 import io.holunda.polyflow.view.query.process.ProcessDefinitionsStartableByUserQuery
 import org.assertj.core.api.Assertions.assertThat
+import org.axonframework.config.EventProcessingConfiguration
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -26,6 +27,9 @@ import javax.transaction.Transactional
 @ActiveProfiles("itest", "mock-query-emitter")
 @Transactional
 internal class JpaPolyflowViewServiceProcessDefinitionITest {
+
+  @Autowired
+  lateinit var eventProcessorController: EventProcessorController
 
   @Autowired
   lateinit var jpaPolyflowViewService: JpaPolyflowViewProcessDefinitionService
@@ -57,6 +61,7 @@ internal class JpaPolyflowViewServiceProcessDefinitionITest {
 
   @AfterEach
   fun `cleanup projection`() {
+    eventProcessorController.shutdown()
     dbCleaner.cleanup()
   }
 

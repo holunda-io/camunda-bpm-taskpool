@@ -18,6 +18,7 @@ import io.holunda.polyflow.view.query.data.DataEntriesQuery
 import io.holunda.polyflow.view.query.data.DataEntriesQueryResult
 import mu.KLogging
 import org.assertj.core.api.Assertions.assertThat
+import org.axonframework.config.EventProcessingConfiguration
 import org.axonframework.eventhandling.GenericEventMessage
 import org.axonframework.eventsourcing.eventstore.EventStore
 import org.axonframework.messaging.GenericMessage
@@ -51,12 +52,14 @@ import javax.transaction.Transactional
 )
 @Transactional
 @ActiveProfiles("itest")
-@EnableRevisionAwareQueryGateway
 internal class JpaPolyflowViewServiceDataEntryRevisionSupportITest {
 
   companion object : KLogging()
 
   lateinit var executorService: ExecutorService
+
+  @Autowired
+  lateinit var eventProcessorController: EventProcessorController
 
   @Autowired
   lateinit var dbCleaner: DbCleaner
@@ -117,6 +120,7 @@ internal class JpaPolyflowViewServiceDataEntryRevisionSupportITest {
 
   @AfterEach
   fun `cleanup projection`() {
+    eventProcessorController.shutdown()
     dbCleaner.cleanup()
     executorService.shutdown()
   }

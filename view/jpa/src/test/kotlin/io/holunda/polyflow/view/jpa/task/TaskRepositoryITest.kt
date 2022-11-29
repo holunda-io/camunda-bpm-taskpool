@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import io.holunda.camunda.variable.serializer.toJsonPathsWithValues
 import io.holunda.camunda.variable.serializer.toPayloadJson
 import io.holunda.polyflow.view.jpa.DbCleaner
+import io.holunda.polyflow.view.jpa.EventProcessorController
 import io.holunda.polyflow.view.jpa.auth.AuthorizationPrincipal.Companion.group
 import io.holunda.polyflow.view.jpa.auth.AuthorizationPrincipal.Companion.user
 import io.holunda.polyflow.view.jpa.data.DataEntryId
@@ -15,6 +16,7 @@ import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.hasBusinessKey
 import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.hasTaskPayloadAttribute
 import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.isAuthorizedFor
 import org.assertj.core.api.Assertions.assertThat
+import org.axonframework.config.EventProcessingConfiguration
 import org.camunda.bpm.engine.variable.Variables.createVariables
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
@@ -45,6 +47,9 @@ class TaskRepositoryITest {
 
   @Autowired
   lateinit var objectMapper: ObjectMapper
+
+  @Autowired
+  lateinit var eventProcessorController: EventProcessorController
 
   lateinit var task1: TaskEntity
   lateinit var task2: TaskEntity
@@ -89,7 +94,9 @@ class TaskRepositoryITest {
 
   @AfterEach
   fun `clean up`() {
+    eventProcessorController.shutdown()
     dbCleaner.cleanup()
+
   }
 
   @Test

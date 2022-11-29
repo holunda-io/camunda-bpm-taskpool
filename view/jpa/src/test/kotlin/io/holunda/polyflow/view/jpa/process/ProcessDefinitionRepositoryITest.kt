@@ -1,9 +1,11 @@
 package io.holunda.polyflow.view.jpa.process
 
+import io.holunda.polyflow.view.jpa.EventProcessorController
 import io.holunda.polyflow.view.jpa.auth.AuthorizationPrincipal.Companion.group
 import io.holunda.polyflow.view.jpa.itest.TestApplicationDataJpa
 import io.holunda.polyflow.view.jpa.process.ProcessDefinitionRepository.Companion.isStarterAuthorizedFor
 import org.assertj.core.api.Assertions.assertThat
+import org.axonframework.config.EventProcessingConfiguration
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -21,6 +23,10 @@ import javax.persistence.EntityManager
 @ContextConfiguration(classes = [TestApplicationDataJpa::class])
 @ActiveProfiles("itest", "mock-query-emitter")
 class ProcessDefinitionRepositoryITest {
+
+  @Autowired
+  lateinit var eventProcessorController: EventProcessorController
+
   @Autowired
   lateinit var entityManager: EntityManager
 
@@ -56,6 +62,7 @@ class ProcessDefinitionRepositoryITest {
 
   @AfterEach
   fun `clean up`() {
+    eventProcessorController.shutdown()
     processDefinitionRepository.deleteAll()
     entityManager.flush()
   }
