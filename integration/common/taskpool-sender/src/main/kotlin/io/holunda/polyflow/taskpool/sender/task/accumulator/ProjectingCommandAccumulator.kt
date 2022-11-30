@@ -3,6 +3,8 @@ package io.holunda.polyflow.taskpool.sender.task.accumulator
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.holunda.camunda.taskpool.api.business.WithCorrelations
 import io.holunda.camunda.taskpool.api.task.*
+import io.holunda.camunda.taskpool.api.task.CamundaTaskEventType.Companion.CANDIDATE_GROUP_DELETE
+import io.holunda.camunda.taskpool.api.task.CamundaTaskEventType.Companion.CANDIDATE_USER_DELETE
 import io.holunda.camunda.variable.serializer.serialize
 import kotlin.reflect.KClass
 
@@ -10,22 +12,28 @@ import kotlin.reflect.KClass
 /**
  * Sorts commands by their order id and project attribute to one command
  * @param objectMapper optional object mapper used for serialization.
+ * @param serializePayload
  */
 class ProjectingCommandAccumulator(
   val objectMapper: ObjectMapper,
-  val serializePayload: Boolean
+  val serializePayload: Boolean,
+  simpleIntentDetectionBehaviour: Boolean
 ) : EngineTaskCommandAccumulator {
 
-  private val sorter: EngineTaskCommandAccumulator = SortingCommandAccumulator()
+  private val engineTaskCommandIntentDetector = SimpleEngineTaskCommandIntentDetector(simpleIntentDetectionBehaviour)
 
   override fun invoke(taskCommands: List<EngineTaskCommand>): List<EngineTaskCommand> =
+    // only if there are at least two commands, there is something to accumulate at all
     if (taskCommands.size > 1) {
-      // only if there are at least two commands, there is something to accumulate at all
-      val sorted = sorter.invoke(taskCommands)
-      // after the sort, the first command is the actual intend and the remaining are carrying additional details.
-      listOf(projectCommandProperties(sorted.first(), sorted.subList(1, sorted.size)))
+      engineTaskCommandIntentDetector.detectIntents(taskCommands)
+        .map { intent ->
+          // after the sort, the first command is the actual intend and the remaining are carrying additional details.
+          val command = intent.first()
+          val details = intent.drop(1)
+          projectCommandProperties(command, details)
+        }
     } else {
-      // otherwise just return the empty or singleton list
+      // otherwise just return the empty or singleton list, since there is nothing to do.
       taskCommands
     }.map {
       // serialize the content of payload and convert it to a map of key/value in order to be able
@@ -47,32 +55,38 @@ class ProjectingCommandAccumulator(
        * For delta-commands (add/delete candidate groups/users), the lists has to be adjusted
        */
       propertyOperationConfig = mutableMapOf<KClass<out Any>, PropertyOperation>().apply {
-        // a delete command should remove one element from candidate user
         put(DeleteCandidateUsersCommand::class) { map, key, value ->
           if (key == DeleteCandidateUsersCommand::candidateUsers.name) {
-            val candidateUsers = (map[key] as Collection<String>).minus(value as Collection<String>)
-            map[key] = candidateUsers
+            if (map.isTaskCommandEventType(CANDIDATE_USER_DELETE)) {
+              // if the command is to delete candidate user, add the group to the list of deleted user
+              map[key] = (map[key] as Collection<String>).plus(value as Collection<String>)
+            } else {
+              // a delete command should remove one element from candidate user
+              map[key] = (map[key] as Collection<String>).minus(value as Collection<String>)
+            }
           }
         }
-        // a delete command should remove one element from candidate group
         put(DeleteCandidateGroupsCommand::class) { map, key, value ->
           if (key == DeleteCandidateGroupsCommand::candidateGroups.name) {
-            val candidateGroups = (map[key] as Collection<String>).minus(value as Collection<String>)
-            map[key] = candidateGroups
+            if (map.isTaskCommandEventType(CANDIDATE_GROUP_DELETE)) {
+              // if the command is to delete candidate group, add the group to the list of deleted groups
+              map[key] = (map[key] as Collection<String>).plus(value as Collection<String>)
+            } else {
+              // a delete command should remove one element from candidate group
+              map[key] = (map[key] as Collection<String>).minus(value as Collection<String>)
+            }
           }
         }
         // add command should add one element to candidate user
         put(AddCandidateUsersCommand::class) { map, key, value ->
           if (key == AddCandidateUsersCommand::candidateUsers.name) {
-            val candidateUsers = (map[key] as Collection<String>).plus(value as Collection<String>)
-            map[key] = candidateUsers
+            map[key] = (map[key] as Collection<String>).plus(value as Collection<String>)
           }
         }
         // add command should add one element to candidate group
         put(AddCandidateGroupsCommand::class) { map, key, value ->
           if (key == AddCandidateGroupsCommand::candidateGroups.name) {
-            val candidateGroups = (map[key] as Collection<String>).plus(value as Collection<String>)
-            map[key] = candidateGroups
+            map[key] = (map[key] as Collection<String>).plus(value as Collection<String>)
           }
         }
       },
@@ -101,11 +115,11 @@ class ProjectingCommandAccumulator(
     )
   }
 
-  /**
+  /*
    * Handle payload and serializes it using provided object mapper (e.g. to JSON)
    */
   @Suppress("UNCHECKED_CAST")
-  fun <T : EngineTaskCommand> serializePayloadIfNeeded(command: T): T =
+  private fun <T : EngineTaskCommand> serializePayloadIfNeeded(command: T): T =
     // FIXME: is there a way in Kotlin to avoid code duplication and make this check not type specific (but e.g. based on common interfaces)?
     if (serializePayload) {
       when (command) {
@@ -116,19 +130,8 @@ class ProjectingCommandAccumulator(
     } else {
       command
     }
+
+  private fun Map<String, Any?>.isTaskCommandEventType(eventType: String): Boolean =
+    requireNotNull(this[CamundaTaskEventType::eventName.name]) { "Property ${CamundaTaskEventType::eventName.name} must be set on command, but it was null." } == eventType
 }
 
-/**
- * Due to Camunda event handling implementation eventing might be slightly strange.
- * Ignore error reporting if to any original the detail is AddCandidateUsersCommand or UpdateAttributeTaskCommand, since both those commands
- * should be primary intent (original) and not detail.
- */
-object EngineTaskCommandProjectionErrorDetector : ProjectionErrorDetector {
-
-  override fun shouldReportError(original: Any, detail: Any): Boolean {
-    return when (detail) {
-      is AddCandidateUsersCommand, is UpdateAttributeTaskCommand -> false
-      else -> true
-    }
-  }
-}

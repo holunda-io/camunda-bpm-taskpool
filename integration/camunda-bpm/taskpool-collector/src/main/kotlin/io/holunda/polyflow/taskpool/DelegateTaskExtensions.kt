@@ -3,7 +3,11 @@ package io.holunda.polyflow.taskpool
 import io.holunda.camunda.taskpool.api.task.CaseReference
 import io.holunda.camunda.taskpool.api.task.ProcessReference
 import io.holunda.camunda.taskpool.api.task.SourceReference
+import io.holunda.camunda.taskpool.api.task.UpdateAttributeTaskCommand
+import org.apache.commons.lang3.reflect.FieldUtils
 import org.camunda.bpm.engine.delegate.DelegateTask
+import org.camunda.bpm.engine.impl.persistence.entity.PropertyChange
+import org.camunda.bpm.engine.impl.persistence.entity.TaskEntity
 
 /**
  * Retrieves source reference (process or case) from delegate task.
@@ -80,5 +84,25 @@ fun DelegateTask.processDefinition() = this.processEngine.repositoryService
   .createProcessDefinitionQuery().processDefinitionId(processDefinitionId)
   .singleResult()
   ?: throw IllegalArgumentException("Process definition could not be resolved for id $processDefinitionId")
+
+/**
+ * Creates an update event out of delegate task.
+ * @param applicationName application name.
+ * @return update task command.
+ */
+fun DelegateTask.toUpdateCommand(applicationName: String) = UpdateAttributeTaskCommand(
+  id = this.id,
+  description = this.description,
+  dueDate = this.dueDate,
+  followUpDate = this.followUpDate,
+  name = this.name,
+  owner = this.owner,
+  priority = this.priority,
+  taskDefinitionKey = this.taskDefinitionKey,
+  businessKey = this.execution.businessKey,
+  sourceReference = this.sourceReference(applicationName),
+  formKey = this.formKey()
+)
+
 
 
