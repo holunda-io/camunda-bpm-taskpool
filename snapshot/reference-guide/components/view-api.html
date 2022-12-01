@@ -827,6 +827,13 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#filtering-paging-and-sorting" class="md-nav__link">
+    Filtering, Paging and Sorting
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1474,7 +1481,7 @@ available:</p>
 like <code>attribute=value&amp;attrubute2=value2&amp;task.name=taskname</code>). Especially, it defines the main concepts like <code>Criteria</code> and <code>Operator</code>
 and generic query paging and sorting.</p>
 <h2 id="feature-support-matrix">Feature support matrix<a class="headerlink" href="#feature-support-matrix" title="Permanent link">#</a></h2>
-<h4 id="task-api">Task API<a class="headerlink" href="#task-api" title="Permanent link">#</a></h4>
+<h3 id="task-api">Task API<a class="headerlink" href="#task-api" title="Permanent link">#</a></h3>
 <p>The Task API allows to query for tasks handled by the task-pool.</p>
 <table>
 <thead>
@@ -1490,7 +1497,7 @@ and generic query paging and sorting.</p>
 <tbody>
 <tr>
 <td>TasksForUserQuery</td>
-<td>Retrieves a list of tasks accessible by the user (filters on username and groups only)</td>
+<td>Retrieves a list of tasks accessible by the user and applying additional filters</td>
 <td>List<Task></td>
 <td>yes</td>
 <td>yes</td>
@@ -1538,7 +1545,7 @@ and generic query paging and sorting.</p>
 </tr>
 </tbody>
 </table>
-<h4 id="process-definition-api">Process Definition API<a class="headerlink" href="#process-definition-api" title="Permanent link">#</a></h4>
+<h3 id="process-definition-api">Process Definition API<a class="headerlink" href="#process-definition-api" title="Permanent link">#</a></h3>
 <p>The Process Definition API allows to query for process definitions handled by the task-pool.</p>
 <table>
 <thead>
@@ -1562,7 +1569,7 @@ and generic query paging and sorting.</p>
 </tr>
 </tbody>
 </table>
-<h4 id="process-instance-api">Process Instance API<a class="headerlink" href="#process-instance-api" title="Permanent link">#</a></h4>
+<h3 id="process-instance-api">Process Instance API<a class="headerlink" href="#process-instance-api" title="Permanent link">#</a></h3>
 <p>The Process Instance API allows to query for process instances handled by the task-pool.</p>
 <table>
 <thead>
@@ -1586,7 +1593,7 @@ and generic query paging and sorting.</p>
 </tr>
 </tbody>
 </table>
-<h4 id="process-variable-api-incubation">Process Variable API (incubation)<a class="headerlink" href="#process-variable-api-incubation" title="Permanent link">#</a></h4>
+<h3 id="process-variable-api-incubation">Process Variable API (incubation)<a class="headerlink" href="#process-variable-api-incubation" title="Permanent link">#</a></h3>
 <p>The Process Variable API allows to query for process variables handled by the task-pool.</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
@@ -1614,7 +1621,7 @@ and generic query paging and sorting.</p>
 </tr>
 </tbody>
 </table>
-<h4 id="data-entry-api">Data Entry API<a class="headerlink" href="#data-entry-api" title="Permanent link">#</a></h4>
+<h3 id="data-entry-api">Data Entry API<a class="headerlink" href="#data-entry-api" title="Permanent link">#</a></h3>
 <p>The Data Entry API allows to query for data entries handled by the data-pool.</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
@@ -1663,6 +1670,33 @@ and generic query paging and sorting.</p>
 update of the model by specifying the update revision and are waiting for the eventually consistent event delivery to the projection of this update.
 In order to achieve this, you might specify the minimum revision the query result must fulfill in order to match your query request. See <a href="https://github.com/holixon/axon-gateway-extension">axon-gateway-extension</a>
 for more details. Please note, that not all implementations are implementing this feature. Especially, Mongo DB View is currently <strong>NOT SUPPORTING</strong> Revision Aware queries. </p>
+<h2 id="filtering-paging-and-sorting">Filtering, Paging and Sorting<a class="headerlink" href="#filtering-paging-and-sorting" title="Permanent link">#</a></h2>
+<p>Task API and Data Entries API supports filtering, paging and sorting in queries resulting in multiple results. For Task API these are <code>TasksForUserQuery</code> and <code>TasksWithDataEntriesForUserQuery</code>
+and for Data Entries API these are <code>DataEntriesForUserQuery</code> and <code>DataEntriesQuery</code>. The queries implement the <code>PageableSortableQuery</code> interface, allowing to limit the amount
+of results and provide an optional sorting:</p>
+<p><div class="highlight"><pre><span></span><code><span class="kd">interface</span><span class="w"> </span><span class="nc">PageableSortableQuery</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="nv">page</span><span class="p">:</span><span class="w"> </span><span class="kt">Int</span><span class="w"></span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="nv">size</span><span class="p">:</span><span class="w"> </span><span class="kt">Int</span><span class="w"></span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="nv">sort</span><span class="p">:</span><span class="w"> </span><span class="kt">String?</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+</code></pre></div>
+The <code>page</code> parameter denotes the page number to deliver (starting with <code>1</code>). The <code>size</code> parameter denotes the number of elements on a page. By default, the <code>page</code> is set to <code>1</code>
+and the size is set to <code>Int.MAX</code>. </p>
+<p>An optional <code>sort</code> parameter allows to sort the results by a field attribute.  The format of the <code>sort</code> string is <code>&lt;+|-&gt;filedName</code>, <code>+fieldName</code> means sort by <code>fieldName</code> ascending,
+<code>-fieldName</code> means sort by <code>fieldName</code> descending. The field must be a direct member of the result (<code>Task</code>, <code>TaskWithDataEntries</code> or <code>DataEntry</code>) and must be one of the following type:</p>
+<ul>
+<li>java.lang.Integer</li>
+<li>java.lang.String</li>
+<li>java.util.Date</li>
+<li>java.time.Instant</li>
+</ul>
+<p>To filter the results, you might supply a list of filters. A filter is an expression in format <code>fieldName&lt;op&gt;value</code>, where <code>fieldName</code> is addressing the attribute of the search result,
+<code>&lt;op&gt;</code> is one of <code>&lt;</code>, <code>=</code> and <code>&gt;</code> and <code>value</code> is a string representation of the values. The <code>fieldName</code> can point to an attribute of the result entity itself (<code>Task</code>, <code>TaskWithDataEntries</code> 
+or <code>DataEntry</code>) or point to the attribute inside the payload. To avoid a possible name clash, you must prefix the field name with <code>task.</code> if you want to filter on direct attributes of a task,
+and you must prefix the field name with <code>data</code> if you want to filter on direct attributes of a dta entry. For example, <code>task.priority=50</code> would deliver tasks with priority set to 50,
+and <code>data.entryType=info.polyflow.Order</code> will deliver data entries of type <code>info.polyflow.Order</code> only.</p>
+<p>If the field name has no prefix of above, it is considered as an attribute inside the payload of data entry or enriched variables of a user task. For example, imagine
+you have a data entry with payload attributes <code>{ "attribute": "value", "another": 45 }</code>. In order to search for those, just specify <code>attribute=value</code> in your filter criteria. </p>
 
   <hr>
 <div class="md-source-file">
