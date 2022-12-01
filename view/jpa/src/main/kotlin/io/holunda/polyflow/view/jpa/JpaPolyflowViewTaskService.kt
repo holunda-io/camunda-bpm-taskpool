@@ -96,6 +96,10 @@ class JpaPolyflowViewTaskService(
     )
   }
 
+  /**
+   * Legacy handler to support old query.
+   */
+  @Deprecated("Will be removed in future versions", ReplaceWith("query(query: TaskWithDataEntriesForIdQuery): Optional<TaskWithDataEntries>"))
   @QueryHandler
   fun legacyQuery(query: TaskWithDataEntriesForIdQuery): TaskWithDataEntries? {
     logger.warn { "You are using deprecated API, consider to switch to query(TaskWithDataEntriesForIdQuery): Optional<TaskWithDataEntries>" }
@@ -113,6 +117,10 @@ class JpaPolyflowViewTaskService(
     })
   }
 
+  /**
+   * Legacy handler to support old query.
+   */
+  @Deprecated("Will be removed in future versions", ReplaceWith("query(TaskForIdQuery): Optional<Task>"))
   @QueryHandler
   fun legacyQuery(query: TaskForIdQuery): Task? {
     logger.warn { "You are using deprecated API, consider to switch to query(TaskForIdQuery): Optional<Task>" }
