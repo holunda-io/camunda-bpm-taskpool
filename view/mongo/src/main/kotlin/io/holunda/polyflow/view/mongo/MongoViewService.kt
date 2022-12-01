@@ -181,7 +181,7 @@ class MongoViewService(
    */
   @QueryHandler
   override fun query(query: TaskForIdQuery): CompletableFuture<Optional<Task>> {
-    return taskRepository.findNotDeletedById(query.id).map { Optional.of(it.task()) }.toFuture()
+    return taskRepository.findNotDeletedById(query.id).map { Optional.of(it.task()) }.defaultIfEmpty(Optional.empty()).toFuture()
   }
 
   /**
@@ -199,7 +199,7 @@ class MongoViewService(
    */
   @QueryHandler
   override fun query(query: TaskWithDataEntriesForIdQuery): CompletableFuture<Optional<TaskWithDataEntries>> {
-    return taskRepository.findNotDeletedById(query.id).flatMap { tasksWithDataEntries(it.task()) }.map { Optional.of(it) }.toFuture()
+    return taskRepository.findNotDeletedById(query.id).flatMap { tasksWithDataEntries(it.task()) }.map { Optional.of(it) }.defaultIfEmpty(Optional.empty()).toFuture()
   }
 
   /**
