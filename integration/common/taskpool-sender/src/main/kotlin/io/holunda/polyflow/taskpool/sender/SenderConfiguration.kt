@@ -47,7 +47,11 @@ class SenderConfiguration(private val senderProperties: SenderProperties) {
    */
   @Bean
   fun taskCommandAccumulator(@Qualifier(PAYLOAD_OBJECT_MAPPER) objectMapper: ObjectMapper): EngineTaskCommandAccumulator =
-    ProjectingCommandAccumulator(objectMapper = objectMapper, serializePayload = senderProperties.task.serializePayload)
+    ProjectingCommandAccumulator(
+      objectMapper = objectMapper,
+      serializePayload = senderProperties.task.serializePayload,
+      simpleIntentDetectionBehaviour = false
+    )
 
   /**
    * Creates a command list gateway, if none is provided.
