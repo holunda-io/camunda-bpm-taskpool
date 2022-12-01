@@ -79,7 +79,8 @@ class TxAwareAccumulatingEngineTaskCommandSender(
       val commands = engineTaskCommandAccumulator.invoke(taskCommands)
       // handle messages for every task
       if (senderProperties.enabled && senderProperties.task.enabled) {
-        commandListGateway.sendToGateway(commands)
+       commandListGateway.sendToGateway(commands)
+        logger.trace { "SENDER-TRACE: sending commands for task [${commands.first().id}]: " + commands.joinToString(", ", "'", "'", -1, "...") { it.eventName } }
       } else {
         logger.debug { "SENDER-004: Process task sending is disabled by property. Would have sent $commands." }
       }

@@ -36,6 +36,9 @@ class CamundaTaskpoolCollectorConfiguration(
   private val eventingProperties = camundaBpmProperties.eventing
 
 
+  /**
+   * Build the engine plugin to install pre-built listeners.
+   */
   @Bean
   fun builtInEngineListenerPlugin(publisher: ApplicationEventPublisher) = object : SpringProcessEnginePlugin() {
     override fun preInit(processEngineConfiguration: ProcessEngineConfigurationImpl) {

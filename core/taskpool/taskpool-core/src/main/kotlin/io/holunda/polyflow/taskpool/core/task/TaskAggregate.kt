@@ -87,9 +87,10 @@ class TaskAggregate() {
   @CommandHandler
   fun handle(command: UpdateAttributeTaskCommand) {
     if (!deleted && !completed) {
-      logger.debug { "Received updateAttributes intent for task $task.id of type ${command.javaClass}" }
       AggregateLifecycle.apply(
-        task.updateAttributesEvent(Task.from(command), command.enriched)
+        task.updateAttributesEvent(Task.from(command), command.enriched).also {
+          logger.debug { "Received updateAttributes intent for task $task.id of type ${command.javaClass}" }
+        }
       )
     }
   }
@@ -186,9 +187,11 @@ class TaskAggregate() {
   @CommandHandler
   fun handle(command: AddCandidateGroupsCommand) {
     if (!deleted && !completed) {
-      AggregateLifecycle.apply(
-        task.addCandidateGroupEvent(command.candidateGroups.first())
-      )
+      command.candidateGroups.map { groupId ->
+        AggregateLifecycle.apply(
+          task.addCandidateGroupEvent(groupId = groupId)
+        )
+      }
     }
   }
 
@@ -198,9 +201,11 @@ class TaskAggregate() {
   @CommandHandler
   fun handle(command: DeleteCandidateGroupsCommand) {
     if (!deleted && !completed) {
-      AggregateLifecycle.apply(
-        task.removeCandidateGroupEvent(command.candidateGroups.first())
-      )
+      command.candidateGroups.map { groupId ->
+        AggregateLifecycle.apply(
+          task.removeCandidateGroupEvent(groupId = groupId)
+        )
+      }
     }
   }
 
@@ -210,9 +215,11 @@ class TaskAggregate() {
   @CommandHandler
   fun handle(command: AddCandidateUsersCommand) {
     if (!deleted && !completed) {
-      AggregateLifecycle.apply(
-        task.addCandidateUserEvent(command.candidateUsers.first())
-      )
+      command.candidateUsers.map { userId ->
+        AggregateLifecycle.apply(
+          task.addCandidateUserEvent(userId = userId)
+        )
+      }
     }
   }
 
@@ -222,9 +229,11 @@ class TaskAggregate() {
   @CommandHandler
   fun handle(command: DeleteCandidateUsersCommand) {
     if (!deleted && !completed) {
-      AggregateLifecycle.apply(
-        task.removeCandidateUserEvent(command.candidateUsers.first())
-      )
+      command.candidateUsers.map { userId ->
+        AggregateLifecycle.apply(
+          task.removeCandidateUserEvent(userId = userId)
+        )
+      }
     }
   }
 

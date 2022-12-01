@@ -1,15 +1,15 @@
 package io.holunda.polyflow.taskpool.collector.task
 
 import io.holunda.camunda.taskpool.api.task.*
-import io.holunda.polyflow.taskpool.formKey
-import io.holunda.polyflow.taskpool.sourceReference
+import io.holunda.polyflow.taskpool.*
 import io.holunda.polyflow.taskpool.collector.CamundaTaskpoolCollectorProperties
+import mu.KLogging
 import org.camunda.bpm.engine.RepositoryService
 import org.camunda.bpm.engine.delegate.DelegateTask
 import org.camunda.bpm.engine.impl.history.event.HistoricIdentityLinkLogEventEntity
 import org.camunda.bpm.engine.impl.history.event.HistoricTaskInstanceEventEntity
+import org.camunda.bpm.engine.impl.persistence.entity.TaskEntity
 import org.camunda.bpm.engine.task.IdentityLinkType
-import org.slf4j.LoggerFactory
 import org.springframework.context.event.EventListener
 import org.springframework.core.annotation.Order
 import org.springframework.stereotype.Component
@@ -23,9 +23,8 @@ class TaskEventCollectorService(
   private val repositoryService: RepositoryService
 ) {
 
-  private val logger = LoggerFactory.getLogger(TaskEventCollectorService::class.java)
 
-  companion object {
+  companion object : KLogging() {
     // high order to be later than all other listeners and work on changed entity
     const val ORDER = Integer.MAX_VALUE - 100
   }
@@ -91,6 +90,44 @@ class TaskEventCollectorService(
     )
 
   /**
+   * Tracing of collector.
+   */
+  @Order(ORDER)
+  @EventListener
+  fun all(task: DelegateTask) {
+    if (logger.isTraceEnabled) {
+      logger.trace("Received " + task.eventName + " event on task with id " + task.id)
+      if (task is TaskEntity) {
+        logger.trace("\tProperties: {}", task.propertyChanges.keys.joinToString(","))
+        logger.trace("\tIdentity links: {}", task.getIdentityLinkChanges().joinToString(","))
+      }
+    }
+  }
+
+  /**
+   * Fires update command.
+   */
+  @Order(ORDER)
+  @EventListener(condition = "#task.eventName.equals('update')")
+  fun update(task: DelegateTask): UpdateAttributeTaskCommand? =
+    if (!collectorProperties.task.useHistoricEventCollector) {
+      logger.debug("Received task update for task {}", task.id)
+      if (task is TaskEntity) {
+        if (task.isAssigneeChange() || !task.hasChangedProperties()) {
+          // this is already handled by assignment event, or it is an empty fired during taskService call of candidate update.
+          null
+        } else {
+          task.toUpdateCommand(collectorProperties.applicationName)
+        }
+      } else {
+        task.toUpdateCommand(collectorProperties.applicationName)
+      }
+    } else {
+      null
+    }
+
+
+  /**
    * Fires update historic command.
    * The following attributes of the update event are skipped:
    * <ul>
@@ -98,22 +135,22 @@ class TaskEventCollectorService(
    * </ul>
    */
   @Order(ORDER)
-  @EventListener()
+  @EventListener(condition = "#changeEvent.eventType.equals('update')")
   fun update(changeEvent: HistoricTaskInstanceEventEntity): UpdateAttributeTaskCommand? =
-    when (changeEvent.eventType) {
-      "update" ->
-        UpdateAttributeTaskCommand(
-          id = changeEvent.taskId,
-          description = changeEvent.description,
-          dueDate = changeEvent.dueDate,
-          followUpDate = changeEvent.followUpDate,
-          name = changeEvent.name,
-          owner = changeEvent.owner,
-          priority = changeEvent.priority,
-          taskDefinitionKey = changeEvent.taskDefinitionKey,
-          sourceReference = changeEvent.sourceReference(repositoryService, collectorProperties.applicationName)
-        )
-      else -> null
+    if (collectorProperties.task.useHistoricEventCollector) {
+      UpdateAttributeTaskCommand(
+        id = changeEvent.taskId,
+        description = changeEvent.description,
+        dueDate = changeEvent.dueDate,
+        followUpDate = changeEvent.followUpDate,
+        name = changeEvent.name,
+        owner = changeEvent.owner,
+        priority = changeEvent.priority,
+        taskDefinitionKey = changeEvent.taskDefinitionKey,
+        sourceReference = changeEvent.sourceReference(repositoryService, collectorProperties.applicationName)
+      )
+    } else {
+      null
     }
 
   /**
@@ -128,29 +165,35 @@ class TaskEventCollectorService(
           id = changeEvent.taskId,
           candidateUsers = setOf(changeEvent.userId)
         )
+
         changeEvent.taskId != null && changeEvent.groupId != null -> AddCandidateGroupsCommand(
           id = changeEvent.taskId,
           candidateGroups = setOf(changeEvent.groupId)
         )
+
         else -> {
           logger.warn("Received unexpected identity link historic update event ${changeEvent.type} ${changeEvent.operationType} ${changeEvent.eventType} on ${changeEvent.taskId}")
           null
         }
       }
+
       "delete" -> when {
         changeEvent.taskId != null && changeEvent.userId != null -> DeleteCandidateUsersCommand(
           id = changeEvent.taskId,
           candidateUsers = setOf(changeEvent.userId)
         )
+
         changeEvent.taskId != null && changeEvent.groupId != null -> DeleteCandidateGroupsCommand(
           id = changeEvent.taskId,
           candidateGroups = setOf(changeEvent.groupId)
         )
+
         else -> {
           logger.warn("Received unexpected identity link historic update event ${changeEvent.type} ${changeEvent.operationType} ${changeEvent.eventType} on ${changeEvent.taskId}")
           null
         }
       }
+
       else -> {
         logger.warn("Received unexpected identity link historic update event ${changeEvent.type} ${changeEvent.operationType} ${changeEvent.eventType} on ${changeEvent.taskId}")
         null
