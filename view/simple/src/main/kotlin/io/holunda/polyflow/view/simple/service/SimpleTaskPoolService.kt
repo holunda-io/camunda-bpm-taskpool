@@ -12,8 +12,9 @@ import io.holunda.polyflow.view.query.task.*
 import io.holunda.polyflow.view.filter.createTaskPredicates
 import io.holunda.polyflow.view.filter.filterByPredicate
 import io.holunda.polyflow.view.filter.toCriteria
-import io.holunda.polyflow.view.sort.taskComparator
+import io.holunda.polyflow.view.sort.taskWithDataEntriesComparator
 import io.holunda.polyflow.view.simple.updateMapFilterQuery
+import io.holunda.polyflow.view.sort.taskComparator
 import io.holunda.polyflow.view.task
 import mu.KLogging
 import org.axonframework.config.ProcessingGroup
@@ -21,6 +22,7 @@ import org.axonframework.eventhandling.EventHandler
 import org.axonframework.queryhandling.QueryHandler
 import org.axonframework.queryhandling.QueryUpdateEmitter
 import org.springframework.stereotype.Component
+import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 
 /**
@@ -38,34 +40,80 @@ class SimpleTaskPoolService(
   private val dataEntries = ConcurrentHashMap<String, DataEntry>()
 
   /**
-   * Retrieves a list of all user tasks for current user.
+   * Retrieves a task for given task id.
    */
   @QueryHandler
-  override fun query(query: TasksForUserQuery) = TaskQueryResult(tasks.values.filter { query.applyFilter(it) })
+  @Deprecated("Deprecated in favour of Optional-version of the same query.", replaceWith = ReplaceWith("SimpleTaskPoolService.query(TaskForIdQuery)"))
+  fun legacyQuery(query: TaskForIdQuery): Task? {
+    logger.warn { "You are using deprecated API, consider to switch to query(TaskWithDataEntriesForIdQuery): Optional<TaskWithDataEntries>" }
+    return query(query).orElse(null)
+  }
 
   /**
    * Retrieves a task for given task id.
    */
   @QueryHandler
-  override fun query(query: TaskForIdQuery): Task? = tasks.values.firstOrNull { query.applyFilter(it) }
+  override fun query(query: TaskForIdQuery): Optional<Task> {
+    return Optional.ofNullable(tasks.values.firstOrNull { query.applyFilter(it) })
+  }
 
   /**
    * Retrieves a  list of all tasks of a given process application.
    */
   @QueryHandler
-  override fun query(query: TasksForApplicationQuery) = TaskQueryResult(tasks.values.filter { query.applyFilter(it) })
+  override fun query(query: TasksForApplicationQuery): TaskQueryResult {
+    return TaskQueryResult(tasks.values.filter { query.applyFilter(it) })
+  }
+
+  /**
+   * Retrieves a task with data entries for given task id.
+   */
+  @Deprecated("Deprecated in favour of Optional-version of the same query.", replaceWith = ReplaceWith("SimpleTaskPoolService.query(TaskWithDataEntriesForIdQuery)"))
+  @QueryHandler
+  fun legacyQuery(query: TaskWithDataEntriesForIdQuery): TaskWithDataEntries? {
+    logger.warn { "You are using deprecated API, consider to switch to query(TaskWithDataEntriesForIdQuery): Optional<TaskWithDataEntries>" }
+    return query(query).orElse(null)
+  }
 
   /**
    * Retrieves a task with data entries for given task id.
    */
   @QueryHandler
-  override fun query(query: TaskWithDataEntriesForIdQuery): TaskWithDataEntries? {
+  override fun query(query: TaskWithDataEntriesForIdQuery): Optional<TaskWithDataEntries> {
     val task = tasks.values.firstOrNull { query.applyFilter(TaskWithDataEntries(it)) }
     return if (task != null) {
-      TaskWithDataEntries(task, this.dataEntries.values.toList())
+      Optional.of(TaskWithDataEntries(task, this.dataEntries.values.toList()))
     } else {
-      null
+      Optional.empty()
     }
+  }
+
+  /**
+   * Retrieves the count of tasks grouped by source application. Supports subscription queries.
+   */
+  @QueryHandler
+  override fun query(query: TaskCountByApplicationQuery): List<ApplicationWithTaskCount> =
+    tasks.values.groupingBy { it.sourceReference.applicationName }.eachCount().map { ApplicationWithTaskCount(it.key, it.value) }
+
+
+  /**
+   * Retrieves a list of all user tasks for current user.
+   */
+  @QueryHandler
+  override fun query(query: TasksForUserQuery): TaskQueryResult {
+    val predicates = createTaskPredicates(toCriteria(query.filters))
+    val filtered = tasks.values.filter { query.applyFilter(it) }
+      .filter { filterByPredicate(it, predicates) }
+      .toList()
+    val comparator = taskComparator(query.sort)
+
+    val sorted = if (comparator != null) {
+      filtered.sortedWith(comparator)
+    } else {
+      filtered
+    }
+
+    return TaskQueryResult(elements = sorted).slice(query = query)
   }
 
   /**
@@ -76,14 +124,13 @@ class SimpleTaskPoolService(
 
     val predicates = createTaskPredicates(toCriteria(query.filters))
 
-    val filtered = query(TasksForUserQuery(query.user))
-      .elements
+    val filtered = tasks.values.filter { TasksForUserQuery(query.user).applyFilter(it) }
       .asSequence()
       .map { task -> TaskWithDataEntries.correlate(task, dataEntries) }
       .filter { filterByPredicate(it, predicates) }
       .toList()
 
-    val comparator = taskComparator(query.sort)
+    val comparator = taskWithDataEntriesComparator(query.sort)
 
     val sorted = if (comparator != null) {
       filtered.sortedWith(comparator)
@@ -93,13 +140,6 @@ class SimpleTaskPoolService(
 
     return TasksWithDataEntriesQueryResult(elements = sorted).slice(query = query)
   }
-
-  /**
-   * Retrieves the count of tasks grouped by source application. Supports subscription queries.
-   */
-  @QueryHandler
-  override fun query(query: TaskCountByApplicationQuery): List<ApplicationWithTaskCount> =
-    tasks.values.groupingBy { it.sourceReference.applicationName }.eachCount().map { ApplicationWithTaskCount(it.key, it.value) }
 
   /**
    * Creates task.
@@ -183,7 +223,7 @@ class SimpleTaskPoolService(
   }
 
   /**
-   * Changes task candidatges users.
+   * Changes task candidates users.
    */
   @Suppress("unused")
   @EventHandler

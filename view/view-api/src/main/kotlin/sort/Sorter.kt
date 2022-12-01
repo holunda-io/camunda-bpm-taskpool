@@ -16,7 +16,7 @@ import java.util.*
  * @return comparator for the sort string.
  */
 fun dataComparator(sort: String?): DataEntryComparator? {
-  if (sort == null || sort.isBlank()) return null
+  if (sort.isNullOrBlank()) return null
   val sortDirection = parse(sort) ?: return null
   val fieldName = if (isTaskAttribute(sort.substring(1))) {
     sort.substring(1).substring(DATA_PREFIX.length)
@@ -32,8 +32,26 @@ fun dataComparator(sort: String?): DataEntryComparator? {
  * @param sort a sort string (like +field or -name)
  * @return comparator for the sort string.
  */
-fun taskComparator(sort: String?): TasksWithDataEntriesComparator? {
-  if (sort == null || sort.isBlank()) return null
+fun taskComparator(sort: String?): TaskComparator? {
+  if (sort.isNullOrBlank()) return null
+  val sortDirection = parse(sort) ?: return null
+  val fieldName = if (isTaskAttribute(sort.substring(1))) {
+    sort.substring(1).substring(TASK_PREFIX.length)
+  } else {
+    return null
+  }
+  val field = extractField(targetClass = Task::class.java, name = fieldName)
+    ?: return null
+  return TaskComparator(field to sortDirection)
+}
+
+/**
+ * Creates a new task with data entries comparator.
+ * @param sort a sort string (like +field or -name)
+ * @return comparator for the sort string.
+ */
+fun taskWithDataEntriesComparator(sort: String?): TasksWithDataEntriesComparator? {
+  if (sort.isNullOrBlank()) return null
   val sortDirection = parse(sort) ?: return null
   val fieldName = if (isTaskAttribute(sort.substring(1))) {
     sort.substring(1).substring(TASK_PREFIX.length)

@@ -1,5 +1,6 @@
 package io.holunda.polyflow.view.sort
 
+import io.holunda.polyflow.view.Task
 import io.holunda.polyflow.view.TaskWithDataEntries
 import io.holunda.polyflow.view.filter.extractValue
 import java.lang.reflect.Field
@@ -10,12 +11,12 @@ import javax.xml.datatype.DatatypeConstants.LESSER
  */
 data class TaskComparator(
   private val fieldSort: Pair<Field, SortDirection>
-) : Comparator<TaskWithDataEntries> {
-  override fun compare(o1: TaskWithDataEntries, o2: TaskWithDataEntries): Int {
+) : Comparator<Task> {
+  override fun compare(o1: Task, o2: Task): Int {
     return try {
 
-      val v1 = extractValue(o1.task, this.fieldSort.first)
-      val v2 = extractValue(o2.task, this.fieldSort.first)
+      val v1 = extractValue(o1, this.fieldSort.first)
+      val v2 = extractValue(o2, this.fieldSort.first)
 
       when (findCompareMode(v1, v2)) {
         CompareMode.DEFAULT -> compareActual(fieldSort, v1, v2)

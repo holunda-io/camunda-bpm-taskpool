@@ -63,7 +63,26 @@
       <artifactId>jgiven-html5-report</artifactId>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>io.toolisticon.testing</groupId>
+      <artifactId>jgiven-kotlin</artifactId>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>kotlin-maven-plugin</artifactId>
+        <groupId>org.jetbrains.kotlin</groupId>
+        <configuration>
+          <pluginOptions>
+            <option>all-open:annotation=io.toolisticon.testing.jgiven.JGivenKotlinStage</option>
+          </pluginOptions>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 
 </project>
 

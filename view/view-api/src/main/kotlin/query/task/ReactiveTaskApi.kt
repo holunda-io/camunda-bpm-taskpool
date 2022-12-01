@@ -3,6 +3,7 @@ package io.holunda.polyflow.view.query.task
 import io.holunda.polyflow.view.Task
 import io.holunda.polyflow.view.TaskWithDataEntries
 import io.holunda.polyflow.view.query.process.ProcessDefinitionApi
+import java.util.*
 import java.util.concurrent.CompletableFuture
 
 /**
@@ -20,7 +21,7 @@ interface ReactiveTaskApi {
   /**
    * Queries user tasks for task id.
    */
-  fun query(query: TaskWithDataEntriesForIdQuery): CompletableFuture<TaskWithDataEntries?>
+  fun query(query: TaskWithDataEntriesForIdQuery): CompletableFuture<Optional<TaskWithDataEntries>>
 
   /**
    * Count user tasks for applications.
@@ -35,7 +36,7 @@ interface ReactiveTaskApi {
   /**
    * Task for id.
    */
-  fun query(query: TaskForIdQuery): CompletableFuture<Task?>
+  fun query(query: TaskForIdQuery): CompletableFuture<Optional<Task>>
 
   /**
    * Query tasks for a given process application.

@@ -29,9 +29,11 @@ import org.springframework.stereotype.Component
 import reactor.core.Disposable
 import reactor.core.publisher.Mono
 import reactor.kotlin.core.publisher.switchIfEmpty
+import reactor.kotlin.core.publisher.toMono
 import reactor.util.retry.Retry
 import java.time.Clock
 import java.time.Duration
+import java.util.*
 import java.util.concurrent.CompletableFuture
 import javax.annotation.PostConstruct
 import javax.annotation.PreDestroy
@@ -147,11 +149,18 @@ class MongoViewService(
    */
   @QueryHandler
   override fun query(query: TasksForUserQuery): CompletableFuture<TaskQueryResult> =
-    taskRepository.findAllForUser(
-      username = query.user.username,
-      groupNames = query.user.groups
-    ).map { it.task() }
-      .collectList()
+    if (query.filters.isNotEmpty()) {
+      this.taskWithDataEntriesRepository.findAllFilteredForUser(
+        user = query.user,
+        criteria = toCriteria(query.filters),
+        pageable = PageRequest.of(query.page, query.size, sort(query.sort))
+      ).map { it.task() }
+    } else {
+      taskRepository.findAllForUser(
+        username = query.user.username,
+        groupNames = query.user.groups
+      ).map { it.task() }
+    }.collectList()
       .map { TaskQueryResult(it) }
       .toFuture()
 
@@ -171,15 +180,38 @@ class MongoViewService(
    * Retrieves a task for given task id.
    */
   @QueryHandler
-  override fun query(query: TaskForIdQuery): CompletableFuture<Task?> =
-    taskRepository.findNotDeletedById(query.id).map { it.task() }.toFuture()
+  override fun query(query: TaskForIdQuery): CompletableFuture<Optional<Task>> {
+    return taskRepository.findNotDeletedById(query.id).map { Optional.of(it.task()) }.toFuture()
+  }
+
+  /**
+   * Retrieves a task for given task id.
+   */
+  @QueryHandler
+  @Deprecated("Deprecated in favour of Optional-version of the same query.", replaceWith = ReplaceWith("MongoViewService.query(TaskForIdQuery)"))
+  fun legacyQuery(query: TaskForIdQuery): CompletableFuture<Task?> {
+    logger.warn { "You are using deprecated API, consider to switch to query(TaskForIdQuery): CompletableFuture<Optional<Task>>" }
+    return query(query).toMono().map { it.orElse(null) }.toFuture()
+  }
 
   /**
    * Retrieves a task with data entries for given task id.
    */
   @QueryHandler
-  override fun query(query: TaskWithDataEntriesForIdQuery): CompletableFuture<TaskWithDataEntries?> =
-    taskRepository.findNotDeletedById(query.id).flatMap { tasksWithDataEntries(it.task()) }.toFuture()
+  override fun query(query: TaskWithDataEntriesForIdQuery): CompletableFuture<Optional<TaskWithDataEntries>> {
+    return taskRepository.findNotDeletedById(query.id).flatMap { tasksWithDataEntries(it.task()) }.map { Optional.of(it) }.toFuture()
+  }
+
+  /**
+   * Retrieves a task with data entries for given task id.
+   */
+  @QueryHandler
+  @Deprecated("Deprecated in favour of Optional-version of the same query.", replaceWith = ReplaceWith("MongoViewService.query(TaskWithDataEntriesForIdQuery)"))
+  fun legacyQuery(query: TaskWithDataEntriesForIdQuery): CompletableFuture<TaskWithDataEntries?> {
+    logger.warn { "You are using deprecated API, consider to switch to query(TaskForIdQuery): CompletableFuture<Optional<Task>>" }
+    return query(query).toMono().map { it.orElse(null) }.toFuture()
+  }
+
 
   /**
    * Retrieves a list of tasks with correlated data entries of given entry type (and optional id).
@@ -425,7 +457,7 @@ class MongoViewService(
     }
   }
 
-  private fun tasksWithDataEntries(task: Task) =
+  private fun tasksWithDataEntries(task: Task): Mono<TaskWithDataEntries> =
     this.dataEntryRepository.findNotDeletedById(task.correlations.map { dataIdentityString(entryType = it.key, entryId = it.value.toString()) })
       .map { it.dataEntry() }
       .collectList()

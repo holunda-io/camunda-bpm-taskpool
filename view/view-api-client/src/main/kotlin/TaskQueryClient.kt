@@ -3,6 +3,7 @@ package io.holunda.polyflow.view
 import io.holunda.polyflow.view.query.task.*
 import org.axonframework.messaging.responsetypes.ResponseTypes
 import org.axonframework.queryhandling.QueryGateway
+import java.util.*
 import java.util.concurrent.CompletableFuture
 
 /**
@@ -26,9 +27,9 @@ class TaskQueryClient(
    * @see io.holunda.polyflow.view.query.task.TaskApi.query
    * @see io.holunda.polyflow.view.query.task.TaskForIdQuery
    */
-  fun query(query: TaskForIdQuery): CompletableFuture<Task?> = queryGateway.query(
+  fun query(query: TaskForIdQuery): CompletableFuture<Optional<Task>> = queryGateway.query(
     query,
-    ResponseTypes.instanceOf(Task::class.java)
+    ResponseTypes.optionalInstanceOf(Task::class.java)
   )
 
   /**
@@ -44,9 +45,9 @@ class TaskQueryClient(
    * @see io.holunda.polyflow.view.query.task.TaskApi.query
    * @see io.holunda.polyflow.view.query.task.TaskWithDataEntriesForIdQuery
    */
-  fun query(query: TaskWithDataEntriesForIdQuery): CompletableFuture<TaskWithDataEntries?> = queryGateway.query(
+  fun query(query: TaskWithDataEntriesForIdQuery): CompletableFuture<Optional<TaskWithDataEntries>> = queryGateway.query(
     query,
-    ResponseTypes.instanceOf(TaskWithDataEntries::class.java)
+    ResponseTypes.optionalInstanceOf(TaskWithDataEntries::class.java)
   )
 
   /**

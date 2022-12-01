@@ -13,6 +13,7 @@ import io.holunda.polyflow.view.query.process.variable.ProcessVariablesForInstan
 import io.holunda.polyflow.view.query.task.*
 import org.axonframework.messaging.responsetypes.ResponseTypes
 import org.axonframework.queryhandling.QueryGateway
+import java.util.*
 import java.util.concurrent.CompletableFuture
 
 /**
@@ -67,7 +68,7 @@ object QueryGatewayExt {
   /**
    * @see [TaskForIdQuery]
    */
-  fun QueryGateway.taskForId(query: TaskForIdQuery): CompletableFuture<Task?> =
+  fun QueryGateway.taskForId(query: TaskForIdQuery): CompletableFuture<Optional<Task>> =
     TaskQueryClient(this).query(query)
 
   /**
@@ -79,7 +80,7 @@ object QueryGatewayExt {
   /**
    * @see [TaskWithDataEntriesForIdQuery]
    */
-  fun QueryGateway.taskWithDataEntriesForId(query: TaskWithDataEntriesForIdQuery): CompletableFuture<TaskWithDataEntries?> =
+  fun QueryGateway.taskWithDataEntriesForId(query: TaskWithDataEntriesForIdQuery): CompletableFuture<Optional<TaskWithDataEntries>> =
     TaskQueryClient(this).query(query)
 
   /**
