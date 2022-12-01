@@ -232,9 +232,8 @@ class PolyflowThenStage<SELF : PolyflowThenStage<SELF>> : PolyflowStage<SELF>() 
 
     assertThat(captured)
       .`as`("Query updates for query $query")
-      .usingRecursiveFieldByFieldElementComparatorIgnoringFields()
+      .usingRecursiveFieldByFieldElementComparatorIgnoringFields("payload", "correlation")
       .contains(*updates)
-    return self()
   }
 
   fun task_is_not_found_for_user(taskId: String, assignee: String) = step {

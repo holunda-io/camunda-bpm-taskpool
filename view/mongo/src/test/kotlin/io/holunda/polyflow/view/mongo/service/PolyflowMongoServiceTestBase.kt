@@ -51,7 +51,10 @@ abstract class PolyflowMongoServiceITestBase : SpringScenarioTest<PolyflowGivenS
       .and()
       .query_updates_have_been_emitted(TasksForUserQuery(User("kermit", setOf("muppetshow"))), expected)
       .and()
-      .query_updates_have_been_emitted(TasksWithDataEntriesForUserQuery(User("kermit", setOf("muppetshow"))), expected.withDataEntries())
+      .query_updates_have_been_emitted(
+        TasksWithDataEntriesForUserQuery(User("kermit", setOf("muppetshow"))),
+        expected.withDataEntries()
+      )
   }
 
   @Test
@@ -71,7 +74,10 @@ abstract class PolyflowMongoServiceITestBase : SpringScenarioTest<PolyflowGivenS
       .and()
       .task_is_created(TestTaskData(id = "some-id", assignee = "kermit").asTask())
       .and()
-      .query_updates_have_been_emitted(TasksForUserQuery(User("kermit", setOf("muppetshow"))), TestTaskData(id = "some-id", assignee = "kermit").asTask())
+      .query_updates_have_been_emitted(
+        query = TasksForUserQuery(User("kermit", setOf("muppetshow"))),
+        TestTaskData(id = "some-id", assignee = "kermit").asTask()
+      )
   }
 
   @Test
