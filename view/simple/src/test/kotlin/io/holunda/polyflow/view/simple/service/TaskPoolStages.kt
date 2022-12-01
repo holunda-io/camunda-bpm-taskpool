@@ -162,7 +162,9 @@ class SimpleTaskPoolThenStage<SELF : SimpleTaskPoolThenStage<SELF>> : AbstractSi
   }
 
   fun task_is_created(task: Task) = step {
-    assertThat(simpleTaskPoolService.query(TaskForIdQuery(task.id))).isPresent.isEqualTo(task)
+    val result = simpleTaskPoolService.query(TaskForIdQuery(task.id))
+    assertThat(result).isPresent
+    assertThat(result.get()).isEqualTo(task)
   }
 
   @As("task with id $ is assigned to $")
@@ -198,6 +200,16 @@ class SimpleTaskPoolThenStage<SELF : SimpleTaskPoolThenStage<SELF>> : AbstractSi
 
   fun task_counts_are(vararg entries: ApplicationWithTaskCount) = step {
     assertThat(returnedTaskCounts).containsOnly(*entries)
+  }
+
+  fun task_does_not_exist(taskId: String) = step  {
+    val result = simpleTaskPoolService.query(TaskForIdQuery(taskId))
+    assertThat(result).isNotPresent
+  }
+
+  fun task_is_not_found_for_user(userId: String, taskId: String) = step {
+    val result = simpleTaskPoolService.query(TasksForUserQuery(User(userId, setOf())))
+    assertThat(result.elements.map { it.id }).doesNotContain(taskId)
   }
 
 
