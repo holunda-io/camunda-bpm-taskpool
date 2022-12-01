@@ -89,6 +89,9 @@ class TaskEventCollectorService(
       eventName = task.eventName
     )
 
+  /**
+   * Tracing of collector.
+   */
   @Order(ORDER)
   @EventListener
   fun all(task: DelegateTask) {
