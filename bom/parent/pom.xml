@@ -32,6 +32,7 @@
 
     <pattern.class.itest>**/*ITest.*</pattern.class.itest>
     <pattern.package.itest>**/itest/**/*.*</pattern.package.itest>
+    <jgiven-kotlin.version>1.2.4.0</jgiven-kotlin.version>
   </properties>
 
   <modules>
@@ -240,6 +241,13 @@
         <version>${jgiven.version}</version>
         <scope>test</scope>
       </dependency>
+      <dependency>
+        <groupId>io.toolisticon.testing</groupId>
+        <artifactId>jgiven-kotlin</artifactId>
+        <scope>test</scope>
+        <version>${jgiven-kotlin.version}</version>
+      </dependency>
+
 
     </dependencies>
   </dependencyManagement>

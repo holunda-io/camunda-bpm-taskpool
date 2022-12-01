@@ -47,7 +47,6 @@ class JpaPolyflowViewDataEntryService(
   override fun query(query: DataEntryForIdentityQuery, metaData: MetaData): QueryResponseMessage<DataEntriesQueryResult> {
     val entryId = query.entryId
     require(entryId != null) { "Entry id must be set on query by id" }
-
     val elements = dataEntryRepository.findAllById(listOf(DataEntryId(entryId = entryId, entryType = query.entryType)))
     return constructDataEntryResponse(elements, query)
   }
@@ -58,6 +57,8 @@ class JpaPolyflowViewDataEntryService(
     val authorizedPrincipals: Set<AuthorizationPrincipal> = setOf(user(query.user.username)).plus(query.user.groups.map { group(it) })
     val criteria: List<Criterion> = toCriteria(query.filters)
     val specification = criteria.toDataEntrySpecification()
+
+    reportMissingFeature(query)
 
     val elements = if (specification != null) {
       dataEntryRepository.findAll(specification.and(isAuthorizedFor(authorizedPrincipals))).distinct()
@@ -72,6 +73,9 @@ class JpaPolyflowViewDataEntryService(
 
     val criteria: List<Criterion> = toCriteria(query.filters)
     val specification = criteria.toDataEntrySpecification()
+
+    reportMissingFeature(query)
+
     val elements = if (specification != null) {
       dataEntryRepository.findAll(specification)
     } else {
@@ -168,6 +172,13 @@ class JpaPolyflowViewDataEntryService(
   private fun emitDataEntryUpdate(entity: DataEntryEntity) {
     queryUpdateEmitter.updateDataEntryQuery(entity.toDataEntry(objectMapper), RevisionValue(entity.revision))
   }
+
+  private fun reportMissingFeature(query: PageableSortableQuery) {
+    if (query.sort != null) {
+      logger.warn { "Sorting is currently not supported, but the sort was requested: ${query.sort}, see https://github.com/holunda-io/camunda-bpm-taskpool/issues/701" }
+    }
+  }
+
 
   private fun isDisabledByProperty(): Boolean {
     return (!polyflowJpaViewProperties.storedItems.contains(StoredItem.DATA_ENTRY)).also {

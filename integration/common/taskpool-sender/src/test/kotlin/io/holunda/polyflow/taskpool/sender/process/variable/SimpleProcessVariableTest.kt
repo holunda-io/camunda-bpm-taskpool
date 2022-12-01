@@ -3,7 +3,7 @@ package io.holunda.polyflow.taskpool.sender.process.variable
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.holunda.camunda.taskpool.api.process.variable.*
 import io.holunda.camunda.taskpool.api.task.ProcessReference
-import io.holunda.polyflow.taskpool.configureTaskpoolJacksonObjectMapper
+import io.holunda.polyflow.bus.jackson.configurePolyflowJacksonObjectMapper
 import io.holunda.polyflow.taskpool.sender.SenderProperties
 import io.holunda.polyflow.taskpool.sender.gateway.CommandListGateway
 import org.assertj.core.api.Assertions.assertThat
@@ -24,7 +24,7 @@ class SimpleProcessVariableTest {
       store.addAll(commands)
     }
   }
-  private val objectMapper = jacksonObjectMapper().configureTaskpoolJacksonObjectMapper()
+  private val objectMapper = jacksonObjectMapper().configurePolyflowJacksonObjectMapper()
   private val simpleProcessVariableCommandSender = SimpleProcessVariableCommandSender(commandListGateway, SenderProperties(), objectMapper)
 
   @BeforeEach

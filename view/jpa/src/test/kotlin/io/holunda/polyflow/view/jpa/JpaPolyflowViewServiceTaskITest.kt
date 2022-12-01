@@ -243,17 +243,17 @@ internal class JpaPolyflowViewServiceTaskITest {
   @Test
   fun `should find the task by id`() {
     val byId1 = jpaPolyflowViewService.query(TaskForIdQuery(id = id))
-    assertThat(byId1).isNotNull
-    assertThat(byId1!!.id).isEqualTo(id)
+    assertThat(byId1).isPresent
+    assertThat(byId1.get().id).isEqualTo(id)
   }
 
   @Test
   fun `should find the task with data entries by id`() {
     val byId3 = jpaPolyflowViewService.query(TaskWithDataEntriesForIdQuery(id = id3))
-    assertThat(byId3).isNotNull
-    assertThat(byId3!!.task.id).isEqualTo(id3)
-    assertThat(byId3.dataEntries).isNotEmpty.hasSize(1)
-    assertThat(byId3.dataEntries.first().entryId).isEqualTo(dataId1)
+    assertThat(byId3).isPresent
+    assertThat(byId3.get().task.id).isEqualTo(id3)
+    assertThat(byId3.get().dataEntries).isNotEmpty.hasSize(1)
+    assertThat(byId3.get().dataEntries.first().entryId).isEqualTo(dataId1)
   }
 
   @Test

@@ -110,14 +110,10 @@
       <activation>
         <activeByDefault>false</activeByDefault>
       </activation>
-      <properties>
-        <skipFrontend>true</skipFrontend>
-      </properties>
       <build>
         <defaultGoal>integration-test failsafe:verify</defaultGoal>
       </build>
     </profile>
-
 
     <!--
       Profile creating all artifacts: JARs, POMs, Sources, JavaDoc and all signatures.
