@@ -5,6 +5,7 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.holunda.camunda.taskpool.api.business.newCorrelations
 import io.holunda.camunda.taskpool.api.task.*
 import io.holunda.camunda.taskpool.api.task.CamundaTaskEventType.Companion.CREATE
+import io.holunda.polyflow.taskpool.itest.TaskCollectorITest.Companion.NOW
 import io.holunda.polyflow.taskpool.sender.gateway.CommandListGateway
 import org.assertj.core.api.Assertions
 import org.awaitility.Awaitility.await
@@ -52,6 +53,10 @@ class TaskCollectorITest {
   private val processId = "processId"
   private val taskDefinitionKey = "userTask"
   private val defaultVariables = createVariables().apply { put("key", "value") }
+
+  companion object {
+    val NOW = Date.from(now())
+  }
 
   @Autowired
   lateinit var repositoryService: RepositoryService
@@ -193,8 +198,7 @@ class TaskCollectorITest {
    * The update command is send after the TX commit.
    */
   @Test
-  fun `updates due date`() {
-
+  fun `updates attributes via API`() {
 
     // deploy
     deployProcess(createUserTaskProcess(processId, taskDefinitionKey))
@@ -206,31 +210,10 @@ class TaskCollectorITest {
 
     // set due date to now
     val now = Date.from(now())
-    taskService.saveTask(task().apply { dueDate = now })
-    val updateCommand = updateTaskCommand()
-    verify(commandListGateway).sendToGateway(listOf(updateCommand))
-
-    verifyNoMoreInteractions(commandListGateway)
-  }
-
-  /**
-   * The process is started and wait in a user task.
-   * The update command is send after the TX commit.
-   */
-  @Test
-  fun `updates attributes`() {
-
-    // deploy
-    deployProcess(createUserTaskProcess(processId, taskDefinitionKey))
-
-    // start
-    val instance = startProcessInstance(processId, businessKey)
-    assertThat(instance).isWaitingAt(taskDefinitionKey)
-    verify(commandListGateway).sendToGateway(listOf(createTaskCommand()))
-
     taskService.saveTask(task().apply {
       name = "new name"
       description = "new description"
+      dueDate = now
     })
 
     val updateCommand = updateTaskCommand()
@@ -376,6 +359,40 @@ class TaskCollectorITest {
     verifyNoMoreInteractions(commandListGateway)
   }
 
+  @Test
+  fun `update by listener is not loosing form key`() {
+    // deploy
+    deployProcess(
+      createUserTaskProcess(
+        processId, taskDefinitionKey,
+        taskListeners = listOf(
+          "create" to "#{changeTaskAttributes}" // will change direct task attributes
+        )
+      )
+    )
+
+    // start
+    val instance = startProcessInstance(processId, businessKey)
+    assertThat(instance).isWaitingAt(taskDefinitionKey)
+    verify(commandListGateway).sendToGateway(listOf(
+      createTaskCommand()
+      .copy(
+        name = "new name",
+        description = "new description",
+        priority = 99,
+        dueDate = NOW,
+        followUpDate = NOW,
+//        name = "User Task",
+//        description = null,
+//        priority = 66,
+//        dueDate = null,
+//        followUpDate = null,
+
+      )
+    ))
+
+  }
+
   /**
    * The process is started and wait in a user task.
    * The candidate group change commands is sent after the TX commit.
@@ -408,8 +425,6 @@ class TaskCollectorITest {
     verify(commandListGateway).sendToGateway(listOf(createTaskCommand(
       candidateGroups = setOf(muppets, peasants, lords)
     )))
-
-
 
     val doInOneTransactionCommand = Command {
       taskService.deleteCandidateGroup(task().id, muppets)
@@ -509,6 +524,7 @@ class TaskCollectorITest {
     asyncOnStart: Boolean = false,
     candidateGroups: String = "",
     candidateUsers: String = "",
+    formKey: String = "form-key",
     taskListeners: List<Pair<String, String>> = listOf(),
     otherTaskDefinitionKey: String = "another-user-task"
   ) = Bpmn
@@ -516,10 +532,16 @@ class TaskCollectorITest {
     // start event
     .startEvent("start").camundaAsyncAfter(asyncOnStart)
     // user task
-    .userTask(taskDefinitionKey).camundaCandidateGroups(candidateGroups).camundaCandidateUsers(candidateUsers).apply {
+    .userTask(taskDefinitionKey)
+    .camundaCandidateGroups(candidateGroups)
+    .camundaCandidateUsers(candidateUsers)
+    .camundaFormKey(formKey)
+    .camundaPriority("66")
+    .apply {
       taskListeners.forEach {
         this.camundaTaskListenerDelegateExpression(it.first, it.second)
       }
+      this.element.name = "User Task"
     }
     // optional second user task
     .apply {
@@ -542,7 +564,7 @@ class TaskCollectorITest {
     candidateUsers: Set<String> = setOf(),
     variables: VariableMap = defaultVariables,
     processBusinessKey: String = this.businessKey
-  ) = task().let { task ->
+  ) = task(taskQuery().initializeFormKeys()).let { task ->
     CreateTaskCommand(
       id = task.id,
       sourceReference = ProcessReference(
@@ -564,7 +586,8 @@ class TaskCollectorITest {
       createTime = task.createTime,
       businessKey = processBusinessKey,
       priority = task.priority, // default by camunda if not set in explicit
-      payload = variables
+      payload = variables,
+      formKey = task.formKey
     )
   }
 
@@ -576,7 +599,7 @@ class TaskCollectorITest {
     instanceBusinessKey: String = businessKey,
     correlations: VariableMap = newCorrelations()
   ) =
-    task().let { task ->
+    task(taskQuery().initializeFormKeys()).let { task ->
       UpdateAttributeTaskCommand(
         id = task.id,
         name = task.name,
@@ -596,7 +619,8 @@ class TaskCollectorITest {
         enriched = true,
         businessKey = instanceBusinessKey,
         payload = variables,
-        correlations = correlations
+        correlations = correlations,
+        formKey = task.formKey
       )
     }
 }
@@ -622,6 +646,22 @@ class AddCandidateGroupMuppetShow : TaskListener {
     delegateTask.addCandidateGroup("muppetshow")
   }
 }
+
+/**
+ * Typical use case for a start listener changing attributes
+ */
+@Component
+class ChangeTaskAttributes : TaskListener {
+  override fun notify(delegateTask: DelegateTask) {
+    delegateTask.name = "new name"
+    delegateTask.description = "new description"
+    delegateTask.priority = 99
+    delegateTask.dueDate = NOW
+    delegateTask.followUpDate = NOW
+  }
+}
+
+
 
 data class MyStructure(val name: String, val key: String, val value: Int)
 data class MyStructureWithSet(val name: String, val key: String, val value: Int, val set: Set<String> = setOf())

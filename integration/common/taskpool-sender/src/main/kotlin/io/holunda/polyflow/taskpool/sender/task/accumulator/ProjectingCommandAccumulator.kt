@@ -107,7 +107,9 @@ class ProjectingCommandAccumulator(
         WithPayload::payload.name,
         // there is no reason to overwrite a business key so far
         // its initial value is read and send during task creation
-        WithPayload::businessKey.name
+        WithPayload::businessKey.name,
+        // form key should not be changed - don't touch it
+        WithFormKey::formKey.name
       ),
       projectionErrorDetector = EngineTaskCommandProjectionErrorDetector,
       mapper = mapper,

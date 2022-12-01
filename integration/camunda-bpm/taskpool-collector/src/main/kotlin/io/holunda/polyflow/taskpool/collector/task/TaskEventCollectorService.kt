@@ -137,7 +137,7 @@ class TaskEventCollectorService(
   @Order(ORDER)
   @EventListener(condition = "#changeEvent.eventType.equals('update')")
   fun update(changeEvent: HistoricTaskInstanceEventEntity): UpdateAttributeTaskCommand? =
-    if (collectorProperties.task.useHistoricEventCollector) {
+   //  if (collectorProperties.task.useHistoricEventCollector) {
       UpdateAttributeTaskCommand(
         id = changeEvent.taskId,
         description = changeEvent.description,
@@ -149,9 +149,9 @@ class TaskEventCollectorService(
         taskDefinitionKey = changeEvent.taskDefinitionKey,
         sourceReference = changeEvent.sourceReference(repositoryService, collectorProperties.applicationName)
       )
-    } else {
-      null
-    }
+//    } else {
+//      null
+//    }
 
   /**
    * Fires update assignment historic command.
