@@ -277,7 +277,7 @@ class TaskCollectorITest {
       candidateGroups = setOf("muppetshow"),
     )
     // we need to take into account that dispatching the accumulated commands is done asynchronously, and therefore we might have to wait a little bit
-    waitAtMost(1, TimeUnit.SECONDS).untilAsserted { verify(commandListGateway).sendToGateway(listOf(createCommand)) }
+    waitAtMost(3, TimeUnit.SECONDS).untilAsserted { verify(commandListGateway).sendToGateway(listOf(createCommand)) }
     verifyNoMoreInteractions(commandListGateway)
   }
 
@@ -334,7 +334,7 @@ class TaskCollectorITest {
     )
 
     // we need to take into account that dispatching the accumulated commands is done asynchronously, and therefore we might have to wait a little bit
-    waitAtMost(1, TimeUnit.SECONDS).untilAsserted {
+    waitAtMost(3, TimeUnit.SECONDS).untilAsserted {
       verify(commandListGateway).sendToGateway(listOf(createCommand))
     }
 
@@ -381,7 +381,7 @@ class TaskCollectorITest {
    * The candidate group change commands is sent after the TX commit.
    */
   @Test
-  fun `should send task candidate groups updates`() {
+  fun `changes candidate groups via API`() {
 
     val muppets = "muppets"
     val lords = "lords"
@@ -425,6 +425,56 @@ class TaskCollectorITest {
     verify(commandListGateway).sendToGateway(listOf(deleteGroups, addGroups))
   }
 
+  /**
+   * The process is started and wait in a user task.
+   * The candidate group change commands is sent after the TX commit.
+   */
+  @Test
+  fun `changes candidate users via API`() {
+
+    val kermit = "kermit"
+    val piggy = "piggy"
+    val superman = "superman"
+    val batman = "batman"
+    val hulk = "hulk"
+
+    // deploy
+    deployProcess(
+      createUserTaskProcess(
+        processId,
+        taskDefinitionKey,
+        candidateUsers = "$kermit,$piggy"
+      )
+    )
+
+    // start
+    val instance = startProcessInstance(processId, businessKey)
+    assertThat(instance).isWaitingAt(taskDefinitionKey)
+    assertThat(task()).hasCandidateUser(kermit)
+    assertThat(task()).hasCandidateUser(piggy)
+    verify(commandListGateway).sendToGateway(listOf(createTaskCommand(
+      candidateUsers = setOf(kermit, piggy)
+    )))
+
+    val doInOneTransactionCommand = Command {
+      taskService.deleteCandidateUser(task().id, kermit)
+      taskService.deleteCandidateUser(task().id, piggy)
+      taskService.addCandidateUser(task().id, superman)
+      taskService.addCandidateUser(task().id, batman)
+      taskService.addCandidateUser(task().id, hulk)
+
+    }
+    commandExecutor.execute(doInOneTransactionCommand)
+
+    val deleteUsers = DeleteCandidateUsersCommand(task().id, candidateUsers = setOf(kermit, piggy))
+    val addUsers = AddCandidateUsersCommand(task().id, candidateUsers = setOf(superman, batman, hulk))
+    verify(commandListGateway).sendToGateway(listOf(deleteUsers, addUsers))
+  }
+
+
+  /*
+   * Deploys the process.
+   */
   private fun deployProcess(modelInstance: BpmnModelInstance) {
     repositoryService
       .createDeployment()
@@ -432,6 +482,9 @@ class TaskCollectorITest {
       .deploy()
   }
 
+  /*
+   * Starts the process.
+   */
   private fun startProcessInstance(
     processId: String,
     businessKey: String,
@@ -481,6 +534,9 @@ class TaskCollectorITest {
     }
 
 
+  /*
+   * Create task command from current task.
+   */
   private fun createTaskCommand(
     candidateGroups: Set<String> = setOf(),
     candidateUsers: Set<String> = setOf(),
@@ -498,6 +554,7 @@ class TaskCollectorITest {
         applicationName = "collector-test"
       ),
       name = task.name,
+      description = task.description,
       taskDefinitionKey = task.taskDefinitionKey,
       candidateUsers = candidateUsers,
       candidateGroups = candidateGroups,
@@ -511,6 +568,9 @@ class TaskCollectorITest {
     )
   }
 
+  /*
+   * Creates update command from current task.
+   */
   private fun updateTaskCommand(
     variables: VariableMap = defaultVariables,
     instanceBusinessKey: String = businessKey,

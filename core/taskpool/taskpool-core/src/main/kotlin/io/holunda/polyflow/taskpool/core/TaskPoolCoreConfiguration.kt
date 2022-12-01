@@ -79,7 +79,7 @@ fun <T : Any> EventSourcingRepository<T>.loadOptional(id: String): Optional<Aggr
 /**
  * Extending optional to be able to react on presence and absence with kotlin callback functions.
  * @param presentConsumer consumer if present.
- * @param missingCallback callback if absend.
+ * @param missingCallback callback if absent.
  */
 fun <T> Optional<T>.ifPresentOrElse(presentConsumer: (T) -> Unit, missingCallback: () -> Unit) {
   if (this.isPresent) {
