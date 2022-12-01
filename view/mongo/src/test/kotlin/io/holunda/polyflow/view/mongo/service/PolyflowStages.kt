@@ -129,12 +129,10 @@ class PolyflowGivenStage<SELF : PolyflowGivenStage<SELF>> : PolyflowStage<SELF>(
 
   fun no_task_exists() = step {
     tasks = listOf()
-    return self()
   }
 
   fun no_data_entry_exists() = step {
     dataEntries = listOf()
-    return self()
   }
 }
 
@@ -193,32 +191,34 @@ class PolyflowThenStage<SELF : PolyflowThenStage<SELF>> : PolyflowStage<SELF>() 
   }
 
   fun tasks_visible_to_assignee_or_candidate_user(username: String, expectedTasks: List<Task>) = step {
-    assertThat(service.query(TasksForUserQuery(User(username = username, groups = emptySet()))).join().elements).containsExactlyElementsOf(expectedTasks)
+    val result = service.query(TasksForUserQuery(User(username = username, groups = emptySet()))).join()
+    assertThat(result.elements).containsExactlyElementsOf(expectedTasks)
   }
 
   fun data_entries_visible_to_user(username: String, expectedDataEntries: List<DataEntry>) = step {
-    assertThat(service.query(DataEntriesForUserQuery(User(username = username, groups = emptySet()))).join().elements).containsExactlyElementsOf(
-      expectedDataEntries
-    )
+    val result = service.query(DataEntriesForUserQuery(User(username = username, groups = emptySet()))).join()
+    assertThat(result.elements).containsExactlyElementsOf(expectedDataEntries)
   }
 
   fun tasks_visible_to_candidate_group(groupName: String, expectedTasks: List<Task>) = step {
-    assertThat(service.query(TasksForUserQuery(User(username = "<unmet>", groups = setOf(groupName)))).join().elements).containsExactlyElementsOf(expectedTasks)
+    val result = service.query(TasksForUserQuery(User(username = "<unmet>", groups = setOf(groupName)))).join()
+    assertThat(result.elements).containsExactlyElementsOf(expectedTasks)
   }
 
   fun data_entries_visible_to_group(groupName: String, expectedDataEntries: List<DataEntry>) = step {
-    assertThat(service.query(DataEntriesForUserQuery(User(username = "<unmet>", groups = setOf(groupName)))).join().elements).containsExactlyElementsOf(
-      expectedDataEntries
-    )
+    val result = service.query(DataEntriesForUserQuery(User(username = "<unmet>", groups = setOf(groupName)))).join()
+    assertThat(result.elements).containsExactlyElementsOf(expectedDataEntries)
   }
 
   fun task_counts_per_application_are(vararg applicationsWithTaskCount: ApplicationWithTaskCount) = step {
-    assertThat(service.query(TaskCountByApplicationQuery()).join()).containsOnly(*applicationsWithTaskCount)
+    val result = service.query(TaskCountByApplicationQuery()).join()
+    assertThat(result).containsOnly(*applicationsWithTaskCount)
   }
 
   @As("only tasks for application $ are returned")
   fun tasks_are_returned_for_application(applicationName: String, @Hidden taskQueryResult: TaskQueryResult) = step {
-    assertThat(service.query(TasksForApplicationQuery(applicationName)).join()).isEqualTo(taskQueryResult)
+    val result = service.query(TasksForApplicationQuery(applicationName)).join()
+    assertThat(result).isEqualTo(taskQueryResult)
   }
 
   @As("the following query updates have been emitted for query \$query: \$updates")
@@ -237,19 +237,24 @@ class PolyflowThenStage<SELF : PolyflowThenStage<SELF>> : PolyflowStage<SELF>() 
     return self()
   }
 
+  fun task_is_not_found_for_user(taskId: String, assignee: String) = step {
+    val result = service.query(TasksForUserQuery(User(assignee, setOf()))).join()
+    assertThat(result.elements.map { it.id }).doesNotContain(taskId)
+  }
+
   fun no_query_update_has_been_emitted() {
     captureEmittedQueryUpdates()
     assertThat(emittedQueryUpdates).isEmpty()
   }
 
   fun data_entry_is_created(dataEntry: DataEntry) = step {
-    assertThat(service.query(DataEntryForIdentityQuery(dataEntry.entryType, dataEntry.entryId)).join().elements).containsExactly(dataEntry)
-    return self()
+    val result = service.query(DataEntryForIdentityQuery(dataEntry.entryType, dataEntry.entryId)).join()
+    assertThat(result.elements).containsExactly(dataEntry)
   }
 
   fun data_entry_does_not_exist(dataEntry: DataEntry) = step {
-    assertThat(service.query(DataEntryForIdentityQuery(dataEntry.entryType, dataEntry.entryId)).join().elements).isEmpty()
-    return self()
+    val result = service.query(DataEntryForIdentityQuery(dataEntry.entryType, dataEntry.entryId)).join()
+    assertThat(result.elements).isEmpty()
   }
 
 }
