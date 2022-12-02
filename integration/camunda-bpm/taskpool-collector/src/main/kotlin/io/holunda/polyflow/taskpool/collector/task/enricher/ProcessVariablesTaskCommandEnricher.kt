@@ -116,8 +116,8 @@ open class ProcessVariablesTaskCommandEnricher(
  */
 fun Any.isHistoric(): Boolean =
   when (this) {
-    is CreateTaskCommand, is DeleteTaskCommand, is CompleteTaskCommand, is AssignTaskCommand -> false
-    is UpdateAttributeTaskCommand, is UpdateAssignmentTaskCommand -> true
+    is CreateTaskCommand, is DeleteTaskCommand, is CompleteTaskCommand, is AssignTaskCommand, is UpdateAttributeTaskCommand -> false
+    is UpdateAttributesHistoricTaskCommand, is UpdateAssignmentTaskCommand -> true
     else -> throw IllegalArgumentException("Unexpected command received: '$this'")
   }
 

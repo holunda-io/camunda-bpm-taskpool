@@ -31,6 +31,12 @@ class ProjectingCommandAccumulator(
           val command = intent.first()
           val details = intent.drop(1)
           projectCommandProperties(command, details)
+        }.filter { taskCommand ->
+          when (taskCommand) {
+            // make sure the update historic task command is never detected as a primary intent
+            is UpdateAttributesHistoricTaskCommand -> false
+            else -> true
+          }
         }
     } else {
       // otherwise just return the empty or singleton list, since there is nothing to do.

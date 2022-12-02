@@ -30,6 +30,21 @@ class TaskEventCollectorService(
   }
 
   /**
+   * Tracing of collector.
+   */
+  @Order(ORDER)
+  @EventListener
+  fun all(task: DelegateTask) {
+    if (logger.isTraceEnabled) {
+      logger.trace("Received " + task.eventName + " event on task with id " + task.id)
+      if (task is TaskEntity) {
+        logger.trace("\tProperties: {}", task.propertyChanges.keys.joinToString(","))
+        logger.trace("\tIdentity links: {}", task.getIdentityLinkChanges().joinToString(","))
+      }
+    }
+  }
+
+  /**
    * Fires create command.
    */
   @Order(ORDER)
@@ -69,13 +84,10 @@ class TaskEventCollectorService(
    */
   @Order(ORDER)
   @EventListener(condition = "#task.eventName.equals('assignment')")
-  fun assign(task: DelegateTask): AssignTaskCommand =
-    AssignTaskCommand(
-      id = task.id,
-      assignee = task.assignee,
-      eventName = task.eventName
-    )
-
+  fun assign(task: DelegateTask) {
+    // this method is intentionally empty to demonstrate that the assign event is captured.
+    // we hence rely on historic identity link events to capture assignment via API and via listeners more accurately.
+  }
 
   /**
    * Fires delete command.
@@ -89,20 +101,6 @@ class TaskEventCollectorService(
       eventName = task.eventName
     )
 
-  /**
-   * Tracing of collector.
-   */
-  @Order(ORDER)
-  @EventListener
-  fun all(task: DelegateTask) {
-    if (logger.isTraceEnabled) {
-      logger.trace("Received " + task.eventName + " event on task with id " + task.id)
-      if (task is TaskEntity) {
-        logger.trace("\tProperties: {}", task.propertyChanges.keys.joinToString(","))
-        logger.trace("\tIdentity links: {}", task.getIdentityLinkChanges().joinToString(","))
-      }
-    }
-  }
 
   /**
    * Fires update command.
@@ -110,35 +108,27 @@ class TaskEventCollectorService(
   @Order(ORDER)
   @EventListener(condition = "#task.eventName.equals('update')")
   fun update(task: DelegateTask): UpdateAttributeTaskCommand? =
-    if (!collectorProperties.task.useHistoricEventCollector) {
-      logger.debug("Received task update for task {}", task.id)
-      if (task is TaskEntity) {
-        if (task.isAssigneeChange() || !task.hasChangedProperties()) {
-          // this is already handled by assignment event, or it is an empty fired during taskService call of candidate update.
-          null
-        } else {
-          task.toUpdateCommand(collectorProperties.applicationName)
-        }
+    if (task is TaskEntity) {
+      if (task.isAssigneeChange() || !task.hasChangedProperties()) {
+        // this is already handled by assignment event, or it is an empty fired during taskService call of candidate update.
+        null
       } else {
         task.toUpdateCommand(collectorProperties.applicationName)
       }
     } else {
-      null
+      task.toUpdateCommand(collectorProperties.applicationName)
     }
 
-
   /**
-   * Fires update historic command.
-   * The following attributes of the update event are skipped:
-   * <ul>
-   *     <li>parentTaskId</li>
-   * </ul>
+   * Fires update historic attribute command.
+   * This is used to detect all changes provided by the TaskListeners and collect all details to be projected
+   * into the original intent.
    */
   @Order(ORDER)
-  @EventListener(condition = "#changeEvent.eventType.equals('update')")
-  fun update(changeEvent: HistoricTaskInstanceEventEntity): UpdateAttributeTaskCommand? =
-   //  if (collectorProperties.task.useHistoricEventCollector) {
-      UpdateAttributeTaskCommand(
+  @EventListener
+  fun update(changeEvent: HistoricTaskInstanceEventEntity): UpdateAttributesHistoricTaskCommand? =
+    when (changeEvent.eventType) {
+      "update" -> UpdateAttributesHistoricTaskCommand(
         id = changeEvent.taskId,
         description = changeEvent.description,
         dueDate = changeEvent.dueDate,
@@ -149,40 +139,53 @@ class TaskEventCollectorService(
         taskDefinitionKey = changeEvent.taskDefinitionKey,
         sourceReference = changeEvent.sourceReference(repositoryService, collectorProperties.applicationName)
       )
-//    } else {
-//      null
-//    }
+
+      else -> null
+    }
 
   /**
    * Fires update assignment historic command.
+   * This is the only way to detect changes of identity links (candidate user/group change and remove).
    */
   @Order(ORDER)
   @EventListener
-  fun update(changeEvent: HistoricIdentityLinkLogEventEntity): UpdateAssignmentTaskCommand? =
-    when (changeEvent.operationType) {
-      "add" -> when {
+  fun update(changeEvent: HistoricIdentityLinkLogEventEntity): Any? =
+    when {
+      // user assignment. Is needed because the assignment out of a listener is undetected otherwise.
+      changeEvent.operationType == "add" && changeEvent.type == "assignee" -> AssignTaskCommand(
+        id = changeEvent.taskId,
+        assignee = changeEvent.userId
+      )
+      // is the assignee is removed, the old value is contained in the userId, so we ignore it.
+      changeEvent.operationType == "delete" && changeEvent.type == "assignee" -> AssignTaskCommand(
+        id = changeEvent.taskId,
+        assignee = null
+      )
+
+      changeEvent.operationType == "add" && changeEvent.type == "candidate" -> when {
+        // candidate user add
         changeEvent.taskId != null && changeEvent.userId != null -> AddCandidateUsersCommand(
           id = changeEvent.taskId,
           candidateUsers = setOf(changeEvent.userId)
         )
-
+        // candidate group add
         changeEvent.taskId != null && changeEvent.groupId != null -> AddCandidateGroupsCommand(
           id = changeEvent.taskId,
           candidateGroups = setOf(changeEvent.groupId)
         )
-
         else -> {
           logger.warn("Received unexpected identity link historic update event ${changeEvent.type} ${changeEvent.operationType} ${changeEvent.eventType} on ${changeEvent.taskId}")
           null
         }
       }
 
-      "delete" -> when {
+      changeEvent.operationType == "delete" && changeEvent.type == "candidate" -> when {
+        // candidate user delete
         changeEvent.taskId != null && changeEvent.userId != null -> DeleteCandidateUsersCommand(
           id = changeEvent.taskId,
           candidateUsers = setOf(changeEvent.userId)
         )
-
+        // candidate group delete
         changeEvent.taskId != null && changeEvent.groupId != null -> DeleteCandidateGroupsCommand(
           id = changeEvent.taskId,
           candidateGroups = setOf(changeEvent.groupId)

@@ -38,7 +38,6 @@ fun Task.Companion.from(command: UpdateAttributeTaskCommand): Task = Task().appl
   sourceReference = command.sourceReference
   name = command.name
   description = command.description
-  formKey = command.formKey
   priority = command.priority
   owner = command.owner
   dueDate = command.dueDate
