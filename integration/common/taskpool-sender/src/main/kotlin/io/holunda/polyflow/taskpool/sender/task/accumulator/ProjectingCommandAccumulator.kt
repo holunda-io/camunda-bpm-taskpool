@@ -31,6 +31,12 @@ class ProjectingCommandAccumulator(
           val command = intent.first()
           val details = intent.drop(1)
           projectCommandProperties(command, details)
+        }.filter { taskCommand ->
+          when (taskCommand) {
+            // make sure the update historic task command is never detected as a primary intent
+            is UpdateAttributesHistoricTaskCommand -> false
+            else -> true
+          }
         }
     } else {
       // otherwise just return the empty or singleton list, since there is nothing to do.
@@ -107,7 +113,9 @@ class ProjectingCommandAccumulator(
         WithPayload::payload.name,
         // there is no reason to overwrite a business key so far
         // its initial value is read and send during task creation
-        WithPayload::businessKey.name
+        WithPayload::businessKey.name,
+        // form key should not be changed - don't touch it
+        WithFormKey::formKey.name
       ),
       projectionErrorDetector = EngineTaskCommandProjectionErrorDetector,
       mapper = mapper,

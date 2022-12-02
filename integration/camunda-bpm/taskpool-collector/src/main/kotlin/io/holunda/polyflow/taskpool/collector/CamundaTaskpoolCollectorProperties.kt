@@ -55,13 +55,7 @@ data class CamundaTaskCollectorProperties(
   /**
    * Flag to enable or disable the collector.
    */
-  val enabled: Boolean = true,
-  /**
-   * Property controlling how the collection of events is performed.
-   * In old Camunda Installations, there was no update event so the collection was based on history events.
-   * This behaviour is changed in Polyflow > 3.5.0 to a listener-oriented collection (like create, delete, complete, assign).
-   */
-  val useHistoricEventCollector: Boolean = false
+  val enabled: Boolean = true
 )
 
 /**

@@ -188,10 +188,6 @@ data class UpdateAttributeTaskCommand(
    */
   override var enriched: Boolean = false,
   /**
-   * Form key used to create a task URL.
-   */
-  override val formKey: String? = null,
-  /**
    * Optional task name.
    */
   val description: String?,
@@ -216,7 +212,7 @@ data class UpdateAttributeTaskCommand(
    */
   val priority: Int?,
 
-) : TaskIdentityWithPayloadAndCorrelations, EngineTaskCommand, WithFormKey
+) : TaskIdentityWithPayloadAndCorrelations, EngineTaskCommand
 
 
 /**
@@ -286,3 +282,67 @@ data class DeleteCandidateUsersCommand(
   candidateUsers = candidateUsers,
   candidateGroups = setOf()
 )
+
+/**
+ * A special command to detect changes originated from TaskListeners.
+ * This command has no command handler in the core and is never sent to it.
+ * There is currently no way to detect those changes than collecting the history Camunda event and use details to enrich the original intent.
+ */
+data class UpdateAttributesHistoricTaskCommand(
+  @TargetAggregateIdentifier
+  override val id: String,
+
+  override val order: Int = ORDER_TASK_HISTORIC_ATTRIBUTE_UPDATE,
+  override val eventName: String = CamundaTaskEventType.ATTRIBUTES_LISTENER_UPDATE,
+  /**
+   * Source reference, indicating why this task exists.
+   */
+  override val sourceReference: SourceReference,
+  /**
+   * Task definition key aka task type.
+   */
+  override val taskDefinitionKey: String,
+  /**
+   * Business key of the underlying process instance. Will be ignored, since there is neither a reason to change a business key
+   * nor an easy way to get the changed one.
+   */
+  override val businessKey: String? = null,
+  /**
+   * Task payload.
+   */
+  override val payload: VariableMap = Variables.createVariables(),
+  /**
+   * Task correlations.
+   */
+  override val correlations: CorrelationMap = newCorrelations(),
+  /**
+   * Enrichment flag.
+   */
+  override var enriched: Boolean = false,
+  /**
+   * Optional task name.
+   */
+  val description: String?,
+  /**
+   * Optional task due date.
+   */
+  val dueDate: Date? = null,
+  /**
+   * Optional task follow-up date.
+   */
+  val followUpDate: Date? = null,
+  /**
+   * Optional task name.
+   */
+  val name: String?,
+  /**
+   * Optional task owner (assignee).
+   */
+  val owner: String?,
+  /**
+   * Optional task priority.
+   */
+  val priority: Int?,
+
+  ) : TaskIdentityWithPayloadAndCorrelations, EngineTaskCommand
+

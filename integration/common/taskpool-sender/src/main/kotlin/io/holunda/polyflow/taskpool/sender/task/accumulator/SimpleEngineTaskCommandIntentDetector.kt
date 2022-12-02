@@ -1,15 +1,13 @@
 package io.holunda.polyflow.taskpool.sender.task.accumulator
 
-import io.holunda.camunda.taskpool.api.task.AssignTaskCommand
+import io.holunda.camunda.taskpool.api.task.*
 import io.holunda.camunda.taskpool.api.task.CamundaTaskEventType.Companion.ASSIGN
+import io.holunda.camunda.taskpool.api.task.CamundaTaskEventType.Companion.ATTRIBUTES_LISTENER_UPDATE
 import io.holunda.camunda.taskpool.api.task.CamundaTaskEventType.Companion.CANDIDATE_USER_ADD
 import io.holunda.camunda.taskpool.api.task.CamundaTaskEventType.Companion.CANDIDATE_USER_DELETE
 import io.holunda.camunda.taskpool.api.task.CamundaTaskEventType.Companion.COMPLETE
 import io.holunda.camunda.taskpool.api.task.CamundaTaskEventType.Companion.CREATE
 import io.holunda.camunda.taskpool.api.task.CamundaTaskEventType.Companion.DELETE
-import io.holunda.camunda.taskpool.api.task.CompleteTaskCommand
-import io.holunda.camunda.taskpool.api.task.CreateTaskCommand
-import io.holunda.camunda.taskpool.api.task.EngineTaskCommand
 
 /**
  * Simple implementation of the intent detection
@@ -54,14 +52,17 @@ class SimpleEngineTaskCommandIntentDetector(
         is CreateTaskCommand -> engineTaskCommands.filter { it.eventName !in setOf(COMPLETE, DELETE) }
         // candidate user delete is fired if the task gets re-assigned
         // candidate user add is fired if the task gets assigned
-        is AssignTaskCommand -> engineTaskCommands.filter { it.eventName in setOf(CANDIDATE_USER_ADD, CANDIDATE_USER_DELETE) }
+        is AssignTaskCommand -> engineTaskCommands.filter { it.eventName in setOf(CANDIDATE_USER_ADD, CANDIDATE_USER_DELETE, ATTRIBUTES_LISTENER_UPDATE) }
         // is assignment is executed, it can be carried with complete and then the candidate user add / delete
         is CompleteTaskCommand -> if (engineTaskCommands.any { it.eventName == ASSIGN }) {
-          engineTaskCommands.filter { it.eventName in setOf(ASSIGN, CANDIDATE_USER_ADD, CANDIDATE_USER_DELETE) }
+          engineTaskCommands.filter { it.eventName in setOf(ASSIGN, CANDIDATE_USER_ADD, CANDIDATE_USER_DELETE, ATTRIBUTES_LISTENER_UPDATE) }
         } else {
           // complete without assign is not projectable
+          // FIXME: think how attribute change on complete can be carried to the core.
           listOf()
         }
+        // updates of the listener are accepted
+        is UpdateAttributeTaskCommand -> engineTaskCommands.filter { it.eventName == ATTRIBUTES_LISTENER_UPDATE }
         else -> listOf()
       }
 }

@@ -15,6 +15,7 @@ interface CamundaTaskEventType {
     const val DELETE = "delete"
     const val COMPLETE = "complete"
     const val ATTRIBUTES = "attribute-update"
+    const val ATTRIBUTES_LISTENER_UPDATE = "attribute-listener-update"
     const val CANDIDATE_GROUP_ADD = "candidate-group-add"
     const val CANDIDATE_GROUP_DELETE = "candidate-group-delete"
     const val CANDIDATE_USER_ADD = "candidate-user-add"

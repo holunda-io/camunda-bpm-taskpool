@@ -29,9 +29,7 @@ import org.springframework.context.annotation.Import
   CreateOrUpdateCommandHandler::class,
   DataEntryCreatedEventUpcaster::class
 )
-class DataPoolCoreAxonConfiguration(
-  deletionStrategy: DeletionStrategy
-) {
+class DataPoolCoreAxonConfiguration {
   companion object : KLogging() {
     const val DATA_ENTRY_REPOSITORY = "dataEntryEventSourcingRepository"
     const val DATA_ENTRY_SNAPSHOTTER = "dataEntrySnapshotter"

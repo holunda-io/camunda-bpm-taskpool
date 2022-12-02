@@ -5,6 +5,7 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.holunda.camunda.taskpool.api.business.newCorrelations
 import io.holunda.camunda.taskpool.api.task.*
 import io.holunda.camunda.taskpool.api.task.CamundaTaskEventType.Companion.CREATE
+import io.holunda.polyflow.taskpool.itest.TaskCollectorITest.Companion.NOW
 import io.holunda.polyflow.taskpool.sender.gateway.CommandListGateway
 import org.assertj.core.api.Assertions
 import org.awaitility.Awaitility.await
@@ -53,6 +54,10 @@ class TaskCollectorITest {
   private val taskDefinitionKey = "userTask"
   private val defaultVariables = createVariables().apply { put("key", "value") }
 
+  companion object {
+    val NOW = Date.from(now())
+  }
+
   @Autowired
   lateinit var repositoryService: RepositoryService
 
@@ -68,34 +73,170 @@ class TaskCollectorITest {
   @MockBean
   lateinit var commandListGateway: CommandListGateway
 
-  /**
-   * The process is started and waits in the user task. If the instance is deleted,
-   * and the listeners are notified, the delete command is sent out with process
-   * variables contained prior the deletion.
-   */
   @Test
-  fun `should send task delete on process instance deletion`() {
+  fun `creates task in process`() {
 
-    val reason = "I-test"
     // deploy
-    deployProcess(createUserTaskProcess(processId, taskDefinitionKey))
+    deployProcess(
+      createUserTaskProcess(
+        processId,
+        taskDefinitionKey,
+        taskListeners = listOf(
+          Pair("create", "#{addCandidateUserPiggy}"),
+          Pair("create", "#{addCandidateGroupMuppetShow}"),
+        ),
+      )
+    )
+
+    // start
+    val instance = startProcessInstance(
+      processId,
+      businessKey
+    )
+
+    // wait for async continuation: we must not trigger the execution of the job explicitly but instead await its execution
+    await().untilAsserted { assertThat(job(instance)).isNull() }
+
+    // user task
+    assertThat(instance).isWaitingAt(taskDefinitionKey)
+
+    val createCommand = createTaskCommand(
+      candidateUsers = setOf("piggy"),
+      candidateGroups = setOf("muppetshow"),
+    )
+    // we need to take into account that dispatching the accumulated commands is done asynchronously, and therefore we might have to wait a little bit
+    waitAtMost(3, TimeUnit.SECONDS).untilAsserted { verify(commandListGateway).sendToGateway(listOf(createCommand)) }
+    verifyNoMoreInteractions(commandListGateway)
+  }
+
+  @Test
+  fun `creates task with values modified by task create listener`() {
+    // deploy
+    deployProcess(
+      createUserTaskProcess(
+        processId, taskDefinitionKey,
+        taskListeners = listOf(
+          "create" to "#{changeTaskAttributes}" // will change direct task attributes
+        )
+      )
+    )
 
     // start
     val instance = startProcessInstance(processId, businessKey)
     assertThat(instance).isWaitingAt(taskDefinitionKey)
-    verify(commandListGateway).sendToGateway(listOf(createTaskCommand()))
-
-    // delete
-    val deleteCommand = DeleteTaskCommand(
-      id = task().id,
-      deleteReason = reason
+    verify(commandListGateway).sendToGateway(
+      listOf(
+        createTaskCommand()
+          .copy(
+            name = "new name",
+            description = "new description",
+            priority = 99,
+            dueDate = NOW,
+            followUpDate = NOW,
+// Values from the original are, but these are modified by the listener.
+//        name = "User Task",
+//        description = null,
+//        priority = 66,
+//        dueDate = null,
+//        followUpDate = null,
+          )
+      )
     )
-    runtimeService.deleteProcessInstance(instance.processInstanceId, reason, true) // set to skip listeners, still should work fine
-
-    verify(commandListGateway).sendToGateway(listOf(deleteCommand))
-    verifyNoMoreInteractions(commandListGateway)
-
   }
+
+
+  @Test
+  fun `creates task in process with async start`() {
+
+    // deploy
+    deployProcess(
+      createUserTaskProcess(
+        processId,
+        taskDefinitionKey,
+        taskListeners = listOf(
+          Pair("create", "#{addCandidateUserPiggy}"),
+          Pair("create", "#{addCandidateGroupMuppetShow}")
+        ),
+        asyncOnStart = true
+      )
+    )
+
+    // start
+    val instance = startProcessInstance(
+      processId,
+      businessKey
+    )
+
+    // wait for async continuation: we must not trigger the execution of the job explicitly but instead await its execution
+    await().untilAsserted { assertThat(job(instance)).isNull() }
+
+    // user task
+    assertThat(instance).isWaitingAt(taskDefinitionKey)
+
+    val createCommand = createTaskCommand(
+      candidateUsers = setOf("piggy"),
+      candidateGroups = setOf("muppetshow"),
+    )
+    // we need to take into account that dispatching the accumulated commands is done asynchronously, and therefore we might have to wait a little bit
+    waitAtMost(3, TimeUnit.SECONDS).untilAsserted { verify(commandListGateway).sendToGateway(listOf(createCommand)) }
+    verifyNoMoreInteractions(commandListGateway)
+  }
+
+  @Test
+  fun `creates task in a process with async start and complex variables`() {
+    // deploy
+    deployProcess(
+      createUserTaskProcess(
+        processId,
+        taskDefinitionKey,
+        taskListeners = listOf(
+          Pair("create", "#{addCandidateUserPiggy}"),
+          Pair("create", "#{addCandidateGroupMuppetShow}")
+        ),
+        asyncOnStart = true
+      )
+    )
+
+    // start
+    val set = linkedSetOf("3", "2", "1")
+    // When Jackson reads the set as a Set (not a LinkedSet), the order changes
+    Assertions.assertThat(set.toList()).isNotEqualTo(jacksonObjectMapper().convertValue<Set<String>>(set).toList())
+    val instance = startProcessInstance(
+      processId, businessKey,
+      Variables
+        .putValue("key", "value")
+        .putValue("object", MyStructureWithSet("name", "key", 1, set))
+    )
+
+    // wait for async continuation: we must not trigger the execution of the job explicitly but instead await its execution
+    await().untilAsserted { assertThat(job(instance)).isNull() }
+
+    // user task
+    assertThat(instance).isWaitingAt(taskDefinitionKey)
+
+    val createCommand = createTaskCommand(
+      candidateUsers = setOf("piggy"), candidateGroups = setOf("muppetshow"), variables = Variables
+        .putValue("key", Variables.stringValue("value"))
+        // Jackson changes the order in the set, so we need to get the iteration order that the elements would have in a normal HashSet
+        .putValue(
+          "object",
+          mapOf(
+            MyStructureWithSet::name.name to "name",
+            MyStructureWithSet::key.name to "key",
+            MyStructureWithSet::value.name to 1,
+            MyStructureWithSet::set.name to HashSet(set).toList()
+          )
+        )
+    )
+
+    // we need to take into account that dispatching the accumulated commands is done asynchronously, and therefore we might have to wait a little bit
+    waitAtMost(3, TimeUnit.SECONDS).untilAsserted {
+      verify(commandListGateway).sendToGateway(listOf(createCommand))
+    }
+
+    verifyNoMoreInteractions(commandListGateway)
+  }
+
 
   /**
    * The process is started and wait in a user task. If this gets completed,
@@ -160,7 +301,7 @@ class TaskCollectorITest {
    * the process runs to the next user task.
    */
   @Test
-  fun `claim and complete in one TX`() {
+  fun `completes with claim in one TX`() {
 
     // deploy
     deployProcess(createUserTaskProcess(processId, taskDefinitionKey))
@@ -193,8 +334,7 @@ class TaskCollectorITest {
    * The update command is send after the TX commit.
    */
   @Test
-  fun `updates due date`() {
-
+  fun `updates attributes via API`() {
 
     // deploy
     deployProcess(createUserTaskProcess(processId, taskDefinitionKey))
@@ -206,7 +346,12 @@ class TaskCollectorITest {
 
     // set due date to now
     val now = Date.from(now())
-    taskService.saveTask(task().apply { dueDate = now })
+    taskService.saveTask(task().apply {
+      name = "new name"
+      description = "new description"
+      dueDate = now
+    })
+
     val updateCommand = updateTaskCommand()
     verify(commandListGateway).sendToGateway(listOf(updateCommand))
 
@@ -218,19 +363,25 @@ class TaskCollectorITest {
    * The update command is send after the TX commit.
    */
   @Test
-  fun `updates attributes`() {
+  fun `updates attributes via API with update listener`() {
 
     // deploy
-    deployProcess(createUserTaskProcess(processId, taskDefinitionKey))
+    deployProcess(
+      createUserTaskProcess(
+        processId, taskDefinitionKey, taskListeners = listOf(
+          "update" to "#{changeTaskAttributes}"
+        )
+      )
+    )
 
     // start
     val instance = startProcessInstance(processId, businessKey)
     assertThat(instance).isWaitingAt(taskDefinitionKey)
     verify(commandListGateway).sendToGateway(listOf(createTaskCommand()))
 
+    // trigger the update event on the task
     taskService.saveTask(task().apply {
-      name = "new name"
-      description = "new description"
+      name = "api name"
     })
 
     val updateCommand = updateTaskCommand()
@@ -240,103 +391,32 @@ class TaskCollectorITest {
   }
 
   /**
-   * The process is started and runs into a user task.
-   * The create command is send after the TX commit.
+   * The process is started and wait in a user task.
+   * The update command is send after the TX commit.
    */
   @Test
-  fun `should send task create of async process`() {
+  fun `assigns task via API with assignment listener`() {
 
     // deploy
     deployProcess(
       createUserTaskProcess(
-        processId,
-        taskDefinitionKey,
+        processId, taskDefinitionKey,
+        candidateUsers = "fozzy",
         taskListeners = listOf(
-          Pair("create", "#{addCandidateUserPiggy}"),
-          Pair("create", "#{addCandidateGroupMuppetShow}")
-        ),
-        additionalUserTask = false,
-        asyncOnStart = true
-      )
-    )
-
-    // start
-    val instance = startProcessInstance(
-      processId,
-      businessKey
-    )
-
-    // wait for async continuation: we must not trigger the execution of the job explicitly but instead await its execution
-    await().untilAsserted { assertThat(job(instance)).isNull() }
-
-    // user task
-    assertThat(instance).isWaitingAt(taskDefinitionKey)
-
-    val createCommand = createTaskCommand(
-      candidateUsers = setOf("piggy"),
-      candidateGroups = setOf("muppetshow"),
-    )
-    // we need to take into account that dispatching the accumulated commands is done asynchronously, and therefore we might have to wait a little bit
-    waitAtMost(3, TimeUnit.SECONDS).untilAsserted { verify(commandListGateway).sendToGateway(listOf(createCommand)) }
-    verifyNoMoreInteractions(commandListGateway)
-  }
-
-  /**
-   * Test case for the issue described in [io.holunda.polyflow.taskpool.collector.task.enricher.ProcessVariablesTaskCommandEnricher]
-   * where variable changes were flushed in the inner process engine context, causing an OptimisticLockingException.
-   */
-  @Test
-  fun `not flushes changes in separate context`() {
-    // deploy
-    deployProcess(
-      createUserTaskProcess(
-        processId,
-        taskDefinitionKey,
-        taskListeners = listOf(
-          Pair("create", "#{addCandidateUserPiggy}"),
-          Pair("create", "#{addCandidateGroupMuppetShow}")
-        ),
-        additionalUserTask = false,
-        asyncOnStart = true
-      )
-    )
-
-    // start
-    val set = linkedSetOf("3", "2", "1")
-    // When Jackson reads the set as a Set (not a LinkedSet), the order changes
-    Assertions.assertThat(set.toList()).isNotEqualTo(jacksonObjectMapper().convertValue<Set<String>>(set).toList())
-    val instance = startProcessInstance(
-      processId, businessKey,
-      Variables
-        .putValue("key", "value")
-        .putValue("object", MyStructureWithSet("name", "key", 1, set))
-    )
-
-    // wait for async continuation: we must not trigger the execution of the job explicitly but instead await its execution
-    await().untilAsserted { assertThat(job(instance)).isNull() }
-
-    // user task
-    assertThat(instance).isWaitingAt(taskDefinitionKey)
-
-    val createCommand = createTaskCommand(
-      candidateUsers = setOf("piggy"), candidateGroups = setOf("muppetshow"), variables = Variables
-        .putValue("key", Variables.stringValue("value"))
-        // Jackson changes the order in the set, so we need to get the iteration order that the elements would have in a normal HashSet
-        .putValue(
-          "object",
-          mapOf(
-            MyStructureWithSet::name.name to "name",
-            MyStructureWithSet::key.name to "key",
-            MyStructureWithSet::value.name to 1,
-            MyStructureWithSet::set.name to HashSet(set).toList()
-          )
+          "assignment" to "#{setAssigneePiggy}"
         )
+      )
     )
 
-    // we need to take into account that dispatching the accumulated commands is done asynchronously, and therefore we might have to wait a little bit
-    waitAtMost(3, TimeUnit.SECONDS).untilAsserted {
-      verify(commandListGateway).sendToGateway(listOf(createCommand))
-    }
+    // start
+    val instance = startProcessInstance(processId, businessKey)
+    assertThat(instance).isWaitingAt(taskDefinitionKey)
+    verify(commandListGateway).sendToGateway(listOf(createTaskCommand(candidateUsers = setOf("fozzy"))))
+
+    // trigger the update event on the task
+    taskService.setAssignee(task().id, "kermit") // but the listener will set it back to piggy!
+
+    verify(commandListGateway).sendToGateway(listOf(AssignTaskCommand(task().id, assignee = "piggy")))
 
     verifyNoMoreInteractions(commandListGateway)
   }
@@ -346,7 +426,7 @@ class TaskCollectorITest {
    * The assign command is send after the TX commit.
    */
   @Test
-  fun `(re) assigns user`() {
+  fun `(re) assigns user via API`() {
 
     // deploy
     deployProcess(
@@ -405,11 +485,13 @@ class TaskCollectorITest {
     assertThat(task()).hasCandidateGroup(muppets)
     assertThat(task()).hasCandidateGroup(peasants)
     assertThat(task()).hasCandidateGroup(lords)
-    verify(commandListGateway).sendToGateway(listOf(createTaskCommand(
-      candidateGroups = setOf(muppets, peasants, lords)
-    )))
-
-
+    verify(commandListGateway).sendToGateway(
+      listOf(
+        createTaskCommand(
+          candidateGroups = setOf(muppets, peasants, lords)
+        )
+      )
+    )
 
     val doInOneTransactionCommand = Command {
       taskService.deleteCandidateGroup(task().id, muppets)
@@ -423,6 +505,63 @@ class TaskCollectorITest {
     val deleteGroups = DeleteCandidateGroupsCommand(task().id, candidateGroups = setOf(muppets, peasants, lords))
     val addGroups = AddCandidateGroupsCommand(task().id, candidateGroups = setOf(avengers, dwarfs))
     verify(commandListGateway).sendToGateway(listOf(deleteGroups, addGroups))
+  }
+
+  /**
+   * The process is started and wait in a user task.
+   * The candidate group change commands is sent after the TX commit.
+   */
+  @Test
+  fun `changes candidate groups and further command attributes via API`() {
+
+    val muppets = "muppets"
+    val lords = "lords"
+    val peasants = "peasants"
+    val avengers = "avengers"
+    val dwarfs = "dwarfs"
+
+    // deploy
+    deployProcess(
+      createUserTaskProcess(
+        processId,
+        taskDefinitionKey,
+        additionalUserTask = false,
+        candidateGroups = "$muppets,$lords,$peasants"
+      )
+    )
+
+    // start
+    val instance = startProcessInstance(processId, businessKey)
+    assertThat(instance).isWaitingAt(taskDefinitionKey)
+    assertThat(task()).hasCandidateGroup(muppets)
+    assertThat(task()).hasCandidateGroup(peasants)
+    assertThat(task()).hasCandidateGroup(lords)
+    verify(commandListGateway).sendToGateway(
+      listOf(
+        createTaskCommand(
+          candidateGroups = setOf(muppets, peasants, lords)
+        )
+      )
+    )
+
+    val doInOneTransactionCommand = Command {
+      taskService.deleteCandidateGroup(task().id, muppets)
+      taskService.deleteCandidateGroup(task().id, peasants)
+      taskService.deleteCandidateGroup(task().id, lords)
+      taskService.addCandidateGroup(task().id, avengers)
+      taskService.addCandidateGroup(task().id, dwarfs)
+      taskService.setPriority(task().id, 11)
+      taskService.setAssignee(task().id, "kermit")
+    }
+    commandExecutor.execute(doInOneTransactionCommand)
+
+    val deleteGroups = DeleteCandidateGroupsCommand(task().id, candidateGroups = setOf(muppets, peasants, lords))
+    val addGroups = AddCandidateGroupsCommand(task().id, candidateGroups = setOf(avengers, dwarfs))
+    val updateAttributes = updateTaskCommand().copy(
+      priority = 11
+    )
+    val assign = AssignTaskCommand(task().id, assignee = "kermit")
+    verify(commandListGateway).sendToGateway(listOf(assign, deleteGroups, addGroups, updateAttributes))
   }
 
   /**
@@ -452,9 +591,13 @@ class TaskCollectorITest {
     assertThat(instance).isWaitingAt(taskDefinitionKey)
     assertThat(task()).hasCandidateUser(kermit)
     assertThat(task()).hasCandidateUser(piggy)
-    verify(commandListGateway).sendToGateway(listOf(createTaskCommand(
-      candidateUsers = setOf(kermit, piggy)
-    )))
+    verify(commandListGateway).sendToGateway(
+      listOf(
+        createTaskCommand(
+          candidateUsers = setOf(kermit, piggy)
+        )
+      )
+    )
 
     val doInOneTransactionCommand = Command {
       taskService.deleteCandidateUser(task().id, kermit)
@@ -471,6 +614,35 @@ class TaskCollectorITest {
     verify(commandListGateway).sendToGateway(listOf(deleteUsers, addUsers))
   }
 
+
+  /**
+   * The process is started and waits in the user task. If the instance is deleted,
+   * and the listeners are notified, the delete command is sent out with process
+   * variables contained prior the deletion.
+   */
+  @Test
+  fun `deletes on process instance deletion`() {
+
+    val reason = "I-test"
+    // deploy
+    deployProcess(createUserTaskProcess(processId, taskDefinitionKey))
+
+    // start
+    val instance = startProcessInstance(processId, businessKey)
+    assertThat(instance).isWaitingAt(taskDefinitionKey)
+    verify(commandListGateway).sendToGateway(listOf(createTaskCommand()))
+
+    // delete
+    val deleteCommand = DeleteTaskCommand(
+      id = task().id,
+      deleteReason = reason
+    )
+    runtimeService.deleteProcessInstance(instance.processInstanceId, reason, true) // set to skip listeners, still should work fine
+
+    verify(commandListGateway).sendToGateway(listOf(deleteCommand))
+    verifyNoMoreInteractions(commandListGateway)
+
+  }
 
   /*
    * Deploys the process.
@@ -509,6 +681,7 @@ class TaskCollectorITest {
     asyncOnStart: Boolean = false,
     candidateGroups: String = "",
     candidateUsers: String = "",
+    formKey: String = "form-key",
     taskListeners: List<Pair<String, String>> = listOf(),
     otherTaskDefinitionKey: String = "another-user-task"
   ) = Bpmn
@@ -516,10 +689,16 @@ class TaskCollectorITest {
     // start event
     .startEvent("start").camundaAsyncAfter(asyncOnStart)
     // user task
-    .userTask(taskDefinitionKey).camundaCandidateGroups(candidateGroups).camundaCandidateUsers(candidateUsers).apply {
+    .userTask(taskDefinitionKey)
+    .camundaCandidateGroups(candidateGroups)
+    .camundaCandidateUsers(candidateUsers)
+    .camundaFormKey(formKey)
+    .camundaPriority("66")
+    .apply {
       taskListeners.forEach {
         this.camundaTaskListenerDelegateExpression(it.first, it.second)
       }
+      this.element.name = "User Task"
     }
     // optional second user task
     .apply {
@@ -542,7 +721,7 @@ class TaskCollectorITest {
     candidateUsers: Set<String> = setOf(),
     variables: VariableMap = defaultVariables,
     processBusinessKey: String = this.businessKey
-  ) = task().let { task ->
+  ) = task(taskQuery().initializeFormKeys()).let { task ->
     CreateTaskCommand(
       id = task.id,
       sourceReference = ProcessReference(
@@ -564,7 +743,8 @@ class TaskCollectorITest {
       createTime = task.createTime,
       businessKey = processBusinessKey,
       priority = task.priority, // default by camunda if not set in explicit
-      payload = variables
+      payload = variables,
+      formKey = task.formKey
     )
   }
 
@@ -576,12 +756,13 @@ class TaskCollectorITest {
     instanceBusinessKey: String = businessKey,
     correlations: VariableMap = newCorrelations()
   ) =
-    task().let { task ->
+    task(taskQuery().initializeFormKeys()).let { task ->
       UpdateAttributeTaskCommand(
         id = task.id,
         name = task.name,
         description = task.description,
         dueDate = task.dueDate,
+        followUpDate = task.followUpDate,
         owner = task.owner,
         priority = task.priority,
         taskDefinitionKey = task.taskDefinitionKey,
@@ -622,6 +803,21 @@ class AddCandidateGroupMuppetShow : TaskListener {
     delegateTask.addCandidateGroup("muppetshow")
   }
 }
+
+/**
+ * Typical use case for a start listener changing attributes
+ */
+@Component
+class ChangeTaskAttributes : TaskListener {
+  override fun notify(delegateTask: DelegateTask) {
+    delegateTask.name = "new name"
+    delegateTask.description = "new description"
+    delegateTask.priority = 99
+    delegateTask.dueDate = NOW
+    delegateTask.followUpDate = NOW
+  }
+}
+
 
 data class MyStructure(val name: String, val key: String, val value: Int)
 data class MyStructureWithSet(val name: String, val key: String, val value: Int, val set: Set<String> = setOf())

@@ -72,7 +72,7 @@ Taskpool Collector registers Spring Event Listener to the following events, fire
 
 * `DelegateTask` events:
   ** create
-  ** assign
+  ** update 
   ** delete
   ** complete
 * `HistoryEvent` events:
