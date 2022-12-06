@@ -3,15 +3,9 @@ spring:
 camunda:
   bpm:
     default-serialization-format: application/json
-    authorization:
-      enabled: false
-    # id-generator: strong
     history-level: full
     eventing:
       task: false
-    metrics:
-      enabled: false
-      db-reporter-activate: false
 
 polyflow:
   integration:

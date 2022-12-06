@@ -3,8 +3,8 @@ package io.holunda.polyflow.client.camunda.task
 import io.holunda.camunda.taskpool.api.task.*
 import io.holunda.polyflow.client.camunda.CamundaEngineClientProperties
 import org.camunda.bpm.engine.TaskService
-import org.camunda.bpm.extension.mockito.QueryMocks
-import org.camunda.bpm.extension.mockito.task.TaskFake
+import org.camunda.community.mockito.QueryMocks
+import org.camunda.community.mockito.task.TaskFake
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith

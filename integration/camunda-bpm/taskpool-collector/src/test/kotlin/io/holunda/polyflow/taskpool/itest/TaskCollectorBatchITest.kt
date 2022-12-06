@@ -1,52 +1,48 @@
 package io.holunda.polyflow.taskpool.itest
 
-import com.fasterxml.jackson.module.kotlin.convertValue
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.holunda.camunda.taskpool.api.business.newCorrelations
 import io.holunda.camunda.taskpool.api.task.*
 import io.holunda.camunda.taskpool.api.task.CamundaTaskEventType.Companion.CREATE
-import io.holunda.polyflow.taskpool.itest.TaskCollectorITest.Companion.NOW
 import io.holunda.polyflow.taskpool.sender.gateway.CommandListGateway
-import org.assertj.core.api.Assertions
-import org.awaitility.Awaitility.await
-import org.awaitility.Awaitility.waitAtMost
 import org.camunda.bpm.engine.RepositoryService
 import org.camunda.bpm.engine.RuntimeService
 import org.camunda.bpm.engine.TaskService
-import org.camunda.bpm.engine.delegate.DelegateTask
-import org.camunda.bpm.engine.delegate.TaskListener
 import org.camunda.bpm.engine.impl.interceptor.Command
 import org.camunda.bpm.engine.impl.interceptor.CommandExecutor
 import org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.*
 import org.camunda.bpm.engine.variable.VariableMap
-import org.camunda.bpm.engine.variable.Variables
 import org.camunda.bpm.engine.variable.Variables.createVariables
 import org.camunda.bpm.model.bpmn.Bpmn
 import org.camunda.bpm.model.bpmn.BpmnModelInstance
 import org.camunda.bpm.model.xml.instance.ModelElementInstance
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mockito.*
-import org.mockito.kotlin.verifyNoMoreInteractions
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment.MOCK
 import org.springframework.boot.test.mock.mockito.MockBean
-import org.springframework.stereotype.Component
 import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit.jupiter.SpringExtension
-import java.time.Instant.now
+import org.springframework.transaction.annotation.Transactional
 import java.util.*
-import java.util.concurrent.TimeUnit
 
 
 /**
  * This ITests simulates work of Camunda collector including variable enrichment.
  */
 @ExtendWith(SpringExtension::class)
-@SpringBootTest(classes = [CollectorTestApplication::class], webEnvironment = SpringBootTest.WebEnvironment.MOCK, properties = ["polyflow.integration.sender.task.batchCommands=true"])
+@SpringBootTest(
+  classes = [CollectorTestApplication::class],
+  webEnvironment = MOCK,
+  properties = ["polyflow.integration.sender.task.batch-commands=true"]
+)
 @ActiveProfiles("collector-itest")
 @DirtiesContext
+@Transactional
+@Disabled
 class TaskCollectorBatchITest {
 
   private val businessKey = "BK1"
@@ -70,7 +66,6 @@ class TaskCollectorBatchITest {
   lateinit var commandListGateway: CommandListGateway
 
 
-
   /**
    * The process is started and wait in a user task.
    * The candidate group change commands is sent after the TX commit.
@@ -87,10 +82,7 @@ class TaskCollectorBatchITest {
     // deploy
     deployProcess(
       createUserTaskProcess(
-        processId,
-        taskDefinitionKey,
-        additionalUserTask = false,
-        candidateGroups = "$muppets,$lords,$peasants"
+        processId, taskDefinitionKey, additionalUserTask = false, candidateGroups = "$muppets,$lords,$peasants"
       )
     )
 
@@ -138,10 +130,7 @@ class TaskCollectorBatchITest {
     // deploy
     deployProcess(
       createUserTaskProcess(
-        processId,
-        taskDefinitionKey,
-        additionalUserTask = false,
-        candidateGroups = "$muppets,$lords,$peasants"
+        processId, taskDefinitionKey, additionalUserTask = false, candidateGroups = "$muppets,$lords,$peasants"
       )
     )
 
@@ -196,9 +185,7 @@ class TaskCollectorBatchITest {
     // deploy
     deployProcess(
       createUserTaskProcess(
-        processId,
-        taskDefinitionKey,
-        candidateUsers = "$kermit,$piggy"
+        processId, taskDefinitionKey, candidateUsers = "$kermit,$piggy"
       )
     )
 
@@ -227,37 +214,28 @@ class TaskCollectorBatchITest {
 
     val deleteUsers = DeleteCandidateUsersCommand(task().id, candidateUsers = setOf(kermit, piggy))
     val addUsers = AddCandidateUsersCommand(task().id, candidateUsers = setOf(superman, batman, hulk))
-    verify(commandListGateway).sendToGateway(listOf(BatchCommand(id = task().id, commands =listOf(deleteUsers, addUsers))))
+    verify(commandListGateway).sendToGateway(listOf(BatchCommand(id = task().id, commands = listOf(deleteUsers, addUsers))))
   }
-
 
 
   /*
    * Deploys the process.
    */
   private fun deployProcess(modelInstance: BpmnModelInstance) {
-    repositoryService
-      .createDeployment()
-      .addModelInstance("process.bpmn", modelInstance)
-      .deploy()
+    repositoryService.createDeployment().addModelInstance("process.bpmn", modelInstance).deploy()
   }
 
   /*
    * Starts the process.
    */
   private fun startProcessInstance(
-    processId: String,
-    businessKey: String,
-    variables: VariableMap = defaultVariables
-  ) = runtimeService
-    .startProcessInstanceByKey(
-      processId,
-      businessKey,
-      variables
-    ).also { instance ->
-      assertThat(instance).isNotNull
-      assertThat(instance).isStarted
-    }
+    processId: String, businessKey: String, variables: VariableMap = defaultVariables
+  ) = runtimeService.startProcessInstanceByKey(
+    processId, businessKey, variables
+  ).also { instance ->
+    assertThat(instance).isNotNull
+    assertThat(instance).isStarted
+  }
 
   /**
    * Creates a process model instance with start -> user-task -> (optional: another-user-task) -> end
@@ -272,17 +250,11 @@ class TaskCollectorBatchITest {
     formKey: String = "form-key",
     taskListeners: List<Pair<String, String>> = listOf(),
     otherTaskDefinitionKey: String = "another-user-task"
-  ) = Bpmn
-    .createExecutableProcess(processId)
+  ) = Bpmn.createExecutableProcess(processId)
     // start event
     .startEvent("start").camundaAsyncAfter(asyncOnStart)
     // user task
-    .userTask(taskDefinitionKey)
-    .camundaCandidateGroups(candidateGroups)
-    .camundaCandidateUsers(candidateUsers)
-    .camundaFormKey(formKey)
-    .camundaPriority("66")
-    .apply {
+    .userTask(taskDefinitionKey).camundaCandidateGroups(candidateGroups).camundaCandidateUsers(candidateUsers).camundaFormKey(formKey).camundaPriority("66").apply {
       taskListeners.forEach {
         this.camundaTaskListenerDelegateExpression(it.first, it.second)
       }
@@ -295,8 +267,7 @@ class TaskCollectorBatchITest {
       }
     }
     // end event
-    .endEvent("end")
-    .done().apply {
+    .endEvent("end").done().apply {
       getModelElementById<ModelElementInstance>(processId).setAttributeValue("name", "My Process")
     }
 
@@ -305,10 +276,7 @@ class TaskCollectorBatchITest {
    * Create task command from current task.
    */
   private fun createTaskCommand(
-    candidateGroups: Set<String> = setOf(),
-    candidateUsers: Set<String> = setOf(),
-    variables: VariableMap = defaultVariables,
-    processBusinessKey: String = this.businessKey
+    candidateGroups: Set<String> = setOf(), candidateUsers: Set<String> = setOf(), variables: VariableMap = defaultVariables, processBusinessKey: String = this.businessKey
   ) = task(taskQuery().initializeFormKeys()).let { task ->
     CreateTaskCommand(
       id = task.id,
@@ -340,32 +308,29 @@ class TaskCollectorBatchITest {
    * Creates update command from current task.
    */
   private fun updateTaskCommand(
-    variables: VariableMap = defaultVariables,
-    instanceBusinessKey: String = businessKey,
-    correlations: VariableMap = newCorrelations()
-  ) =
-    task(taskQuery().initializeFormKeys()).let { task ->
-      UpdateAttributeTaskCommand(
-        id = task.id,
-        name = task.name,
-        description = task.description,
-        dueDate = task.dueDate,
-        followUpDate = task.followUpDate,
-        owner = task.owner,
-        priority = task.priority,
-        taskDefinitionKey = task.taskDefinitionKey,
-        sourceReference = ProcessReference(
-          instanceId = task.processInstanceId,
-          executionId = task.executionId,
-          definitionId = task.processDefinitionId,
-          name = "My Process",
-          definitionKey = processId,
-          applicationName = "collector-test"
-        ),
-        enriched = true,
-        businessKey = instanceBusinessKey,
-        payload = variables,
-        correlations = correlations
-      )
-    }
+    variables: VariableMap = defaultVariables, instanceBusinessKey: String = businessKey, correlations: VariableMap = newCorrelations()
+  ) = task(taskQuery().initializeFormKeys()).let { task ->
+    UpdateAttributeTaskCommand(
+      id = task.id,
+      name = task.name,
+      description = task.description,
+      dueDate = task.dueDate,
+      followUpDate = task.followUpDate,
+      owner = task.owner,
+      priority = task.priority,
+      taskDefinitionKey = task.taskDefinitionKey,
+      sourceReference = ProcessReference(
+        instanceId = task.processInstanceId,
+        executionId = task.executionId,
+        definitionId = task.processDefinitionId,
+        name = "My Process",
+        definitionKey = processId,
+        applicationName = "collector-test"
+      ),
+      enriched = true,
+      businessKey = instanceBusinessKey,
+      payload = variables,
+      correlations = correlations
+    )
+  }
 }

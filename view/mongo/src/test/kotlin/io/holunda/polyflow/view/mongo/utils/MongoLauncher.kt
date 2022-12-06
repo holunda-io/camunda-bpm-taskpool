@@ -2,13 +2,13 @@ package io.holunda.polyflow.view.mongo.utils
 
 import com.mongodb.*
 import com.mongodb.client.MongoClients
-import de.flapdoodle.embed.mongo.Command
 import de.flapdoodle.embed.mongo.MongodExecutable
 import de.flapdoodle.embed.mongo.MongodProcess
 import de.flapdoodle.embed.mongo.MongodStarter
 import de.flapdoodle.embed.mongo.config.*
 import de.flapdoodle.embed.mongo.distribution.Version
-import de.flapdoodle.embed.process.config.io.ProcessOutput
+import de.flapdoodle.embed.mongo.packageresolver.Command
+import de.flapdoodle.embed.process.config.process.ProcessOutput.*
 import de.flapdoodle.embed.process.io.Processors
 import de.flapdoodle.embed.process.io.Slf4jLevel
 import mu.KLogging
@@ -57,7 +57,7 @@ object MongoLauncher {
 
     val mongodConfig = ImmutableMongodConfig
       .builder()
-      .version(Version.Main.PRODUCTION)
+      .version(Version.Main.V4_4)
       .replication(if (asReplicaSet) Storage(null, "repembedded", 16) else Storage())
       .net(Net(MONGO_DEFAULT_PORT, false))
       .cmdOptions(
@@ -70,11 +70,12 @@ object MongoLauncher {
       .stopTimeoutInMillis(11000)
       .build()
 
-    val processOutput = ProcessOutput(
-      Processors.logTo(logger, Slf4jLevel.DEBUG),
-      Processors.logTo(logger, Slf4jLevel.ERROR),
-      Processors.named("[console>]", Processors.logTo(logger, Slf4jLevel.TRACE))
-    )
+    val processOutput = builder()
+      .output(Processors.logTo(logger, Slf4jLevel.DEBUG))
+      .error(Processors.logTo(logger, Slf4jLevel.ERROR))
+      .build()
+    //    Processors.named("[console>]", Processors.logTo(logger, Slf4jLevel.TRACE))
+
 
     val command = Command.MongoD
 
@@ -128,10 +129,12 @@ object MongoLauncher {
               .build()
           ).use { mongo ->
 
-            val config = Document(mapOf("_id" to "repembedded",
-              "members" to BasicDBList().apply {
-                add(Document("_id", 0).append("host", "$LOCALHOST:$MONGO_DEFAULT_PORT"))
-              }))
+            val config = Document(
+              mapOf("_id" to "repembedded",
+                "members" to BasicDBList().apply {
+                  add(Document("_id", 0).append("host", "$LOCALHOST:$MONGO_DEFAULT_PORT"))
+                })
+            )
             logger.info { "MongoDB Replica Config: $config" }
 
             val adminDatabase = mongo.getDatabase("admin")

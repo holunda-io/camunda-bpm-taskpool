@@ -58,8 +58,8 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.camunda.bpm.extension.mockito</groupId>
-      <artifactId>camunda-bpm-mockito</artifactId>
+      <groupId>org.camunda.community.mockito</groupId>
+      <artifactId>camunda-platform-7-mockito</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -96,7 +96,7 @@
     </dependency>
 
     <dependency>
-      <groupId>org.camunda.bpm.assert</groupId>
+      <groupId>org.camunda.bpm</groupId>
       <artifactId>camunda-bpm-assert</artifactId>
       <scope>test</scope>
     </dependency>
