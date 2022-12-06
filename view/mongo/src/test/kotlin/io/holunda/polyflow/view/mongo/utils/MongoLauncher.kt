@@ -73,9 +73,8 @@ object MongoLauncher {
     val processOutput = builder()
       .output(Processors.logTo(logger, Slf4jLevel.DEBUG))
       .error(Processors.logTo(logger, Slf4jLevel.ERROR))
+      .commands(Processors.named("[console>]", Processors.logTo(logger, Slf4jLevel.TRACE)))
       .build()
-    //    Processors.named("[console>]", Processors.logTo(logger, Slf4jLevel.TRACE))
-
 
     val command = Command.MongoD
 

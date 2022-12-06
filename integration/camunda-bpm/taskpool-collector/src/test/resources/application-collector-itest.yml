@@ -1,5 +1,12 @@
 spring:
   application.name: collector-test
+  jpa:
+    open-in-view: true # disable JPA warning
+    show-sql: false
+    database-platform: org.hibernate.dialect.H2Dialect
+  datasource:
+    driverClassName: org.h2.Driver
+
 camunda:
   bpm:
     default-serialization-format: application/json
