@@ -96,6 +96,62 @@ class TaskAggregate() {
   }
 
   /**
+   * Add candidate group.
+   */
+  @CommandHandler
+  fun handle(command: AddCandidateGroupsCommand) {
+    if (!deleted && !completed) {
+      command.candidateGroups.map { groupId ->
+        AggregateLifecycle.apply(
+          task.addCandidateGroupEvent(groupId = groupId)
+        )
+      }
+    }
+  }
+
+  /**
+   * Delete candidate group.
+   */
+  @CommandHandler
+  fun handle(command: DeleteCandidateGroupsCommand) {
+    if (!deleted && !completed) {
+      command.candidateGroups.map { groupId ->
+        AggregateLifecycle.apply(
+          task.removeCandidateGroupEvent(groupId = groupId)
+        )
+      }
+    }
+  }
+
+  /**
+   * Add candidate user.
+   */
+  @CommandHandler
+  fun handle(command: AddCandidateUsersCommand) {
+    if (!deleted && !completed) {
+      command.candidateUsers.map { userId ->
+        AggregateLifecycle.apply(
+          task.addCandidateUserEvent(userId = userId)
+        )
+      }
+    }
+  }
+
+  /**
+   * Delete candidate user.
+   */
+  @CommandHandler
+  fun handle(command: DeleteCandidateUsersCommand) {
+    if (!deleted && !completed) {
+      command.candidateUsers.map { userId ->
+        AggregateLifecycle.apply(
+          task.removeCandidateUserEvent(userId = userId)
+        )
+      }
+    }
+  }
+
+  /**
    * Handles intent to claim the task (sent by the user).
    */
   @CommandHandler
@@ -178,62 +234,6 @@ class TaskAggregate() {
       AggregateLifecycle.apply(
         task.undeferredEvent()
       )
-    }
-  }
-
-  /**
-   * Add candidate group.
-   */
-  @CommandHandler
-  fun handle(command: AddCandidateGroupsCommand) {
-    if (!deleted && !completed) {
-      command.candidateGroups.map { groupId ->
-        AggregateLifecycle.apply(
-          task.addCandidateGroupEvent(groupId = groupId)
-        )
-      }
-    }
-  }
-
-  /**
-   * Delete candidate group.
-   */
-  @CommandHandler
-  fun handle(command: DeleteCandidateGroupsCommand) {
-    if (!deleted && !completed) {
-      command.candidateGroups.map { groupId ->
-        AggregateLifecycle.apply(
-          task.removeCandidateGroupEvent(groupId = groupId)
-        )
-      }
-    }
-  }
-
-  /**
-   * Add candidate user.
-   */
-  @CommandHandler
-  fun handle(command: AddCandidateUsersCommand) {
-    if (!deleted && !completed) {
-      command.candidateUsers.map { userId ->
-        AggregateLifecycle.apply(
-          task.addCandidateUserEvent(userId = userId)
-        )
-      }
-    }
-  }
-
-  /**
-   * Delete candidate user.
-   */
-  @CommandHandler
-  fun handle(command: DeleteCandidateUsersCommand) {
-    if (!deleted && !completed) {
-      command.candidateUsers.map { userId ->
-        AggregateLifecycle.apply(
-          task.removeCandidateUserEvent(userId = userId)
-        )
-      }
     }
   }
 

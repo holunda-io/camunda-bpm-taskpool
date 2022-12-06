@@ -20,5 +20,6 @@ interface CamundaTaskEventType {
     const val CANDIDATE_GROUP_DELETE = "candidate-group-delete"
     const val CANDIDATE_USER_ADD = "candidate-user-add"
     const val CANDIDATE_USER_DELETE = "candidate-user-delete"
+    const val BATCH = "batch"
   }
 }
