@@ -51,13 +51,19 @@ Since all processing inside collector component and enricher is performed synchr
 be successfully committed before sending any commands to the Command Gateway. Otherwise, on any error
 the transaction would be rolled-back and the command would create an inconsistency between the taskpool and the engine.
 
-Depending on your deployment scenario, you may want to control the exact point in time when the commands are sent to command gateway.
+Depending on your deployment scenario, you may want to control the exact point in time, when the commands are sent to command gateway.
 The property `polyflow.integration.task.sender.send-within-transaction` is designed to influence this. If set to `true`, the commands
 are sent _before_ the process engine transaction is committed, otherwise commands are sent _after_ the process engine transaction is committed.
 
 !!! warning
-      Never send commands over remote messaging before the transaction is committed, since you may produce unexpected results if Camunda fails
+      Never send commands over **remote** messaging before the transaction is committed, since you may produce unexpected results if Camunda fails
       to commit the transaction.
+
+If commands are delivered to a local component (this is the case if taskpool core is deployed in the same deployment as collector and sender components),
+the sending transaction is spanned across the taskpool core component. In particular, this means that the command dispatch and emission of events
+are happening inside the same transaction (unit of work). For source-stated aggregates, Axon Framework is not allowing to dispatch multiple commands
+inside the same Unit of Work, so you want to batch the command dispatch. For this purpose, a special flag `polyflow.integration.task.sender.batch-commands` exists.
+Set this to `true` for local deployment of collector, sender and core or let it by `false` (default) on any other distribution scenario.
 
 #### Serialization of payload
 
