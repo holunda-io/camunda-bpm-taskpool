@@ -1491,14 +1491,19 @@ by the <code>AxonCommandListGateway</code> for sending the result over to the Ax
 Since all processing inside collector component and enricher is performed synchronously, the sender must waits until transaction to
 be successfully committed before sending any commands to the Command Gateway. Otherwise, on any error
 the transaction would be rolled-back and the command would create an inconsistency between the taskpool and the engine.</p>
-<p>Depending on your deployment scenario, you may want to control the exact point in time when the commands are sent to command gateway.
+<p>Depending on your deployment scenario, you may want to control the exact point in time, when the commands are sent to command gateway.
 The property <code>polyflow.integration.task.sender.send-within-transaction</code> is designed to influence this. If set to <code>true</code>, the commands
 are sent <em>before</em> the process engine transaction is committed, otherwise commands are sent <em>after</em> the process engine transaction is committed.</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
-<p>Never send commands over remote messaging before the transaction is committed, since you may produce unexpected results if Camunda fails
+<p>Never send commands over <strong>remote</strong> messaging before the transaction is committed, since you may produce unexpected results if Camunda fails
   to commit the transaction.</p>
 </div>
+<p>If commands are delivered to a local component (this is the case if taskpool core is deployed in the same deployment as collector and sender components),
+the sending transaction is spanned across the taskpool core component. In particular, this means that the command dispatch and emission of events
+are happening inside the same transaction (unit of work). For source-stated aggregates, Axon Framework is not allowing to dispatch multiple commands
+inside the same Unit of Work, so you want to batch the command dispatch. For this purpose, a special flag <code>polyflow.integration.task.sender.batch-commands</code> exists.
+Set this to <code>true</code> for local deployment of collector, sender and core or let it by <code>false</code> (default) on any other distribution scenario.</p>
 <h4 id="serialization-of-payload">Serialization of payload<a class="headerlink" href="#serialization-of-payload" title="Permanent link">#</a></h4>
 <p>By default, the data entry sender will serialize payload of the <code>DataEntry</code> into a JSON-Map structure, in order to be received by projections (Data Pool View)
 and storage of it, independent of the classes which might be not on the classpath of the projection (generic structure instead of a typed Java object structure).
@@ -1663,7 +1668,7 @@ the <code>CommandSuccessHandler</code>and <code>CommandErrorHandler</code> accor
   <small>
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">December 2, 2022</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">December 7, 2022</span>
       
     
   </small>
