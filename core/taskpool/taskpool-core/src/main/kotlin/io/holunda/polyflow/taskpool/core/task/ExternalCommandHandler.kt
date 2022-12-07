@@ -13,7 +13,7 @@ import java.lang.IllegalArgumentException
  * Handler allowing to re-submit a create command for already existing task.
  */
 @Component
-class TaskCreateCommandHandler(
+class ExternalCommandHandler(
   @Lazy
   val eventSourcingRepository: EventSourcingRepository<TaskAggregate>
 ) {
@@ -26,17 +26,26 @@ class TaskCreateCommandHandler(
     deliverCommand(command)
   }
 
+  /**
+   * Delivers a batch.
+   * @param batch batch command.
+   */
   @CommandHandler
-  fun handleBatch(command: BatchCommand) {
-
+  fun handleBatch(batch: BatchCommand) {
+    batch.commands.forEach { command ->
+      deliverCommand(command)
+    }
   }
 
-  fun deliverCommand(command: EngineTaskCommand) {
-
+  /*
+   * Delivers command.
+   */
+  private fun deliverCommand(command: EngineTaskCommand) {
     eventSourcingRepository.loadOptional(command.id).ifPresentOrElse(
       presentConsumer = { aggregate ->
         // re-apply creation.
         aggregate.invoke {
+          // funny casting, kotlin rocks
           when (command) {
             is CreateTaskCommand -> it.handle(command)
             is UpdateAttributeTaskCommand -> it.handle(command)
@@ -47,7 +56,6 @@ class TaskCreateCommandHandler(
             is AddCandidateUsersCommand -> it.handle(command)
             is DeleteCandidateUsersCommand -> it.handle(command)
             is CompleteTaskCommand -> it.handle(command)
-
             else -> throw IllegalArgumentException("Task aggregate for task ${command.id} can't handle command: ${command.eventName}")
           }
         }
