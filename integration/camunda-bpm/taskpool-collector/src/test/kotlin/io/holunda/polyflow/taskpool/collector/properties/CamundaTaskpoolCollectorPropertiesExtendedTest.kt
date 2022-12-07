@@ -21,7 +21,7 @@ import org.springframework.boot.context.annotation.UserConfigurations
 import org.springframework.boot.test.context.runner.ApplicationContextRunner
 import org.springframework.context.annotation.Bean
 
-class CamundaTaskpoolCollectorPropertiesExtendedTest {
+internal class CamundaTaskpoolCollectorPropertiesExtendedTest {
 
   private val contextRunner = ApplicationContextRunner()
     .withConfiguration(UserConfigurations.of(CamundaTaskpoolCollectorConfiguration::class.java))
