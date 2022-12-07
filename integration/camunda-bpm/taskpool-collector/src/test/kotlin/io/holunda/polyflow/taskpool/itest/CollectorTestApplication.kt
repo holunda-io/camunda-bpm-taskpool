@@ -1,18 +1,13 @@
 package io.holunda.polyflow.taskpool.itest
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.kotlin.KotlinModule
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.holunda.polyflow.taskpool.EnableCamundaTaskpoolCollector
 import org.axonframework.commandhandling.gateway.CommandGateway
+import org.camunda.bpm.engine.delegate.TaskListener
 import org.camunda.bpm.spring.boot.starter.annotation.EnableProcessApplication
-import org.camunda.spin.impl.json.jackson.format.JacksonJsonDataFormat
-import org.camunda.spin.spi.DataFormatConfigurator
 import org.mockito.kotlin.mock
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Primary
-
 
 @SpringBootApplication
 @EnableProcessApplication
@@ -23,19 +18,27 @@ class CollectorTestApplication {
   @Primary
   fun testAxonCommandGateway(): CommandGateway = mock()
 
+
   @Bean
-  fun objectMapper(): ObjectMapper = jacksonObjectMapper()
+  fun addCandidateUserPiggy() = TaskListener { delegateTask -> delegateTask.addCandidateUser("piggy") }
+
+  @Bean
+  fun setAssigneePiggy() = TaskListener { delegateTask -> delegateTask.assignee = "piggy" }
+
+
+  @Bean
+  fun addCandidateGroupMuppetShow() = TaskListener { delegateTask -> delegateTask.addCandidateGroup("muppetshow") }
+
+  /**
+   * Typical use case for a start listener changing attributes
+   */
+  @Bean
+  fun changeTaskAttributes() = TaskListener { delegateTask ->
+    delegateTask.name = "new name"
+    delegateTask.description = "new description"
+    delegateTask.priority = 99
+    delegateTask.dueDate = TestDriver.NOW
+    delegateTask.followUpDate = TestDriver.NOW
+  }
 }
 
-class JacksonDataFormatConfigurator : DataFormatConfigurator<JacksonJsonDataFormat> {
-
-  override fun configure(dataFormat: JacksonJsonDataFormat) {
-    val objectMapper = dataFormat.objectMapper
-    objectMapper.registerModule(KotlinModule.Builder().build())
-  }
-
-  override fun getDataFormatClass(): Class<JacksonJsonDataFormat> {
-    return JacksonJsonDataFormat::class.java
-  }
-
-}

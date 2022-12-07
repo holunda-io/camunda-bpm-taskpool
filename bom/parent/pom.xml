@@ -6,7 +6,7 @@
   <parent>
     <groupId>io.holunda.polyflow</groupId>
     <artifactId>polyflow-root</artifactId>
-    <version>3.5.0</version>
+    <version>3.6.0</version>
     <relativePath>../../pom.xml</relativePath>
   </parent>
 
@@ -32,6 +32,7 @@
 
     <pattern.class.itest>**/*ITest.*</pattern.class.itest>
     <pattern.package.itest>**/itest/**/*.*</pattern.package.itest>
+    <jgiven-kotlin.version>1.2.4.0</jgiven-kotlin.version>
   </properties>
 
   <modules>
@@ -240,6 +241,13 @@
         <version>${jgiven.version}</version>
         <scope>test</scope>
       </dependency>
+      <dependency>
+        <groupId>io.toolisticon.testing</groupId>
+        <artifactId>jgiven-kotlin</artifactId>
+        <scope>test</scope>
+        <version>${jgiven-kotlin.version}</version>
+      </dependency>
+
 
     </dependencies>
   </dependencyManagement>
@@ -268,6 +276,12 @@
       <artifactId>junit-jupiter</artifactId>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-engine</artifactId>
+      <scope>test</scope>
+    </dependency>
+
     <dependency>
       <groupId>org.assertj</groupId>
       <artifactId>assertj-core</artifactId>
@@ -441,7 +455,7 @@
           <!-- for loading and unpacking artifacts -->
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-dependency-plugin</artifactId>
-          <version>3.3.0</version>
+          <version>3.4.0</version>
         </plugin>
 
         <plugin>

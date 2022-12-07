@@ -1,7 +1,6 @@
 package io.holunda.polyflow.view.jpa
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import io.holixon.axon.gateway.configuration.query.EnableRevisionAwareQueryGateway
 import io.holixon.axon.gateway.query.QueryResponseMessageResponseType
 import io.holixon.axon.gateway.query.RevisionValue
 import io.holunda.camunda.taskpool.api.business.AuthorizationChange.Companion.addGroup
@@ -51,7 +50,6 @@ import javax.transaction.Transactional
 )
 @Transactional
 @ActiveProfiles("itest")
-@EnableRevisionAwareQueryGateway
 internal class JpaPolyflowViewServiceDataEntryRevisionSupportITest {
 
   companion object : KLogging()

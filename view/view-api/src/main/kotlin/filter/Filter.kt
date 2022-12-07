@@ -54,12 +54,27 @@ internal fun compareOperator(sign: String): CompareOperator =
   }
 
 /**
- * Filters the list of tasks by provided filters.
+ * Filters the list of tasks with data entries by provided filters.
  */
 internal fun filter(filters: List<String>, values: List<TaskWithDataEntries>): List<TaskWithDataEntries> {
   val predicates = createTaskPredicates(toCriteria(filters))
   return filterByPredicate(values, predicates)
 }
+
+/**
+ * Filters the list of tasks by provided filters.
+ */
+internal fun filterTasks(filters: List<String>, values: List<Task>): List<Task> {
+  val predicates: TaskPredicateWrapper = createTaskPredicates(toCriteria(filters))
+  return filterTasksByPredicate(values, predicates)
+}
+
+/**
+ * Filters by applying predicates on the list of tasks.
+ */
+fun filterTasksByPredicate(values: List<Task>, wrapper: TaskPredicateWrapper): List<Task> =
+  values.filter { filterByPredicate(it, wrapper) }
+
 
 /**
  * Filters by applying predicates on the list of tasks.
@@ -94,6 +109,18 @@ fun filterByPredicate(value: DataEntry, wrapper: DataEntryPredicateWrapper): Boo
     || (wrapper.dataEntryAttributePredicate != null && wrapper.dataEntryAttributePredicate.test(value))
     // constraint is defined on data payload and matches
     || (wrapper.dataEntryPayloadPredicate != null && wrapper.dataEntryPayloadPredicate.test(value.payload))
+
+
+/**
+ * Checks if a single task matches the predicate.
+ */
+fun filterByPredicate(value: Task, wrapper: TaskPredicateWrapper): Boolean =
+// no constraints
+  (wrapper.taskAttributePredicate == null && wrapper.taskPayloadPredicate == null)
+    // constraint is defined on task and matches on task property
+    || (wrapper.taskAttributePredicate != null && wrapper.taskAttributePredicate.test(value))
+    // constraint is defined on data and matches
+    || (wrapper.taskPayloadPredicate != null && wrapper.taskPayloadPredicate.test(value.payload))
 
 
 /**

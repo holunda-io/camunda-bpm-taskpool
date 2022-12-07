@@ -7,81 +7,88 @@ import io.holunda.polyflow.view.Task
 import io.holunda.polyflow.view.TaskWithDataEntries
 import io.holunda.polyflow.view.auth.User
 import io.holunda.polyflow.view.query.task.*
+import io.toolisticon.testing.jgiven.JGivenKotlinStage
+import io.toolisticon.testing.jgiven.step
 import org.assertj.core.api.Assertions.assertThat
 import org.axonframework.queryhandling.QueryUpdateEmitter
 import org.camunda.bpm.engine.variable.VariableMap
+import org.camunda.bpm.engine.variable.Variables.createVariables
 import org.mockito.Mockito
 
-open class TaskPoolStage<SELF : TaskPoolStage<SELF>> : Stage<SELF>() {
+abstract class AbstractSimpleTaskPoolStage<SELF : AbstractSimpleTaskPoolStage<SELF>> : Stage<SELF>() {
 
   @ScenarioState
-  lateinit var testee: SimpleTaskPoolService
+  lateinit var simpleTaskPoolService: SimpleTaskPoolService
 
   @BeforeScenario
   fun init() {
-    testee = SimpleTaskPoolService(Mockito.mock(QueryUpdateEmitter::class.java))
+    simpleTaskPoolService = SimpleTaskPoolService(Mockito.mock(QueryUpdateEmitter::class.java))
   }
 
-  open fun task_created_event_is_received(event: TaskCreatedEngineEvent): SELF {
-    testee.on(event)
-    return self()
+  fun task_created_event_is_received(event: TaskCreatedEngineEvent) = step {
+    simpleTaskPoolService.on(event)
   }
 
-  open fun task_assign_event_is_received(event: TaskAssignedEngineEvent): SELF {
-    testee.on(event)
-    return self()
+  fun task_assign_event_is_received(event: TaskAssignedEngineEvent) = step {
+    simpleTaskPoolService.on(event)
   }
 
-  open fun task_attributes_update_event_is_received(event: TaskAttributeUpdatedEngineEvent): SELF {
-    testee.on(event)
-    return self()
+  fun task_attributes_update_event_is_received(event: TaskAttributeUpdatedEngineEvent) = step {
+    simpleTaskPoolService.on(event)
   }
 
-  open fun task_candidate_group_changed_event_is_received(event: TaskCandidateGroupChanged): SELF {
-    testee.on(event)
-    return self()
+  fun task_candidate_group_changed_event_is_received(event: TaskCandidateGroupChanged) = step {
+    simpleTaskPoolService.on(event)
   }
 
-  open fun task_candidate_user_changed_event_is_received(event: TaskCandidateUserChanged): SELF {
-    testee.on(event)
-    return self()
+  fun task_candidate_user_changed_event_is_received(event: TaskCandidateUserChanged) = step {
+    simpleTaskPoolService.on(event)
   }
 
 }
 
-open class TaskPoolGivenStage<SELF : TaskPoolGivenStage<SELF>> : TaskPoolStage<SELF>() {
+@JGivenKotlinStage
+class SimpleTaskPoolGivenStage<SELF : SimpleTaskPoolGivenStage<SELF>> : AbstractSimpleTaskPoolStage<SELF>() {
 
   @ProvidedScenarioState(resolution = ScenarioState.Resolution.NAME)
   private var tasks: List<TaskWithDataEntries> = listOf()
 
   private fun procRef(applicationName: String = "app") = ProcessReference("instance1", "exec1", "def1", "def-key", "proce1", applicationName)
 
-  private fun task(i: Int, applicationName: String = "app") = TestTaskData("id$i", procRef(applicationName), "task-key-$i", businessKey = "BUS-$i")
+  private fun task(i: Int, applicationName: String = "app") = TestTaskData(
+    id ="id$i",
+    sourceReference = procRef(applicationName),
+    taskDefinitionKey = "task-key-$i",
+    businessKey = "BUS-$i",
+    payload = createVariables().apply {
+      put("payloadIdInt", i)
+      put("payloadIdString", "$i")
+    }
+  )
 
-  open fun no_task_exists(): SELF {
+  fun no_task_exists() = step {
     tasks = listOf()
-    return self()
   }
 
   @As("$ tasks exist")
-  open fun tasks_exist(numTasks: Int): SELF {
-    tasks = (0 until numTasks).map { task(it) }.also { createTasksInTestee(it) }.map { TaskWithDataEntries(it.asTask()) }
+  fun tasks_exist(numTasks: Int) = step {
+    tasks = (0 until numTasks).map { task(it) }.also { createTasksInService(it) }.map { TaskWithDataEntries(it.asTask()) }
     return self()
   }
 
   @As("$ tasks exist from application $")
-  open fun tasks_exist_from_application(numTasks: Int, applicationName: String): SELF {
-    tasks += (tasks.size until tasks.size + numTasks).map { task(it, applicationName) }.also { createTasksInTestee(it) }.map { TaskWithDataEntries(it.asTask()) }
-    return self()
+  fun tasks_exist_from_application(numTasks: Int, applicationName: String) = step {
+    tasks += (tasks.size until tasks.size + numTasks).map { task(it, applicationName) }.also { createTasksInService(it) }.map { TaskWithDataEntries(it.asTask()) }
   }
 
-  private fun createTasksInTestee(tasks: List<TestTaskData>) {
-    tasks.forEach { testee.on(it.asTaskCreatedEngineEvent()) }
+  private fun createTasksInService(tasks: List<TestTaskData>) {
+    tasks.forEach { simpleTaskPoolService.on(it.asTaskCreatedEngineEvent()) }
   }
 
 }
 
-open class TaskPoolWhenStage<SELF : TaskPoolWhenStage<SELF>> : TaskPoolStage<SELF>() {
+@JGivenKotlinStage
+class SimpleTaskPoolWhenStage<SELF : SimpleTaskPoolWhenStage<SELF>> : AbstractSimpleTaskPoolStage<SELF>() {
 
   @ExpectedScenarioState(resolution = ScenarioState.Resolution.NAME, required = true)
   private lateinit var tasks: List<TaskWithDataEntries>
@@ -96,31 +103,34 @@ open class TaskPoolWhenStage<SELF : TaskPoolWhenStage<SELF>> : TaskPoolStage<SEL
   private var returnedTasksForApplication = TaskQueryResult(listOf())
 
   private fun query(page: Int, size: Int) = TasksWithDataEntriesForUserQuery(User("kermit", setOf()), page, size)
+  private fun filterQuery(sort: String, filters: List<String>) = TasksForUserQuery(user = User("kermit", setOf()), filters = filters, sort = sort)
 
   @As("Page $ is queried with a page size of $")
-  open fun tasks_queried(page: Int, size: Int): SELF {
+  fun page_is_queried(page: Int, size: Int) = step {
     queriedTasks.addAll(TasksWithDataEntriesQueryResult(tasks).slice(query(page, size)).elements)
-    return self()
   }
 
   @As("Task count by application is queried")
-  open fun task_count_queried(): SELF {
-    returnedTaskCounts = testee.query(TaskCountByApplicationQuery())
-    return self()
+  fun task_count_queried() = step {
+    returnedTaskCounts = simpleTaskPoolService.query(TaskCountByApplicationQuery())
   }
 
   @As("Tasks are queried for application $")
-  open fun tasks_queried_for_application(applicationName: String): SELF {
-    returnedTasksForApplication = testee.query(TasksForApplicationQuery(applicationName))
-    return self()
+  fun tasks_queried_for_application(applicationName: String) = step {
+    returnedTasksForApplication = simpleTaskPoolService.query(TasksForApplicationQuery(applicationName))
   }
 
+  @As("Tasks are queried with filter $")
+  fun tasks_are_queried(filters: List<String>) = step {
+    queriedTasks.addAll(simpleTaskPoolService.query(filterQuery("+name", filters)).elements.map { TaskWithDataEntries(it) })
+  }
 }
 
-open class TaskPoolThenStage<SELF : TaskPoolThenStage<SELF>> : TaskPoolStage<SELF>() {
+@JGivenKotlinStage
+class SimpleTaskPoolThenStage<SELF : SimpleTaskPoolThenStage<SELF>> : AbstractSimpleTaskPoolStage<SELF>() {
 
   @ExpectedScenarioState(resolution = ScenarioState.Resolution.NAME, required = true)
-  private lateinit var tasks: List<TaskWithDataEntries>
+  lateinit var tasks: List<TaskWithDataEntries>
 
   @ExpectedScenarioState(resolution = ScenarioState.Resolution.NAME, required = true)
   private lateinit var queriedTasks: List<TaskWithDataEntries>
@@ -132,57 +142,75 @@ open class TaskPoolThenStage<SELF : TaskPoolThenStage<SELF>> : TaskPoolStage<SEL
   private lateinit var returnedTasksForApplication: TaskQueryResult
 
   @As("$ tasks are returned")
-  open fun num_tasks_are_returned(numTasks: Int): SELF {
+  fun num_tasks_are_returned(numTasks: Int) = step {
     assertThat(queriedTasks.size).isEqualTo(numTasks)
-    return self()
+  }
+
+  @As("expected tasks are returned")
+  fun tasks_are_returned(@Hidden expected: List<TaskWithDataEntries>) = step {
+    assertThat(queriedTasks).containsExactlyInAnyOrderElementsOf( expected )
   }
 
   @As("all tasks are returned once")
-  open fun all_tasks_are_returned(): SELF {
+  fun all_tasks_are_returned() = step {
     assertThat(queriedTasks).isEqualTo(tasks)
-    return self()
   }
 
   @As("tasks $ are returned for application")
-  open fun tasks_are_returned_for_application(@Hidden vararg expectedTasks: Task): SELF {
+  fun tasks_are_returned_for_application(@Hidden vararg expectedTasks: Task) = step {
     assertThat(returnedTasksForApplication.elements).containsExactlyInAnyOrder(*expectedTasks)
-    return self()
   }
 
-  open fun task_is_created(task: Task): SELF {
-    assertThat(testee.query(TaskForIdQuery(task.id))).isEqualTo(task)
-    return self()
+  fun task_is_created(task: Task) = step {
+    val result = simpleTaskPoolService.query(TaskForIdQuery(task.id))
+    assertThat(result).isPresent
+    assertThat(result.get()).isEqualTo(task)
   }
 
   @As("task with id $ is assigned to $")
-  open fun task_is_assigned_to(taskId: String, assignee: String?): SELF {
-    assertThat(testee.query(TaskForIdQuery(taskId))?.assignee).isEqualTo(assignee)
-    return self()
+  fun task_is_assigned_to(taskId: String, assignee: String?) = step {
+    val result = simpleTaskPoolService.query(TaskForIdQuery(taskId))
+    assertThat(result).isPresent
+    assertThat(result.get().assignee).isEqualTo(assignee)
   }
 
-  open fun task_has_candidate_groups(taskId: String, groupIds: Set<String>): SELF {
-    assertThat(testee.query(TaskForIdQuery(taskId))?.candidateGroups).isEqualTo(groupIds)
-    return self()
+  fun task_has_candidate_groups(taskId: String, groupIds: Set<String>) = step {
+    val result = simpleTaskPoolService.query(TaskForIdQuery(taskId))
+    assertThat(result).isPresent
+    assertThat(result.get().candidateGroups).isEqualTo(groupIds)
   }
 
-  open fun task_has_candidate_users(taskId: String, groupIds: Set<String>): SELF {
-    assertThat(testee.query(TaskForIdQuery(taskId))?.candidateUsers).isEqualTo(groupIds)
-    return self()
+  fun task_has_candidate_users(taskId: String, groupIds: Set<String>) = step {
+    val result = simpleTaskPoolService.query(TaskForIdQuery(taskId))
+    assertThat(result).isPresent
+    assertThat(result.get().candidateUsers).isEqualTo(groupIds)
   }
 
-  open fun task_payload_matches(taskId: String, payload: VariableMap): SELF {
-    assertThat(testee.query(TaskForIdQuery(taskId))?.payload).isEqualTo(payload)
-    return self()
+  fun task_payload_matches(taskId: String, payload: VariableMap) = step {
+    val result = simpleTaskPoolService.query(TaskForIdQuery(taskId))
+    assertThat(result).isPresent
+    assertThat(result.get().payload).isEqualTo(payload)
   }
 
-  open fun task_correlations_match(taskId: String, correlations: VariableMap): SELF {
-    assertThat(testee.query(TaskForIdQuery(taskId))?.correlations).isEqualTo(correlations)
-    return self()
+  fun task_correlations_match(taskId: String, correlations: VariableMap) = step {
+    val result = simpleTaskPoolService.query(TaskForIdQuery(taskId))
+    assertThat(result).isPresent
+    assertThat(result.get().correlations).isEqualTo(correlations)
   }
 
-  open fun task_counts_are(vararg entries: ApplicationWithTaskCount): SELF {
+  fun task_counts_are(vararg entries: ApplicationWithTaskCount) = step {
     assertThat(returnedTaskCounts).containsOnly(*entries)
-    return self()
   }
+
+  fun task_does_not_exist(taskId: String) = step  {
+    val result = simpleTaskPoolService.query(TaskForIdQuery(taskId))
+    assertThat(result).isNotPresent
+  }
+
+  fun task_is_not_found_for_user(userId: String, taskId: String) = step {
+    val result = simpleTaskPoolService.query(TasksForUserQuery(User(userId, setOf())))
+    assertThat(result.elements.map { it.id }).doesNotContain(taskId)
+  }
+
 
 }

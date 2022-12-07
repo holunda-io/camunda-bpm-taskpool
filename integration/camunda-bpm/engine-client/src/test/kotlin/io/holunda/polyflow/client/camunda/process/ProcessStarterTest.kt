@@ -4,7 +4,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.camunda.bpm.engine.RuntimeService
 import org.camunda.bpm.engine.variable.Variables
 import org.camunda.bpm.engine.variable.Variables.stringValue
-import org.camunda.bpm.extension.mockito.process.ProcessInstanceFake
+import org.camunda.community.mockito.process.ProcessInstanceFake
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith

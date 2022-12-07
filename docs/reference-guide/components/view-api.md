@@ -17,13 +17,13 @@ and generic query paging and sorting.
 
 ## Feature support matrix
 
-#### Task API
+### Task API
 
 The Task API allows to query for tasks handled by the task-pool.
 
 | Query Type                       | Description                                                                                                                            | Payload types                   | In-Memory | JPA        | Mongo DB |
 |----------------------------------|----------------------------------------------------------------------------------------------------------------------------------------|---------------------------------|-----------|------------|----------|
-| TasksForUserQuery                | Retrieves a list of tasks accessible by the user (filters on username and groups only)                                                 | List<Task>                      | yes       | yes        | yes      |
+| TasksForUserQuery                | Retrieves a list of tasks accessible by the user and applying additional filters                                                       | List<Task>                      | yes       | yes        | yes      |
 | TaskForIdQuery                   | Retrieves a task by id (without any other filters)                                                                                     | Task or null                    | yes       | yes        | yes      |
 | TasksForApplicationQuery         | Retrieves all tasks by given application name (without any further filters)                                                            | List<Task>                      | yes       | yes        | yes      |
 | TaskWithDataEntriesForIdQuery    | Retrieves a task by id and correlates result with data entries, if available                                                           | (Task, List<DataEntry>) or null | yes       | yes        | yes      |
@@ -31,7 +31,7 @@ The Task API allows to query for tasks handled by the task-pool.
 | TaskCountByApplicationQuery      | Counts tasks grouped by application names, useful for monitoring                                                                       | List<(ApplicationName, Count)>  | yes       | no         | yes      |
  
 
-#### Process Definition API
+### Process Definition API
 
 The Process Definition API allows to query for process definitions handled by the task-pool.
 
@@ -40,7 +40,7 @@ The Process Definition API allows to query for process definitions handled by th
 | ProcessDefinitionsStartableByUserQuery  | Retrieves a list of process definitions start-able by user | List<ProcessDefinition> | yes       | yes   | yes      |
 
 
-#### Process Instance API
+### Process Instance API
 
 The Process Instance API allows to query for process instances handled by the task-pool.
 
@@ -49,7 +49,7 @@ The Process Instance API allows to query for process instances handled by the ta
 | ProcessInstancesByStateQuery  | Retrieves a list of process instances by state (started, finished, etc) | List<ProcessInstance> | yes       | yes   | no       |
 
 
-#### Process Variable API (incubation)
+### Process Variable API (incubation)
 
 The Process Variable API allows to query for process variables handled by the task-pool.
 
@@ -61,7 +61,7 @@ The Process Variable API allows to query for process variables handled by the ta
 | ProcessVariablesForInstanceQuery | Retrieves a list of process variables for given process instance and matching provided filters | List<ProcessVariable> | yes       | no  | no       |
 
 
-#### Data Entry API
+### Data Entry API
 
 The Data Entry API allows to query for data entries handled by the data-pool.
 
@@ -83,4 +83,35 @@ update of the model by specifying the update revision and are waiting for the ev
 In order to achieve this, you might specify the minimum revision the query result must fulfill in order to match your query request. See [axon-gateway-extension](https://github.com/holixon/axon-gateway-extension)
 for more details. Please note, that not all implementations are implementing this feature. Especially, Mongo DB View is currently **NOT SUPPORTING** Revision Aware queries. 
 
+## Filtering, Paging and Sorting
 
+Task API and Data Entries API supports filtering, paging and sorting in queries resulting in multiple results. For Task API these are `TasksForUserQuery` and `TasksWithDataEntriesForUserQuery`
+and for Data Entries API these are `DataEntriesForUserQuery` and `DataEntriesQuery`. The queries implement the `PageableSortableQuery` interface, allowing to limit the amount
+of results and provide an optional sorting:
+
+```kotlin
+interface PageableSortableQuery {
+  val page: Int
+  val size: Int
+  val sort: String?
+}
+```
+The `page` parameter denotes the page number to deliver (starting with `1`). The `size` parameter denotes the number of elements on a page. By default, the `page` is set to `1`
+and the size is set to `Int.MAX`. 
+
+An optional `sort` parameter allows to sort the results by a field attribute.  The format of the `sort` string is `<+|->filedName`, `+fieldName` means sort by `fieldName` ascending,
+`-fieldName` means sort by `fieldName` descending. The field must be a direct member of the result (`Task`, `TaskWithDataEntries` or `DataEntry`) and must be one of the following type:
+
+* java.lang.Integer
+* java.lang.String
+* java.util.Date
+* java.time.Instant
+
+To filter the results, you might supply a list of filters. A filter is an expression in format `fieldName<op>value`, where `fieldName` is addressing the attribute of the search result,
+`<op>` is one of `<`, `=` and `>` and `value` is a string representation of the values. The `fieldName` can point to an attribute of the result entity itself (`Task`, `TaskWithDataEntries` 
+or `DataEntry`) or point to the attribute inside the payload. To avoid a possible name clash, you must prefix the field name with `task.` if you want to filter on direct attributes of a task,
+and you must prefix the field name with `data` if you want to filter on direct attributes of a dta entry. For example, `task.priority=50` would deliver tasks with priority set to 50,
+and `data.entryType=info.polyflow.Order` will deliver data entries of type `info.polyflow.Order` only.
+
+If the field name has no prefix of above, it is considered as an attribute inside the payload of data entry or enriched variables of a user task. For example, imagine
+you have a data entry with payload attributes `{ "attribute": "value", "another": 45 }`. In order to search for those, just specify `attribute=value` in your filter criteria. 

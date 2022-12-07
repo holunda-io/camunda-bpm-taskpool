@@ -5,7 +5,7 @@
   <parent>
     <groupId>io.holunda.polyflow</groupId>
     <artifactId>polyflow-view-parent</artifactId>
-    <version>3.5.0</version>
+    <version>3.6.0</version>
   </parent>
 
   <artifactId>polyflow-view-simple</artifactId>
@@ -63,7 +63,26 @@
       <artifactId>jgiven-html5-report</artifactId>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>io.toolisticon.testing</groupId>
+      <artifactId>jgiven-kotlin</artifactId>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>kotlin-maven-plugin</artifactId>
+        <groupId>org.jetbrains.kotlin</groupId>
+        <configuration>
+          <pluginOptions>
+            <option>all-open:annotation=io.toolisticon.testing.jgiven.JGivenKotlinStage</option>
+          </pluginOptions>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 
 </project>
 

@@ -2,6 +2,7 @@ package io.holunda.polyflow.view.query.task
 
 import io.holunda.polyflow.view.Task
 import io.holunda.polyflow.view.TaskWithDataEntries
+import java.util.*
 
 /**
  * API to access task projection.
@@ -16,7 +17,7 @@ interface TaskApi {
   /**
    * Retrieve task with correlated data entries by given id.
    */
-  fun query(query: TaskWithDataEntriesForIdQuery): TaskWithDataEntries?
+  fun query(query: TaskWithDataEntriesForIdQuery): Optional<TaskWithDataEntries>
 
   /**
    * Count tasks and group by application.
@@ -31,7 +32,7 @@ interface TaskApi {
   /**
    * Retrieve task by given id.
    */
-  fun query(query: TaskForIdQuery): Task?
+  fun query(query: TaskForIdQuery): Optional<Task>
 
   /**
    * Retrieve tasks for given application.

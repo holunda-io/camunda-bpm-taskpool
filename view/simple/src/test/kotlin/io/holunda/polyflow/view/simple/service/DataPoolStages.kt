@@ -8,13 +8,15 @@ import io.holunda.camunda.taskpool.api.business.DataEntryUpdatedEvent
 import io.holunda.polyflow.view.DataEntry
 import io.holunda.polyflow.view.auth.User
 import io.holunda.polyflow.view.query.data.DataEntriesForUserQuery
+import io.toolisticon.testing.jgiven.step
 import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
 import org.axonframework.messaging.MetaData
 import org.axonframework.queryhandling.QueryUpdateEmitter
 import org.mockito.Mockito
 
 @JGivenStage
-class DataPoolStage<SELF : DataPoolStage<SELF>> : Stage<SELF>() {
+abstract class DataPoolStage<SELF : DataPoolStage<SELF>> : Stage<SELF>() {
 
   @ScenarioState
   lateinit var testee: SimpleDataEntryService
@@ -24,34 +26,30 @@ class DataPoolStage<SELF : DataPoolStage<SELF>> : Stage<SELF>() {
     testee = SimpleDataEntryService(Mockito.mock(QueryUpdateEmitter::class.java))
   }
 
-  fun data_entry_created_event(event: DataEntryCreatedEvent): SELF {
+  fun data_entry_created_event(event: DataEntryCreatedEvent) = step {
     testee.on(event, MetaData.emptyInstance())
-    return self()
   }
 
-  fun data_entry_updated_event(event: DataEntryUpdatedEvent): SELF {
+  fun data_entry_updated_event(event: DataEntryUpdatedEvent) = step {
     testee.on(event, MetaData.emptyInstance())
-    return self()
   }
 }
 
 @JGivenStage
-open class DataPoolGivenStage<SELF : DataPoolGivenStage<SELF>> : DataPoolStage<SELF>() {
+class DataPoolGivenStage<SELF : DataPoolGivenStage<SELF>> : DataPoolStage<SELF>() {
 
   @ProvidedScenarioState(resolution = ScenarioState.Resolution.NAME)
   private var dataEntries: List<DataEntry> = listOf()
 
   private fun data(i: Int) = TestDataEntry(entryId = "entry-$i", name = "Test entry $i")
 
-  fun none_exists(): SELF {
+  fun none_exists() = step {
     dataEntries = listOf()
-    return self()
   }
 
   @As("$ data entries exist")
-  fun entries_exist(numTasks: Int): SELF {
+  fun entries_exist(numTasks: Int) = step {
     dataEntries = (0 until numTasks).map { data(it) }.also { createDataInTestee(it) }.map { it.asDataEntry() }
-    return self()
   }
 
   private fun createDataInTestee(entries: List<TestDataEntry>) {
@@ -70,9 +68,8 @@ class DataPoolWhenStage<SELF : DataPoolWhenStage<SELF>> : DataPoolStage<SELF>() 
 
   private fun query(sort: String, filters: List<String>) = DataEntriesForUserQuery(User("kermit", setOf()), 1, Integer.MAX_VALUE, sort, filters)
 
-  fun data_queried(filters: List<String>): SELF {
+  fun data_queried(filters: List<String>) = step {
     queriedEntries.addAll(testee.query(query("+name", filters)).payload.elements)
-    return self()
   }
 }
 
@@ -86,9 +83,8 @@ class DataPoolThenStage<SELF : DataPoolThenStage<SELF>> : DataPoolStage<SELF>() 
   lateinit var queriedEntries: MutableList<DataEntry>
 
   @As("returns expected entries")
-  fun dataEntriesAreReturned(@Hidden vararg expected: DataEntry): SELF {
-    Assertions.assertThat(queriedEntries).containsExactlyInAnyOrder(*expected)
-    return self()
+  fun dataEntriesAreReturned(@Hidden vararg expected: DataEntry) = step {
+    assertThat(queriedEntries).containsExactlyInAnyOrder(*expected)
   }
 
 }

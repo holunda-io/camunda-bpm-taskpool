@@ -17,11 +17,11 @@ class ComparatorTest {
   private val task1 = TaskWithDataEntries(Task("id", ref, "key", name = "myName", priority = 31, createTime = now.plusSeconds(10)), listOf())
   private val task2 = TaskWithDataEntries(Task("id", ref, "key", name = "zzz", priority = 37, createTime = now.plusSeconds(20)), listOf())
 
-  private val nameComparator = taskComparator("+task.name")!!
-  private val priorityComparator = taskComparator("+task.priority")!!
-  private val createTimeComparator = taskComparator("+task.createTime")!!
-  private val descriptionComparator = taskComparator("+task.description")!!
-  private val dueDateComparator = taskComparator("+task.dueDate")!!
+  private val nameComparator = taskWithDataEntriesComparator("+task.name")!!
+  private val priorityComparator = taskWithDataEntriesComparator("+task.priority")!!
+  private val createTimeComparator = taskWithDataEntriesComparator("+task.createTime")!!
+  private val descriptionComparator = taskWithDataEntriesComparator("+task.description")!!
+  private val dueDateComparator = taskWithDataEntriesComparator("+task.dueDate")!!
 
   @BeforeEach
   fun precondition() {

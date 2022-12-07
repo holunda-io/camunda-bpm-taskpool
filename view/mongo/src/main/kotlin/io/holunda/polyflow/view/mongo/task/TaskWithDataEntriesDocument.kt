@@ -1,6 +1,8 @@
 package io.holunda.polyflow.view.mongo.task
 
+import io.holunda.polyflow.view.Task
 import io.holunda.polyflow.view.mongo.data.DataEntryDocument
+import org.camunda.bpm.engine.variable.Variables
 import org.springframework.data.annotation.Id
 import org.springframework.data.annotation.TypeAlias
 import org.springframework.data.mongodb.core.mapping.Document
@@ -32,3 +34,27 @@ data class TaskWithDataEntriesDocument(
   val dueDate: Instant? = null,
   val followUpDate: Instant? = null
 )
+
+/**
+ * Create a task from task document.
+ */
+fun TaskWithDataEntriesDocument.task() = Task(
+  id = this.id,
+  sourceReference = sourceReference(this.sourceReference),
+  taskDefinitionKey = this.taskDefinitionKey,
+  payload = Variables.fromMap(this.payload),
+  businessKey = this.businessKey,
+  name = this.name,
+  description = this.description,
+  formKey = this.formKey,
+  priority = this.priority,
+  createTime = this.createTime,
+  candidateUsers = this.candidateUsers,
+  candidateGroups = this.candidateGroups,
+  assignee = this.assignee,
+  owner = this.owner,
+  dueDate = this.dueDate,
+  followUpDate = this.followUpDate,
+  deleted = false
+)
+

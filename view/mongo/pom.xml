@@ -6,7 +6,7 @@
   <parent>
     <groupId>io.holunda.polyflow</groupId>
     <artifactId>polyflow-view-parent</artifactId>
-    <version>3.5.0</version>
+    <version>3.6.0</version>
   </parent>
 
   <artifactId>polyflow-view-mongo</artifactId>
@@ -86,6 +86,11 @@
     <dependency>
       <groupId>io.projectreactor</groupId>
       <artifactId>reactor-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.toolisticon.testing</groupId>
+      <artifactId>jgiven-kotlin</artifactId>
       <scope>test</scope>
     </dependency>
   </dependencies>

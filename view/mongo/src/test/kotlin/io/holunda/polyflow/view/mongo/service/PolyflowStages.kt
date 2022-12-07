@@ -15,6 +15,7 @@ import io.holunda.polyflow.view.mongo.MongoViewService
 import io.holunda.polyflow.view.query.data.DataEntriesForUserQuery
 import io.holunda.polyflow.view.query.data.DataEntryForIdentityQuery
 import io.holunda.polyflow.view.query.task.*
+import io.toolisticon.testing.jgiven.step
 import mu.KLogging
 import org.assertj.core.api.Assertions.assertThat
 import org.awaitility.Awaitility
@@ -30,12 +31,12 @@ import org.springframework.beans.factory.annotation.Autowired
 import java.util.concurrent.TimeUnit
 import java.util.function.Predicate
 
-open class PolyflowStage<SELF : PolyflowStage<SELF>> : Stage<SELF>() {
+abstract class PolyflowStage<SELF : PolyflowStage<SELF>> : Stage<SELF>() {
   companion object : KLogging()
 
   @Autowired
   @ScenarioState
-  lateinit var testee: MongoViewService
+  lateinit var service: MongoViewService
 
   @Autowired
   @ScenarioState
@@ -44,37 +45,31 @@ open class PolyflowStage<SELF : PolyflowStage<SELF>> : Stage<SELF>() {
   @ScenarioState
   var emittedQueryUpdates: List<QueryUpdate<Any>> = listOf()
 
-  open fun task_created_event_is_received(event: TaskCreatedEngineEvent): SELF {
-    testee.on(event, MetaData.emptyInstance())
-    return self()
+  fun task_created_event_is_received(event: TaskCreatedEngineEvent) = step {
+    service.on(event, MetaData.emptyInstance())
   }
 
-  open fun task_assign_event_is_received(event: TaskAssignedEngineEvent): SELF {
-    testee.on(event, MetaData.emptyInstance())
-    return self()
+  fun task_assign_event_is_received(event: TaskAssignedEngineEvent) = step {
+    service.on(event, MetaData.emptyInstance())
   }
 
-  open fun task_attributes_update_event_is_received(event: TaskAttributeUpdatedEngineEvent): SELF {
-    testee.on(event, MetaData.emptyInstance())
-    return self()
+  fun task_attributes_update_event_is_received(event: TaskAttributeUpdatedEngineEvent) = step {
+    service.on(event, MetaData.emptyInstance())
   }
 
-  open fun task_candidate_group_changed_event_is_received(event: TaskCandidateGroupChanged): SELF {
-    testee.on(event, MetaData.emptyInstance())
-    return self()
+  fun task_candidate_group_changed_event_is_received(event: TaskCandidateGroupChanged) = step {
+    service.on(event, MetaData.emptyInstance())
   }
 
-  open fun task_candidate_user_changed_event_is_received(event: TaskCandidateUserChanged): SELF {
-    testee.on(event, MetaData.emptyInstance())
-    return self()
+  fun task_candidate_user_changed_event_is_received(event: TaskCandidateUserChanged) = step {
+    service.on(event, MetaData.emptyInstance())
   }
 
-  open fun task_deleted_event_is_received(event: TaskDeletedEngineEvent): SELF {
-    testee.on(event, MetaData.emptyInstance())
-    return self()
+  open fun task_deleted_event_is_received(event: TaskDeletedEngineEvent) = step {
+    service.on(event, MetaData.emptyInstance())
   }
 
-  open fun time_passes_until_query_update_is_emitted(queryType: Class<out Any> = Object::class.java): SELF {
+  fun time_passes_until_query_update_is_emitted(queryType: Class<out Any> = Object::class.java) = step {
     try {
       Awaitility.await().atMost(2, TimeUnit.SECONDS).until {
         captureEmittedQueryUpdates().any { queryType.isAssignableFrom(it.queryType) }
@@ -83,22 +78,18 @@ open class PolyflowStage<SELF : PolyflowStage<SELF>> : Stage<SELF>() {
     } catch (e: ConditionTimeoutException) {
       logger.warn { "Query update was not emitted within 2 seconds" }
     }
-    return self()
   }
 
-  open fun data_entry_created_event_is_received(event: DataEntryCreatedEvent): SELF {
-    testee.on(event, MetaData.emptyInstance())
-    return self()
+  fun data_entry_created_event_is_received(event: DataEntryCreatedEvent) = step {
+    service.on(event, MetaData.emptyInstance())
   }
 
-  open fun data_entry_updated_event_is_received(event: DataEntryUpdatedEvent): SELF {
-    testee.on(event, MetaData.emptyInstance())
-    return self()
+  fun data_entry_updated_event_is_received(event: DataEntryUpdatedEvent) = step {
+    service.on(event, MetaData.emptyInstance())
   }
 
-  open fun data_entry_deleted_event_is_received(event: DataEntryDeletedEvent): SELF {
-    testee.on(event, MetaData.emptyInstance())
-    return self()
+  fun data_entry_deleted_event_is_received(event: DataEntryDeletedEvent) = step {
+    service.on(event, MetaData.emptyInstance())
   }
 
   protected fun captureEmittedQueryUpdates(): List<QueryUpdate<Any>> {
@@ -136,14 +127,12 @@ class PolyflowGivenStage<SELF : PolyflowGivenStage<SELF>> : PolyflowStage<SELF>(
     emittedQueryUpdates = listOf()
   }
 
-  fun no_task_exists(): SELF {
+  fun no_task_exists() = step {
     tasks = listOf()
-    return self()
   }
 
-  fun no_data_entry_exists(): SELF {
+  fun no_data_entry_exists() = step {
     dataEntries = listOf()
-    return self()
   }
 }
 
@@ -153,86 +142,87 @@ class PolyflowWhenStage<SELF : PolyflowWhenStage<SELF>> : PolyflowStage<SELF>()
 @JGivenStage
 class PolyflowThenStage<SELF : PolyflowThenStage<SELF>> : PolyflowStage<SELF>() {
 
-  fun task_is_created(task: Task): SELF {
-    assertThat(testee.query(TaskForIdQuery(task.id)).join()).isEqualTo(task)
-    return self()
+  fun task_is_created(task: Task) = step {
+    val result = service.query(TaskForIdQuery(task.id)).join()
+    assertThat(result).isPresent
+    assertThat(result.get()).isEqualTo(task)
   }
 
   @As("task with id $ is assigned to $")
-  fun task_is_assigned_to(taskId: String, assignee: String?): SELF {
-    assertThat(testee.query(TaskForIdQuery(taskId)).join()?.assignee).isEqualTo(assignee)
-    return self()
+  fun task_is_assigned_to(taskId: String, assignee: String?) = step {
+    val result = service.query(TaskForIdQuery(taskId)).join()
+    assertThat(result).isPresent
+    assertThat(result.get().assignee).isEqualTo(assignee)
   }
 
   @As("tasks with payload with ids \$taskIds are visible to \$user")
-  fun tasks_with_payload_are_visible_to(user: User, vararg taskIds: String): SELF {
-    val taskResponse = testee.query(TasksWithDataEntriesForUserQuery(user = user, page = 1, size = 100)).join()
+  fun tasks_with_payload_are_visible_to(user: User, vararg taskIds: String) = step {
+    val taskResponse = service.query(TasksWithDataEntriesForUserQuery(user = user, page = 1, size = 100)).join()
     assertThat(taskResponse.elements.map { it.task.id }).containsExactlyElementsOf(taskIds.asIterable())
-    return self()
   }
 
-  fun task_has_candidate_groups(taskId: String, groupIds: Set<String>): SELF {
-    assertThat(testee.query(TaskForIdQuery(taskId)).join()?.candidateGroups).isEqualTo(groupIds)
-    return self()
+  fun task_has_candidate_groups(taskId: String, groupIds: Set<String>) = step {
+    val result = service.query(TaskForIdQuery(taskId)).join()
+    assertThat(result).isPresent
+    assertThat(result.get().candidateGroups).isEqualTo(groupIds)
   }
 
-  fun task_has_candidate_users(taskId: String, groupIds: Set<String>): SELF {
-    assertThat(testee.query(TaskForIdQuery(taskId)).join()?.candidateUsers).isEqualTo(groupIds)
-    return self()
+  fun task_has_candidate_users(taskId: String, groupIds: Set<String>) = step {
+    val result = service.query(TaskForIdQuery(taskId)).join()
+    assertThat(result).isPresent
+    assertThat(result.get().candidateUsers).isEqualTo(groupIds)
   }
 
-  fun task_does_not_exist(taskId: String): SELF {
-    assertThat(testee.query(TaskForIdQuery(taskId)).join()).isNull()
-    return self()
+  fun task_does_not_exist(taskId: String) = step {
+    val result = service.query(TaskForIdQuery(taskId)).join()
+    assertThat(result).isNotPresent
   }
 
-  fun task_payload_matches(taskId: String, payload: VariableMap): SELF {
-    assertThat(testee.query(TaskForIdQuery(taskId)).join()?.payload).isEqualTo(payload)
-    return self()
+  fun task_payload_matches(taskId: String, payload: VariableMap) = step {
+    val result = service.query(TaskForIdQuery(taskId)).join()
+    assertThat(result).isPresent
+    assertThat(result.get().payload).isEqualTo(payload)
   }
 
-  fun task_correlations_match(taskId: String, correlations: VariableMap): SELF {
-    assertThat(testee.query(TaskForIdQuery(taskId)).join()?.correlations).isEqualTo(correlations)
-    return self()
+  fun task_correlations_match(taskId: String, correlations: VariableMap) = step {
+    val result = service.query(TaskForIdQuery(taskId)).join()
+    assertThat(result).isPresent
+    assertThat(result.get().correlations).isEqualTo(correlations)
   }
 
-  fun tasks_visible_to_assignee_or_candidate_user(username: String, expectedTasks: List<Task>): SELF {
-    assertThat(testee.query(TasksForUserQuery(User(username = username, groups = emptySet()))).join().elements).containsExactlyElementsOf(expectedTasks)
-    return self()
+  fun tasks_visible_to_assignee_or_candidate_user(username: String, expectedTasks: List<Task>) = step {
+    val result = service.query(TasksForUserQuery(User(username = username, groups = emptySet()))).join()
+    assertThat(result.elements).containsExactlyElementsOf(expectedTasks)
   }
 
-  fun data_entries_visible_to_user(username: String, expectedDataEntries: List<DataEntry>): SELF {
-    assertThat(testee.query(DataEntriesForUserQuery(User(username = username, groups = emptySet()))).join().elements).containsExactlyElementsOf(
-      expectedDataEntries
-    )
-    return self()
+  fun data_entries_visible_to_user(username: String, expectedDataEntries: List<DataEntry>) = step {
+    val result = service.query(DataEntriesForUserQuery(User(username = username, groups = emptySet()))).join()
+    assertThat(result.elements).containsExactlyElementsOf(expectedDataEntries)
   }
 
-  fun tasks_visible_to_candidate_group(groupName: String, expectedTasks: List<Task>): SELF {
-    assertThat(testee.query(TasksForUserQuery(User(username = "<unmet>", groups = setOf(groupName)))).join().elements).containsExactlyElementsOf(expectedTasks)
-    return self()
+  fun tasks_visible_to_candidate_group(groupName: String, expectedTasks: List<Task>) = step {
+    val result = service.query(TasksForUserQuery(User(username = "<unmet>", groups = setOf(groupName)))).join()
+    assertThat(result.elements).containsExactlyElementsOf(expectedTasks)
   }
 
-  fun data_entries_visible_to_group(groupName: String, expectedDataEntries: List<DataEntry>): SELF {
-    assertThat(testee.query(DataEntriesForUserQuery(User(username = "<unmet>", groups = setOf(groupName)))).join().elements).containsExactlyElementsOf(
-      expectedDataEntries
-    )
-    return self()
+  fun data_entries_visible_to_group(groupName: String, expectedDataEntries: List<DataEntry>) = step {
+    val result = service.query(DataEntriesForUserQuery(User(username = "<unmet>", groups = setOf(groupName)))).join()
+    assertThat(result.elements).containsExactlyElementsOf(expectedDataEntries)
   }
 
-  fun task_counts_per_application_are(vararg applicationsWithTaskCount: ApplicationWithTaskCount): SELF {
-    assertThat(testee.query(TaskCountByApplicationQuery()).join()).containsOnly(*applicationsWithTaskCount)
-    return self()
+  fun task_counts_per_application_are(vararg applicationsWithTaskCount: ApplicationWithTaskCount) = step {
+    val result = service.query(TaskCountByApplicationQuery()).join()
+    assertThat(result).containsOnly(*applicationsWithTaskCount)
   }
 
   @As("only tasks for application $ are returned")
-  fun tasks_are_returned_for_application(applicationName: String, @Hidden taskQueryResult: TaskQueryResult): SELF {
-    assertThat(testee.query(TasksForApplicationQuery(applicationName)).join()).isEqualTo(taskQueryResult)
-    return self()
+  fun tasks_are_returned_for_application(applicationName: String, @Hidden taskQueryResult: TaskQueryResult) = step {
+    val result = service.query(TasksForApplicationQuery(applicationName)).join()
+    assertThat(result).isEqualTo(taskQueryResult)
   }
 
   @As("the following query updates have been emitted for query \$query: \$updates")
-  fun <T : Any> query_updates_have_been_emitted(query: T, vararg updates: Any): SELF {
+  fun <T : Any> query_updates_have_been_emitted(query: T, vararg updates: Any) = step {
     captureEmittedQueryUpdates()
 
     val captured = emittedQueryUpdates
@@ -242,9 +232,13 @@ class PolyflowThenStage<SELF : PolyflowThenStage<SELF>> : PolyflowStage<SELF>() 
 
     assertThat(captured)
       .`as`("Query updates for query $query")
-      .usingRecursiveFieldByFieldElementComparatorIgnoringFields()
+      .usingRecursiveFieldByFieldElementComparatorIgnoringFields("payload", "correlation")
       .contains(*updates)
-    return self()
+  }
+
+  fun task_is_not_found_for_user(taskId: String, assignee: String) = step {
+    val result = service.query(TasksForUserQuery(User(assignee, setOf()))).join()
+    assertThat(result.elements.map { it.id }).doesNotContain(taskId)
   }
 
   fun no_query_update_has_been_emitted() {
@@ -252,14 +246,14 @@ class PolyflowThenStage<SELF : PolyflowThenStage<SELF>> : PolyflowStage<SELF>() 
     assertThat(emittedQueryUpdates).isEmpty()
   }
 
-  fun data_entry_is_created(dataEntry: DataEntry): SELF {
-    assertThat(testee.query(DataEntryForIdentityQuery(dataEntry.entryType, dataEntry.entryId)).join().elements).containsExactly(dataEntry)
-    return self()
+  fun data_entry_is_created(dataEntry: DataEntry) = step {
+    val result = service.query(DataEntryForIdentityQuery(dataEntry.entryType, dataEntry.entryId)).join()
+    assertThat(result.elements).containsExactly(dataEntry)
   }
 
-  fun data_entry_does_not_exist(dataEntry: DataEntry): SELF {
-    assertThat(testee.query(DataEntryForIdentityQuery(dataEntry.entryType, dataEntry.entryId)).join().elements).isEmpty()
-    return self()
+  fun data_entry_does_not_exist(dataEntry: DataEntry) = step {
+    val result = service.query(DataEntryForIdentityQuery(dataEntry.entryType, dataEntry.entryId)).join()
+    assertThat(result.elements).isEmpty()
   }
 
 }

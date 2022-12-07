@@ -51,7 +51,10 @@ abstract class PolyflowMongoServiceITestBase : SpringScenarioTest<PolyflowGivenS
       .and()
       .query_updates_have_been_emitted(TasksForUserQuery(User("kermit", setOf("muppetshow"))), expected)
       .and()
-      .query_updates_have_been_emitted(TasksWithDataEntriesForUserQuery(User("kermit", setOf("muppetshow"))), expected.withDataEntries())
+      .query_updates_have_been_emitted(
+        TasksWithDataEntriesForUserQuery(User("kermit", setOf("muppetshow"))),
+        expected.withDataEntries()
+      )
   }
 
   @Test
@@ -71,7 +74,10 @@ abstract class PolyflowMongoServiceITestBase : SpringScenarioTest<PolyflowGivenS
       .and()
       .task_is_created(TestTaskData(id = "some-id", assignee = "kermit").asTask())
       .and()
-      .query_updates_have_been_emitted(TasksForUserQuery(User("kermit", setOf("muppetshow"))), TestTaskData(id = "some-id", assignee = "kermit").asTask())
+      .query_updates_have_been_emitted(
+        query = TasksForUserQuery(User("kermit", setOf("muppetshow"))),
+        TestTaskData(id = "some-id", assignee = "kermit").asTask()
+      )
   }
 
   @Test
@@ -115,7 +121,9 @@ abstract class PolyflowMongoServiceITestBase : SpringScenarioTest<PolyflowGivenS
       .task_assign_event_is_received(TestTaskData(id = "some-id", assignee = "kermit").asTaskAssignedEngineEvent())
 
     then()
-      .task_is_assigned_to("some-id", null)
+      .task_does_not_exist("some-id")
+      .and()
+      .task_is_not_found_for_user("some-id", "kermit")
       .and()
       .no_query_update_has_been_emitted()
   }

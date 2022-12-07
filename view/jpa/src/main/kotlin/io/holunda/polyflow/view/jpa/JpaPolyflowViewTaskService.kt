@@ -20,6 +20,7 @@ import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.isAuthorizedFo
 import io.holunda.polyflow.view.jpa.task.toEntity
 import io.holunda.polyflow.view.jpa.task.toTask
 import io.holunda.polyflow.view.jpa.update.updateTaskQuery
+import io.holunda.polyflow.view.query.PageableSortableQuery
 import io.holunda.polyflow.view.query.task.*
 import mu.KLogging
 import org.axonframework.config.ProcessingGroup
@@ -54,6 +55,8 @@ class JpaPolyflowViewTaskService(
     val criteria: List<Criterion> = toCriteria(query.filters)
     val specification = criteria.toTaskSpecification()
 
+    reportMissingFeature(query)
+
     return TasksWithDataEntriesQueryResult(
       elements = if (specification != null) {
         taskRepository.findAll(specification.and(isAuthorizedFor(authorizedPrincipals)))
@@ -77,31 +80,62 @@ class JpaPolyflowViewTaskService(
   }
 
   @QueryHandler
-  override fun query(query: TaskWithDataEntriesForIdQuery): TaskWithDataEntries? {
-    return taskRepository.findByIdOrNull(query.id)?.let { taskEntity ->
+  override fun query(query: TasksForUserQuery): TaskQueryResult {
+    val authorizedPrincipals: Set<AuthorizationPrincipal> = setOf(user(query.user.username)).plus(query.user.groups.map { group(it) })
+    val criteria: List<Criterion> = toCriteria(query.filters)
+    val specification = criteria.toTaskSpecification()
+
+    reportMissingFeature(query)
+
+    return TaskQueryResult(
+      elements = if (specification != null) {
+        taskRepository.findAll(specification.and(isAuthorizedFor(authorizedPrincipals)))
+      } else {
+        taskRepository.findAll(isAuthorizedFor(authorizedPrincipals))
+      }.map { taskEntity -> taskEntity.toTask(objectMapper) }
+    )
+  }
+
+  /**
+   * Legacy handler to support old query.
+   */
+  @Deprecated("Will be removed in future versions", ReplaceWith("query(query: TaskWithDataEntriesForIdQuery): Optional<TaskWithDataEntries>"))
+  @QueryHandler
+  fun legacyQuery(query: TaskWithDataEntriesForIdQuery): TaskWithDataEntries? {
+    logger.warn { "You are using deprecated API, consider to switch to query(TaskWithDataEntriesForIdQuery): Optional<TaskWithDataEntries>" }
+    return query(query).orElse(null)
+  }
+
+
+  @QueryHandler
+  override fun query(query: TaskWithDataEntriesForIdQuery): Optional<TaskWithDataEntries> {
+    return Optional.ofNullable(taskRepository.findByIdOrNull(query.id)?.let { taskEntity ->
       TaskWithDataEntries(
         task = taskEntity.toTask(objectMapper),
         dataEntries = taskEntity.correlations.map { id -> dataEntryRepository.findById(id) }.filter { it.isPresent }.map { it.get().toDataEntry(objectMapper) }
       )
-    }
+    })
   }
+
+  /**
+   * Legacy handler to support old query.
+   */
+  @Deprecated("Will be removed in future versions", ReplaceWith("query(TaskForIdQuery): Optional<Task>"))
+  @QueryHandler
+  fun legacyQuery(query: TaskForIdQuery): Task? {
+    logger.warn { "You are using deprecated API, consider to switch to query(TaskForIdQuery): Optional<Task>" }
+    return query(query).orElse(null)
+  }
+
+  @QueryHandler
+  override fun query(query: TaskForIdQuery): Optional<Task> {
+    return Optional.ofNullable(taskRepository.findByIdOrNull(query.id)?.toTask(objectMapper))
+  }
+
 
   @QueryHandler
   override fun query(query: TaskCountByApplicationQuery): List<ApplicationWithTaskCount> {
     TODO("Not implemented yet")
-  }
-
-  @QueryHandler
-  override fun query(query: TasksForUserQuery): TaskQueryResult {
-    val authorizedPrincipals: Set<AuthorizationPrincipal> = setOf(user(query.user.username)).plus(query.user.groups.map { group(it) })
-    return TaskQueryResult(elements = taskRepository.findAll(isAuthorizedFor(authorizedPrincipals)).map {
-      it.toTask(objectMapper)
-    })
-  }
-
-  @QueryHandler
-  override fun query(query: TaskForIdQuery): Task? {
-    return taskRepository.findByIdOrNull(query.id)?.toTask(objectMapper)
   }
 
   @QueryHandler
@@ -281,6 +315,14 @@ class JpaPolyflowViewTaskService(
     )
   }
 
+  private fun reportMissingFeature(query: PageableSortableQuery) {
+    if (query.sort != null) {
+      logger.warn { "Sorting is currently not supported, but the sort was requested: ${query.sort}, see https://github.com/holunda-io/camunda-bpm-taskpool/issues/701" }
+    }
+    if (query.page != 1 || query.size != Int.MAX_VALUE) {
+      logger.warn { "Paging is currently not supported by requested. Page: ${query.page}, Size: ${query.size}, see https://github.com/holunda-io/camunda-bpm-taskpool/issues/701" }
+    }
+  }
   /**
    * Executor on empty optional.
    */

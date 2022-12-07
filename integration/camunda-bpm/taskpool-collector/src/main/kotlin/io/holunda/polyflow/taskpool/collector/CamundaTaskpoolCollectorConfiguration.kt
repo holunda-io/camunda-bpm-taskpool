@@ -36,11 +36,14 @@ class CamundaTaskpoolCollectorConfiguration(
   private val eventingProperties = camundaBpmProperties.eventing
 
 
+  /**
+   * Build the engine plugin to install pre-built listeners.
+   */
   @Bean
   fun builtInEngineListenerPlugin(publisher: ApplicationEventPublisher) = object : SpringProcessEnginePlugin() {
     override fun preInit(processEngineConfiguration: ProcessEngineConfigurationImpl) {
       if (eventingProperties.isTask) {
-        throw IllegalStateException("Standard eventing of Camunda BPM Spring boot is active for tasks. Switch it off by setting camunda.eventing.task=false to use polyflow collector.")
+        throw IllegalStateException("Standard eventing of Camunda BPM Spring boot is active for tasks. Switch it off by setting camunda.bpm.eventing.task=false to use Polyflow task collector.")
       }
       processEngineConfiguration.customPostBPMNParseListeners.add(
         BuiltInPublishDelegateParseListener(publisher)

@@ -2,6 +2,8 @@ changelog:
   sections:
     - title: ":rocket: Enhancements & Features"
       labels: [ "Type: enhancement", "Type: documentation", "Type: example" ]
+    - title: ":zap: Breaking Changes"
+      labels: [ "Type: breaking" ]
     - title: ":bug: Bug Fixes"
       labels: [ "Type: bug" ]
     - title: ":hammer_and_wrench: Chore"

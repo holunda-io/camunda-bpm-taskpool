@@ -12,7 +12,6 @@ import io.holunda.polyflow.view.query.PageableSortableQuery
  * @param size number of entries on every page.
  * @param sort property name of the {@link TaskWithDataEntries} to sort.
  * @param filters list of filters
- * @param filterMethod filter method to check authorization. defaults to checking of authorization of the task only, see [TasksForUserQuery].
  */
 data class TasksWithDataEntriesForUserQuery(
   val user: User,
