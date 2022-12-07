@@ -16,6 +16,7 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit.jupiter.SpringExtension
+import org.springframework.transaction.annotation.Transactional
 
 /**
  * This ITests simulates work of Camunda process definition collector.
@@ -23,6 +24,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
 @SpringBootTest(classes = [CollectorTestApplication::class], webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @ActiveProfiles("collector-itest")
 @DirtiesContext
+@Transactional
 class ProcessDefinitionServiceITest {
 
   companion object {
