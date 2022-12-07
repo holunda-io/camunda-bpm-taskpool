@@ -2,10 +2,11 @@ package io.holunda.polyflow.taskpool.itest
 
 import com.fasterxml.jackson.module.kotlin.convertValue
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import io.holunda.camunda.taskpool.api.business.newCorrelations
 import io.holunda.camunda.taskpool.api.task.*
-import io.holunda.camunda.taskpool.api.task.CamundaTaskEventType.Companion.CREATE
-import io.holunda.polyflow.taskpool.itest.TaskCollectorITest.Companion.NOW
+import io.holunda.polyflow.taskpool.itest.TestDriver.Companion.DEFAULT_VARIABLES
+import io.holunda.polyflow.taskpool.itest.TestDriver.Companion.createTaskCommand
+import io.holunda.polyflow.taskpool.itest.TestDriver.Companion.createUserTaskProcess
+import io.holunda.polyflow.taskpool.itest.TestDriver.Companion.updateTaskCommand
 import io.holunda.polyflow.taskpool.sender.gateway.CommandListGateway
 import org.assertj.core.api.Assertions
 import org.awaitility.Awaitility.await
@@ -13,50 +14,27 @@ import org.awaitility.Awaitility.waitAtMost
 import org.camunda.bpm.engine.RepositoryService
 import org.camunda.bpm.engine.RuntimeService
 import org.camunda.bpm.engine.TaskService
-import org.camunda.bpm.engine.delegate.DelegateTask
-import org.camunda.bpm.engine.delegate.TaskListener
 import org.camunda.bpm.engine.impl.interceptor.Command
 import org.camunda.bpm.engine.impl.interceptor.CommandExecutor
 import org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.*
-import org.camunda.bpm.engine.variable.VariableMap
 import org.camunda.bpm.engine.variable.Variables
-import org.camunda.bpm.engine.variable.Variables.createVariables
-import org.camunda.bpm.model.bpmn.Bpmn
-import org.camunda.bpm.model.bpmn.BpmnModelInstance
-import org.camunda.bpm.model.xml.instance.ModelElementInstance
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mockito.*
 import org.mockito.kotlin.verifyNoMoreInteractions
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
-import org.springframework.stereotype.Component
 import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.ActiveProfiles
-import org.springframework.test.context.junit.jupiter.SpringExtension
 import java.time.Instant.now
 import java.util.*
 import java.util.concurrent.TimeUnit
 
 
-/**
- * This ITests simulates work of Camunda collector including variable enrichment.
- */
-@ExtendWith(SpringExtension::class)
 @SpringBootTest(classes = [CollectorTestApplication::class], webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @ActiveProfiles("collector-itest")
 @DirtiesContext
-class TaskCollectorITest {
-
-  private val businessKey = "BK1"
-  private val processId = "processId"
-  private val taskDefinitionKey = "userTask"
-  private val defaultVariables = createVariables().apply { put("key", "value") }
-
-  companion object {
-    val NOW = Date.from(now())
-  }
+internal class TaskCollectorITest {
 
   @Autowired
   lateinit var repositoryService: RepositoryService
@@ -73,14 +51,16 @@ class TaskCollectorITest {
   @MockBean
   lateinit var commandListGateway: CommandListGateway
 
+  private val driver: TestDriver by lazy {
+    TestDriver(repositoryService, runtimeService)
+  }
+
   @Test
   fun `creates task in process`() {
 
     // deploy
-    deployProcess(
+    driver.deployProcess(
       createUserTaskProcess(
-        processId,
-        taskDefinitionKey,
         taskListeners = listOf(
           Pair("create", "#{addCandidateUserPiggy}"),
           Pair("create", "#{addCandidateGroupMuppetShow}"),
@@ -89,16 +69,13 @@ class TaskCollectorITest {
     )
 
     // start
-    val instance = startProcessInstance(
-      processId,
-      businessKey
-    )
+    val instance = driver.startProcessInstance()
 
     // wait for async continuation: we must not trigger the execution of the job explicitly but instead await its execution
     await().untilAsserted { assertThat(job(instance)).isNull() }
 
     // user task
-    assertThat(instance).isWaitingAt(taskDefinitionKey)
+    driver.assertProcessInstanceWaitsInUserTask(instance)
 
     val createCommand = createTaskCommand(
       candidateUsers = setOf("piggy"),
@@ -112,9 +89,8 @@ class TaskCollectorITest {
   @Test
   fun `creates task with values modified by task create listener`() {
     // deploy
-    deployProcess(
+    driver.deployProcess(
       createUserTaskProcess(
-        processId, taskDefinitionKey,
         taskListeners = listOf(
           "create" to "#{changeTaskAttributes}" // will change direct task attributes
         )
@@ -122,8 +98,8 @@ class TaskCollectorITest {
     )
 
     // start
-    val instance = startProcessInstance(processId, businessKey)
-    assertThat(instance).isWaitingAt(taskDefinitionKey)
+    val instance = driver.startProcessInstance()
+    driver.assertProcessInstanceWaitsInUserTask(instance)
     verify(commandListGateway).sendToGateway(
       listOf(
         createTaskCommand()
@@ -131,8 +107,8 @@ class TaskCollectorITest {
             name = "new name",
             description = "new description",
             priority = 99,
-            dueDate = NOW,
-            followUpDate = NOW,
+            dueDate = TestDriver.NOW,
+            followUpDate = TestDriver.NOW,
 // Values from the original are, but these are modified by the listener.
 //        name = "User Task",
 //        description = null,
@@ -149,10 +125,8 @@ class TaskCollectorITest {
   fun `creates task in process with async start`() {
 
     // deploy
-    deployProcess(
+    driver.deployProcess(
       createUserTaskProcess(
-        processId,
-        taskDefinitionKey,
         taskListeners = listOf(
           Pair("create", "#{addCandidateUserPiggy}"),
           Pair("create", "#{addCandidateGroupMuppetShow}")
@@ -162,16 +136,13 @@ class TaskCollectorITest {
     )
 
     // start
-    val instance = startProcessInstance(
-      processId,
-      businessKey
-    )
+    val instance = driver.startProcessInstance()
 
     // wait for async continuation: we must not trigger the execution of the job explicitly but instead await its execution
     await().untilAsserted { assertThat(job(instance)).isNull() }
 
     // user task
-    assertThat(instance).isWaitingAt(taskDefinitionKey)
+    driver.assertProcessInstanceWaitsInUserTask(instance)
 
     val createCommand = createTaskCommand(
       candidateUsers = setOf("piggy"),
@@ -185,10 +156,8 @@ class TaskCollectorITest {
   @Test
   fun `creates task in a process with async start and complex variables`() {
     // deploy
-    deployProcess(
+    driver.deployProcess(
       createUserTaskProcess(
-        processId,
-        taskDefinitionKey,
         taskListeners = listOf(
           Pair("create", "#{addCandidateUserPiggy}"),
           Pair("create", "#{addCandidateGroupMuppetShow}")
@@ -201,9 +170,8 @@ class TaskCollectorITest {
     val set = linkedSetOf("3", "2", "1")
     // When Jackson reads the set as a Set (not a LinkedSet), the order changes
     Assertions.assertThat(set.toList()).isNotEqualTo(jacksonObjectMapper().convertValue<Set<String>>(set).toList())
-    val instance = startProcessInstance(
-      processId, businessKey,
-      Variables
+    val instance = driver.startProcessInstance(
+      variables = Variables
         .putValue("key", "value")
         .putValue("object", MyStructureWithSet("name", "key", 1, set))
     )
@@ -212,7 +180,7 @@ class TaskCollectorITest {
     await().untilAsserted { assertThat(job(instance)).isNull() }
 
     // user task
-    assertThat(instance).isWaitingAt(taskDefinitionKey)
+    driver.assertProcessInstanceWaitsInUserTask(instance)
 
     val createCommand = createTaskCommand(
       candidateUsers = setOf("piggy"), candidateGroups = setOf("muppetshow"), variables = Variables
@@ -246,11 +214,11 @@ class TaskCollectorITest {
   fun `completes on process finish`() {
 
     // deploy
-    deployProcess(createUserTaskProcess(processId, taskDefinitionKey))
+    driver.deployProcess(createUserTaskProcess())
 
     // start
-    val instance = runtimeService.startProcessInstanceByKey(processId, businessKey, defaultVariables)
-    assertThat(instance).isWaitingAt(taskDefinitionKey)
+    val instance = driver.startProcessInstance()
+    driver.assertProcessInstanceWaitsInUserTask(instance)
     verify(commandListGateway).sendToGateway(listOf(createTaskCommand()))
 
 
@@ -272,11 +240,11 @@ class TaskCollectorITest {
   fun `completes with variables and creates new task`() {
 
     // deploy
-    deployProcess(createUserTaskProcess(processId, taskDefinitionKey, true, otherTaskDefinitionKey = "other-task"))
+    driver.deployProcess(createUserTaskProcess(additionalUserTask = true, otherTaskDefinitionKey = "other-task"))
 
     // start
-    val instance = startProcessInstance(processId, businessKey)
-    assertThat(instance).isWaitingAt(taskDefinitionKey)
+    val instance = driver.startProcessInstance()
+    driver.assertProcessInstanceWaitsInUserTask(instance)
     verify(commandListGateway).sendToGateway(listOf(createTaskCommand()))
 
     // complete
@@ -288,7 +256,7 @@ class TaskCollectorITest {
 
     // separate task id => separate command list
     assertThat(instance).isWaitingAt("other-task")
-    val otherTaskCreateCommand = createTaskCommand(variables = defaultVariables.apply {
+    val otherTaskCreateCommand = createTaskCommand(variables = DEFAULT_VARIABLES.apply {
       put("input", "from user")
     })
     verify(commandListGateway).sendToGateway(listOf(otherTaskCreateCommand))
@@ -304,11 +272,11 @@ class TaskCollectorITest {
   fun `completes with claim in one TX`() {
 
     // deploy
-    deployProcess(createUserTaskProcess(processId, taskDefinitionKey))
+    driver.deployProcess(createUserTaskProcess())
 
     // start
-    val instance = startProcessInstance(processId, businessKey)
-    assertThat(instance).isWaitingAt(taskDefinitionKey)
+    val instance = driver.startProcessInstance()
+    driver.assertProcessInstanceWaitsInUserTask(instance)
     verify(commandListGateway).sendToGateway(listOf(createTaskCommand()))
 
 
@@ -337,11 +305,11 @@ class TaskCollectorITest {
   fun `updates attributes via API`() {
 
     // deploy
-    deployProcess(createUserTaskProcess(processId, taskDefinitionKey))
+    driver.deployProcess(createUserTaskProcess())
 
     // start
-    val instance = startProcessInstance(processId, businessKey)
-    assertThat(instance).isWaitingAt(taskDefinitionKey)
+    val instance = driver.startProcessInstance()
+    driver.assertProcessInstanceWaitsInUserTask(instance)
     verify(commandListGateway).sendToGateway(listOf(createTaskCommand()))
 
     // set due date to now
@@ -366,17 +334,17 @@ class TaskCollectorITest {
   fun `updates attributes via API with update listener`() {
 
     // deploy
-    deployProcess(
+    driver.deployProcess(
       createUserTaskProcess(
-        processId, taskDefinitionKey, taskListeners = listOf(
+        taskListeners = listOf(
           "update" to "#{changeTaskAttributes}"
         )
       )
     )
 
     // start
-    val instance = startProcessInstance(processId, businessKey)
-    assertThat(instance).isWaitingAt(taskDefinitionKey)
+    val instance = driver.startProcessInstance()
+    driver.assertProcessInstanceWaitsInUserTask(instance)
     verify(commandListGateway).sendToGateway(listOf(createTaskCommand()))
 
     // trigger the update event on the task
@@ -398,9 +366,9 @@ class TaskCollectorITest {
   fun `assigns task via API with assignment listener`() {
 
     // deploy
-    deployProcess(
+    driver.deployProcess(
       createUserTaskProcess(
-        processId, taskDefinitionKey,
+
         candidateUsers = "fozzy",
         taskListeners = listOf(
           "assignment" to "#{setAssigneePiggy}"
@@ -409,8 +377,8 @@ class TaskCollectorITest {
     )
 
     // start
-    val instance = startProcessInstance(processId, businessKey)
-    assertThat(instance).isWaitingAt(taskDefinitionKey)
+    val instance = driver.startProcessInstance()
+    driver.assertProcessInstanceWaitsInUserTask(instance)
     verify(commandListGateway).sendToGateway(listOf(createTaskCommand(candidateUsers = setOf("fozzy"))))
 
     // trigger the update event on the task
@@ -429,9 +397,9 @@ class TaskCollectorITest {
   fun `(re) assigns user via API`() {
 
     // deploy
-    deployProcess(
+    driver.deployProcess(
       createUserTaskProcess(
-        processId, taskDefinitionKey,
+
         candidateUsers = "piggy, kermit",
         taskListeners = listOf(
           "create" to "#{setAssigneePiggy}" // will add a listener setting assignee to piggy on task creation.
@@ -440,8 +408,8 @@ class TaskCollectorITest {
     )
 
     // start
-    val instance = startProcessInstance(processId, businessKey)
-    assertThat(instance).isWaitingAt(taskDefinitionKey)
+    val instance = driver.startProcessInstance()
+    driver.assertProcessInstanceWaitsInUserTask(instance)
     verify(commandListGateway).sendToGateway(listOf(createTaskCommand(candidateUsers = setOf("piggy", "kermit"))))
 
     // assign
@@ -470,18 +438,16 @@ class TaskCollectorITest {
     val dwarfs = "dwarfs"
 
     // deploy
-    deployProcess(
+    driver.deployProcess(
       createUserTaskProcess(
-        processId,
-        taskDefinitionKey,
         additionalUserTask = false,
         candidateGroups = "$muppets,$lords,$peasants"
       )
     )
 
     // start
-    val instance = startProcessInstance(processId, businessKey)
-    assertThat(instance).isWaitingAt(taskDefinitionKey)
+    val instance = driver.startProcessInstance()
+    driver.assertProcessInstanceWaitsInUserTask(instance)
     assertThat(task()).hasCandidateGroup(muppets)
     assertThat(task()).hasCandidateGroup(peasants)
     assertThat(task()).hasCandidateGroup(lords)
@@ -521,18 +487,16 @@ class TaskCollectorITest {
     val dwarfs = "dwarfs"
 
     // deploy
-    deployProcess(
+    driver.deployProcess(
       createUserTaskProcess(
-        processId,
-        taskDefinitionKey,
         additionalUserTask = false,
         candidateGroups = "$muppets,$lords,$peasants"
       )
     )
 
     // start
-    val instance = startProcessInstance(processId, businessKey)
-    assertThat(instance).isWaitingAt(taskDefinitionKey)
+    val instance = driver.startProcessInstance()
+    driver.assertProcessInstanceWaitsInUserTask(instance)
     assertThat(task()).hasCandidateGroup(muppets)
     assertThat(task()).hasCandidateGroup(peasants)
     assertThat(task()).hasCandidateGroup(lords)
@@ -578,17 +542,15 @@ class TaskCollectorITest {
     val hulk = "hulk"
 
     // deploy
-    deployProcess(
+    driver.deployProcess(
       createUserTaskProcess(
-        processId,
-        taskDefinitionKey,
         candidateUsers = "$kermit,$piggy"
       )
     )
 
     // start
-    val instance = startProcessInstance(processId, businessKey)
-    assertThat(instance).isWaitingAt(taskDefinitionKey)
+    val instance = driver.startProcessInstance()
+    driver.assertProcessInstanceWaitsInUserTask(instance)
     assertThat(task()).hasCandidateUser(kermit)
     assertThat(task()).hasCandidateUser(piggy)
     verify(commandListGateway).sendToGateway(
@@ -625,11 +587,11 @@ class TaskCollectorITest {
 
     val reason = "I-test"
     // deploy
-    deployProcess(createUserTaskProcess(processId, taskDefinitionKey))
+    driver.deployProcess(createUserTaskProcess())
 
     // start
-    val instance = startProcessInstance(processId, businessKey)
-    assertThat(instance).isWaitingAt(taskDefinitionKey)
+    val instance = driver.startProcessInstance()
+    driver.assertProcessInstanceWaitsInUserTask(instance)
     verify(commandListGateway).sendToGateway(listOf(createTaskCommand()))
 
     // delete
@@ -644,180 +606,6 @@ class TaskCollectorITest {
 
   }
 
-  /*
-   * Deploys the process.
-   */
-  private fun deployProcess(modelInstance: BpmnModelInstance) {
-    repositoryService
-      .createDeployment()
-      .addModelInstance("process.bpmn", modelInstance)
-      .deploy()
-  }
-
-  /*
-   * Starts the process.
-   */
-  private fun startProcessInstance(
-    processId: String,
-    businessKey: String,
-    variables: VariableMap = defaultVariables
-  ) = runtimeService
-    .startProcessInstanceByKey(
-      processId,
-      businessKey,
-      variables
-    ).also { instance ->
-      assertThat(instance).isNotNull
-      assertThat(instance).isStarted
-    }
-
-  /**
-   * Creates a process model instance with start -> user-task -> (optional: another-user-task) -> end
-   */
-  private fun createUserTaskProcess(
-    processId: String,
-    taskDefinitionKey: String,
-    additionalUserTask: Boolean = false,
-    asyncOnStart: Boolean = false,
-    candidateGroups: String = "",
-    candidateUsers: String = "",
-    formKey: String = "form-key",
-    taskListeners: List<Pair<String, String>> = listOf(),
-    otherTaskDefinitionKey: String = "another-user-task"
-  ) = Bpmn
-    .createExecutableProcess(processId)
-    // start event
-    .startEvent("start").camundaAsyncAfter(asyncOnStart)
-    // user task
-    .userTask(taskDefinitionKey)
-    .camundaCandidateGroups(candidateGroups)
-    .camundaCandidateUsers(candidateUsers)
-    .camundaFormKey(formKey)
-    .camundaPriority("66")
-    .apply {
-      taskListeners.forEach {
-        this.camundaTaskListenerDelegateExpression(it.first, it.second)
-      }
-      this.element.name = "User Task"
-    }
-    // optional second user task
-    .apply {
-      if (additionalUserTask) {
-        this.userTask(otherTaskDefinitionKey)
-      }
-    }
-    // end event
-    .endEvent("end")
-    .done().apply {
-      getModelElementById<ModelElementInstance>(processId).setAttributeValue("name", "My Process")
-    }
-
-
-  /*
-   * Create task command from current task.
-   */
-  private fun createTaskCommand(
-    candidateGroups: Set<String> = setOf(),
-    candidateUsers: Set<String> = setOf(),
-    variables: VariableMap = defaultVariables,
-    processBusinessKey: String = this.businessKey
-  ) = task(taskQuery().initializeFormKeys()).let { task ->
-    CreateTaskCommand(
-      id = task.id,
-      sourceReference = ProcessReference(
-        instanceId = task.processInstanceId,
-        executionId = task.executionId,
-        definitionId = task.processDefinitionId,
-        name = "My Process",
-        definitionKey = processId,
-        applicationName = "collector-test"
-      ),
-      name = task.name,
-      description = task.description,
-      taskDefinitionKey = task.taskDefinitionKey,
-      candidateUsers = candidateUsers,
-      candidateGroups = candidateGroups,
-      assignee = task.assignee,
-      enriched = true,
-      eventName = CREATE,
-      createTime = task.createTime,
-      businessKey = processBusinessKey,
-      priority = task.priority, // default by camunda if not set in explicit
-      payload = variables,
-      formKey = task.formKey
-    )
-  }
-
-  /*
-   * Creates update command from current task.
-   */
-  private fun updateTaskCommand(
-    variables: VariableMap = defaultVariables,
-    instanceBusinessKey: String = businessKey,
-    correlations: VariableMap = newCorrelations()
-  ) =
-    task(taskQuery().initializeFormKeys()).let { task ->
-      UpdateAttributeTaskCommand(
-        id = task.id,
-        name = task.name,
-        description = task.description,
-        dueDate = task.dueDate,
-        followUpDate = task.followUpDate,
-        owner = task.owner,
-        priority = task.priority,
-        taskDefinitionKey = task.taskDefinitionKey,
-        sourceReference = ProcessReference(
-          instanceId = task.processInstanceId,
-          executionId = task.executionId,
-          definitionId = task.processDefinitionId,
-          name = "My Process",
-          definitionKey = processId,
-          applicationName = "collector-test"
-        ),
-        enriched = true,
-        businessKey = instanceBusinessKey,
-        payload = variables,
-        correlations = correlations
-      )
-    }
 }
 
-@Component
-internal class AddCandidateUserPiggy : TaskListener {
-  override fun notify(delegateTask: DelegateTask) {
-    delegateTask.addCandidateUser("piggy")
-  }
-}
-
-@Component
-internal class SetAssigneePiggy : TaskListener {
-  override fun notify(delegateTask: DelegateTask) {
-    delegateTask.assignee = "piggy"
-  }
-}
-
-
-@Component
-class AddCandidateGroupMuppetShow : TaskListener {
-  override fun notify(delegateTask: DelegateTask) {
-    delegateTask.addCandidateGroup("muppetshow")
-  }
-}
-
-/**
- * Typical use case for a start listener changing attributes
- */
-@Component
-class ChangeTaskAttributes : TaskListener {
-  override fun notify(delegateTask: DelegateTask) {
-    delegateTask.name = "new name"
-    delegateTask.description = "new description"
-    delegateTask.priority = 99
-    delegateTask.dueDate = NOW
-    delegateTask.followUpDate = NOW
-  }
-}
-
-
-data class MyStructure(val name: String, val key: String, val value: Int)
 data class MyStructureWithSet(val name: String, val key: String, val value: Int, val set: Set<String> = setOf())

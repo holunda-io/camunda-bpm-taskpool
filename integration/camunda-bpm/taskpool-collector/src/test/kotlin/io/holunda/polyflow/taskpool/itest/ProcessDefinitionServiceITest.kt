@@ -20,7 +20,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
 /**
  * This ITests simulates work of Camunda process definition collector.
  */
-@ExtendWith(SpringExtension::class)
 @SpringBootTest(classes = [CollectorTestApplication::class], webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @ActiveProfiles("collector-itest")
 @DirtiesContext
