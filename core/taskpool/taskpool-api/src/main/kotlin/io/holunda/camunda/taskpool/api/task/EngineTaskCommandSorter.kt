@@ -13,6 +13,7 @@ const val ORDER_TASK_DELETION = -1
 const val ORDER_TASK_ASSIGNMENT = 0
 const val ORDER_TASK_CANDIDATES_UPDATE = 1
 const val ORDER_TASK_ATTRIBUTE_UPDATE = 2
+const val ORDER_TASK_BATCH = 100
 
 /**
  * Special command that is never an intent, but is used for enrichment of other commands.
