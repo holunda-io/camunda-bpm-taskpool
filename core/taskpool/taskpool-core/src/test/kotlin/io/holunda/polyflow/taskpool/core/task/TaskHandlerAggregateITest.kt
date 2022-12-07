@@ -2,22 +2,20 @@ package io.holunda.polyflow.taskpool.core.task
 
 import io.holunda.camunda.taskpool.api.business.addCorrelation
 import io.holunda.camunda.taskpool.api.business.newCorrelations
-import io.holunda.camunda.taskpool.api.task.CreateTaskCommand
-import io.holunda.camunda.taskpool.api.task.ProcessReference
-import io.holunda.camunda.taskpool.api.task.TaskCreatedEngineEvent
+import io.holunda.camunda.taskpool.api.task.*
 import io.holunda.polyflow.taskpool.core.TestApplication
 import org.assertj.core.api.Assertions.assertThat
 import org.axonframework.commandhandling.gateway.CommandGateway
 import org.axonframework.eventhandling.EventBus
 import org.axonframework.eventhandling.EventMessage
+import org.axonframework.messaging.unitofwork.UnitOfWork
 import org.camunda.bpm.engine.variable.Variables
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
-import org.springframework.test.context.junit.jupiter.SpringExtension
 import java.time.Instant
 import java.util.*
 
@@ -26,10 +24,9 @@ import java.util.*
  * - if task doesn't exist, create it and handle the create command
  * - if it does exist (e.g. we run populate), just handle the create command
  */
-@ExtendWith(SpringExtension::class)
 @SpringBootTest(classes = [TestApplication::class])
 @ActiveProfiles("itest")
-class TaskHandlerAggregateITest {
+internal class TaskHandlerAggregateITest {
 
   @Autowired
   private lateinit var commandGateway: CommandGateway
@@ -46,6 +43,28 @@ class TaskHandlerAggregateITest {
     name = "My process",
     applicationName = "myExample"
   )
+  private val taskId = UUID.randomUUID().toString()
+  private val now = Date.from(Instant.now())
+
+  val createCommand = CreateTaskCommand(
+    id = taskId,
+    name = "Foo",
+    createTime = now,
+    owner = "kermit",
+    taskDefinitionKey = "foo",
+    formKey = "some",
+    businessKey = "business123",
+    sourceReference = processReference,
+    candidateUsers = setOf("kermit", "gonzo"),
+    candidateGroups = setOf("muppets"),
+    assignee = "kermit",
+    followUpDate = now,
+    dueDate = now,
+    priority = 51,
+    description = "Funky task",
+    payload = Variables.createVariables().putValueTyped("key", Variables.stringValue("value")),
+    correlations = newCorrelations().addCorrelation("Request", "business123")
+  )
 
 
   @BeforeEach
@@ -55,33 +74,32 @@ class TaskHandlerAggregateITest {
 
   @Test
   fun `should accept second create task command for the same task id`() {
-
-    val taskId = UUID.randomUUID().toString()
-    val now = Date.from(Instant.now())
-    val command = CreateTaskCommand(
-      id = taskId,
-      name = "Foo",
-      createTime = now,
-      owner = "kermit",
-      taskDefinitionKey = "foo",
-      formKey = "some",
-      businessKey = "business123",
-      sourceReference = processReference,
-      candidateUsers = setOf("kermit", "gonzo"),
-      candidateGroups = setOf("muppets"),
-      assignee = "kermit",
-      followUpDate = now,
-      dueDate = now,
-      priority = 51,
-      description = "Funky task",
-      payload = Variables.createVariables().putValueTyped("key", Variables.stringValue("value")),
-      correlations = newCorrelations().addCorrelation("Request", "business123")
-    )
-
-    commandGateway.sendAndWait<String>(command)
-    commandGateway.sendAndWait<String>(command.copy(description = "Changed value"))
+    commandGateway.sendAndWait<String>(createCommand)
+    commandGateway.sendAndWait<String>(createCommand.copy(description = "Changed value"))
 
     assertThat(receivedEvents.size).isEqualTo(2)
     assertThat((receivedEvents[1].payload as TaskCreatedEngineEvent).description).isEqualTo("Changed value")
+  }
+
+  @Test
+  fun `should accept batch command`() {
+    val addCandidateUsersCommand = AddCandidateUsersCommand(id = createCommand.id, candidateUsers = setOf("kermit"))
+    val addCandidateUsersGroups = AddCandidateGroupsCommand(id = createCommand.id, candidateGroups = setOf("muppets"))
+    commandGateway.sendAndWait<String>(
+      BatchCommand(id = createCommand.id, commands = listOf(
+        createCommand,
+        addCandidateUsersCommand,
+        addCandidateUsersGroups
+      ))
+    )
+    assertThat(receivedEvents.size).isEqualTo(3)
+    assertThat(receivedEvents[0].payload).isInstanceOf(TaskCreatedEngineEvent::class.java)
+    assertThat(receivedEvents[1].payload).isInstanceOf(TaskCandidateUserChanged::class.java)
+    assertThat(receivedEvents[2].payload).isInstanceOf(TaskCandidateGroupChanged::class.java)
+  }
+
+  @AfterEach
+  fun clean() {
+    receivedEvents.clear()
   }
 }

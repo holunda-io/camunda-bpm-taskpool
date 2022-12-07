@@ -27,10 +27,10 @@ class TaskAggregate() {
   private var completed = false
 
   /**
-   * This handler triggers on a duplication of creation and
-   * is invoked manually on aggregate creation and is therefor
-   * not annotated with {@link CommandHandler}
+   * This a non-static handler for create command.
+   * The aggregate is created manually to avoid duplication and then the handler is invoked.
    */
+  @CommandHandler
   fun handle(command: CreateTaskCommand) {
     logger.debug { "Created new aggregate for task ${command.id}" }
     AggregateLifecycle.apply(
