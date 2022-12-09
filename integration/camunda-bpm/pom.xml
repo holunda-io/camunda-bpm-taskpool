@@ -21,6 +21,7 @@
 
   <modules>
     <module>taskpool-collector</module>
+    <module>taskpool-job-sender</module>
     <module>engine-client</module>
     <module>springboot-starter</module>
     <module>springboot-autoconfigure</module>

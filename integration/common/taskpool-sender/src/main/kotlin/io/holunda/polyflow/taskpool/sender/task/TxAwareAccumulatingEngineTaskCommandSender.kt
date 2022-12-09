@@ -11,10 +11,9 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
 /**
  * Collects commands of one transaction, accumulates them to one command and sends it after TX commit.
  */
-class TxAwareAccumulatingEngineTaskCommandSender(
-  private val commandListGateway: CommandListGateway,
-  private val engineTaskCommandAccumulator: EngineTaskCommandAccumulator,
-  private val senderProperties: SenderProperties
+abstract class TxAwareAccumulatingEngineTaskCommandSender(
+  protected val engineTaskCommandAccumulator: EngineTaskCommandAccumulator,
+  protected val senderProperties: SenderProperties
 ) : EngineTaskCommandSender {
 
   companion object : KLogging()
@@ -22,7 +21,7 @@ class TxAwareAccumulatingEngineTaskCommandSender(
   private val registered: ThreadLocal<Boolean> = ThreadLocal.withInitial { false }
 
   @Suppress("RemoveExplicitTypeArguments")
-  private val taskCommands: ThreadLocal<MutableMap<String, MutableList<EngineTaskCommand>>> =
+  protected val taskCommands: ThreadLocal<MutableMap<String, MutableList<EngineTaskCommand>>> =
     ThreadLocal.withInitial { mutableMapOf<String, MutableList<EngineTaskCommand>>() }
 
   /**
@@ -71,19 +70,8 @@ class TxAwareAccumulatingEngineTaskCommandSender(
     }
   }
 
-  private fun send() {
-    // iterate over messages and send them
-    taskCommands.get().forEach { (taskId, taskCommands) ->
-      val accumulatorName = engineTaskCommandAccumulator::class.simpleName
-      logger.debug("SENDER-005: Handling ${taskCommands.size} commands for task $taskId using command accumulator $accumulatorName")
-      val commands = engineTaskCommandAccumulator.invoke(taskCommands)
-      // handle messages for every task
-      if (senderProperties.enabled && senderProperties.task.enabled) {
-        commandListGateway.sendToGateway(commands)
-        logger.trace { "SENDER-TRACE: sending commands for task [${commands.first().id}]: " + commands.joinToString(", ", "'", "'", -1, "...") { it.eventName } }
-      } else {
-        logger.debug { "SENDER-004: Process task sending is disabled by property. Would have sent $commands." }
-      }
-    }
-  }
+  /**
+   * Triggers the command sending.
+   */
+  abstract fun send()
 }

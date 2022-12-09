@@ -10,6 +10,7 @@ import io.holunda.polyflow.taskpool.sender.process.instance.SimpleProcessInstanc
 import io.holunda.polyflow.taskpool.sender.process.variable.ProcessVariableCommandSender
 import io.holunda.polyflow.taskpool.sender.process.variable.SimpleProcessVariableCommandSender
 import io.holunda.polyflow.taskpool.sender.process.variable.TxAwareAccumulatingProcessVariableCommandSender
+import io.holunda.polyflow.taskpool.sender.task.DirectTxAwareAccumulatingEngineTaskCommandSender
 import io.holunda.polyflow.taskpool.sender.task.EngineTaskCommandSender
 import io.holunda.polyflow.taskpool.sender.task.SimpleEngineTaskCommandSender
 import io.holunda.polyflow.taskpool.sender.task.TxAwareAccumulatingEngineTaskCommandSender
@@ -24,7 +25,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Configuration
 import javax.annotation.PostConstruct
 
 /**
@@ -71,16 +71,21 @@ class SenderConfiguration(private val senderProperties: SenderProperties) {
   )
 
   /**
-   * Creates command sender for tasks.
+   * Creates simple (direct) command sender for tasks.
    */
   @Bean
-  @ConditionalOnExpression("'\${polyflow.integration.sender.task.type}' != 'custom'")
-  fun taskCommandSender(commandListGateway: CommandListGateway, accumulator: EngineTaskCommandAccumulator): EngineTaskCommandSender =
-    when (senderProperties.task.type) {
-      SenderType.tx -> TxAwareAccumulatingEngineTaskCommandSender(commandListGateway, accumulator, senderProperties)
-      SenderType.simple -> SimpleEngineTaskCommandSender(commandListGateway, senderProperties)
-      else -> throw IllegalStateException("Could not initialize task sender, used unknown ${senderProperties.task.type} type.")
-    }
+  @ConditionalOnExpression("'\${polyflow.integration.sender.task.type}' == 'simple'")
+  fun simpleTaskCommandSender(commandListGateway: CommandListGateway, accumulator: EngineTaskCommandAccumulator): EngineTaskCommandSender =
+    SimpleEngineTaskCommandSender(commandListGateway, senderProperties)
+
+  /**
+   * Creates transactional command sender for tasks.
+   */
+  @Bean
+  @ConditionalOnExpression("'\${polyflow.integration.sender.task.type}' == 'tx'")
+  fun txAwareTaskCommandSender(commandListGateway: CommandListGateway, accumulator: EngineTaskCommandAccumulator): EngineTaskCommandSender =
+    DirectTxAwareAccumulatingEngineTaskCommandSender(commandListGateway, accumulator, senderProperties)
+
 
   /**
    * Creates command sender for process definitions.
