@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component
 /**
  * Component responsible for retrieving process definitions from process engine.
  */
+@Component
 class ProcessDefinitionService(
   private val collectorProperties: CamundaTaskpoolCollectorProperties
 ) {

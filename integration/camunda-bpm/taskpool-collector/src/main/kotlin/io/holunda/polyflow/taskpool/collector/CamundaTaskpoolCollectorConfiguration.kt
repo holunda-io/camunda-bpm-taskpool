@@ -7,20 +7,20 @@ import io.holunda.polyflow.taskpool.collector.process.variable.ProcessVariableCo
 import io.holunda.polyflow.taskpool.collector.task.TaskCollectorConfiguration
 import mu.KLogging
 import org.springframework.boot.context.properties.EnableConfigurationProperties
+import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Import
 import javax.annotation.PostConstruct
 
 /**
  * Configuration of collector.
  */
-@Import(
-  FallbackProcessVariablesCorrelatorConfiguration::class,
-  FallbackProcessVariablesFilterConfiguration::class,
-  ProcessDefinitionCollectorConfiguration::class,
-  ProcessDefinitionService::class, // always start the service.
-  ProcessInstanceCollectorConfiguration::class,
-  ProcessVariableCollectorConfiguration::class,
-  TaskCollectorConfiguration::class
+@ComponentScan(
+  basePackageClasses = [
+    ProcessDefinitionCollectorConfiguration::class,
+    ProcessInstanceCollectorConfiguration::class,
+    ProcessVariableCollectorConfiguration::class,
+    TaskCollectorConfiguration::class
+  ]
 )
 @EnableConfigurationProperties(CamundaTaskpoolCollectorProperties::class)
 class CamundaTaskpoolCollectorConfiguration(

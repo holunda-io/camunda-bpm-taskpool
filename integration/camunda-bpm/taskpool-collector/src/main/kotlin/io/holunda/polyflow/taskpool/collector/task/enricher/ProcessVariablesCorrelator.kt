@@ -8,7 +8,7 @@ import org.camunda.bpm.engine.variable.VariableMap
 /**
  * Correlator for process variables.
  */
-class ProcessVariablesCorrelator(vararg correlations: ProcessVariableCorrelation) {
+open class ProcessVariablesCorrelator(vararg correlations: ProcessVariableCorrelation) {
 
   private val all: Map<ProcessDefinitionKey, ProcessVariableCorrelation> = correlations.associate { it.processDefinitionKey to it }
 
