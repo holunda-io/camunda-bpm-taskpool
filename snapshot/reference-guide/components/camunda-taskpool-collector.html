@@ -1660,7 +1660,7 @@ and the process reaches the task <code>task_approve_request</code>, the task wil
 </code></pre></div>
 <h3 id="message-codes">Message codes<a class="headerlink" href="#message-codes" title="Permanent link">#</a></h3>
 <blockquote>
-<p>Please note that the logger root hierarchy is <code>io.holunda.camunda.taskpool.collector</code></p>
+<p>Please note that the logger root hierarchy is <code>io.holunda.polyflow.taskpool.collector</code></p>
 </blockquote>
 <table>
 <thead>
@@ -1689,30 +1689,30 @@ and the process reaches the task <code>task_approve_request</code>, the task wil
 </tr>
 <tr>
 <td><code>COLLECTOR-005</code></td>
-<td><code>DEBUG</code></td>
+<td><code>TRACE</code></td>
 <td align="left"><code>.process.definition</code></td>
-<td align="left">Process definition collecting has been disabled by property, skipping ${command.processDefinitionId}.</td>
+<td align="left">Sending process definition command: $command</td>
 <td align="left"></td>
 </tr>
 <tr>
 <td><code>COLLECTOR-006</code></td>
-<td><code>DEBUG</code></td>
+<td><code>TRACE</code></td>
 <td align="left"><code>.process.instance</code></td>
-<td align="left">Process instance collecting has been disabled by property, skipping ${command.processInstanceId}.</td>
+<td align="left">Sending process instance command: $command</td>
 <td align="left"></td>
 </tr>
 <tr>
 <td><code>COLLECTOR-007</code></td>
-<td><code>DEBUG</code></td>
+<td><code>TRACE</code></td>
 <td align="left"><code>.process.variable</code></td>
-<td align="left">Process variable collecting has been disabled by property, skipping ${command.processInstanceId}.</td>
+<td align="left">Sending process variable command: $command</td>
 <td align="left"></td>
 </tr>
 <tr>
 <td><code>COLLECTOR-008</code></td>
-<td><code>DEBUG</code></td>
+<td><code>TRACE</code></td>
 <td align="left"><code>.task</code></td>
-<td align="left">Task command collecting is disabled by property, would have enriched and sent command $command.</td>
+<td align="left">Sending engine task command: $command.</td>
 <td align="left"></td>
 </tr>
 <tr>
@@ -1751,7 +1751,7 @@ and the process reaches the task <code>task_approve_request</code>, the task wil
   <small>
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">December 8, 2022</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">December 9, 2022</span>
       
     
   </small>
