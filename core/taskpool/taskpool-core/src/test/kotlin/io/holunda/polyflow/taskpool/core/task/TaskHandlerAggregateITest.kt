@@ -8,7 +8,6 @@ import org.assertj.core.api.Assertions.assertThat
 import org.axonframework.commandhandling.gateway.CommandGateway
 import org.axonframework.eventhandling.EventBus
 import org.axonframework.eventhandling.EventMessage
-import org.axonframework.messaging.unitofwork.UnitOfWork
 import org.camunda.bpm.engine.variable.Variables
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
@@ -79,23 +78,6 @@ internal class TaskHandlerAggregateITest {
 
     assertThat(receivedEvents.size).isEqualTo(2)
     assertThat((receivedEvents[1].payload as TaskCreatedEngineEvent).description).isEqualTo("Changed value")
-  }
-
-  @Test
-  fun `should accept batch command`() {
-    val addCandidateUsersCommand = AddCandidateUsersCommand(id = createCommand.id, candidateUsers = setOf("kermit"))
-    val addCandidateUsersGroups = AddCandidateGroupsCommand(id = createCommand.id, candidateGroups = setOf("muppets"))
-    commandGateway.sendAndWait<String>(
-      BatchCommand(id = createCommand.id, commands = listOf(
-        createCommand,
-        addCandidateUsersCommand,
-        addCandidateUsersGroups
-      ))
-    )
-    assertThat(receivedEvents.size).isEqualTo(3)
-    assertThat(receivedEvents[0].payload).isInstanceOf(TaskCreatedEngineEvent::class.java)
-    assertThat(receivedEvents[1].payload).isInstanceOf(TaskCandidateUserChanged::class.java)
-    assertThat(receivedEvents[2].payload).isInstanceOf(TaskCandidateGroupChanged::class.java)
   }
 
   @AfterEach

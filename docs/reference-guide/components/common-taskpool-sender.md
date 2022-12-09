@@ -61,9 +61,7 @@ are sent _before_ the process engine transaction is committed, otherwise command
 
 If commands are delivered to a local component (this is the case if taskpool core is deployed in the same deployment as collector and sender components),
 the sending transaction is spanned across the taskpool core component. In particular, this means that the command dispatch and emission of events
-are happening inside the same transaction (unit of work). For source-stated aggregates, Axon Framework is not allowing to dispatch multiple commands
-inside the same Unit of Work, so you want to batch the command dispatch. For this purpose, a special flag `polyflow.integration.task.sender.batch-commands` exists.
-Set this to `true` for local deployment of collector, sender and core or let it by `false` (default) on any other distribution scenario.
+are happening inside the same transaction (unit of work). 
 
 #### Serialization of payload
 

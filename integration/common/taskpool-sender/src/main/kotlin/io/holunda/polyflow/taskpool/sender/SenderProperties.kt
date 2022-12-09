@@ -59,10 +59,6 @@ data class TaskSenderProperties(
    * Serialize payload to `Map<String, Object>`. Defaults to true.
    */
   val serializePayload: Boolean = true,
-  /**
-   * If multiple commands are send, package them into a batch.
-   */
-  val batchCommands: Boolean = false
 )
 
 /**
