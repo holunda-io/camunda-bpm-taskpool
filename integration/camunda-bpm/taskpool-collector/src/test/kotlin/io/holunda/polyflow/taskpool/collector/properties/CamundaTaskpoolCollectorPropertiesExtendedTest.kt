@@ -14,6 +14,8 @@ import org.axonframework.commandhandling.gateway.CommandGateway
 import org.axonframework.eventhandling.EventBus
 import org.axonframework.serialization.Serializer
 import org.axonframework.serialization.xml.XStreamSerializer
+import org.camunda.bpm.engine.RepositoryService
+import org.camunda.bpm.spring.boot.starter.property.CamundaBpmProperties
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.mock
 import org.mockito.kotlin.mock
@@ -27,7 +29,7 @@ internal class CamundaTaskpoolCollectorPropertiesExtendedTest {
     .withConfiguration(UserConfigurations.of(CamundaTaskpoolCollectorConfiguration::class.java))
 
   @Test
-  fun testMinimal() {
+  fun `loads minimal configuration without properties set`() {
     contextRunner
       .withUserConfiguration(TestMockConfiguration::class.java)
       .withPropertyValues(
@@ -48,7 +50,7 @@ internal class CamundaTaskpoolCollectorPropertiesExtendedTest {
   }
 
   @Test
-  fun testAllChanged() {
+  fun `loads all changed properties configuration`() {
     contextRunner
       .withUserConfiguration(TestMockConfiguration::class.java)
       .withUserConfiguration(AdditionalMockConfiguration::class.java)
@@ -110,5 +112,11 @@ internal class CamundaTaskpoolCollectorPropertiesExtendedTest {
 
     @Bean
     fun engineTaskCommandSender(): EngineTaskCommandSender = mock()
+
+    @Bean
+    fun camundaBpmProperties(): CamundaBpmProperties = CamundaBpmProperties()
+
+    @Bean
+    fun repositoryService(): RepositoryService = mock()
   }
 }

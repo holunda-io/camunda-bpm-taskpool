@@ -26,7 +26,6 @@ import org.springframework.stereotype.Component
  *  VARIABLE_INSTANCE_DELETE("variable-instance", "delete"),
  * </code>
  */
-@Component
 class ProcessVariableEventCollectorService(
   private val collectorProperties: CamundaTaskpoolCollectorProperties,
   private val repositoryService: RepositoryService

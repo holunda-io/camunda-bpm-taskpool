@@ -1,79 +1,38 @@
 package io.holunda.polyflow.taskpool.collector
 
-import io.holunda.polyflow.taskpool.collector.task.BuiltInPublishDelegateParseListener
-import io.holunda.polyflow.taskpool.collector.task.VariablesEnricher
-import io.holunda.polyflow.taskpool.collector.task.enricher.EmptyTaskCommandEnricher
-import io.holunda.polyflow.taskpool.collector.task.enricher.ProcessVariablesCorrelator
-import io.holunda.polyflow.taskpool.collector.task.enricher.ProcessVariablesFilter
-import io.holunda.polyflow.taskpool.collector.task.enricher.ProcessVariablesTaskCommandEnricher
-import org.camunda.bpm.engine.RuntimeService
-import org.camunda.bpm.engine.TaskService
-import org.camunda.bpm.engine.impl.cfg.ProcessEngineConfigurationImpl
-import org.camunda.bpm.engine.impl.interceptor.CommandExecutor
-import org.camunda.bpm.engine.spring.SpringProcessEnginePlugin
-import org.camunda.bpm.spring.boot.starter.property.CamundaBpmProperties
-import org.camunda.bpm.spring.boot.starter.property.EventingProperty
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
-import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression
+import io.holunda.polyflow.taskpool.collector.process.definition.ProcessDefinitionCollectorConfiguration
+import io.holunda.polyflow.taskpool.collector.process.definition.ProcessDefinitionService
+import io.holunda.polyflow.taskpool.collector.process.instance.ProcessInstanceCollectorConfiguration
+import io.holunda.polyflow.taskpool.collector.process.variable.ProcessVariableCollectorConfiguration
+import io.holunda.polyflow.taskpool.collector.task.TaskCollectorConfiguration
+import mu.KLogging
 import org.springframework.boot.context.properties.EnableConfigurationProperties
-import org.springframework.context.ApplicationEventPublisher
-import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.ComponentScan
+import org.springframework.context.annotation.Import
 import javax.annotation.PostConstruct
 
 /**
  * Configuration of collector.
  */
-@ComponentScan
+@Import(
+  FallbackProcessVariablesCorrelatorConfiguration::class,
+  FallbackProcessVariablesFilterConfiguration::class,
+  ProcessDefinitionCollectorConfiguration::class,
+  ProcessDefinitionService::class, // always start the service.
+  ProcessInstanceCollectorConfiguration::class,
+  ProcessVariableCollectorConfiguration::class,
+  TaskCollectorConfiguration::class
+)
 @EnableConfigurationProperties(CamundaTaskpoolCollectorProperties::class)
 class CamundaTaskpoolCollectorConfiguration(
-  private val properties: CamundaTaskpoolCollectorProperties,
-  camundaBpmProperties: CamundaBpmProperties
+  private val properties: CamundaTaskpoolCollectorProperties
 ) {
-
-  private val logger: Logger = LoggerFactory.getLogger(CamundaTaskpoolCollectorConfiguration::class.java)
-  private val eventingProperties = camundaBpmProperties.eventing
-
-
-  /**
-   * Build the engine plugin to install pre-built listeners.
-   */
-  @Bean
-  fun builtInEngineListenerPlugin(publisher: ApplicationEventPublisher) = object : SpringProcessEnginePlugin() {
-    override fun preInit(processEngineConfiguration: ProcessEngineConfigurationImpl) {
-      if (eventingProperties.isTask) {
-        throw IllegalStateException("Standard eventing of Camunda BPM Spring boot is active for tasks. Switch it off by setting camunda.bpm.eventing.task=false to use Polyflow task collector.")
-      }
-      processEngineConfiguration.customPostBPMNParseListeners.add(
-        BuiltInPublishDelegateParseListener(publisher)
-      )
-    }
-  }
-
-  /**
-   * Create enricher.
-   */
-  @Bean
-  @ConditionalOnExpression("'\${polyflow.integration.collector.camunda.task.enricher.type}' != 'custom'")
-  fun processVariablesEnricher(
-    runtimeService: RuntimeService,
-    taskService: TaskService,
-    commandExecutor: CommandExecutor,
-    filter: ProcessVariablesFilter,
-    correlator: ProcessVariablesCorrelator
-  ): VariablesEnricher =
-    when (properties.task.enricher.type) {
-      TaskCollectorEnricherType.processVariables -> ProcessVariablesTaskCommandEnricher(runtimeService, taskService, commandExecutor, filter, correlator)
-      TaskCollectorEnricherType.no -> EmptyTaskCommandEnricher()
-      else -> throw IllegalStateException("Could not initialize task enricher, used unknown ${properties.task.enricher.type} type.")
-    }
+  companion object : KLogging()
 
   /**
    * Prints sender config.
    */
   @PostConstruct
-  fun printTaskEnricherConfiguration() {
+  fun printConfiguration() {
     if (properties.task.enabled) {
       logger.info("COLLECTOR-001: Task commands will be collected.")
       when (properties.task.enricher.type) {
@@ -102,7 +61,6 @@ class CamundaTaskpoolCollectorConfiguration(
     } else {
       logger.info("COLLECTOR-015: Process variable commands won't be collected.")
     }
-
   }
 }
 

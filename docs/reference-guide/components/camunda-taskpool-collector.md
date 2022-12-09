@@ -234,16 +234,16 @@ and the process reaches the task `task_approve_request`, the task will get the f
 
 ### Message codes
 
-> Please note that the logger root hierarchy is `io.holunda.camunda.taskpool.collector`
+> Please note that the logger root hierarchy is `io.holunda.polyflow.taskpool.collector`
 
 | Message Code     | Severity | Logger*               | Description                                                                                                                 | Meaning |
 |------------------|----------|:----------------------|:----------------------------------------------------------------------------------------------------------------------------|:--------| 
 | `COLLECTOR-001`  | `INFO`   |                       | Task commands will be collected.                                                                                            |         |
 | `COLLECTOR-002`  | `INFO`   |                       | Task commands not be collected.                                                                                             |         |
-| `COLLECTOR-005`  | `DEBUG`  | `.process.definition` | Process definition collecting has been disabled by property, skipping ${command.processDefinitionId}.                       |         |
-| `COLLECTOR-006`  | `DEBUG`  | `.process.instance`   | Process instance collecting has been disabled by property, skipping ${command.processInstanceId}.                           |         |
-| `COLLECTOR-007`  | `DEBUG`  | `.process.variable`   | Process variable collecting has been disabled by property, skipping ${command.processInstanceId}.                           |         |
-| `COLLECTOR-008`  | `DEBUG`  | `.task`               | Task command collecting is disabled by property, would have enriched and sent command $command.                             |         |
+| `COLLECTOR-005`  | `TRACE`  | `.process.definition` | Sending process definition command: $command                                                                                |         |
+| `COLLECTOR-006`  | `TRACE`  | `.process.instance`   | Sending process instance command: $command                                                                                  |         |
+| `COLLECTOR-007`  | `TRACE`  | `.process.variable`   | Sending process variable command: $command                                                                                  |         |
+| `COLLECTOR-008`  | `TRACE`  | `.task`               | Sending engine task command: $command.                                                                                      |         |
 | `ENRICHER-001`   | `INFO`   |                       | Task commands will be enriched with process variables.                                                                      |         |
 | `ENRICHER-002`   | `INFO`   |                       | Task commands will not be enriched.                                                                                         |         |
 | `ENRICHER-003`   | `INFO`   |                       | Task commands will be enriched by a custom enricher.                                                                        |         |
