@@ -1501,9 +1501,7 @@ are sent <em>before</em> the process engine transaction is committed, otherwise 
 </div>
 <p>If commands are delivered to a local component (this is the case if taskpool core is deployed in the same deployment as collector and sender components),
 the sending transaction is spanned across the taskpool core component. In particular, this means that the command dispatch and emission of events
-are happening inside the same transaction (unit of work). For source-stated aggregates, Axon Framework is not allowing to dispatch multiple commands
-inside the same Unit of Work, so you want to batch the command dispatch. For this purpose, a special flag <code>polyflow.integration.task.sender.batch-commands</code> exists.
-Set this to <code>true</code> for local deployment of collector, sender and core or let it by <code>false</code> (default) on any other distribution scenario.</p>
+are happening inside the same transaction (unit of work). </p>
 <h4 id="serialization-of-payload">Serialization of payload<a class="headerlink" href="#serialization-of-payload" title="Permanent link">#</a></h4>
 <p>By default, the data entry sender will serialize payload of the <code>DataEntry</code> into a JSON-Map structure, in order to be received by projections (Data Pool View)
 and storage of it, independent of the classes which might be not on the classpath of the projection (generic structure instead of a typed Java object structure).
