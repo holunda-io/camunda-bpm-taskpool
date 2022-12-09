@@ -71,7 +71,7 @@ class SimpleTaskPoolGivenStage<SELF : SimpleTaskPoolGivenStage<SELF>> : Abstract
   }
 
   @As("$ tasks exist")
-  fun tasks_exist(numTasks: Int) = step {
+  fun tasks_exist(numTasks: Int, taskDefinitionKey: String? = null) = step {
     tasks = (0 until numTasks).map { task(it) }.also { createTasksInService(it) }.map { TaskWithDataEntries(it.asTask()) }
     return self()
   }

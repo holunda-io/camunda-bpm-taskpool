@@ -40,6 +40,7 @@ internal fun compareOperator(sign: String): CompareOperator =
         else -> actual.toString().endsWith(filter.toString())
       }
     }
+
     GREATER -> { filter, actual ->
       when (actual) {
         is String -> actual.startsWith(filter.toString())
@@ -49,6 +50,7 @@ internal fun compareOperator(sign: String): CompareOperator =
         else -> actual.toString().startsWith(filter.toString())
       }
     }
+
     EQUALS -> { filter, actual -> filter.toString() == actual.toString() }
     else -> throw IllegalArgumentException("Unsupported operator $sign")
   }
@@ -90,13 +92,14 @@ fun filterByPredicate(value: TaskWithDataEntries, wrapper: TaskPredicateWrapper)
 // no constraints
   (wrapper.taskAttributePredicate == null && wrapper.taskPayloadPredicate == null)
     // constraint is defined on task and matches on task property
-    || (wrapper.taskAttributePredicate != null && wrapper.taskAttributePredicate.test(value.task))
+    || (wrapper.taskAttributePredicate != null && wrapper.taskAttributePredicate.test(value.task) && wrapper.taskPayloadPredicate == null)
     // constraint is defined on data and matches on data entry property
-    || (wrapper.taskPayloadPredicate != null
-    && (value.dataEntries
-    .asSequence()
+    || (wrapper.taskAttributePredicate == null && (wrapper.taskPayloadPredicate != null && (value.dataEntries.asSequence().map { dataEntry -> dataEntry.payload }
+    .find { payload -> wrapper.taskPayloadPredicate.test(payload) } != null || wrapper.taskPayloadPredicate.test(value.task.payload))))
+    // both constraints
+    || (wrapper.taskAttributePredicate != null && wrapper.taskAttributePredicate.test(value.task) && (wrapper.taskPayloadPredicate != null && (value.dataEntries.asSequence()
     .map { dataEntry -> dataEntry.payload }
-    .find { payload -> wrapper.taskPayloadPredicate.test(payload) } != null || wrapper.taskPayloadPredicate.test(value.task.payload)))
+    .find { payload -> wrapper.taskPayloadPredicate.test(payload) } != null || wrapper.taskPayloadPredicate.test(value.task.payload))))
 
 
 /**
@@ -106,9 +109,13 @@ fun filterByPredicate(value: DataEntry, wrapper: DataEntryPredicateWrapper): Boo
 // no constraints
   (wrapper.dataEntryAttributePredicate == null && wrapper.dataEntryPayloadPredicate == null)
     // constraint is defined on data and matches on data entry property
-    || (wrapper.dataEntryAttributePredicate != null && wrapper.dataEntryAttributePredicate.test(value))
+    || (wrapper.dataEntryAttributePredicate != null && wrapper.dataEntryAttributePredicate.test(value) && wrapper.dataEntryPayloadPredicate == null)
     // constraint is defined on data payload and matches
-    || (wrapper.dataEntryPayloadPredicate != null && wrapper.dataEntryPayloadPredicate.test(value.payload))
+    || (wrapper.dataEntryAttributePredicate == null && wrapper.dataEntryPayloadPredicate != null && wrapper.dataEntryPayloadPredicate.test(value.payload))
+    // both constraints
+    || (wrapper.dataEntryAttributePredicate != null && wrapper.dataEntryAttributePredicate.test(value) && wrapper.dataEntryPayloadPredicate != null && wrapper.dataEntryPayloadPredicate.test(
+    value.payload
+  ))
 
 
 /**
@@ -118,9 +125,11 @@ fun filterByPredicate(value: Task, wrapper: TaskPredicateWrapper): Boolean =
 // no constraints
   (wrapper.taskAttributePredicate == null && wrapper.taskPayloadPredicate == null)
     // constraint is defined on task and matches on task property
-    || (wrapper.taskAttributePredicate != null && wrapper.taskAttributePredicate.test(value))
+    || (wrapper.taskAttributePredicate != null && wrapper.taskAttributePredicate.test(value) && wrapper.taskPayloadPredicate == null)
     // constraint is defined on data and matches
-    || (wrapper.taskPayloadPredicate != null && wrapper.taskPayloadPredicate.test(value.payload))
+    || (wrapper.taskAttributePredicate == null && wrapper.taskPayloadPredicate != null && wrapper.taskPayloadPredicate.test(value.payload))
+    // both constraints
+    || (wrapper.taskAttributePredicate != null && wrapper.taskAttributePredicate.test(value) && wrapper.taskPayloadPredicate != null && wrapper.taskPayloadPredicate.test(value.payload))
 
 
 /**
@@ -134,12 +143,12 @@ fun createDataEntryPredicates(criteria: List<Criterion>): DataEntryPredicateWrap
     dataEntryAttributePredicate = if (dataEntryPredicates.isEmpty()) {
       null
     } else {
-      dataEntryPredicates.reduce { combined, predicate -> combined.or(predicate) }
+      dataEntryPredicates.reduce { combined, predicate -> combined.and(predicate) }
     },
     dataEntryPayloadPredicate = if (dataEntryPayloadPredicates.isEmpty()) {
       null
     } else {
-      dataEntryPayloadPredicates.reduce { combined, predicate -> combined.or(predicate) }
+      dataEntryPayloadPredicates.reduce { combined, predicate -> combined.and(predicate) }
     }
   )
 }
@@ -154,12 +163,12 @@ fun createTaskPredicates(criteria: List<Criterion>): TaskPredicateWrapper {
     taskAttributePredicate = if (taskAttributePredicates.isEmpty()) {
       null
     } else {
-      taskAttributePredicates.reduce { combined, predicate -> combined.or(predicate) }
+      taskAttributePredicates.reduce { combined, predicate -> combined.and(predicate) }
     },
     taskPayloadPredicate = if (taskPayloadPredicates.isEmpty()) {
       null
     } else {
-      taskPayloadPredicates.reduce { combined, predicate -> combined.or(predicate) }
+      taskPayloadPredicates.reduce { combined, predicate -> combined.and(predicate) }
     })
 }
 
@@ -228,9 +237,11 @@ internal fun toCriterion(filter: String): Criterion {
     isTaskAttribute(segments[0]) -> {
       Criterion.TaskCriterion(name = segments[0].substring(TASK_PREFIX.length), value = segments[1], operator = segments[2])
     }
+
     isDataEntryAttribute(segments[0]) -> {
       Criterion.DataEntryCriterion(name = segments[0].substring(DATA_PREFIX.length), value = segments[1], operator = segments[2])
     }
+
     else -> {
       Criterion.PayloadEntryCriterion(name = segments[0], value = segments[1], operator = segments[2])
     }

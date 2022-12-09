@@ -134,18 +134,39 @@ class FilterTest {
     assertThat(predicates.taskAttributePredicate).isNotNull
     assertThat(predicates.taskPayloadPredicate).isNotNull
 
-    assertThat(predicates.taskAttributePredicate!!.test(task1.task)).isTrue
-    assertThat(predicates.taskAttributePredicate!!.test(task2.task)).isTrue
+    assertThat(predicates.taskAttributePredicate!!.test(task1.task)).isFalse
+    assertThat(predicates.taskAttributePredicate!!.test(task2.task)).isFalse
     assertThat(predicates.taskAttributePredicate!!.test(task3.task)).isFalse
     assertThat(predicates.taskPayloadPredicate!!.test(task3.dataEntries[0].payload)).isFalse
-    assertThat(predicates.taskPayloadPredicate!!.test(task4.dataEntries[0].payload)).isTrue
-    assertThat(predicates.taskPayloadPredicate!!.test(task5.dataEntries[0].payload)).isTrue
+    assertThat(predicates.taskPayloadPredicate!!.test(task4.dataEntries[0].payload)).isFalse
+    assertThat(predicates.taskPayloadPredicate!!.test(task5.dataEntries[0].payload)).isFalse
   }
 
   @Test
   fun `should filter string properties`() {
-    val filtered = filter(filtersList, listOf(task1, task2, task3, task4, task5, task6))
-    assertThat(filtered).containsExactlyElementsOf(listOf(task1, task2, task4, task5, task6))
+
+    assertThat(
+      filter(
+        listOf("task.name${EQUALS}myName", "task.priority${EQUALS}90"),
+        listOf(task1, task2, task3, task4, task5, task6)
+      )
+    ).containsExactlyElementsOf(listOf(task1))
+
+    assertThat(
+      filter(
+        listOf("task.assignee${EQUALS}gonzo"),
+        listOf(task1, task2, task3, task4, task5, task6)
+      )
+    ).containsExactlyElementsOf(listOf(task3, task4, task5, task6))
+
+
+    assertThat(
+      filter(
+        listOf("task.assignee${EQUALS}gonzo", "task.priority${EQUALS}78"),
+        listOf(task1, task2, task3, task4, task5, task6)
+      )
+    ).containsExactlyElementsOf(listOf(task4))
+
   }
 
 
