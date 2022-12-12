@@ -36,9 +36,9 @@ Spring eventing.
 
 The Taskpool Collector consists of several components which can be divided into the following groups:
 
-- Event collectors receive are responsible for gathering information and form commands
-- Processor performs the command enrichment with payload and data correlation
-- Command senders are responsible for accumulating commands and sending them to Command Gateway
+- Event collectors services are responsible for gathering information and forming commands
+- Processors are performing command manipulation (e.g. command enrichment with payload and data correlation)
+- Command senders are part of `command-sender` component and are responsible for accumulating commands and sending them to Axon Command List Gateway
 
 ### Usage and configuration
 
@@ -248,6 +248,4 @@ and the process reaches the task `task_approve_request`, the task will get the f
 | `ENRICHER-002`   | `INFO`   |                       | Task commands will not be enriched.                                                                                         |         |
 | `ENRICHER-003`   | `INFO`   |                       | Task commands will be enriched by a custom enricher.                                                                        |         |
 | `ENRICHER-004`   | `DEBUG`  | `.task.enricher`      | Could not enrich variables from running execution ${command.sourceReference.executionId}, since it doesn't exist (anymore). |         |
-
-
 
