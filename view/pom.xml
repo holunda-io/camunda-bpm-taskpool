@@ -16,7 +16,7 @@
 
   <properties>
     <axon-mongo.version>4.5</axon-mongo.version>
-    <reactor-kotlin-extensions.version>1.2.0</reactor-kotlin-extensions.version>
+    <reactor-kotlin-extensions.version>1.2.1</reactor-kotlin-extensions.version>
   </properties>
 
   <modules>
