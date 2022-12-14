@@ -17,7 +17,6 @@ import org.springframework.stereotype.Component
  * in order to avoid dependency cycles.
  * </p>
  */
-@Component
 class RefreshProcessDefinitionsJobHandler(
   private val processDefinitionService: ProcessDefinitionService,
   private val applicationEventPublisher: ApplicationEventPublisher

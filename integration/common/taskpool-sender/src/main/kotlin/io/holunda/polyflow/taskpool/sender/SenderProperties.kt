@@ -7,7 +7,7 @@ import org.springframework.boot.context.properties.NestedConfigurationProperty
 /**
  * Command sender properties.
  */
-@ConfigurationProperties(prefix="polyflow.integration.sender")
+@ConfigurationProperties(prefix = "polyflow.integration.sender")
 @ConstructorBinding
 data class SenderProperties(
   /**
@@ -59,10 +59,6 @@ data class TaskSenderProperties(
    * Serialize payload to `Map<String, Object>`. Defaults to true.
    */
   val serializePayload: Boolean = true,
-  /**
-   * If multiple commands are send, package them into a batch.
-   */
-  val batchCommands: Boolean = false
 )
 
 /**
@@ -121,13 +117,20 @@ data class ProcessVariableSenderProperties(
  */
 enum class SenderType {
   /**
-   * Direct sending.
+   * Direct sending without accumulation.
    */
   simple,
+
   /**
-   * Sending using Tx synchronization.
+   * Sending using Tx synchronization sending commands directly.
    */
   tx,
+
+  /**
+   * Special sender using Tx synchronization sending commands from a Camunda Job. See polyflow-camunda-bpm-taskpool-job-sender.
+   */
+  txjob,
+
   /**
    * Custom sending.
    */

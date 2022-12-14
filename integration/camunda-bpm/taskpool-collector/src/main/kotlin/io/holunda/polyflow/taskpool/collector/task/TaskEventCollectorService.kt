@@ -12,14 +12,12 @@ import org.camunda.bpm.engine.impl.persistence.entity.TaskEntity
 import org.camunda.bpm.engine.task.IdentityLinkType
 import org.springframework.context.event.EventListener
 import org.springframework.core.annotation.Order
-import org.springframework.stereotype.Component
 
 /**
  * Collects Camunda events and Camunda historic events (event listener order is {@link TaskEventCollectorService#ORDER}) and emits Commands
  */
-@Component
 class TaskEventCollectorService(
-  private val collectorProperties: CamundaTaskpoolCollectorProperties,
+  private val camundaTaskpoolCollectorProperties: CamundaTaskpoolCollectorProperties,
   private val repositoryService: RepositoryService
 ) {
 
@@ -65,7 +63,7 @@ class TaskEventCollectorService(
       formKey = task.formKey(),
       taskDefinitionKey = task.taskDefinitionKey,
       businessKey = task.execution.businessKey,
-      sourceReference = task.sourceReference(collectorProperties.applicationName)
+      sourceReference = task.sourceReference(camundaTaskpoolCollectorProperties.applicationName)
     )
 
   /**
@@ -113,10 +111,10 @@ class TaskEventCollectorService(
         // this is already handled by assignment event, or it is an empty fired during taskService call of candidate update.
         null
       } else {
-        task.toUpdateCommand(collectorProperties.applicationName)
+        task.toUpdateCommand(camundaTaskpoolCollectorProperties.applicationName)
       }
     } else {
-      task.toUpdateCommand(collectorProperties.applicationName)
+      task.toUpdateCommand(camundaTaskpoolCollectorProperties.applicationName)
     }
 
   /**
@@ -137,7 +135,7 @@ class TaskEventCollectorService(
         owner = changeEvent.owner,
         priority = changeEvent.priority,
         taskDefinitionKey = changeEvent.taskDefinitionKey,
-        sourceReference = changeEvent.sourceReference(repositoryService, collectorProperties.applicationName)
+        sourceReference = changeEvent.sourceReference(repositoryService, camundaTaskpoolCollectorProperties.applicationName)
       )
 
       else -> null

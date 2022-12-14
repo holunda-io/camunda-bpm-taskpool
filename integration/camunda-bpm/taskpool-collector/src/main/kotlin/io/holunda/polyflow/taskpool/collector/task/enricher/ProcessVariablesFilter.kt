@@ -7,7 +7,7 @@ import org.camunda.bpm.engine.variable.VariableMap
  * Groups one or more {@linkplain VariableFilter process variable filters}. Assumes (but does not enforce) that among the given individual filter instances,
  * at most one is contained for any specific process, and at most one "global" filter (that is applied to all processes) is contained.
  */
-class ProcessVariablesFilter(
+open class ProcessVariablesFilter(
   vararg variableFilters: VariableFilter
 ) {
 

@@ -152,7 +152,9 @@ class JpaPolyflowViewTaskService(
   @EventHandler
   fun on(event: TaskCreatedEngineEvent, metaData: MetaData) {
     logger.debug { "Task created $event received" }
-    if (isDisabledByProperty()) return
+    if (isDisabledByProperty()) {
+      return
+    }
 
     taskRepository
       .findById(event.id)
@@ -179,7 +181,9 @@ class JpaPolyflowViewTaskService(
   @EventHandler
   fun on(event: TaskAssignedEngineEvent, metaData: MetaData) {
     logger.debug { "Task assigned $event received" }
-    if (isDisabledByProperty()) return
+    if (isDisabledByProperty()) {
+      return
+    }
 
     taskRepository
       .findById(event.id)
@@ -199,7 +203,9 @@ class JpaPolyflowViewTaskService(
   @EventHandler
   fun on(event: TaskCompletedEngineEvent, metaData: MetaData) {
     logger.debug { "Task completed $event received" }
-    if (isDisabledByProperty()) return
+    if (isDisabledByProperty()) {
+      return
+    }
 
     taskRepository
       .findById(event.id)
@@ -217,7 +223,9 @@ class JpaPolyflowViewTaskService(
   @EventHandler
   fun on(event: TaskDeletedEngineEvent, metaData: MetaData) {
     logger.debug { "Task deleted $event received" }
-    if (isDisabledByProperty()) return
+    if (isDisabledByProperty()) {
+      return
+    }
 
     taskRepository
       .findById(event.id)
@@ -235,7 +243,9 @@ class JpaPolyflowViewTaskService(
   @EventHandler
   fun on(event: TaskAttributeUpdatedEngineEvent, metaData: MetaData) {
     logger.debug { "Task attributes updated $event received" }
-    if (isDisabledByProperty()) return
+    if (isDisabledByProperty()) {
+      return
+    }
 
     taskRepository
       .findById(event.id)
@@ -261,7 +271,9 @@ class JpaPolyflowViewTaskService(
   @EventHandler
   fun on(event: TaskCandidateGroupChanged, metaData: MetaData) {
     logger.debug { "Task candidate groups changed $event received" }
-    if (isDisabledByProperty()) return
+    if (isDisabledByProperty()) {
+      return
+    }
 
     taskRepository
       .findById(event.id)
@@ -284,7 +296,9 @@ class JpaPolyflowViewTaskService(
   @EventHandler
   fun on(event: TaskCandidateUserChanged, metaData: MetaData) {
     logger.debug { "Task user groups changed $event received" }
-    if (isDisabledByProperty()) return
+    if (isDisabledByProperty()) {
+      return
+    }
 
     taskRepository
       .findById(event.id)
@@ -327,7 +341,9 @@ class JpaPolyflowViewTaskService(
    * Executor on empty optional.
    */
   fun <T> Optional<T>.ifEmpty(execute: () -> Unit): Optional<T> = this.also {
-    execute.invoke()
+    if (this.isEmpty) {
+      execute.invoke()
+    }
   }
 
   private fun isDisabledByProperty(): Boolean {

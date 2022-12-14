@@ -40,7 +40,7 @@ class ProcessDefinitionService(
     require(Context.getCommandContext() != null) { "This method must be executed inside a Camunda command context." }
 
     val query = repositoryService.createProcessDefinitionQuery()
-    if (processDefinitionKey != null && processDefinitionKey.isNotBlank()) {
+    if (!processDefinitionKey.isNullOrBlank()) {
       query.processDefinitionKey(processDefinitionKey)
     }
     val newDefinitions: List<ProcessDefinitionEntity> = query.list()

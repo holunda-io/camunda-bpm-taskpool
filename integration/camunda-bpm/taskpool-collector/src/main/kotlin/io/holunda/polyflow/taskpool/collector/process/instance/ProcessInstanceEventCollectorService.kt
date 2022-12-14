@@ -9,15 +9,13 @@ import org.camunda.bpm.engine.history.HistoricProcessInstance
 import org.camunda.bpm.engine.impl.history.event.HistoricProcessInstanceEventEntity
 import org.springframework.context.event.EventListener
 import org.springframework.core.annotation.Order
-import org.springframework.stereotype.Component
 
 /**
  * Collects Camunda events and Camunda historic events and emits Process Instance Commands
  * @see [org.camunda.bpm.engine.impl.history.event.HistoryEventTypes]
  */
-@Component
 class ProcessInstanceEventCollectorService(
-  private val collectorProperties: CamundaTaskpoolCollectorProperties,
+  private val camundaTaskpoolCollectorProperties: CamundaTaskpoolCollectorProperties,
   private val repositoryService: RepositoryService
 ) {
 
@@ -35,7 +33,7 @@ class ProcessInstanceEventCollectorService(
   @EventListener(condition = "#processInstance.eventType.equals('start')")
   fun create(processInstance: HistoricProcessInstanceEventEntity): StartProcessInstanceCommand =
     StartProcessInstanceCommand(
-      sourceReference = processInstance.sourceReference(repositoryService, collectorProperties.applicationName),
+      sourceReference = processInstance.sourceReference(repositoryService, camundaTaskpoolCollectorProperties.applicationName),
       processInstanceId = processInstance.processInstanceId,
       businessKey = processInstance.businessKey,
       startActivityId = processInstance.startActivityId,
@@ -57,13 +55,13 @@ class ProcessInstanceEventCollectorService(
     // suspend
     HistoricProcessInstance.STATE_SUSPENDED ->
       SuspendProcessInstanceCommand(
-        sourceReference = processInstance.sourceReference(repositoryService, collectorProperties.applicationName),
+        sourceReference = processInstance.sourceReference(repositoryService, camundaTaskpoolCollectorProperties.applicationName),
         processInstanceId = processInstance.processInstanceId,
       )
     // resume
     HistoricProcessInstance.STATE_ACTIVE ->
       ResumeProcessInstanceCommand(
-        sourceReference = processInstance.sourceReference(repositoryService, collectorProperties.applicationName),
+        sourceReference = processInstance.sourceReference(repositoryService, camundaTaskpoolCollectorProperties.applicationName),
         processInstanceId = processInstance.processInstanceId,
       )
     else -> {
@@ -83,7 +81,7 @@ class ProcessInstanceEventCollectorService(
     // cancel
     HistoricProcessInstance.STATE_EXTERNALLY_TERMINATED ->
       CancelProcessInstanceCommand(
-        sourceReference = processInstance.sourceReference(repositoryService, collectorProperties.applicationName),
+        sourceReference = processInstance.sourceReference(repositoryService, camundaTaskpoolCollectorProperties.applicationName),
         processInstanceId = processInstance.processInstanceId,
         businessKey = processInstance.businessKey,
         endActivityId = processInstance.endActivityId,
@@ -97,7 +95,7 @@ class ProcessInstanceEventCollectorService(
     // finish
     HistoricProcessInstance.STATE_INTERNALLY_TERMINATED ->
       FinishProcessInstanceCommand(
-        sourceReference = processInstance.sourceReference(repositoryService, collectorProperties.applicationName),
+        sourceReference = processInstance.sourceReference(repositoryService, camundaTaskpoolCollectorProperties.applicationName),
         processInstanceId = processInstance.processInstanceId,
         businessKey = processInstance.businessKey,
         endActivityId = processInstance.endActivityId,

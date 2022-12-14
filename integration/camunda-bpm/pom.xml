@@ -5,7 +5,7 @@
   <parent>
     <groupId>io.holunda.polyflow</groupId>
     <artifactId>polyflow-parent</artifactId>
-    <version>3.6.0</version>
+    <version>3.7.0</version>
     <relativePath>../../bom/parent/pom.xml</relativePath>
   </parent>
 
@@ -21,6 +21,7 @@
 
   <modules>
     <module>taskpool-collector</module>
+    <module>taskpool-job-sender</module>
     <module>engine-client</module>
     <module>springboot-starter</module>
     <module>springboot-autoconfigure</module>

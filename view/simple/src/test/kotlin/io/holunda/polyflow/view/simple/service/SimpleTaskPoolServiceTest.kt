@@ -216,6 +216,21 @@ class SimpleTaskPoolServiceTest : ScenarioTest<SimpleTaskPoolGivenStage<*>, Simp
   }
 
   @Test
+  fun `retrieves only tasks with given task definition key`() {
+    given()
+      .tasks_exist(13)
+
+    `when`()
+      .tasks_are_queried(listOf("task.taskDefinitionKey=task-key-3", "payloadIdInt<5"))
+
+    then()
+      .tasks_are_returned(
+        then().tasks.subList(3, 4) // only the third, because the task definition key is limiting from 5 to 1...
+      )
+  }
+
+
+  @Test
   fun `retrieves only fifth by payload string value`() {
     given()
       .tasks_exist(13)
@@ -243,12 +258,14 @@ class SimpleTaskPoolServiceTest : ScenarioTest<SimpleTaskPoolGivenStage<*>, Simp
   private infix fun String.withTaskCount(taskCount: Int) = ApplicationWithTaskCount(this, taskCount)
 }
 
-private fun processReference(instanceId: String = "instance-id-12345",
-                             executionId: String = "execution-id-12345",
-                             definitionId: String = "definition-id-12345",
-                             definitionKey: String = "definition-key-abcde",
-                             name: String = "process-name",
-                             applicationName: String = "application-name"): ProcessReference {
+private fun processReference(
+  instanceId: String = "instance-id-12345",
+  executionId: String = "execution-id-12345",
+  definitionId: String = "definition-id-12345",
+  definitionKey: String = "definition-key-abcde",
+  name: String = "process-name",
+  applicationName: String = "application-name"
+): ProcessReference {
   return ProcessReference(
     instanceId,
     executionId,

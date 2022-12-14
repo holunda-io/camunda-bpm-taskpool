@@ -6,7 +6,7 @@
   <parent>
     <groupId>io.holunda.polyflow</groupId>
     <artifactId>polyflow-root</artifactId>
-    <version>3.6.0</version>
+    <version>3.7.0</version>
     <relativePath>../../pom.xml</relativePath>
   </parent>
 
@@ -81,12 +81,12 @@
 
       <dependency>
         <groupId>io.holunda.polyflow</groupId>
-        <artifactId>polyflow-taskpool-collector</artifactId>
+        <artifactId>polyflow-camunda-bpm-taskpool-collector</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>io.holunda.polyflow</groupId>
-        <artifactId>camunda-bpm-engine-client</artifactId>
+        <artifactId>polyflow-camunda-bpm-engine-client</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
@@ -107,6 +107,11 @@
       <dependency>
         <groupId>io.holunda.polyflow</groupId>
         <artifactId>polyflow-taskpool-sender</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.holunda.polyflow</groupId>
+        <artifactId>polyflow-camunda-bpm-taskpool-job-sender</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>

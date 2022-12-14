@@ -30,13 +30,6 @@ polyflow:
           enabled: false
         process-definition:
           enabled: false
-
-#logging:
-#  level:
-#    root: info
-#    org.springframework: warn
-#    org.camunda.bpm: warn
-#    io.holunda.camunda.taskpool.sender: warn
-#    io.holunda.camunda.taskpool.collector.task: debug
-#    io.holunda.camunda.taskpool.core: warn
-#    io.holunda.camunda.taskpool.view.simple: debug
+    sender:
+      task:
+        type: tx

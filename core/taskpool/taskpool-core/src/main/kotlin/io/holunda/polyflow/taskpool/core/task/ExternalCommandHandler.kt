@@ -1,6 +1,5 @@
 package io.holunda.polyflow.taskpool.core.task
 
-import io.holunda.camunda.taskpool.api.task.BatchCommand
 import io.holunda.camunda.taskpool.api.task.CreateTaskCommand
 import io.holunda.polyflow.taskpool.core.ifPresentOrElse
 import io.holunda.polyflow.taskpool.core.loadOptional
@@ -8,8 +7,6 @@ import org.axonframework.commandhandling.CommandHandler
 import org.axonframework.commandhandling.GenericCommandMessage
 import org.axonframework.eventsourcing.EventSourcingRepository
 import org.axonframework.messaging.MetaData
-import org.axonframework.messaging.unitofwork.BatchingUnitOfWork
-import org.axonframework.messaging.unitofwork.DefaultUnitOfWork
 import org.springframework.context.annotation.Lazy
 import org.springframework.stereotype.Component
 
@@ -30,31 +27,6 @@ class ExternalCommandHandler(
     eventSourcingRepository.loadOptional(command.id).ifPresentOrElse(
       presentConsumer = { aggregate -> aggregate.handle(GenericCommandMessage(command, metadata)) },
       missingCallback = { eventSourcingRepository.newInstance { TaskAggregate() }.handle(GenericCommandMessage(command, metadata)) }
-    )
-  }
-
-  /**
-   * Delivers a batch.
-   * @param batch batch command.
-   */
-  @CommandHandler
-  fun handleBatch(batch: BatchCommand, metadata: MetaData) {
-    eventSourcingRepository.loadOptional(batch.id).ifPresentOrElse(
-      presentConsumer = { aggregate ->
-        aggregate
-          .apply {
-            batch.commands.forEach { command ->
-              val message = GenericCommandMessage(command, metadata)
-              val handling = { handle(message) }
-              val uow = DefaultUnitOfWork.startAndGet(message)
-              uow.executeWithResult(handling)
-            }
-          }
-      },
-      missingCallback = {
-        eventSourcingRepository.newInstance { TaskAggregate() }
-          .apply { batch.commands.forEach { command -> handle(GenericCommandMessage(command, metadata)) } }
-      }
     )
   }
 }
