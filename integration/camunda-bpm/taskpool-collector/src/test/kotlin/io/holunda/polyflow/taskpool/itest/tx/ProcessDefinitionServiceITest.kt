@@ -1,28 +1,32 @@
-package io.holunda.polyflow.taskpool.itest
+package io.holunda.polyflow.taskpool.itest.tx
 
+import io.holunda.polyflow.taskpool.EnableCamundaTaskpoolCollector
 import io.holunda.polyflow.taskpool.collector.process.definition.ProcessDefinitionService
 import org.assertj.core.api.Assertions.assertThat
+import org.axonframework.commandhandling.gateway.CommandGateway
 import org.camunda.bpm.engine.FormService
 import org.camunda.bpm.engine.ProcessEngine
 import org.camunda.bpm.engine.RepositoryService
 import org.camunda.bpm.engine.impl.cfg.ProcessEngineConfigurationImpl
 import org.camunda.bpm.model.bpmn.Bpmn
 import org.camunda.bpm.model.xml.instance.ModelElementInstance
+import org.camunda.bpm.spring.boot.starter.annotation.EnableProcessApplication
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Primary
 import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.ActiveProfiles
-import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.transaction.annotation.Transactional
 
 /**
  * This ITests simulates work of Camunda process definition collector.
  */
-@SpringBootTest(classes = [CollectorTestApplication::class], webEnvironment = SpringBootTest.WebEnvironment.MOCK)
-@ActiveProfiles("collector-itest")
+@SpringBootTest(classes = [ProcessDefinitionServiceITest.CollectorTestApplication::class], webEnvironment = SpringBootTest.WebEnvironment.MOCK)
+@ActiveProfiles("collector-tx-itest")
 @DirtiesContext
 @Transactional
 class ProcessDefinitionServiceITest {
@@ -82,4 +86,19 @@ class ProcessDefinitionServiceITest {
     assertThat(definitions[0].candidateStarterGroups).containsExactlyElementsOf(listOf("muppetshow"))
   }
 
+  /**
+   * Internal test application.
+   */
+  @SpringBootApplication
+  @EnableProcessApplication
+  @EnableCamundaTaskpoolCollector
+  class CollectorTestApplication {
+    /**
+     * Gateway.
+     */
+    @Bean
+    @Primary
+    fun testAxonCommandGateway(): CommandGateway = org.mockito.kotlin.mock()
+
+  }
 }

@@ -1,0 +1,23 @@
+spring:
+  application.name: txjob-sender-test
+  jpa:
+    open-in-view: true # disable JPA warning
+    show-sql: true
+    database-platform: org.hibernate.dialect.H2Dialect
+    generate-ddl: true
+    defer-datasource-initialization: true
+    hibernate:
+      ddl-auto: create-drop
+camunda:
+  bpm:
+    default-serialization-format: application/json
+    history-level: full
+    eventing:
+      task: false
+
+polyflow:
+  integration:
+    sender:
+      task:
+        type: txjob
+        send-within-transaction: true

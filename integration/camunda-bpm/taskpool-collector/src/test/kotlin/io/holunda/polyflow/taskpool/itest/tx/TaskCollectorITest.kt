@@ -1,8 +1,10 @@
-package io.holunda.polyflow.taskpool.itest
+package io.holunda.polyflow.taskpool.itest.tx
 
 import com.fasterxml.jackson.module.kotlin.convertValue
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.holunda.camunda.taskpool.api.task.*
+import io.holunda.polyflow.taskpool.EnableCamundaTaskpoolCollector
+import io.holunda.polyflow.taskpool.itest.TestDriver
 import io.holunda.polyflow.taskpool.itest.TestDriver.Companion.DEFAULT_VARIABLES
 import io.holunda.polyflow.taskpool.itest.TestDriver.Companion.createTaskCommand
 import io.holunda.polyflow.taskpool.itest.TestDriver.Companion.createUserTaskProcess
@@ -11,19 +13,25 @@ import io.holunda.polyflow.taskpool.sender.gateway.CommandListGateway
 import org.assertj.core.api.Assertions
 import org.awaitility.Awaitility.await
 import org.awaitility.Awaitility.waitAtMost
+import org.axonframework.commandhandling.gateway.CommandGateway
 import org.camunda.bpm.engine.RepositoryService
 import org.camunda.bpm.engine.RuntimeService
 import org.camunda.bpm.engine.TaskService
+import org.camunda.bpm.engine.delegate.TaskListener
 import org.camunda.bpm.engine.impl.interceptor.Command
 import org.camunda.bpm.engine.impl.interceptor.CommandExecutor
 import org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.*
 import org.camunda.bpm.engine.variable.Variables
+import org.camunda.bpm.spring.boot.starter.annotation.EnableProcessApplication
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.*
 import org.mockito.kotlin.verifyNoMoreInteractions
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
+import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Primary
 import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.ActiveProfiles
 import java.time.Instant.now
@@ -31,8 +39,8 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 
 
-@SpringBootTest(classes = [CollectorTestApplication::class], webEnvironment = SpringBootTest.WebEnvironment.MOCK)
-@ActiveProfiles("collector-itest")
+@SpringBootTest(classes = [TaskCollectorITest.CollectorTestApplication::class], webEnvironment = SpringBootTest.WebEnvironment.MOCK)
+@ActiveProfiles("collector-tx-itest")
 @DirtiesContext
 internal class TaskCollectorITest {
 
@@ -606,6 +614,58 @@ internal class TaskCollectorITest {
 
   }
 
+
+  /**
+   * Internal test application.
+   */
+  @SpringBootApplication
+  @EnableProcessApplication
+  @EnableCamundaTaskpoolCollector
+  class CollectorTestApplication {
+
+    /**
+     * Gateway.
+     */
+    @Bean
+    @Primary
+    fun testAxonCommandGateway(): CommandGateway = org.mockito.kotlin.mock()
+
+
+    /**
+     * Adds candidate user.
+     */
+    @Bean
+    fun addCandidateUserPiggy() = TaskListener { delegateTask -> delegateTask.addCandidateUser("piggy") }
+
+    /**
+     * Sets assignee.
+     */
+    @Bean
+    fun setAssigneePiggy() = TaskListener { delegateTask -> delegateTask.assignee = "piggy" }
+
+
+    /**
+     * Adds candidate group.
+     */
+    @Bean
+    fun addCandidateGroupMuppetShow() = TaskListener { delegateTask -> delegateTask.addCandidateGroup("muppetshow") }
+
+    /**
+     * Typical use case for a start listener changing attributes
+     */
+    @Bean
+    fun changeTaskAttributes() = TaskListener { delegateTask ->
+      delegateTask.name = "new name"
+      delegateTask.description = "new description"
+      delegateTask.priority = 99
+      delegateTask.dueDate = TestDriver.NOW
+      delegateTask.followUpDate = TestDriver.NOW
+    }
+  }
+
 }
 
+/**
+ * Data structure with a set.
+ */
 data class MyStructureWithSet(val name: String, val key: String, val value: Int, val set: Set<String> = setOf())

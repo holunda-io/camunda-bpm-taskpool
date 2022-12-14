@@ -9,7 +9,7 @@
     <version>3.6.1-SNAPSHOT</version>
   </parent>
 
-  <artifactId>polyflow-camunda-bpm-taskpool-collector</artifactId>
+  <artifactId>polyflow-camunda-bpm-taskpool-job-sender</artifactId>
   <name>integration/camunda-bpm/${project.artifactId}</name>
 
   <dependencies>
@@ -33,7 +33,7 @@
       <artifactId>camunda-engine</artifactId>
       <scope>provided</scope>
     </dependency>
-
+    
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter</artifactId>
@@ -121,14 +121,11 @@
       <artifactId>jackson-datatype-jsr310</artifactId>
       <scope>test</scope>
     </dependency>
-    <!-- Tx job sender to itest it here -->
     <dependency>
-      <groupId>io.holunda.polyflow</groupId>
-      <artifactId>polyflow-camunda-bpm-taskpool-job-sender</artifactId>
+      <groupId>org.assertj</groupId>
+      <artifactId>assertj-core</artifactId>
       <scope>test</scope>
     </dependency>
-
-
   </dependencies>
 
 </project>

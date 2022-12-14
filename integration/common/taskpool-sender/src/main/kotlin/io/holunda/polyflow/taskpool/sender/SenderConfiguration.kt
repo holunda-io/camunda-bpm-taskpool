@@ -10,21 +10,20 @@ import io.holunda.polyflow.taskpool.sender.process.instance.SimpleProcessInstanc
 import io.holunda.polyflow.taskpool.sender.process.variable.ProcessVariableCommandSender
 import io.holunda.polyflow.taskpool.sender.process.variable.SimpleProcessVariableCommandSender
 import io.holunda.polyflow.taskpool.sender.process.variable.TxAwareAccumulatingProcessVariableCommandSender
+import io.holunda.polyflow.taskpool.sender.task.DirectTxAwareAccumulatingEngineTaskCommandSender
 import io.holunda.polyflow.taskpool.sender.task.EngineTaskCommandSender
 import io.holunda.polyflow.taskpool.sender.task.SimpleEngineTaskCommandSender
-import io.holunda.polyflow.taskpool.sender.task.TxAwareAccumulatingEngineTaskCommandSender
 import io.holunda.polyflow.taskpool.sender.task.accumulator.EngineTaskCommandAccumulator
 import io.holunda.polyflow.taskpool.sender.task.accumulator.ProjectingCommandAccumulator
 import org.axonframework.commandhandling.gateway.CommandGateway
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Qualifier
-import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Configuration
 import javax.annotation.PostConstruct
 
 /**
@@ -71,22 +70,27 @@ class SenderConfiguration(private val senderProperties: SenderProperties) {
   )
 
   /**
-   * Creates command sender for tasks.
+   * Creates simple (direct) command sender for tasks.
    */
   @Bean
-  @ConditionalOnExpression("'\${polyflow.integration.sender.task.type}' != 'custom'")
-  fun taskCommandSender(commandListGateway: CommandListGateway, accumulator: EngineTaskCommandAccumulator): EngineTaskCommandSender =
-    when (senderProperties.task.type) {
-      SenderType.tx -> TxAwareAccumulatingEngineTaskCommandSender(commandListGateway, accumulator, senderProperties)
-      SenderType.simple -> SimpleEngineTaskCommandSender(commandListGateway, senderProperties)
-      else -> throw IllegalStateException("Could not initialize task sender, used unknown ${senderProperties.task.type} type.")
-    }
+  @ConditionalOnProperty(value = ["polyflow.integration.sender.task.type"], havingValue = "simple", matchIfMissing = false)
+  fun simpleTaskCommandSender(commandListGateway: CommandListGateway, accumulator: EngineTaskCommandAccumulator): EngineTaskCommandSender =
+    SimpleEngineTaskCommandSender(commandListGateway, senderProperties)
+
+  /**
+   * Creates transactional (direct) command sender for tasks.
+   */
+  @Bean
+  @ConditionalOnProperty(value = ["polyflow.integration.sender.task.type"], havingValue = "tx", matchIfMissing = true)
+  fun txAwareTaskCommandSender(commandListGateway: CommandListGateway, accumulator: EngineTaskCommandAccumulator): EngineTaskCommandSender =
+    DirectTxAwareAccumulatingEngineTaskCommandSender(commandListGateway, accumulator, senderProperties)
+
 
   /**
    * Creates command sender for process definitions.
    */
   @Bean
-  @ConditionalOnExpression("'\${polyflow.integration.sender.process-definition.type}' != 'custom'")
+  @ConditionalOnProperty(value = ["polyflow.integration.sender.process-definition.type"], havingValue = "simple", matchIfMissing = true)
   fun processDefinitionCommandSender(commandListGateway: CommandListGateway): ProcessDefinitionCommandSender =
     when (senderProperties.processDefinition.type) {
       SenderType.simple -> SimpleProcessDefinitionCommandSender(commandListGateway, senderProperties)
@@ -97,7 +101,7 @@ class SenderConfiguration(private val senderProperties: SenderProperties) {
    * Creates command sender for process instances.
    */
   @Bean
-  @ConditionalOnExpression("'\${polyflow.integration.sender.process-instance.type}' != 'custom'")
+  @ConditionalOnProperty(value = ["polyflow.integration.sender.process-instance.type"], havingValue = "simple", matchIfMissing = true)
   fun processInstanceCommandSender(commandListGateway: CommandListGateway): ProcessInstanceCommandSender =
     when (senderProperties.processInstance.type) {
       SenderType.simple -> SimpleProcessInstanceCommandSender(commandListGateway, senderProperties)
@@ -108,16 +112,21 @@ class SenderConfiguration(private val senderProperties: SenderProperties) {
    * Creates command sender for process instances.
    */
   @Bean
-  @ConditionalOnExpression("'\${polyflow.integration.sender.process-variable.type}' != 'custom'")
+  @ConditionalOnProperty(value = ["polyflow.integration.sender.process-variable.type"], havingValue = "simple")
+  fun simpleProcessVariableCommandSender(
+    commandListGateway: CommandListGateway,
+    @Qualifier(PAYLOAD_OBJECT_MAPPER) objectMapper: ObjectMapper
+  ): ProcessVariableCommandSender = SimpleProcessVariableCommandSender(commandListGateway, senderProperties, objectMapper)
+
+  /**
+   * Creates command sender for process instances.
+   */
+  @Bean
+  @ConditionalOnProperty(value = ["polyflow.integration.sender.process-variable.type"], havingValue = "tx", matchIfMissing = true)
   fun processVariableCommandSender(
     commandListGateway: CommandListGateway,
     @Qualifier(PAYLOAD_OBJECT_MAPPER) objectMapper: ObjectMapper
-  ): ProcessVariableCommandSender =
-    when (senderProperties.processVariable.type) {
-      SenderType.simple -> SimpleProcessVariableCommandSender(commandListGateway, senderProperties, objectMapper)
-      SenderType.tx -> TxAwareAccumulatingProcessVariableCommandSender(commandListGateway, senderProperties, objectMapper)
-      else -> throw IllegalStateException("Could not initialize variable sender, used unknown ${senderProperties.processVariable.type} type.")
-    }
+  ): ProcessVariableCommandSender = TxAwareAccumulatingProcessVariableCommandSender(commandListGateway, senderProperties, objectMapper)
 
   /**
    * Prints sender config.
