@@ -1493,9 +1493,9 @@ Spring eventing.</p>
 <p><img alt="Taskpool collector building blocks" src="../../img/collector-building-blocks.png" /></p>
 <p>The Taskpool Collector consists of several components which can be divided into the following groups:</p>
 <ul>
-<li>Event collectors receive are responsible for gathering information and form commands</li>
-<li>Processor performs the command enrichment with payload and data correlation</li>
-<li>Command senders are responsible for accumulating commands and sending them to Command Gateway</li>
+<li>Event collectors services are responsible for gathering information and forming commands</li>
+<li>Processors are performing command manipulation (e.g. command enrichment with payload and data correlation)</li>
+<li>Command senders are part of <code>command-sender</code> component and are responsible for accumulating commands and sending them to Axon Command List Gateway</li>
 </ul>
 <h3 id="usage-and-configuration">Usage and configuration<a class="headerlink" href="#usage-and-configuration" title="Permanent link">#</a></h3>
 <p>In order to enable collector component, include the Maven dependency to your process application:</p>
@@ -1751,7 +1751,7 @@ and the process reaches the task <code>task_approve_request</code>, the task wil
   <small>
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">December 9, 2022</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">December 14, 2022</span>
       
     
   </small>

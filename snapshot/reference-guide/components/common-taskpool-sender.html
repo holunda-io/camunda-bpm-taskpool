@@ -661,6 +661,13 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#command-sender-types" class="md-nav__link">
+    Command sender types
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#command-aggregation" class="md-nav__link">
     Command aggregation
   </a>
@@ -1460,6 +1467,10 @@ as commands.</p>
 <li>Allows to integrate custom success and error handling</li>
 </ul>
 <h3 id="usage-and-configuration">Usage and configuration<a class="headerlink" href="#usage-and-configuration" title="Permanent link">#</a></h3>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you are using <code>polyflow-camunda-bpm-collector</code> component, the sender component is included and activated by default, and you can skip this step.</p>
+</div>
 <div class="highlight"><pre><span></span><code><span class="nt">&lt;dependency&gt;</span>
   <span class="nt">&lt;groupId&gt;</span>io.holunda.polyflow<span class="nt">&lt;/groupId&gt;</span>
   <span class="nt">&lt;artifactId&gt;</span>polyflow-taskpool-sender<span class="nt">&lt;/artifactId&gt;</span>
@@ -1473,27 +1484,59 @@ as commands.</p>
 
 <span class="p">}</span><span class="w"></span>
 </code></pre></div>
-<h3 id="command-aggregation">Command aggregation<a class="headerlink" href="#command-aggregation" title="Permanent link">#</a></h3>
 <p>In order to control sending of commands to command sender, the command sender activation property
 <code>polyflow.integration.sender.task.enabled</code> is available. If disabled, the command sender
 will log any command instead of aggregating sending it to the command gateway.</p>
-<p>In addition, you can control by the property <code>polyflow.integration.task.sender.type</code> if you want to use the default command sender or provide your own
-implementation.
-The default provided command sender (type: <code>tx</code>) is collects all task commands during one transaction, group them by task id
-and accumulates by creating one command reflecting the intent of the task operation. It uses Axon Command Bus (encapsulated
+<h3 id="command-sender-types">Command sender types<a class="headerlink" href="#command-sender-types" title="Permanent link">#</a></h3>
+<p>Out of the box, Polyflow supplies several command senders to match your deployment scenario. The property 
+<code>polyflow.integration.task.sender.type</code>  is used to switch between different commands senders.</p>
+<table>
+<thead>
+<tr>
+<th>Sender type</th>
+<th>Property value</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Simple</td>
+<td>simple</td>
+<td>Simple command sender, used to send every command directly to Command Bus.</td>
+</tr>
+<tr>
+<td>Transactional Direct</td>
+<td>tx</td>
+<td>Transactional accumulating command sender, sending accumulated commands along with the running transaction.</td>
+</tr>
+<tr>
+<td>Transactional Job</td>
+<td>txjob</td>
+<td>Transactional accumulating command sender, writing a Camunda job to send the commands in a new transaction.</td>
+</tr>
+<tr>
+<td>Custom</td>
+<td>custom</td>
+<td>Setting to provide your own sender implementation</td>
+</tr>
+</tbody>
+</table>
+<p>The default provided command sender (type: <code>tx</code>) is collects all task commands during one transaction, group them by task id
+and accumulates the commands to the minimum reflecting the intent(s) of the task operation(s). It uses Axon Command Bus (encapsulated
 by the <code>AxonCommandListGateway</code> for sending the result over to the Axon command gateway.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>If you want to implement a custom command sending, please provide your own implementation of the interface <code>EngineTaskCommandSender</code>
-  (register a Spring Component of the type) and set the property <code>polyflow.integration.task.sender.type</code> to <code>custom</code>.</p>
+(register a Spring Component of the type) and set the property <code>polyflow.integration.task.sender.type</code> to <code>custom</code>.</p>
 </div>
+<h3 id="command-aggregation">Command aggregation<a class="headerlink" href="#command-aggregation" title="Permanent link">#</a></h3>
 <p>The Spring event listeners receiving events from the Camunda Engine plugin are called before the engine commits the transaction.
 Since all processing inside collector component and enricher is performed synchronously, the sender must waits until transaction to
 be successfully committed before sending any commands to the Command Gateway. Otherwise, on any error
 the transaction would be rolled-back and the command would create an inconsistency between the taskpool and the engine.</p>
 <p>Depending on your deployment scenario, you may want to control the exact point in time, when the commands are sent to command gateway.
 The property <code>polyflow.integration.task.sender.send-within-transaction</code> is designed to influence this. If set to <code>true</code>, the commands
-are sent <em>before</em> the process engine transaction is committed, otherwise commands are sent <em>after</em> the process engine transaction is committed.</p>
+are accumulated <em>before</em> the process engine transaction is committed, otherwise commands are sent <em>after</em> the process engine transaction is committed.</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
 <p>Never send commands over <strong>remote</strong> messaging before the transaction is committed, since you may produce unexpected results if Camunda fails
@@ -1501,7 +1544,9 @@ are sent <em>before</em> the process engine transaction is committed, otherwise 
 </div>
 <p>If commands are delivered to a local component (this is the case if taskpool core is deployed in the same deployment as collector and sender components),
 the sending transaction is spanned across the taskpool core component. In particular, this means that the command dispatch and emission of events
-are happening inside the same transaction (unit of work). </p>
+are happening inside the same transaction (unit of work). The default <code>Transactional Direct</code> command sender will send the commands inside this Unit of Work.
+The <code>Transactional Job</code> command sender will write a Camunda Job and finish current Unit of Work without sending anything and rely on Camunda Job Worker to
+perform the transmission of the commands to the Command Bus. This sender is in particular helpful, if you need to finish </p>
 <h4 id="serialization-of-payload">Serialization of payload<a class="headerlink" href="#serialization-of-payload" title="Permanent link">#</a></h4>
 <p>By default, the data entry sender will serialize payload of the <code>DataEntry</code> into a JSON-Map structure, in order to be received by projections (Data Pool View)
 and storage of it, independent of the classes which might be not on the classpath of the projection (generic structure instead of a typed Java object structure).
@@ -1666,7 +1711,7 @@ the <code>CommandSuccessHandler</code>and <code>CommandErrorHandler</code> accor
   <small>
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">December 9, 2022</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">December 14, 2022</span>
       
     
   </small>
