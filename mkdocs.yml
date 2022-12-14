@@ -119,7 +119,6 @@ nav:
       - In-Memory View: reference-guide/components/view-simple.md
       - JPA View: reference-guide/components/view-jpa.md
       - Mongo DB View: reference-guide/components/view-mongo.md
-
     - Other Components:
       - Tasklist URL Resolver: reference-guide/components/other-tasklist-url-resolver.md
       - Variable Serializer: reference-guide/components/other-variable-serializer.md
@@ -129,6 +128,7 @@ nav:
       - Mongo DB View Configuration: reference-guide/configuration/view-mongo.md
       - Persistence Configuration: reference-guide/configuration/persistence.md
       - Datapool Aggregate Tuning: reference-guide/configuration/core-datapool-aggregate-tuning.md
+      - Deployment of Core inside Process applications: reference-guide/configuration/local-core-deployment.md
   - Examples:
     - Examples Overview: examples/index.md
     - Example Approval: examples/example-approval.md
