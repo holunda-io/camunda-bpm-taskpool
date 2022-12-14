@@ -13,6 +13,7 @@ import org.camunda.bpm.engine.impl.cfg.ProcessEngineConfigurationImpl
 import org.camunda.bpm.engine.spring.SpringProcessEnginePlugin
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.context.annotation.Bean
 
 /**
@@ -30,7 +31,7 @@ class CamundaJobSenderConfiguration(
    * Creates transactional command sender for tasks.
    */
   @Bean
-  @ConditionalOnExpression("'\${polyflow.integration.sender.task.type}' == 'txjob'")
+  @ConditionalOnProperty(value = ["polyflow.integration.sender.task.type"], havingValue = "txjob")
   fun camundaJobTaskCommandSender(
     processEngineConfiguration: ProcessEngineConfigurationImpl,
     @Qualifier(COMMAND_BYTEARRAY_OBJECT_MAPPER)
@@ -46,9 +47,10 @@ class CamundaJobSenderConfiguration(
     )
 
   /**
-   * Build the engine plugin to install pre-built listeners.
+   * Build the engine plugin to install the job handler.
    */
   @Bean
+  @ConditionalOnProperty(value = ["polyflow.integration.sender.task.type"], havingValue = "txjob")
   fun camundaEngineTaskCommandSendingJobHandlerEnginePlugin(
     @Qualifier(COMMAND_BYTEARRAY_OBJECT_MAPPER)
     objectMapper: ObjectMapper,
@@ -63,6 +65,9 @@ class CamundaJobSenderConfiguration(
     }
   }
 
+  /**
+   * Object mapper for serializing and deserializing commands to camunda bytearray and back.
+   */
   @Bean
   @Qualifier(COMMAND_BYTEARRAY_OBJECT_MAPPER)
   @ConditionalOnMissingQualifiedBean(beanClass = ObjectMapper::class, qualifier = COMMAND_BYTEARRAY_OBJECT_MAPPER)

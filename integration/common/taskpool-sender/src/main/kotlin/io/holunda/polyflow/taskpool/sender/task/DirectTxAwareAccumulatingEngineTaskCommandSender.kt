@@ -4,6 +4,9 @@ import io.holunda.polyflow.taskpool.sender.SenderProperties
 import io.holunda.polyflow.taskpool.sender.gateway.CommandListGateway
 import io.holunda.polyflow.taskpool.sender.task.accumulator.EngineTaskCommandAccumulator
 
+/**
+ * Accumulates commands and sends them directly in the same transaction.
+ */
 class DirectTxAwareAccumulatingEngineTaskCommandSender(
   private val commandListGateway: CommandListGateway,
   engineTaskCommandAccumulator: EngineTaskCommandAccumulator,
@@ -22,7 +25,15 @@ class DirectTxAwareAccumulatingEngineTaskCommandSender(
       // handle messages for every task
       if (senderProperties.enabled && senderProperties.task.enabled) {
         commandListGateway.sendToGateway(commands)
-        logger.trace { "SENDER-TRACE: sending commands for task [${commands.first().id}]: " + commands.joinToString(", ", "'", "'", -1, "...") { it.eventName } }
+        logger.trace {
+          "SENDER-TRACE: sending commands for task [${commands.first().id}]: " + commands.joinToString(
+            ", ",
+            "'",
+            "'",
+            -1,
+            "..."
+          ) { it.eventName }
+        }
       } else {
         logger.debug { "SENDER-004: Process task sending is disabled by property. Would have sent $commands." }
       }

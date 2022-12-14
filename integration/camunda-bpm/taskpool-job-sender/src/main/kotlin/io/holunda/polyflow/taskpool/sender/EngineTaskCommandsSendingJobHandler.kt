@@ -10,6 +10,9 @@ import org.camunda.bpm.engine.impl.persistence.entity.ExecutionEntity
 import org.camunda.bpm.engine.impl.persistence.entity.JobEntity
 import org.camunda.bpm.engine.impl.persistence.entity.ResourceEntity
 
+/**
+ * Camunda Job handling sending commands to Polyflow.
+ */
 class EngineTaskCommandsSendingJobHandler(
   private val objectMapper: ObjectMapper,
   private val commandListGateway: CommandListGateway

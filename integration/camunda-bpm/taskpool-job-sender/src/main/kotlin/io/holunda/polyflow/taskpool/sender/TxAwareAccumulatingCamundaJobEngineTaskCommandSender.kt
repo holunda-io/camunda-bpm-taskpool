@@ -9,6 +9,9 @@ import org.camunda.bpm.engine.impl.persistence.entity.ResourceEntity
 import java.time.Instant
 import java.util.*
 
+/**
+ * Command sender writing a Camunda Jobj which will send commands later.
+ */
 class TxAwareAccumulatingCamundaJobEngineTaskCommandSender(
   private val processEngineConfiguration: ProcessEngineConfigurationImpl,
   private val objectMapper: ObjectMapper,
