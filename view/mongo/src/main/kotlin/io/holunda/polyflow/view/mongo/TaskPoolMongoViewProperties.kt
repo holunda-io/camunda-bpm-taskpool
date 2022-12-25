@@ -42,10 +42,12 @@ data class ChangeStream(
   /**
    * Configures mode for task deletion.
    */
+  @NestedConfigurationProperty
   val clearDeletedTasks: ClearDeletedDocuments = ClearDeletedDocuments(),
   /**
    * Configures mode for data entry deletion.
    */
+  @NestedConfigurationProperty
   val clearDeletedDataEntries: ClearDeletedDocuments = ClearDeletedDocuments()
 )
 
