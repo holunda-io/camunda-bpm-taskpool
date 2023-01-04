@@ -14,8 +14,14 @@
       
         <link rel="canonical" href="https://www.holunda.io/camunda-bpm-taskpool/snapshot/reference-guide/components/camunda-taskpool-collector.html">
       
+      
+        <link rel="prev" href="camunda-interaction-client.html">
+      
+      
+        <link rel="next" href="camunda-starter.html">
+      
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-8.5.10">
+      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.0.2">
     
     
       
@@ -23,11 +29,10 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.975780f9.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.f56500e0.min.css">
       
         
         <link rel="stylesheet" href="../../assets/stylesheets/palette.2505c338.min.css">
-        
       
       
 
@@ -122,8 +127,6 @@
       <form class="md-header__option" data-md-component="palette">
         
           
-          
-          
           <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="polyflow" data-md-color-primary="" data-md-color-accent=""  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
           
             <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_2" hidden>
@@ -131,8 +134,6 @@
             </label>
           
         
-          
-          
           
           <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="" data-md-color-accent=""  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_2">
           
@@ -1470,10 +1471,9 @@
                 
                   
 
-  <a href="https://github.com/holunda-io/camunda-bpm-taskpool/edit/develop/docs/reference-guide/components/camunda-taskpool-collector.md" title="Edit this page" class="md-content__button md-icon">
-    
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25Z"/></svg>
-  </a>
+  
+  
+
 
 
   <h1>Camunda BPM Engine Taskpool Collector</h1>
@@ -1514,18 +1514,18 @@ Spring eventing.</p>
 <h3 id="usage-and-configuration">Usage and configuration<a class="headerlink" href="#usage-and-configuration" title="Permanent link">#</a></h3>
 <p>In order to enable collector component, include the Maven dependency to your process application:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">&lt;dependency&gt;</span>
-  <span class="nt">&lt;groupId&gt;</span>io.holunda.polyflow
-    <span class="nt">&lt;groupId&gt;</span>
-      <span class="nt">&lt;artifactId&gt;</span>polyflow-camunda-bpm-taskpool-collector<span class="nt">&lt;/artifactId&gt;</span>
-      <span class="nt">&lt;version&gt;</span>${camunda-taskpool.version}<span class="nt">&lt;/version&gt;</span>
-      <span class="nt">&lt;dependency&gt;</span>
+<span class="w">  </span><span class="nt">&lt;groupId&gt;</span>io.holunda.polyflow
+<span class="w">    </span><span class="nt">&lt;groupId&gt;</span>
+<span class="w">      </span><span class="nt">&lt;artifactId&gt;</span>polyflow-camunda-bpm-taskpool-collector<span class="nt">&lt;/artifactId&gt;</span>
+<span class="w">      </span><span class="nt">&lt;version&gt;</span>${camunda-taskpool.version}<span class="nt">&lt;/version&gt;</span>
+<span class="w">      </span><span class="nt">&lt;dependency&gt;</span>
 </code></pre></div>
 <p>Then activate the taskpool collector by providing the annotation on any Spring Configuration:</p>
-<div class="highlight"><pre><span></span><code><span class="nd">@Configuration</span><span class="w"></span>
-<span class="nd">@Import</span><span class="p">(</span><span class="n">CamundaTaskpoolCollectorConfiguration</span><span class="p">.</span><span class="na">class</span><span class="p">)</span><span class="w"></span>
-<span class="kd">class</span> <span class="nc">MyProcessApplicationConfiguration</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="nd">@Configuration</span>
+<span class="nd">@Import</span><span class="p">(</span><span class="n">CamundaTaskpoolCollectorConfiguration</span><span class="p">.</span><span class="na">class</span><span class="p">)</span>
+<span class="kd">class</span> <span class="nc">MyProcessApplicationConfiguration</span><span class="w"> </span><span class="p">{</span>
 
-<span class="p">}</span><span class="w"></span>
+<span class="p">}</span>
 </code></pre></div>
 <h3 id="event-collection">Event collection<a class="headerlink" href="#event-collection" title="Permanent link">#</a></h3>
 <p>Taskpool Collector registers Spring Event Listener to the following events, fired by Camunda Eventing Engine Plugin:</p>
@@ -1578,42 +1578,42 @@ a default filter is used which is an empty <code>EXCLUDE</code> filter, resultin
   is defined.</li>
 </ul>
 <p>Here is an example, how the process variable filter can configure the enrichment:</p>
-<div class="highlight"><pre><span></span><code><span class="w">  </span><span class="nd">@Configuration</span><span class="w"></span>
-<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">MyTaskCollectorConfiguration</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="w">  </span><span class="nd">@Configuration</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">MyTaskCollectorConfiguration</span><span class="w"> </span><span class="p">{</span>
 
-<span class="w">  </span><span class="nd">@Bean</span><span class="w"></span>
-<span class="w">  </span><span class="kd">public</span><span class="w"> </span><span class="n">ProcessVariablesFilter</span><span class="w"> </span><span class="nf">myProcessVariablesFilter</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nd">@Bean</span>
+<span class="w">  </span><span class="kd">public</span><span class="w"> </span><span class="n">ProcessVariablesFilter</span><span class="w"> </span><span class="nf">myProcessVariablesFilter</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ProcessVariablesFilter</span><span class="p">(</span><span class="w"></span>
-<span class="w">      </span><span class="c1">// define a variable filter for every process</span><span class="w"></span>
-<span class="w">      </span><span class="k">new</span><span class="w"> </span><span class="n">VariableFilter</span><span class="o">[]</span><span class="p">{</span><span class="w"></span>
-<span class="w">        </span><span class="c1">// define for every process definition</span><span class="w"></span>
-<span class="w">        </span><span class="c1">// either a TaskVariableFilter or ProcessVariableFilter</span><span class="w"></span>
-<span class="w">        </span><span class="k">new</span><span class="w"> </span><span class="n">TaskVariableFilter</span><span class="p">(</span><span class="w"></span>
-<span class="w">          </span><span class="n">ProcessApproveRequest</span><span class="p">.</span><span class="na">KEY</span><span class="p">,</span><span class="w"></span>
-<span class="w">          </span><span class="c1">// filter type</span><span class="w"></span>
-<span class="w">          </span><span class="n">FilterType</span><span class="p">.</span><span class="na">INCLUDE</span><span class="p">,</span><span class="w"></span>
-<span class="w">          </span><span class="n">ImmutableMap</span><span class="p">.</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;&gt;</span><span class="n">builder</span><span class="p">()</span><span class="w"></span>
-<span class="w">                      </span><span class="c1">// define a variable filter for every task of the process</span><span class="w"></span>
-<span class="w">                      </span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">ProcessApproveRequest</span><span class="p">.</span><span class="na">Elements</span><span class="p">.</span><span class="na">APPROVE_REQUEST</span><span class="p">,</span><span class="w"> </span><span class="n">Lists</span><span class="p">.</span><span class="na">newArrayList</span><span class="p">(</span><span class="w"></span>
-<span class="w">                        </span><span class="n">ProcessApproveRequest</span><span class="p">.</span><span class="na">Variables</span><span class="p">.</span><span class="na">REQUEST_ID</span><span class="p">,</span><span class="w"></span>
-<span class="w">                        </span><span class="n">ProcessApproveRequest</span><span class="p">.</span><span class="na">Variables</span><span class="p">.</span><span class="na">ORIGINATOR</span><span class="p">)</span><span class="w"></span>
-<span class="w">                      </span><span class="p">)</span><span class="w"></span>
-<span class="w">                      </span><span class="c1">// and again</span><span class="w"></span>
-<span class="w">                      </span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">ProcessApproveRequest</span><span class="p">.</span><span class="na">Elements</span><span class="p">.</span><span class="na">AMEND_REQUEST</span><span class="p">,</span><span class="w"> </span><span class="n">Lists</span><span class="p">.</span><span class="na">newArrayList</span><span class="p">(</span><span class="w"></span>
-<span class="w">                        </span><span class="n">ProcessApproveRequest</span><span class="p">.</span><span class="na">Variables</span><span class="p">.</span><span class="na">REQUEST_ID</span><span class="p">,</span><span class="w"></span>
-<span class="w">                        </span><span class="n">ProcessApproveRequest</span><span class="p">.</span><span class="na">Variables</span><span class="p">.</span><span class="na">COMMENT</span><span class="p">,</span><span class="w"></span>
-<span class="w">                        </span><span class="n">ProcessApproveRequest</span><span class="p">.</span><span class="na">Variables</span><span class="p">.</span><span class="na">APPLICANT</span><span class="p">)</span><span class="w"></span>
-<span class="w">                      </span><span class="p">).</span><span class="na">build</span><span class="p">()</span><span class="w"></span>
-<span class="w">        </span><span class="p">),</span><span class="w"></span>
-<span class="w">        </span><span class="c1">// optionally add a global filter for all processes</span><span class="w"></span>
-<span class="w">        </span><span class="c1">// for that no individual filter was created</span><span class="w"></span>
-<span class="w">        </span><span class="k">new</span><span class="w"> </span><span class="n">ProcessVariableFilter</span><span class="p">(</span><span class="n">FilterType</span><span class="p">.</span><span class="na">INCLUDE</span><span class="p">,</span><span class="w"></span>
-<span class="w">                                  </span><span class="n">Lists</span><span class="p">.</span><span class="na">newArrayList</span><span class="p">(</span><span class="n">CommonProcessVariables</span><span class="p">.</span><span class="na">CUSTOMER_ID</span><span class="p">))</span><span class="w"></span>
-<span class="w">      </span><span class="p">}</span><span class="w"></span>
-<span class="w">    </span><span class="p">);</span><span class="w"></span>
-<span class="w">  </span><span class="p">}</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ProcessVariablesFilter</span><span class="p">(</span>
+<span class="w">      </span><span class="c1">// define a variable filter for every process</span>
+<span class="w">      </span><span class="k">new</span><span class="w"> </span><span class="n">VariableFilter</span><span class="o">[]</span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// define for every process definition</span>
+<span class="w">        </span><span class="c1">// either a TaskVariableFilter or ProcessVariableFilter</span>
+<span class="w">        </span><span class="k">new</span><span class="w"> </span><span class="n">TaskVariableFilter</span><span class="p">(</span>
+<span class="w">          </span><span class="n">ProcessApproveRequest</span><span class="p">.</span><span class="na">KEY</span><span class="p">,</span>
+<span class="w">          </span><span class="c1">// filter type</span>
+<span class="w">          </span><span class="n">FilterType</span><span class="p">.</span><span class="na">INCLUDE</span><span class="p">,</span>
+<span class="w">          </span><span class="n">ImmutableMap</span><span class="p">.</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;&gt;</span><span class="n">builder</span><span class="p">()</span>
+<span class="w">                      </span><span class="c1">// define a variable filter for every task of the process</span>
+<span class="w">                      </span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">ProcessApproveRequest</span><span class="p">.</span><span class="na">Elements</span><span class="p">.</span><span class="na">APPROVE_REQUEST</span><span class="p">,</span><span class="w"> </span><span class="n">Lists</span><span class="p">.</span><span class="na">newArrayList</span><span class="p">(</span>
+<span class="w">                        </span><span class="n">ProcessApproveRequest</span><span class="p">.</span><span class="na">Variables</span><span class="p">.</span><span class="na">REQUEST_ID</span><span class="p">,</span>
+<span class="w">                        </span><span class="n">ProcessApproveRequest</span><span class="p">.</span><span class="na">Variables</span><span class="p">.</span><span class="na">ORIGINATOR</span><span class="p">)</span>
+<span class="w">                      </span><span class="p">)</span>
+<span class="w">                      </span><span class="c1">// and again</span>
+<span class="w">                      </span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">ProcessApproveRequest</span><span class="p">.</span><span class="na">Elements</span><span class="p">.</span><span class="na">AMEND_REQUEST</span><span class="p">,</span><span class="w"> </span><span class="n">Lists</span><span class="p">.</span><span class="na">newArrayList</span><span class="p">(</span>
+<span class="w">                        </span><span class="n">ProcessApproveRequest</span><span class="p">.</span><span class="na">Variables</span><span class="p">.</span><span class="na">REQUEST_ID</span><span class="p">,</span>
+<span class="w">                        </span><span class="n">ProcessApproveRequest</span><span class="p">.</span><span class="na">Variables</span><span class="p">.</span><span class="na">COMMENT</span><span class="p">,</span>
+<span class="w">                        </span><span class="n">ProcessApproveRequest</span><span class="p">.</span><span class="na">Variables</span><span class="p">.</span><span class="na">APPLICANT</span><span class="p">)</span>
+<span class="w">                      </span><span class="p">).</span><span class="na">build</span><span class="p">()</span>
+<span class="w">        </span><span class="p">),</span>
+<span class="w">        </span><span class="c1">// optionally add a global filter for all processes</span>
+<span class="w">        </span><span class="c1">// for that no individual filter was created</span>
+<span class="w">        </span><span class="k">new</span><span class="w"> </span><span class="n">ProcessVariableFilter</span><span class="p">(</span><span class="n">FilterType</span><span class="p">.</span><span class="na">INCLUDE</span><span class="p">,</span>
+<span class="w">                                  </span><span class="n">Lists</span><span class="p">.</span><span class="na">newArrayList</span><span class="p">(</span><span class="n">CommonProcessVariables</span><span class="p">.</span><span class="na">CUSTOMER_ID</span><span class="p">))</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
 </code></pre></div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -1627,21 +1627,21 @@ business data entry(ies) to a task. In the projection (which is used for queryin
 information from business data events can be shown together with task information.</p>
 <p>The correlation to data events can be configured by providing a <code>ProcessVariablesCorrelator</code> bean. Here is
 an example how this can be done:</p>
-<div class="highlight"><pre><span></span><code><span class="nd">@Bean</span><span class="w"></span>
-<span class="kd">fun</span><span class="w"> </span><span class="nf">processVariablesCorrelator</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ProcessVariablesCorrelator</span><span class="p">(</span><span class="w"></span>
-<span class="w">    </span><span class="c1">// define correlation for every process</span><span class="w"></span>
-<span class="w">    </span><span class="n">ProcessVariableCorrelation</span><span class="p">(</span><span class="w"></span>
-<span class="w">      </span><span class="n">ProcessApproveRequest</span><span class="p">.</span><span class="na">KEY</span><span class="p">,</span><span class="w"></span>
-<span class="w">      </span><span class="n">mapOf</span><span class="p">(</span><span class="w"></span>
-<span class="w">        </span><span class="c1">// define a correlation for every task needed</span><span class="w"></span>
-<span class="w">        </span><span class="n">ProcessApproveRequest</span><span class="p">.</span><span class="na">Elements</span><span class="p">.</span><span class="na">APPROVE_REQUEST</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">mapOf</span><span class="p">(</span><span class="w"></span>
-<span class="w">          </span><span class="n">ProcessApproveRequest</span><span class="p">.</span><span class="na">Variables</span><span class="p">.</span><span class="na">REQUEST_ID</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">BusinessDataEntry</span><span class="p">.</span><span class="na">REQUEST</span><span class="w"></span>
-<span class="w">        </span><span class="p">)</span><span class="w"></span>
-<span class="w">      </span><span class="p">),</span><span class="w"></span>
-<span class="w">      </span><span class="c1">// define a correlation globally (for the whole process)</span><span class="w"></span>
-<span class="w">      </span><span class="n">mapOf</span><span class="p">(</span><span class="n">ProcessApproveRequest</span><span class="p">.</span><span class="na">Variables</span><span class="p">.</span><span class="na">REQUEST_ID</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">BusinessDataEntry</span><span class="p">.</span><span class="na">REQUEST</span><span class="p">)</span><span class="w"></span>
-<span class="w">    </span><span class="p">)</span><span class="w"></span>
-<span class="w">  </span><span class="p">)</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="nd">@Bean</span>
+<span class="kd">fun</span><span class="w"> </span><span class="nf">processVariablesCorrelator</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ProcessVariablesCorrelator</span><span class="p">(</span>
+<span class="w">    </span><span class="c1">// define correlation for every process</span>
+<span class="w">    </span><span class="n">ProcessVariableCorrelation</span><span class="p">(</span>
+<span class="w">      </span><span class="n">ProcessApproveRequest</span><span class="p">.</span><span class="na">KEY</span><span class="p">,</span>
+<span class="w">      </span><span class="n">mapOf</span><span class="p">(</span>
+<span class="w">        </span><span class="c1">// define a correlation for every task needed</span>
+<span class="w">        </span><span class="n">ProcessApproveRequest</span><span class="p">.</span><span class="na">Elements</span><span class="p">.</span><span class="na">APPROVE_REQUEST</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">mapOf</span><span class="p">(</span>
+<span class="w">          </span><span class="n">ProcessApproveRequest</span><span class="p">.</span><span class="na">Variables</span><span class="p">.</span><span class="na">REQUEST_ID</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">BusinessDataEntry</span><span class="p">.</span><span class="na">REQUEST</span>
+<span class="w">        </span><span class="p">)</span>
+<span class="w">      </span><span class="p">),</span>
+<span class="w">      </span><span class="c1">// define a correlation globally (for the whole process)</span>
+<span class="w">      </span><span class="n">mapOf</span><span class="p">(</span><span class="n">ProcessApproveRequest</span><span class="p">.</span><span class="na">Variables</span><span class="p">.</span><span class="na">REQUEST_ID</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">BusinessDataEntry</span><span class="p">.</span><span class="na">REQUEST</span><span class="p">)</span>
+<span class="w">    </span><span class="p">)</span>
+<span class="w">  </span><span class="p">)</span>
 </code></pre></div>
 <p>The process variable correlator holds a list of process variable correlations - one for every process
 definition key. Every <code>ProcessVariableCorrelation</code> configures for all tasks or for an individual task by providing a so-called correlation
@@ -1651,26 +1651,26 @@ map. A correlation map is keyed by the name of a process variable inside Camunda
 data and using the entry type <code>io.my.approvalRequest</code> and the id of the request as <code>entryId</code>. In order to
 create a correlation in task <code>task_approve_request</code> of the <code>process_approval_process</code> we would provide the following configuration
 of the correlator:</p>
-<div class="highlight"><pre><span></span><code><span class="nd">@Bean</span><span class="w"></span>
-<span class="kd">fun</span><span class="w"> </span><span class="nf">processVariablesCorrelator</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ProcessVariablesCorrelator</span><span class="p">(</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="nd">@Bean</span>
+<span class="kd">fun</span><span class="w"> </span><span class="nf">processVariablesCorrelator</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ProcessVariablesCorrelator</span><span class="p">(</span>
 
-<span class="w">    </span><span class="n">ProcessVariableCorrelation</span><span class="p">(</span><span class="w"></span>
-<span class="w">      </span><span class="s">&quot;process_approval_process&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w">      </span><span class="n">mapOf</span><span class="p">(</span><span class="w"></span>
-<span class="w">        </span><span class="s">&quot;task_approve_request&quot;</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">mapOf</span><span class="p">(</span><span class="w"></span>
-<span class="w">          </span><span class="c1">// process variable &#39;varRequestId&#39; holds the id of a data entry of type &#39;io.my.approvalRequest&#39;</span><span class="w"></span>
-<span class="w">          </span><span class="s">&quot;varRequestId&quot;</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="s">&quot;io.my.approvalRequest&quot;</span><span class="w"></span>
-<span class="w">        </span><span class="p">)</span><span class="w"></span>
-<span class="w">      </span><span class="p">)</span><span class="w"></span>
-<span class="w">    </span><span class="p">)</span><span class="w"></span>
-<span class="w">  </span><span class="p">)</span><span class="w"></span>
+<span class="w">    </span><span class="n">ProcessVariableCorrelation</span><span class="p">(</span>
+<span class="w">      </span><span class="s">&quot;process_approval_process&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="n">mapOf</span><span class="p">(</span>
+<span class="w">        </span><span class="s">&quot;task_approve_request&quot;</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">mapOf</span><span class="p">(</span>
+<span class="w">          </span><span class="c1">// process variable &#39;varRequestId&#39; holds the id of a data entry of type &#39;io.my.approvalRequest&#39;</span>
+<span class="w">          </span><span class="s">&quot;varRequestId&quot;</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="s">&quot;io.my.approvalRequest&quot;</span>
+<span class="w">        </span><span class="p">)</span>
+<span class="w">      </span><span class="p">)</span>
+<span class="w">    </span><span class="p">)</span>
+<span class="w">  </span><span class="p">)</span>
 </code></pre></div>
 <p>If the process instance now contains the approval request id <code>"4711"</code> in the process variable <code>varRequestId</code>
 and the process reaches the task <code>task_approve_request</code>, the task will get the following correlation created
 (here written in JSON):</p>
-<div class="highlight"><pre><span></span><code><span class="nt">&quot;correlations&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
-<span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;entryType&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;approvalRequest&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;entryId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;4711&quot;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
-<span class="p">]</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="nt">&quot;correlations&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;entryType&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;approvalRequest&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;entryId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;4711&quot;</span><span class="w"> </span><span class="p">}</span>
+<span class="p">]</span>
 </code></pre></div>
 <h3 id="message-codes">Message codes<a class="headerlink" href="#message-codes" title="Permanent link">#</a></h3>
 <blockquote>
@@ -1765,7 +1765,7 @@ and the process reaches the task <code>task_approve_request</code>, the task wil
   <small>
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">December 25, 2022</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">January 4, 2023</span>
       
     
   </small>
@@ -1790,42 +1790,6 @@ and the process reaches the task <code>task_approve_request</code>, the task wil
       </main>
       
         <footer class="md-footer">
-  
-    
-    <nav class="md-footer__inner md-grid" aria-label="Footer" >
-      
-        
-        <a href="camunda-interaction-client.html" class="md-footer__link md-footer__link--prev" aria-label="Previous: Camunda BPM Engine Interaction Client" rel="prev">
-          <div class="md-footer__button md-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
-          </div>
-          <div class="md-footer__title">
-            <div class="md-ellipsis">
-              <span class="md-footer__direction">
-                Previous
-              </span>
-              Camunda BPM Engine Interaction Client
-            </div>
-          </div>
-        </a>
-      
-      
-        
-        <a href="camunda-starter.html" class="md-footer__link md-footer__link--next" aria-label="Next: Camunda BPM Engine Taskpool SpringBoot Starter" rel="next">
-          <div class="md-footer__title">
-            <div class="md-ellipsis">
-              <span class="md-footer__direction">
-                Next
-              </span>
-              Camunda BPM Engine Taskpool SpringBoot Starter
-            </div>
-          </div>
-          <div class="md-footer__button md-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
-          </div>
-        </a>
-      
-    </nav>
   
   <div class="md-footer-meta md-typeset">
     <div class="md-footer-meta__inner md-grid">
@@ -1868,12 +1832,11 @@ and the process reaches the task <code>task_approve_request</code>, the task wil
       <div class="md-dialog__inner md-typeset"></div>
     </div>
     
-    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.instant", "navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.top", "toc.integrate"], "search": "../../assets/javascripts/workers/search.16e2a7d4.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "version": {"provider": "mike"}}</script>
+    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.instant", "navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.top", "toc.integrate"], "search": "../../assets/javascripts/workers/search.12658920.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.5a2dcb6a.min.js"></script>
+      <script src="../../assets/javascripts/bundle.5cf534bf.min.js"></script>
       
-    
     
   </body>
 </html>
