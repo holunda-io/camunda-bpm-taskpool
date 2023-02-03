@@ -22,9 +22,39 @@ import io.holunda.polyflow.bus.jackson.configureTaskpoolJacksonObjectMapper
 
 class MyConfiguration {
   @Bean
-  fun objectMapper(): ObjectMapper {
+  @Qualifier("payloadObjectMapper")
+  fun payloadObjectMapper(): ObjectMapper {
     return ObjectMapper().configureTaskpoolJacksonObjectMapper()
   }
 }
+```
 
+If you are not using Jackson for serialization of Axon messages (commands, events and queries) you
+are ready to go.
+
+If you want to use Jackson as Axon message serialization message format the following configuration
+is required. In your application properties, set-up the following properties:
+
+```yaml
+axon:
+  serializer:
+    events: jackson
+    messages: jackson
+    general: jackson 
+```
+
+In addition, define configure the `ObjectMapper` to be used by Axon Framework:
+
+```kotlin
+
+import io.holunda.polyflow.bus.jackson.configureTaskpoolJacksonObjectMapper
+
+class MyConfiguration {
+
+  @Bean("defaultAxonObjectMapper")
+  @Qualifier("defaultAxonObjectMapper")
+  fun defaultAxonObjectMapper(): ObjectMapper {
+    return ObjectMapper().configureTaskpoolJacksonObjectMapper()
+  }
+}
 ```
