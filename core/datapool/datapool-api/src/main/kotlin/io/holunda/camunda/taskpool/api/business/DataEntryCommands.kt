@@ -48,7 +48,7 @@ data class DeleteDataEntryCommand(
   /**
    * Final state.
    */
-  val state: DataEntryState= ProcessingType.UNDEFINED.of(""),
+  val state: DataEntryState = ProcessingType.DELETED.of(""),
   /**
    * Addressing information.
    */
