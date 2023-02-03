@@ -1,5 +1,6 @@
 package io.holunda.polyflow.taskpool.collector
 
+import io.holunda.polyflow.taskpool.collector.task.assigner.ProcessVariableTaskAssignerMapping
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.context.properties.ConstructorBinding
@@ -52,6 +53,13 @@ data class CamundaTaskCollectorProperties(
    */
   @NestedConfigurationProperty
   val enricher: TaskCollectorEnricherProperties = TaskCollectorEnricherProperties(),
+
+  /**
+   * Task assigner properties.
+   */
+  @NestedConfigurationProperty
+  val assigner: TaskAssignerProperties = TaskAssignerProperties(),
+
   /**
    * Flag to enable or disable the collector.
    */
@@ -100,6 +108,23 @@ enum class TaskCollectorEnricherType {
   custom
 }
 
+enum class TaskAssignerType {
+  /**
+   * Empty assigner, use information from Camunda task.
+   */
+  no,
+
+  /**
+   * Use process variables for assignment information.
+   */
+  processVariables,
+
+  /**
+   * Custom assigner.
+   */
+  custom
+}
+
 /**
  * Properties controlling the transfer of process definitions deployments.
  */
@@ -124,3 +149,32 @@ data class CamundaProcessInstanceCollectorProperties(
    */
   val enabled: Boolean = true
 )
+
+/**
+ * Properties to set up the task assigner.
+ */
+@ConstructorBinding
+data class TaskAssignerProperties(
+  /**
+   * Configures assigner type.
+   */
+  val type: TaskAssignerType = TaskAssignerType.no,
+  /**
+   * Process variable carrying the assignee information used by the process variable task assigner.
+   */
+  val assignee: String? = null,
+  /**
+   * Process variable carrying the candidateUsers information used by the process variable task assigner.
+   */
+  val candidateUsers: String? = null,
+  /**
+   * Process variable carrying the candidateGroups information used by the process variable task assigner.
+   */
+  val candidateGroups: String? = null
+) {
+  fun toMapping(): ProcessVariableTaskAssignerMapping = ProcessVariableTaskAssignerMapping(
+    assignee = assignee,
+    candidateUsers = candidateUsers,
+    candidateGroups = candidateGroups,
+  )
+}
