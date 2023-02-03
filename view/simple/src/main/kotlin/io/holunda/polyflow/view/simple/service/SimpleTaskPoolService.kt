@@ -82,7 +82,7 @@ class SimpleTaskPoolService(
   override fun query(query: TaskWithDataEntriesForIdQuery): Optional<TaskWithDataEntries> {
     val task = tasks.values.firstOrNull { query.applyFilter(TaskWithDataEntries(it)) }
     return if (task != null) {
-      Optional.of(TaskWithDataEntries(task, this.dataEntries.values.toList()))
+      Optional.of(TaskWithDataEntries.correlate(task, dataEntries))
     } else {
       Optional.empty()
     }
