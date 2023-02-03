@@ -106,7 +106,24 @@ class SimpleDataEntryCommandSender(
         }
       }
     } else {
-      logger.debug("Would have sent command $command")
+      logger.debug("Would have sent change command $command")
+    }
+  }
+
+  override fun sendDataEntryDelete(command: DeleteDataEntryCommand, metaData: MetaData) {
+    if (properties.enabled) {
+      val message = GenericCommandMessage
+        .asCommandMessage<DeleteDataEntryCommand>(command)
+        .withMetaData(metaData)
+      gateway.send<Any, Any?>(message) { m, r ->
+        if (r.isExceptional) {
+          errorHandler.apply(m, r)
+        } else {
+          successHandler.apply(m, r)
+        }
+      }
+    } else {
+      logger.debug("Would have sent delete command $command")
     }
   }
 }
