@@ -1455,7 +1455,30 @@ It provides helper Jackson Modules to configure serialization of classes used by
 
 <span class="kd">class</span><span class="w"> </span><span class="nc">MyConfiguration</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="nd">@Bean</span>
-<span class="w">  </span><span class="kd">fun</span><span class="w"> </span><span class="nf">objectMapper</span><span class="p">():</span><span class="w"> </span><span class="n">ObjectMapper</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nd">@Qualifier</span><span class="p">(</span><span class="s">&quot;payloadObjectMapper&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="kd">fun</span><span class="w"> </span><span class="nf">payloadObjectMapper</span><span class="p">():</span><span class="w"> </span><span class="n">ObjectMapper</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">ObjectMapper</span><span class="p">().</span><span class="na">configureTaskpoolJacksonObjectMapper</span><span class="p">()</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>If you are not using Jackson for serialization of Axon messages (commands, events and queries) you
+are ready to go.</p>
+<p>If you want to use Jackson as Axon message serialization message format the following configuration
+is required. In your application properties, set-up the following properties:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">axon</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">serializer</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">events</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">jackson</span>
+<span class="w">    </span><span class="nt">messages</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">jackson</span>
+<span class="w">    </span><span class="nt">general</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">jackson</span><span class="w"> </span>
+</code></pre></div>
+<p>In addition, define configure the <code>ObjectMapper</code> to be used by Axon Framework:</p>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="nn">io.holunda.polyflow.bus.jackson.configureTaskpoolJacksonObjectMapper</span>
+
+<span class="kd">class</span><span class="w"> </span><span class="nc">MyConfiguration</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">  </span><span class="nd">@Bean</span><span class="p">(</span><span class="s">&quot;defaultAxonObjectMapper&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="nd">@Qualifier</span><span class="p">(</span><span class="s">&quot;defaultAxonObjectMapper&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="kd">fun</span><span class="w"> </span><span class="nf">defaultAxonObjectMapper</span><span class="p">():</span><span class="w"> </span><span class="n">ObjectMapper</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">ObjectMapper</span><span class="p">().</span><span class="na">configureTaskpoolJacksonObjectMapper</span><span class="p">()</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
