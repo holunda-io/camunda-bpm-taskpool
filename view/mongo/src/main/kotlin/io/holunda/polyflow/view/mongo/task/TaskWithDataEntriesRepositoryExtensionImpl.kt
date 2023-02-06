@@ -1,10 +1,7 @@
 package io.holunda.polyflow.view.mongo.task
 
 import io.holunda.polyflow.view.auth.User
-import io.holunda.polyflow.view.filter.Criterion
-import io.holunda.polyflow.view.filter.EQUALS
-import io.holunda.polyflow.view.filter.GREATER
-import io.holunda.polyflow.view.filter.LESS
+import io.holunda.polyflow.view.filter.*
 import io.holunda.polyflow.view.mongo.data.DataEntryDocument
 import mu.KLogging
 import org.springframework.data.domain.Pageable
@@ -62,6 +59,7 @@ open class TaskWithDataEntriesRepositoryExtensionImpl(
           EQUALS -> this.isEqualTo(it.typedValue())
           GREATER -> this.gt(it.typedValue())
           LESS -> this.lt(it.typedValue())
+          // FIXME -> implement like
           else -> throw IllegalArgumentException("Unsupported operator ${it.operator}")
         }
       }

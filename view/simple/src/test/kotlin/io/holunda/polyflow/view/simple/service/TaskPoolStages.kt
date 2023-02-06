@@ -124,6 +124,12 @@ class SimpleTaskPoolWhenStage<SELF : SimpleTaskPoolWhenStage<SELF>> : AbstractSi
   fun tasks_are_queried(filters: List<String>) = step {
     queriedTasks.addAll(simpleTaskPoolService.query(filterQuery("+name", filters)).elements.map { TaskWithDataEntries(it) })
   }
+
+  @As("All tasks are queried with filter $")
+  fun all_tasks_are_queried(filters: List<String>) = step {
+    queriedTasks.addAll(simpleTaskPoolService.query(AllTasksQuery(sort = "+name", filters = filters)).elements.map { TaskWithDataEntries(it) })
+  }
+
 }
 
 @JGivenKotlinStage
