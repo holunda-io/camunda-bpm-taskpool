@@ -5,6 +5,7 @@ import io.holunda.camunda.taskpool.api.business.ProcessingType
 import io.holunda.polyflow.view.DataEntry
 import io.holunda.polyflow.view.filter.Criterion
 import io.holunda.polyflow.view.filter.EQUALS
+import io.holunda.polyflow.view.filter.LIKE
 import io.holunda.polyflow.view.jpa.data.DataEntryEntity
 import io.holunda.polyflow.view.jpa.data.DataEntryRepository.Companion.hasDataEntryPayloadAttribute
 import io.holunda.polyflow.view.jpa.data.DataEntryRepository.Companion.hasEntryId
@@ -15,6 +16,11 @@ import io.holunda.polyflow.view.jpa.data.DataEntryRepository.Companion.hasType
 import io.holunda.polyflow.view.jpa.task.TaskEntity
 import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.hasBusinessKey
 import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.hasTaskPayloadAttribute
+import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.likeBusinessKey
+import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.likeDescription
+import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.likeName
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Sort
 import org.springframework.data.jpa.domain.Specification
 import org.springframework.data.jpa.domain.Specification.where
 
@@ -49,6 +55,26 @@ fun List<Criterion>.toTaskSpecification(): Specification<TaskEntity>? {
     else -> null
   }
 }
+
+/**
+ * Constructs page request.
+ * @param page page number.
+ * @param size page size
+ * @param sort optional sort in format +filedName or -fieldName
+ */
+fun pageRequest(page: Int, size: Int, sort: String?): PageRequest {
+  val sort = if (sort.isNullOrBlank()) {
+    null
+  } else {
+    Sort.by(Sort.Direction.fromOptionalString(sort.substring(0, 1)).orElse(Sort.DEFAULT_DIRECTION), sort.substring(1))
+  }
+  return if (sort != null) {
+    PageRequest.of(page, size, sort)
+  } else {
+    PageRequest.of(page, size)
+  }
+}
+
 
 /**
  * Specification for query on task attributes.
@@ -87,9 +113,22 @@ internal fun List<Criterion>.toTaskPayloadSpecification(): Specification<TaskEnt
  * Creates JPA specification for the query of direct attributes of the task.
  */
 internal fun Criterion.TaskCriterion.toTaskSpecification(): Specification<TaskEntity> {
-  return when (this.name) {
-    TaskEntity::businessKey.name -> hasBusinessKey(this.value)
-    else -> throw IllegalArgumentException("JPA View found unsupported task attribute: ${this.name}.")
+  return when (this.operator) {
+    EQUALS -> {
+      when (this.name) {
+        TaskEntity::businessKey.name -> hasBusinessKey(this.value)
+        else -> throw IllegalArgumentException("JPA View found unsupported task attribute for equals comparison: ${this.name}.")
+      }
+    }
+    LIKE -> {
+      when (this.name) {
+        TaskEntity::name.name -> likeName(this.value)
+        TaskEntity::description.name -> likeDescription(this.value)
+        TaskEntity::businessKey.name -> likeBusinessKey(this.value)
+        else -> throw IllegalArgumentException("JPA View found unsupported task attribute for like comparison: ${this.name}.")
+      }
+    }
+    else -> throw IllegalArgumentException("JPA View found unsupported comparison ${this.operator} for attribute ${this.name}.")
   }
 }
 

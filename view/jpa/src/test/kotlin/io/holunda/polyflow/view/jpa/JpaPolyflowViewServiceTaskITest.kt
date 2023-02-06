@@ -202,6 +202,7 @@ internal class JpaPolyflowViewServiceTaskITest {
           put(dataType1, dataId1)
           put(dataType2, dataId2)
         },
+        assignee = "zoro",
         businessKey = "business-4",
         createTime = Date.from(now),
         candidateUsers = setOf("zoro"),
@@ -264,6 +265,7 @@ internal class JpaPolyflowViewServiceTaskITest {
     assertThat(zoro.elements[0].task.name).isEqualTo("task name 4")
     assertThat(zoro.elements[0].dataEntries).isNotEmpty.hasSize(1)
     assertThat(zoro.elements[0].dataEntries[0].entryId).isEqualTo(dataId2)
+
     val strawhats = jpaPolyflowViewService.query(TasksWithDataEntriesForUserQuery(user = User("other", setOf("strawhats"))))
     assertThat(strawhats.elements).isNotEmpty.hasSize(2)
     assertThat(strawhats.elements.map { it.task.id }).contains(id3, id4)
@@ -271,6 +273,24 @@ internal class JpaPolyflowViewServiceTaskITest {
     assertThat(strawhats.elements[0].dataEntries[0].entryId).isEqualTo(dataId1)
     assertThat(strawhats.elements[1].dataEntries).hasSize(1)
     assertThat(strawhats.elements[1].dataEntries[0].entryId).isEqualTo(dataId1)
+  }
+
+  @Test
+  fun `should find the task by group with data entries`() {
+    val strawhats = jpaPolyflowViewService.query(TasksWithDataEntriesForGroupQuery(user = User("some", setOf("strawhats")), includeAssigned = false))
+    assertThat(strawhats.elements).isNotEmpty.hasSize(1)
+    assertThat(strawhats.elements.map { it.task.id }).contains(id3)
+    assertThat(strawhats.elements[0].task.assignee).isNull()
+    assertThat(strawhats.elements[0].dataEntries).hasSize(1)
+    assertThat(strawhats.elements[0].dataEntries[0].entryId).isEqualTo(dataId1)
+
+    val strawhats2 = jpaPolyflowViewService.query(TasksWithDataEntriesForGroupQuery(user = User("some", setOf("strawhats")), includeAssigned = true))
+    assertThat(strawhats2.elements).isNotEmpty.hasSize(1)
+    assertThat(strawhats2.elements.map { it.task.id }).contains(id4)
+    assertThat(strawhats2.elements[0].task.assignee).isNotNull()
+    assertThat(strawhats2.elements[0].dataEntries).hasSize(1)
+    assertThat(strawhats2.elements[0].dataEntries[0].entryId).isEqualTo(dataId1)
+
   }
 
   @Test
@@ -283,6 +303,18 @@ internal class JpaPolyflowViewServiceTaskITest {
     assertThat(muppets.elements).isNotEmpty
     assertThat(muppets.elements[0].id).isEqualTo(id)
   }
+
+  @Test
+  fun `should find the task by group`() {
+    val unassigned = jpaPolyflowViewService.query(TasksForGroupQuery(user = User("other", setOf("muppets")), includeAssigned = false))
+    assertThat(unassigned.elements).isEmpty()
+
+    val assigned = jpaPolyflowViewService.query(TasksForGroupQuery(user = User("other", setOf("muppets")), includeAssigned = true))
+    assertThat(assigned.elements).hasSize(1)
+    assertThat(assigned.elements[0].id).isEqualTo(id)
+    assertThat(assigned.elements[0].name).isEqualTo("task name 1")
+  }
+
 
   @Test
   fun `query updates are sent`() {

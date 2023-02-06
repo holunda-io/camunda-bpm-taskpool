@@ -15,9 +15,20 @@ interface TaskApi {
   fun query(query: TasksWithDataEntriesForUserQuery): TasksWithDataEntriesQueryResult
 
   /**
+   * Retrieve tasks with correlated data entries for given user.
+   */
+  fun query(query: TasksWithDataEntriesForGroupQuery): TasksWithDataEntriesQueryResult
+
+  /**
    * Retrieve task with correlated data entries by given id.
    */
   fun query(query: TaskWithDataEntriesForIdQuery): Optional<TaskWithDataEntries>
+
+  /**
+   * Retrieve all tasks with correlated data entries.
+   */
+  fun query(query: AllTasksWithDataEntriesQuery): TasksWithDataEntriesQueryResult
+
 
   /**
    * Count tasks and group by application.
@@ -30,6 +41,11 @@ interface TaskApi {
   fun query(query: TasksForUserQuery): TaskQueryResult
 
   /**
+   * Retrieve tasks for given user's groups.
+   */
+  fun query(query: TasksForGroupQuery): TaskQueryResult
+
+  /**
    * Retrieve task by given id.
    */
   fun query(query: TaskForIdQuery): Optional<Task>
@@ -39,4 +55,8 @@ interface TaskApi {
    */
   fun query(query: TasksForApplicationQuery): TaskQueryResult
 
+  /**
+   * Retrieve all tasks.
+   */
+  fun query(query: AllTasksQuery): TaskQueryResult
 }

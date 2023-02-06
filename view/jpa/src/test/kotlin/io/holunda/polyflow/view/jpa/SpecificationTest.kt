@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test
 internal class SpecificationTest {
 
   @Test
-  internal fun `should create single attribute specification`() {
+  internal fun `creates single attribute specification`() {
     val filters = listOf("data.state.state=In Progress")
     val criteria = toCriteria(filters)
 
@@ -22,7 +22,7 @@ internal class SpecificationTest {
   }
 
   @Test
-  internal fun `should create multiple attribute specification`() {
+  fun `creates multiple attribute specification`() {
     val filters = listOf(
       "data.state.state=In Progress",
       "data.state.processingType=IN_PROGRESS",
@@ -37,7 +37,7 @@ internal class SpecificationTest {
   }
 
   @Test
-  internal fun `should create multiple principal specifications`() {
+  fun `creates multiple principal specifications`() {
     val spec = DataEntryRepository.isAuthorizedFor(
       setOf(
         user("kermit"),
@@ -47,5 +47,21 @@ internal class SpecificationTest {
     )
 
     assertThat(spec).isNotNull
+  }
+
+  @Test
+  fun `creates a paged request`() {
+    val request = pageRequest(page = 15, size = 42, "+name")
+    assertThat(request.pageNumber).isEqualTo(15)
+    assertThat(request.pageSize).isEqualTo(42)
+    assertThat(request.sort.isSorted).isEqualTo(true)
+    assertThat(request.sort.isEmpty).isEqualTo(false)
+
+    val unsorted = pageRequest(page = 14, size = 41, null)
+    assertThat(unsorted.pageNumber).isEqualTo(14)
+    assertThat(unsorted.pageSize).isEqualTo(41)
+    assertThat(unsorted.sort.isSorted).isEqualTo(false)
+    assertThat(unsorted.sort.isEmpty).isEqualTo(true)
+
   }
 }

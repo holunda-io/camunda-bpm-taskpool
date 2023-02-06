@@ -13,6 +13,8 @@ import io.holunda.polyflow.view.jpa.auth.AuthorizationPrincipal
 import io.holunda.polyflow.view.jpa.auth.AuthorizationPrincipal.Companion.group
 import io.holunda.polyflow.view.jpa.auth.AuthorizationPrincipal.Companion.user
 import io.holunda.polyflow.view.jpa.data.*
+import io.holunda.polyflow.view.jpa.data.DataEntryRepository.Companion.hasEntryId
+import io.holunda.polyflow.view.jpa.data.DataEntryRepository.Companion.hasEntryType
 import io.holunda.polyflow.view.jpa.data.DataEntryRepository.Companion.isAuthorizedFor
 import io.holunda.polyflow.view.jpa.update.updateDataEntryQuery
 import io.holunda.polyflow.view.query.PageableSortableQuery
@@ -24,6 +26,7 @@ import org.axonframework.messaging.MetaData
 import org.axonframework.queryhandling.QueryHandler
 import org.axonframework.queryhandling.QueryResponseMessage
 import org.axonframework.queryhandling.QueryUpdateEmitter
+import org.springframework.data.domain.Page
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Component
 
@@ -47,8 +50,13 @@ class JpaPolyflowViewDataEntryService(
   override fun query(query: DataEntryForIdentityQuery, metaData: MetaData): QueryResponseMessage<DataEntriesQueryResult> {
     val entryId = query.entryId
     require(entryId != null) { "Entry id must be set on query by id" }
-    val elements = dataEntryRepository.findAllById(listOf(DataEntryId(entryId = entryId, entryType = query.entryType)))
-    return constructDataEntryResponse(elements, query)
+
+    val specification = composeAnd(listOf(hasEntryId(entryId), hasEntryType(query.entryType)))
+    val pageRequest = pageRequest(query.page, query.size, query.sort)
+
+    val page = dataEntryRepository.findAll(specification, pageRequest)
+
+    return constructDataEntryResponse(page)
   }
 
   @QueryHandler
@@ -57,15 +65,14 @@ class JpaPolyflowViewDataEntryService(
     val authorizedPrincipals: Set<AuthorizationPrincipal> = setOf(user(query.user.username)).plus(query.user.groups.map { group(it) })
     val criteria: List<Criterion> = toCriteria(query.filters)
     val specification = criteria.toDataEntrySpecification()
+    val pageRequest = pageRequest(query.page, query.size, query.sort)
 
-    reportMissingFeature(query)
-
-    val elements = if (specification != null) {
-      dataEntryRepository.findAll(specification.and(isAuthorizedFor(authorizedPrincipals))).distinct()
+    val page = if (specification != null) {
+      dataEntryRepository.findAll(specification.and(isAuthorizedFor(authorizedPrincipals)), pageRequest)
     } else {
-      dataEntryRepository.findAll(isAuthorizedFor(authorizedPrincipals)).distinct()
+      dataEntryRepository.findAll(isAuthorizedFor(authorizedPrincipals), pageRequest)
     }
-    return constructDataEntryResponse(elements, query)
+    return constructDataEntryResponse(page)
   }
 
   @QueryHandler
@@ -73,15 +80,14 @@ class JpaPolyflowViewDataEntryService(
 
     val criteria: List<Criterion> = toCriteria(query.filters)
     val specification = criteria.toDataEntrySpecification()
+    val pageRequest = pageRequest(query.page, query.size, query.sort)
 
-    reportMissingFeature(query)
-
-    val elements = if (specification != null) {
-      dataEntryRepository.findAll(specification)
+    val page = if (specification != null) {
+      dataEntryRepository.findAll(specification, pageRequest)
     } else {
-      dataEntryRepository.findAll()
+      dataEntryRepository.findAll(null, pageRequest)
     }
-    return constructDataEntryResponse(elements, query)
+    return constructDataEntryResponse(page)
   }
 
   @Suppress("unused")
@@ -151,15 +157,17 @@ class JpaPolyflowViewDataEntryService(
    * Constructs response message slicing it.
    */
   private fun constructDataEntryResponse(
-    elements: Iterable<DataEntryEntity>,
-    query: PageableSortableQuery
+    page: Page<DataEntryEntity>
   ): QueryResponseMessage<DataEntriesQueryResult> {
 
-    val payload = DataEntriesQueryResult(elements = elements.map { it.toDataEntry(objectMapper) }).slice(query = query)
+    val payload = DataEntriesQueryResult(
+      elements = page.map { it.toDataEntry(objectMapper) }.distinct().toList(),
+      totalElementCount = page.totalElements.toInt()
+    )
 
     return QueryResponseMessageResponseType.asQueryResponseMessage(
       payload = payload,
-      metaData = getMaxRevision(elements.filter { dataEntryEntity ->
+      metaData = getMaxRevision(page.toList().filter { dataEntryEntity ->
         payload.elements.map { dataEntry -> dataEntry.entryType to dataEntry.entryId }
           .contains(dataEntryEntity.dataEntryId.entryType to dataEntryEntity.dataEntryId.entryId)
       }.map { it.revision }).toMetaData()

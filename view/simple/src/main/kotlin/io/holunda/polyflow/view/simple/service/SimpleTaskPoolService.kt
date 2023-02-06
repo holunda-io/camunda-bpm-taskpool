@@ -97,26 +97,6 @@ class SimpleTaskPoolService(
 
 
   /**
-   * Retrieves a list of all user tasks for current user.
-   */
-  @QueryHandler
-  override fun query(query: TasksForUserQuery): TaskQueryResult {
-    val predicates = createTaskPredicates(toCriteria(query.filters))
-    val filtered = tasks.values.filter { query.applyFilter(it) }
-      .filter { filterByPredicate(it, predicates) }
-      .toList()
-    val comparator = taskComparator(query.sort)
-
-    val sorted = if (comparator != null) {
-      filtered.sortedWith(comparator)
-    } else {
-      filtered
-    }
-
-    return TaskQueryResult(elements = sorted).slice(query = query)
-  }
-
-  /**
    * Retrieves a list of tasks with correlated data entries of given entry type (and optional id).
    */
   @QueryHandler
@@ -131,7 +111,6 @@ class SimpleTaskPoolService(
       .toList()
 
     val comparator = taskWithDataEntriesComparator(query.sort)
-
     val sorted = if (comparator != null) {
       filtered.sortedWith(comparator)
     } else {
@@ -139,6 +118,89 @@ class SimpleTaskPoolService(
     }
 
     return TasksWithDataEntriesQueryResult(elements = sorted).slice(query = query)
+  }
+
+  /**
+   * Retrieves a list of all user tasks for current user's groups.
+   */
+  @QueryHandler
+  override fun query(query: TasksWithDataEntriesForGroupQuery): TasksWithDataEntriesQueryResult {
+    val predicates = createTaskPredicates(toCriteria(query.filters))
+
+    val filtered = tasks.values.filter { TasksForGroupQuery(query.user).applyFilter(it) }
+      .asSequence()
+      .map { task -> TaskWithDataEntries.correlate(task, dataEntries) }
+      .filter { filterByPredicate(it, predicates) }
+      .toList()
+
+    val comparator = taskWithDataEntriesComparator(query.sort)
+    val sorted = if (comparator != null) {
+      filtered.sortedWith(comparator)
+    } else {
+      filtered
+    }
+
+    return TasksWithDataEntriesQueryResult(elements = sorted).slice(query = query)
+  }
+
+  /**
+   * Retrieves a list of all user tasks.
+   */
+  @QueryHandler
+  override fun query(query: AllTasksWithDataEntriesQuery): TasksWithDataEntriesQueryResult {
+    val predicates = createTaskPredicates(toCriteria(query.filters))
+
+    val filtered = tasks.values.filter { AllTasksQuery().applyFilter(it) }
+      .asSequence()
+      .map { task -> TaskWithDataEntries.correlate(task, dataEntries) }
+      .filter { filterByPredicate(it, predicates) }
+      .toList()
+
+    val comparator = taskWithDataEntriesComparator(query.sort)
+    val sorted = if (comparator != null) {
+      filtered.sortedWith(comparator)
+    } else {
+      filtered
+    }
+
+    return TasksWithDataEntriesQueryResult(elements = sorted).slice(query = query)
+
+  }
+
+  /**
+   * Retrieves a list of all user tasks for current user.
+   */
+  @QueryHandler
+  override fun query(query: TasksForUserQuery): TaskQueryResult {
+    return queryForTasks(query)
+  }
+  /**
+   * Retrieves a list of all user tasks for current user's groups.
+   */
+  @QueryHandler
+  override fun query(query: TasksForGroupQuery): TaskQueryResult {
+    return queryForTasks(query)
+  }
+  /**
+   * Retrieves a list of all user tasks.
+   */
+  @QueryHandler
+  override fun query(query: AllTasksQuery): TaskQueryResult {
+    return queryForTasks(query)
+  }
+
+  private fun queryForTasks(query: PageableSortableFilteredTaskQuery): TaskQueryResult {
+    val predicates = createTaskPredicates(toCriteria(query.filters))
+    val filtered = tasks.values.filter { query.applyFilter(it) }
+      .filter { filterByPredicate(it, predicates) }
+      .toList()
+    val comparator = taskComparator(query.sort)
+    val sorted = if (comparator != null) {
+      filtered.sortedWith(comparator)
+    } else {
+      filtered
+    }
+    return TaskQueryResult(elements = sorted).slice(query = query)
   }
 
   /**
@@ -150,7 +212,7 @@ class SimpleTaskPoolService(
     logger.debug { "SIMPLE-VIEW-21: Task created $event received" }
     val task = task(event)
     tasks[task.id] = task
-    updateTaskForUserQuery(event.id)
+    updateFilteredQueryQuery(event.id)
     updateTaskCountByApplicationQuery(task.sourceReference.applicationName)
   }
 
@@ -163,7 +225,7 @@ class SimpleTaskPoolService(
     logger.debug { "SIMPLE-VIEW-22: Task assigned $event received" }
     if (tasks.containsKey(event.id)) {
       tasks[event.id] = task(event, tasks[event.id]!!)
-      updateTaskForUserQuery(event.id)
+      updateFilteredQueryQuery(event.id)
       updateTaskCountByApplicationQuery(tasks[event.id]!!.sourceReference.applicationName)
     }
   }
@@ -177,7 +239,7 @@ class SimpleTaskPoolService(
     logger.debug { "SIMPLE-VIEW-23: Task completed $event received" }
     val applicationName = tasks[event.id]?.sourceReference?.applicationName
     tasks.remove(event.id)
-    updateTaskForUserQuery(event.id)
+    updateFilteredQueryQuery(event.id)
     applicationName?.let { updateTaskCountByApplicationQuery(it) }
   }
 
@@ -190,7 +252,7 @@ class SimpleTaskPoolService(
     logger.debug { "SIMPLE-VIEW-24: Task deleted $event received" }
     val applicationName = tasks[event.id]?.sourceReference?.applicationName
     tasks.remove(event.id)
-    updateTaskForUserQuery(event.id)
+    updateFilteredQueryQuery(event.id)
     applicationName?.let { updateTaskCountByApplicationQuery(it) }
   }
 
@@ -203,7 +265,7 @@ class SimpleTaskPoolService(
     logger.debug { "SIMPLE-VIEW-25: Task attributes updated $event received" }
     if (tasks.containsKey(event.id)) {
       tasks[event.id] = task(event, tasks[event.id]!!)
-      updateTaskForUserQuery(event.id)
+      updateFilteredQueryQuery(event.id)
       updateTaskCountByApplicationQuery(tasks[event.id]!!.sourceReference.applicationName)
     }
   }
@@ -217,7 +279,7 @@ class SimpleTaskPoolService(
     logger.debug { "SIMPLE-VIEW-26: Task candidate groups changed $event received" }
     if (tasks.containsKey(event.id)) {
       tasks[event.id] = task(event, tasks[event.id]!!)
-      updateTaskForUserQuery(event.id)
+      updateFilteredQueryQuery(event.id)
       updateTaskCountByApplicationQuery(tasks[event.id]!!.sourceReference.applicationName)
     }
   }
@@ -231,7 +293,7 @@ class SimpleTaskPoolService(
     logger.debug { "SIMPLE-VIEW-27: Task user groups changed $event received" }
     if (tasks.containsKey(event.id)) {
       tasks[event.id] = task(event, tasks[event.id]!!)
-      updateTaskForUserQuery(event.id)
+      updateFilteredQueryQuery(event.id)
       updateTaskCountByApplicationQuery(tasks[event.id]!!.sourceReference.applicationName)
     }
   }
@@ -248,7 +310,7 @@ class SimpleTaskPoolService(
 
     findTasksForDataEntry(entryId).forEach { taskId ->
       val task = tasks[taskId]!!
-      updateTaskForUserQuery(task.id)
+      updateFilteredQueryQuery(task.id)
     }
   }
 
@@ -263,7 +325,7 @@ class SimpleTaskPoolService(
     dataEntries[entryId] = event.toDataEntry(dataEntries[entryId])
     findTasksForDataEntry(entryId).forEach { taskId ->
       val task = tasks[taskId]!!
-      updateTaskForUserQuery(task.id)
+      updateFilteredQueryQuery(task.id)
     }
   }
 
@@ -278,7 +340,7 @@ class SimpleTaskPoolService(
     dataEntries.remove(entryId)
     findTasksForDataEntry(entryId).forEach { taskId ->
       val task = tasks[taskId]!!
-      updateTaskForUserQuery(task.id)
+      updateFilteredQueryQuery(task.id)
     }
   }
   /**
@@ -291,12 +353,18 @@ class SimpleTaskPoolService(
    */
   fun getTasks(): Map<String, Task> = tasks.toMap()
 
-  private fun updateTaskForUserQuery(taskId: String) {
+  private fun updateFilteredQueryQuery(taskId: String) {
     queryUpdateEmitter.updateMapFilterQuery(tasks, taskId, TasksForUserQuery::class.java)
+    queryUpdateEmitter.updateMapFilterQuery(tasks, taskId, TasksForGroupQuery::class.java)
+    queryUpdateEmitter.updateMapFilterQuery(tasks, taskId, AllTasksQuery::class.java)
 
     tasks[taskId]
       ?.let { task -> TaskWithDataEntries.correlate(task, dataEntries) }
-      ?.let { task -> queryUpdateEmitter.emit(TasksWithDataEntriesForUserQuery::class.java, { query -> query.applyFilter(task) }, task) }
+      ?.let { task ->
+        queryUpdateEmitter.emit(TasksWithDataEntriesForUserQuery::class.java, { query -> query.applyFilter(task) }, task)
+        queryUpdateEmitter.emit(TasksWithDataEntriesForGroupQuery::class.java, { query -> query.applyFilter(task) }, task)
+        queryUpdateEmitter.emit(AllTasksWithDataEntriesQuery::class.java, { query -> query.applyFilter(task) }, task)
+      }
   }
 
   private fun updateTaskCountByApplicationQuery(applicationName: String) {
