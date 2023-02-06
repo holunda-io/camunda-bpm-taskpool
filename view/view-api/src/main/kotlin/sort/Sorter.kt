@@ -2,9 +2,8 @@ package io.holunda.polyflow.view.sort
 
 import io.holunda.polyflow.view.DataEntry
 import io.holunda.polyflow.view.Task
-import io.holunda.polyflow.view.filter.DATA_PREFIX
-import io.holunda.polyflow.view.filter.TASK_PREFIX
-import io.holunda.polyflow.view.filter.extractField
+import io.holunda.polyflow.view.filter.*
+import io.holunda.polyflow.view.filter.isDataEntryAttribute
 import io.holunda.polyflow.view.filter.isTaskAttribute
 import java.lang.reflect.Field
 import java.time.Instant
@@ -18,7 +17,7 @@ import java.util.*
 fun dataComparator(sort: String?): DataEntryComparator? {
   if (sort.isNullOrBlank()) return null
   val sortDirection = parse(sort) ?: return null
-  val fieldName = if (isTaskAttribute(sort.substring(1))) {
+  val fieldName = if (isDataEntryAttribute(sort.substring(1))) {
     sort.substring(1).substring(DATA_PREFIX.length)
   } else {
     return null
@@ -55,6 +54,8 @@ fun taskWithDataEntriesComparator(sort: String?): TasksWithDataEntriesComparator
   val sortDirection = parse(sort) ?: return null
   val fieldName = if (isTaskAttribute(sort.substring(1))) {
     sort.substring(1).substring(TASK_PREFIX.length)
+  } else if (isDataEntryAttribute(sort.substring(1))) {
+    sort.substring(1).substring(DATA_PREFIX.length)
   } else {
     return null
   }

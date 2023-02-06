@@ -26,7 +26,7 @@ interface DataEntryRepository : CrudRepository<DataEntryEntity, DataEntryId>, Jp
       Specification { dataEntry, _, builder ->
         builder.equal(
           dataEntry
-            .get<DataEntryStateEmbeddable>(DataEntryEntity::dataEntryId.name)
+            .get<DataEntryId>(DataEntryEntity::dataEntryId.name)
             .get<String>(DataEntryId::entryId.name),
           entryId
         )
@@ -39,7 +39,7 @@ interface DataEntryRepository : CrudRepository<DataEntryEntity, DataEntryId>, Jp
       Specification { dataEntry, _, builder ->
         builder.equal(
           dataEntry
-            .get<DataEntryStateEmbeddable>(DataEntryEntity::dataEntryId.name)
+            .get<DataEntryId>(DataEntryEntity::dataEntryId.name)
             .get<String>(DataEntryId::entryType.name),
           entryType
         )
@@ -51,7 +51,8 @@ interface DataEntryRepository : CrudRepository<DataEntryEntity, DataEntryId>, Jp
     fun hasType(type: String): Specification<DataEntryEntity> =
       Specification { dataEntry, _, builder ->
         builder.equal(
-          dataEntry.get<DataEntryStateEmbeddable>(DataEntryEntity::type.name),
+          dataEntry
+            .get<String>(DataEntryEntity::type.name),
           type
         )
       }
@@ -62,7 +63,9 @@ interface DataEntryRepository : CrudRepository<DataEntryEntity, DataEntryId>, Jp
     fun hasState(state: String): Specification<DataEntryEntity> =
       Specification { dataEntry, _, builder ->
         builder.equal(
-          dataEntry.get<DataEntryStateEmbeddable>(DataEntryEntity::state.name).get<String>(DataEntryStateEmbeddable::state.name),
+          dataEntry
+            .get<DataEntryStateEmbeddable>(DataEntryEntity::state.name)
+            .get<String>(DataEntryStateEmbeddable::state.name),
           state
         )
       }
@@ -73,7 +76,9 @@ interface DataEntryRepository : CrudRepository<DataEntryEntity, DataEntryId>, Jp
     fun hasProcessingType(processingType: ProcessingType): Specification<DataEntryEntity> =
       Specification { dataEntry, _, builder ->
         builder.equal(
-          dataEntry.get<DataEntryStateEmbeddable>(DataEntryEntity::state.name).get<ProcessingType>(DataEntryStateEmbeddable::processingType.name),
+          dataEntry
+            .get<DataEntryStateEmbeddable>(DataEntryEntity::state.name)
+            .get<ProcessingType>(DataEntryStateEmbeddable::processingType.name),
           processingType.name
         )
       }

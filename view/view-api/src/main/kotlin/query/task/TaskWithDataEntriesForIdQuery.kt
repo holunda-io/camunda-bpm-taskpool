@@ -9,5 +9,5 @@ import io.holunda.polyflow.view.query.FilterQuery
  * @param id task id.
  */
 data class TaskWithDataEntriesForIdQuery(val id: String) : FilterQuery<TaskWithDataEntries> {
-  override fun applyFilter(element: TaskWithDataEntries): Boolean = element.task.id == id
+  override fun applyFilter(element: TaskWithDataEntries): Boolean = TaskForIdQuery(id).applyFilter(element.task)
 }

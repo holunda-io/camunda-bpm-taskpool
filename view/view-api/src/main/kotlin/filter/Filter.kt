@@ -14,6 +14,7 @@ import kotlin.reflect.KClass
 import kotlin.reflect.full.memberProperties
 
 const val EQUALS = "="
+const val LIKE = "%"
 const val GREATER = ">"
 const val LESS = "<"
 const val TASK_PREFIX = "task."
@@ -24,7 +25,7 @@ const val DATA_PREFIX = "data."
  */
 typealias CompareOperator = (Any, Any?) -> Boolean
 
-val OPERATORS = Regex("[$EQUALS$LESS$GREATER]")
+val OPERATORS = Regex("[$EQUALS$LESS$GREATER$LIKE]")
 
 /**
  * Implemented comparison support for some data types.
@@ -51,7 +52,15 @@ internal fun compareOperator(sign: String): CompareOperator =
       }
     }
 
-    EQUALS -> { filter, actual -> filter.toString() == actual.toString() }
+    LIKE -> { filter, actual ->
+      when (actual) {
+        is String -> actual.contains(filter.toString())
+        else -> actual.toString().contains(filter.toString())
+      }
+    }
+
+    EQUALS-> { filter, actual -> filter.toString() == actual.toString() }
+
     else -> throw IllegalArgumentException("Unsupported operator $sign")
   }
 
@@ -173,7 +182,7 @@ fun createTaskPredicates(criteria: List<Criterion>): TaskPredicateWrapper {
 }
 
 /**
- * Create critera for given class fields.
+ * Create criteria for given class fields.
  */
 fun List<Criterion>.toClassAttributePredicates(clazz: KClass<out Criterion>) =
   this

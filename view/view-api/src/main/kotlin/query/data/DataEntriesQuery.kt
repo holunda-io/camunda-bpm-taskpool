@@ -15,7 +15,7 @@ import io.holunda.polyflow.view.query.PageableSortableQuery
  * @param filters list of filters.
  */
 data class DataEntriesQuery(
-  override val page: Int = 1,
+  override val page: Int = 0,
   override val size: Int = Int.MAX_VALUE,
   override val sort: String? = null,
   val filters: List<String> = listOf()

@@ -11,14 +11,14 @@ import io.holunda.polyflow.view.query.PageableSortableQuery
 /**
  * Queries data entries for provided user.
  * @param user user authorized to access data entries.
- * @param page current page.
+ * @param page current page, zero-based index.
  * @param size page size.
  * @param sort sort of data entries.
  * @param filters list of filters.
  */
 data class DataEntriesForUserQuery(
   val user: User,
-  override val page: Int = 1,
+  override val page: Int = 0,
   override val size: Int = Int.MAX_VALUE,
   override val sort: String? = null,
   val filters: List<String> = listOf()

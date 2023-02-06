@@ -9,11 +9,13 @@ import io.holunda.polyflow.view.query.PageableSortableQuery
 
 /**
  * Query for entry type and optional id.
+ * @param page current page, zero-based index.
+ * @param size page size
  */
 data class DataEntryForIdentityQuery(
   val entryType: EntryType,
   val entryId: EntryId? = null,
-  override val page: Int = 1,
+  override val page: Int = 0,
   override val size: Int = Int.MAX_VALUE,
   override val sort: String? = null
 ) : FilterQuery<DataEntry>, PageableSortableQuery {
