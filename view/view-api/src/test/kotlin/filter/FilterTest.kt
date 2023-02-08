@@ -8,6 +8,8 @@ import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.camunda.bpm.engine.variable.Variables
 import org.junit.jupiter.api.Test
+import java.time.Instant
+import java.time.temporal.ChronoUnit
 
 class FilterTest {
 
@@ -82,7 +84,8 @@ class FilterTest {
   fun `should classify properties`() {
     assertThat(isTaskAttribute("task.id")).isTrue
     assertThat(isTaskAttribute("task.name")).isTrue
-    assertThat(isTaskAttribute("task.assignee")).isTrue
+    assertThat(isTaskAttribute("task.name")).isTrue
+    assertThat(isTaskAttribute("task.dueDate")).isTrue
 
     assertThat(isTaskAttribute("task.")).isFalse
     assertThat(isTaskAttribute("assignee")).isFalse
@@ -187,12 +190,39 @@ class FilterTest {
   }
 
   @Test
+  fun `should filter by less instant property`() {
+    val now = Instant.now()
+    val dueDate = now.minus(1, ChronoUnit.DAYS)
+
+    val task = task1.copy(task = task1.task.copy(dueDate = dueDate))
+
+
+    val dueDateFilter = listOf("task.dueDate<$now")
+    val filtered = filter(dueDateFilter, listOf(task))
+    assertThat(filtered).containsExactlyElementsOf(listOf(task))
+  }
+
+  @Test
   fun `should filter by greater number property`() {
 
     val numberFilter = listOf("task.priority>80")
     val filtered = filter(numberFilter, listOf(task1, task2, task3, task4, task5, task6))
     assertThat(filtered).containsExactlyElementsOf(listOf(task1, task2))
   }
+
+  @Test
+  fun `should filter by greater instant property`() {
+    val now = Instant.now()
+    val dueDate = now.plus(1, ChronoUnit.DAYS)
+
+    val task = task1.copy(task = task1.task.copy(dueDate = dueDate))
+
+
+    val dueDateFilter = listOf("task.dueDate>$now")
+    val filtered = filter(dueDateFilter, listOf(task))
+    assertThat(filtered).containsExactlyElementsOf(listOf(task))
+  }
+
 
   @Test
   fun `should filter by less string property`() {

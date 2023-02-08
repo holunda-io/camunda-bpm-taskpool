@@ -37,6 +37,7 @@ internal fun compareOperator(sign: String): CompareOperator =
         is String -> actual.endsWith(filter.toString())
         is Int -> actual < Integer.parseInt(filter.toString())
         is Date -> actual.toInstant().isBefore(Instant.parse(filter.toString()))
+        is Instant -> actual.isBefore(Instant.parse(filter.toString()))
         is BigDecimal -> actual.subtract(BigDecimal(filter.toString())) < BigDecimal.ZERO
         else -> actual.toString().endsWith(filter.toString())
       }
@@ -47,6 +48,7 @@ internal fun compareOperator(sign: String): CompareOperator =
         is String -> actual.startsWith(filter.toString())
         is Int -> actual > Integer.parseInt(filter.toString())
         is Date -> actual.toInstant().isAfter(Instant.parse(filter.toString()))
+        is Instant -> actual.isAfter(Instant.parse(filter.toString()))
         is BigDecimal -> actual.subtract(BigDecimal(filter.toString())) > BigDecimal.ZERO
         else -> actual.toString().startsWith(filter.toString())
       }
