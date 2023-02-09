@@ -128,6 +128,20 @@ class FilterTest {
   }
 
   @Test
+  fun `should trim params`() {
+    val criteria = toCriteria(listOf("task.name${EQUALS}some"))
+    val predicates = createTaskPredicates(criteria)
+    assertThat(predicates).isNotNull
+    assertThat(predicates.taskAttributePredicate).isNotNull
+
+    val criteriaWithSpaces = toCriteria(listOf("task.name ${EQUALS} some"))
+    val predicatesTrimmed = createTaskPredicates(criteriaWithSpaces)
+    assertThat(predicatesTrimmed).isNotNull
+    assertThat(predicatesTrimmed.taskAttributePredicate).isNotNull
+  }
+
+
+  @Test
   fun `should create predicates`() {
 
     val criteria = toCriteria(filtersList)
