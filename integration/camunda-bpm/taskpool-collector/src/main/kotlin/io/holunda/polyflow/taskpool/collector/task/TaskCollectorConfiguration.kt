@@ -100,7 +100,10 @@ class TaskCollectorConfiguration(
 
   @Bean
   @ConditionalOnExpression("'\${polyflow.integration.collector.camunda.task.assigner.type}' == 'process-variables' && '\${polyflow.integration.collector.camunda.process-variable.enabled}'")
-  fun processVariableChangeAssigningService() = ProcessVariableChangeAssigningService(camundaTaskpoolCollectorProperties.task.assigner.toMapping())
+  fun processVariableChangeAssigningService(taskService: TaskService) = ProcessVariableChangeAssigningService(
+    taskService = taskService,
+    mapping = camundaTaskpoolCollectorProperties.task.assigner.toMapping()
+  )
 
   /**
    * Constructs the task collector service responsible for collecting Camunda Spring events and building commands out of them.

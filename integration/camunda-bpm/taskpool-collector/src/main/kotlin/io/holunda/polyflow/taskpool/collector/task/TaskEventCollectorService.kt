@@ -99,7 +99,6 @@ class TaskEventCollectorService(
       eventName = task.eventName
     )
 
-
   /**
    * Fires update command.
    */

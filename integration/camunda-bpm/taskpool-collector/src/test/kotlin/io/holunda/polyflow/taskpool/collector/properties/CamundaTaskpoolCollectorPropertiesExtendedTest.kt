@@ -4,6 +4,7 @@ import com.thoughtworks.xstream.XStream
 import io.holunda.polyflow.taskpool.collector.CamundaTaskpoolCollectorConfiguration
 import io.holunda.polyflow.taskpool.collector.CamundaTaskpoolCollectorProperties
 import io.holunda.polyflow.taskpool.collector.TaskCollectorEnricherType
+import io.holunda.polyflow.taskpool.collector.task.TaskVariableLoader
 import io.holunda.polyflow.taskpool.collector.task.VariablesEnricher
 import io.holunda.polyflow.taskpool.sender.process.definition.ProcessDefinitionCommandSender
 import io.holunda.polyflow.taskpool.sender.process.instance.ProcessInstanceCommandSender
@@ -15,6 +16,9 @@ import org.axonframework.eventhandling.EventBus
 import org.axonframework.serialization.Serializer
 import org.axonframework.serialization.xml.XStreamSerializer
 import org.camunda.bpm.engine.RepositoryService
+import org.camunda.bpm.engine.RuntimeService
+import org.camunda.bpm.engine.TaskService
+import org.camunda.bpm.engine.impl.interceptor.CommandExecutor
 import org.camunda.bpm.spring.boot.starter.property.CamundaBpmProperties
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.mock
@@ -85,6 +89,7 @@ internal class CamundaTaskpoolCollectorPropertiesExtendedTest {
   private class AdditionalMockConfiguration {
     @Bean
     fun variablesEnricher(): VariablesEnricher = mock(VariablesEnricher::class.java)
+
   }
 
   /**
@@ -118,5 +123,14 @@ internal class CamundaTaskpoolCollectorPropertiesExtendedTest {
 
     @Bean
     fun repositoryService(): RepositoryService = mock()
+
+    @Bean
+    fun runtimeService(): RuntimeService = mock()
+
+    @Bean
+    fun taskService(): TaskService = mock()
+
+    @Bean
+    fun commandExecutor(): CommandExecutor = mock()
   }
 }
