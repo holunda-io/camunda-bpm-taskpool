@@ -254,6 +254,29 @@ class SimpleTaskPoolServiceTest : ScenarioTest<SimpleTaskPoolGivenStage<*>, Simp
       .tasks_are_returned(listOf(then().tasks[5]))
   }
 
+  @Test
+  fun `retrieves tasks by like search`() {
+    given()
+      .tasks_exist(13)
+
+    `when`()
+      .tasks_are_queried(listOf("task.id%id5"))
+
+    then()
+      .tasks_are_returned(listOf(then().tasks[5]))
+  }
+
+  @Test
+  fun `retrieves all tasks by like search`() {
+    given()
+      .tasks_exist(13)
+
+    `when`()
+      .all_tasks_are_queried(listOf("task.id%id5"))
+
+    then()
+      .tasks_are_returned(listOf(then().tasks[5]))
+  }
 
   private infix fun String.withTaskCount(taskCount: Int) = ApplicationWithTaskCount(this, taskCount)
 }

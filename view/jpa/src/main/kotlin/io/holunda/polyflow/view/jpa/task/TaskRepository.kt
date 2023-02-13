@@ -15,6 +15,18 @@ import org.springframework.data.repository.CrudRepository
 interface TaskRepository : CrudRepository<TaskEntity, String>, JpaSpecificationExecutor<TaskEntity> {
 
   companion object {
+
+    /**
+     * Specification for checking that the assignee is set.
+     */
+    fun isAssigneeSet(assigneeSet: Boolean): Specification<TaskEntity> =
+      Specification { task, _, builder ->
+        if (assigneeSet) {
+          builder.isNotNull(task.get<String>(TaskEntity::assignee.name))
+        } else {
+          builder.isNull(task.get<String>(TaskEntity::assignee.name))
+        }
+      }
     /**
      * Specification for checking authorization of multiple principals.
      */
@@ -48,6 +60,40 @@ interface TaskRepository : CrudRepository<TaskEntity, String>, JpaSpecificationE
           businessKey
         )
       }
+
+    /**
+     * Specification for checking the name likeness.
+     */
+    fun likeName(pattern: String): Specification<TaskEntity> =
+      Specification { task, _, builder ->
+        builder.like(
+          task.get<String>(TaskEntity::name.name),
+          pattern
+        )
+      }
+
+    /**
+     * Specification for checking the description likeness.
+     */
+    fun likeDescription(pattern: String): Specification<TaskEntity> =
+      Specification { task, _, builder ->
+        builder.like(
+          task.get<String>(TaskEntity::description.name),
+          pattern
+        )
+      }
+
+    /**
+     * Specification for checking the description likeness.
+     */
+    fun likeBusinessKey(pattern: String): Specification<TaskEntity> =
+      Specification { task, _, builder ->
+        builder.like(
+          task.get<String>(TaskEntity::description.name),
+          pattern
+        )
+      }
+
 
     /**
      * Specification for checking the payload attribute.

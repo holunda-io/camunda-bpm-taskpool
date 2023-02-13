@@ -83,7 +83,7 @@
   --md-primary-fg-color: var(--background-blue);
   --md-footer-bg-color: var(--accent-4-100);
   --md-typeset-a-color: var(--accent-1-100);
-
+  --md-typeset-color: var(--monochrome-5);
 /*
 Code
 */
@@ -135,6 +135,10 @@ body[data-md-color-scheme="polyflow"] {
 
 [data-md-color-scheme="polyflow"] .md-nav--integrated .md-nav__link[for=__toc]~.md-nav {
   border-left: .05rem solid var(--md-accent-fg-color);
+}
+
+[data-md-color-scheme="polyflow"] .note code {
+  background-color: var(--monochrome-5);
 }
 
 /* footer */

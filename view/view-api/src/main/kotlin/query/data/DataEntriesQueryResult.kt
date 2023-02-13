@@ -8,8 +8,9 @@ import io.holunda.polyflow.view.query.QueryResult
  * Results of a query for multiple data entries.
  */
 data class DataEntriesQueryResult(
-  override val elements: List<DataEntry>
-) : QueryResult<DataEntry, DataEntriesQueryResult>(elements = elements) {
+  override val elements: List<DataEntry>,
+  override val totalElementCount: Int = elements.size
+) : QueryResult<DataEntry, DataEntriesQueryResult>(elements = elements, totalElementCount = totalElementCount) {
 
   override fun slice(query: PageableSortableQuery) = this.copy(elements = super.slice(query).elements)
 }

@@ -6,7 +6,7 @@ package io.holunda.polyflow.view.query
  * @param totalElementCount in the result before the slice has been applied.
  */
 open class QueryResult<T : Any, S : QueryResult<T, S>>(
-  val totalElementCount: Int,
+  open val totalElementCount: Int,
   open val elements: List<T>
 ) {
   constructor(elements: List<T>) : this(totalElementCount = elements.size, elements = elements)
@@ -22,7 +22,7 @@ open class QueryResult<T : Any, S : QueryResult<T, S>>(
     return if (totalCount > offset) {
       QueryResult(
         totalElementCount = totalCount,
-        elements = this.elements.slice(offset until Math.min(offset + query.size, totalCount))
+        elements = this.elements.slice(offset until (offset + query.size).coerceAtMost(totalCount))
       )
     } else {
       QueryResult(

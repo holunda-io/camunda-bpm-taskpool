@@ -68,4 +68,39 @@ class TaskQueryClient(
     ResponseTypes.multipleInstancesOf(ApplicationWithTaskCount::class.java)
   )
 
+  /**
+   * @see io.holunda.polyflow.view.query.task.TaskApi.query
+   * @see io.holunda.polyflow.view.query.task.AllTasksQuery
+   */
+  fun query(query: AllTasksQuery): CompletableFuture<TaskQueryResult> = queryGateway.query(
+    query,
+    ResponseTypes.instanceOf(TaskQueryResult::class.java)
+  )
+
+  /**
+   * @see io.holunda.polyflow.view.query.task.TaskApi.query
+   * @see io.holunda.polyflow.view.query.task.TasksWithDataEntriesQueryResult
+   */
+  fun query(query: AllTasksWithDataEntriesQuery): CompletableFuture<TasksWithDataEntriesQueryResult> = queryGateway.query(
+    query,
+    ResponseTypes.instanceOf(TasksWithDataEntriesQueryResult::class.java)
+  )
+
+  /**
+   * @see io.holunda.polyflow.view.query.task.TaskApi.query
+   * @see io.holunda.polyflow.view.query.task.TasksForGroupQuery
+   */
+  fun query(query: TasksForGroupQuery): CompletableFuture<TaskQueryResult> = queryGateway.query(
+    query,
+    ResponseTypes.instanceOf(TaskQueryResult::class.java)
+  )
+
+  /**
+   * @see io.holunda.polyflow.view.query.task.TaskApi.query
+   * @see io.holunda.polyflow.view.query.task.TasksWithDataEntriesForGroupQuery
+   */
+  fun query(query: TasksWithDataEntriesForGroupQuery): CompletableFuture<TasksWithDataEntriesQueryResult> = queryGateway.query(
+    query,
+    ResponseTypes.instanceOf(TasksWithDataEntriesQueryResult::class.java)
+  )
 }

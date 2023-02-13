@@ -57,11 +57,18 @@ interface DataEntryCommandSender {
   )
 
   /**
-   * Sends a data entry command.
+   * Sends a data entry create or update command.
    * @param command command to send.
    * @param metaData meta data, will default to empty metadata.
    */
   fun sendDataEntryChange(command: CreateOrUpdateDataEntryCommand, metaData: MetaData = MetaData.emptyInstance())
+
+  /**
+   * Sends a data entry delete command.
+   * @param command command to send.
+   * @param metaData meta data, will default to empty metadata.
+   */
+  fun sendDataEntryDelete(command: DeleteDataEntryCommand, metaData: MetaData = MetaData.emptyInstance())
 }
 
 /**

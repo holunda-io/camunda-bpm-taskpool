@@ -195,11 +195,10 @@ internal class JpaPolyflowViewServiceDataEntryITest {
 
   @Test
   fun `should find the entry by id`() {
-    assertResultIsTestEntry1(
-      jpaPolyflowViewService.query(
-        DataEntryForIdentityQuery(entryType = "io.polyflow.test", entryId = id)
-      )
+    val result = jpaPolyflowViewService.query(
+      DataEntryForIdentityQuery(entryType = "io.polyflow.test", entryId = id)
     )
+    assertTestDataEntry1(result.payload)
   }
 
   @Test
@@ -254,11 +253,12 @@ internal class JpaPolyflowViewServiceDataEntryITest {
 
   @Test
   fun `should not find the deleted entry`() {
-    assertResultIsEmpty(
-      jpaPolyflowViewService.query(
-        DataEntryForIdentityQuery(entryType = "io.polyflow.test", entryId = id3)
-      )
+
+    val result = jpaPolyflowViewService.query(
+      DataEntryForIdentityQuery(entryType = "io.polyflow.test", entryId = id3)
     )
+    assertThat(result).isNotNull
+    assertThat(result.payload).isNull()
   }
 
 

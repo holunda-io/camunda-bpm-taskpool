@@ -5,7 +5,6 @@ import io.holixon.axon.gateway.query.RevisionValue
 import io.holunda.camunda.taskpool.api.task.*
 import io.holunda.polyflow.view.Task
 import io.holunda.polyflow.view.TaskWithDataEntries
-import io.holunda.polyflow.view.filter.Criterion
 import io.holunda.polyflow.view.filter.toCriteria
 import io.holunda.polyflow.view.jpa.JpaPolyflowViewTaskService.Companion.PROCESSING_GROUP
 import io.holunda.polyflow.view.jpa.auth.AuthorizationPrincipal
@@ -16,6 +15,7 @@ import io.holunda.polyflow.view.jpa.data.toDataEntry
 import io.holunda.polyflow.view.jpa.task.TaskEntity
 import io.holunda.polyflow.view.jpa.task.TaskRepository
 import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.hasApplication
+import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.isAssigneeSet
 import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.isAuthorizedFor
 import io.holunda.polyflow.view.jpa.task.toEntity
 import io.holunda.polyflow.view.jpa.task.toTask
@@ -52,49 +52,187 @@ class JpaPolyflowViewTaskService(
   @QueryHandler
   override fun query(query: TasksWithDataEntriesForUserQuery): TasksWithDataEntriesQueryResult {
     val authorizedPrincipals: Set<AuthorizationPrincipal> = setOf(user(query.user.username)).plus(query.user.groups.map { group(it) })
-    val criteria: List<Criterion> = toCriteria(query.filters)
-    val specification = criteria.toTaskSpecification()
+    val criteria = toCriteria(query.filters)
+    val taskSpecification = criteria.toTaskSpecification()
+    val dataEntrySpecification = criteria.toDataEntrySpecification()
+    val pageRequest = pageRequest(query.page, query.size, query.sort)
 
-    reportMissingFeature(query)
-
-    return TasksWithDataEntriesQueryResult(
-      elements = if (specification != null) {
-        taskRepository.findAll(specification.and(isAuthorizedFor(authorizedPrincipals)))
-      } else {
-        taskRepository.findAll(isAuthorizedFor(authorizedPrincipals))
-      }
-        .map { taskEntity ->
-          TaskWithDataEntries(
-            task = taskEntity.toTask(objectMapper),
-            dataEntries = taskEntity.correlations.map { id ->
+    val page = if (taskSpecification != null) {
+      taskRepository.findAll(taskSpecification.and(isAuthorizedFor(authorizedPrincipals)), pageRequest)
+    } else {
+      taskRepository.findAll(isAuthorizedFor(authorizedPrincipals), pageRequest)
+    }
+      .map { taskEntity ->
+        TaskWithDataEntries(
+          task = taskEntity.toTask(objectMapper),
+          dataEntries = taskEntity.correlations.map { id ->
+            if (dataEntrySpecification != null) {
+              dataEntryRepository.findAll(
+                dataEntrySpecification
+                  .and(DataEntryRepository.isAuthorizedFor(authorizedPrincipals))
+                  .and(DataEntryRepository.hasEntryId(id.entryId))
+                  .and(DataEntryRepository.hasEntryType(id.entryType))
+              )
+            } else {
               dataEntryRepository.findAll(
                 DataEntryRepository
                   .isAuthorizedFor(authorizedPrincipals)
                   .and(DataEntryRepository.hasEntryId(id.entryId))
                   .and(DataEntryRepository.hasEntryType(id.entryType))
               )
-            }.flatten().map { it.toDataEntry(objectMapper) }
-          )
-        }
+            }
+          }.flatten().map { it.toDataEntry(objectMapper) }
+        )
+      }
+
+    return TasksWithDataEntriesQueryResult(
+      elements = page.toList(),
+      totalElementCount = page.totalElements.toInt()
+    )
+  }
+
+  @QueryHandler
+  override fun query(query: TasksWithDataEntriesForGroupQuery): TasksWithDataEntriesQueryResult {
+    val authorizedPrincipals = query.user.groups.map { group(it) }.toSet()
+    val taskAuthorizationSpecification = composeAnd(
+      listOf(
+        isAuthorizedFor(authorizedPrincipals), isAssigneeSet(query.includeAssigned)
+      )
+    )
+    val dataAuthorizationSpecification = DataEntryRepository.isAuthorizedFor(authorizedPrincipals)
+    val criteria = toCriteria(query.filters)
+    val taskSpecification = criteria.toTaskSpecification()
+    val dataEntrySpecification = criteria.toDataEntrySpecification()
+    val pageRequest = pageRequest(query.page, query.size, query.sort)
+
+    val page = if (taskSpecification != null) {
+      taskRepository.findAll(taskSpecification.and(taskAuthorizationSpecification), pageRequest)
+    } else {
+      taskRepository.findAll(taskAuthorizationSpecification, pageRequest)
+    }
+      .map { taskEntity ->
+        TaskWithDataEntries(
+          task = taskEntity.toTask(objectMapper),
+          dataEntries = taskEntity.correlations.map { id ->
+            if (dataEntrySpecification != null) {
+              dataEntryRepository.findAll(
+                dataEntrySpecification
+                  .and(dataAuthorizationSpecification)
+                  .and(DataEntryRepository.hasEntryId(id.entryId))
+                  .and(DataEntryRepository.hasEntryType(id.entryType))
+              )
+            } else {
+              dataEntryRepository.findAll(
+                dataAuthorizationSpecification
+                  .and(DataEntryRepository.hasEntryId(id.entryId))
+                  .and(DataEntryRepository.hasEntryType(id.entryType))
+              )
+            }
+          }.flatten().map { it.toDataEntry(objectMapper) }
+        )
+      }
+
+    return TasksWithDataEntriesQueryResult(
+      elements = page.toList(),
+      totalElementCount = page.totalElements.toInt()
+    )
+  }
+
+  override fun query(query: AllTasksWithDataEntriesQuery): TasksWithDataEntriesQueryResult {
+    val criteria = toCriteria(query.filters)
+    val taskSpecification = criteria.toTaskSpecification()
+    val dataEntrySpecification = criteria.toDataEntrySpecification()
+
+    val pageRequest = pageRequest(query.page, query.size, query.sort)
+
+    val page = if (taskSpecification != null) {
+      taskRepository.findAll(taskSpecification, pageRequest)
+    } else {
+      taskRepository.findAll(null, pageRequest)
+    }.map { taskEntity ->
+      TaskWithDataEntries(
+        task = taskEntity.toTask(objectMapper),
+        dataEntries = taskEntity.correlations.map { id ->
+          if (dataEntrySpecification != null) {
+            dataEntryRepository.findAll(
+              dataEntrySpecification
+                .and(DataEntryRepository.hasEntryId(id.entryId))
+                .and(DataEntryRepository.hasEntryType(id.entryType))
+            )
+          } else {
+            dataEntryRepository.findAll(
+              DataEntryRepository
+                .hasEntryId(id.entryId)
+                .and(DataEntryRepository.hasEntryType(id.entryType))
+            )
+          }
+        }.flatten().map { it.toDataEntry(objectMapper) }
+      )
+    }
+
+    return TasksWithDataEntriesQueryResult(
+      elements = page.toList(),
+      totalElementCount = page.totalElements.toInt()
     )
   }
 
   @QueryHandler
   override fun query(query: TasksForUserQuery): TaskQueryResult {
     val authorizedPrincipals: Set<AuthorizationPrincipal> = setOf(user(query.user.username)).plus(query.user.groups.map { group(it) })
-    val criteria: List<Criterion> = toCriteria(query.filters)
-    val specification = criteria.toTaskSpecification()
+    val specification = toCriteria(query.filters).toTaskSpecification()
+    val pageRequest = pageRequest(query.page, query.size, query.sort)
 
-    reportMissingFeature(query)
+    val page = if (specification != null) {
+      taskRepository.findAll(specification.and(isAuthorizedFor(authorizedPrincipals)), pageRequest)
+    } else {
+      taskRepository.findAll(isAuthorizedFor(authorizedPrincipals), pageRequest)
+    }.map { taskEntity -> taskEntity.toTask(objectMapper) }
 
     return TaskQueryResult(
-      elements = if (specification != null) {
-        taskRepository.findAll(specification.and(isAuthorizedFor(authorizedPrincipals)))
-      } else {
-        taskRepository.findAll(isAuthorizedFor(authorizedPrincipals))
-      }.map { taskEntity -> taskEntity.toTask(objectMapper) }
+      elements = page.toList(),
+      totalElementCount = page.totalElements.toInt()
     )
   }
+
+  @QueryHandler
+  override fun query(query: TasksForGroupQuery): TaskQueryResult {
+    val authorizationSpecification = composeAnd(
+      listOf(
+        isAuthorizedFor(query.user.groups.map { group(it) }.toSet()),
+        isAssigneeSet(query.includeAssigned)
+      )
+    )
+    val taskSpecification = toCriteria(query.filters).toTaskSpecification()
+    val pageRequest = pageRequest(query.page, query.size, query.sort)
+
+    val page = if (taskSpecification != null) {
+      taskRepository.findAll(taskSpecification.and(authorizationSpecification), pageRequest)
+    } else {
+      taskRepository.findAll(authorizationSpecification, pageRequest)
+    }.map { taskEntity -> taskEntity.toTask(objectMapper) }
+
+    return TaskQueryResult(
+      elements = page.toList(),
+      totalElementCount = page.totalElements.toInt()
+    )
+  }
+
+  @QueryHandler
+  override fun query(query: AllTasksQuery): TaskQueryResult {
+    val specification = toCriteria(query.filters).toTaskSpecification()
+    val pageRequest = pageRequest(query.page, query.size, query.sort)
+    val page = if (specification != null) {
+      taskRepository.findAll(specification, pageRequest)
+    } else {
+      taskRepository.findAll(null, pageRequest)
+    }.map { taskEntity -> taskEntity.toTask(objectMapper) }
+
+    return TaskQueryResult(
+      elements = page.toList(),
+      totalElementCount = page.totalElements.toInt()
+    )
+  }
+
 
   /**
    * Legacy handler to support old query.
@@ -117,6 +255,7 @@ class JpaPolyflowViewTaskService(
     })
   }
 
+
   /**
    * Legacy handler to support old query.
    */
@@ -135,7 +274,7 @@ class JpaPolyflowViewTaskService(
 
   @QueryHandler
   override fun query(query: TaskCountByApplicationQuery): List<ApplicationWithTaskCount> {
-    TODO("Not implemented yet")
+    TODO("Count by application query is not implemented yet")
   }
 
   @QueryHandler
@@ -322,10 +461,7 @@ class JpaPolyflowViewTaskService(
 
   private fun emitTaskUpdate(entity: TaskEntity, deleted: Boolean = false) {
     queryUpdateEmitter.updateTaskQuery(
-      TaskWithDataEntries(
-        task = entity.toTask(objectMapper, deleted),
-        dataEntries = listOf() // FIXME
-      )
+      TaskWithDataEntries(task = entity.toTask(objectMapper, deleted), dataEntries = listOf()) // FIXME
     )
   }
 
@@ -337,6 +473,7 @@ class JpaPolyflowViewTaskService(
       logger.warn { "Paging is currently not supported by requested. Page: ${query.page}, Size: ${query.size}, see https://github.com/holunda-io/camunda-bpm-taskpool/issues/701" }
     }
   }
+
   /**
    * Executor on empty optional.
    */
@@ -353,4 +490,5 @@ class JpaPolyflowViewTaskService(
       }
     }
   }
+
 }

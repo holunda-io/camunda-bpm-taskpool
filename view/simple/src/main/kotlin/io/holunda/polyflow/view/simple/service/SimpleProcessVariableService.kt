@@ -26,14 +26,12 @@ import java.util.concurrent.ConcurrentHashMap
 @Component
 @ProcessingGroup(SimpleServiceViewProcessingGroup.PROCESSING_GROUP)
 class SimpleProcessVariableService(
-  val queryUpdateEmitter: QueryUpdateEmitter
+  private val queryUpdateEmitter: QueryUpdateEmitter,
+  private val revisionSupport: RevisionSupport = RevisionSupport(),
+  private val processVariables: ConcurrentHashMap<String, MutableSet<ProcessVariable>> = ConcurrentHashMap<String, MutableSet<ProcessVariable>>()
 ) : ProcessVariableApi {
 
   companion object : KLogging()
-
-  private val revisionSupport = RevisionSupport()
-  private val processVariables = ConcurrentHashMap<String, MutableSet<ProcessVariable>>()
-
 
   /**
    * Query for process variables of a process instance.

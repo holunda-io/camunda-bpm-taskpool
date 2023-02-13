@@ -1,10 +1,7 @@
 package io.holunda.polyflow.view
 
 import io.holixon.axon.gateway.query.RevisionQueryParameters
-import io.holunda.polyflow.view.query.data.DataEntriesForUserQuery
-import io.holunda.polyflow.view.query.data.DataEntriesQuery
-import io.holunda.polyflow.view.query.data.DataEntriesQueryResult
-import io.holunda.polyflow.view.query.data.DataEntryForIdentityQuery
+import io.holunda.polyflow.view.query.data.*
 import io.holunda.polyflow.view.query.process.ProcessDefinitionsStartableByUserQuery
 import io.holunda.polyflow.view.query.process.ProcessInstanceQueryResult
 import io.holunda.polyflow.view.query.process.ProcessInstancesByStateQuery
@@ -25,7 +22,10 @@ object QueryGatewayExt {
   /**
    * @see [DataEntriesForUserQuery]
    */
-  fun QueryGateway.dataEntriesForUser(query: DataEntriesForUserQuery, revisionQuery: RevisionQueryParameters? = null): CompletableFuture<DataEntriesQueryResult> =
+  fun QueryGateway.dataEntriesForUser(
+    query: DataEntriesForUserQuery,
+    revisionQuery: RevisionQueryParameters? = null
+  ): CompletableFuture<DataEntriesQueryResult> =
     DataEntryQueryClient(this).query(query, revisionQuery)
 
 
@@ -38,7 +38,19 @@ object QueryGatewayExt {
   /**
    * @see [DataEntryForIdentityQuery]
    */
-  fun QueryGateway.dataEntryForIdentity(query: DataEntryForIdentityQuery, revisionQuery: RevisionQueryParameters? = null): CompletableFuture<DataEntriesQueryResult> =
+  fun QueryGateway.dataEntryForIdentity(
+    query: DataEntryForIdentityQuery,
+    revisionQuery: RevisionQueryParameters? = null
+  ): CompletableFuture<DataEntry> =
+    DataEntryQueryClient(this).query(query, revisionQuery)
+
+  /**
+   * @see [DataEntriesForDataEntryTypeQuery]
+   */
+  fun QueryGateway.dataEntriesForDataEntryType(
+    query: DataEntriesForDataEntryTypeQuery,
+    revisionQuery: RevisionQueryParameters? = null
+  ): CompletableFuture<DataEntriesQueryResult> =
     DataEntryQueryClient(this).query(query, revisionQuery)
 
   /**
@@ -95,4 +107,25 @@ object QueryGatewayExt {
   fun QueryGateway.taskCountByApplication(query: TaskCountByApplicationQuery): CompletableFuture<List<ApplicationWithTaskCount>> =
     TaskQueryClient(this).query(query)
 
+  /**
+   * @see [AllTasksQuery]
+   */
+  fun QueryGateway.allTasks(query: AllTasksQuery): CompletableFuture<TaskQueryResult> = TaskQueryClient(this).query(query)
+
+  /**
+   * @see [AllTasksWithDataEntriesQuery]
+   */
+  fun QueryGateway.allTasksWithDataEntries(query: AllTasksWithDataEntriesQuery): CompletableFuture<TasksWithDataEntriesQueryResult> =
+    TaskQueryClient(this).query(query)
+
+  /**
+   * @see [TasksForGroupQuery]
+   */
+  fun QueryGateway.tasksForGroup(query: TasksForGroupQuery): CompletableFuture<TaskQueryResult> = TaskQueryClient(this).query(query)
+
+  /**
+   * @see [TasksWithDataEntriesForGroupQuery]
+   */
+  fun QueryGateway.tasksWithDataEntriesForGroup(query: TasksWithDataEntriesForGroupQuery): CompletableFuture<TasksWithDataEntriesQueryResult> =
+    TaskQueryClient(this).query(query)
 }
