@@ -7,6 +7,7 @@ import io.holunda.polyflow.taskpool.core.TaskPoolCoreConfiguration
 import mu.KLogging
 import org.axonframework.commandhandling.CommandHandler
 import org.axonframework.eventsourcing.EventSourcingHandler
+import org.axonframework.messaging.MetaData
 import org.axonframework.modelling.command.AggregateIdentifier
 import org.axonframework.modelling.command.AggregateLifecycle
 import org.axonframework.spring.stereotype.Aggregate
@@ -30,8 +31,7 @@ class TaskAggregate() {
    * This a non-static handler for create command.
    * The aggregate is created manually to avoid duplication and then the handler is invoked.
    */
-  @CommandHandler
-  fun handle(command: CreateTaskCommand) {
+  fun handle(command: CreateTaskCommand, metadata: MetaData) {
     logger.debug { "Created new aggregate for task ${command.id}" }
     AggregateLifecycle.apply(
       Task.from(command).createdEvent().also { logger.debug { "Created task $it" } }
