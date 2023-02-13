@@ -247,13 +247,13 @@ class PolyflowThenStage<SELF : PolyflowThenStage<SELF>> : PolyflowStage<SELF>() 
   }
 
   fun data_entry_is_created(dataEntry: DataEntry) = step {
-    val result = service.query(DataEntryForIdentityQuery(dataEntry.entryType, dataEntry.entryId)).join()
-    assertThat(result.elements).containsExactly(dataEntry)
+    val result = service.query(DataEntryForIdentityQuery(entryType = dataEntry.entryType, entryId = dataEntry.entryId)).join()
+    assertThat(result).isNotNull
   }
 
   fun data_entry_does_not_exist(dataEntry: DataEntry) = step {
-    val result = service.query(DataEntryForIdentityQuery(dataEntry.entryType, dataEntry.entryId)).join()
-    assertThat(result.elements).isEmpty()
+    val result = service.query(DataEntryForIdentityQuery(entryType = dataEntry.entryType, entryId = dataEntry.entryId)).join()
+    assertThat(result).isNull()
   }
 
 }

@@ -96,12 +96,28 @@ class SimpleDataEntryService(
     )
   }
 
+  /**
+   * Retrieves a data entry of given entry type and id.
+   */
+  @QueryHandler
+  override fun query(query: DataEntryForIdentityQuery, metaData: MetaData): QueryResponseMessage<DataEntry> {
+    val filtered = dataEntries.values.firstOrNull { query.applyFilter(it) }
+    return if (filtered != null) {
+      QueryResponseMessageResponseType.asQueryResponseMessage(
+        payload = filtered,
+        metaData = filtered.let { revisionSupport.getRevisionMax(listOf(it.identity)).toMetaData() }
+      )
+    } else {
+      QueryResponseMessageResponseType.asQueryResponseMessage(null, MetaData.emptyInstance());
+    }
+  }
+
 
   /**
    * Retrieves a list of all data entries of given entry type (and optional id).
    */
   @QueryHandler
-  override fun query(query: DataEntryForIdentityQuery, metaData: MetaData): QueryResponseMessage<DataEntriesQueryResult> {
+  override fun query(query: DataEntriesForDataEntryTypeQuery, metaData: MetaData): QueryResponseMessage<DataEntriesQueryResult> {
     val filtered = dataEntries.values.filter { query.applyFilter(it) }
     return QueryResponseMessageResponseType.asQueryResponseMessage(
       payload = DataEntriesQueryResult(elements = filtered),

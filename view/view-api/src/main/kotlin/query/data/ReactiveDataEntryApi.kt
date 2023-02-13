@@ -1,5 +1,6 @@
 package io.holunda.polyflow.view.query.data
 
+import io.holunda.polyflow.view.DataEntry
 import org.axonframework.messaging.MetaData
 import java.util.concurrent.CompletableFuture
 
@@ -14,7 +15,15 @@ interface ReactiveDataEntryApi {
    * @param metaData metadata for the query, may be empty.
    * @return completable future with data entries.
    */
-  fun query(query: DataEntryForIdentityQuery, metaData: MetaData = MetaData.emptyInstance()): CompletableFuture<DataEntriesQueryResult>
+  fun query(query: DataEntryForIdentityQuery, metaData: MetaData = MetaData.emptyInstance()): CompletableFuture<DataEntry>
+
+  /**
+   * Query data entries for type.
+   * @param query object representing data identity.
+   * @param metaData metadata for the query, may be empty.
+   * @return completable future with data entries.
+   */
+  fun query(query: DataEntriesForDataEntryTypeQuery, metaData: MetaData = MetaData.emptyInstance()): CompletableFuture<DataEntriesQueryResult>
 
   /**
    * Query data entries for user.

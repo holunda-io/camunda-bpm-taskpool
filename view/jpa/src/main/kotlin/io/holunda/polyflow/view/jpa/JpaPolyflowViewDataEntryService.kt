@@ -6,6 +6,7 @@ import io.holixon.axon.gateway.query.RevisionValue
 import io.holunda.camunda.taskpool.api.business.DataEntryCreatedEvent
 import io.holunda.camunda.taskpool.api.business.DataEntryDeletedEvent
 import io.holunda.camunda.taskpool.api.business.DataEntryUpdatedEvent
+import io.holunda.polyflow.view.DataEntry
 import io.holunda.polyflow.view.filter.Criterion
 import io.holunda.polyflow.view.filter.toCriteria
 import io.holunda.polyflow.view.jpa.JpaPolyflowViewDataEntryService.Companion.PROCESSING_GROUP
@@ -47,15 +48,21 @@ class JpaPolyflowViewDataEntryService(
   }
 
   @QueryHandler
-  override fun query(query: DataEntryForIdentityQuery, metaData: MetaData): QueryResponseMessage<DataEntriesQueryResult> {
-    val entryId = query.entryId
-    require(entryId != null) { "Entry id must be set on query by id" }
+  override fun query(query: DataEntryForIdentityQuery, metaData: MetaData): QueryResponseMessage<DataEntry> {
+    val specification = composeAnd(listOf(hasEntryId(query.identity.entryId), hasEntryType(query.identity.entryType)))
+    return dataEntryRepository.findOne(specification).map {
+      QueryResponseMessageResponseType.asQueryResponseMessage<DataEntry>(
+        payload = it.toDataEntry(objectMapper),
+        metaData = RevisionValue(it.revision).toMetaData()
+      )
+    }.orElse(QueryResponseMessageResponseType.asQueryResponseMessage(null))
+  }
 
-    val specification = composeAnd(listOf(hasEntryId(entryId), hasEntryType(query.entryType)))
+  @QueryHandler
+  override fun query(query: DataEntriesForDataEntryTypeQuery, metaData: MetaData): QueryResponseMessage<DataEntriesQueryResult> {
+    val specification = hasEntryType(query.entryType)
     val pageRequest = pageRequest(query.page, query.size, query.sort)
-
     val page = dataEntryRepository.findAll(specification, pageRequest)
-
     return constructDataEntryResponse(page)
   }
 
