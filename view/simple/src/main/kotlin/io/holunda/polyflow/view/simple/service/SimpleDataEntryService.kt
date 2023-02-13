@@ -28,14 +28,12 @@ import java.util.concurrent.ConcurrentHashMap
 @Component
 @ProcessingGroup(SimpleServiceViewProcessingGroup.PROCESSING_GROUP)
 class SimpleDataEntryService(
-  private val queryUpdateEmitter: QueryUpdateEmitter
+  private val queryUpdateEmitter: QueryUpdateEmitter,
+  private val revisionSupport: RevisionSupport = RevisionSupport(),
+  private val dataEntries: ConcurrentHashMap<String, DataEntry> = ConcurrentHashMap<String, DataEntry>()
 ) : DataEntryApi {
 
   companion object : KLogging()
-
-  private val revisionSupport = RevisionSupport()
-  private val dataEntries = ConcurrentHashMap<String, DataEntry>()
-
 
   /**
    * Creates new data entry.
