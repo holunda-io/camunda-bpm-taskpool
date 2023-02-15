@@ -63,13 +63,13 @@ fun List<Criterion>.toTaskSpecification(): Specification<TaskEntity>? {
  * @param sort optional sort in format +filedName or -fieldName
  */
 fun pageRequest(page: Int, size: Int, sort: String?): PageRequest {
-  val sort = if (sort.isNullOrBlank()) {
+  val sortCriteria = if (sort.isNullOrBlank()) {
     null
   } else {
     Sort.by(Sort.Direction.fromOptionalString(sort.substring(0, 1)).orElse(Sort.DEFAULT_DIRECTION), sort.substring(1))
   }
-  return if (sort != null) {
-    PageRequest.of(page, size, sort)
+  return if (sortCriteria != null) {
+    PageRequest.of(page, size, sortCriteria)
   } else {
     PageRequest.of(page, size)
   }

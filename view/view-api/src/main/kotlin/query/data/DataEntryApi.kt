@@ -3,6 +3,7 @@ package io.holunda.polyflow.view.query.data
 import io.holunda.polyflow.view.DataEntry
 import org.axonframework.messaging.MetaData
 import org.axonframework.queryhandling.QueryResponseMessage
+import java.util.*
 
 /**
  * Defines an API interface for Data Entry Queries.

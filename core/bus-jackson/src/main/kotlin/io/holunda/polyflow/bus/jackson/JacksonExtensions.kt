@@ -4,17 +4,26 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import io.holunda.camunda.taskpool.api.business.AuthorizationChange
 import io.holunda.camunda.taskpool.api.task.SourceReference
 import io.holunda.polyflow.view.filter.Criterion
+import io.holunda.polyflow.view.query.process.variable.ProcessVariableFilter
 
 /**
  * Configures object mapper.
  */
 fun ObjectMapper.configurePolyflowJacksonObjectMapper(): ObjectMapper = this
+  /*
+   * List all custom modules.
+   */
   .registerModule(VariableMapTypeMappingModule())
   .registerModule(DataEntryStateTypeMappingModule())
   .apply {
+    /*
+     * List here all interfaces used in messages, which have multiple implementations and require additional
+     * type descriminator.
+     */
     addMixIn(SourceReference::class.java, KotlinTypeInfo::class.java)
     addMixIn(AuthorizationChange::class.java, KotlinTypeInfo::class.java)
     addMixIn(Criterion::class.java, KotlinTypeInfo::class.java)
+    addMixIn(ProcessVariableFilter::class.java, KotlinTypeInfo::class.java)
   }
 
 /**

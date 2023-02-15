@@ -7,7 +7,7 @@ import io.holunda.polyflow.view.query.process.variable.ProcessVariableFilterType
 /**
  * Filter to query for a list of variables. Every variable present in the list matches the filter.
  */
-data class ProcessVariableOneOf(
+data class ProcessVariableFilterOneOf(
   val processVariableNames: Set<String>
 ) : ProcessVariableFilter {
 

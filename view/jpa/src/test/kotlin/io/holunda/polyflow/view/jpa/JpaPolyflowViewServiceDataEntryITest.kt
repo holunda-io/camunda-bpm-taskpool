@@ -198,6 +198,7 @@ internal class JpaPolyflowViewServiceDataEntryITest {
     val result = jpaPolyflowViewService.query(
       DataEntryForIdentityQuery(entryType = "io.polyflow.test", entryId = id)
     )
+    assertThat(result.payload).isNotNull
     assertTestDataEntry1(result.payload)
   }
 

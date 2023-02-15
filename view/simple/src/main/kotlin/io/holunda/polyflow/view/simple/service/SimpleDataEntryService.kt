@@ -20,6 +20,7 @@ import org.axonframework.queryhandling.QueryHandler
 import org.axonframework.queryhandling.QueryResponseMessage
 import org.axonframework.queryhandling.QueryUpdateEmitter
 import org.springframework.stereotype.Component
+import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 
 /**
@@ -106,7 +107,10 @@ class SimpleDataEntryService(
         metaData = filtered.let { revisionSupport.getRevisionMax(listOf(it.identity)).toMetaData() }
       )
     } else {
-      QueryResponseMessageResponseType.asQueryResponseMessage(null, MetaData.emptyInstance());
+      QueryResponseMessageResponseType.asQueryResponseMessage(
+        payload = null,
+        metaData = MetaData.emptyInstance()
+      )
     }
   }
 

@@ -122,7 +122,7 @@ class MongoViewService(
   @QueryHandler
   override fun query(query: DataEntryForIdentityQuery, metaData: MetaData): CompletableFuture<DataEntry> =
     dataEntryRepository
-      .findNotDeletedById(dataIdentityString(entryType = query.identity.entryType, entryId = query.identity.entryId))
+      .findNotDeletedById(dataIdentityString(entryType = query.entryType, entryId = query.entryId))
       .map { it.dataEntry() }
       .toFuture()
 

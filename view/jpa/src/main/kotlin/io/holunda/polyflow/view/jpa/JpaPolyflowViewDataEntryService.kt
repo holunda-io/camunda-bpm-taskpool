@@ -30,6 +30,7 @@ import org.axonframework.queryhandling.QueryUpdateEmitter
 import org.springframework.data.domain.Page
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Component
+import java.util.*
 
 /**
  * Implementation of the Polyflow Data Entry View API using JPA to create the persistence model.
@@ -49,13 +50,18 @@ class JpaPolyflowViewDataEntryService(
 
   @QueryHandler
   override fun query(query: DataEntryForIdentityQuery, metaData: MetaData): QueryResponseMessage<DataEntry> {
-    val specification = composeAnd(listOf(hasEntryId(query.identity.entryId), hasEntryType(query.identity.entryType)))
+    val specification = composeAnd(listOf(hasEntryId(query.entryId), hasEntryType(query.entryType)))
     return dataEntryRepository.findOne(specification).map {
       QueryResponseMessageResponseType.asQueryResponseMessage<DataEntry>(
         payload = it.toDataEntry(objectMapper),
         metaData = RevisionValue(it.revision).toMetaData()
       )
-    }.orElse(QueryResponseMessageResponseType.asQueryResponseMessage(null))
+    }.orElse(
+      QueryResponseMessageResponseType.asQueryResponseMessage(
+        payload = null,
+        metaData = MetaData.emptyInstance()
+      )
+    )
   }
 
   @QueryHandler
