@@ -8,26 +8,25 @@ import io.holunda.polyflow.view.query.FilterQuery
 
 /**
  * Query for entry type and optional id.
- * @param identity identity to query for.
+ * @param entryType type of the data entry.
+ * @param entryId id of the data entry.
  */
 data class DataEntryForIdentityQuery(
-  val identity: DataIdentity,
+  val entryType: EntryType,
+  val entryId: EntryId,
 ) : FilterQuery<DataEntry> {
 
   /**
-   * Compatibility constructor to avoid compile errors.
+   * Additional convenience constructor.
    */
   constructor(
-    entryType: EntryType,
-    entryId: EntryId,
+    identity: DataIdentity
   ) : this(
-    identity = QueryDataIdentity(
-      entryType = entryType,
-      entryId = entryId,
-    )
+    entryType = identity.entryType,
+    entryId = identity.entryId,
   )
 
-  override fun applyFilter(element: DataEntry) = element.entryType == this.identity.entryType && element.entryId == this.identity.entryId
+  override fun applyFilter(element: DataEntry) = element.entryType == this.entryType && element.entryId == this.entryId
 }
 
 
