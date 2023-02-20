@@ -2,10 +2,7 @@ package io.holunda.polyflow.view
 
 import io.holixon.axon.gateway.query.QueryResponseMessageResponseType
 import io.holixon.axon.gateway.query.RevisionQueryParameters
-import io.holunda.polyflow.view.query.data.DataEntriesForUserQuery
-import io.holunda.polyflow.view.query.data.DataEntriesQuery
-import io.holunda.polyflow.view.query.data.DataEntriesQueryResult
-import io.holunda.polyflow.view.query.data.DataEntryForIdentityQuery
+import io.holunda.polyflow.view.query.data.*
 import org.axonframework.messaging.GenericMessage
 import org.axonframework.messaging.MetaData
 import org.axonframework.queryhandling.QueryGateway
@@ -32,7 +29,17 @@ class DataEntryQueryClient(
    * @see io.holunda.polyflow.view.query.data.DataEntryApi.query
    * @see io.holunda.polyflow.view.query.data.DataEntryForIdentityQuery
    */
-  fun query(query: DataEntryForIdentityQuery, revisionParams: RevisionQueryParameters? = null): CompletableFuture<DataEntriesQueryResult> =
+  fun query(query: DataEntryForIdentityQuery, revisionParams: RevisionQueryParameters? = null): CompletableFuture<DataEntry> =
+    queryGateway.query(
+      GenericMessage.asMessage(query).andMetaData(revisionParams?.toMetaData() ?: MetaData.emptyInstance()),
+      QueryResponseMessageResponseType.queryResponseMessageResponseType<DataEntry>()
+    )
+
+  /**
+   * @see io.holunda.polyflow.view.query.data.DataEntryApi.query
+   * @see io.holunda.polyflow.view.query.data.DataEntriesForDataEntryTypeQuery
+   */
+  fun query(query: DataEntriesForDataEntryTypeQuery, revisionParams: RevisionQueryParameters? = null): CompletableFuture<DataEntriesQueryResult> =
     queryGateway.query(
       GenericMessage.asMessage(query).andMetaData(revisionParams?.toMetaData() ?: MetaData.emptyInstance()),
       QueryResponseMessageResponseType.queryResponseMessageResponseType<DataEntriesQueryResult>()

@@ -20,6 +20,7 @@ import org.axonframework.queryhandling.QueryHandler
 import org.axonframework.queryhandling.QueryResponseMessage
 import org.axonframework.queryhandling.QueryUpdateEmitter
 import org.springframework.stereotype.Component
+import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 
 /**
@@ -28,14 +29,12 @@ import java.util.concurrent.ConcurrentHashMap
 @Component
 @ProcessingGroup(SimpleServiceViewProcessingGroup.PROCESSING_GROUP)
 class SimpleDataEntryService(
-  private val queryUpdateEmitter: QueryUpdateEmitter
+  private val queryUpdateEmitter: QueryUpdateEmitter,
+  private val revisionSupport: RevisionSupport = RevisionSupport(),
+  private val dataEntries: ConcurrentHashMap<String, DataEntry> = ConcurrentHashMap<String, DataEntry>()
 ) : DataEntryApi {
 
   companion object : KLogging()
-
-  private val revisionSupport = RevisionSupport()
-  private val dataEntries = ConcurrentHashMap<String, DataEntry>()
-
 
   /**
    * Creates new data entry.
@@ -96,12 +95,31 @@ class SimpleDataEntryService(
     )
   }
 
+  /**
+   * Retrieves a data entry of given entry type and id.
+   */
+  @QueryHandler
+  override fun query(query: DataEntryForIdentityQuery, metaData: MetaData): QueryResponseMessage<DataEntry> {
+    val filtered = dataEntries.values.firstOrNull { query.applyFilter(it) }
+    return if (filtered != null) {
+      QueryResponseMessageResponseType.asQueryResponseMessage(
+        payload = filtered,
+        metaData = filtered.let { revisionSupport.getRevisionMax(listOf(it.identity)).toMetaData() }
+      )
+    } else {
+      QueryResponseMessageResponseType.asQueryResponseMessage(
+        payload = null,
+        metaData = MetaData.emptyInstance()
+      )
+    }
+  }
+
 
   /**
    * Retrieves a list of all data entries of given entry type (and optional id).
    */
   @QueryHandler
-  override fun query(query: DataEntryForIdentityQuery, metaData: MetaData): QueryResponseMessage<DataEntriesQueryResult> {
+  override fun query(query: DataEntriesForDataEntryTypeQuery, metaData: MetaData): QueryResponseMessage<DataEntriesQueryResult> {
     val filtered = dataEntries.values.filter { query.applyFilter(it) }
     return QueryResponseMessageResponseType.asQueryResponseMessage(
       payload = DataEntriesQueryResult(elements = filtered),

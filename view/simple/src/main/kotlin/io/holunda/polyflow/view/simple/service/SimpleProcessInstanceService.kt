@@ -24,13 +24,12 @@ import java.util.concurrent.ConcurrentHashMap
 @Component
 @ProcessingGroup(SimpleServiceViewProcessingGroup.PROCESSING_GROUP)
 class SimpleProcessInstanceService(
-  val queryUpdateEmitter: QueryUpdateEmitter
+  private val queryUpdateEmitter: QueryUpdateEmitter,
+  private val revisionSupport: RevisionSupport = RevisionSupport(),
+  private val processInstances: ConcurrentHashMap<String, ProcessInstance> = ConcurrentHashMap<String, ProcessInstance>()
 ) : ProcessInstanceApi {
 
   companion object : KLogging()
-
-  private val revisionSupport = RevisionSupport()
-  private val processInstances = ConcurrentHashMap<String, ProcessInstance>()
 
   /**
    * Query by the state.

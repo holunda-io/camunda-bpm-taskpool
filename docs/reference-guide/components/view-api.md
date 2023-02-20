@@ -73,11 +73,12 @@ The Data Entry API allows to query for data entries handled by the data-pool.
     The Data Entry API supports revision-aware queries by JPA and In-Memory implementations **ONLY**.
 
 
-| Query Type                    | Description                                                                           | Payload types   | In-Memory | JPA   | Mongo DB |
-|-------------------------------|---------------------------------------------------------------------------------------|-----------------|-----------|-------|----------|
-| DataEntriesForUserQuery       | Retrieves a list of data entries accessible by the user with some additional filters. | List<DataEntry> | yes       | yes   | yes      |
-| DataEntryForIdentityQuery     | Retrieves a a list by type and an optional id (without any other filters)             | List<DataEntry> | yes       | yes   | yes      |
-| DataEntriesQuery              | Retrieves a list of data entries matching filters                                     | List<DataEntry> | yes       | yes   | yes      |
+| Query Type                     | Description                                                                           | Payload types   | In-Memory | JPA   | Mongo DB |
+|--------------------------------|---------------------------------------------------------------------------------------|-----------------|-----------|-------|----------|
+| DataEntriesForUserQuery        | Retrieves a list of data entries accessible by the user with some additional filters. | List<DataEntry> | yes       | yes   | yes      |
+| DataEntryForIdentityQuery      | Retrieves a single data entry by type and an id                                       | DataEntry       | yes       | yes   | yes      |
+| DataEntryForDataEntryTypeQuery | Retrieves a list of data entries by type                                              | List<DataEntry> | yes       | yes   | yes      |
+| DataEntriesQuery               | Retrieves a list of data entries matching filters                                     | List<DataEntry> | yes       | yes   | yes      |
 
 
 ## Revision-aware query support

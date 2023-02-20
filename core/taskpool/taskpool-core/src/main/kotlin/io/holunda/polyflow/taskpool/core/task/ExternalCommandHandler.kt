@@ -4,7 +4,6 @@ import io.holunda.camunda.taskpool.api.task.CreateTaskCommand
 import io.holunda.polyflow.taskpool.core.ifPresentOrElse
 import io.holunda.polyflow.taskpool.core.loadOptional
 import org.axonframework.commandhandling.CommandHandler
-import org.axonframework.commandhandling.GenericCommandMessage
 import org.axonframework.eventsourcing.EventSourcingRepository
 import org.axonframework.messaging.MetaData
 import org.springframework.context.annotation.Lazy
@@ -25,8 +24,12 @@ class ExternalCommandHandler(
   @CommandHandler
   fun create(command: CreateTaskCommand, metadata: MetaData) {
     eventSourcingRepository.loadOptional(command.id).ifPresentOrElse(
-      presentConsumer = { aggregate -> aggregate.handle(GenericCommandMessage(command, metadata)) },
-      missingCallback = { eventSourcingRepository.newInstance { TaskAggregate() }.handle(GenericCommandMessage(command, metadata)) }
+      presentConsumer = { aggregate -> aggregate.invoke { it.handle(command, metadata) } },
+      missingCallback = {
+        eventSourcingRepository.newInstance { TaskAggregate() }.invoke {
+          it.handle(command, metadata)
+        }
+      }
     )
   }
 }

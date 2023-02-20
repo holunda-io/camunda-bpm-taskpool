@@ -2,6 +2,7 @@ package io.holunda.polyflow.view.mongo
 
 import io.holunda.camunda.taskpool.api.business.*
 import io.holunda.camunda.taskpool.api.task.*
+import io.holunda.polyflow.view.DataEntry
 import io.holunda.polyflow.view.Task
 import io.holunda.polyflow.view.TaskWithDataEntries
 import io.holunda.polyflow.view.filter.toCriteria
@@ -116,21 +117,25 @@ class MongoViewService(
       .toFuture()
 
   /**
+   * Retrieves a list of all data entries of given entry type and id.
+   */
+  @QueryHandler
+  override fun query(query: DataEntryForIdentityQuery, metaData: MetaData): CompletableFuture<DataEntry> =
+    dataEntryRepository
+      .findNotDeletedById(dataIdentityString(entryType = query.entryType, entryId = query.entryId))
+      .map { it.dataEntry() }
+      .toFuture()
+
+  /**
    * Retrieves a list of all data entries of given entry type (and optional id).
    */
   @QueryHandler
-  override fun query(query: DataEntryForIdentityQuery, metaData: MetaData): CompletableFuture<DataEntriesQueryResult> =
-    (if (query.entryId != null) {
-      dataEntryRepository
-        .findNotDeletedById(query.identity().asString())
-        .map { it.dataEntry() }
-        .map { listOf(it) }
-        .defaultIfEmpty(listOf())
-    } else {
-      dataEntryRepository.findAllByEntryType(query.entryType)
-        .map { it.dataEntry() }
-        .collectList()
-    }).map { DataEntriesQueryResult(elements = it) }
+  override fun query(query: DataEntriesForDataEntryTypeQuery, metaData: MetaData): CompletableFuture<DataEntriesQueryResult> =
+    dataEntryRepository
+      .findAllByEntryType(query.entryType)
+      .map { it.dataEntry() }
+      .collectList()
+      .map { DataEntriesQueryResult(elements = it) }
       .toFuture()
 
   /**
@@ -199,7 +204,8 @@ class MongoViewService(
    */
   @QueryHandler
   override fun query(query: TaskWithDataEntriesForIdQuery): CompletableFuture<Optional<TaskWithDataEntries>> {
-    return taskRepository.findNotDeletedById(query.id).flatMap { tasksWithDataEntries(it.task()) }.map { Optional.of(it) }.defaultIfEmpty(Optional.empty()).toFuture()
+    return taskRepository.findNotDeletedById(query.id).flatMap { tasksWithDataEntries(it.task()) }.map { Optional.of(it) }.defaultIfEmpty(Optional.empty())
+      .toFuture()
   }
 
   /**
@@ -440,7 +446,9 @@ class MongoViewService(
     dataEntryRepository.findNotDeletedById(identity.asString())
       .map { it.dataEntry() }
       .doOnNext { dataEntry ->
+        updateMapFilterQuery(dataEntry, DataEntryForIdentityQuery::class.java)
         updateMapFilterQuery(dataEntry, DataEntriesForUserQuery::class.java)
+        updateMapFilterQuery(dataEntry, DataEntriesForDataEntryTypeQuery::class.java)
       }
       .then()
   }

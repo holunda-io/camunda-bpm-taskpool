@@ -1,10 +1,7 @@
 package io.holunda.polyflow.view
 
 import io.holixon.axon.gateway.query.RevisionQueryParameters
-import io.holunda.polyflow.view.query.data.DataEntriesForUserQuery
-import io.holunda.polyflow.view.query.data.DataEntriesQuery
-import io.holunda.polyflow.view.query.data.DataEntriesQueryResult
-import io.holunda.polyflow.view.query.data.DataEntryForIdentityQuery
+import io.holunda.polyflow.view.query.data.*
 import io.holunda.polyflow.view.query.process.ProcessDefinitionsStartableByUserQuery
 import io.holunda.polyflow.view.query.process.ProcessInstanceQueryResult
 import io.holunda.polyflow.view.query.process.ProcessInstancesByStateQuery
@@ -43,6 +40,15 @@ object QueryGatewayExt {
    */
   fun QueryGateway.dataEntryForIdentity(
     query: DataEntryForIdentityQuery,
+    revisionQuery: RevisionQueryParameters? = null
+  ): CompletableFuture<DataEntry> =
+    DataEntryQueryClient(this).query(query, revisionQuery)
+
+  /**
+   * @see [DataEntriesForDataEntryTypeQuery]
+   */
+  fun QueryGateway.dataEntriesForDataEntryType(
+    query: DataEntriesForDataEntryTypeQuery,
     revisionQuery: RevisionQueryParameters? = null
   ): CompletableFuture<DataEntriesQueryResult> =
     DataEntryQueryClient(this).query(query, revisionQuery)

@@ -74,7 +74,7 @@ class SenderConfiguration(private val senderProperties: SenderProperties) {
    */
   @Bean
   @ConditionalOnProperty(value = ["polyflow.integration.sender.task.type"], havingValue = "simple", matchIfMissing = false)
-  fun simpleTaskCommandSender(commandListGateway: CommandListGateway, accumulator: EngineTaskCommandAccumulator): EngineTaskCommandSender =
+  fun simpleTaskCommandSender(commandListGateway: CommandListGateway): EngineTaskCommandSender =
     SimpleEngineTaskCommandSender(commandListGateway, senderProperties)
 
   /**

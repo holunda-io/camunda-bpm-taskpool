@@ -3,6 +3,7 @@ package io.holunda.polyflow.view.jpa
 import io.holunda.camunda.taskpool.api.business.DataEntryCreatedEvent
 import io.holunda.camunda.taskpool.api.business.DataEntryDeletedEvent
 import io.holunda.camunda.taskpool.api.business.DataEntryUpdatedEvent
+import io.holunda.polyflow.view.DataEntry
 import io.holunda.polyflow.view.jpa.data.DataEntryEventHandler
 import io.holunda.polyflow.view.jpa.data.DataEntryRepository
 import io.holunda.polyflow.view.jpa.process.ProcessDefinitionRepository
@@ -64,7 +65,10 @@ class DbCleaner(
 @Transactional(propagation = Propagation.REQUIRES_NEW)
 class JpaPolyflowViewServiceTxFacade(private val implementation: JpaPolyflowViewDataEntryService) : DataEntryApi, DataEntryEventHandler {
 
-  override fun query(query: DataEntryForIdentityQuery, metaData: MetaData): QueryResponseMessage<DataEntriesQueryResult> =
+  override fun query(query: DataEntriesForDataEntryTypeQuery, metaData: MetaData): QueryResponseMessage<DataEntriesQueryResult> =
+    implementation.query(query = query, metaData = metaData)
+
+  override fun query(query: DataEntryForIdentityQuery, metaData: MetaData): QueryResponseMessage<DataEntry> =
     implementation.query(query = query, metaData = metaData)
 
   override fun query(query: DataEntriesForUserQuery, metaData: MetaData): QueryResponseMessage<DataEntriesQueryResult> =

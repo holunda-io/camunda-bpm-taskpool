@@ -20,13 +20,11 @@ import java.util.concurrent.ConcurrentHashMap
 @Component
 @ProcessingGroup(SimpleServiceViewProcessingGroup.PROCESSING_GROUP)
 class SimpleProcessDefinitionService(
-  private val queryUpdateEmitter: QueryUpdateEmitter
+  private val queryUpdateEmitter: QueryUpdateEmitter,
+  private val processDefinitions: MutableMap<String, TreeSet<ProcessDefinition>> = ConcurrentHashMap()
 ) : ProcessDefinitionApi {
 
   companion object : KLogging()
-
-  private val processDefinitions: MutableMap<String, TreeSet<ProcessDefinition>> = ConcurrentHashMap()
-
 
   /**
    * React on process definition registration.

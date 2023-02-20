@@ -1,7 +1,9 @@
 package io.holunda.polyflow.view.query.data
 
+import io.holunda.polyflow.view.DataEntry
 import org.axonframework.messaging.MetaData
 import org.axonframework.queryhandling.QueryResponseMessage
+import java.util.*
 
 /**
  * Defines an API interface for Data Entry Queries.
@@ -14,7 +16,15 @@ interface DataEntryApi {
    * @param metaData meta of the query, may be empty.
    * @return query result.
    */
-  fun query(query: DataEntryForIdentityQuery, metaData: MetaData = MetaData.emptyInstance()): QueryResponseMessage<DataEntriesQueryResult>
+  fun query(query: DataEntryForIdentityQuery, metaData: MetaData = MetaData.emptyInstance()): QueryResponseMessage<DataEntry>
+
+  /**
+   * Query data entries for given type.
+   * @param query object
+   * @param metaData meta of the query, may be empty.
+   * @return query result.
+   */
+  fun query(query: DataEntriesForDataEntryTypeQuery, metaData: MetaData = MetaData.emptyInstance()): QueryResponseMessage<DataEntriesQueryResult>
 
   /**
    * Query data entries for provided user.

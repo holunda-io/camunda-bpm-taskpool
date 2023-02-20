@@ -8,13 +8,13 @@ import io.holunda.camunda.taskpool.api.task.*
 import io.holunda.polyflow.view.DataEntry
 import io.holunda.polyflow.view.Task
 import io.holunda.polyflow.view.TaskWithDataEntries
-import io.holunda.polyflow.view.query.task.*
 import io.holunda.polyflow.view.filter.createTaskPredicates
 import io.holunda.polyflow.view.filter.filterByPredicate
 import io.holunda.polyflow.view.filter.toCriteria
-import io.holunda.polyflow.view.sort.taskWithDataEntriesComparator
+import io.holunda.polyflow.view.query.task.*
 import io.holunda.polyflow.view.simple.updateMapFilterQuery
 import io.holunda.polyflow.view.sort.taskComparator
+import io.holunda.polyflow.view.sort.taskWithDataEntriesComparator
 import io.holunda.polyflow.view.task
 import mu.KLogging
 import org.axonframework.config.ProcessingGroup
@@ -31,13 +31,12 @@ import java.util.concurrent.ConcurrentHashMap
 @Component
 @ProcessingGroup(SimpleServiceViewProcessingGroup.PROCESSING_GROUP)
 class SimpleTaskPoolService(
-  private val queryUpdateEmitter: QueryUpdateEmitter
+  private val queryUpdateEmitter: QueryUpdateEmitter,
+  private val tasks: ConcurrentHashMap<String, Task> = ConcurrentHashMap<String, Task>(),
+  private val dataEntries: ConcurrentHashMap<String, DataEntry> = ConcurrentHashMap<String, DataEntry>()
 ) : TaskApi {
 
   companion object : KLogging()
-
-  private val tasks = ConcurrentHashMap<String, Task>()
-  private val dataEntries = ConcurrentHashMap<String, DataEntry>()
 
   /**
    * Retrieves a task for given task id.
@@ -68,7 +67,10 @@ class SimpleTaskPoolService(
   /**
    * Retrieves a task with data entries for given task id.
    */
-  @Deprecated("Deprecated in favour of Optional-version of the same query.", replaceWith = ReplaceWith("SimpleTaskPoolService.query(TaskWithDataEntriesForIdQuery)"))
+  @Deprecated(
+    "Deprecated in favour of Optional-version of the same query.",
+    replaceWith = ReplaceWith("SimpleTaskPoolService.query(TaskWithDataEntriesForIdQuery)")
+  )
   @QueryHandler
   fun legacyQuery(query: TaskWithDataEntriesForIdQuery): TaskWithDataEntries? {
     logger.warn { "You are using deprecated API, consider to switch to query(TaskWithDataEntriesForIdQuery): Optional<TaskWithDataEntries>" }
@@ -174,6 +176,7 @@ class SimpleTaskPoolService(
   override fun query(query: TasksForUserQuery): TaskQueryResult {
     return queryForTasks(query)
   }
+
   /**
    * Retrieves a list of all user tasks for current user's groups.
    */
@@ -181,6 +184,7 @@ class SimpleTaskPoolService(
   override fun query(query: TasksForGroupQuery): TaskQueryResult {
     return queryForTasks(query)
   }
+
   /**
    * Retrieves a list of all user tasks.
    */
@@ -343,6 +347,7 @@ class SimpleTaskPoolService(
       updateFilteredQueryQuery(task.id)
     }
   }
+
   /**
    * Read-only stored data.
    */
@@ -368,7 +373,11 @@ class SimpleTaskPoolService(
   }
 
   private fun updateTaskCountByApplicationQuery(applicationName: String) {
-    queryUpdateEmitter.emit(TaskCountByApplicationQuery::class.java, { true }, ApplicationWithTaskCount(applicationName, tasks.values.count { it.sourceReference.applicationName == applicationName }))
+    queryUpdateEmitter.emit(
+      TaskCountByApplicationQuery::class.java,
+      { true },
+      ApplicationWithTaskCount(applicationName, tasks.values.count { it.sourceReference.applicationName == applicationName })
+    )
   }
 
   /**

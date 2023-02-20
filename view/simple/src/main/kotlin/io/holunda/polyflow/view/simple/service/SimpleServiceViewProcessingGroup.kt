@@ -13,7 +13,6 @@ class SimpleServiceViewProcessingGroup(
   private val configuration: EventProcessingConfiguration
 ) {
 
-
   companion object : KLogging() {
     const val PROCESSING_GROUP = "io.holunda.polyflow.view.simple"
   }

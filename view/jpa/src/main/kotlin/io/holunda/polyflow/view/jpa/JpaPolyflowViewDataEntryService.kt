@@ -6,6 +6,7 @@ import io.holixon.axon.gateway.query.RevisionValue
 import io.holunda.camunda.taskpool.api.business.DataEntryCreatedEvent
 import io.holunda.camunda.taskpool.api.business.DataEntryDeletedEvent
 import io.holunda.camunda.taskpool.api.business.DataEntryUpdatedEvent
+import io.holunda.polyflow.view.DataEntry
 import io.holunda.polyflow.view.filter.Criterion
 import io.holunda.polyflow.view.filter.toCriteria
 import io.holunda.polyflow.view.jpa.JpaPolyflowViewDataEntryService.Companion.PROCESSING_GROUP
@@ -29,6 +30,7 @@ import org.axonframework.queryhandling.QueryUpdateEmitter
 import org.springframework.data.domain.Page
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Component
+import java.util.*
 
 /**
  * Implementation of the Polyflow Data Entry View API using JPA to create the persistence model.
@@ -47,15 +49,26 @@ class JpaPolyflowViewDataEntryService(
   }
 
   @QueryHandler
-  override fun query(query: DataEntryForIdentityQuery, metaData: MetaData): QueryResponseMessage<DataEntriesQueryResult> {
-    val entryId = query.entryId
-    require(entryId != null) { "Entry id must be set on query by id" }
+  override fun query(query: DataEntryForIdentityQuery, metaData: MetaData): QueryResponseMessage<DataEntry> {
+    val specification = composeAnd(listOf(hasEntryId(query.entryId), hasEntryType(query.entryType)))
+    return dataEntryRepository.findOne(specification).map {
+      QueryResponseMessageResponseType.asQueryResponseMessage<DataEntry>(
+        payload = it.toDataEntry(objectMapper),
+        metaData = RevisionValue(it.revision).toMetaData()
+      )
+    }.orElse(
+      QueryResponseMessageResponseType.asQueryResponseMessage(
+        payload = null,
+        metaData = MetaData.emptyInstance()
+      )
+    )
+  }
 
-    val specification = composeAnd(listOf(hasEntryId(entryId), hasEntryType(query.entryType)))
+  @QueryHandler
+  override fun query(query: DataEntriesForDataEntryTypeQuery, metaData: MetaData): QueryResponseMessage<DataEntriesQueryResult> {
+    val specification = hasEntryType(query.entryType)
     val pageRequest = pageRequest(query.page, query.size, query.sort)
-
     val page = dataEntryRepository.findAll(specification, pageRequest)
-
     return constructDataEntryResponse(page)
   }
 
