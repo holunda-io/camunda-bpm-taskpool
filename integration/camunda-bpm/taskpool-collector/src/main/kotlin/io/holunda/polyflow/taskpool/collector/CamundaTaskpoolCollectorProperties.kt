@@ -63,7 +63,14 @@ data class CamundaTaskCollectorProperties(
   /**
    * Flag to enable or disable the collector.
    */
-  val enabled: Boolean = true
+  val enabled: Boolean = true,
+
+  /**
+   * Properties of task importer.
+   */
+  @NestedConfigurationProperty
+  val importer: TaskImporterProperties = TaskImporterProperties()
+
 )
 
 /**
@@ -178,3 +185,26 @@ data class TaskAssignerProperties(
     candidateGroups = candidateGroups,
   )
 }
+
+@ConstructorBinding
+data class TaskImporterProperties (
+  /**
+   * Enables or disabled importer. Defaults to false.
+   */
+  val enabled: Boolean = false,
+
+  /**
+   * Configures the type of engine task command filter.
+   * Defaults to `eventstore` allowing co-located deployed Taskpool Core to be used as a reference to filter commands.
+   */
+  val taskFilterType: EngineTaskCommandFilterType = EngineTaskCommandFilterType.eventstore
+)
+
+/**
+ * Type
+ */
+enum class EngineTaskCommandFilterType {
+  eventstore,
+  custom
+}
+

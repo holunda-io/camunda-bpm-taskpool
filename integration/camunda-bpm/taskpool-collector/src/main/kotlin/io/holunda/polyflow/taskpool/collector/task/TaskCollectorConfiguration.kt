@@ -1,5 +1,7 @@
 package io.holunda.polyflow.taskpool.collector.task
 
+import io.holunda.camunda.taskpool.api.task.EngineTaskCommandFilter
+import io.holunda.polyflow.taskpool.collector.CamundaTaskpoolCollectorConfiguration
 import io.holunda.polyflow.taskpool.collector.CamundaTaskpoolCollectorProperties
 import io.holunda.polyflow.taskpool.collector.TaskAssignerType
 import io.holunda.polyflow.taskpool.collector.TaskCollectorEnricherType
@@ -18,6 +20,7 @@ import org.camunda.bpm.engine.impl.cfg.ProcessEngineConfigurationImpl
 import org.camunda.bpm.engine.impl.interceptor.CommandExecutor
 import org.camunda.bpm.engine.spring.SpringProcessEnginePlugin
 import org.camunda.bpm.spring.boot.starter.property.CamundaBpmProperties
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.context.ApplicationEventPublisher
@@ -127,4 +130,28 @@ class TaskCollectorConfiguration(
     enricher = variablesEnricher,
     taskAssigner = taskAssigner
   )
+
+  /**
+   * Create a task collector service collecting tasks directly from the task service of the engine.
+   */
+  @Bean
+  @ConditionalOnProperty(value = ["polyflow.integration.collector.camunda.task.importer.enabled"], havingValue = "true", matchIfMissing = false)
+  fun taskServiceCollectorService(
+    taskService: TaskService,
+    applicationEventPublisher: ApplicationEventPublisher,
+    @Autowired(required = false) engineTaskCommandFilter: EngineTaskCommandFilter?
+  ): TaskServiceCollectorService {
+
+    if (engineTaskCommandFilter == null) {
+      CamundaTaskpoolCollectorConfiguration.logger.warn { "Task importer is configured, but no task filter is provided. All tasks commands will be rejected." }
+    }
+
+    return TaskServiceCollectorService(
+      taskService = taskService,
+      camundaTaskpoolCollectorProperties = camundaTaskpoolCollectorProperties,
+      applicationEventPublisher = applicationEventPublisher,
+      engineTaskCommandFilter = engineTaskCommandFilter ?: object : EngineTaskCommandFilter {}
+    )
+
+  }
 }
