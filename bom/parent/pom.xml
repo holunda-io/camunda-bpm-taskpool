@@ -32,7 +32,7 @@
 
     <pattern.class.itest>**/*ITest.*</pattern.class.itest>
     <pattern.package.itest>**/itest/**/*.*</pattern.package.itest>
-    <jgiven-kotlin.version>1.2.4.0</jgiven-kotlin.version>
+    <jgiven-kotlin.version>1.2.5.0</jgiven-kotlin.version>
   </properties>
 
   <modules>
