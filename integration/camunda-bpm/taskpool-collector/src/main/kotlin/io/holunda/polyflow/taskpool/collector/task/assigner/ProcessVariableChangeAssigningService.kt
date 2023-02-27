@@ -21,6 +21,9 @@ class ProcessVariableChangeAssigningService(
 
   companion object : KLogging()
 
+  /**
+   * React on new variables created.
+   */
   @EventListener
   fun on(command: CreateSingleProcessVariableCommand): EngineTaskCommand? {
     // only relevant if waiting in a user task
@@ -50,9 +53,35 @@ class ProcessVariableChangeAssigningService(
     }
   }
 
+  /**
+   * React on variables updates.
+   */
   @EventListener
-  fun on(update: UpdateSingleProcessVariableCommand) {
+  fun on(command: UpdateSingleProcessVariableCommand): EngineTaskCommand? {
+    val taskId = getTaskId(command.sourceReference) ?: return null
+    return when (command.variableName) {
+      mapping.assignee -> {
+        AssignTaskCommand(
+          id = taskId,
+          assignee = command.value.value.asStringValue()
+        )
+      }
+      mapping.candidateUsers -> {
+        if (command.value.value != null) {
+          AddCandidateUsersCommand(
+            id = taskId,
+            candidateUsers = command.value.value.asSetValue()
+          )
+        } else {
+          null
+        }
+      }
+      mapping.candidateGroups -> {
+        null
+      }
 
+      else -> null
+    }
   }
 
 

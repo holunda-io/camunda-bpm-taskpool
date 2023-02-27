@@ -101,6 +101,9 @@ class TaskCollectorConfiguration(
       else -> throw IllegalStateException("Could not initialize task assigner, used unknown ${camundaTaskpoolCollectorProperties.task.assigner.type} type.")
     }
 
+  /**
+   * Service reposnsible for changing assignees on process variable change.
+   */
   @Bean
   @ConditionalOnExpression("'\${polyflow.integration.collector.camunda.task.assigner.type}' == 'process-variables' && '\${polyflow.integration.collector.camunda.process-variable.enabled}'")
   fun processVariableChangeAssigningService(taskService: TaskService) = ProcessVariableChangeAssigningService(

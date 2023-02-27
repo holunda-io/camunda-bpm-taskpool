@@ -115,6 +115,9 @@ enum class TaskCollectorEnricherType {
   custom
 }
 
+/**
+ * Type of task assigner.
+ */
 enum class TaskAssignerType {
   /**
    * Empty assigner, use information from Camunda task.
@@ -179,6 +182,9 @@ data class TaskAssignerProperties(
    */
   val candidateGroups: String? = null
 ) {
+  /**
+   * Constructs mapping from properties.
+   */
   fun toMapping(): ProcessVariableTaskAssignerMapping = ProcessVariableTaskAssignerMapping(
     assignee = assignee,
     candidateUsers = candidateUsers,
@@ -186,8 +192,11 @@ data class TaskAssignerProperties(
   )
 }
 
+/**
+ * Configuration of the task importer.
+ */
 @ConstructorBinding
-data class TaskImporterProperties (
+data class TaskImporterProperties(
   /**
    * Enables or disabled importer. Defaults to false.
    */
