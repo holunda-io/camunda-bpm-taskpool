@@ -27,6 +27,17 @@ interface TaskRepository : CrudRepository<TaskEntity, String>, JpaSpecificationE
           builder.isNull(task.get<String>(TaskEntity::assignee.name))
         }
       }
+
+    /**
+     * Is assignee set to specified user.
+     */
+    fun isAssignedTo(assignee: String): Specification<TaskEntity> =
+      Specification { task, _, builder ->
+        builder.equal(
+          task.get<String>(TaskEntity::assignee.name),
+          assignee
+        )
+      }
     /**
      * Specification for checking authorization of multiple principals.
      */

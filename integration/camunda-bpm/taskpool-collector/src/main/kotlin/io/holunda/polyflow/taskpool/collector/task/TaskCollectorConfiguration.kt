@@ -141,6 +141,7 @@ class TaskCollectorConfiguration(
   @ConditionalOnProperty(value = ["polyflow.integration.collector.camunda.task.importer.enabled"], havingValue = "true", matchIfMissing = false)
   fun taskServiceCollectorService(
     taskService: TaskService,
+    commandExecutor: CommandExecutor,
     applicationEventPublisher: ApplicationEventPublisher,
     @Autowired(required = false) engineTaskCommandFilter: EngineTaskCommandFilter?
   ): TaskServiceCollectorService {
@@ -151,6 +152,7 @@ class TaskCollectorConfiguration(
 
     return TaskServiceCollectorService(
       taskService = taskService,
+      commandExecutor = commandExecutor,
       camundaTaskpoolCollectorProperties = camundaTaskpoolCollectorProperties,
       applicationEventPublisher = applicationEventPublisher,
       engineTaskCommandFilter = engineTaskCommandFilter ?: object : EngineTaskCommandFilter {}
