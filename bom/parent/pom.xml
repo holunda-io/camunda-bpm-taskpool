@@ -18,7 +18,7 @@
   <url>https://github.com/holunda-io/camunda-bpm-taskpool/</url>
 
   <properties>
-    <springboot.version>2.7.7</springboot.version>
+    <springboot.version>3.0.4</springboot.version>
     <camunda-commons-typed-values.version>7.18.0</camunda-commons-typed-values.version>
 
     <axon-bom.version>4.6.3</axon-bom.version>
