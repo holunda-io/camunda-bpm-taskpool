@@ -107,8 +107,8 @@ class TaskEventCollectorService(
   @EventListener(condition = "#task.eventName.equals('update')")
   fun update(task: DelegateTask): UpdateAttributeTaskCommand? =
     if (task is TaskEntity) {
-      if (task.isAssigneeChange() || !task.hasChangedProperties()) {
-        // this is already handled by assignment event, or it is an empty fired during taskService call of candidate update.
+      if (task.isAssigneeChange()) {
+        // this is already handled by assignment event
         null
       } else {
         task.toUpdateCommand(camundaTaskpoolCollectorProperties.applicationName)
