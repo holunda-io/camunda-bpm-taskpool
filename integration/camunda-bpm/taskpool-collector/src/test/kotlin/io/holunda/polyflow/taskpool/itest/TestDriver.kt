@@ -114,7 +114,8 @@ class TestDriver(
     fun updateTaskCommand(
       variables: VariableMap = DEFAULT_VARIABLES,
       instanceBusinessKey: String = BUSINESS_KEY,
-      correlations: VariableMap = newCorrelations()
+      correlations: VariableMap = newCorrelations(),
+      unchanged: Boolean = false
     ) =
       BpmnAwareTests.task(BpmnAwareTests.taskQuery().initializeFormKeys()).let { task ->
         UpdateAttributeTaskCommand(
@@ -137,7 +138,8 @@ class TestDriver(
           enriched = true,
           businessKey = instanceBusinessKey,
           payload = variables,
-          correlations = correlations
+          correlations = correlations,
+          unchanged = unchanged
         )
       }
 

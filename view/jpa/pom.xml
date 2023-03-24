@@ -6,7 +6,7 @@
   <parent>
     <groupId>io.holunda.polyflow</groupId>
     <artifactId>polyflow-view-parent</artifactId>
-    <version>3.8.1</version>
+    <version>3.8.2</version>
   </parent>
 
   <artifactId>polyflow-view-jpa</artifactId>
@@ -134,7 +134,7 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-resources-plugin</artifactId>
-            <version>3.3.0</version>
+            <version>3.3.1</version>
             <executions>
               <execution>
                 <id>copy persistence xml</id>
@@ -233,7 +233,7 @@
               <dependency>
                 <groupId>org.postgresql</groupId>
                 <artifactId>postgresql</artifactId>
-                <version>42.5.3</version>
+                <version>42.6.0</version>
               </dependency>
             </dependencies>
           </plugin>

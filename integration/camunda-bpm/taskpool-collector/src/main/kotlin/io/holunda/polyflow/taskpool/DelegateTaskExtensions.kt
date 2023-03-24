@@ -100,7 +100,8 @@ fun DelegateTask.toUpdateCommand(applicationName: String) = UpdateAttributeTaskC
   priority = this.priority,
   taskDefinitionKey = this.taskDefinitionKey,
   businessKey = this.execution.businessKey,
-  sourceReference = this.sourceReference(applicationName)
+  sourceReference = this.sourceReference(applicationName),
+  unchanged = this is TaskEntity && this.propertyChanges.isEmpty()
 )
 
 
