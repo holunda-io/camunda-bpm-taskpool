@@ -212,7 +212,10 @@ data class UpdateAttributeTaskCommand(
    * Optional task priority.
    */
   val priority: Int?,
-
+  /**
+   * True if no properties of the task have actually changed.
+   */
+  val unchanged: Boolean = false
 ) : TaskIdentityWithPayloadAndCorrelations, EngineTaskCommand
 
 

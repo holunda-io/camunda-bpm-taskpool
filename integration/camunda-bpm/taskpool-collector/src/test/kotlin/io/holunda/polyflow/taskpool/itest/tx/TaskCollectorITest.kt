@@ -387,10 +387,13 @@ internal class TaskCollectorITest {
     runtimeService.setVariable(instance.processInstanceId, "bla", "blubb")
     taskService.saveTask(task())
 
-    val updateCommand = updateTaskCommand(variables = Variables.createVariables().apply {
-      putAll(DEFAULT_VARIABLES)
-      putValue("bla", "blubb")
-    })
+    val updateCommand = updateTaskCommand(
+      variables = Variables.createVariables().apply {
+        putAll(DEFAULT_VARIABLES)
+        putValue("bla", "blubb")
+      },
+      unchanged = true
+    )
     verify(commandListGateway).sendToGateway(listOf(updateCommand))
 
     verifyNoMoreInteractions(commandListGateway)
