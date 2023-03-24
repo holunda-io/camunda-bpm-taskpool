@@ -6,7 +6,6 @@ import io.holunda.camunda.taskpool.api.task.CamundaTaskEventType.Companion.ATTRI
 import io.holunda.camunda.taskpool.api.task.CamundaTaskEventType.Companion.CANDIDATE_USER_ADD
 import io.holunda.camunda.taskpool.api.task.CamundaTaskEventType.Companion.CANDIDATE_USER_DELETE
 import io.holunda.camunda.taskpool.api.task.CamundaTaskEventType.Companion.COMPLETE
-import io.holunda.camunda.taskpool.api.task.CamundaTaskEventType.Companion.CREATE
 import io.holunda.camunda.taskpool.api.task.CamundaTaskEventType.Companion.DELETE
 
 /**
@@ -63,6 +62,7 @@ class SimpleEngineTaskCommandIntentDetector(
         }
         // updates of the listener are accepted
         is UpdateAttributeTaskCommand -> engineTaskCommands.filter { it.eventName == ATTRIBUTES_LISTENER_UPDATE }
+        is UpdateAssignmentTaskCommand -> engineTaskCommands.filter { it is UpdateAttributeTaskCommand && it.unchanged}
         else -> listOf()
       }
 }
