@@ -366,6 +366,36 @@ internal class TaskCollectorITest {
     verifyNoMoreInteractions(commandListGateway)
   }
 
+  @Test
+  fun `updates attributes via API with update listener when task is unchanged`() {
+
+    // deploy
+    driver.deployProcess(
+      createUserTaskProcess(
+        taskListeners = listOf(
+          "update" to "#{changeTaskAttributes}"
+        )
+      )
+    )
+
+    // start
+    val instance = driver.startProcessInstance()
+    driver.assertProcessInstanceWaitsInUserTask(instance)
+    verify(commandListGateway).sendToGateway(listOf(createTaskCommand()))
+
+    // trigger the update event on the task
+    runtimeService.setVariable(instance.processInstanceId, "bla", "blubb")
+    taskService.saveTask(task())
+
+    val updateCommand = updateTaskCommand(variables = Variables.createVariables().apply {
+      putAll(DEFAULT_VARIABLES)
+      putValue("bla", "blubb")
+    })
+    verify(commandListGateway).sendToGateway(listOf(updateCommand))
+
+    verifyNoMoreInteractions(commandListGateway)
+  }
+
   /**
    * The process is started and wait in a user task.
    * The update command is send after the TX commit.
