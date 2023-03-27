@@ -232,6 +232,23 @@ internal class JpaPolyflowViewServiceDataEntryITest {
   }
 
   @Test
+  fun `should not fail deleted already deleted entry`() {
+    jpaPolyflowViewService.on(
+      event = DataEntryDeletedEvent(
+        entryType = "io.polyflow.test",
+        entryId = id3,
+        deleteModification = Modification(
+          time = OffsetDateTime.ofInstant(now, ZoneOffset.UTC),
+          log = "Deleted",
+          logNotes = "Created by mistake"
+        ),
+        state = ProcessingType.DELETED.of("Create error")
+      ),
+      metaData = MetaData.emptyInstance()
+    )
+  }
+
+  @Test
   fun `should find the entry by user and filter`() {
     val query = DataEntriesForUserQuery(user = User("kermit", groups = setOf("muppets")), filters = listOf("key-int=1"))
     assertResultIsTestEntry1(
