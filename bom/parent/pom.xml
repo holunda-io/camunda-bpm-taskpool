@@ -18,10 +18,10 @@
   <url>https://github.com/holunda-io/camunda-bpm-taskpool/</url>
 
   <properties>
-    <springboot.version>2.7.7</springboot.version>
+    <springboot.version>2.7.10</springboot.version>
     <camunda-commons-typed-values.version>7.18.0</camunda-commons-typed-values.version>
 
-    <axon-bom.version>4.6.3</axon-bom.version>
+    <axon-bom.version>4.6.6</axon-bom.version>
 
     <axon-kotlin.version>4.7.0</axon-kotlin.version>
     <axon-gateway-extension.version>1.1.2</axon-gateway-extension.version>
@@ -29,10 +29,10 @@
     <awaitability.version>4.2.0</awaitability.version>
     <mockito-kotlin.version>4.1.0</mockito-kotlin.version>
     <jgiven.version>1.2.5</jgiven.version>
+    <jgiven-kotlin.version>1.2.5.0</jgiven-kotlin.version>
 
     <pattern.class.itest>**/*ITest.*</pattern.class.itest>
     <pattern.package.itest>**/itest/**/*.*</pattern.package.itest>
-    <jgiven-kotlin.version>1.2.5.0</jgiven-kotlin.version>
   </properties>
 
   <modules>
