@@ -39,7 +39,6 @@ import java.time.temporal.ChronoUnit
 import java.util.*
 import java.util.function.Predicate
 
-@ExtendWith(SpringExtension::class)
 @SpringBootTest(
   classes = [TestApplication::class],
   properties = [
