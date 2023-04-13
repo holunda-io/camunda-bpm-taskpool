@@ -102,7 +102,7 @@ class TaskCollectorConfiguration(
     }
 
   /**
-   * Service reposnsible for changing assignees on process variable change.
+   * Service responsible for changing assignees on process variable change.
    */
   @Bean
   @ConditionalOnExpression("'\${polyflow.integration.collector.camunda.task.assigner.type}' == 'process-variables' && '\${polyflow.integration.collector.camunda.process-variable.enabled}'")

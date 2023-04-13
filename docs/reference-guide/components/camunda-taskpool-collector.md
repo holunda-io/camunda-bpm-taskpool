@@ -8,7 +8,7 @@ Taskpool Collector is a component deployed as a part of the process application
 (aside with Camunda BPM Engine) that is responsible for collecting information from
 the Camunda BPM Engine. It detects the _intent_ of the operations executed inside the engine
 and creates the corresponding commands for the Taskpool. The commands are enriched with data and transmitted to
-other taskpool components (via Command Bus).
+other Taskpool components (via Command Bus).
 
 In the following description, we use the terms _event_ and _command_. Event denotes an entity
 received from Camunda BPM Engine (from delegate event listener or from history event listener)
@@ -55,7 +55,7 @@ In order to enable collector component, include the Maven dependency to your pro
 
 ```
 
-Then activate the taskpool collector by providing the annotation on any Spring Configuration:
+Then activate the Taskpool collector by providing the annotation on any Spring Configuration:
 
 ```java
 @Configuration
@@ -277,3 +277,26 @@ polyflow:
             candidateUsers: my-candidate-users-var 
             candidateGroup: my-candidate-group-var
 ```
+
+### Task Importer
+
+Alongside with the event-based Task Collector based on Camunda Eventing, there exists a dedicated service which can query Camunda database for existing
+user tasks and publish the results. In order to avoid duplications in tasks, the collected tasks are filtered by a special filter. Currently, you may choose
+between the supplied `eventstore` filter or supply your own `custom` filter by providing your own implementation of a `EngineTaskCommandFilter` interface as 
+a Spring Bean. If you want to use this task importer facility, you need to activate it first in your application configuration.
+
+The following property block is used for configuration:
+
+```yaml
+polyflow:
+  integration:
+    collector:
+      camunda:
+        task:
+          importer:
+            enabled: true
+            task-filter-type: eventstore
+```
+
+By doing so, the `TaskServiceCollectorService` Bean is made available and can be used to trigger the import. The `eventstore` filter is useful in scenarios,
+in which the [Taskpool Core](./core-taskpool) is deployed on together with Taskpool Collector as part of the Process Application.

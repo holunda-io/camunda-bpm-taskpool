@@ -8,7 +8,8 @@ import java.util.function.Predicate
 interface EngineTaskCommandFilter : Predicate<EngineTaskCommand> {
   /**
    * Tests if the task command should be sent.
+   * @param engineTaskCommand commend to test.
    * @return true, if command should be emitted. Defaults to false.
    */
-  override fun test(t: EngineTaskCommand): Boolean = false
+  override fun test(engineTaskCommand: EngineTaskCommand): Boolean = false
 }
