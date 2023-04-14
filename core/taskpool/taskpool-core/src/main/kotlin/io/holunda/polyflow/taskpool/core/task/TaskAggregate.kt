@@ -24,8 +24,8 @@ class TaskAggregate() {
   private lateinit var id: String
   internal lateinit var task: Task
 
-  private var deleted = false
-  private var completed = false
+  internal var deleted = false
+  internal var completed = false
 
   /**
    * This a non-static handler for create command.
@@ -277,5 +277,4 @@ class TaskAggregate() {
   fun on(event: TaskDeletedEngineEvent) {
     this.deleted = true
   }
-
 }

@@ -18,6 +18,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.data.jpa.domain.Specification.where
 import org.springframework.data.repository.findByIdOrNull
@@ -30,11 +31,11 @@ import java.util.*
 import javax.persistence.EntityManager
 import javax.transaction.Transactional
 
-@ExtendWith(SpringExtension::class)
 @DataJpaTest(showSql = false)
 @Transactional
 @DirtiesContext
 @ContextConfiguration(classes = [TestApplication::class])
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ActiveProfiles("itest", "mock-query-emitter")
 internal class DataEntryRepositoryITest {
   @Autowired

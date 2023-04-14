@@ -16,7 +16,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
 import java.util.*
 import javax.transaction.Transactional
 
-@ExtendWith(SpringExtension::class)
 @SpringBootTest(
   classes = [TestApplication::class],
   properties = [

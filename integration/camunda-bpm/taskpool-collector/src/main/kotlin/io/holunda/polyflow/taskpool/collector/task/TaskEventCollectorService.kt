@@ -30,7 +30,7 @@ class TaskEventCollectorService(
   /**
    * Tracing of collector.
    */
-  @Order(ORDER)
+  @Order(ORDER - 10)
   @EventListener
   fun all(task: DelegateTask) {
     if (logger.isTraceEnabled) {
@@ -98,7 +98,6 @@ class TaskEventCollectorService(
       deleteReason = task.deleteReason,
       eventName = task.eventName
     )
-
 
   /**
    * Fires update command.

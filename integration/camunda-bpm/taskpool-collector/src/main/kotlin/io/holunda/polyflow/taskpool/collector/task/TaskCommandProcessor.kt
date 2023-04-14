@@ -14,7 +14,8 @@ import org.springframework.context.event.EventListener
  */
 class TaskCommandProcessor(
   private val engineTaskCommandSender: EngineTaskCommandSender,
-  private val enricher: VariablesEnricher
+  private val enricher: VariablesEnricher,
+  private val taskAssigner: TaskAssigner
 ) {
   companion object : KLogging()
 
@@ -27,6 +28,8 @@ class TaskCommandProcessor(
     when (command) {
       is TaskIdentityWithPayloadAndCorrelations -> enricher.enrich(command)
       else -> command
+    }.let {
+      taskAssigner.setAssignment(it)
     }.also { commandToSend ->
       if (logger.isTraceEnabled) {
         logger.trace("COLLECTOR-008: Sending engine task command: $commandToSend.")

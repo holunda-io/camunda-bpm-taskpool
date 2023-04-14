@@ -8,7 +8,7 @@ import org.camunda.bpm.engine.variable.value.TypedValue
  */
 interface ProcessVariableValue {
   val type: ProcessVariableValueType
-  val value: Any
+  val value: Any?
 }
 
 /**
@@ -23,7 +23,7 @@ data class TypedValueProcessVariableValue(override val value: TypedValue)
  * Implementation of the process variable value, where the value itself is represented by a 'primitive' class.
  */
 data class PrimitiveProcessVariableValue(
-  override val value: Any
+  override val value: Any?
 ) : ProcessVariableValue {
   override val type: ProcessVariableValueType = ProcessVariableValueType.PRIMITIVE
 }
@@ -46,7 +46,7 @@ enum class ProcessVariableValueType {
    */
   TYPE_VALUE,
   /**
-   * Some of the types are native to serialize. These are:
+   * Some types are native to serialize. These are:
    * - Numbers (Integer, Float, Double)
    * - Boolean
    * - String

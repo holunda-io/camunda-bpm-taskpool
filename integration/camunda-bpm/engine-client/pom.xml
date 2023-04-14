@@ -22,7 +22,7 @@
       <exclusions>
         <exclusion>
           <groupId>org.axonframework</groupId>
-          <artifactId>axon-server-conector</artifactId>
+          <artifactId>axon-server-connector</artifactId>
         </exclusion>
       </exclusions>
     </dependency>

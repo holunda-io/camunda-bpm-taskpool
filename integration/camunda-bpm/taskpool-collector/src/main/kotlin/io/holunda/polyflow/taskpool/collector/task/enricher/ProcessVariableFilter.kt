@@ -6,12 +6,12 @@ package io.holunda.polyflow.taskpool.collector.task.enricher
  * If a differentiation between individual user tasks of a process is required, use a {@link TaskVariableFilter} instead.
  */
 data class ProcessVariableFilter(
-        override val processDefinitionKey: ProcessDefinitionKey?,
-        val filterType: FilterType,
-        val processVariables: List<VariableName> = emptyList()
-): VariableFilter {
+  override val processDefinitionKey: ProcessDefinitionKey?,
+  val filterType: FilterType,
+  val processVariables: List<VariableName> = emptyList()
+) : VariableFilter {
 
-  constructor(filterType: FilterType, processVariables: List<VariableName>): this(null, filterType, processVariables)
+  constructor(filterType: FilterType, processVariables: List<VariableName>) : this(null, filterType, processVariables)
 
   override fun filter(taskDefinitionKey: TaskDefinitionKey, variableName: VariableName): Boolean {
     return (filterType == FilterType.INCLUDE) == processVariables.contains(variableName)

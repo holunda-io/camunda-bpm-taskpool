@@ -8,7 +8,7 @@ interface VariableFilter {
   val processDefinitionKey: ProcessDefinitionKey?
 
   /**
-   * Returns whether or not the process variable with the given name shall be contained in the payload of the given task.
+   * Returns whether the process variable with the given name shall be contained in the payload of the given task.
    * @param taskDefinitionKey the key of the task to be enriched
    * @param variableName the name of the process variable
    */

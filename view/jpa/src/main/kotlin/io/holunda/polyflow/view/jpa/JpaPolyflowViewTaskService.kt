@@ -15,6 +15,7 @@ import io.holunda.polyflow.view.jpa.data.toDataEntry
 import io.holunda.polyflow.view.jpa.task.TaskEntity
 import io.holunda.polyflow.view.jpa.task.TaskRepository
 import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.hasApplication
+import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.isAssignedTo
 import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.isAssigneeSet
 import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.isAuthorizedFor
 import io.holunda.polyflow.view.jpa.task.toEntity
@@ -56,11 +57,12 @@ class JpaPolyflowViewTaskService(
     val taskSpecification = criteria.toTaskSpecification()
     val dataEntrySpecification = criteria.toDataEntrySpecification()
     val pageRequest = pageRequest(query.page, query.size, query.sort)
+    val userQuery = composeOr(listOf(isAuthorizedFor(authorizedPrincipals), isAssignedTo(query.user.username)))
 
     val page = if (taskSpecification != null) {
-      taskRepository.findAll(taskSpecification.and(isAuthorizedFor(authorizedPrincipals)), pageRequest)
+      taskRepository.findAll(taskSpecification.and(userQuery), pageRequest)
     } else {
-      taskRepository.findAll(isAuthorizedFor(authorizedPrincipals), pageRequest)
+      taskRepository.findAll(userQuery, pageRequest)
     }
       .map { taskEntity ->
         TaskWithDataEntries(
@@ -181,11 +183,12 @@ class JpaPolyflowViewTaskService(
     val authorizedPrincipals: Set<AuthorizationPrincipal> = setOf(user(query.user.username)).plus(query.user.groups.map { group(it) })
     val specification = toCriteria(query.filters).toTaskSpecification()
     val pageRequest = pageRequest(query.page, query.size, query.sort)
+    val userQuery = composeOr(listOf(isAuthorizedFor(authorizedPrincipals), isAssignedTo(query.user.username)))
 
     val page = if (specification != null) {
-      taskRepository.findAll(specification.and(isAuthorizedFor(authorizedPrincipals)), pageRequest)
+      taskRepository.findAll(specification.and(userQuery), pageRequest)
     } else {
-      taskRepository.findAll(isAuthorizedFor(authorizedPrincipals), pageRequest)
+      taskRepository.findAll(userQuery, pageRequest)
     }.map { taskEntity -> taskEntity.toTask(objectMapper) }
 
     return TaskQueryResult(
