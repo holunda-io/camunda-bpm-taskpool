@@ -8,7 +8,7 @@ Taskpool Collector is a component deployed as a part of the process application
 (aside with Camunda BPM Engine) that is responsible for collecting information from
 the Camunda BPM Engine. It detects the _intent_ of the operations executed inside the engine
 and creates the corresponding commands for the Taskpool. The commands are enriched with data and transmitted to
-other taskpool components (via Command Bus).
+other Taskpool components (via Command Bus).
 
 In the following description, we use the terms _event_ and _command_. Event denotes an entity
 received from Camunda BPM Engine (from delegate event listener or from history event listener)
@@ -55,7 +55,7 @@ In order to enable collector component, include the Maven dependency to your pro
 
 ```
 
-Then activate the taskpool collector by providing the annotation on any Spring Configuration:
+Then activate the Taskpool collector by providing the annotation on any Spring Configuration:
 
 ```java
 @Configuration
@@ -236,16 +236,67 @@ and the process reaches the task `task_approve_request`, the task will get the f
 
 > Please note that the logger root hierarchy is `io.holunda.polyflow.taskpool.collector`
 
-| Message Code     | Severity | Logger*               | Description                                                                                                                 | Meaning |
-|------------------|----------|:----------------------|:----------------------------------------------------------------------------------------------------------------------------|:--------| 
-| `COLLECTOR-001`  | `INFO`   |                       | Task commands will be collected.                                                                                            |         |
-| `COLLECTOR-002`  | `INFO`   |                       | Task commands not be collected.                                                                                             |         |
-| `COLLECTOR-005`  | `TRACE`  | `.process.definition` | Sending process definition command: $command                                                                                |         |
-| `COLLECTOR-006`  | `TRACE`  | `.process.instance`   | Sending process instance command: $command                                                                                  |         |
-| `COLLECTOR-007`  | `TRACE`  | `.process.variable`   | Sending process variable command: $command                                                                                  |         |
-| `COLLECTOR-008`  | `TRACE`  | `.task`               | Sending engine task command: $command.                                                                                      |         |
-| `ENRICHER-001`   | `INFO`   |                       | Task commands will be enriched with process variables.                                                                      |         |
-| `ENRICHER-002`   | `INFO`   |                       | Task commands will not be enriched.                                                                                         |         |
-| `ENRICHER-003`   | `INFO`   |                       | Task commands will be enriched by a custom enricher.                                                                        |         |
-| `ENRICHER-004`   | `DEBUG`  | `.task.enricher`      | Could not enrich variables from running execution ${command.sourceReference.executionId}, since it doesn't exist (anymore). |         |
+| Message Code     | Severity | Logger*               | Description                                                                                                                 | Meaning  |
+|------------------|----------|:----------------------|:----------------------------------------------------------------------------------------------------------------------------|:---------| 
+| `COLLECTOR-001`  | `INFO`   |                       | Task commands will be collected.                                                                                            |          |
+| `COLLECTOR-002`  | `INFO`   |                       | Task commands not be collected.                                                                                             |          |
+| `COLLECTOR-005`  | `TRACE`  | `.process.definition` | Sending process definition command: $command                                                                                |          |
+| `COLLECTOR-006`  | `TRACE`  | `.process.instance`   | Sending process instance command: $command                                                                                  |          |
+| `COLLECTOR-007`  | `TRACE`  | `.process.variable`   | Sending process variable command: $command                                                                                  |          |
+| `COLLECTOR-008`  | `TRACE`  | `.task`               | Sending engine task command: $command.                                                                                      |          |
+| `ENRICHER-001`   | `INFO`   |                       | Task commands will be enriched with process variables.                                                                      |          |
+| `ENRICHER-002`   | `INFO`   |                       | Task commands will not be enriched.                                                                                         |          |
+| `ENRICHER-003`   | `INFO`   |                       | Task commands will be enriched by a custom enricher.                                                                        |          |
+| `ENRICHER-004`   | `DEBUG`  | `.task.enricher`      | Could not enrich variables from running execution ${command.sourceReference.executionId}, since it doesn't exist (anymore). |          |
 
+### Task Assignment
+
+User task assignment is a core functionality for every process application fostering task oriented work. By default, Taskpool Collector uses
+information from Camunda User Task and maps that one-to-one to properties of the user task commands. The task attribute
+`assignee`, `candidateUsers` and `candidateGroups` are mapped to the corresponding attributes automatically.
+
+To control the task assignment mode you can configure taskpool collector using application properties. The property 
+`polyflow.integration.collector.camunda.task.assigner.type` has the following values:
+
+* `no`: No additional assignment takes place, the Camunda task attributes are used (default)
+* `process-variables`: Use process variables for assignment information, see below
+* `custom`: User provides own implementation implementing a bean implementing `TaskAssigner` interface.
+
+If the value is set to `process-variables`, you can set up a constant mapping defining the process variables carrying the assignment
+information. The corresponding properties are:
+
+```yaml
+polyflow:
+  integration:
+    collector:
+      camunda:
+        task:
+          assigner:
+            type: process-variables
+            assignee: my-assignee-var
+            candidateUsers: my-candidate-users-var 
+            candidateGroup: my-candidate-group-var
+```
+
+### Task Importer
+
+Alongside with the event-based Task Collector based on Camunda Eventing, there exists a dedicated service which can query Camunda database for existing
+user tasks and publish the results. In order to avoid duplications in tasks, the collected tasks are filtered by a special filter. Currently, you may choose
+between the supplied `eventstore` filter or supply your own `custom` filter by providing your own implementation of a `EngineTaskCommandFilter` interface as 
+a Spring Bean. If you want to use this task importer facility, you need to activate it first in your application configuration.
+
+The following property block is used for configuration:
+
+```yaml
+polyflow:
+  integration:
+    collector:
+      camunda:
+        task:
+          importer:
+            enabled: true
+            task-filter-type: eventstore
+```
+
+By doing so, the `TaskServiceCollectorService` Bean is made available and can be used to trigger the import. The `eventstore` filter is useful in scenarios,
+in which the [Taskpool Core](./core-taskpool) is deployed on together with Taskpool Collector as part of the Process Application.
