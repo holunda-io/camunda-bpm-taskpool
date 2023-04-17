@@ -1746,7 +1746,7 @@ The queries implement the <code>PageableSortableQuery</code> interface, allowing
 </code></pre></div>
 The <code>page</code> parameter denotes the page number to deliver (starting with <code>0</code>). The <code>size</code> parameter denotes the number of elements on a page. By default, the <code>page</code> is set to <code>0</code>
 and the size is set to <code>Int.MAX</code>. </p>
-<p>An optional <code>sort</code> parameter allows to sort the results by a field attribute.  The format of the <code>sort</code> string is <code>&lt;+|-&gt;filedName</code>, <code>+fieldName</code> means sort by <code>fieldName</code> ascending,
+<p>An optional <code>sort</code> parameter allows to sort the results by a field attribute. The format of the <code>sort</code> string is <code>&lt;+|-&gt;fieldName</code>, <code>+fieldName</code> means sort by <code>fieldName</code> ascending,
 <code>-fieldName</code> means sort by <code>fieldName</code> descending. The field must be a direct member of the result (<code>Task</code>, <code>TaskWithDataEntries</code> or <code>DataEntry</code>) and must be one of the following type:</p>
 <ul>
 <li>java.lang.Integer</li>
@@ -1757,7 +1757,7 @@ and the size is set to <code>Int.MAX</code>. </p>
 <p>To filter the results, you might supply a list of filters. A filter is an expression in format <code>fieldName&lt;op&gt;value</code>, where <code>fieldName</code> is addressing the attribute of the search result,
 <code>&lt;op&gt;</code> is one of <code>&lt;</code>, <code>=</code>, <code>%</code> and <code>&gt;</code> and <code>value</code> is a string representation of the values. The <code>fieldName</code> can point to an attribute of the result entity itself (<code>Task</code>, <code>TaskWithDataEntries</code> 
 or <code>DataEntry</code>) or point to the attribute inside the payload. To avoid a possible name clash, you must prefix the field name with <code>task.</code> if you want to filter on direct attributes of a task,
-and you must prefix the field name with <code>data</code> if you want to filter on direct attributes of a dta entry. For example, <code>task.priority=50</code> would deliver tasks with priority set to 50,
+and you must prefix the field name with <code>data</code> if you want to filter on direct attributes of a data entry. For example, <code>task.priority=50</code> would deliver tasks with priority set to 50,
 and <code>data.entryType=info.polyflow.Order</code> will deliver data entries of type <code>info.polyflow.Order</code> only.</p>
 <p>Following operations are supported:</p>
 <table>
@@ -1777,7 +1777,7 @@ and <code>data.entryType=info.polyflow.Order</code> will deliver data entries of
 <td><code>&lt;</code></td>
 <td>Less than</td>
 <td>all, payload</td>
-<td>none</td>
+<td><code>followUpDate</code>, <code>dueDate</code></td>
 <td>none</td>
 <td>all, payload</td>
 <td>all, payload</td>
@@ -1786,7 +1786,7 @@ and <code>data.entryType=info.polyflow.Order</code> will deliver data entries of
 <td><code>&gt;</code></td>
 <td>Greater than</td>
 <td>all, payload</td>
-<td>none</td>
+<td><code>followUpDate</code>, <code>dueDate</code></td>
 <td>none</td>
 <td>all, payload</td>
 <td>all, payload</td>
@@ -1795,8 +1795,8 @@ and <code>data.entryType=info.polyflow.Order</code> will deliver data entries of
 <td><code>=</code></td>
 <td>Equals</td>
 <td>all, payload</td>
-<td>business key, payload</td>
-<td>entry id, entry type, type, payload, processing state, user status</td>
+<td>payload, <code>businessKey</code>, <code>followUpDate</code>, <code>dueDate</code></td>
+<td><code>entryId</code>, <code>entryType</code>, <code>type</code>, payload, <code>processingState</code>, <code>userStatus</code></td>
 <td>all, payload</td>
 <td>all, payload</td>
 </tr>
@@ -1804,13 +1804,18 @@ and <code>data.entryType=info.polyflow.Order</code> will deliver data entries of
 <td><code>%</code></td>
 <td>Like</td>
 <td>all, payload</td>
-<td>name, description</td>
+<td><code>businessKey</code>, <code>name</code>, <code>description</code>, <code>processName</code>, <code>textSearch</code></td>
 <td>none</td>
 <td>none</td>
 <td>none</td>
 </tr>
 </tbody>
 </table>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>There are several special reserved filters which can be passed to the task query: <code>task.processName=&lt;value&gt;</code> check equality of the process name, <code>task.processName%&lt;value&gt;</code> makes a like-search on</p>
+</div>
+<p>process name, <code>task.textSearch%some-substring</code> makes a special OR-combined like-search on task name, task description and task process name. </p>
 <p>If the field name has no prefix of above, it is considered as an attribute inside the payload of data entry or enriched variables of a user task. For example, imagine
 you have a data entry with payload attributes <code>{ "attribute": "value", "another": 45 }</code>. In order to search for those, just specify <code>attribute=value</code> in your filter criteria. </p>
 
@@ -1819,7 +1824,7 @@ you have a data entry with payload attributes <code>{ "attribute": "value", "ano
   <small>
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">April 14, 2023</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">April 17, 2023</span>
       
     
   </small>
