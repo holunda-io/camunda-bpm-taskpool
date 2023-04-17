@@ -120,12 +120,12 @@ and `data.entryType=info.polyflow.Order` will deliver data entries of type `info
 
 Following operations are supported:
 
-| Filter | Operation    | In-Memory    | JPA (Task Attributes) | JPA (Data Entries Attributes)                                      | Mongo DB (Task Attributes) | Mongo DB (Data Entries Attributes) |  
-|--------|--------------|--------------|-----------------------|--------------------------------------------------------------------|----------------------------|------------------------------------|
-| `<`    | Less than    | all, payload | none                  | none                                                               | all, payload               | all, payload                       | 
-| `>`    | Greater than | all, payload | none                  | none                                                               | all, payload               | all, payload                       |
-| `=`    | Equals       | all, payload | business key, payload | entry id, entry type, type, payload, processing state, user status | all, payload               | all, payload                       |
-| `%`    | Like         | all, payload | name, description     | none                                                               | none                       | none                               |
+| Filter | Operation    | In-Memory    | JPA (Task Attributes)                         | JPA (Data Entries Attributes)                                      | Mongo DB (Task Attributes) | Mongo DB (Data Entries Attributes) |  
+|--------|--------------|--------------|-----------------------------------------------|--------------------------------------------------------------------|----------------------------|------------------------------------|
+| `<`    | Less than    | all, payload | followUpDate, dueDate                         | none                                                               | all, payload               | all, payload                       | 
+| `>`    | Greater than | all, payload | followUpDate, dueDate                         | none                                                               | all, payload               | all, payload                       |
+| `=`    | Equals       | all, payload | business key, payload, followUpDate, dueDate  | entry id, entry type, type, payload, processing state, user status | all, payload               | all, payload                       |
+| `%`    | Like         | all, payload | name, description                             | none                                                               | none                       | none                               |
 
 
 If the field name has no prefix of above, it is considered as an attribute inside the payload of data entry or enriched variables of a user task. For example, imagine
