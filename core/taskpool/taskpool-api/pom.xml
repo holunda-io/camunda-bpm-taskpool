@@ -6,7 +6,7 @@
   <parent>
     <groupId>io.holunda.polyflow</groupId>
     <artifactId>polyflow-taskpool-parent</artifactId>
-    <version>3.9.1</version>
+    <version>3.9.2-SNAPSHOT</version>
   </parent>
 
   <artifactId>polyflow-taskpool-api</artifactId>
