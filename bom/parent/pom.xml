@@ -6,7 +6,7 @@
   <parent>
     <groupId>io.holunda.polyflow</groupId>
     <artifactId>polyflow-root</artifactId>
-    <version>3.9.0</version>
+    <version>3.9.1</version>
     <relativePath>../../pom.xml</relativePath>
   </parent>
 
@@ -296,6 +296,10 @@
 
   <build>
     <defaultGoal>clean package</defaultGoal>
+
+    <sourceDirectory>src/main/kotlin</sourceDirectory>
+    <testSourceDirectory>src/test/kotlin</testSourceDirectory>
+
     <pluginManagement>
       <plugins>
         <!-- Coverage metering -->
@@ -423,40 +427,6 @@
         </plugin>
 
         <plugin>
-          <!-- for packaging springboot application -->
-          <groupId>org.springframework.boot</groupId>
-          <artifactId>spring-boot-maven-plugin</artifactId>
-          <version>${springboot.version}</version>
-          <executions>
-            <execution>
-              <goals>
-                <goal>repackage</goal>
-              </goals>
-            </execution>
-          </executions>
-          <configuration>
-            <excludes>
-              <exclude>
-                <groupId>commons-logging</groupId>
-                <artifactId>commons-logging</artifactId>
-              </exclude>
-              <exclude>
-                <groupId>log4j</groupId>
-                <artifactId>log4j</artifactId>
-              </exclude>
-              <exclude>
-                <groupId>org.apache.logging.log4j</groupId>
-                <artifactId>log4j-core</artifactId>
-              </exclude>
-              <exclude>
-                <groupId>org.apache.logging.log4j</groupId>
-                <artifactId>log4j-api</artifactId>
-              </exclude>
-            </excludes>
-          </configuration>
-        </plugin>
-
-        <plugin>
           <!-- for loading and unpacking artifacts -->
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-dependency-plugin</artifactId>
@@ -476,8 +446,8 @@
           <version>${kotlin.version}</version>
           <configuration>
             <jvmTarget>${java.version}</jvmTarget>
-            <apiVersion>1.5</apiVersion>
-            <languageVersion>1.5</languageVersion>
+            <apiVersion>1.8</apiVersion>
+            <languageVersion>1.8</languageVersion>
             <args>
               <arg>-Xjsr305=strict</arg>
             </args>
@@ -500,9 +470,6 @@
                 <goal>kapt</goal>
               </goals>
               <configuration>
-                <sourceDirs>
-                  <sourceDir>${project.basedir}/src/main/kotlin</sourceDir>
-                </sourceDirs>
                 <annotationProcessorPaths>
                   <annotationProcessorPath>
                     <groupId>org.springframework.boot</groupId>
@@ -517,12 +484,6 @@
               <goals>
                 <goal>compile</goal>
               </goals>
-              <configuration>
-                <sourceDirs>
-                  <sourceDir>${project.basedir}/target/generated-sources/swagger/src/main/java</sourceDir>
-                  <sourceDir>${project.basedir}/src/main/kotlin</sourceDir>
-                </sourceDirs>
-              </configuration>
             </execution>
             <execution>
               <id>test-compile</id>
@@ -563,7 +524,7 @@
             </excludes>
             <!-- Sets the VM argument line used when unit tests are run. -->
             <!-- prevent the annoying ForkedBooter process from stealing window focus on Mac OS -->
-            <argLine>-Djava.awt.headless=true ${surefireArgLine} -XX:+StartAttachListener</argLine>
+            <argLine>-Djava.awt.headless=true @{surefireArgLine} -XX:+StartAttachListener</argLine>
             <systemPropertyVariables>
               <jgiven.report.dir>${project.build.directory}/jgiven-reports</jgiven.report.dir>
             </systemPropertyVariables>
@@ -589,7 +550,7 @@
             </includes>
             <!-- Sets the VM argument line used when integration tests are run. -->
             <!-- prevent the annoying ForkedBooter process from stealing window focus on Mac OS -->
-            <argLine>-Djava.awt.headless=true ${failsafeArgLine} -XX:+StartAttachListener</argLine>
+            <argLine>-Djava.awt.headless=true @{failsafeArgLine} -XX:+StartAttachListener</argLine>
           </configuration>
         </plugin>
 

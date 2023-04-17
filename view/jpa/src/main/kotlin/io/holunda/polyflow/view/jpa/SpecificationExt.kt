@@ -3,9 +3,8 @@ package io.holunda.polyflow.view.jpa
 import io.holunda.camunda.taskpool.api.business.DataEntryState
 import io.holunda.camunda.taskpool.api.business.ProcessingType
 import io.holunda.polyflow.view.DataEntry
-import io.holunda.polyflow.view.filter.Criterion
-import io.holunda.polyflow.view.filter.EQUALS
-import io.holunda.polyflow.view.filter.LIKE
+import io.holunda.polyflow.view.Task
+import io.holunda.polyflow.view.filter.*
 import io.holunda.polyflow.view.jpa.data.DataEntryEntity
 import io.holunda.polyflow.view.jpa.data.DataEntryRepository.Companion.hasDataEntryPayloadAttribute
 import io.holunda.polyflow.view.jpa.data.DataEntryRepository.Companion.hasEntryId
@@ -15,14 +14,24 @@ import io.holunda.polyflow.view.jpa.data.DataEntryRepository.Companion.hasState
 import io.holunda.polyflow.view.jpa.data.DataEntryRepository.Companion.hasType
 import io.holunda.polyflow.view.jpa.task.TaskEntity
 import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.hasBusinessKey
+import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.hasDueDate
+import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.hasDueDateAfter
+import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.hasDueDateBefore
+import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.hasFollowUpDate
+import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.hasFollowUpDateAfter
+import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.hasFollowUpDateBefore
+import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.hasProcessName
 import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.hasTaskPayloadAttribute
 import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.likeBusinessKey
 import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.likeDescription
 import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.likeName
+import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.likeProcessName
+import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.likeTextSearch
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.data.jpa.domain.Specification
 import org.springframework.data.jpa.domain.Specification.where
+import java.time.Instant
 
 /**
  * Creates a JPQL specification out of predicate wrapper.
@@ -116,16 +125,35 @@ internal fun Criterion.TaskCriterion.toTaskSpecification(): Specification<TaskEn
   return when (this.operator) {
     EQUALS -> {
       when (this.name) {
-        TaskEntity::businessKey.name -> hasBusinessKey(this.value)
+        "processName" -> hasProcessName(this.value)
+        Task::businessKey.name -> hasBusinessKey(this.value)
+        Task::dueDate.name -> hasDueDate(Instant.parse(this.value))
+        Task::followUpDate.name -> hasFollowUpDate(Instant.parse(this.value))
         else -> throw IllegalArgumentException("JPA View found unsupported task attribute for equals comparison: ${this.name}.")
       }
     }
     LIKE -> {
       when (this.name) {
-        TaskEntity::name.name -> likeName(this.value)
-        TaskEntity::description.name -> likeDescription(this.value)
-        TaskEntity::businessKey.name -> likeBusinessKey(this.value)
+        "textSearch" -> likeTextSearch(this.value)
+        Task::name.name -> likeName(this.value)
+        Task::description.name -> likeDescription(this.value)
+        "processName" -> likeProcessName(this.value)
+        Task::businessKey.name -> likeBusinessKey(this.value)
         else -> throw IllegalArgumentException("JPA View found unsupported task attribute for like comparison: ${this.name}.")
+      }
+    }
+    LESS -> {
+      when (this.name) {
+        Task::dueDate.name -> hasDueDateBefore(Instant.parse(this.value))
+        Task::followUpDate.name -> hasFollowUpDateBefore(Instant.parse(this.value))
+        else -> throw IllegalArgumentException("JPA View found unsupported task attribute for < comparison: ${this.name}.")
+      }
+    }
+    GREATER -> {
+      when (this.name) {
+        Task::dueDate.name -> hasDueDateAfter(Instant.parse(this.value))
+        Task::followUpDate.name -> hasFollowUpDateAfter(Instant.parse(this.value))
+        else -> throw IllegalArgumentException("JPA View found unsupported task attribute for > comparison: ${this.name}.")
       }
     }
     else -> throw IllegalArgumentException("JPA View found unsupported comparison ${this.operator} for attribute ${this.name}.")
