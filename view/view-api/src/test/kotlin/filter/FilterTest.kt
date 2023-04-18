@@ -84,8 +84,10 @@ class FilterTest {
   fun `should classify properties`() {
     assertThat(isTaskAttribute("task.id")).isTrue
     assertThat(isTaskAttribute("task.name")).isTrue
-    assertThat(isTaskAttribute("task.name")).isTrue
+    assertThat(isTaskAttribute("task.followUpDate")).isTrue
     assertThat(isTaskAttribute("task.dueDate")).isTrue
+    assertThat(isTaskAttribute("task.processName")).isTrue
+    assertThat(isTaskAttribute("task.textSearch")).isTrue
 
     assertThat(isTaskAttribute("task.")).isFalse
     assertThat(isTaskAttribute("assignee")).isFalse
@@ -114,6 +116,20 @@ class FilterTest {
       toCriteria(listOf("$EQUALS$EQUALS"))
     }
   }
+
+  @Test
+  fun `should create task criteria for process name and text search`() {
+    val criteria = toCriteria(listOf("task.processName%foo", "task.textSearch%bar"))
+    assertThat(criteria).isNotNull
+    assertThat(criteria.size).isEqualTo(2)
+    assertThat(criteria).containsExactlyElementsOf(
+      listOf(
+        Criterion.TaskCriterion("processName", "foo", operator = "%"),
+        Criterion.TaskCriterion("textSearch", "bar", operator = "%"),
+      )
+    )
+  }
+
 
   @Test
   fun `should fail to create criteria 2`() {
