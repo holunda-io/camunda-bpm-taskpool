@@ -51,7 +51,7 @@ class TaskEntity(
   var payloadAttributes: MutableSet<PayloadAttribute> = mutableSetOf(),
   @Column(name = "BUSINESS_KEY")
   var businessKey: String? = null,
-  @Column(name = "DESCRIPTION")
+  @Column(name = "DESCRIPTION", length = 2048)
   var description: String? = null,
   @Column(name = "FORM_KEY")
   var formKey: String? = null,

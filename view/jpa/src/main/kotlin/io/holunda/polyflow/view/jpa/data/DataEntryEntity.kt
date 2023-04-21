@@ -25,7 +25,7 @@ class DataEntryEntity(
   var revision: Long = 0L,
   @Embedded
   var state: DataEntryStateEmbeddable,
-  @Column(name = "DESCRIPTION")
+  @Column(name = "DESCRIPTION", length = 2048)
   var description: String? = null,
 
   @Column(name = "DATE_CREATED", nullable = false)
