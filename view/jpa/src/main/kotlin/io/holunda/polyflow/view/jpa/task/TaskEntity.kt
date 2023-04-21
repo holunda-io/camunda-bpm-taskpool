@@ -18,7 +18,6 @@ class TaskEntity(
   var taskId: String,
   @Column(name = "TASK_DEF_KEY", nullable = false)
   var taskDefinitionKey: String,
-  @Lob
   @Column(name = "NAME", nullable = false)
   var name: String,
   @Column(name = "PRIORITY")
@@ -52,8 +51,7 @@ class TaskEntity(
   var payloadAttributes: MutableSet<PayloadAttribute> = mutableSetOf(),
   @Column(name = "BUSINESS_KEY")
   var businessKey: String? = null,
-  @Lob
-  @Column(name = "DESCRIPTION")
+  @Column(name = "DESCRIPTION", length = 2048)
   var description: String? = null,
   @Column(name = "FORM_KEY")
   var formKey: String? = null,

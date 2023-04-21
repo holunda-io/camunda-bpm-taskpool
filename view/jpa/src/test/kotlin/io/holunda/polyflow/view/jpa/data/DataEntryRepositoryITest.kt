@@ -49,6 +49,8 @@ internal class DataEntryRepositoryITest {
 
   @BeforeEach
   fun `insert entries`() {
+    dataEntryRepository.deleteAll()
+    entityManager.flush()
 
     val id = UUID.randomUUID().toString()
 
