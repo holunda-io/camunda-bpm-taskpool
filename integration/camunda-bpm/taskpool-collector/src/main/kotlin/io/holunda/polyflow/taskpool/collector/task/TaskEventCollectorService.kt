@@ -17,12 +17,13 @@ import org.springframework.core.annotation.Order
  * Collects Camunda events and Camunda historic events (event listener order is {@link TaskEventCollectorService#ORDER}) and emits Commands
  */
 class TaskEventCollectorService(
-  private val camundaTaskpoolCollectorProperties: CamundaTaskpoolCollectorProperties,
+  val camundaTaskpoolCollectorProperties: CamundaTaskpoolCollectorProperties, // must not be private to access in conditions of event handlers
   private val repositoryService: RepositoryService
 ) {
 
 
   companion object : KLogging() {
+    const val NAME = "taskEventCollectorService"
     // high order to be later than all other listeners and work on changed entity
     const val ORDER = Integer.MAX_VALUE - 100
   }
@@ -46,7 +47,7 @@ class TaskEventCollectorService(
    * Fires create command.
    */
   @Order(ORDER)
-  @EventListener(condition = "#task.eventName.equals('create')")
+  @EventListener(condition = "#task.eventName.equals('create') && @taskEventCollectorService.camundaTaskpoolCollectorProperties.task.collectTaskEvent('create')")
   fun create(task: DelegateTask): CreateTaskCommand =
     CreateTaskCommand(
       id = task.id,
@@ -70,7 +71,7 @@ class TaskEventCollectorService(
    * Fires complete.
    */
   @Order(ORDER)
-  @EventListener(condition = "#task.eventName.equals('complete')")
+  @EventListener(condition = "#task.eventName.equals('complete') && @taskEventCollectorService.camundaTaskpoolCollectorProperties.task.collectTaskEvent('complete')")
   fun complete(task: DelegateTask): CompleteTaskCommand =
     CompleteTaskCommand(
       id = task.id,
@@ -81,7 +82,7 @@ class TaskEventCollectorService(
    * Fires assign command.
    */
   @Order(ORDER)
-  @EventListener(condition = "#task.eventName.equals('assignment')")
+  @EventListener(condition = "#task.eventName.equals('assignment') && @taskEventCollectorService.camundaTaskpoolCollectorProperties.task.collectTaskEvent('assignment')")
   fun assign(task: DelegateTask) {
     // this method is intentionally empty to demonstrate that the assign event is captured.
     // we hence rely on historic identity link events to capture assignment via API and via listeners more accurately.
@@ -91,7 +92,7 @@ class TaskEventCollectorService(
    * Fires delete command.
    */
   @Order(ORDER)
-  @EventListener(condition = "#task.eventName.equals('delete')")
+  @EventListener(condition = "#task.eventName.equals('delete') && @taskEventCollectorService.camundaTaskpoolCollectorProperties.task.collectTaskEvent('delete')")
   fun delete(task: DelegateTask): DeleteTaskCommand =
     DeleteTaskCommand(
       id = task.id,
@@ -103,7 +104,7 @@ class TaskEventCollectorService(
    * Fires update command.
    */
   @Order(ORDER)
-  @EventListener(condition = "#task.eventName.equals('update')")
+  @EventListener(condition = "#task.eventName.equals('update') && @taskEventCollectorService.camundaTaskpoolCollectorProperties.task.collectTaskEvent('update')")
   fun update(task: DelegateTask): UpdateAttributeTaskCommand? =
     if (task is TaskEntity) {
       if (task.isAssigneeChange()) {
@@ -122,7 +123,7 @@ class TaskEventCollectorService(
    * into the original intent.
    */
   @Order(ORDER)
-  @EventListener
+  @EventListener(condition = "@taskEventCollectorService.camundaTaskpoolCollectorProperties.task.collectHistoryEvent('update')")
   fun update(changeEvent: HistoricTaskInstanceEventEntity): UpdateAttributesHistoricTaskCommand? =
     when (changeEvent.eventType) {
       "update" -> UpdateAttributesHistoricTaskCommand(
@@ -145,7 +146,7 @@ class TaskEventCollectorService(
    * This is the only way to detect changes of identity links (candidate user/group change and remove).
    */
   @Order(ORDER)
-  @EventListener
+  @EventListener(condition = "@taskEventCollectorService.camundaTaskpoolCollectorProperties.task.collectHistoryEvent('add-identity-link') || @taskEventCollectorService.camundaTaskpoolCollectorProperties.task.collectHistoryEvent('delete-identity-link')")
   fun update(changeEvent: HistoricIdentityLinkLogEventEntity): Any? =
     when {
       // user assignment. Is needed because the assignment out of a listener is undetected otherwise.
