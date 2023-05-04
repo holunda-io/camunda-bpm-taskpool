@@ -12,13 +12,9 @@ import org.camunda.bpm.engine.ManagementService
 import org.camunda.bpm.engine.RepositoryService
 import org.camunda.bpm.engine.RuntimeService
 import org.camunda.bpm.engine.TaskService
-import org.camunda.bpm.engine.impl.interceptor.Command
 import org.camunda.bpm.engine.impl.interceptor.CommandExecutor
 import org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.*
 import org.camunda.bpm.spring.boot.starter.annotation.EnableProcessApplication
-import org.junit.After
-import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.*
@@ -32,11 +28,9 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Primary
 import org.springframework.test.annotation.Commit
 import org.springframework.test.annotation.DirtiesContext
-import org.springframework.test.annotation.Rollback
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.transaction.AfterTransaction
 import org.springframework.transaction.annotation.Transactional
-import org.springframework.transaction.support.TransactionSynchronization
 import java.util.*
 
 
@@ -70,12 +64,6 @@ internal class TaskTxJobSenderITest {
     TestDriver(repositoryService, runtimeService)
   }
 
-
-  @BeforeEach
-  fun `start process and create user task`() {
-
-  }
-
   @Test
   @Transactional
   @Commit
@@ -85,26 +73,12 @@ internal class TaskTxJobSenderITest {
       createUserTaskProcess()
     )
 
-//    commandExecutor.execute {
-//      Command {
-        // start
-        val instance = driver.startProcessInstance()
-        // instance is started
-        assertThat(instance).isStarted
-        // user task
-        driver.assertProcessInstanceWaitsInUserTask(instance)
-//      }
-//    }
-
-
-    /*
-
-        val createCommand = createTaskCommand(
-          candidateUsers = setOf("piggy"),
-          candidateGroups = setOf("muppetshow"),
-        )
-    */
-
+    // start
+    val instance = driver.startProcessInstance()
+    // instance is started
+    assertThat(instance).isStarted
+    // user task
+    driver.assertProcessInstanceWaitsInUserTask(instance)
 
     verifyNoMoreInteractions(commandListGateway)
 

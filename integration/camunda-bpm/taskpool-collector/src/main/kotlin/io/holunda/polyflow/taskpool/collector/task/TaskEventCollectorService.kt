@@ -86,6 +86,7 @@ class TaskEventCollectorService(
   fun assign(task: DelegateTask) {
     // this method is intentionally empty to demonstrate that the assign event is captured.
     // we hence rely on historic identity link events to capture assignment via API and via listeners more accurately.
+    // see implementation below
   }
 
   /**
@@ -123,10 +124,9 @@ class TaskEventCollectorService(
    * into the original intent.
    */
   @Order(ORDER)
-  @EventListener(condition = "@taskEventCollectorService.camundaTaskpoolCollectorProperties.task.collectHistoryEvent('update')")
-  fun update(changeEvent: HistoricTaskInstanceEventEntity): UpdateAttributesHistoricTaskCommand? =
-    when (changeEvent.eventType) {
-      "update" -> UpdateAttributesHistoricTaskCommand(
+  @EventListener(condition = "#changeEvent.eventType.equals('update') && @taskEventCollectorService.camundaTaskpoolCollectorProperties.task.collectHistoryEvent('update')")
+  fun update(changeEvent: HistoricTaskInstanceEventEntity): UpdateAttributesHistoricTaskCommand =
+      UpdateAttributesHistoricTaskCommand(
         id = changeEvent.taskId,
         description = changeEvent.description,
         dueDate = changeEvent.dueDate,
@@ -137,9 +137,6 @@ class TaskEventCollectorService(
         taskDefinitionKey = changeEvent.taskDefinitionKey,
         sourceReference = changeEvent.sourceReference(repositoryService, camundaTaskpoolCollectorProperties.applicationName)
       )
-
-      else -> null
-    }
 
   /**
    * Fires update assignment historic command.

@@ -83,6 +83,31 @@ internal class CamundaTaskpoolCollectorPropertiesExtendedTest {
       }
   }
 
+  @Test
+  fun `loads properties configuration to ignore listeners`() {
+    contextRunner
+      .withUserConfiguration(TestMockConfiguration::class.java)
+      .withUserConfiguration(AdditionalMockConfiguration::class.java)
+      .withPropertyValues(
+        "spring.application.name=my-test-application",
+        "camunda.bpm.eventing.task=false",
+        "polyflow.integration.collector.camunda.task.enabled=true",
+        "polyflow.integration.collector.camunda.task.enricher.type=custom",
+        "polyflow.integration.collector.camunda.task.excluded-task-event-names=assignment",
+        "polyflow.integration.collector.camunda.task.excluded-history-event-names=add-identity-link,delete-identity-link",
+      ).run {
+
+        assertThat(it.getBean(CamundaTaskpoolCollectorProperties::class.java)).isNotNull
+        val props: CamundaTaskpoolCollectorProperties = it.getBean(CamundaTaskpoolCollectorProperties::class.java)
+
+        assertThat(props.task.enabled).isTrue
+        assertThat(props.task.collectTaskEvent("assignment")).isFalse()
+        assertThat(props.task.collectHistoryEvent("add-identity-link")).isFalse()
+        assertThat(props.task.collectHistoryEvent("delete-identity-link")).isFalse()
+      }
+  }
+
+
   /**
    * Config class without configuration annotation not to confuse others.
    */
