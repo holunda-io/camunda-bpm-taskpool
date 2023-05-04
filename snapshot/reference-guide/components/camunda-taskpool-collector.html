@@ -1519,7 +1519,7 @@ received from Camunda BPM Engine (from delegate event listener or from history e
 which is passed over to the Taskpool Collector using internal <strong>Spring eventing</strong> mechanism. The Taskpool
 Collector converts the series of such events into a Taskpool Command - an entity carrying an intent
 of change inside the Taskpool core. Please note that <em>event</em> has another meaning in CQRS/ES systems
-and other components of the Taskpool, but in the context of Taskpool collector an event always originates from
+and other components of the Taskpool, but in the context of Taskpool Collector an event always originates from
 Spring eventing.</p>
 <h3 id="features">Features<a class="headerlink" href="#features" title="Permanent link">#</a></h3>
 <ul>
@@ -1528,6 +1528,7 @@ Spring eventing.</p>
 <li>Collection of process variable change events</li>
 <li>Collection of task events and history events</li>
 <li>Creation of task engine commands</li>
+<li>Collection of tasks assignment information</li>
 <li>Enrichment of task engine commands with process variables</li>
 <li>Attachment of correlation information to task engine commands</li>
 <li>Transmission of commands to Axon command bus</li>
@@ -1550,7 +1551,7 @@ Spring eventing.</p>
 <span class="w">      </span><span class="nt">&lt;version&gt;</span>${camunda-taskpool.version}<span class="nt">&lt;/version&gt;</span>
 <span class="w">      </span><span class="nt">&lt;dependency&gt;</span>
 </code></pre></div>
-<p>Then activate the Taskpool collector by providing the annotation on any Spring Configuration:</p>
+<p>Then activate the Taskpool Collector by providing the annotation on any Spring Configuration:</p>
 <div class="highlight"><pre><span></span><code><span class="nd">@Configuration</span>
 <span class="nd">@Import</span><span class="p">(</span><span class="n">CamundaTaskpoolCollectorConfiguration</span><span class="p">.</span><span class="na">class</span><span class="p">)</span>
 <span class="kd">class</span> <span class="nc">MyProcessApplicationConfiguration</span><span class="w"> </span><span class="p">{</span>
@@ -1558,7 +1559,7 @@ Spring eventing.</p>
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="event-collection">Event collection<a class="headerlink" href="#event-collection" title="Permanent link">#</a></h3>
-<p>Taskpool Collector registers Spring Event Listener to the following events, fired by Camunda Eventing Engine Plugin:</p>
+<p>By default, Taskpool Collector registers Spring Event Listener to the following events, fired by Camunda Eventing Engine Plugin:</p>
 <ul>
 <li><code>DelegateTask</code> events:
   <strong> create
@@ -1575,6 +1576,18 @@ Spring eventing.</p>
 <p>The events are transformed into corresponding commands and passed over to the processor layer. Until Camunda Platform 7.19, the eventing
 is fired using custom listeners only and polyflow components don't rely on that but rather on own implementation of built-in (unskippable) listeners.
 For this purpose, it is important to disable Camunda Platform custom listeners by setting <code>camunda.bpm.eventing.task</code> property to <code>false</code>.   </p>
+<p>During collection of task information, you can control which listeners are registered. By default, all listeners are considered but you can change
+this behaviour by setting values of two properties:</p>
+<p><div class="highlight"><pre><span></span><code><span class="nt">polyflow</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">integration</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">collector</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">camunda</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">task</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">excludedTaskEventNames</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">assignment, delete</span>
+<span class="w">          </span><span class="nt">excludedHistoryEventNames</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">add-identity-link, delete-identity-link</span>
+</code></pre></div>
+This particular setting is helpful, if you want to disable assignment in the engine entirely and want to provide you own custom task assignment algorithm or
+use assignment based on process variables (see below for more details).</p>
 <h3 id="task-commands-enrichment">Task commands enrichment<a class="headerlink" href="#task-commands-enrichment" title="Permanent link">#</a></h3>
 <p>Alongside with attributes received from the Camunda BPM engine, the engine task commands
 can be enriched with additional attributes.</p>
@@ -1790,10 +1803,10 @@ and the process reaches the task <code>task_approve_request</code>, the task wil
 </tbody>
 </table>
 <h3 id="task-assignment">Task Assignment<a class="headerlink" href="#task-assignment" title="Permanent link">#</a></h3>
-<p>User task assignment is a core functionality for every process application fostering task oriented work. By default, Taskpool Collector uses
+<p>User task assignment is a core functionality for every process application fostering task-oriented work. By default, Taskpool Collector uses
 information from Camunda User Task and maps that one-to-one to properties of the user task commands. The task attribute
 <code>assignee</code>, <code>candidateUsers</code> and <code>candidateGroups</code> are mapped to the corresponding attributes automatically.</p>
-<p>To control the task assignment mode you can configure taskpool collector using application properties. The property 
+<p>To control the task assignment mode you can configure Taskpool Collector using application properties. The property 
 <code>polyflow.integration.collector.camunda.task.assigner.type</code> has the following values:</p>
 <ul>
 <li><code>no</code>: No additional assignment takes place, the Camunda task attributes are used (default)</li>
