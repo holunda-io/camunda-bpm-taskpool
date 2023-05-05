@@ -114,7 +114,7 @@ class TaskCollectorConfiguration(
   /**
    * Constructs the task collector service responsible for collecting Camunda Spring events and building commands out of them.
    */
-  @Bean
+  @Bean(TaskEventCollectorService.NAME)
   fun taskEventCollectorService(repositoryService: RepositoryService) = TaskEventCollectorService(
     camundaTaskpoolCollectorProperties = camundaTaskpoolCollectorProperties,
     repositoryService = repositoryService

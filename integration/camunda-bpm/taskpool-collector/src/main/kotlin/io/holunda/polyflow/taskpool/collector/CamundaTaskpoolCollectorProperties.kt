@@ -1,6 +1,7 @@
 package io.holunda.polyflow.taskpool.collector
 
 import io.holunda.polyflow.taskpool.collector.task.assigner.ProcessVariableTaskAssignerMapping
+import org.camunda.bpm.engine.delegate.TaskListener
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.context.properties.ConstructorBinding
@@ -69,9 +70,33 @@ data class CamundaTaskCollectorProperties(
    * Properties of task importer.
    */
   @NestedConfigurationProperty
-  val importer: TaskImporterProperties = TaskImporterProperties()
+  val importer: TaskImporterProperties = TaskImporterProperties(),
 
-)
+  /**
+   * List of task events to be excluded from collector. Defaults to empty list, so all events are collected.
+   * Possible values are constants defined in [TaskListener].
+   */
+  val excludedTaskEventNames: List<String> = listOf(),
+
+  /**
+   * List of history events to restrict (HistoricTaskInstanceEventEntity, HistoricIdentityLinkLogEventEntity). Defaults to empty list, so all events are collected.
+   * Possible values are constants defined in [HistoryEventTypes] + "update".
+   */
+  val excludedHistoryEventNames: List<String> = listOf()
+) {
+  /**
+   * Determines if the provided event name should be collected.
+   * @param eventName event name to check.
+   * @return true if not excluded.
+   */
+  fun collectTaskEvent(eventName: String): Boolean = !excludedTaskEventNames.contains(eventName)
+  /**
+   * Determines if the provided event name should be collected.
+   * @param eventName event name to check.
+   * @return true if not excluded.
+   */
+  fun collectHistoryEvent(eventName: String): Boolean = !excludedHistoryEventNames.contains(eventName)
+}
 
 /**
  * Process variable properties.

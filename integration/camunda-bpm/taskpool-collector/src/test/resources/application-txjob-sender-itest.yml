@@ -1,5 +1,5 @@
 spring:
-  application.name: txjob-sender-test
+  application.name: collector-test
   jpa:
     open-in-view: true # disable JPA warning
     show-sql: true
@@ -17,7 +17,16 @@ camunda:
 
 polyflow:
   integration:
+    collector:
+      camunda:
+        task:
+          enabled: true
+        process-instance:
+          enabled: false
+        process-definition:
+          enabled: false
     sender:
       task:
         type: txjob
         send-within-transaction: true
+

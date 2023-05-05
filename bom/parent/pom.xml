@@ -6,7 +6,7 @@
   <parent>
     <groupId>io.holunda.polyflow</groupId>
     <artifactId>polyflow-root</artifactId>
-    <version>3.10.0</version>
+    <version>3.11.0</version>
     <relativePath>../../pom.xml</relativePath>
   </parent>
 
@@ -18,7 +18,7 @@
   <url>https://github.com/holunda-io/camunda-bpm-taskpool/</url>
 
   <properties>
-    <springboot.version>2.7.10</springboot.version>
+    <springboot.version>2.7.11</springboot.version>
     <camunda-commons-typed-values.version>7.18.0</camunda-commons-typed-values.version>
 
     <axon-bom.version>4.6.6</axon-bom.version>
@@ -306,7 +306,7 @@
         <plugin>
           <groupId>org.jacoco</groupId>
           <artifactId>jacoco-maven-plugin</artifactId>
-          <version>0.8.9</version>
+          <version>0.8.10</version>
           <executions>
             <execution>
               <id>pre-unit-test</id>
