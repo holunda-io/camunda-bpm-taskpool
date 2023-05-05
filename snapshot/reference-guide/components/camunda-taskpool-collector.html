@@ -1621,7 +1621,7 @@ a default filter is used which is an empty <code>EXCLUDE</code> filter, resultin
   is defined.</li>
 </ul>
 <p>Here is an example, how the process variable filter can configure the enrichment:</p>
-<div class="highlight"><pre><span></span><code><span class="w">  </span><span class="nd">@Configuration</span>
+<div class="highlight"><pre><span></span><code><span class="nd">@Configuration</span>
 <span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">MyTaskCollectorConfiguration</span><span class="w"> </span><span class="p">{</span>
 
 <span class="w">  </span><span class="nd">@Bean</span>
@@ -1662,6 +1662,13 @@ a default filter is used which is an empty <code>EXCLUDE</code> filter, resultin
 <p class="admonition-title">Note</p>
 <p>If you want to implement a custom enrichment, please provide your own implementation of the interface <code>VariablesEnricher</code>
   (register a Spring Component of the type) and set the property <code>polyflow.integration.collector.camunda.task.enricher.type</code> to <code>custom</code>.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Avoid using a classic Camunda <code>TaskListener</code> which modifies process variables on task creation, since changes of those
+  listeners can't be used during task enrichment. A proper way to modify instance or task variables is to implement an ordered Spring
+  <code>EventListener</code> listening on <code>DelegateTask</code>, put it before the enricher by providing <code>@Order(TaskEventCollectorService.ORDER - 80)</code> and scope the event listener to 
+  the task of your interest using condition: <code>@EventListener(condition = "#delegateTask.taskDefinitionKey.equals('my-task-key') &amp;&amp; #delegateTask.eventName.equals('create')")</code> </p>
 </div>
 <h3 id="data-correlation">Data Correlation<a class="headerlink" href="#data-correlation" title="Permanent link">#</a></h3>
 <p>Apart from task payload attached by the enricher, the so-called <em>Correlation</em> with data entries can
@@ -1849,7 +1856,7 @@ in which the <a href="./core-taskpool">Taskpool Core</a> is deployed on together
   <small>
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">May 4, 2023</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">May 5, 2023</span>
       
     
   </small>
