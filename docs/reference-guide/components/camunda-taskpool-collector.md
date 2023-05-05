@@ -143,7 +143,7 @@ A `VariableFilter` can be of the following type:
 Here is an example, how the process variable filter can configure the enrichment:
 
 ```java
-  @Configuration
+@Configuration
 public class MyTaskCollectorConfiguration {
 
   @Bean
@@ -184,6 +184,12 @@ public class MyTaskCollectorConfiguration {
 !!! note  
       If you want to implement a custom enrichment, please provide your own implementation of the interface `VariablesEnricher`
       (register a Spring Component of the type) and set the property `polyflow.integration.collector.camunda.task.enricher.type` to `custom`.
+
+!!! warning
+      Avoid using a classic Camunda `TaskListener` which modifies process variables on task creation, since changes of those
+      listeners can't be used during task enrichment. A proper way to modify instance or task variables is to implement an ordered Spring
+      `EventListener` listening on `DelegateTask`, put it before the enricher by providing `@Order(TaskEventCollectorService.ORDER - 80)` and scope the event listener to 
+      the task of your interest using condition: `@EventListener(condition = "#delegateTask.taskDefinitionKey.equals('my-task-key') && #delegateTask.eventName.equals('create')")` 
 
 ### Data Correlation
 
