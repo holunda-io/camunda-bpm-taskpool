@@ -29,6 +29,7 @@ import org.mockito.kotlin.clearInvocations
 import org.mockito.kotlin.verify
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.transaction.annotation.Transactional
@@ -47,6 +48,7 @@ import java.util.function.Predicate
 )
 @ActiveProfiles("itest", "mock-query-emitter")
 @Transactional
+@DirtiesContext
 internal class JpaPolyflowViewServiceDataEntryITest {
 
   private val emittedQueryUpdates: MutableList<QueryUpdate<Any>> = mutableListOf()

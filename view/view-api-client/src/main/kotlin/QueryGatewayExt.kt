@@ -128,4 +128,10 @@ object QueryGatewayExt {
    */
   fun QueryGateway.tasksWithDataEntriesForGroup(query: TasksWithDataEntriesForGroupQuery): CompletableFuture<TasksWithDataEntriesQueryResult> =
     TaskQueryClient(this).query(query)
+
+  /**
+   * @see [TasksForGroupQuery]
+   */
+  fun QueryGateway.tasksForCandidateUserAndGroup(query: TasksForCandidateUserAndGroupQuery): CompletableFuture<TaskQueryResult> = TaskQueryClient(this).query(query)
+
 }

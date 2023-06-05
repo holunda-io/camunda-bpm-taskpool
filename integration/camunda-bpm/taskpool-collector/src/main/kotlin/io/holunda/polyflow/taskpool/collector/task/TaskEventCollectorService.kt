@@ -87,6 +87,9 @@ class TaskEventCollectorService(
     // this method is intentionally empty to demonstrate that the assign event is captured.
     // we hence rely on historic identity link events to capture assignment via API and via listeners more accurately.
     // see implementation below
+    if (logger.isTraceEnabled) {
+      logger.trace { "Task ${task.id} is assigned to ${task.assignee}." }
+    }
   }
 
   /**

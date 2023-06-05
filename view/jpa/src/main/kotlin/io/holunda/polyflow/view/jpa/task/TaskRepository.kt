@@ -225,11 +225,11 @@ interface TaskRepository : CrudRepository<TaskEntity, String>, JpaSpecificationE
         .or(likeProcessName(pattern))
 
     /**
-     * Specification for checking the payload attribute.
+     * Specification for checking the payload attribute of a task.
      */
     fun hasTaskPayloadAttribute(name: String, value: String): Specification<TaskEntity> =
       Specification { task, _, builder ->
-        val join = task.join<DataEntryEntity, Set<PayloadAttribute>>(TaskEntity::payloadAttributes.name)
+        val join = task.join<TaskEntity, Set<PayloadAttribute>>(TaskEntity::payloadAttributes.name)
         val pathEquals = builder.equal(
           join.get<String>(PayloadAttribute::path.name),
           name
