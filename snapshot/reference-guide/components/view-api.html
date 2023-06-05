@@ -1550,6 +1550,14 @@ and generic query paging and sorting.</p>
 <td>no</td>
 </tr>
 <tr>
+<td>TasksForCandidateUserAndGroupQuery</td>
+<td>Retrieves a list of tasks accessible by the user because listed as candidate and the user's group and applying additional filters</td>
+<td>List<Task></td>
+<td>yes</td>
+<td>yes</td>
+<td>no</td>
+</tr>
+<tr>
 <td>TaskForIdQuery</td>
 <td>Retrieves a task by id (without any other filters)</td>
 <td>Task or null</td>
@@ -1741,7 +1749,7 @@ update of the model by specifying the update revision and are waiting for the ev
 In order to achieve this, you might specify the minimum revision the query result must fulfill in order to match your query request. See <a href="https://github.com/holixon/axon-gateway-extension">axon-gateway-extension</a>
 for more details. Please note, that not all implementations are implementing this feature. Especially, Mongo DB View is currently <strong>NOT SUPPORTING</strong> Revision Aware queries. </p>
 <h2 id="filtering-paging-and-sorting">Filtering, Paging and Sorting<a class="headerlink" href="#filtering-paging-and-sorting" title="Permanent link">#</a></h2>
-<p>Task API and Data Entries API supports filtering, paging and sorting in queries resulting in multiple results. For Task API these are <code>AllTasksQuery</code>, <code>TasksForGroupQuery</code>, <code>TasksForUserQuery</code>,
+<p>Task API and Data Entries API supports filtering, paging and sorting in queries resulting in multiple results. For Task API these are <code>AllTasksQuery</code>, <code>TasksForGroupQuery</code>, <code>TasksForUserQuery</code>, <code>TasksForCandidateUserAndGroupQuery</code>,
 <code>AllTasksWithDataEntriesQuery</code>, <code>TasksWithDataEntriesForGroupQuery</code>, <code>TasksWithDataEntriesForUserQuery</code> and for Data Entries API these are <code>DataEntriesForUserQuery</code> and <code>DataEntriesQuery</code>. 
 The queries implement the <code>PageableSortableQuery</code> interface, allowing to limit the amount of results and provide an optional sorting:</p>
 <p><div class="highlight"><pre><span></span><code><span class="kd">interface</span><span class="w"> </span><span class="nc">PageableSortableQuery</span><span class="w"> </span><span class="p">{</span>

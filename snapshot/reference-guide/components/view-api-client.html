@@ -1443,7 +1443,7 @@
 <p>The Polyflow View API Client is a client for the users of the task-pool and the data-pool query API. It provides simple components which can be used 
 in order to query the configured views. By doing so, it defines an easy-to-use API for <strong>callers</strong>.</p>
 <h2 id="usage">Usage<a class="headerlink" href="#usage" title="Permanent link">#</a></h2>
-<p>Pleas put the following component to you class path:</p>
+<p>Please put the following component to you class path:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">&lt;dependency&gt;</span>
 <span class="w">  </span><span class="nt">&lt;groupId&gt;</span>io.holunda.polyflow<span class="nt">&lt;/groupId&gt;</span>
 <span class="w">  </span><span class="nt">&lt;artifactId&gt;</span>polyflow-view-api-client<span class="nt">&lt;/artifactId&gt;</span>
@@ -1457,6 +1457,10 @@ in order to query the configured views. By doing so, it defines an easy-to-use A
 <li><code>io.holunda.polyflow.view.ProcessVariableQueryClient</code></li>
 <li><code>io.holunda.polyflow.view.TaskQueryClient</code></li>
 </ul>
+<p>To initialize the client, you need to pass the <code>queryGateway</code> to it:</p>
+<div class="highlight"><pre><span></span><code><span class="nd">@Bean</span>
+<span class="kd">fun</span><span class="w"> </span><span class="nf">myTaskClient</span><span class="p">(</span><span class="n">queryGateway</span><span class="p">:</span><span class="w"> </span><span class="n">QueryGateway</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">TaskQueryClient</span><span class="p">(</span><span class="n">queryGateway</span><span class="p">)</span>
+</code></pre></div>
 <p>If you are using Kotlin, you might like the extension functions of the <code>QueryGateway</code> provided by <code>io.holunda.polyflow.view.QueryGatewayExt</code> object.  </p>
 
   <hr>
