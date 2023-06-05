@@ -21,18 +21,19 @@ and generic query paging and sorting.
 
 The Task API allows to query for tasks handled by the task-pool.
 
-| Query Type                        | Description                                                                                                                                    | Payload types                   | In-Memory | JPA        | Mongo DB |
-|-----------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------|-----------|------------|----------|
-| AllTasksQuery                     | Retrieves a list of tasks applying additional filters                                                                                          | List<Task>                      | yes       | yes        | no       |
-| TasksForUserQuery                 | Retrieves a list of tasks accessible by the user and applying additional filters                                                               | List<Task>                      | yes       | yes        | yes      |
-| TasksForGroupQuery                | Retrieves a list of tasks accessible by the user's group and applying additional filters                                                       | List<Task>                      | yes       | yes        | no       |
-| TaskForIdQuery                    | Retrieves a task by id (without any other filters)                                                                                             | Task or null                    | yes       | yes        | yes      |
-| TasksForApplicationQuery          | Retrieves all tasks by given application name (without any further filters)                                                                    | List<Task>                      | yes       | yes        | yes      |
-| AllTasksWithDataEntriesQuery      | Retrieves a list of tasks applying additional filters and correlates result with data entries, if available                                    | List<(Task, List<DataEntry>)    | yes       | incubation | no       |
-| TasksWithDataEntriesForGroupQuery | Retrieves a list of tasks accessible by the user's group and applying additional filters and correlates result with data entries, if available | List<(Task, List<DataEntry>)    | yes       | incubation | no       |
-| TasksWithDataEntriesForUserQuery  | Retrieves a list of tasks accessible by the user and applying additional filters and correlates result with data entries, if available         | List<(Task, List<DataEntry>)    | yes       | incubation | yes      |
-| TaskWithDataEntriesForIdQuery     | Retrieves a task by id and correlates result with data entries, if available                                                                   | (Task, List<DataEntry>) or null | yes       | yes        | yes      |
-| TaskCountByApplicationQuery       | Counts tasks grouped by application names, useful for monitoring                                                                               | List<(ApplicationName, Count)>  | yes       | no         | yes      |
+| Query Type                          | Description                                                                                                                                    | Payload types                   | In-Memory | JPA        | Mongo DB |
+|-------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------|-----------|------------|----------|
+| AllTasksQuery                       | Retrieves a list of tasks applying additional filters                                                                                          | List<Task>                      | yes       | yes        | no       |
+| TasksForUserQuery                   | Retrieves a list of tasks accessible by the user and applying additional filters                                                               | List<Task>                      | yes       | yes        | yes      |
+| TasksForGroupQuery                  | Retrieves a list of tasks accessible by the user's group and applying additional filters                                                       | List<Task>                      | yes       | yes        | no       |
+| TasksForCandidateUserAndGroupQuery  | Retrieves a list of tasks accessible by the user because listed as candidate and the user's group and applying additional filters              | List<Task>                      | yes       | yes        | no       |
+| TaskForIdQuery                      | Retrieves a task by id (without any other filters)                                                                                             | Task or null                    | yes       | yes        | yes      |
+| TasksForApplicationQuery            | Retrieves all tasks by given application name (without any further filters)                                                                    | List<Task>                      | yes       | yes        | yes      |
+| AllTasksWithDataEntriesQuery        | Retrieves a list of tasks applying additional filters and correlates result with data entries, if available                                    | List<(Task, List<DataEntry>)    | yes       | incubation | no       |
+| TasksWithDataEntriesForGroupQuery   | Retrieves a list of tasks accessible by the user's group and applying additional filters and correlates result with data entries, if available | List<(Task, List<DataEntry>)    | yes       | incubation | no       |
+| TasksWithDataEntriesForUserQuery    | Retrieves a list of tasks accessible by the user and applying additional filters and correlates result with data entries, if available         | List<(Task, List<DataEntry>)    | yes       | incubation | yes      |
+| TaskWithDataEntriesForIdQuery       | Retrieves a task by id and correlates result with data entries, if available                                                                   | (Task, List<DataEntry>) or null | yes       | yes        | yes      |
+| TaskCountByApplicationQuery         | Counts tasks grouped by application names, useful for monitoring                                                                               | List<(ApplicationName, Count)>  | yes       | no         | yes      |
  
 
 ### Process Definition API
@@ -90,7 +91,7 @@ for more details. Please note, that not all implementations are implementing thi
 
 ## Filtering, Paging and Sorting
 
-Task API and Data Entries API supports filtering, paging and sorting in queries resulting in multiple results. For Task API these are `AllTasksQuery`, `TasksForGroupQuery`, `TasksForUserQuery`,
+Task API and Data Entries API supports filtering, paging and sorting in queries resulting in multiple results. For Task API these are `AllTasksQuery`, `TasksForGroupQuery`, `TasksForUserQuery`, `TasksForCandidateUserAndGroupQuery`,
 `AllTasksWithDataEntriesQuery`, `TasksWithDataEntriesForGroupQuery`, `TasksWithDataEntriesForUserQuery` and for Data Entries API these are `DataEntriesForUserQuery` and `DataEntriesQuery`. 
 The queries implement the `PageableSortableQuery` interface, allowing to limit the amount of results and provide an optional sorting:
 

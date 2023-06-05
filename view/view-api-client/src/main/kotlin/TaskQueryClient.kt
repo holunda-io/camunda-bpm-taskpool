@@ -103,4 +103,14 @@ class TaskQueryClient(
     query,
     ResponseTypes.instanceOf(TasksWithDataEntriesQueryResult::class.java)
   )
+
+  /**
+   * @see io.holunda.polyflow.view.query.task.TaskApi.query
+   * @see io.holunda.polyflow.view.query.task.TasksForCandidateUserAndGroupQuery
+   */
+  fun query(query: TasksForCandidateUserAndGroupQuery): CompletableFuture<TaskQueryResult> = queryGateway.query(
+    query,
+    ResponseTypes.instanceOf(TaskQueryResult::class.java)
+  )
+
 }
