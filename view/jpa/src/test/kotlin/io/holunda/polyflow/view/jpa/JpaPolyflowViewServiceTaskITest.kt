@@ -302,14 +302,17 @@ internal class JpaPolyflowViewServiceTaskITest {
   }
 
   @Test
-  fun `should find the task by candidate user`() {
-    val luffy = jpaPolyflowViewService.query(TasksForUserQuery(user = User("luffy", setOf()), includeAssigned = false))
+  fun `should find the task by user assigned to me`() {
+    val luffy = jpaPolyflowViewService.query(TasksForUserQuery(user = User("luffy", setOf()), assignedToMeOnly = false))
     assertThat(luffy.elements).isNotEmpty
     assertThat(luffy.elements[0].id).isEqualTo(id3)
     assertThat(luffy.elements[0].name).isEqualTo("task name 3")
 
-    val zorro = jpaPolyflowViewService.query(TasksForUserQuery(user = User("zorro", setOf()), includeAssigned = false))
-    assertThat(zorro.elements).isEmpty() // can't find zorro, it is assigned to zorro
+    val zoro = jpaPolyflowViewService.query(TasksForUserQuery(user = User("zoro", setOf()), assignedToMeOnly = true))
+    assertThat(zoro.elements).isNotEmpty
+    assertThat(zoro.elements[0].id).isEqualTo(id4)
+    assertThat(zoro.elements[0].name).isEqualTo("task name 4")
+
   }
 
 
@@ -322,6 +325,19 @@ internal class JpaPolyflowViewServiceTaskITest {
     assertThat(assigned.elements).hasSize(1)
     assertThat(assigned.elements[0].id).isEqualTo(id)
     assertThat(assigned.elements[0].name).isEqualTo("task name 1")
+  }
+
+  @Test
+  fun `should find the task by candidate user and group`() {
+    val unassigned = jpaPolyflowViewService.query(TasksForCandidateUserAndGroupQuery(user = User("zoro", setOf("muppets")), includeAssigned = false))
+    assertThat(unassigned.elements).isEmpty()
+
+    val assigned = jpaPolyflowViewService.query(TasksForCandidateUserAndGroupQuery(user = User("zoro", setOf("muppets")), includeAssigned = true))
+    assertThat(assigned.elements).hasSize(2)
+    assertThat(assigned.elements[0].id).isEqualTo(id)
+    assertThat(assigned.elements[0].name).isEqualTo("task name 1")
+    assertThat(assigned.elements[1].id).isEqualTo(id4)
+    assertThat(assigned.elements[1].name).isEqualTo("task name 4")
   }
 
 

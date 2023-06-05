@@ -9,6 +9,7 @@ import io.holunda.polyflow.view.query.PageableSortableQuery
  * Query for tasks with correlated data entries for given user.
  * @param user user able to see the tasks.
  * @param includeAssigned flag indicating if assigned tasks should be returned.
+ * @param assignedToMeOnly flag indicating if the resulting tasks must be assigned to the user only.
  * @param page current page, zero-based index.
  * @param size number of entries on every page.
  * @param sort property name of the {@link TaskWithDataEntries} to sort.
@@ -16,7 +17,7 @@ import io.holunda.polyflow.view.query.PageableSortableQuery
  */
 data class TasksWithDataEntriesForUserQuery(
   val user: User,
-  val includeAssigned: Boolean = true,
+  val assignedToMeOnly: Boolean = false,
   override val page: Int = 0,
   override val size: Int = Int.MAX_VALUE,
   override val sort: String? = null,
@@ -24,5 +25,12 @@ data class TasksWithDataEntriesForUserQuery(
 ) : FilterQuery<TaskWithDataEntries>, PageableSortableQuery {
 
   override fun applyFilter(element: TaskWithDataEntries): Boolean =
-    TasksForUserQuery(user = user, includeAssigned = includeAssigned, page = page, size = size, sort = sort, filters = filters).applyFilter(element.task)
+    TasksForUserQuery(
+      user = user,
+      assignedToMeOnly = assignedToMeOnly,
+      page = page,
+      size = size,
+      sort = sort,
+      filters = filters
+    ).applyFilter(element.task)
 }

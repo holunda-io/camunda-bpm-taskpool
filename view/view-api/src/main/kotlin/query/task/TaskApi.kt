@@ -29,7 +29,6 @@ interface TaskApi {
    */
   fun query(query: AllTasksWithDataEntriesQuery): TasksWithDataEntriesQueryResult
 
-
   /**
    * Count tasks and group by application.
    */
@@ -44,6 +43,11 @@ interface TaskApi {
    * Retrieve tasks for given user's groups.
    */
   fun query(query: TasksForGroupQuery): TaskQueryResult
+
+  /**
+   * Retrieves tasks for given user's groups and user's being candidates.
+   */
+  fun query(query: TasksForCandidateUserAndGroupQuery): TaskQueryResult
 
   /**
    * Retrieve task by given id.

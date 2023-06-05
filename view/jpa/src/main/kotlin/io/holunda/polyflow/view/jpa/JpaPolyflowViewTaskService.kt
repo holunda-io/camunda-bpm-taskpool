@@ -58,10 +58,15 @@ class JpaPolyflowViewTaskService(
     val dataEntrySpecification = criteria.toDataEntrySpecification()
     val pageRequest = pageRequest(query.page, query.size, query.sort)
 
-    val userQuery = if (query.includeAssigned) {
-      composeOr(listOf(isAuthorizedFor(authorizedPrincipals), isAssignedTo(query.user.username)))
+    val userQuery = if (query.assignedToMeOnly) {
+      isAssignedTo(query.user.username)
     } else {
-      isAuthorizedFor(authorizedPrincipals)
+      composeOr(
+        listOf(
+          isAuthorizedFor(authorizedPrincipals),
+          isAssignedTo(query.user.username)
+        )
+      )
     }
 
     val page = if (taskSpecification != null) {
@@ -188,12 +193,16 @@ class JpaPolyflowViewTaskService(
     val authorizedPrincipals: Set<AuthorizationPrincipal> = setOf(user(query.user.username)).plus(query.user.groups.map { group(it) })
     val specification = toCriteria(query.filters).toTaskSpecification()
     val pageRequest = pageRequest(query.page, query.size, query.sort)
-    val userQuery = if (query.includeAssigned) {
-      composeOr(listOf(isAuthorizedFor(authorizedPrincipals), isAssignedTo(query.user.username)))
+    val userQuery = if (query.assignedToMeOnly) {
+      isAssignedTo(query.user.username)
     } else {
-      isAuthorizedFor(authorizedPrincipals)
+      composeOr(
+        listOf(
+          isAuthorizedFor(authorizedPrincipals),
+          isAssignedTo(query.user.username)
+        )
+      )
     }
-
 
     val page = if (specification != null) {
       taskRepository.findAll(specification.and(userQuery), pageRequest)
@@ -215,6 +224,34 @@ class JpaPolyflowViewTaskService(
         isAssigneeSet(query.includeAssigned)
       )
     )
+    val taskSpecification = toCriteria(query.filters).toTaskSpecification()
+    val pageRequest = pageRequest(query.page, query.size, query.sort)
+
+    val page = if (taskSpecification != null) {
+      taskRepository.findAll(taskSpecification.and(authorizationSpecification), pageRequest)
+    } else {
+      taskRepository.findAll(authorizationSpecification, pageRequest)
+    }.map { taskEntity -> taskEntity.toTask(objectMapper) }
+
+    return TaskQueryResult(
+      elements = page.toList(),
+      totalElementCount = page.totalElements.toInt()
+    )
+  }
+
+  @QueryHandler
+  override fun query(query: TasksForCandidateUserAndGroupQuery): TaskQueryResult {
+    val authorizationSpecification =
+      composeAnd(
+        listOf(
+          composeOr(
+            listOf(
+              isAuthorizedFor(setOf(user(query.user.username)).plus(query.user.groups.map { group(it) }.toSet())),
+            )
+          ),
+          isAssigneeSet(query.includeAssigned)
+        )
+      )
     val taskSpecification = toCriteria(query.filters).toTaskSpecification()
     val pageRequest = pageRequest(query.page, query.size, query.sort)
 
