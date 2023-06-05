@@ -22,7 +22,6 @@ import org.camunda.bpm.engine.variable.Variables.createVariables
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.atLeast
 import org.mockito.kotlin.clearInvocations
@@ -30,7 +29,6 @@ import org.mockito.kotlin.verify
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
-import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.transaction.annotation.Transactional
 import java.time.Instant
 import java.time.OffsetDateTime
@@ -304,6 +302,21 @@ internal class JpaPolyflowViewServiceTaskITest {
   }
 
   @Test
+  fun `should find the task by user assigned to me`() {
+    val luffy = jpaPolyflowViewService.query(TasksForUserQuery(user = User("luffy", setOf()), assignedToMeOnly = false))
+    assertThat(luffy.elements).isNotEmpty
+    assertThat(luffy.elements[0].id).isEqualTo(id3)
+    assertThat(luffy.elements[0].name).isEqualTo("task name 3")
+
+    val zoro = jpaPolyflowViewService.query(TasksForUserQuery(user = User("zoro", setOf()), assignedToMeOnly = true))
+    assertThat(zoro.elements).isNotEmpty
+    assertThat(zoro.elements[0].id).isEqualTo(id4)
+    assertThat(zoro.elements[0].name).isEqualTo("task name 4")
+
+  }
+
+
+  @Test
   fun `should find the task by group`() {
     val unassigned = jpaPolyflowViewService.query(TasksForGroupQuery(user = User("other", setOf("muppets")), includeAssigned = false))
     assertThat(unassigned.elements).isEmpty()
@@ -312,6 +325,19 @@ internal class JpaPolyflowViewServiceTaskITest {
     assertThat(assigned.elements).hasSize(1)
     assertThat(assigned.elements[0].id).isEqualTo(id)
     assertThat(assigned.elements[0].name).isEqualTo("task name 1")
+  }
+
+  @Test
+  fun `should find the task by candidate user and group`() {
+    val unassigned = jpaPolyflowViewService.query(TasksForCandidateUserAndGroupQuery(user = User("zoro", setOf("muppets")), includeAssigned = false))
+    assertThat(unassigned.elements).isEmpty()
+
+    val assigned = jpaPolyflowViewService.query(TasksForCandidateUserAndGroupQuery(user = User("zoro", setOf("muppets")), includeAssigned = true))
+    assertThat(assigned.elements).hasSize(2)
+    assertThat(assigned.elements[0].id).isEqualTo(id)
+    assertThat(assigned.elements[0].name).isEqualTo("task name 1")
+    assertThat(assigned.elements[1].id).isEqualTo(id4)
+    assertThat(assigned.elements[1].name).isEqualTo("task name 4")
   }
 
 

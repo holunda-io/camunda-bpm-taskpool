@@ -186,6 +186,15 @@ class SimpleTaskPoolService(
   }
 
   /**
+   * Retrieves a list of all user tasks for current user's groups and current user being member of candidate users.
+   */
+  @QueryHandler
+  override fun query(query: TasksForCandidateUserAndGroupQuery): TaskQueryResult {
+    return queryForTasks(query)
+  }
+
+
+  /**
    * Retrieves a list of all user tasks.
    */
   @QueryHandler
@@ -361,6 +370,7 @@ class SimpleTaskPoolService(
   private fun updateFilteredQueryQuery(taskId: String) {
     queryUpdateEmitter.updateMapFilterQuery(tasks, taskId, TasksForUserQuery::class.java)
     queryUpdateEmitter.updateMapFilterQuery(tasks, taskId, TasksForGroupQuery::class.java)
+    queryUpdateEmitter.updateMapFilterQuery(tasks, taskId, TasksForCandidateUserAndGroupQuery::class.java)
     queryUpdateEmitter.updateMapFilterQuery(tasks, taskId, AllTasksQuery::class.java)
 
     tasks[taskId]

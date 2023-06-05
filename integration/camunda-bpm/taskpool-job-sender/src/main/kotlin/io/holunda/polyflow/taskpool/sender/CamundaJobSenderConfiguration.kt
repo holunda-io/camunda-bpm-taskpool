@@ -36,7 +36,6 @@ class CamundaJobSenderConfiguration(
     processEngineConfiguration: ProcessEngineConfigurationImpl,
     @Qualifier(COMMAND_BYTEARRAY_OBJECT_MAPPER)
     objectMapper: ObjectMapper,
-    commandListGateway: CommandListGateway,
     engineTaskCommandAccumulator: EngineTaskCommandAccumulator
   ): EngineTaskCommandSender =
     TxAwareAccumulatingCamundaJobEngineTaskCommandSender(
