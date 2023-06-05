@@ -57,7 +57,12 @@ class JpaPolyflowViewTaskService(
     val taskSpecification = criteria.toTaskSpecification()
     val dataEntrySpecification = criteria.toDataEntrySpecification()
     val pageRequest = pageRequest(query.page, query.size, query.sort)
-    val userQuery = composeOr(listOf(isAuthorizedFor(authorizedPrincipals), isAssignedTo(query.user.username)))
+
+    val userQuery = if (query.includeAssigned) {
+      composeOr(listOf(isAuthorizedFor(authorizedPrincipals), isAssignedTo(query.user.username)))
+    } else {
+      isAuthorizedFor(authorizedPrincipals)
+    }
 
     val page = if (taskSpecification != null) {
       taskRepository.findAll(taskSpecification.and(userQuery), pageRequest)
@@ -183,7 +188,12 @@ class JpaPolyflowViewTaskService(
     val authorizedPrincipals: Set<AuthorizationPrincipal> = setOf(user(query.user.username)).plus(query.user.groups.map { group(it) })
     val specification = toCriteria(query.filters).toTaskSpecification()
     val pageRequest = pageRequest(query.page, query.size, query.sort)
-    val userQuery = composeOr(listOf(isAuthorizedFor(authorizedPrincipals), isAssignedTo(query.user.username)))
+    val userQuery = if (query.includeAssigned) {
+      composeOr(listOf(isAuthorizedFor(authorizedPrincipals), isAssignedTo(query.user.username)))
+    } else {
+      isAuthorizedFor(authorizedPrincipals)
+    }
+
 
     val page = if (specification != null) {
       taskRepository.findAll(specification.and(userQuery), pageRequest)

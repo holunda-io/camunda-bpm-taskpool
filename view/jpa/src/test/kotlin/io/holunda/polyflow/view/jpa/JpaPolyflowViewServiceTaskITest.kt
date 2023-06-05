@@ -22,7 +22,6 @@ import org.camunda.bpm.engine.variable.Variables.createVariables
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.atLeast
 import org.mockito.kotlin.clearInvocations
@@ -30,7 +29,6 @@ import org.mockito.kotlin.verify
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
-import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.transaction.annotation.Transactional
 import java.time.Instant
 import java.time.OffsetDateTime
@@ -302,6 +300,18 @@ internal class JpaPolyflowViewServiceTaskITest {
     assertThat(muppets.elements).isNotEmpty
     assertThat(muppets.elements[0].id).isEqualTo(id)
   }
+
+  @Test
+  fun `should find the task by candidate user`() {
+    val luffy = jpaPolyflowViewService.query(TasksForUserQuery(user = User("luffy", setOf()), includeAssigned = false))
+    assertThat(luffy.elements).isNotEmpty
+    assertThat(luffy.elements[0].id).isEqualTo(id3)
+    assertThat(luffy.elements[0].name).isEqualTo("task name 3")
+
+    val zorro = jpaPolyflowViewService.query(TasksForUserQuery(user = User("zorro", setOf()), includeAssigned = false))
+    assertThat(zorro.elements).isEmpty() // can't find zorro, it is assigned to zorro
+  }
+
 
   @Test
   fun `should find the task by group`() {

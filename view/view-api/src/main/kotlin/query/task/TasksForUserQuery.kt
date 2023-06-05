@@ -2,12 +2,11 @@ package io.holunda.polyflow.view.query.task
 
 import io.holunda.polyflow.view.Task
 import io.holunda.polyflow.view.auth.User
-import io.holunda.polyflow.view.query.FilterQuery
-import io.holunda.polyflow.view.query.PageableSortableQuery
 
 /**
  * Query for tasks visible for user.
  * @param user - the user with groups accessing the tasks.
+ * @param includeAssigned flag indicating if assigned tasks are returned.
  * @param page - page to read, zero-based index.
  * @param size - size of the page
  * @param sort - optional attribute to sort by.
@@ -15,6 +14,7 @@ import io.holunda.polyflow.view.query.PageableSortableQuery
  */
 data class TasksForUserQuery(
   val user: User,
+  val includeAssigned: Boolean = true,
   override val page: Int = 0,
   override val size: Int = Int.MAX_VALUE,
   override val sort: String? = null,
@@ -22,11 +22,11 @@ data class TasksForUserQuery(
 ) : PageableSortableFilteredTaskQuery {
 
   override fun applyFilter(element: Task): Boolean =
-  // assignee
-    element.assignee == this.user.username
-      // candidate user
-      || (element.candidateUsers.contains(this.user.username))
+    // candidate user
+    element.candidateUsers.contains(this.user.username)
       // candidate groups
-      || (element.candidateGroups.any { candidateGroup -> this.user.groups.contains(candidateGroup) })
+      || element.candidateGroups.any { candidateGroup -> this.user.groups.contains(candidateGroup) }
+      // assignee
+      || (includeAssigned && element.assignee == this.user.username)
 }
 
