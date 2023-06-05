@@ -32,7 +32,7 @@ class TaskCommandProcessor(
       taskAssigner.setAssignment(it)
     }.also { commandToSend ->
       if (logger.isTraceEnabled) {
-        logger.trace("COLLECTOR-008: Sending engine task command: $commandToSend.")
+        logger.trace {"COLLECTOR-008: Sending engine task command: $commandToSend." }
       }
       // enrich and send
       engineTaskCommandSender.send(commandToSend)
