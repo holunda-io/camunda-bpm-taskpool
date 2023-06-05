@@ -21,8 +21,7 @@ class ProcessDefinitionEntity(
   var name: String,
   @Column(name = "VERSION_TAG")
   var versionTag: String? = null,
-  @Column(name = "DESCRIPTION")
-  @Lob
+  @Column(name = "DESCRIPTION", length = 2048)
   var description: String? = null,
   @Column(name = "START_FORM_KEY")
   var startFormKey: String? = null,

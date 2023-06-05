@@ -15,7 +15,7 @@ received from Camunda BPM Engine (from delegate event listener or from history e
 which is passed over to the Taskpool Collector using internal **Spring eventing** mechanism. The Taskpool
 Collector converts the series of such events into a Taskpool Command - an entity carrying an intent
 of change inside the Taskpool core. Please note that _event_ has another meaning in CQRS/ES systems
-and other components of the Taskpool, but in the context of Taskpool collector an event always originates from
+and other components of the Taskpool, but in the context of Taskpool Collector an event always originates from
 Spring eventing.
 
 ### Features
@@ -25,6 +25,7 @@ Spring eventing.
 - Collection of process variable change events
 - Collection of task events and history events
 - Creation of task engine commands
+- Collection of tasks assignment information
 - Enrichment of task engine commands with process variables
 - Attachment of correlation information to task engine commands
 - Transmission of commands to Axon command bus
@@ -55,7 +56,7 @@ In order to enable collector component, include the Maven dependency to your pro
 
 ```
 
-Then activate the Taskpool collector by providing the annotation on any Spring Configuration:
+Then activate the Taskpool Collector by providing the annotation on any Spring Configuration:
 
 ```java
 @Configuration
@@ -68,7 +69,7 @@ class MyProcessApplicationConfiguration {
 
 ### Event collection
 
-Taskpool Collector registers Spring Event Listener to the following events, fired by Camunda Eventing Engine Plugin:
+By default, Taskpool Collector registers Spring Event Listener to the following events, fired by Camunda Eventing Engine Plugin:
 
 * `DelegateTask` events:
   ** create
@@ -85,6 +86,22 @@ Taskpool Collector registers Spring Event Listener to the following events, fire
 The events are transformed into corresponding commands and passed over to the processor layer. Until Camunda Platform 7.19, the eventing
 is fired using custom listeners only and polyflow components don't rely on that but rather on own implementation of built-in (unskippable) listeners.
 For this purpose, it is important to disable Camunda Platform custom listeners by setting `camunda.bpm.eventing.task` property to `false`.   
+
+During collection of task information, you can control which listeners are registered. By default, all listeners are considered but you can change
+this behaviour by setting values of two properties:
+
+```yaml
+
+polyflow:
+  integration:
+    collector:
+      camunda:
+        task:
+          excludedTaskEventNames: assignment, delete
+          excludedHistoryEventNames: add-identity-link, delete-identity-link
+```
+This particular setting is helpful, if you want to disable assignment in the engine entirely and want to provide you own custom task assignment algorithm or
+use assignment based on process variables (see below for more details).
 
 ### Task commands enrichment
 
@@ -126,7 +143,7 @@ A `VariableFilter` can be of the following type:
 Here is an example, how the process variable filter can configure the enrichment:
 
 ```java
-  @Configuration
+@Configuration
 public class MyTaskCollectorConfiguration {
 
   @Bean
@@ -167,6 +184,12 @@ public class MyTaskCollectorConfiguration {
 !!! note  
       If you want to implement a custom enrichment, please provide your own implementation of the interface `VariablesEnricher`
       (register a Spring Component of the type) and set the property `polyflow.integration.collector.camunda.task.enricher.type` to `custom`.
+
+!!! warning
+      Avoid using a classic Camunda `TaskListener` which modifies process variables on task creation, since changes of those
+      listeners can't be used during task enrichment. A proper way to modify instance or task variables is to implement an ordered Spring
+      `EventListener` listening on `DelegateTask`, put it before the enricher by providing `@Order(TaskEventCollectorService.ORDER - 80)` and scope the event listener to 
+      the task of your interest using condition: `@EventListener(condition = "#delegateTask.taskDefinitionKey.equals('my-task-key') && #delegateTask.eventName.equals('create')")` 
 
 ### Data Correlation
 
@@ -251,11 +274,11 @@ and the process reaches the task `task_approve_request`, the task will get the f
 
 ### Task Assignment
 
-User task assignment is a core functionality for every process application fostering task oriented work. By default, Taskpool Collector uses
+User task assignment is a core functionality for every process application fostering task-oriented work. By default, Taskpool Collector uses
 information from Camunda User Task and maps that one-to-one to properties of the user task commands. The task attribute
 `assignee`, `candidateUsers` and `candidateGroups` are mapped to the corresponding attributes automatically.
 
-To control the task assignment mode you can configure taskpool collector using application properties. The property 
+To control the task assignment mode you can configure Taskpool Collector using application properties. The property 
 `polyflow.integration.collector.camunda.task.assigner.type` has the following values:
 
 * `no`: No additional assignment takes place, the Camunda task attributes are used (default)

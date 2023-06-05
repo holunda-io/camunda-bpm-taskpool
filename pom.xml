@@ -5,7 +5,7 @@
 
   <groupId>io.holunda.polyflow</groupId>
   <artifactId>polyflow-root</artifactId>
-  <version>3.9.2-SNAPSHOT</version>
+  <version>3.11.1-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>POM: ${project.artifactId}</name>
@@ -20,7 +20,7 @@
     <version.java>${java.version}</version.java>
     <version.java>${java.version}</version.java>
 
-    <kotlin.version>1.8.20</kotlin.version>
+    <kotlin.version>1.8.21</kotlin.version>
     <kotlin.compiler.jvmTarget>${java.version}</kotlin.compiler.jvmTarget>
     <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
     <kotlin-logging.version>3.0.5</kotlin-logging.version>
@@ -159,7 +159,7 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-gpg-plugin</artifactId>
-            <version>3.0.1</version>
+            <version>3.1.0</version>
             <configuration>
               <!-- pass -Dgpg.keyname=.. and -Dgpg.passphrase=... -->
               <gpgArguments>
