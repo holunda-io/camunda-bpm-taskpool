@@ -6,7 +6,6 @@ import io.holunda.polyflow.view.auth.User
 /**
  * Query for tasks visible for user.
  * @param user - the user with groups accessing the tasks.
- * @param includeAssigned flag indicating if assigned tasks are returned.
  * @param assignedToMeOnly flag indicating if the resulting tasks must be assigned to the user only.
  * @param page - page to read, zero-based index.
  * @param size - size of the page
@@ -21,6 +20,19 @@ data class TasksForUserQuery(
   override val sort: String? = null,
   override val filters: List<String> = listOf()
 ) : PageableSortableFilteredTaskQuery {
+
+  /**
+   * Compatibility constructor for old clients.
+   */
+  @Deprecated(message = "Please use other constructor setting the assignedToMeOnly.")
+  constructor(user: User, page: Int = 0, size: Int = Int.MAX_VALUE, sort: String? = null, filters: List<String> = listOf()): this(
+    user = user,
+    assignedToMeOnly = false,
+    page = page,
+    size = size,
+    sort = sort,
+    filters = filters
+  )
 
   override fun applyFilter(element: Task): Boolean =
     if (assignedToMeOnly) {
