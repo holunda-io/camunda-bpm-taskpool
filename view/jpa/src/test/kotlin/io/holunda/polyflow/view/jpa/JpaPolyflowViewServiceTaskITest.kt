@@ -256,14 +256,14 @@ internal class JpaPolyflowViewServiceTaskITest {
 
   @Test
   fun `should find the task by user with data entries`() {
-    val zoro = jpaPolyflowViewService.query(TasksWithDataEntriesForUserQuery(user = User("zoro", setOf())))
+    val zoro = jpaPolyflowViewService.query(TasksWithDataEntriesForUserQuery(user = User("zoro", setOf()), assignedToMeOnly = false))
     assertThat(zoro.elements).isNotEmpty.hasSize(1)
     assertThat(zoro.elements[0].task.id).isEqualTo(id4)
     assertThat(zoro.elements[0].task.name).isEqualTo("task name 4")
     assertThat(zoro.elements[0].dataEntries).isNotEmpty.hasSize(1)
     assertThat(zoro.elements[0].dataEntries[0].entryId).isEqualTo(dataId2)
 
-    val strawhats = jpaPolyflowViewService.query(TasksWithDataEntriesForUserQuery(user = User("other", setOf("strawhats"))))
+    val strawhats = jpaPolyflowViewService.query(TasksWithDataEntriesForUserQuery(user = User("other", setOf("strawhats")), assignedToMeOnly = false))
     assertThat(strawhats.elements).isNotEmpty.hasSize(2)
     assertThat(strawhats.elements.map { it.task.id }).contains(id3, id4)
     assertThat(strawhats.elements[0].dataEntries).hasSize(1)
@@ -276,11 +276,13 @@ internal class JpaPolyflowViewServiceTaskITest {
   fun `should find the task by user with data entries and sort results correctly`() {
     val strawhats = jpaPolyflowViewService.query(TasksWithDataEntriesForUserQuery(
       user = User("other", setOf("strawhats")),
-      sort = "+name"
+      sort = "+name",
+      assignedToMeOnly = false
     ))
     val strawhatsInverse = jpaPolyflowViewService.query(TasksWithDataEntriesForUserQuery(
       user = User("other", setOf("strawhats")),
-      sort = "-name"
+      sort = "-name",
+      assignedToMeOnly = false
     ))
 
     assertThat(strawhats.elements).isNotEmpty.hasSize(2)
@@ -309,11 +311,11 @@ internal class JpaPolyflowViewServiceTaskITest {
 
   @Test
   fun `should find the task by user`() {
-    val kermit = jpaPolyflowViewService.query(TasksForUserQuery(user = User("kermit", setOf())))
+    val kermit = jpaPolyflowViewService.query(TasksForUserQuery(user = User("kermit", setOf()), assignedToMeOnly = false))
     assertThat(kermit.elements).isNotEmpty
     assertThat(kermit.elements[0].id).isEqualTo(id)
     assertThat(kermit.elements[0].name).isEqualTo("task name 1")
-    val muppets = jpaPolyflowViewService.query(TasksForUserQuery(user = User("other", setOf("muppets"))))
+    val muppets = jpaPolyflowViewService.query(TasksForUserQuery(user = User("other", setOf("muppets")), assignedToMeOnly = false))
     assertThat(muppets.elements).isNotEmpty
     assertThat(muppets.elements[0].id).isEqualTo(id)
   }
