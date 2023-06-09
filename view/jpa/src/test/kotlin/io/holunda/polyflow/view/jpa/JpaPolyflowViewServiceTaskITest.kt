@@ -273,6 +273,23 @@ internal class JpaPolyflowViewServiceTaskITest {
   }
 
   @Test
+  fun `should find the task by user with data entries and sort results correctly`() {
+    val strawhats = jpaPolyflowViewService.query(TasksWithDataEntriesForUserQuery(
+      user = User("other", setOf("strawhats")),
+      sort = "+name"
+    ))
+    val strawhatsInverse = jpaPolyflowViewService.query(TasksWithDataEntriesForUserQuery(
+      user = User("other", setOf("strawhats")),
+      sort = "-name"
+    ))
+
+    assertThat(strawhats.elements).isNotEmpty.hasSize(2)
+    assertThat(strawhats.elements.map { it.task.id }).containsExactly(id3, id4)
+    assertThat(strawhatsInverse.elements).isNotEmpty.hasSize(2)
+    assertThat(strawhatsInverse.elements.map { it.task.id }).containsExactly(id4, id3)
+  }
+
+  @Test
   fun `should find the task by group with data entries`() {
     val strawhats = jpaPolyflowViewService.query(TasksWithDataEntriesForGroupQuery(user = User("some", setOf("strawhats")), includeAssigned = false))
     assertThat(strawhats.elements).isNotEmpty.hasSize(1)

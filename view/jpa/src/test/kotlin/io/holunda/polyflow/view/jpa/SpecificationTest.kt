@@ -6,6 +6,7 @@ import io.holunda.polyflow.view.jpa.auth.AuthorizationPrincipal.Companion.user
 import io.holunda.polyflow.view.jpa.data.DataEntryRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import org.springframework.data.domain.Sort.Direction
 
 /**
  * Tests conversion of criteria into JPA Specifications.
@@ -51,11 +52,19 @@ internal class SpecificationTest {
 
   @Test
   fun `creates a paged request`() {
-    val request = pageRequest(page = 15, size = 42, "+name")
-    assertThat(request.pageNumber).isEqualTo(15)
-    assertThat(request.pageSize).isEqualTo(42)
-    assertThat(request.sort.isSorted).isEqualTo(true)
-    assertThat(request.sort.isEmpty).isEqualTo(false)
+    val requestAsc = pageRequest(page = 15, size = 42, "+name")
+    assertThat(requestAsc.pageNumber).isEqualTo(15)
+    assertThat(requestAsc.pageSize).isEqualTo(42)
+    assertThat(requestAsc.sort.isSorted).isEqualTo(true)
+    assertThat(requestAsc.sort.isEmpty).isEqualTo(false)
+    assertThat(requestAsc.sort.getOrderFor("name")!!.direction).isEqualTo(Direction.ASC)
+
+    val requestDesc = pageRequest(page = 15, size = 42, "-name")
+    assertThat(requestDesc.pageNumber).isEqualTo(15)
+    assertThat(requestDesc.pageSize).isEqualTo(42)
+    assertThat(requestDesc.sort.isSorted).isEqualTo(true)
+    assertThat(requestDesc.sort.isEmpty).isEqualTo(false)
+    assertThat(requestDesc.sort.getOrderFor("name")!!.direction).isEqualTo(Direction.DESC)
 
     val unsorted = pageRequest(page = 14, size = 41, null)
     assertThat(unsorted.pageNumber).isEqualTo(14)

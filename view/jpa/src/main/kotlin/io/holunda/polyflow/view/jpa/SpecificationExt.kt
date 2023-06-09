@@ -29,6 +29,7 @@ import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.likeProcessNam
 import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.likeTextSearch
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
+import org.springframework.data.domain.Sort.Direction
 import org.springframework.data.jpa.domain.Specification
 import org.springframework.data.jpa.domain.Specification.where
 import java.time.Instant
@@ -75,7 +76,8 @@ fun pageRequest(page: Int, size: Int, sort: String?): PageRequest {
   val sortCriteria = if (sort.isNullOrBlank()) {
     null
   } else {
-    Sort.by(Sort.Direction.fromOptionalString(sort.substring(0, 1)).orElse(Sort.DEFAULT_DIRECTION), sort.substring(1))
+    val direction = if(sort.substring(0, 1) == "+") Direction.ASC else Direction.DESC
+    Sort.by(direction, sort.substring(1))
   }
   return if (sortCriteria != null) {
     PageRequest.of(page, size, sortCriteria)
