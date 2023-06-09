@@ -22,6 +22,7 @@ import org.camunda.bpm.engine.variable.Variables.createVariables
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.atLeast
 import org.mockito.kotlin.clearInvocations
@@ -289,6 +290,35 @@ internal class JpaPolyflowViewServiceTaskITest {
     assertThat(strawhats.elements.map { it.task.id }).containsExactly(id3, id4)
     assertThat(strawhatsInverse.elements).isNotEmpty.hasSize(2)
     assertThat(strawhatsInverse.elements.map { it.task.id }).containsExactly(id4, id3)
+  }
+
+  @Test
+  fun `should not execute query because of wrong sort`() {
+    val user = User("other", setOf("strawhats"))
+    assertThat(assertThrows<IllegalArgumentException> {
+      jpaPolyflowViewService.query(TasksWithDataEntriesForUserQuery(
+        user = user,
+        sort = "+createdTime", // entity property
+        assignedToMeOnly = false
+      ))
+    }.message).startsWith("Sort parameter must be one of ").endsWith(" but it was createdTime.")
+
+    assertThat(assertThrows<IllegalArgumentException> {
+      jpaPolyflowViewService.query(TasksWithDataEntriesForUserQuery(
+        user = user,
+        sort = "+candidateUsers", // unsupported by JPA view
+        assignedToMeOnly = false
+      ))
+    }.message).isEqualTo("'candidateUsers' is not supported for sorting in JPA View")
+
+    assertThat(assertThrows<IllegalArgumentException> {
+      jpaPolyflowViewService.query(TasksWithDataEntriesForUserQuery(
+        user = user,
+        sort = "*name", // wrong order
+        assignedToMeOnly = false
+      ))
+    }.message).isEqualTo("Sort must start either with '+' or '-' but it was starting with '*'")
+
   }
 
   @Test
