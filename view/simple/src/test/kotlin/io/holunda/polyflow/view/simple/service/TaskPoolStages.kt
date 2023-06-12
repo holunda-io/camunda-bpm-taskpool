@@ -103,7 +103,7 @@ class SimpleTaskPoolWhenStage<SELF : SimpleTaskPoolWhenStage<SELF>> : AbstractSi
   private var returnedTasksForApplication = TaskQueryResult(listOf())
 
   private fun query(page: Int, size: Int) = TasksWithDataEntriesForUserQuery(User("kermit", setOf()), true, page, size)
-  private fun filterQuery(sort: String, filters: List<String>) = TasksForUserQuery(user = User("kermit", setOf()), filters = filters, sort = sort)
+  private fun filterQuery(sort: String, filters: List<String>) = TasksForUserQuery(assignedToMeOnly = false, user = User("kermit", setOf()), filters = filters, sort = sort)
 
   @As("Page $ is queried with a page size of $")
   fun page_is_queried(page: Int, size: Int) = step {
@@ -122,7 +122,7 @@ class SimpleTaskPoolWhenStage<SELF : SimpleTaskPoolWhenStage<SELF>> : AbstractSi
 
   @As("Tasks are queried with filter $")
   fun tasks_are_queried(filters: List<String>) = step {
-    queriedTasks.addAll(simpleTaskPoolService.query(filterQuery("+name", filters)).elements.map { TaskWithDataEntries(it) })
+    queriedTasks.addAll(simpleTaskPoolService.query(filterQuery("+createdDate", filters)).elements.map { TaskWithDataEntries(it) })
   }
 
   @As("All tasks are queried with filter $")
@@ -214,7 +214,7 @@ class SimpleTaskPoolThenStage<SELF : SimpleTaskPoolThenStage<SELF>> : AbstractSi
   }
 
   fun task_is_not_found_for_user(userId: String, taskId: String) = step {
-    val result = simpleTaskPoolService.query(TasksForUserQuery(User(userId, setOf())))
+    val result = simpleTaskPoolService.query(TasksForUserQuery(assignedToMeOnly = false, user = User(username = userId, groups = setOf())))
     assertThat(result.elements.map { it.id }).doesNotContain(taskId)
   }
 

@@ -106,7 +106,7 @@ class SimpleTaskPoolService(
 
     val predicates = createTaskPredicates(toCriteria(query.filters))
 
-    val filtered = tasks.values.filter { TasksForUserQuery(query.user).applyFilter(it) }
+    val filtered = tasks.values.filter { TasksForUserQuery(user = query.user, assignedToMeOnly = query.assignedToMeOnly ).applyFilter(it) }
       .asSequence()
       .map { task -> TaskWithDataEntries.correlate(task, dataEntries) }
       .filter { filterByPredicate(it, predicates) }

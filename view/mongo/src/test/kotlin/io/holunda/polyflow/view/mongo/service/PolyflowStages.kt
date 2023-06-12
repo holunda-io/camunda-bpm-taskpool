@@ -157,7 +157,7 @@ class PolyflowThenStage<SELF : PolyflowThenStage<SELF>> : PolyflowStage<SELF>() 
 
   @As("tasks with payload with ids \$taskIds are visible to \$user")
   fun tasks_with_payload_are_visible_to(user: User, vararg taskIds: String) = step {
-    val taskResponse = service.query(TasksWithDataEntriesForUserQuery(user = user, page = 1, size = 100)).join()
+    val taskResponse = service.query(TasksWithDataEntriesForUserQuery(assignedToMeOnly = false, user = user, page = 1, size = 100)).join()
     assertThat(taskResponse.elements.map { it.task.id }).containsExactlyElementsOf(taskIds.asIterable())
   }
 
@@ -191,17 +191,17 @@ class PolyflowThenStage<SELF : PolyflowThenStage<SELF>> : PolyflowStage<SELF>() 
   }
 
   fun tasks_visible_to_assignee_or_candidate_user(username: String, expectedTasks: List<Task>) = step {
-    val result = service.query(TasksForUserQuery(User(username = username, groups = emptySet()))).join()
+    val result = service.query(TasksForUserQuery(assignedToMeOnly = false, user = User(username = username, groups = emptySet()))).join()
     assertThat(result.elements).containsExactlyElementsOf(expectedTasks)
   }
 
   fun data_entries_visible_to_user(username: String, expectedDataEntries: List<DataEntry>) = step {
-    val result = service.query(DataEntriesForUserQuery(User(username = username, groups = emptySet()))).join()
+    val result = service.query(DataEntriesForUserQuery(user = User(username = username, groups = emptySet()))).join()
     assertThat(result.elements).containsExactlyElementsOf(expectedDataEntries)
   }
 
   fun tasks_visible_to_candidate_group(groupName: String, expectedTasks: List<Task>) = step {
-    val result = service.query(TasksForUserQuery(User(username = "<unmet>", groups = setOf(groupName)))).join()
+    val result = service.query(TasksForUserQuery(assignedToMeOnly = false, user = User(username = "<unmet>", groups = setOf(groupName)))).join()
     assertThat(result.elements).containsExactlyElementsOf(expectedTasks)
   }
 
@@ -237,7 +237,7 @@ class PolyflowThenStage<SELF : PolyflowThenStage<SELF>> : PolyflowStage<SELF>() 
   }
 
   fun task_is_not_found_for_user(taskId: String, assignee: String) = step {
-    val result = service.query(TasksForUserQuery(User(assignee, setOf()))).join()
+    val result = service.query(TasksForUserQuery(assignedToMeOnly = false, user = User(assignee, setOf()))).join()
     assertThat(result.elements.map { it.id }).doesNotContain(taskId)
   }
 

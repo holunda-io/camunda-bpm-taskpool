@@ -56,7 +56,11 @@ class JpaPolyflowViewTaskService(
     val criteria = toCriteria(query.filters)
     val taskSpecification = criteria.toTaskSpecification()
     val dataEntrySpecification = criteria.toDataEntrySpecification()
-    val pageRequest = pageRequest(query.page, query.size, query.sort)
+    val sort = query.apply {
+      sanitizeSort(Task::class)
+    }.mapTaskSort()
+
+    val pageRequest = pageRequest(query.page, query.size, sort)
 
     val userQuery = if (query.assignedToMeOnly) {
       isAssignedTo(query.user.username)
@@ -115,7 +119,10 @@ class JpaPolyflowViewTaskService(
     val criteria = toCriteria(query.filters)
     val taskSpecification = criteria.toTaskSpecification()
     val dataEntrySpecification = criteria.toDataEntrySpecification()
-    val pageRequest = pageRequest(query.page, query.size, query.sort)
+    val sort = query.apply {
+      sanitizeSort(Task::class)
+    }.mapTaskSort()
+    val pageRequest = pageRequest(query.page, query.size, sort)
 
     val page = if (taskSpecification != null) {
       taskRepository.findAll(taskSpecification.and(taskAuthorizationSpecification), pageRequest)
@@ -154,8 +161,10 @@ class JpaPolyflowViewTaskService(
     val criteria = toCriteria(query.filters)
     val taskSpecification = criteria.toTaskSpecification()
     val dataEntrySpecification = criteria.toDataEntrySpecification()
-
-    val pageRequest = pageRequest(query.page, query.size, query.sort)
+    val sort = query.apply {
+      sanitizeSort(Task::class)
+    }.mapTaskSort()
+    val pageRequest = pageRequest(query.page, query.size, sort)
 
     val page = if (taskSpecification != null) {
       taskRepository.findAll(taskSpecification, pageRequest)
@@ -192,7 +201,10 @@ class JpaPolyflowViewTaskService(
   override fun query(query: TasksForUserQuery): TaskQueryResult {
     val authorizedPrincipals: Set<AuthorizationPrincipal> = setOf(user(query.user.username)).plus(query.user.groups.map { group(it) })
     val specification = toCriteria(query.filters).toTaskSpecification()
-    val pageRequest = pageRequest(query.page, query.size, query.sort)
+    val sort = query.apply {
+      sanitizeSort(Task::class)
+    }.mapTaskSort()
+    val pageRequest = pageRequest(query.page, query.size, sort)
     val userQuery = if (query.assignedToMeOnly) {
       isAssignedTo(query.user.username)
     } else {
@@ -225,7 +237,10 @@ class JpaPolyflowViewTaskService(
       )
     )
     val taskSpecification = toCriteria(query.filters).toTaskSpecification()
-    val pageRequest = pageRequest(query.page, query.size, query.sort)
+    val sort = query.apply {
+      sanitizeSort(Task::class)
+    }.mapTaskSort()
+    val pageRequest = pageRequest(query.page, query.size, sort)
 
     val page = if (taskSpecification != null) {
       taskRepository.findAll(taskSpecification.and(authorizationSpecification), pageRequest)
@@ -253,7 +268,10 @@ class JpaPolyflowViewTaskService(
         )
       )
     val taskSpecification = toCriteria(query.filters).toTaskSpecification()
-    val pageRequest = pageRequest(query.page, query.size, query.sort)
+    val sort = query.apply {
+      sanitizeSort(Task::class)
+    }.mapTaskSort()
+    val pageRequest = pageRequest(query.page, query.size, sort)
 
     val page = if (taskSpecification != null) {
       taskRepository.findAll(taskSpecification.and(authorizationSpecification), pageRequest)
@@ -270,7 +288,10 @@ class JpaPolyflowViewTaskService(
   @QueryHandler
   override fun query(query: AllTasksQuery): TaskQueryResult {
     val specification = toCriteria(query.filters).toTaskSpecification()
-    val pageRequest = pageRequest(query.page, query.size, query.sort)
+    val sort = query.apply {
+      sanitizeSort(Task::class)
+    }.mapTaskSort()
+    val pageRequest = pageRequest(query.page, query.size, sort)
     val page = if (specification != null) {
       taskRepository.findAll(specification, pageRequest)
     } else {

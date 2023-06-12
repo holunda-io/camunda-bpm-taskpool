@@ -6,7 +6,7 @@
   <parent>
     <groupId>io.holunda.polyflow</groupId>
     <artifactId>polyflow-root</artifactId>
-    <version>3.12.0</version>
+    <version>3.13.0</version>
     <relativePath>../../pom.xml</relativePath>
   </parent>
 
@@ -27,7 +27,7 @@
     <axon-gateway-extension.version>1.1.2</axon-gateway-extension.version>
 
     <awaitability.version>4.2.0</awaitability.version>
-    <mockito-kotlin.version>4.1.0</mockito-kotlin.version>
+    <mockito-kotlin.version>5.0.0</mockito-kotlin.version>
     <jgiven.version>1.2.5</jgiven.version>
     <jgiven-kotlin.version>1.2.5.0</jgiven-kotlin.version>
 
@@ -430,7 +430,7 @@
           <!-- for loading and unpacking artifacts -->
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-dependency-plugin</artifactId>
-          <version>3.5.0</version>
+          <version>3.6.0</version>
         </plugin>
 
         <plugin>
@@ -513,7 +513,7 @@
 
         <plugin>
           <artifactId>maven-surefire-plugin</artifactId>
-          <version>3.1.0</version>
+          <version>3.1.2</version>
           <configuration>
             <useSystemClassLoader>false</useSystemClassLoader>
             <runOrder>random</runOrder>
@@ -534,7 +534,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-failsafe-plugin</artifactId>
-          <version>3.1.0</version>
+          <version>3.1.2</version>
           <executions>
             <execution>
               <goals>
@@ -558,7 +558,7 @@
         <plugin>
           <groupId>org.jetbrains.dokka</groupId>
           <artifactId>dokka-maven-plugin</artifactId>
-          <version>1.8.10</version>
+          <version>1.8.20</version>
           <executions>
             <execution>
               <id>attach-javadocs</id>
