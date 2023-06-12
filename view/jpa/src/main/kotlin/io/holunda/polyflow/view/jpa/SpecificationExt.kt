@@ -27,6 +27,7 @@ import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.likeDescriptio
 import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.likeName
 import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.likeProcessName
 import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.likeTextSearch
+import io.holunda.polyflow.view.query.PageableSortableQuery
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.data.domain.Sort.Direction
@@ -76,13 +77,45 @@ fun pageRequest(page: Int, size: Int, sort: String?): PageRequest {
   val sortCriteria = if (sort.isNullOrBlank()) {
     null
   } else {
-    val direction = if(sort.substring(0, 1) == "+") Direction.ASC else Direction.DESC
+    val direction = if (sort.substring(0, 1) == "+") {
+      Direction.ASC
+    } else {
+      Direction.DESC
+    }
     Sort.by(direction, sort.substring(1))
   }
   return if (sortCriteria != null) {
     PageRequest.of(page, size, sortCriteria)
   } else {
     PageRequest.of(page, size)
+  }
+}
+
+/**
+ * Map sort string from the view API to implementation sort of the entities.
+ */
+fun PageableSortableQuery.mapTaskSort(): String {
+  return if (this.sort == null) {
+    // no sort is specified, we don't want unsorted results.
+    "-${TaskEntity::createdDate.name}"
+  } else {
+    val direction = sort!!.substring(0, 1)
+    val field = sort!!.substring(1)
+    return when (field) {
+      Task::name.name -> TaskEntity::name.name
+      Task::description.name -> TaskEntity::description.name
+      Task::assignee.name -> TaskEntity::assignee.name
+      Task::createTime.name -> TaskEntity::createdDate.name
+      Task::dueDate.name -> TaskEntity::dueDate.name
+      Task::followUpDate.name -> TaskEntity::followUpDate.name
+      Task::owner.name -> TaskEntity::owner.name
+      Task::priority.name -> TaskEntity::priority.name
+      Task::formKey.name -> TaskEntity::formKey.name
+      Task::businessKey.name -> TaskEntity::businessKey.name
+      Task::id.name -> TaskEntity::taskId.name
+      Task::taskDefinitionKey.name -> TaskEntity::taskDefinitionKey.name
+      else -> throw IllegalArgumentException("'$field' is not supported for sorting in JPA View")
+    }.let { "$direction$it" }
   }
 }
 
@@ -134,6 +167,7 @@ internal fun Criterion.TaskCriterion.toTaskSpecification(): Specification<TaskEn
         else -> throw IllegalArgumentException("JPA View found unsupported task attribute for equals comparison: ${this.name}.")
       }
     }
+
     LIKE -> {
       when (this.name) {
         "textSearch" -> likeTextSearch(this.value)
@@ -144,6 +178,7 @@ internal fun Criterion.TaskCriterion.toTaskSpecification(): Specification<TaskEn
         else -> throw IllegalArgumentException("JPA View found unsupported task attribute for like comparison: ${this.name}.")
       }
     }
+
     LESS -> {
       when (this.name) {
         Task::dueDate.name -> hasDueDateBefore(Instant.parse(this.value))
@@ -151,6 +186,7 @@ internal fun Criterion.TaskCriterion.toTaskSpecification(): Specification<TaskEn
         else -> throw IllegalArgumentException("JPA View found unsupported task attribute for < comparison: ${this.name}.")
       }
     }
+
     GREATER -> {
       when (this.name) {
         Task::dueDate.name -> hasDueDateAfter(Instant.parse(this.value))
@@ -158,6 +194,7 @@ internal fun Criterion.TaskCriterion.toTaskSpecification(): Specification<TaskEn
         else -> throw IllegalArgumentException("JPA View found unsupported task attribute for > comparison: ${this.name}.")
       }
     }
+
     else -> throw IllegalArgumentException("JPA View found unsupported comparison ${this.operator} for attribute ${this.name}.")
   }
 }
