@@ -1509,16 +1509,26 @@ complex type is decomposed via the map) using Jackson ObjectMapper and then crea
 property paths (<code>myObj1.myProperty2.myOtherEmbeddedProperty3</code>) and their values. You can provide some 
 configuration of this indexing process by the following configuration options:</p>
 <div class="highlight"><pre><span></span><code>polyflow.view.jpa:
-  payload-attribute-level-limit: 2
   stored-items: task, data-entry, process-instance, process-definition
+  payload-attribute-level-limit: 2
   data-entry-filters:
     include: myProperty2.myOtherEmbeddedProperty3, myProperty2.myOtherEmbeddedProperty2
 #    exclude: myProperty
+  task-filters:
+    exclude: processVariableWithVeryLongText
 </code></pre></div>
-<p>In the example below you see the configuration of the limit of keying depth and usage of include/exclude filters of the keys.
+<p>In the example above you see the configuration of the limit of keying depth and usage of include/exclude filters of the keys.
 In addition, the <code>stored-items</code> property is holding a set of items to be persisted to the database. The possible values of 
 stored items are: <code>task</code>, <code>data-entry</code>, <code>process-instance</code> and <code>process-definition</code>. By setting this property, you can disable
 storage of items not required by your application and save space consumption of your database. The property defaults to <code>data-entry</code>.</p>
+<p>The attributes <code>data-entry-filters</code> and <code>task-filters</code> hold <code>include</code> / <code>exclude</code> lists of property paths which will be taken in 
+consideration during the search index creation.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Please make sure you understand that the <strong>payload enrichment</strong> performed during collection and <strong>indexing for search</strong> are two different
+operations. It is perfectly fine to have a large JSON payload attached to the task, but it makes no sense to make the entire payload searchable,
+at lease using JPA View.</p>
+</div>
 <h3 id="entity-scan">Entity Scan<a class="headerlink" href="#entity-scan" title="Permanent link">#</a></h3>
 <p>The JPA View utilizes Spring Data repositories and Hibernate entities inside the persistence layer. As a result, it declares a <code>@EntityScan</code> 
 and <code>@EnableJpaRepositories</code> annotations pointing at the corresponding locations. If you are using Spring Data JPA on your own, you will
@@ -1554,7 +1564,7 @@ want to increase the logging level, please setup it e.g. in your <code>applicati
   <small>
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">June 12, 2023</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">June 13, 2023</span>
       
     
   </small>
