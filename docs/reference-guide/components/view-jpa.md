@@ -59,17 +59,28 @@ configuration of this indexing process by the following configuration options:
 
 ```yml
 polyflow.view.jpa:
-  payload-attribute-level-limit: 2
   stored-items: task, data-entry, process-instance, process-definition
+  payload-attribute-level-limit: 2
   data-entry-filters:
     include: myProperty2.myOtherEmbeddedProperty3, myProperty2.myOtherEmbeddedProperty2
 #    exclude: myProperty
+  task-filters:
+    exclude: processVariableWithVeryLongText
+
 ```
 
-In the example below you see the configuration of the limit of keying depth and usage of include/exclude filters of the keys.
+In the example above you see the configuration of the limit of keying depth and usage of include/exclude filters of the keys.
 In addition, the `stored-items` property is holding a set of items to be persisted to the database. The possible values of 
 stored items are: `task`, `data-entry`, `process-instance` and `process-definition`. By setting this property, you can disable
 storage of items not required by your application and save space consumption of your database. The property defaults to `data-entry`.
+
+The attributes `data-entry-filters` and `task-filters` hold `include` / `exclude` lists of property paths which will be taken in 
+consideration during the search index creation.
+
+!!! note
+    Please make sure you understand that the **payload enrichment** performed during collection and **indexing for search** are two different
+    operations. It is perfectly fine to have a large JSON payload attached to the task, but it makes no sense to make the entire payload searchable,
+    at lease using JPA View.
 
 ### Entity Scan
 
