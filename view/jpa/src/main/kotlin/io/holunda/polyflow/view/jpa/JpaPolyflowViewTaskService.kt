@@ -373,7 +373,7 @@ class JpaPolyflowViewTaskService(
           event.toEntity(
             objectMapper,
             polyflowJpaViewProperties.payloadAttributeLevelLimit,
-            polyflowJpaViewProperties.dataEntryJsonPathFilters()
+            polyflowJpaViewProperties.taskJsonPathFilters()
           )
         )
         emitTaskUpdate(updated)
@@ -467,7 +467,7 @@ class JpaPolyflowViewTaskService(
             objectMapper,
             entity,
             polyflowJpaViewProperties.payloadAttributeLevelLimit,
-            polyflowJpaViewProperties.dataEntryJsonPathFilters()
+            polyflowJpaViewProperties.taskJsonPathFilters()
           )
         )
         emitTaskUpdate(updated)

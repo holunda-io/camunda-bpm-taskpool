@@ -8,7 +8,7 @@ import java.time.Instant
 internal class TaskEntityTest {
 
   @Test
-  internal fun `test toString`() {
+  fun `test toString`() {
     val now = Instant.now()
     val task = emptyTask().apply {
       taskId = "id-123"
