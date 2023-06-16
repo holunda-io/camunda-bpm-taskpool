@@ -16,7 +16,6 @@ import org.camunda.bpm.engine.variable.Variables.createVariables
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
@@ -25,7 +24,6 @@ import org.springframework.data.repository.findByIdOrNull
 import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.ContextConfiguration
-import org.springframework.test.context.junit.jupiter.SpringExtension
 import java.time.Instant
 import java.util.*
 import javax.persistence.EntityManager
@@ -149,6 +147,13 @@ internal class DataEntryRepositoryITest {
   fun `remove all stuff`() {
     dataEntryRepository.deleteAll()
     entityManager.flush()
+  }
+
+  @Test
+  fun `loads each protocol entry only once`() {
+    entityManager.clear()
+    val dataEntry = dataEntryRepository.findByIdOrNull(dataEntry.dataEntryId)!!
+    assertThat(dataEntry.protocol.size).isEqualTo(1)
   }
 
   @Test

@@ -2,6 +2,8 @@ package io.holunda.polyflow.view.jpa.data
 
 
 import io.holunda.polyflow.view.jpa.payload.PayloadAttribute
+import org.hibernate.annotations.Fetch
+import org.hibernate.annotations.FetchMode
 import java.time.Instant
 import javax.persistence.*
 
@@ -58,6 +60,7 @@ class DataEntryEntity(
 
 
   @OneToMany(mappedBy = "dataEntry", orphanRemoval = true, cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
+  @Fetch(FetchMode.SELECT)
   var protocol: MutableList<ProtocolElement> = mutableListOf(),
 
   @Column(name = "PAYLOAD")
