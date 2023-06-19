@@ -10,9 +10,9 @@ import javax.persistence.Embeddable
  */
 @Embeddable
 class DataEntryStateEmbeddable(
-  @Column(name = "PROCESSING_TYPE", nullable = false)
+  @Column(name = "PROCESSING_TYPE", length = 64, nullable = false)
   var processingType: String,
-  @Column(name = "STATE", nullable = false)
+  @Column(name = "STATE", length = 64, nullable = false)
   var state: String
 ) : Serializable {
   companion object {

@@ -9,21 +9,21 @@ import javax.persistence.Embeddable
  */
 @Embeddable
 class SourceReferenceEmbeddable(
-  @Column(name = "SOURCE_INSTANCE_ID", nullable = false)
+  @Column(name = "SOURCE_INSTANCE_ID", length = 64, nullable = false)
   var instanceId: String,
-  @Column(name = "SOURCE_EXECUTION_ID", nullable = false)
+  @Column(name = "SOURCE_EXECUTION_ID", length = 64, nullable = false)
   var executionId: String,
-  @Column(name = "SOURCE_DEF_ID", nullable = false)
+  @Column(name = "SOURCE_DEF_ID", length = 64, nullable = false)
   var definitionId: String,
-  @Column(name = "SOURCE_DEF_KEY", nullable = false)
+  @Column(name = "SOURCE_DEF_KEY", length = 64, nullable = false)
   var definitionKey: String,
-  @Column(name = "SOURCE_NAME", nullable = false)
+  @Column(name = "SOURCE_NAME", length = 255, nullable = false)
   var name: String,
-  @Column(name = "APPLICATION_NAME", nullable = false)
+  @Column(name = "APPLICATION_NAME", length = 64, nullable = false)
   var applicationName: String,
-  @Column(name = "SOURCE_TENANT_ID", nullable = true)
+  @Column(name = "SOURCE_TENANT_ID", length = 64, nullable = true)
   var tenantId: String? = null,
-  @Column(name = "SOURCE_TYPE", nullable = false)
+  @Column(name = "SOURCE_TYPE", length = 64, nullable = false)
   var sourceType: String
 ) : Serializable {
 
