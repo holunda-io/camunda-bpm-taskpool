@@ -10,9 +10,9 @@ import javax.persistence.Embeddable
  */
 @Embeddable
 class DataEntryId(
-  @Column(name = "ENTRY_ID", nullable = false)
+  @Column(name = "ENTRY_ID", length = 64, nullable = false)
   var entryId: String,
-  @Column(name = "ENTRY_TYPE", nullable = false)
+  @Column(name = "ENTRY_TYPE", length = 128, nullable = false)
   var entryType: String
 ) : Serializable {
 

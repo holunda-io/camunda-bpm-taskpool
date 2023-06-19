@@ -15,19 +15,19 @@ import javax.persistence.*
 class DataEntryEntity(
   @EmbeddedId
   var dataEntryId: DataEntryId,
-  @Column(name = "TYPE", nullable = false)
+  @Column(name = "TYPE", length = 255, nullable = false)
   var type: String,
-  @Column(name = "NAME", nullable = false)
+  @Column(name = "NAME", length = 255, nullable = false)
   var name: String,
-  @Column(name = "APPLICATION_NAME", nullable = false)
+  @Column(name = "APPLICATION_NAME", length = 64, nullable = false)
   var applicationName: String,
-  @Column(name = "FORM_KEY")
+  @Column(name = "FORM_KEY", length = 64, nullable = true)
   var formKey: String? = null,
   @Column(name = "REVISION")
   var revision: Long = 0L,
   @Embedded
   var state: DataEntryStateEmbeddable,
-  @Column(name = "DESCRIPTION", length = 2048)
+  @Column(name = "DESCRIPTION", nullable = true, length = 2048)
   var description: String? = null,
 
   @Column(name = "DATE_CREATED", nullable = false)
