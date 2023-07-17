@@ -124,32 +124,48 @@ fun PageableSortableQuery.mapTaskSort(): String {
  * Specification for query on task attributes.
  */
 internal fun List<Criterion>.toTaskAttributeSpecification(): Specification<TaskEntity>? {
-  val relevant = this.filterIsInstance<Criterion.TaskCriterion>().map { it.toTaskSpecification() }
-  return composeAnd(relevant)
+  val relevant = this.filterIsInstance<Criterion.TaskCriterion>()
+  // compose criteria with same name with OR and criteria with different names with AND
+  val relevantByName = relevant.groupBy { it.name }
+  val orComposedByName = relevantByName.map { (_, criteria) -> composeOr(criteria.map { it.toTaskSpecification() }) }
+
+  return composeAnd(orComposedByName)
 }
 
 /**
  * Specification for query on data entry attributes.
  */
 internal fun List<Criterion>.toDataEntryAttributeSpecification(): Specification<DataEntryEntity>? {
-  val relevant = this.filterIsInstance<Criterion.DataEntryCriterion>().map { it.toDataEntrySpecification() }
-  return composeAnd(relevant)
+  val relevant = this.filterIsInstance<Criterion.DataEntryCriterion>()
+  // compose criteria with same name with OR and criteria with different names with AND
+  val relevantByName = relevant.groupBy { it.name }
+  val orComposedByName = relevantByName.map { (_, criteria) -> composeOr(criteria.map { it.toDataEntrySpecification() }) }
+
+  return composeAnd(orComposedByName)
 }
 
 /**
  * Specification on payload.
  */
 internal fun List<Criterion>.toDataEntryPayloadSpecification(): Specification<DataEntryEntity>? {
-  val relevant = this.filterIsInstance<Criterion.PayloadEntryCriterion>().map { it.toDataEntrySpecification() }
-  return composeAnd(relevant)
+  val relevant = this.filterIsInstance<Criterion.PayloadEntryCriterion>()
+  // compose criteria with same name with OR and criteria with different names with AND
+  val relevantByName = relevant.groupBy { it.name }
+  val orComposedByName = relevantByName.map { (_, criteria) -> composeOr(criteria.map { it.toDataEntrySpecification() }) }
+
+  return composeAnd(orComposedByName)
 }
 
 /**
  * Specification on payload.
  */
 internal fun List<Criterion>.toTaskPayloadSpecification(): Specification<TaskEntity>? {
-  val relevant = this.filterIsInstance<Criterion.PayloadEntryCriterion>().map { it.toTaskSpecification() }
-  return composeAnd(relevant)
+  val relevant = this.filterIsInstance<Criterion.PayloadEntryCriterion>()
+  // compose criteria with same name with OR and criteria with different names with AND
+  val relevantByName = relevant.groupBy { it.name }
+  val orComposedByName = relevantByName.map { (_, criteria) -> composeOr(criteria.map { it.toTaskSpecification() }) }
+
+  return composeAnd(orComposedByName)
 }
 
 

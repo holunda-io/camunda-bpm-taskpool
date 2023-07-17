@@ -214,7 +214,7 @@ internal class JpaPolyflowViewServiceTaskITest {
         entryId = dataId2,
         type = "Test",
         applicationName = "test-application",
-        name = "Test Entry 1",
+        name = "Test Entry 2",
         state = ProcessingType.IN_PROGRESS.of("In progress"),
         payload = serialize(payload = payload, mapper = objectMapper),
         authorizations = listOf(
@@ -362,6 +362,57 @@ internal class JpaPolyflowViewServiceTaskITest {
     assertThat(zoro.elements[0].id).isEqualTo(id4)
     assertThat(zoro.elements[0].name).isEqualTo("task name 4")
 
+  }
+
+
+  @Test
+  fun `should or-compose filters on same attribute when querying tasks`() {
+    val kermit = jpaPolyflowViewService.query(
+      TasksForUserQuery(
+        user = User("zoro", setOf("strawhats")),
+        assignedToMeOnly = false,
+        filters = listOf("task.businessKey=business-3", "task.businessKey=business-4")
+      )
+    )
+    assertThat(kermit.elements).hasSize(2)
+  }
+
+  @Test
+  fun `should or-compose filters on same attribute when querying data entries`() {
+    val kermit = jpaPolyflowViewService.query(
+      TasksWithDataEntriesForUserQuery(
+        user = User("zoro", setOf("strawhats")),
+        assignedToMeOnly = false,
+        filters = listOf("data.entryId=${dataId1}", "data.entryId=${dataId2}")
+      )
+    )
+    assertThat(kermit.elements).hasSize(2)
+  }
+
+  @Test
+  fun `should or-compose filters on same attribute when filtering on task payload`() {
+    // query with mutually exclusive filter criteria should still yield result
+    val kermit = jpaPolyflowViewService.query(
+      TasksForUserQuery(
+        user = User("zoro", setOf("strawhats")),
+        assignedToMeOnly = false,
+        filters = listOf("key=value", "key.not-value")
+      )
+    )
+    assertThat(kermit.elements).hasSize(2)
+  }
+
+  @Test
+  fun `should or-compose filters on same attribute when filtering on data entry payload`() {
+    // query with mutually exclusive filter criteria should still yield result
+    val kermit = jpaPolyflowViewService.query(
+      TasksWithDataEntriesForUserQuery(
+        user = User("zoro", setOf("strawhats")),
+        assignedToMeOnly = false,
+        filters = listOf("key=value", "key.not-value")
+      )
+    )
+    assertThat(kermit.elements).hasSize(2)
   }
 
 
