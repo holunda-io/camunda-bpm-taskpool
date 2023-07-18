@@ -125,7 +125,7 @@ Following operations are supported:
 |--------|--------------|--------------|-------------------------------------------------------------------|--------------------------------------------------------------------------|----------------------------|------------------------------------|
 | `<`    | Less than    | all, payload | `followUpDate`, `dueDate`                                         | none                                                                     | all, payload               | all, payload                       | 
 | `>`    | Greater than | all, payload | `followUpDate`, `dueDate`                                         | none                                                                     | all, payload               | all, payload                       |
-| `=`    | Equals       | all, payload | payload, `businessKey`, `followUpDate`, `dueDate`                 | `entryId`, `entryType`, `type`, payload, `processingState`, `userStatus` | all, payload               | all, payload                       |
+| `=`    | Equals       | all, payload | payload, `businessKey`, `followUpDate`, `dueDate`, `priority`     | `entryId`, `entryType`, `type`, payload, `processingState`, `userStatus` | all, payload               | all, payload                       |
 | `%`    | Like         | all, payload | `businessKey`, `name`, `description`, `processName`, `textSearch` | none                                                                     | none                       | none                               |
 
 !!! info
