@@ -20,6 +20,7 @@ import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.hasDueDateBefo
 import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.hasFollowUpDate
 import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.hasFollowUpDateAfter
 import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.hasFollowUpDateBefore
+import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.hasPriority
 import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.hasProcessName
 import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.hasTaskPayloadAttribute
 import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.likeBusinessKey
@@ -124,32 +125,48 @@ fun PageableSortableQuery.mapTaskSort(): String {
  * Specification for query on task attributes.
  */
 internal fun List<Criterion>.toTaskAttributeSpecification(): Specification<TaskEntity>? {
-  val relevant = this.filterIsInstance<Criterion.TaskCriterion>().map { it.toTaskSpecification() }
-  return composeAnd(relevant)
+  val relevant = this.filterIsInstance<Criterion.TaskCriterion>()
+  // compose criteria with same name with OR and criteria with different names with AND
+  val relevantByName = relevant.groupBy { it.name }
+  val orComposedByName = relevantByName.map { (_, criteria) -> composeOr(criteria.map { it.toTaskSpecification() }) }
+
+  return composeAnd(orComposedByName)
 }
 
 /**
  * Specification for query on data entry attributes.
  */
 internal fun List<Criterion>.toDataEntryAttributeSpecification(): Specification<DataEntryEntity>? {
-  val relevant = this.filterIsInstance<Criterion.DataEntryCriterion>().map { it.toDataEntrySpecification() }
-  return composeAnd(relevant)
+  val relevant = this.filterIsInstance<Criterion.DataEntryCriterion>()
+  // compose criteria with same name with OR and criteria with different names with AND
+  val relevantByName = relevant.groupBy { it.name }
+  val orComposedByName = relevantByName.map { (_, criteria) -> composeOr(criteria.map { it.toDataEntrySpecification() }) }
+
+  return composeAnd(orComposedByName)
 }
 
 /**
  * Specification on payload.
  */
 internal fun List<Criterion>.toDataEntryPayloadSpecification(): Specification<DataEntryEntity>? {
-  val relevant = this.filterIsInstance<Criterion.PayloadEntryCriterion>().map { it.toDataEntrySpecification() }
-  return composeAnd(relevant)
+  val relevant = this.filterIsInstance<Criterion.PayloadEntryCriterion>()
+  // compose criteria with same name with OR and criteria with different names with AND
+  val relevantByName = relevant.groupBy { it.name }
+  val orComposedByName = relevantByName.map { (_, criteria) -> composeOr(criteria.map { it.toDataEntrySpecification() }) }
+
+  return composeAnd(orComposedByName)
 }
 
 /**
  * Specification on payload.
  */
 internal fun List<Criterion>.toTaskPayloadSpecification(): Specification<TaskEntity>? {
-  val relevant = this.filterIsInstance<Criterion.PayloadEntryCriterion>().map { it.toTaskSpecification() }
-  return composeAnd(relevant)
+  val relevant = this.filterIsInstance<Criterion.PayloadEntryCriterion>()
+  // compose criteria with same name with OR and criteria with different names with AND
+  val relevantByName = relevant.groupBy { it.name }
+  val orComposedByName = relevantByName.map { (_, criteria) -> composeOr(criteria.map { it.toTaskSpecification() }) }
+
+  return composeAnd(orComposedByName)
 }
 
 
@@ -164,6 +181,7 @@ internal fun Criterion.TaskCriterion.toTaskSpecification(): Specification<TaskEn
         Task::businessKey.name -> hasBusinessKey(this.value)
         Task::dueDate.name -> hasDueDate(Instant.parse(this.value))
         Task::followUpDate.name -> hasFollowUpDate(Instant.parse(this.value))
+        Task::priority.name -> hasPriority(this.value.toInt())
         else -> throw IllegalArgumentException("JPA View found unsupported task attribute for equals comparison: ${this.name}.")
       }
     }
