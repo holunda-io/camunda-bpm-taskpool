@@ -135,10 +135,10 @@ Following operations are supported:
 If the field name does not have one of the above prefixes, it is considered as an attribute inside the payload of data entry or enriched variables of a user task. For example, imagine
 you have a data entry with payload attributes `{ "attribute": "value", "another": 45 }`. In order to search for those, just specify `attribute=value` in your filter criteria.
 
-Filters are composed with AND, meaning that all given filters have to match in order for a task to be included in the result of the query. For example, given the filters
+Filters are composed with logical AND, meaning that all given filters have to match in order for a task to be included in the result of the query. For example, given the filters
 `task.priority=50` and `foo=bar`, the query result would only contain tasks that have a priority of 50 **and** a payload attribute named foo with the value bar.
 
-!!! info
+!!! warning
     The [JPA View](view-jpa.md) has a different implementation when applying filters. Filters that target the same attribute are OR-composed before being AND-composed
     with filters that target other attributes. For example, given the filters `customerName=ABC`, `customerName=DEF` and `task.priority=50`, the filters for the
     customer name would first get OR-composed before being AND-composed with the task priority filter, resulting in a filtering expression logically equivalent to

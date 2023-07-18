@@ -20,6 +20,7 @@ import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.hasDueDateBefo
 import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.hasFollowUpDate
 import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.hasFollowUpDateAfter
 import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.hasFollowUpDateBefore
+import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.hasPriority
 import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.hasProcessName
 import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.hasTaskPayloadAttribute
 import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.likeBusinessKey
@@ -180,6 +181,7 @@ internal fun Criterion.TaskCriterion.toTaskSpecification(): Specification<TaskEn
         Task::businessKey.name -> hasBusinessKey(this.value)
         Task::dueDate.name -> hasDueDate(Instant.parse(this.value))
         Task::followUpDate.name -> hasFollowUpDate(Instant.parse(this.value))
+        Task::priority.name -> hasPriority(this.value.toInt())
         else -> throw IllegalArgumentException("JPA View found unsupported task attribute for equals comparison: ${this.name}.")
       }
     }

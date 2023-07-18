@@ -87,6 +87,17 @@ interface TaskRepository : CrudRepository<TaskEntity, String>, JpaSpecificationE
       }
 
     /**
+     * Specification for checking the priority.
+     */
+    fun hasPriority(priority: Int): Specification<TaskEntity> =
+      Specification { task, _, builder ->
+        builder.equal(
+          task.get<Int>(TaskEntity::priority.name),
+          priority
+        )
+      }
+
+    /**
      * Specification for checking the due date.
      */
     fun hasDueDate(dueDate: Instant): Specification<TaskEntity> =
