@@ -1768,9 +1768,9 @@ and the size is set to <code>Int.MAX</code>. </p>
 <li>java.util.Date</li>
 <li>java.time.Instant</li>
 </ul>
-<p>To filter the results, you might supply a list of filters. A filter is an expression in format <code>fieldName&lt;op&gt;value</code>, where <code>fieldName</code> is addressing the attribute of the search result,
+<p>To filter the results, you can supply a list of filters. A filter is an expression in format <code>fieldName&lt;op&gt;value</code>, where <code>fieldName</code> is addressing the attribute of the search result,
 <code>&lt;op&gt;</code> is one of <code>&lt;</code>, <code>=</code>, <code>%</code> and <code>&gt;</code> and <code>value</code> is a string representation of the values. The <code>fieldName</code> can point to an attribute of the result entity itself (<code>Task</code>, <code>TaskWithDataEntries</code> 
-or <code>DataEntry</code>) or point to the attribute inside the payload. To avoid a possible name clash, you must prefix the field name with <code>task.</code> if you want to filter on direct attributes of a task,
+or <code>DataEntry</code>) or point to the attribute inside the payload. To avoid name clashes, you must prefix the field name with <code>task</code> if you want to filter on direct attributes of a task,
 and you must prefix the field name with <code>data</code> if you want to filter on direct attributes of a data entry. For example, <code>task.priority=50</code> would deliver tasks with priority set to 50,
 and <code>data.entryType=info.polyflow.Order</code> will deliver data entries of type <code>info.polyflow.Order</code> only.</p>
 <p>Following operations are supported:</p>
@@ -1827,18 +1827,27 @@ and <code>data.entryType=info.polyflow.Order</code> will deliver data entries of
 </table>
 <div class="admonition info">
 <p class="admonition-title">Info</p>
-<p>There are several special reserved filters which can be passed to the task query: <code>task.processName=&lt;value&gt;</code> check equality of the process name, <code>task.processName%&lt;value&gt;</code> makes a like-search on</p>
+<p>There are several special reserved filters which can be passed to the task query: <code>task.processName=&lt;value&gt;</code> checks equality of the process name, <code>task.processName%&lt;value&gt;</code> makes a like-search on
+process name, <code>task.textSearch%some-substring</code> makes a special OR-combined like-search on task name, task description and task process name. </p>
 </div>
-<p>process name, <code>task.textSearch%some-substring</code> makes a special OR-combined like-search on task name, task description and task process name. </p>
-<p>If the field name has no prefix of above, it is considered as an attribute inside the payload of data entry or enriched variables of a user task. For example, imagine
-you have a data entry with payload attributes <code>{ "attribute": "value", "another": 45 }</code>. In order to search for those, just specify <code>attribute=value</code> in your filter criteria. </p>
+<p>If the field name does not have one of the above prefixes, it is considered as an attribute inside the payload of data entry or enriched variables of a user task. For example, imagine
+you have a data entry with payload attributes <code>{ "attribute": "value", "another": 45 }</code>. In order to search for those, just specify <code>attribute=value</code> in your filter criteria.</p>
+<p>Filters are composed with logical AND, meaning that all given filters have to match in order for a task to be included in the result of the query. For example, given the filters
+<code>task.priority=50</code> and <code>foo=bar</code>, the query result would only contain tasks that have a priority of 50 <strong>and</strong> a payload attribute named foo with the value bar.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The <a href="view-jpa.html">JPA View</a> has a different implementation when applying filters. Filters that target the same attribute are OR-composed before being AND-composed
+with filters that target other attributes. For example, given the filters <code>customerName=ABC</code>, <code>customerName=DEF</code> and <code>task.priority=50</code>, the filters for the
+customer name would first get OR-composed before being AND-composed with the task priority filter, resulting in a filtering expression logically equivalent to
+<code>(customerName=ABC OR customerName=DEF) AND task.priority=50</code>.</p>
+</div>
 
   <hr>
 <div class="md-source-file">
   <small>
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">July 7, 2023</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">July 18, 2023</span>
       
     
   </small>
