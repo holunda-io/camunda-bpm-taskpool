@@ -60,7 +60,7 @@ You can generate this by executing the following build command:
 ### Build Documentation
 
 We are using MkDocs for generation of a static site documentation and rely on Markdown as much as possible.
-MkDocs is a written in Python 3 and needs to be installed on your machine. For the installation please run the following
+MkDocs is written in Python 3 and needs to be installed on your machine. For the installation please run the following
 command from your command line:
 
 ```bash
