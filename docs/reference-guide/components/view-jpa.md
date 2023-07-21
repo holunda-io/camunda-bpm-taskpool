@@ -5,7 +5,7 @@ pageId: view-jpa
 ### Purpose
 
 The JPA View is component responsible for creating read-projections of tasks and business data entries. It currently implements
-Datapool View API and Taskpool API and persists the projection as entities and relations in a RDBMS using JPA. It is a useful
+Datapool View API and Taskpool API and persists the projection as entities and relations in a RDBMS using JPA. It is useful
 if the JPA persistence is already used in the project setup.
 
 ### Features

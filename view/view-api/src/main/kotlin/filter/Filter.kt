@@ -248,7 +248,7 @@ internal fun toCriterion(filter: String): Criterion {
   }.map { it.trim() }
 
   // special handling for simple infix operators of form <field><op><value>
-  require(segments.size == 3 && segments[0].isNotBlank() && segments[0].isNotBlank()) { "Failed to create criteria from $filter." }
+  require(segments.size == 3 && segments[0].isNotBlank() && segments[1].isNotBlank()) { "Failed to create criteria from $filter." }
 
   return when {
     isTaskAttribute(segments[0]) -> {
