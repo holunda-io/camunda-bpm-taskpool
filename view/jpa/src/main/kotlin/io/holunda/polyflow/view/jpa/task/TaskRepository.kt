@@ -2,7 +2,6 @@ package io.holunda.polyflow.view.jpa.task
 
 import io.holunda.polyflow.view.jpa.auth.AuthorizationPrincipal
 import io.holunda.polyflow.view.jpa.composeOr
-import io.holunda.polyflow.view.jpa.data.DataEntryEntity
 import io.holunda.polyflow.view.jpa.payload.PayloadAttribute
 import io.holunda.polyflow.view.jpa.process.SourceReferenceEmbeddable
 import org.springframework.data.jpa.domain.Specification
@@ -239,7 +238,8 @@ interface TaskRepository : CrudRepository<TaskEntity, String>, JpaSpecificationE
      * Specification for checking the payload attribute of a task.
      */
     fun hasTaskPayloadAttribute(name: String, value: String): Specification<TaskEntity> =
-      Specification { task, _, builder ->
+      Specification { task, query, builder ->
+        query.distinct(true)
         val join = task.join<TaskEntity, Set<PayloadAttribute>>(TaskEntity::payloadAttributes.name)
         val pathEquals = builder.equal(
           join.get<String>(PayloadAttribute::path.name),
