@@ -308,8 +308,9 @@ internal class JpaPolyflowViewServiceDataEntryITest {
 
   private fun assertResultIsTestEntry1And2(result: QueryResponseMessage<DataEntriesQueryResult>) {
     assertThat(result.payload.elements.size).isEqualTo(2)
-    assertTestDataEntry1(result.payload.elements[0])
-    assertTestDataEntry2(result.payload.elements[1])
+    assertThat(result.payload.elements.map { it.entryId }).containsExactlyInAnyOrder(id, id2)
+    assertTestDataEntry1(result.payload.elements.first { it.entryId == id })
+    assertTestDataEntry2(result.payload.elements.first { it.entryId == id2 })
   }
 
 
