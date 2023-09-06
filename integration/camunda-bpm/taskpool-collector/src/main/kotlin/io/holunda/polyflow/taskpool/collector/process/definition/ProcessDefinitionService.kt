@@ -50,7 +50,15 @@ class ProcessDefinitionService(
       this.processDefinitions.clear()
     }
     this.processDefinitions.addAll(newDefinitions)
-    return newDefinitions.map { it.asCommand(applicationName = collectorProperties.applicationName, formKey = formService.getStartFormKey(it.id)) }
+    return newDefinitions.map { it.asCommand(applicationName = collectorProperties.applicationName, formKey = getStartFormKey(it, formService)) }
+  }
+
+  private fun getStartFormKey(processDefinitionEntity: ProcessDefinitionEntity, formService: FormService): String? {
+    return if (processDefinitionEntity.hasStartFormKey) {
+      formService.getStartFormKey(processDefinitionEntity.id)
+    } else {
+      null
+    }
   }
 
   /**
