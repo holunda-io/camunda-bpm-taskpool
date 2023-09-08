@@ -1,15 +1,13 @@
 package io.holunda.polyflow.taskpool.collector
 
+import io.holunda.polyflow.spring.ApplicationNameBeanPostProcessor.Companion.UNSET_APPLICATION_NAME
 import io.holunda.polyflow.taskpool.collector.task.assigner.ProcessVariableTaskAssignerMapping
 import org.camunda.bpm.engine.delegate.TaskListener
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.context.properties.ConfigurationProperties
-import org.springframework.boot.context.properties.ConstructorBinding
 import org.springframework.boot.context.properties.NestedConfigurationProperty
 
 /**
  * Configuration properties of Camunda Taskpool collector.
- * Not using constructor binding here, because we need the springApplicationName.
  */
 @ConfigurationProperties(prefix = "polyflow.integration.collector.camunda")
 class CamundaTaskpoolCollectorProperties(
@@ -17,8 +15,8 @@ class CamundaTaskpoolCollectorProperties(
   /**
    * Denotes the (logical) name of the process application, defaults to "spring.application.name".
    */
-  @Value("\${spring.application.name:unset-application-name}")
-  var applicationName: String,
+  // The default is set by ApplicationNameBeanPostProcessor
+  var applicationName: String = UNSET_APPLICATION_NAME,
 
   /**
    * Task collector properties.
@@ -47,7 +45,6 @@ class CamundaTaskpoolCollectorProperties(
 /**
  * Task collector properties.
  */
-@ConstructorBinding
 data class CamundaTaskCollectorProperties(
   /**
    * Task enricher properties.
@@ -80,7 +77,7 @@ data class CamundaTaskCollectorProperties(
 
   /**
    * List of history events to restrict (HistoricTaskInstanceEventEntity, HistoricIdentityLinkLogEventEntity). Defaults to empty list, so all events are collected.
-   * Possible values are constants defined in [HistoryEventTypes] + "update".
+   * Possible values are constants defined in [org.camunda.bpm.engine.impl.history.event.HistoryEventTypes] + "update".
    */
   val excludedHistoryEventNames: List<String> = listOf()
 ) {
@@ -90,6 +87,7 @@ data class CamundaTaskCollectorProperties(
    * @return true if not excluded.
    */
   fun collectTaskEvent(eventName: String): Boolean = !excludedTaskEventNames.contains(eventName)
+
   /**
    * Determines if the provided event name should be collected.
    * @param eventName event name to check.
@@ -101,7 +99,6 @@ data class CamundaTaskCollectorProperties(
 /**
  * Process variable properties.
  */
-@ConstructorBinding
 data class CamundaProcessVariableProperties(
   /**
    * Enabled by default.
@@ -112,7 +109,6 @@ data class CamundaProcessVariableProperties(
 /**
  * Task command enricher properties.
  */
-@ConstructorBinding
 data class TaskCollectorEnricherProperties(
   /**
    * Type of enricher, see TaskCollectorEnricherType values.
@@ -163,7 +159,6 @@ enum class TaskAssignerType {
 /**
  * Properties controlling the transfer of process definitions deployments.
  */
-@ConstructorBinding
 data class CamundaProcessDefinitionCollectorProperties(
 
   /**
@@ -176,7 +171,6 @@ data class CamundaProcessDefinitionCollectorProperties(
 /**
  * Properties controlling the transfer of process instance.
  */
-@ConstructorBinding
 data class CamundaProcessInstanceCollectorProperties(
 
   /**
@@ -188,7 +182,6 @@ data class CamundaProcessInstanceCollectorProperties(
 /**
  * Properties to set up the task assigner.
  */
-@ConstructorBinding
 data class TaskAssignerProperties(
   /**
    * Configures assigner type.
@@ -220,7 +213,6 @@ data class TaskAssignerProperties(
 /**
  * Configuration of the task importer.
  */
-@ConstructorBinding
 data class TaskImporterProperties(
   /**
    * Enables or disabled importer. Defaults to false.

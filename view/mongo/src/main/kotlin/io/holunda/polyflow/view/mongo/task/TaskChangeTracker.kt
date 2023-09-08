@@ -9,6 +9,8 @@ import io.holunda.polyflow.view.mongo.data.DataEntryRepository
 import io.holunda.polyflow.view.mongo.data.dataEntry
 import io.holunda.polyflow.view.mongo.util.CronTriggerWithJitter
 import io.holunda.polyflow.view.query.task.ApplicationWithTaskCount
+import jakarta.annotation.PostConstruct
+import jakarta.annotation.PreDestroy
 import mu.KLogging
 import org.bson.BsonValue
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
@@ -26,8 +28,6 @@ import java.time.Duration
 import java.time.Instant
 import java.util.concurrent.TimeUnit
 import java.util.logging.Level
-import javax.annotation.PostConstruct
-import javax.annotation.PreDestroy
 
 /**
  * Observes the change stream on the mongo db and provides `Flux`es of changes for the various result types of queries. Also makes sure that tasks marked as

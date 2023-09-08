@@ -3,9 +3,9 @@ package io.holunda.polyflow.view.jpa.task
 import io.holunda.polyflow.view.jpa.data.DataEntryId
 import io.holunda.polyflow.view.jpa.payload.PayloadAttribute
 import io.holunda.polyflow.view.jpa.process.SourceReferenceEmbeddable
+import jakarta.persistence.*
 import java.time.Instant
 import java.time.ZoneOffset
-import javax.persistence.*
 
 /**
  * Entity representing user tasks.
@@ -68,6 +68,6 @@ class TaskEntity(
   @Column(name = "PAYLOAD")
   @Lob
   var payload: String? = null
-  ) {
+) {
   override fun toString() = "Task[taskId=$taskId, taskDefinitionKey=$taskDefinitionKey, name=$name, created=${createdDate.atOffset(ZoneOffset.UTC)}]"
 }

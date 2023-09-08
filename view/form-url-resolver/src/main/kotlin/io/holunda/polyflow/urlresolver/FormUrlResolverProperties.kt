@@ -2,7 +2,6 @@ package io.holunda.polyflow.urlresolver
 
 import io.holunda.camunda.taskpool.api.business.EntryType
 import org.springframework.boot.context.properties.ConfigurationProperties
-import org.springframework.boot.context.properties.ConstructorBinding
 import org.springframework.boot.context.properties.NestedConfigurationProperty
 
 /**
@@ -10,7 +9,6 @@ import org.springframework.boot.context.properties.NestedConfigurationProperty
  * On the top level, the defaults are provided.
  */
 @ConfigurationProperties(prefix = "polyflow.integration.form-url-resolver")
-@ConstructorBinding
 data class FormUrlResolverProperties(
   /**
    * URL template for the task as default.
@@ -82,7 +80,6 @@ data class FormUrlResolverProperties(
   /**
    * Represents an application configuration.
    */
-  @ConstructorBinding
   data class Application(
     /**
      * Base URL template of the application.

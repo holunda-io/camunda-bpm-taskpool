@@ -1,14 +1,12 @@
 package io.holunda.polyflow.taskpool.sender
 
 import org.springframework.boot.context.properties.ConfigurationProperties
-import org.springframework.boot.context.properties.ConstructorBinding
 import org.springframework.boot.context.properties.NestedConfigurationProperty
 
 /**
  * Command sender properties.
  */
 @ConfigurationProperties(prefix = "polyflow.integration.sender")
-@ConstructorBinding
 data class SenderProperties(
   /**
    * Global value to control the command gateway.
@@ -39,7 +37,6 @@ data class SenderProperties(
 /**
  * Task sender properties.
  */
-@ConstructorBinding
 data class TaskSenderProperties(
   /**
    * Value to control the task sending.
@@ -64,7 +61,6 @@ data class TaskSenderProperties(
 /**
  *  Process definition sender properties.
  */
-@ConstructorBinding
 data class ProcessDefinitionSenderProperties(
   /**
    * Value to control the process definition sending.
@@ -79,7 +75,6 @@ data class ProcessDefinitionSenderProperties(
 /**
  * Process instance sender properties.
  */
-@ConstructorBinding
 data class ProcessInstanceSenderProperties(
   /**
    * Value to control the process instance sending.
@@ -94,7 +89,6 @@ data class ProcessInstanceSenderProperties(
 /**
  * Process variable sender properties.
  */
-@ConstructorBinding
 data class ProcessVariableSenderProperties(
   /**
    * Value to control the process variable sending.

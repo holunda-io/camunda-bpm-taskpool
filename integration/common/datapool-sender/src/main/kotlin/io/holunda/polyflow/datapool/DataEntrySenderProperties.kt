@@ -1,6 +1,6 @@
 package io.holunda.polyflow.datapool
 
-import org.springframework.beans.factory.annotation.Value
+import io.holunda.polyflow.spring.ApplicationNameBeanPostProcessor.Companion.UNSET_APPLICATION_NAME
 import org.springframework.boot.context.properties.ConfigurationProperties
 
 /**
@@ -19,8 +19,8 @@ data class DataEntrySenderProperties(
   /**
    * Application name used as a source of the data entries. Defaults to "spring.application.name".
    */
-  @Value("\${spring.application.name:unset-application-name}")
-  var applicationName: String,
+  // The default is set by ApplicationNameBeanPostProcessor
+  var applicationName: String = UNSET_APPLICATION_NAME,
   /**
    * Serialize payload to `Map<String, Object>`. Defaults to true.
    */

@@ -1,7 +1,7 @@
 package io.holunda.polyflow.view.jpa.process
 
 import io.holunda.polyflow.view.ProcessInstanceState
-import javax.persistence.*
+import jakarta.persistence.*
 
 /**
  * Entity to store process instance.

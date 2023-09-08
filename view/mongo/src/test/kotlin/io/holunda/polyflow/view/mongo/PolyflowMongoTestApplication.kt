@@ -1,7 +1,7 @@
 package io.holunda.polyflow.view.mongo
 
+import de.flapdoodle.embed.mongo.spring.autoconfigure.EmbeddedMongoAutoConfiguration
 import org.springframework.boot.autoconfigure.SpringBootApplication
-import org.springframework.boot.autoconfigure.mongo.embedded.EmbeddedMongoAutoConfiguration
 
 @SpringBootApplication(exclude = [EmbeddedMongoAutoConfiguration::class])
 class PolyflowMongoTestApplication

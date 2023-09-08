@@ -4,7 +4,6 @@ import com.thoughtworks.xstream.XStream
 import io.holunda.polyflow.taskpool.collector.CamundaTaskpoolCollectorConfiguration
 import io.holunda.polyflow.taskpool.collector.CamundaTaskpoolCollectorProperties
 import io.holunda.polyflow.taskpool.collector.TaskCollectorEnricherType
-import io.holunda.polyflow.taskpool.collector.task.TaskVariableLoader
 import io.holunda.polyflow.taskpool.collector.task.VariablesEnricher
 import io.holunda.polyflow.taskpool.sender.process.definition.ProcessDefinitionCommandSender
 import io.holunda.polyflow.taskpool.sender.process.instance.ProcessInstanceCommandSender

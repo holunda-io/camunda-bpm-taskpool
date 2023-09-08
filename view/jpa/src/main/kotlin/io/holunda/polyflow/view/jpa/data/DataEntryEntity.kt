@@ -2,10 +2,10 @@ package io.holunda.polyflow.view.jpa.data
 
 
 import io.holunda.polyflow.view.jpa.payload.PayloadAttribute
+import jakarta.persistence.*
 import org.hibernate.annotations.Fetch
 import org.hibernate.annotations.FetchMode
 import java.time.Instant
-import javax.persistence.*
 
 /**
  * Entity to store data entries.
