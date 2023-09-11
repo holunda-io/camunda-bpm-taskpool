@@ -15,7 +15,8 @@ import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.ContextConfiguration
 import java.util.*
 
-@DataJpaTest(showSql = false)
+// TODO: Very weird: changing showSql to true fixes the test for me. Timing issue?
+@DataJpaTest(showSql = true)
 @ContextConfiguration(classes = [TestApplicationDataJpa::class])
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ActiveProfiles("itest", "mock-query-emitter")

@@ -21,7 +21,6 @@ import org.mockito.Mockito.mock
 import org.slf4j.Logger
 import java.io.IOException
 import java.util.concurrent.TimeUnit
-import java.util.concurrent.atomic.AtomicInteger
 import javax.net.SocketFactory
 
 
@@ -63,7 +62,7 @@ object MongoLauncher {
       .mongodArguments(
         Start.to(MongodArguments::class.java).initializedWith(
           MongodArguments.builder()
-            .replication(if (asReplicaSet) Storage.of("repembedded", 16) else null)
+            .apply { if (asReplicaSet) replication(Storage.of("repembedded", 16)) }
             .useNoJournal(!asReplicaSet)
             .build()
         )
