@@ -86,7 +86,7 @@ interface DataEntryRepository : CrudRepository<DataEntryEntity, DataEntryId>, Jp
     /**
      * Specification for checking the payload attribute.
      */
-    fun hasDataEntryPayloadAttribute(name: String, value: String): Specification<DataEntryEntity> =
+    fun hasDataEntryPayloadAttribute(name: String, values: List<String>): Specification<DataEntryEntity> =
       Specification { dataEntry, query, builder ->
         query.distinct(true)
         val join = dataEntry.join<DataEntryEntity, Set<PayloadAttribute>>(DataEntryEntity::payloadAttributes.name)
@@ -94,11 +94,15 @@ interface DataEntryRepository : CrudRepository<DataEntryEntity, DataEntryId>, Jp
           join.get<String>(PayloadAttribute::path.name),
           name
         )
-        val valueEquals = builder.equal(
-          join.get<String>(PayloadAttribute::value.name),
-          value
-        )
-        builder.and(pathEquals, valueEquals)
+
+        val valueAnyOf = values.map {
+          builder.equal(
+            join.get<String>(PayloadAttribute::value.name),
+            it
+          )
+        }.let { builder.or(*it.toTypedArray()) }
+
+        builder.and(pathEquals, valueAnyOf)
       }
 
     /**

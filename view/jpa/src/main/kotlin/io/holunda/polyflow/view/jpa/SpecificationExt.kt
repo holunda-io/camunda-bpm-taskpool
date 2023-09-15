@@ -152,7 +152,7 @@ internal fun List<Criterion>.toDataEntryPayloadSpecification(): Specification<Da
   val relevant = this.filterIsInstance<Criterion.PayloadEntryCriterion>()
   // compose criteria with same name with OR and criteria with different names with AND
   val relevantByName = relevant.groupBy { it.name }
-  val orComposedByName = relevantByName.map { (_, criteria) -> composeOr(criteria.map { it.toDataEntrySpecification() }) }
+  val orComposedByName = relevantByName.map { (_, criteria) -> criteria.toOrDataEntrySpecification() }
 
   return composeAnd(orComposedByName)
 }
@@ -164,7 +164,7 @@ internal fun List<Criterion>.toTaskPayloadSpecification(): Specification<TaskEnt
   val relevant = this.filterIsInstance<Criterion.PayloadEntryCriterion>()
   // compose criteria with same name with OR and criteria with different names with AND
   val relevantByName = relevant.groupBy { it.name }
-  val orComposedByName = relevantByName.map { (_, criteria) -> composeOr(criteria.map { it.toTaskSpecification() }) }
+  val orComposedByName = relevantByName.map { (_, criteria) -> criteria.toOrTaskSpecification() }
 
   return composeAnd(orComposedByName)
 }
@@ -218,13 +218,23 @@ internal fun Criterion.TaskCriterion.toTaskSpecification(): Specification<TaskEn
 }
 
 /**
- * Creates JPA Specification for query of payload attributes based on JSON paths.
+ * Creates JPA Specification for query of payload attributes based on JSON paths. All criteria must have the same path
+ * and will be composed by the logical OR operator.
  */
-internal fun Criterion.PayloadEntryCriterion.toTaskSpecification(): Specification<TaskEntity> {
-  return when (this.operator) {
-    EQUALS -> hasTaskPayloadAttribute(this.name, this.value)
-    else -> throw IllegalArgumentException("JPA View currently supports only equals as operator for filtering of payload attributes.")
+internal fun List<Criterion.PayloadEntryCriterion>.toOrTaskSpecification(): Specification<TaskEntity> {
+  if (this.isEmpty()) {
+    throw IllegalArgumentException("List of criteria must not be empty.")
   }
+
+  if (this.map { it.operator }.any { it != EQUALS }) {
+    throw IllegalArgumentException("JPA View currently supports only equals as operator for filtering of payload attributes.")
+  }
+
+  if (this.map { it.name }.any { it != this[0].name }) {
+    throw IllegalArgumentException("All criteria must have the same path.")
+  }
+
+  return hasTaskPayloadAttribute(this[0].name, this.map { it.value })
 }
 
 /**
@@ -242,13 +252,22 @@ internal fun Criterion.DataEntryCriterion.toDataEntrySpecification(): Specificat
 }
 
 /**
- * Creates JPA Specification for query of payload attributes based on JSON paths.
+ * Creates JPA Specification for query of payload attributes based on JSON paths. All criteria must have the same path
+ * and will be composed by the logical OR operator.
  */
-internal fun Criterion.PayloadEntryCriterion.toDataEntrySpecification(): Specification<DataEntryEntity> {
-  return when (this.operator) {
-    EQUALS -> hasDataEntryPayloadAttribute(this.name, this.value)
-    else -> throw IllegalArgumentException("JPA View currently supports only equals as operator for filtering of payload attributes.")
+internal fun List<Criterion.PayloadEntryCriterion>.toOrDataEntrySpecification(): Specification<DataEntryEntity> {
+  if (this.isEmpty()) {
+    throw IllegalArgumentException("List of criteria must not be empty.")
   }
+
+  if (this.map { it.operator }.any { it != EQUALS }) {
+    throw IllegalArgumentException("JPA View currently supports only equals as operator for filtering of payload attributes.")
+  }
+
+  if (this.map { it.name }.any { it != this[0].name }) {
+    throw IllegalArgumentException("All criteria must have the same path.")
+  }
+  return hasDataEntryPayloadAttribute(this[0].name, this.map { it.value })
 }
 
 

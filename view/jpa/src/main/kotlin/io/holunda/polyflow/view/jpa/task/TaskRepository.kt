@@ -235,9 +235,9 @@ interface TaskRepository : CrudRepository<TaskEntity, String>, JpaSpecificationE
         .or(likeProcessName(pattern))
 
     /**
-     * Specification for checking the payload attribute of a task.
+     * Specification for checking the payload attribute of a task. If multiple values are given, one of them must match.
      */
-    fun hasTaskPayloadAttribute(name: String, value: String): Specification<TaskEntity> =
+    fun hasTaskPayloadAttribute(name: String, values: List<String>): Specification<TaskEntity> =
       Specification { task, query, builder ->
         query.distinct(true)
         val join = task.join<TaskEntity, Set<PayloadAttribute>>(TaskEntity::payloadAttributes.name)
@@ -245,11 +245,15 @@ interface TaskRepository : CrudRepository<TaskEntity, String>, JpaSpecificationE
           join.get<String>(PayloadAttribute::path.name),
           name
         )
-        val valueEquals = builder.equal(
-          join.get<String>(PayloadAttribute::value.name),
-          value
-        )
-        builder.and(pathEquals, valueEquals)
+
+        val valueAnyOf = values.map {
+          builder.equal(
+            join.get<String>(PayloadAttribute::value.name),
+            it
+          )
+        }.let { builder.or(*it.toTypedArray()) }
+
+        builder.and(pathEquals, valueAnyOf)
       }
   }
 }
