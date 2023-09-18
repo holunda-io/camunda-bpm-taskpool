@@ -16,7 +16,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        jdk: ['11.0.5']
+        jdk: ['17.0.8']
     steps:
       - name: Checkout code
         uses: actions/checkout@v3

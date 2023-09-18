@@ -5,13 +5,11 @@ import io.holunda.camunda.variable.serializer.EqualityPathFilter.Companion.eqInc
 import io.holunda.camunda.variable.serializer.FilterType
 import io.holunda.camunda.variable.serializer.JsonPathFilterFunction
 import org.springframework.boot.context.properties.ConfigurationProperties
-import org.springframework.boot.context.properties.ConstructorBinding
 import org.springframework.boot.context.properties.NestedConfigurationProperty
 
 /**
  * Properties to configure JPA View.
  */
-@ConstructorBinding
 @ConfigurationProperties(prefix = "polyflow.view.jpa")
 data class PolyflowJpaViewProperties(
   /**
@@ -54,7 +52,6 @@ data class PolyflowJpaViewProperties(
 /**
  * Config properties for the path filters.
  */
-@ConstructorBinding
 data class PayloadAttributeFilterPaths(
   /**
    * Include filter for path indexing (white listing)

@@ -1,8 +1,8 @@
 package io.holunda.polyflow.view.jpa.process
 
+import jakarta.persistence.Column
+import jakarta.persistence.Embeddable
 import java.io.Serializable
-import javax.persistence.Column
-import javax.persistence.Embeddable
 
 /**
  * Represents process source.

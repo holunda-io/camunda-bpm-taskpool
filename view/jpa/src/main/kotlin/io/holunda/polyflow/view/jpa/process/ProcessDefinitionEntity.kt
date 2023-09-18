@@ -1,6 +1,6 @@
 package io.holunda.polyflow.view.jpa.process
 
-import javax.persistence.*
+import jakarta.persistence.*
 
 /**
  * Entity to store process definitions.

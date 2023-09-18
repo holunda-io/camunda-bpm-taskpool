@@ -1,5 +1,6 @@
 package io.holunda.polyflow.taskpool.collector.properties
 
+import io.holunda.polyflow.spring.ApplicationNameBeanPostProcessor
 import io.holunda.polyflow.taskpool.collector.CamundaTaskpoolCollectorProperties
 import io.holunda.polyflow.taskpool.collector.TaskCollectorEnricherType
 import io.holunda.polyflow.taskpool.sender.SenderProperties
@@ -12,6 +13,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Import
 import org.springframework.context.annotation.Primary
 import org.springframework.test.context.ActiveProfiles
 
@@ -34,6 +36,7 @@ internal class CamundaTaskpoolCollectorPropertiesITest {
 
   @SpringBootApplication
   @EnableConfigurationProperties(CamundaTaskpoolCollectorProperties::class, SenderProperties::class)
+  @Import(ApplicationNameBeanPostProcessor::class)
   class PropertiesTestApplication {
     /**
      * Gateway.

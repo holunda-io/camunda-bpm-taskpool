@@ -1,15 +1,15 @@
 package io.holunda.polyflow.taskpool.collector
 
+import io.holunda.polyflow.spring.ApplicationNameBeanPostProcessor
 import io.holunda.polyflow.taskpool.collector.process.definition.ProcessDefinitionCollectorConfiguration
-import io.holunda.polyflow.taskpool.collector.process.definition.ProcessDefinitionService
 import io.holunda.polyflow.taskpool.collector.process.instance.ProcessInstanceCollectorConfiguration
 import io.holunda.polyflow.taskpool.collector.process.variable.ProcessVariableCollectorConfiguration
 import io.holunda.polyflow.taskpool.collector.task.TaskCollectorConfiguration
+import jakarta.annotation.PostConstruct
 import mu.KLogging
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Import
-import javax.annotation.PostConstruct
 
 /**
  * Configuration of collector.
@@ -23,6 +23,7 @@ import javax.annotation.PostConstruct
   ]
 )
 @EnableConfigurationProperties(CamundaTaskpoolCollectorProperties::class)
+@Import(ApplicationNameBeanPostProcessor::class)
 class CamundaTaskpoolCollectorConfiguration(
   private val properties: CamundaTaskpoolCollectorProperties
 ) {

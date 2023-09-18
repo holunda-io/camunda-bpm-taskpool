@@ -1,17 +1,15 @@
 package io.holunda.polyflow.view.jpa
 
+import jakarta.annotation.PostConstruct
 import mu.KLogging
 import org.axonframework.eventhandling.deadletter.jpa.DeadLetterEntry
 import org.axonframework.eventhandling.tokenstore.jpa.TokenEntry
 import org.axonframework.modelling.saga.repository.jpa.SagaEntry
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.boot.autoconfigure.domain.EntityScan
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories
-import javax.annotation.PostConstruct
-import javax.persistence.EntityManagerFactory
 
 /**
  * From here and below, scan for components, entities and JPA repositories.

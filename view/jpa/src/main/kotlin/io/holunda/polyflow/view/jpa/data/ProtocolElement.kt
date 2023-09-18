@@ -1,8 +1,8 @@
 package io.holunda.polyflow.view.jpa.data
 
+import jakarta.persistence.*
 import java.time.Instant
 import java.util.*
-import javax.persistence.*
 
 /**
  * Entity to store audit log of the changes on data entries.

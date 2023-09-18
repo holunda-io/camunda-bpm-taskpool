@@ -30,6 +30,7 @@ class TaskAggregateEngineTaskCommandFilter(
       is CreateTaskCommand -> {
 
        DefaultUnitOfWork.startAndGet(GenericMessage.asMessage(engineTaskCommand)).executeWithResult {
+         // TODO: This will log an exception if the task aggregate is not present. Currently no idea how to determine this without creating the aggregate or logging an exception.
           eventSourcingRepository.loadOptional(engineTaskCommand.id)
             .map { false } // if the task exists, the CreateCommand should not be emitted
             .orElse(true) // if the task doesn't exist, emit the CreateTaskCommand
