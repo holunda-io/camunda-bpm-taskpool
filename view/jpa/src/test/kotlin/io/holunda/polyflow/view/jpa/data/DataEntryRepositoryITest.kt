@@ -16,25 +16,24 @@ import org.camunda.bpm.engine.variable.Variables.createVariables
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.data.jpa.domain.Specification.where
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.ContextConfiguration
-import org.springframework.test.context.junit.jupiter.SpringExtension
 import java.time.Instant
 import java.util.*
 import javax.persistence.EntityManager
 import javax.transaction.Transactional
 
-@ExtendWith(SpringExtension::class)
 @DataJpaTest(showSql = false)
 @Transactional
 @DirtiesContext
 @ContextConfiguration(classes = [TestApplication::class])
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ActiveProfiles("itest", "mock-query-emitter")
 internal class DataEntryRepositoryITest {
   @Autowired
@@ -48,6 +47,8 @@ internal class DataEntryRepositoryITest {
 
   @BeforeEach
   fun `insert entries`() {
+    dataEntryRepository.deleteAll()
+    entityManager.flush()
 
     val id = UUID.randomUUID().toString()
 
@@ -149,6 +150,13 @@ internal class DataEntryRepositoryITest {
   }
 
   @Test
+  fun `loads each protocol entry only once`() {
+    entityManager.clear()
+    val dataEntry = dataEntryRepository.findByIdOrNull(dataEntry.dataEntryId)!!
+    assertThat(dataEntry.protocol.size).isEqualTo(1)
+  }
+
+  @Test
   fun `should find data entry by id`() {
     val found = dataEntryRepository.findByIdOrNull(DataEntryId(entryType = dataEntry.dataEntryId.entryType, entryId = dataEntry.dataEntryId.entryId))
     assertThat(found).isNotNull
@@ -234,13 +242,13 @@ internal class DataEntryRepositoryITest {
   @Test
   fun `should find by filter payload attribute`() {
 
-    val byPayloadFilterByChildKeyNumberValue = dataEntryRepository.findAll(where(hasDataEntryPayloadAttribute("child.key-number", "42")))
+    val byPayloadFilterByChildKeyNumberValue = dataEntryRepository.findAll(where(hasDataEntryPayloadAttribute("child.key-number", listOf("42"))))
     assertThat(byPayloadFilterByChildKeyNumberValue).containsExactlyInAnyOrderElementsOf(listOf(dataEntry, dataEntry2))
 
     val byPayloadFilterByChildKeyValue =
       dataEntryRepository.findAll(
-        where(hasDataEntryPayloadAttribute("child.key", "value"))
-          .and(hasDataEntryPayloadAttribute("id", dataEntry.dataEntryId.entryId))
+        where(hasDataEntryPayloadAttribute("child.key", listOf("value")))
+          .and(hasDataEntryPayloadAttribute("id", listOf(dataEntry.dataEntryId.entryId)))
       )
     assertThat(byPayloadFilterByChildKeyValue).containsExactlyInAnyOrderElementsOf(listOf(dataEntry))
   }

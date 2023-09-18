@@ -61,7 +61,7 @@ internal fun compareOperator(sign: String): CompareOperator =
       }
     }
 
-    EQUALS-> { filter, actual -> filter.toString() == actual.toString() }
+    EQUALS -> { filter, actual -> filter.toString() == actual.toString() }
 
     else -> throw IllegalArgumentException("Unsupported operator $sign")
   }
@@ -105,7 +105,8 @@ fun filterByPredicate(value: TaskWithDataEntries, wrapper: TaskPredicateWrapper)
     // constraint is defined on task and matches on task property
     || (wrapper.taskAttributePredicate != null && wrapper.taskAttributePredicate.test(value.task) && wrapper.taskPayloadPredicate == null)
     // constraint is defined on data and matches on data entry property
-    || (wrapper.taskAttributePredicate == null && (wrapper.taskPayloadPredicate != null && (value.dataEntries.asSequence().map { dataEntry -> dataEntry.payload }
+    || (wrapper.taskAttributePredicate == null && (wrapper.taskPayloadPredicate != null && (value.dataEntries.asSequence()
+    .map { dataEntry -> dataEntry.payload }
     .find { payload -> wrapper.taskPayloadPredicate.test(payload) } != null || wrapper.taskPayloadPredicate.test(value.task.payload))))
     // both constraints
     || (wrapper.taskAttributePredicate != null && wrapper.taskAttributePredicate.test(value.task) && (wrapper.taskPayloadPredicate != null && (value.dataEntries.asSequence()
@@ -140,7 +141,9 @@ fun filterByPredicate(value: Task, wrapper: TaskPredicateWrapper): Boolean =
     // constraint is defined on data and matches
     || (wrapper.taskAttributePredicate == null && wrapper.taskPayloadPredicate != null && wrapper.taskPayloadPredicate.test(value.payload))
     // both constraints
-    || (wrapper.taskAttributePredicate != null && wrapper.taskAttributePredicate.test(value) && wrapper.taskPayloadPredicate != null && wrapper.taskPayloadPredicate.test(value.payload))
+    || (wrapper.taskAttributePredicate != null && wrapper.taskAttributePredicate.test(value) && wrapper.taskPayloadPredicate != null && wrapper.taskPayloadPredicate.test(
+    value.payload
+  ))
 
 
 /**
@@ -245,7 +248,7 @@ internal fun toCriterion(filter: String): Criterion {
   }.map { it.trim() }
 
   // special handling for simple infix operators of form <field><op><value>
-  require(segments.size == 3 && segments[0].isNotBlank() && segments[0].isNotBlank()) { "Failed to create criteria from $filter." }
+  require(segments.size == 3 && segments[0].isNotBlank() && segments[1].isNotBlank()) { "Failed to create criteria from $filter." }
 
   return when {
     isTaskAttribute(segments[0]) -> {
@@ -268,7 +271,14 @@ internal fun toCriterion(filter: String): Criterion {
 internal fun isTaskAttribute(propertyName: String): Boolean =
   propertyName.startsWith(TASK_PREFIX)
     && propertyName.length > TASK_PREFIX.length
-    && Task::class.memberProperties.map { it.name }.contains(propertyName.substring(TASK_PREFIX.length))
+    && propertyName.substring(TASK_PREFIX.length).let { taskAttribute ->
+    when {
+      Task::class.memberProperties.map { it.name }.contains(taskAttribute) -> true
+      taskAttribute == "processName" -> true
+      taskAttribute == "textSearch" -> true
+      else -> false
+    }
+  }
 
 /**
  * Checks is a property is a data entry attribute.
@@ -276,10 +286,13 @@ internal fun isTaskAttribute(propertyName: String): Boolean =
 internal fun isDataEntryAttribute(propertyName: String): Boolean =
   propertyName.startsWith(DATA_PREFIX)
     && propertyName.length > DATA_PREFIX.length
-    && (
-    DataEntry::class.memberProperties.map { it.name }.contains(propertyName.substring(DATA_PREFIX.length)) ||
-      DataEntryState::class.memberProperties.map { "${DataEntry::state.name}.${it.name}" }.contains(propertyName.substring(DATA_PREFIX.length))
-    )
+    && propertyName.substring(DATA_PREFIX.length).let { dataEntryAttribute ->
+    when {
+      DataEntry::class.memberProperties.map { it.name }.contains(dataEntryAttribute) -> true
+      DataEntryState::class.memberProperties.map { "${DataEntry::state.name}.${it.name}" }.contains(dataEntryAttribute) -> true
+      else -> false
+    }
+  }
 
 /**
  * Criterion.

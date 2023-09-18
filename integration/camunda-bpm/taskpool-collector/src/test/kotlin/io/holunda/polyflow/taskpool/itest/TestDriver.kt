@@ -145,8 +145,8 @@ class TestDriver(
 
   }
 
-  fun assertProcessInstanceWaitsInUserTask(instance: ProcessInstance) {
-    BpmnAwareTests.assertThat(instance).isWaitingAt(TASK_DEFINITION_KEY)
+  fun assertProcessInstanceWaitsInUserTask(instance: ProcessInstance, taskDefinitionKey: String = TASK_DEFINITION_KEY) {
+    BpmnAwareTests.assertThat(instance).isWaitingAt(taskDefinitionKey)
   }
 
   /*

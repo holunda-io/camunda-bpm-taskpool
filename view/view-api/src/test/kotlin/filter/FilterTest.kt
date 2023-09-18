@@ -84,8 +84,11 @@ class FilterTest {
   fun `should classify properties`() {
     assertThat(isTaskAttribute("task.id")).isTrue
     assertThat(isTaskAttribute("task.name")).isTrue
-    assertThat(isTaskAttribute("task.name")).isTrue
+    assertThat(isTaskAttribute("task.followUpDate")).isTrue
     assertThat(isTaskAttribute("task.dueDate")).isTrue
+    assertThat(isTaskAttribute("task.processName")).isTrue
+    assertThat(isTaskAttribute("task.textSearch")).isTrue
+    assertThat(isTaskAttribute("task.businessKey")).isTrue
 
     assertThat(isTaskAttribute("task.")).isFalse
     assertThat(isTaskAttribute("assignee")).isFalse
@@ -116,6 +119,20 @@ class FilterTest {
   }
 
   @Test
+  fun `should create task criteria for process name and text search`() {
+    val criteria = toCriteria(listOf("task.processName${LIKE}foo", "task.textSearch${LIKE}bar"))
+    assertThat(criteria).isNotNull
+    assertThat(criteria.size).isEqualTo(2)
+    assertThat(criteria).containsExactlyElementsOf(
+      listOf(
+        Criterion.TaskCriterion("processName", "foo", operator = LIKE),
+        Criterion.TaskCriterion("textSearch", "bar", operator = LIKE),
+      )
+    )
+  }
+
+
+  @Test
   fun `should fail to create criteria 2`() {
     assertThatThrownBy {
       toCriteria(listOf("${EQUALS}some$EQUALS"))
@@ -134,20 +151,20 @@ class FilterTest {
     assertThat(predicates).isNotNull
     assertThat(predicates.taskAttributePredicate).isNotNull
 
-    val criteriaWithSpaces = toCriteria(listOf("task.name ${EQUALS} some"))
+    val criteriaWithSpaces = toCriteria(listOf("task.name $EQUALS some"))
     val predicatesTrimmed = createTaskPredicates(criteriaWithSpaces)
     assertThat(predicatesTrimmed).isNotNull
     assertThat(predicatesTrimmed.taskAttributePredicate).isNotNull
   }
 
 
+  @Suppress("UNNECESSARY_NOT_NULL_ASSERTION")
   @Test
   fun `should create predicates`() {
 
     val criteria = toCriteria(filtersList)
     val predicates = createTaskPredicates(criteria)
 
-    assertThat(predicates).isNotNull
     assertThat(predicates.taskAttributePredicate).isNotNull
     assertThat(predicates.taskPayloadPredicate).isNotNull
 

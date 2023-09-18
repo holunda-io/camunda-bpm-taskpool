@@ -2,9 +2,17 @@ spring:
   jpa:
     open-in-view: true # disable JPA warning
     show-sql: false
-    database-platform: org.hibernate.dialect.H2Dialect
+    database-platform: io.holunda.polyflow.view.jpa.itest.FixedH2Dialect
+    generate-ddl: true
+    hibernate.ddl-auto: create-drop
   datasource:
-    driverClassName: org.h2.Driver
+    url: jdbc:h2:mem:testdb;MODE=PostgreSQL;INIT=create schema if not exists PUBLIC;DB_CLOSE_DELAY=-1;NON_KEYWORDS=VALUE;DB_CLOSE_ON_EXIT=FALSE
+    username: sa
+    password: sa
+    hikari:
+      connection-test-query: select 1 from dual;
+      schema: PUBLIC
+    driver-class-name: org.h2.Driver
 
 polyflow:
   view:
@@ -13,11 +21,12 @@ polyflow:
 
 logging:
   level:
+    root: INFO
     org.springframework: INFO
     org.axonframework: INFO
     org.hibernate.type: INFO # activate this and generic ROOT logger to see SQL and binding
-    io.holixon.axon.gateway.query: DEBUG
-    io.holunda.polyflow.view.jpa: DEBUG
+    io.holixon.axon.gateway.query: INFO
+    io.holunda.polyflow.view.jpa: INFO
 
 axon:
   axonserver:

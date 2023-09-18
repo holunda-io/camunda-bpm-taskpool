@@ -2,6 +2,8 @@ package io.holunda.polyflow.view.query
 
 /**
  * Query result representing a list of elements and the total number of elements.
+ * @param [T] tpe of resulting element.
+ * @param [S] type of a concrete query (to be returned on query operations like slice).
  * @param elements elements in the query result.
  * @param totalElementCount in the result before the slice has been applied.
  */
@@ -13,7 +15,7 @@ open class QueryResult<T : Any, S : QueryResult<T, S>>(
 
   /**
    * Slices the result.
-   * @param query contaning slicing information.
+   * @param query containing slicing information.
    * @return result having the specified number of elements.
    */
   open fun slice(query: PageableSortableQuery): QueryResult<T, S> {

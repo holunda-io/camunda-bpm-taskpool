@@ -21,18 +21,19 @@ and generic query paging and sorting.
 
 The Task API allows to query for tasks handled by the task-pool.
 
-| Query Type                        | Description                                                                                                                                    | Payload types                   | In-Memory | JPA        | Mongo DB |
-|-----------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------|-----------|------------|----------|
-| AllTasksQuery                     | Retrieves a list of tasks applying additional filters                                                                                          | List<Task>                      | yes       | yes        | no       |
-| TasksForUserQuery                 | Retrieves a list of tasks accessible by the user and applying additional filters                                                               | List<Task>                      | yes       | yes        | yes      |
-| TasksForGroupQuery                | Retrieves a list of tasks accessible by the user's group and applying additional filters                                                       | List<Task>                      | yes       | yes        | no       |
-| TaskForIdQuery                    | Retrieves a task by id (without any other filters)                                                                                             | Task or null                    | yes       | yes        | yes      |
-| TasksForApplicationQuery          | Retrieves all tasks by given application name (without any further filters)                                                                    | List<Task>                      | yes       | yes        | yes      |
-| AllTasksWithDataEntriesQuery      | Retrieves a list of tasks applying additional filters and correlates result with data entries, if available                                    | List<(Task, List<DataEntry>)    | yes       | incubation | no       |
-| TasksWithDataEntriesForGroupQuery | Retrieves a list of tasks accessible by the user's group and applying additional filters and correlates result with data entries, if available | List<(Task, List<DataEntry>)    | yes       | incubation | no       |
-| TasksWithDataEntriesForUserQuery  | Retrieves a list of tasks accessible by the user and applying additional filters and correlates result with data entries, if available         | List<(Task, List<DataEntry>)    | yes       | incubation | yes      |
-| TaskWithDataEntriesForIdQuery     | Retrieves a task by id and correlates result with data entries, if available                                                                   | (Task, List<DataEntry>) or null | yes       | yes        | yes      |
-| TaskCountByApplicationQuery       | Counts tasks grouped by application names, useful for monitoring                                                                               | List<(ApplicationName, Count)>  | yes       | no         | yes      |
+| Query Type                          | Description                                                                                                                                    | Payload types                   | In-Memory | JPA        | Mongo DB |
+|-------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------|-----------|------------|----------|
+| AllTasksQuery                       | Retrieves a list of tasks applying additional filters                                                                                          | List<Task>                      | yes       | yes        | no       |
+| TasksForUserQuery                   | Retrieves a list of tasks accessible by the user and applying additional filters                                                               | List<Task>                      | yes       | yes        | yes      |
+| TasksForGroupQuery                  | Retrieves a list of tasks accessible by the user's group and applying additional filters                                                       | List<Task>                      | yes       | yes        | no       |
+| TasksForCandidateUserAndGroupQuery  | Retrieves a list of tasks accessible by the user because listed as candidate and the user's group and applying additional filters              | List<Task>                      | yes       | yes        | no       |
+| TaskForIdQuery                      | Retrieves a task by id (without any other filters)                                                                                             | Task or null                    | yes       | yes        | yes      |
+| TasksForApplicationQuery            | Retrieves all tasks by given application name (without any further filters)                                                                    | List<Task>                      | yes       | yes        | yes      |
+| AllTasksWithDataEntriesQuery        | Retrieves a list of tasks applying additional filters and correlates result with data entries, if available                                    | List<(Task, List<DataEntry>)    | yes       | incubation | no       |
+| TasksWithDataEntriesForGroupQuery   | Retrieves a list of tasks accessible by the user's group and applying additional filters and correlates result with data entries, if available | List<(Task, List<DataEntry>)    | yes       | incubation | no       |
+| TasksWithDataEntriesForUserQuery    | Retrieves a list of tasks accessible by the user and applying additional filters and correlates result with data entries, if available         | List<(Task, List<DataEntry>)    | yes       | incubation | yes      |
+| TaskWithDataEntriesForIdQuery       | Retrieves a task by id and correlates result with data entries, if available                                                                   | (Task, List<DataEntry>) or null | yes       | yes        | yes      |
+| TaskCountByApplicationQuery         | Counts tasks grouped by application names, useful for monitoring                                                                               | List<(ApplicationName, Count)>  | yes       | no         | yes      |
  
 
 ### Process Definition API
@@ -90,7 +91,7 @@ for more details. Please note, that not all implementations are implementing thi
 
 ## Filtering, Paging and Sorting
 
-Task API and Data Entries API supports filtering, paging and sorting in queries resulting in multiple results. For Task API these are `AllTasksQuery`, `TasksForGroupQuery`, `TasksForUserQuery`,
+Task API and Data Entries API supports filtering, paging and sorting in queries resulting in multiple results. For Task API these are `AllTasksQuery`, `TasksForGroupQuery`, `TasksForUserQuery`, `TasksForCandidateUserAndGroupQuery`,
 `AllTasksWithDataEntriesQuery`, `TasksWithDataEntriesForGroupQuery`, `TasksWithDataEntriesForUserQuery` and for Data Entries API these are `DataEntriesForUserQuery` and `DataEntriesQuery`. 
 The queries implement the `PageableSortableQuery` interface, allowing to limit the amount of results and provide an optional sorting:
 
@@ -104,29 +105,41 @@ interface PageableSortableQuery {
 The `page` parameter denotes the page number to deliver (starting with `0`). The `size` parameter denotes the number of elements on a page. By default, the `page` is set to `0`
 and the size is set to `Int.MAX`. 
 
-An optional `sort` parameter allows to sort the results by a field attribute.  The format of the `sort` string is `<+|->filedName`, `+fieldName` means sort by `fieldName` ascending,
-`-fieldName` means sort by `fieldName` descending. The field must be a direct member of the result (`Task`, `TaskWithDataEntries` or `DataEntry`) and must be one of the following type:
+An optional `sort` parameter allows to sort the results by a field attribute. The format of the `sort` string is `<+|->fieldName`, `+fieldName` means sort by `fieldName` ascending,
+`-fieldName` means sort by `fieldName` descending. The field must be a direct member of the result (`Task` for queries on `Task` and `TaskWithDataEntries` or `DataEntry`) and must be one of the following type:
 
 * java.lang.Integer
 * java.lang.String
 * java.util.Date
 * java.time.Instant
 
-To filter the results, you might supply a list of filters. A filter is an expression in format `fieldName<op>value`, where `fieldName` is addressing the attribute of the search result,
+To filter the results, you can supply a list of filters. A filter is an expression in format `fieldName<op>value`, where `fieldName` is addressing the attribute of the search result,
 `<op>` is one of `<`, `=`, `%` and `>` and `value` is a string representation of the values. The `fieldName` can point to an attribute of the result entity itself (`Task`, `TaskWithDataEntries` 
-or `DataEntry`) or point to the attribute inside the payload. To avoid a possible name clash, you must prefix the field name with `task.` if you want to filter on direct attributes of a task,
-and you must prefix the field name with `data` if you want to filter on direct attributes of a dta entry. For example, `task.priority=50` would deliver tasks with priority set to 50,
+or `DataEntry`) or point to the attribute inside the payload. To avoid name clashes, you must prefix the field name with `task` if you want to filter on direct attributes of a task,
+and you must prefix the field name with `data` if you want to filter on direct attributes of a data entry. For example, `task.priority=50` would deliver tasks with priority set to 50,
 and `data.entryType=info.polyflow.Order` will deliver data entries of type `info.polyflow.Order` only.
 
 Following operations are supported:
 
-| Filter | Operation    | In-Memory    | JPA (Task Attributes) | JPA (Data Entries Attributes)                                      | Mongo DB (Task Attributes) | Mongo DB (Data Entries Attributes) |  
-|--------|--------------|--------------|-----------------------|--------------------------------------------------------------------|----------------------------|------------------------------------|
-| `<`    | Less than    | all, payload | none                  | none                                                               | all, payload               | all, payload                       | 
-| `>`    | Greater than | all, payload | none                  | none                                                               | all, payload               | all, payload                       |
-| `=`    | Equals       | all, payload | business key, payload | entry id, entry type, type, payload, processing state, user status | all, payload               | all, payload                       |
-| `%`    | Like         | all, payload | name, description     | none                                                               | none                       | none                               |
+| Filter | Operation    | In-Memory    | JPA (Task Attributes)                                             | JPA (Data Entries Attributes)                                            | Mongo DB (Task Attributes) | Mongo DB (Data Entries Attributes) |  
+|--------|--------------|--------------|-------------------------------------------------------------------|--------------------------------------------------------------------------|----------------------------|------------------------------------|
+| `<`    | Less than    | all, payload | `followUpDate`, `dueDate`                                         | none                                                                     | all, payload               | all, payload                       | 
+| `>`    | Greater than | all, payload | `followUpDate`, `dueDate`                                         | none                                                                     | all, payload               | all, payload                       |
+| `=`    | Equals       | all, payload | payload, `businessKey`, `followUpDate`, `dueDate`, `priority`     | `entryId`, `entryType`, `type`, payload, `processingState`, `userStatus` | all, payload               | all, payload                       |
+| `%`    | Like         | all, payload | `businessKey`, `name`, `description`, `processName`, `textSearch` | none                                                                     | none                       | none                               |
 
+!!! info
+    There are several special reserved filters which can be passed to the task query: `task.processName=<value>` checks equality of the process name, `task.processName%<value>` makes a like-search on
+    process name, `task.textSearch%some-substring` makes a special OR-combined like-search on task name, task description and task process name. 
 
-If the field name has no prefix of above, it is considered as an attribute inside the payload of data entry or enriched variables of a user task. For example, imagine
-you have a data entry with payload attributes `{ "attribute": "value", "another": 45 }`. In order to search for those, just specify `attribute=value` in your filter criteria. 
+If the field name does not have one of the above prefixes, it is considered as an attribute inside the payload of data entry or enriched variables of a user task. For example, imagine
+you have a data entry with payload attributes `{ "attribute": "value", "another": 45 }`. In order to search for those, just specify `attribute=value` in your filter criteria.
+
+Filters are composed with logical AND, meaning that all given filters have to match in order for a task to be included in the result of the query. For example, given the filters
+`task.priority=50` and `foo=bar`, the query result would only contain tasks that have a priority of 50 **and** a payload attribute named foo with the value bar.
+
+!!! warning
+    The [JPA View](view-jpa.md) has a different implementation when applying filters. Filters that target the same attribute are OR-composed before being AND-composed
+    with filters that target other attributes. For example, given the filters `customerName=ABC`, `customerName=DEF` and `task.priority=50`, the filters for the
+    customer name would first get OR-composed before being AND-composed with the task priority filter, resulting in a filtering expression logically equivalent to
+    `(customerName=ABC OR customerName=DEF) AND task.priority=50`.

@@ -26,7 +26,14 @@ data class PolyflowJpaViewProperties(
    * Filters for the paths for indexing.
    */
   @NestedConfigurationProperty
-  private val dataEntryFilters: PayloadAttributeFilterPaths = PayloadAttributeFilterPaths()
+  private val dataEntryFilters: PayloadAttributeFilterPaths = PayloadAttributeFilterPaths(),
+
+  /**
+   * Filters for the path for indexing.
+   */
+  @NestedConfigurationProperty
+  private val taskFilters: PayloadAttributeFilterPaths = PayloadAttributeFilterPaths()
+
 ) {
   /**
    * Extracts JSON path filters out of the properties.
@@ -34,6 +41,14 @@ data class PolyflowJpaViewProperties(
   fun dataEntryJsonPathFilters(): List<Pair<JsonPathFilterFunction, FilterType>> {
     return this.dataEntryFilters.include.map { eqInclude(it) }.plus(this.dataEntryFilters.exclude.map { eqExclude(it) })
   }
+
+  /**
+   * Extracts JSON path filters out of the properties.
+   */
+  fun taskJsonPathFilters(): List<Pair<JsonPathFilterFunction, FilterType>> {
+    return this.taskFilters.include.map { eqInclude(it) }.plus(this.taskFilters.exclude.map { eqExclude(it) })
+  }
+
 }
 
 /**

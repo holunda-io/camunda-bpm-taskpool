@@ -6,7 +6,7 @@
   <parent>
     <groupId>io.holunda.polyflow</groupId>
     <artifactId>polyflow-parent</artifactId>
-    <version>3.8.3-SNAPSHOT</version>
+    <version>3.14.4-SNAPSHOT</version>
     <relativePath>../../bom/parent/pom.xml</relativePath>
   </parent>
 

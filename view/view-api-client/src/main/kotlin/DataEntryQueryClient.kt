@@ -11,7 +11,7 @@ import java.util.concurrent.CompletableFuture
 /**
  * Client encapsulating the correct query types (including response types)
  */
-class DataEntryQueryClient(
+open class DataEntryQueryClient(
   private val queryGateway: QueryGateway
 ) {
 

@@ -39,7 +39,6 @@ import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import javax.transaction.Transactional
 
-@ExtendWith(SpringExtension::class)
 @SpringBootTest(
   classes = [TestApplication::class],
   properties = [

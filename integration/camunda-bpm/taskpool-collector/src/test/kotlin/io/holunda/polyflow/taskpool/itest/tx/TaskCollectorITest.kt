@@ -4,6 +4,7 @@ import com.fasterxml.jackson.module.kotlin.convertValue
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.holunda.camunda.taskpool.api.task.*
 import io.holunda.polyflow.taskpool.EnableCamundaTaskpoolCollector
+import io.holunda.polyflow.taskpool.collector.task.TaskEventCollectorService
 import io.holunda.polyflow.taskpool.itest.TestDriver
 import io.holunda.polyflow.taskpool.itest.TestDriver.Companion.DEFAULT_VARIABLES
 import io.holunda.polyflow.taskpool.itest.TestDriver.Companion.createTaskCommand
@@ -17,6 +18,7 @@ import org.axonframework.commandhandling.gateway.CommandGateway
 import org.camunda.bpm.engine.RepositoryService
 import org.camunda.bpm.engine.RuntimeService
 import org.camunda.bpm.engine.TaskService
+import org.camunda.bpm.engine.delegate.DelegateTask
 import org.camunda.bpm.engine.delegate.TaskListener
 import org.camunda.bpm.engine.impl.interceptor.Command
 import org.camunda.bpm.engine.impl.interceptor.CommandExecutor
@@ -32,6 +34,8 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Primary
+import org.springframework.context.event.EventListener
+import org.springframework.core.annotation.Order
 import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.ActiveProfiles
 import java.time.Instant.now
@@ -647,6 +651,43 @@ internal class TaskCollectorITest {
 
   }
 
+  /**
+   * The process is started and waits in a user task. The user task has a task listener that changes some local process variables on create.
+   * The create command should contain the local variables.
+   */
+  @Test
+  fun `updates variables with create listener implemented as spring event handler`() {
+
+    // deploy
+    driver.deployProcess(
+      createUserTaskProcess(
+        taskDefinitionKey = "eventing",
+        taskListeners = listOf(
+          "create" to "#{setTaskLocalVariables}" // this one will be ignored, since it is invoked after enrichment
+        )
+      )
+    )
+
+
+    // start
+    val instance = driver.startProcessInstance(variables = Variables.createVariables().putValue("overriddenVariable", "global-value"))
+    driver.assertProcessInstanceWaitsInUserTask(instance, "eventing")
+
+    val createCommand = createTaskCommand(
+      variables = Variables.createVariables()
+        .putValue("taskLocalOnlyVariable", "only-value-by-event-handler")
+        .putValue("overriddenVariable", "local-value-by-event-handler")
+    )
+
+
+    waitAtMost(3, TimeUnit.SECONDS).untilAsserted {
+      verify(commandListGateway).sendToGateway(
+        listOf(createCommand)
+      )
+    }
+
+    verifyNoMoreInteractions(commandListGateway)
+  }
 
   /**
    * Internal test application.
@@ -693,6 +734,26 @@ internal class TaskCollectorITest {
       delegateTask.priority = 99
       delegateTask.dueDate = TestDriver.NOW
       delegateTask.followUpDate = TestDriver.NOW
+    }
+
+    /**
+     * A task listener that sets some local variables.
+     */
+    @Order(TaskEventCollectorService.ORDER - 80)
+    @EventListener(condition = "#delegateTask.taskDefinitionKey.equals('eventing') && #delegateTask.eventName.equals('create')")
+    fun setTaskLocalVariables(delegateTask: DelegateTask) {
+      delegateTask.setVariableLocal("taskLocalOnlyVariable", "only-value-by-event-handler")
+      delegateTask.setVariableLocal("overriddenVariable", "local-value-by-event-handler")
+    }
+
+
+    /**
+     * A task listener that sets some local variables.
+     */
+    @Bean
+    fun setTaskLocalVariables() = TaskListener { delegateTask ->
+      delegateTask.setVariableLocal("taskLocalOnlyVariable", "only-value")
+      delegateTask.setVariableLocal("overriddenVariable", "local-value")
     }
   }
 

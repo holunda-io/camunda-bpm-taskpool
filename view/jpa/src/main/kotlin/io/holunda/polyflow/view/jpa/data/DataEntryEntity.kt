@@ -2,6 +2,8 @@ package io.holunda.polyflow.view.jpa.data
 
 
 import io.holunda.polyflow.view.jpa.payload.PayloadAttribute
+import org.hibernate.annotations.Fetch
+import org.hibernate.annotations.FetchMode
 import java.time.Instant
 import javax.persistence.*
 
@@ -13,21 +15,19 @@ import javax.persistence.*
 class DataEntryEntity(
   @EmbeddedId
   var dataEntryId: DataEntryId,
-  @Column(name = "TYPE", nullable = false)
+  @Column(name = "TYPE", length = 255, nullable = false)
   var type: String,
-  @Column(name = "NAME", nullable = false)
-  @Lob
+  @Column(name = "NAME", length = 255, nullable = false)
   var name: String,
-  @Column(name = "APPLICATION_NAME", nullable = false)
+  @Column(name = "APPLICATION_NAME", length = 64, nullable = false)
   var applicationName: String,
-  @Column(name = "FORM_KEY")
+  @Column(name = "FORM_KEY", length = 64, nullable = true)
   var formKey: String? = null,
   @Column(name = "REVISION")
   var revision: Long = 0L,
   @Embedded
   var state: DataEntryStateEmbeddable,
-  @Column(name = "DESCRIPTION")
-  @Lob
+  @Column(name = "DESCRIPTION", nullable = true, length = 2048)
   var description: String? = null,
 
   @Column(name = "DATE_CREATED", nullable = false)
@@ -60,6 +60,7 @@ class DataEntryEntity(
 
 
   @OneToMany(mappedBy = "dataEntry", orphanRemoval = true, cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
+  @Fetch(FetchMode.SELECT)
   var protocol: MutableList<ProtocolElement> = mutableListOf(),
 
   @Column(name = "PAYLOAD")

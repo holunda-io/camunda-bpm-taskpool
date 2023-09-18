@@ -5,7 +5,7 @@ in order to query the configured views. By doing so, it defines an easy-to-use A
 
 ## Usage
 
-Pleas put the following component to you class path:
+Please put the following component to you class path:
 
 ```xml
 <dependency>
@@ -21,5 +21,13 @@ The components available are:
 * `io.holunda.polyflow.view.ProcessInstanceQueryClient`
 * `io.holunda.polyflow.view.ProcessVariableQueryClient`
 * `io.holunda.polyflow.view.TaskQueryClient`
+
+To initialize the client, you need to pass the `queryGateway` to it:
+
+```kotlin
+@Bean
+fun myTaskClient(queryGateway: QueryGateway) = TaskQueryClient(queryGateway)
+
+```
 
 If you are using Kotlin, you might like the extension functions of the `QueryGateway` provided by `io.holunda.polyflow.view.QueryGatewayExt` object.  

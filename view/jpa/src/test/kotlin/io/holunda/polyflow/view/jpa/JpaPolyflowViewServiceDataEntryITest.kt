@@ -29,6 +29,7 @@ import org.mockito.kotlin.clearInvocations
 import org.mockito.kotlin.verify
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.transaction.annotation.Transactional
@@ -39,7 +40,6 @@ import java.time.temporal.ChronoUnit
 import java.util.*
 import java.util.function.Predicate
 
-@ExtendWith(SpringExtension::class)
 @SpringBootTest(
   classes = [TestApplication::class],
   properties = [
@@ -48,6 +48,7 @@ import java.util.function.Predicate
 )
 @ActiveProfiles("itest", "mock-query-emitter")
 @Transactional
+@DirtiesContext
 internal class JpaPolyflowViewServiceDataEntryITest {
 
   private val emittedQueryUpdates: MutableList<QueryUpdate<Any>> = mutableListOf()
@@ -264,7 +265,7 @@ internal class JpaPolyflowViewServiceDataEntryITest {
   fun `should find the entry by filter`() {
     assertResultIsTestEntry1And2(
       jpaPolyflowViewService.query(
-        DataEntriesQuery(filters = listOf("key=value"))
+        DataEntriesQuery(filters = listOf("key=value", "key=value2", "key=value3"))
       )
     )
   }
@@ -307,8 +308,9 @@ internal class JpaPolyflowViewServiceDataEntryITest {
 
   private fun assertResultIsTestEntry1And2(result: QueryResponseMessage<DataEntriesQueryResult>) {
     assertThat(result.payload.elements.size).isEqualTo(2)
-    assertTestDataEntry1(result.payload.elements[0])
-    assertTestDataEntry2(result.payload.elements[1])
+    assertThat(result.payload.elements.map { it.entryId }).containsExactlyInAnyOrder(id, id2)
+    assertTestDataEntry1(result.payload.elements.first { it.entryId == id })
+    assertTestDataEntry2(result.payload.elements.first { it.entryId == id2 })
   }
 
 

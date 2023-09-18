@@ -15,7 +15,7 @@ import java.util.concurrent.CompletableFuture
 /**
  * Client encapsulating the correct query types (including response types)
  */
-class ProcessVariableQueryClient(
+open class ProcessVariableQueryClient(
   private val queryGateway: QueryGateway
 ) {
 

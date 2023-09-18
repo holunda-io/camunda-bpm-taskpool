@@ -6,7 +6,7 @@
   <parent>
     <groupId>io.holunda.polyflow</groupId>
     <artifactId>polyflow-view-parent</artifactId>
-    <version>3.8.3-SNAPSHOT</version>
+    <version>3.14.4-SNAPSHOT</version>
   </parent>
 
   <artifactId>polyflow-view-jpa</artifactId>
@@ -51,7 +51,6 @@
     <dependency>
       <groupId>com.h2database</groupId>
       <artifactId>h2</artifactId>
-      <version>1.4.200</version> <!-- pin -->
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -103,6 +102,12 @@
       <groupId>org.axonframework</groupId>
       <artifactId>axon-spring-boot-starter</artifactId>
       <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>org.axonframework</groupId>
+          <artifactId>axon-server-connector</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
   </dependencies>
 
@@ -228,7 +233,7 @@
               <dependency>
                 <groupId>com.microsoft.sqlserver</groupId>
                 <artifactId>mssql-jdbc</artifactId>
-                <version>12.2.0.jre11</version>
+                <version>12.4.1.jre11</version>
               </dependency>
               <dependency>
                 <groupId>org.postgresql</groupId>

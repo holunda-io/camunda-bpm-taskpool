@@ -11,18 +11,18 @@ import javax.persistence.*
 @Table(name = "PLF_DATA_ENTRY_PROTOCOL")
 class ProtocolElement(
   @Id
-  @Column(name = "ID")
+  @Column(name = "ID", length = 64, nullable = false)
   var id: String = UUID.randomUUID().toString(),
 
   @Column(name = "TIME", nullable = false)
   var time: Instant = Instant.now(),
   @Embedded
   var state: DataEntryStateEmbeddable,
-  @Column(name = "USERNAME", nullable = true)
+  @Column(name = "USERNAME", length = 64, nullable = true)
   var username: String? = null,
-  @Column(name = "LOG_MESSAGE", nullable = true)
+  @Column(name = "LOG_MESSAGE", length = 2048, nullable = true)
   var logMessage: String? = null,
-  @Column(name = "LOG_DETAILS", nullable = true)
+  @Column(name = "LOG_DETAILS", length = 2048, nullable = true)
   var logDetails: String? = null,
 
   @ManyToOne

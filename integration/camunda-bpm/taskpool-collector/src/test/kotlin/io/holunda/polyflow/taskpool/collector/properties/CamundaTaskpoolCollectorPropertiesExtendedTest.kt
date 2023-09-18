@@ -4,6 +4,7 @@ import com.thoughtworks.xstream.XStream
 import io.holunda.polyflow.taskpool.collector.CamundaTaskpoolCollectorConfiguration
 import io.holunda.polyflow.taskpool.collector.CamundaTaskpoolCollectorProperties
 import io.holunda.polyflow.taskpool.collector.TaskCollectorEnricherType
+import io.holunda.polyflow.taskpool.collector.task.TaskVariableLoader
 import io.holunda.polyflow.taskpool.collector.task.VariablesEnricher
 import io.holunda.polyflow.taskpool.sender.process.definition.ProcessDefinitionCommandSender
 import io.holunda.polyflow.taskpool.sender.process.instance.ProcessInstanceCommandSender
@@ -15,6 +16,9 @@ import org.axonframework.eventhandling.EventBus
 import org.axonframework.serialization.Serializer
 import org.axonframework.serialization.xml.XStreamSerializer
 import org.camunda.bpm.engine.RepositoryService
+import org.camunda.bpm.engine.RuntimeService
+import org.camunda.bpm.engine.TaskService
+import org.camunda.bpm.engine.impl.interceptor.CommandExecutor
 import org.camunda.bpm.spring.boot.starter.property.CamundaBpmProperties
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.mock
@@ -79,12 +83,38 @@ internal class CamundaTaskpoolCollectorPropertiesExtendedTest {
       }
   }
 
+  @Test
+  fun `loads properties configuration to ignore listeners`() {
+    contextRunner
+      .withUserConfiguration(TestMockConfiguration::class.java)
+      .withUserConfiguration(AdditionalMockConfiguration::class.java)
+      .withPropertyValues(
+        "spring.application.name=my-test-application",
+        "camunda.bpm.eventing.task=false",
+        "polyflow.integration.collector.camunda.task.enabled=true",
+        "polyflow.integration.collector.camunda.task.enricher.type=custom",
+        "polyflow.integration.collector.camunda.task.excluded-task-event-names=assignment",
+        "polyflow.integration.collector.camunda.task.excluded-history-event-names=add-identity-link,delete-identity-link",
+      ).run {
+
+        assertThat(it.getBean(CamundaTaskpoolCollectorProperties::class.java)).isNotNull
+        val props: CamundaTaskpoolCollectorProperties = it.getBean(CamundaTaskpoolCollectorProperties::class.java)
+
+        assertThat(props.task.enabled).isTrue
+        assertThat(props.task.collectTaskEvent("assignment")).isFalse()
+        assertThat(props.task.collectHistoryEvent("add-identity-link")).isFalse()
+        assertThat(props.task.collectHistoryEvent("delete-identity-link")).isFalse()
+      }
+  }
+
+
   /**
    * Config class without configuration annotation not to confuse others.
    */
   private class AdditionalMockConfiguration {
     @Bean
     fun variablesEnricher(): VariablesEnricher = mock(VariablesEnricher::class.java)
+
   }
 
   /**
@@ -118,5 +148,14 @@ internal class CamundaTaskpoolCollectorPropertiesExtendedTest {
 
     @Bean
     fun repositoryService(): RepositoryService = mock()
+
+    @Bean
+    fun runtimeService(): RuntimeService = mock()
+
+    @Bean
+    fun taskService(): TaskService = mock()
+
+    @Bean
+    fun commandExecutor(): CommandExecutor = mock()
   }
 }
