@@ -106,7 +106,7 @@ class SimpleTaskPoolService(
 
     val predicates = createTaskPredicates(toCriteria(query.filters))
 
-    val filtered = tasks.values.filter { TasksForUserQuery(query.user).applyFilter(it) }
+    val filtered = tasks.values.filter { TasksForUserQuery(user = query.user, assignedToMeOnly = query.assignedToMeOnly ).applyFilter(it) }
       .asSequence()
       .map { task -> TaskWithDataEntries.correlate(task, dataEntries) }
       .filter { filterByPredicate(it, predicates) }
@@ -184,6 +184,15 @@ class SimpleTaskPoolService(
   override fun query(query: TasksForGroupQuery): TaskQueryResult {
     return queryForTasks(query)
   }
+
+  /**
+   * Retrieves a list of all user tasks for current user's groups and current user being member of candidate users.
+   */
+  @QueryHandler
+  override fun query(query: TasksForCandidateUserAndGroupQuery): TaskQueryResult {
+    return queryForTasks(query)
+  }
+
 
   /**
    * Retrieves a list of all user tasks.
@@ -361,6 +370,7 @@ class SimpleTaskPoolService(
   private fun updateFilteredQueryQuery(taskId: String) {
     queryUpdateEmitter.updateMapFilterQuery(tasks, taskId, TasksForUserQuery::class.java)
     queryUpdateEmitter.updateMapFilterQuery(tasks, taskId, TasksForGroupQuery::class.java)
+    queryUpdateEmitter.updateMapFilterQuery(tasks, taskId, TasksForCandidateUserAndGroupQuery::class.java)
     queryUpdateEmitter.updateMapFilterQuery(tasks, taskId, AllTasksQuery::class.java)
 
     tasks[taskId]

@@ -35,16 +35,16 @@ jobs:
         run: chmod +x ./mvnw
 
       - name: Build with Maven
-        run: ./mvnw clean verify -U -B -T4
+        run: ./mvnw clean verify -U -B -T4 -ntp
 
       - name: Prepare I-Tests
         run: mkdir -p target/jgiven-reports/json
 
       - name: Run I-Tests with Maven
-        run: ./mvnw integration-test failsafe:verify -Pitest -B -T4
+        run: ./mvnw integration-test failsafe:verify -Pitest -B -T4 -ntp
 
       - name: Deploy a new version to central
-        run: ./mvnw deploy -B -DskipTests -Prelease -Dgpg.keyname="${{secrets.GPG_KEYNAME}}" -Dgpg.passphrase="${{secrets.GPG_PASSPHRASE}}"
+        run: ./mvnw deploy -B -ntp -DskipTests -Prelease -Dgpg.keyname="${{secrets.GPG_KEYNAME}}" -Dgpg.passphrase="${{secrets.GPG_PASSPHRASE}}"
         env:
           OSS_CENTRAL_USERNAME: "${{ secrets.SONATYPE_USERNAME }}"
           OSS_CENTRAL_PASSWORD: "${{ secrets.SONATYPE_PASSWORD }}"

@@ -1,5 +1,5 @@
 [![stable](https://img.shields.io/badge/lifecycle-STABLE-green.svg)](https://github.com/holisticon#open-source-lifecycle)
-[![Build Status](https://github.com/holunda-io/camunda-bpm-taskpool/workflows/Development%20braches/badge.svg)](https://github.com/holunda-io/camunda-bpm-taskpool/actions)
+[![Master and Snapshot release](https://github.com/holunda-io/camunda-bpm-taskpool/actions/workflows/release.yml/badge.svg)](https://github.com/holunda-io/camunda-bpm-taskpool/actions/workflows/release.yml)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.holunda.polyflow/polyflow-taskpool-dependencies/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.holunda.polyflow/polyflow-taskpool-dependencies/)
 [![Code Coverage](https://codecov.io/gh/holunda-io/camunda-bpm-taskpool/branch/master/graph/badge.svg)](https://codecov.io/gh/holunda-io/camunda-bpm-taskpool)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/6e15ca2f4ab64cfe85a736f324136086)](https://www.codacy.com/gh/holunda-io/camunda-bpm-taskpool/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=holunda-io/camunda-bpm-taskpool&amp;utm_campaign=Badge_Grade)

@@ -2,7 +2,6 @@ package io.holunda.polyflow.view.jpa.task
 
 import io.holunda.polyflow.view.jpa.auth.AuthorizationPrincipal
 import io.holunda.polyflow.view.jpa.composeOr
-import io.holunda.polyflow.view.jpa.data.DataEntryEntity
 import io.holunda.polyflow.view.jpa.payload.PayloadAttribute
 import io.holunda.polyflow.view.jpa.process.SourceReferenceEmbeddable
 import org.springframework.data.jpa.domain.Specification
@@ -83,6 +82,17 @@ interface TaskRepository : CrudRepository<TaskEntity, String>, JpaSpecificationE
         builder.equal(
           task.get<String>(TaskEntity::businessKey.name),
           businessKey
+        )
+      }
+
+    /**
+     * Specification for checking the priority.
+     */
+    fun hasPriority(priority: Int): Specification<TaskEntity> =
+      Specification { task, _, builder ->
+        builder.equal(
+          task.get<Int>(TaskEntity::priority.name),
+          priority
         )
       }
 
@@ -225,20 +235,26 @@ interface TaskRepository : CrudRepository<TaskEntity, String>, JpaSpecificationE
         .or(likeProcessName(pattern))
 
     /**
-     * Specification for checking the payload attribute.
+     * Specification for checking the payload attribute of a task. If multiple values are given, one of them must match.
+     * payload.name = ? AND (payload.value = ? OR payload.value = ? OR ...)
      */
-    fun hasTaskPayloadAttribute(name: String, value: String): Specification<TaskEntity> =
-      Specification { task, _, builder ->
-        val join = task.join<DataEntryEntity, Set<PayloadAttribute>>(TaskEntity::payloadAttributes.name)
+    fun hasTaskPayloadAttribute(name: String, values: List<String>): Specification<TaskEntity> =
+      Specification { task, query, builder ->
+        query.distinct(true)
+        val join = task.join<TaskEntity, Set<PayloadAttribute>>(TaskEntity::payloadAttributes.name)
         val pathEquals = builder.equal(
           join.get<String>(PayloadAttribute::path.name),
           name
         )
-        val valueEquals = builder.equal(
-          join.get<String>(PayloadAttribute::value.name),
-          value
-        )
-        builder.and(pathEquals, valueEquals)
+
+        val valueAnyOf = values.map {
+          builder.equal(
+            join.get<String>(PayloadAttribute::value.name),
+            it
+          )
+        }.let { builder.or(*it.toTypedArray()) }
+
+        builder.and(pathEquals, valueAnyOf)
       }
   }
 }

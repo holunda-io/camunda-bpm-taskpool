@@ -12,6 +12,7 @@ import io.holunda.polyflow.view.TaskWithDataEntries
 import io.holunda.polyflow.view.auth.User
 import io.holunda.polyflow.view.jpa.itest.TestApplication
 import io.holunda.polyflow.view.jpa.process.toSourceReference
+import io.holunda.polyflow.view.query.data.DataEntriesForUserQuery
 import io.holunda.polyflow.view.query.task.*
 import org.assertj.core.api.Assertions.assertThat
 import org.axonframework.messaging.MetaData
@@ -22,7 +23,7 @@ import org.camunda.bpm.engine.variable.Variables.createVariables
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
+import org.junit.jupiter.api.assertThrows
 import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.atLeast
 import org.mockito.kotlin.clearInvocations
@@ -30,7 +31,6 @@ import org.mockito.kotlin.verify
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
-import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.transaction.annotation.Transactional
 import java.time.Instant
 import java.time.OffsetDateTime
@@ -77,15 +77,6 @@ internal class JpaPolyflowViewServiceTaskITest {
 
   @BeforeEach
   fun `ingest events`() {
-    val payload = mapOf(
-      "key" to "value",
-      "key-int" to 1,
-      "complex" to Pojo(
-        attribute1 = "value",
-        attribute2 = Date.from(now)
-      )
-    )
-
     jpaPolyflowViewService.on(
       event = TaskCreatedEngineEvent(
         id = id,
@@ -93,7 +84,7 @@ internal class JpaPolyflowViewServiceTaskITest {
         name = "task name 1",
         priority = 50,
         sourceReference = processReference().toSourceReference(),
-        payload = createVariables().apply { putAll(payload) },
+        payload = createVariables().apply { putAll(createPayload()) },
         businessKey = "business-1",
         createTime = Date.from(now),
         candidateUsers = setOf("kermit"),
@@ -108,7 +99,7 @@ internal class JpaPolyflowViewServiceTaskITest {
         name = "task name 1",
         priority = 25,
         sourceReference = processReference().toSourceReference(),
-        payload = createVariables().apply { putAll(payload) },
+        payload = createVariables().apply { putAll(createPayload()) },
         businessKey = "business-1",
         createTime = Date.from(now),
         candidateUsers = setOf("kermit"),
@@ -124,7 +115,7 @@ internal class JpaPolyflowViewServiceTaskITest {
         name = "task name 2",
         priority = 10,
         sourceReference = processReference().toSourceReference(),
-        payload = createVariables().apply { putAll(payload) },
+        payload = createVariables().apply { putAll(createPayload()) },
         businessKey = "business-2",
         createTime = Date.from(now),
         candidateUsers = setOf("piggy"),
@@ -139,7 +130,7 @@ internal class JpaPolyflowViewServiceTaskITest {
         name = "task name 2",
         priority = 10,
         sourceReference = processReference().toSourceReference(),
-        payload = createVariables().apply { putAll(payload) },
+        payload = createVariables().apply { putAll(createPayload()) },
         businessKey = "business-2",
         createTime = Date.from(now),
         assignee = "piggy",
@@ -156,7 +147,7 @@ internal class JpaPolyflowViewServiceTaskITest {
         name = "task name 3",
         priority = 10,
         sourceReference = processReference().toSourceReference(),
-        payload = createVariables().apply { putAll(payload) },
+        payload = createVariables().apply { putAll(createPayload()) },
         correlations = newCorrelations().apply { put(dataType1, dataId1) },
         businessKey = "business-3",
         createTime = Date.from(now),
@@ -173,7 +164,7 @@ internal class JpaPolyflowViewServiceTaskITest {
         applicationName = "test-application",
         name = "Test Entry 1",
         state = ProcessingType.IN_PROGRESS.of("In progress"),
-        payload = serialize(payload = payload, mapper = objectMapper),
+        payload = serialize(payload = createPayload("dataEntry1"), mapper = objectMapper),
         authorizations = listOf(
           AuthorizationChange.addUser("luffy"),
           AuthorizationChange.addGroup("strawhats")
@@ -196,7 +187,7 @@ internal class JpaPolyflowViewServiceTaskITest {
         name = "task name 4",
         priority = 10,
         sourceReference = processReference().toSourceReference(),
-        payload = createVariables().apply { putAll(payload) },
+        payload = createVariables().apply { putAll(createPayload("otherValue")) },
         correlations = newCorrelations().apply {
           put(dataType1, dataId1)
           put(dataType2, dataId2)
@@ -215,9 +206,9 @@ internal class JpaPolyflowViewServiceTaskITest {
         entryId = dataId2,
         type = "Test",
         applicationName = "test-application",
-        name = "Test Entry 1",
+        name = "Test Entry 2",
         state = ProcessingType.IN_PROGRESS.of("In progress"),
-        payload = serialize(payload = payload, mapper = objectMapper),
+        payload = serialize(payload = createPayload("dataEntry2"), mapper = objectMapper),
         authorizations = listOf(
           AuthorizationChange.addUser("zoro")
         ),
@@ -258,20 +249,68 @@ internal class JpaPolyflowViewServiceTaskITest {
 
   @Test
   fun `should find the task by user with data entries`() {
-    val zoro = jpaPolyflowViewService.query(TasksWithDataEntriesForUserQuery(user = User("zoro", setOf())))
+    val zoro = jpaPolyflowViewService.query(TasksWithDataEntriesForUserQuery(user = User("zoro", setOf()), assignedToMeOnly = false))
     assertThat(zoro.elements).isNotEmpty.hasSize(1)
     assertThat(zoro.elements[0].task.id).isEqualTo(id4)
     assertThat(zoro.elements[0].task.name).isEqualTo("task name 4")
     assertThat(zoro.elements[0].dataEntries).isNotEmpty.hasSize(1)
     assertThat(zoro.elements[0].dataEntries[0].entryId).isEqualTo(dataId2)
 
-    val strawhats = jpaPolyflowViewService.query(TasksWithDataEntriesForUserQuery(user = User("other", setOf("strawhats"))))
+    val strawhats = jpaPolyflowViewService.query(TasksWithDataEntriesForUserQuery(user = User("other", setOf("strawhats")), assignedToMeOnly = false))
     assertThat(strawhats.elements).isNotEmpty.hasSize(2)
     assertThat(strawhats.elements.map { it.task.id }).contains(id3, id4)
     assertThat(strawhats.elements[0].dataEntries).hasSize(1)
     assertThat(strawhats.elements[0].dataEntries[0].entryId).isEqualTo(dataId1)
     assertThat(strawhats.elements[1].dataEntries).hasSize(1)
     assertThat(strawhats.elements[1].dataEntries[0].entryId).isEqualTo(dataId1)
+  }
+
+  @Test
+  fun `should find the task by user with data entries and sort results correctly`() {
+    val strawhats = jpaPolyflowViewService.query(TasksWithDataEntriesForUserQuery(
+      user = User("other", setOf("strawhats")),
+      sort = "+name",
+      assignedToMeOnly = false
+    ))
+    val strawhatsInverse = jpaPolyflowViewService.query(TasksWithDataEntriesForUserQuery(
+      user = User("other", setOf("strawhats")),
+      sort = "-name",
+      assignedToMeOnly = false
+    ))
+
+    assertThat(strawhats.elements).isNotEmpty.hasSize(2)
+    assertThat(strawhats.elements.map { it.task.id }).containsExactly(id3, id4)
+    assertThat(strawhatsInverse.elements).isNotEmpty.hasSize(2)
+    assertThat(strawhatsInverse.elements.map { it.task.id }).containsExactly(id4, id3)
+  }
+
+  @Test
+  fun `should not execute query because of wrong sort`() {
+    val user = User("other", setOf("strawhats"))
+    assertThat(assertThrows<IllegalArgumentException> {
+      jpaPolyflowViewService.query(TasksWithDataEntriesForUserQuery(
+        user = user,
+        sort = "+createdTime", // entity property
+        assignedToMeOnly = false
+      ))
+    }.message).startsWith("Sort parameter must be one of ").endsWith(" but it was createdTime.")
+
+    assertThat(assertThrows<IllegalArgumentException> {
+      jpaPolyflowViewService.query(TasksWithDataEntriesForUserQuery(
+        user = user,
+        sort = "+candidateUsers", // unsupported by JPA view
+        assignedToMeOnly = false
+      ))
+    }.message).isEqualTo("'candidateUsers' is not supported for sorting in JPA View")
+
+    assertThat(assertThrows<IllegalArgumentException> {
+      jpaPolyflowViewService.query(TasksWithDataEntriesForUserQuery(
+        user = user,
+        sort = "*name", // wrong order
+        assignedToMeOnly = false
+      ))
+    }.message).isEqualTo("Sort must start either with '+' or '-' but it was starting with '*'")
+
   }
 
   @Test
@@ -294,13 +333,74 @@ internal class JpaPolyflowViewServiceTaskITest {
 
   @Test
   fun `should find the task by user`() {
-    val kermit = jpaPolyflowViewService.query(TasksForUserQuery(user = User("kermit", setOf())))
+    val kermit = jpaPolyflowViewService.query(TasksForUserQuery(user = User("kermit", setOf()), assignedToMeOnly = false))
     assertThat(kermit.elements).isNotEmpty
     assertThat(kermit.elements[0].id).isEqualTo(id)
     assertThat(kermit.elements[0].name).isEqualTo("task name 1")
-    val muppets = jpaPolyflowViewService.query(TasksForUserQuery(user = User("other", setOf("muppets"))))
+    val muppets = jpaPolyflowViewService.query(TasksForUserQuery(user = User("other", setOf("muppets")), assignedToMeOnly = false))
     assertThat(muppets.elements).isNotEmpty
     assertThat(muppets.elements[0].id).isEqualTo(id)
+  }
+
+  @Test
+  fun `should find the task by user assigned to me`() {
+    val luffy = jpaPolyflowViewService.query(TasksForUserQuery(user = User("luffy", setOf()), assignedToMeOnly = false))
+    assertThat(luffy.elements).isNotEmpty
+    assertThat(luffy.elements[0].id).isEqualTo(id3)
+    assertThat(luffy.elements[0].name).isEqualTo("task name 3")
+
+    val zoro = jpaPolyflowViewService.query(TasksForUserQuery(user = User("zoro", setOf()), assignedToMeOnly = true))
+    assertThat(zoro.elements).isNotEmpty
+    assertThat(zoro.elements[0].id).isEqualTo(id4)
+    assertThat(zoro.elements[0].name).isEqualTo("task name 4")
+
+  }
+
+  @Test
+  fun `should or-compose task payload filters on same attribute`() {
+    val query = jpaPolyflowViewService.query(
+      TasksForUserQuery(
+        user = User("zoro", setOf("strawhats")),
+        assignedToMeOnly = false,
+        filters = listOf("key=value", "key=otherValue", "key=anotherValue")
+      )
+    )
+    assertThat(query.elements).hasSize(2)
+  }
+
+  @Test
+  fun `should or-compose data entry payload filters on same attribute`() {
+    val query = jpaPolyflowViewDataEntryService.query(
+      DataEntriesForUserQuery(
+        user = User("zoro", setOf("strawhats")),
+        filters = listOf("key=dataEntry1", "key=dataEntry2", "key=dataEntryFoo")
+      )
+    )
+    assertThat(query.payload.elements).hasSize(2)
+  }
+
+  @Test
+  fun `should or-compose task attribute filters on same attribute`() {
+    val kermit = jpaPolyflowViewService.query(
+      TasksForUserQuery(
+        user = User("zoro", setOf("strawhats")),
+        assignedToMeOnly = false,
+        filters = listOf("task.businessKey=business-3", "task.businessKey=business-4")
+      )
+    )
+    assertThat(kermit.elements).hasSize(2)
+  }
+
+  @Test
+  fun `should or-compose date entry attribute filters on same attribute`() {
+    val kermit = jpaPolyflowViewService.query(
+      TasksWithDataEntriesForUserQuery(
+        user = User("zoro", setOf("strawhats")),
+        assignedToMeOnly = false,
+        filters = listOf("data.entryId=${dataId1}", "data.entryId=${dataId2}")
+      )
+    )
+    assertThat(kermit.elements).hasSize(2)
   }
 
   @Test
@@ -312,6 +412,19 @@ internal class JpaPolyflowViewServiceTaskITest {
     assertThat(assigned.elements).hasSize(1)
     assertThat(assigned.elements[0].id).isEqualTo(id)
     assertThat(assigned.elements[0].name).isEqualTo("task name 1")
+  }
+
+  @Test
+  fun `should find the task by candidate user and group`() {
+    val unassigned = jpaPolyflowViewService.query(TasksForCandidateUserAndGroupQuery(user = User("zoro", setOf("muppets")), includeAssigned = false))
+    assertThat(unassigned.elements).isEmpty()
+
+    val assigned = jpaPolyflowViewService.query(TasksForCandidateUserAndGroupQuery(user = User("zoro", setOf("muppets")), includeAssigned = true))
+    assertThat(assigned.elements).hasSize(2)
+    assertThat(assigned.elements[0].id).isEqualTo(id)
+    assertThat(assigned.elements[0].name).isEqualTo("task name 1")
+    assertThat(assigned.elements[1].id).isEqualTo(id4)
+    assertThat(assigned.elements[1].name).isEqualTo("task name 4")
   }
 
 
@@ -386,4 +499,14 @@ internal class JpaPolyflowViewServiceTaskITest {
 
   }
 
+  private fun createPayload(value: String = "value"): Map<String, Any> {
+    return mapOf(
+      "key" to value,
+      "key-int" to 1,
+      "complex" to Pojo(
+        attribute1 = "value",
+        attribute2 = Date.from(now)
+      )
+    )
+  }
 }

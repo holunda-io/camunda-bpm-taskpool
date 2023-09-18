@@ -86,6 +86,52 @@ class ProcessDefinitionServiceITest {
     assertThat(definitions[0].candidateStarterGroups).containsExactlyElementsOf(listOf("muppetshow"))
   }
 
+  @Test
+  fun `should not deliver process starter if no start form is available`() {
+
+    val processId = "my-id"
+    val startEventId = "start"
+    val modelInstance = Bpmn
+      .createExecutableProcess(processId)
+      .startEvent(startEventId)
+      .endEvent("end")
+      .done().apply {
+        getModelElementById<ModelElementInstance>(processId).setAttributeValue("name", "My Process")
+        getModelElementById<ModelElementInstance>(processId).setAttributeValueNs(NS_CAMUNDA, "candidateStarterGroups", "muppetshow")
+      }
+
+    repositoryService
+      .createDeployment()
+      .addModelInstance("process-without-start-form.bpmn", modelInstance)
+      .deploy()
+
+
+    val definitions = processDefinitionService.getProcessDefinitions(processEngine.processEngineConfiguration as ProcessEngineConfigurationImpl)
+
+    assertThat(definitions).isNotEmpty
+    assertThat(definitions[0].processName).isEqualTo("My Process")
+    assertThat(definitions[0].processDefinitionKey).isEqualTo("my-id")
+    assertThat(definitions[0].processDefinitionVersion).isEqualTo(1)
+    assertThat(definitions[0].formKey).isNull()
+    assertThat(definitions[0].candidateStarterGroups).containsExactlyElementsOf(listOf("muppetshow"))
+  }
+
+  @Test
+  fun `should not deliver process starter if only two message start events are available`() {
+    repositoryService
+      .createDeployment()
+      .addClasspathResource("itest/message_start_event.bpmn")
+      .deploy()
+
+    val definitions = processDefinitionService.getProcessDefinitions(processEngine.processEngineConfiguration as ProcessEngineConfigurationImpl)
+
+    assertThat(definitions).isNotEmpty
+    assertThat(definitions[0].processName).isEqualTo("My Process")
+    assertThat(definitions[0].processDefinitionKey).isEqualTo("my-id")
+    assertThat(definitions[0].processDefinitionVersion).isEqualTo(1)
+    assertThat(definitions[0].formKey).isNull()
+  }
+
   /**
    * Internal test application.
    */

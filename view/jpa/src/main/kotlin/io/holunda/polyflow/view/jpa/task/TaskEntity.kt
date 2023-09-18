@@ -14,11 +14,11 @@ import javax.persistence.*
 @Table(name = "PLF_TASK")
 class TaskEntity(
   @Id
-  @Column(name = "TASK_ID", nullable = false)
+  @Column(name = "TASK_ID", length = 64, nullable = false)
   var taskId: String,
   @Column(name = "TASK_DEF_KEY", nullable = false)
   var taskDefinitionKey: String,
-  @Column(name = "NAME", nullable = false)
+  @Column(name = "NAME", length = 128, nullable = false)
   var name: String,
   @Column(name = "PRIORITY")
   var priority: Int,
@@ -49,21 +49,21 @@ class TaskEntity(
     ]
   )
   var payloadAttributes: MutableSet<PayloadAttribute> = mutableSetOf(),
-  @Column(name = "BUSINESS_KEY")
+  @Column(name = "BUSINESS_KEY", length = 255, nullable = true)
   var businessKey: String? = null,
-  @Column(name = "DESCRIPTION", length = 2048)
+  @Column(name = "DESCRIPTION", length = 2048, nullable = true)
   var description: String? = null,
   @Column(name = "FORM_KEY")
   var formKey: String? = null,
   @Column(name = "DATE_CREATED", nullable = false)
   var createdDate: Instant = Instant.now(),
-  @Column(name = "DATE_DUE")
+  @Column(name = "DATE_DUE", nullable = true)
   var dueDate: Instant? = null,
-  @Column(name = "DATE_FOLLOW_UP")
+  @Column(name = "DATE_FOLLOW_UP", nullable = true)
   var followUpDate: Instant? = null,
-  @Column(name = "OWNER_ID")
+  @Column(name = "OWNER_ID", length = 64, nullable = true)
   var owner: String? = null,
-  @Column(name = "ASSIGNEE_ID")
+  @Column(name = "ASSIGNEE_ID", length = 64, nullable = true)
   var assignee: String? = null,
   @Column(name = "PAYLOAD")
   @Lob

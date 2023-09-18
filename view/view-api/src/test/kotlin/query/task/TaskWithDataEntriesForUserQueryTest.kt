@@ -38,10 +38,10 @@ class TaskWithDataEntriesForUserQueryTest {
 
   @Test
   fun `should filter by user`() {
-    assertThat(TasksWithDataEntriesForUserQuery(user = User(username = "kermit", groups = setOf("muppets"))).applyFilter(taskWithDataEntries)).isTrue
-    assertThat(TasksWithDataEntriesForUserQuery(user = User(username = "kermit", groups = setOf())).applyFilter(taskWithDataEntries)).isTrue
-    assertThat(TasksWithDataEntriesForUserQuery(user = User(username = "piggy", groups = setOf())).applyFilter(taskWithDataEntries)).isTrue
-    assertThat(TasksWithDataEntriesForUserQuery(user = User(username = "ironman", groups = setOf("muppets"))).applyFilter(taskWithDataEntries)).isTrue
-    assertThat(TasksWithDataEntriesForUserQuery(user = User(username = "ironman", groups = setOf("avengers"))).applyFilter(taskWithDataEntries)).isFalse
+    assertThat(TasksWithDataEntriesForUserQuery(assignedToMeOnly = false, user = User(username = "kermit", groups = setOf("muppets"))).applyFilter(taskWithDataEntries)).isTrue
+    assertThat(TasksWithDataEntriesForUserQuery(assignedToMeOnly = false, user = User(username = "kermit", groups = setOf())).applyFilter(taskWithDataEntries)).isTrue
+    assertThat(TasksWithDataEntriesForUserQuery(assignedToMeOnly = false, user = User(username = "piggy", groups = setOf())).applyFilter(taskWithDataEntries)).isTrue
+    assertThat(TasksWithDataEntriesForUserQuery(assignedToMeOnly = false, user = User(username = "ironman", groups = setOf("muppets"))).applyFilter(taskWithDataEntries)).isTrue
+    assertThat(TasksWithDataEntriesForUserQuery(assignedToMeOnly = false, user = User(username = "ironman", groups = setOf("avengers"))).applyFilter(taskWithDataEntries)).isFalse
   }
 }
