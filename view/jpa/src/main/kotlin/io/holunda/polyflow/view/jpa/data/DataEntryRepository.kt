@@ -84,7 +84,8 @@ interface DataEntryRepository : CrudRepository<DataEntryEntity, DataEntryId>, Jp
       }
 
     /**
-     * Specification for checking the payload attribute.
+     * Specification for checking the payload attribute. If multiple values are given, one of them must match.
+     * payload.name = ? AND (payload.value = ? OR payload.value = ? OR ...)
      */
     fun hasDataEntryPayloadAttribute(name: String, values: List<String>): Specification<DataEntryEntity> =
       Specification { dataEntry, query, builder ->

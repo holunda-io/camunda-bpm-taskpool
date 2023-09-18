@@ -236,6 +236,7 @@ interface TaskRepository : CrudRepository<TaskEntity, String>, JpaSpecificationE
 
     /**
      * Specification for checking the payload attribute of a task. If multiple values are given, one of them must match.
+     * payload.name = ? AND (payload.value = ? OR payload.value = ? OR ...)
      */
     fun hasTaskPayloadAttribute(name: String, values: List<String>): Specification<TaskEntity> =
       Specification { task, query, builder ->

@@ -222,19 +222,11 @@ internal fun Criterion.TaskCriterion.toTaskSpecification(): Specification<TaskEn
  * and will be composed by the logical OR operator.
  */
 internal fun List<Criterion.PayloadEntryCriterion>.toOrTaskSpecification(): Specification<TaskEntity> {
-  if (this.isEmpty()) {
-    throw IllegalArgumentException("List of criteria must not be empty.")
-  }
+  require(this.isNotEmpty()) { "List of criteria must not be empty." }
+  require(this.all { it.operator == EQUALS }) { "JPA View currently supports only equals as operator for filtering of payload attributes." }
+  require(this.distinctBy { it.name }.size == 1) { "All criteria must have the same path." }
 
-  if (this.map { it.operator }.any { it != EQUALS }) {
-    throw IllegalArgumentException("JPA View currently supports only equals as operator for filtering of payload attributes.")
-  }
-
-  if (this.map { it.name }.any { it != this[0].name }) {
-    throw IllegalArgumentException("All criteria must have the same path.")
-  }
-
-  return hasTaskPayloadAttribute(this[0].name, this.map { it.value })
+  return hasTaskPayloadAttribute(this.first().name, this.map { it.value })
 }
 
 /**
@@ -256,18 +248,11 @@ internal fun Criterion.DataEntryCriterion.toDataEntrySpecification(): Specificat
  * and will be composed by the logical OR operator.
  */
 internal fun List<Criterion.PayloadEntryCriterion>.toOrDataEntrySpecification(): Specification<DataEntryEntity> {
-  if (this.isEmpty()) {
-    throw IllegalArgumentException("List of criteria must not be empty.")
-  }
+  require(this.isNotEmpty()) { "List of criteria must not be empty." }
+  require(this.all { it.operator == EQUALS }) { "JPA View currently supports only equals as operator for filtering of payload attributes." }
+  require(this.distinctBy { it.name }.size == 1) { "All criteria must have the same path." }
 
-  if (this.map { it.operator }.any { it != EQUALS }) {
-    throw IllegalArgumentException("JPA View currently supports only equals as operator for filtering of payload attributes.")
-  }
-
-  if (this.map { it.name }.any { it != this[0].name }) {
-    throw IllegalArgumentException("All criteria must have the same path.")
-  }
-  return hasDataEntryPayloadAttribute(this[0].name, this.map { it.value })
+  return hasDataEntryPayloadAttribute(this.first().name, this.map { it.value })
 }
 
 
