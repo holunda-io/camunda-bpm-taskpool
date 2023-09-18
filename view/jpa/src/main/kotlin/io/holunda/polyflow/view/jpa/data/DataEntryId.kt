@@ -1,9 +1,9 @@
 package io.holunda.polyflow.view.jpa.data
 
+import jakarta.persistence.Column
+import jakarta.persistence.Embeddable
 import java.io.Serializable
 import java.util.*
-import javax.persistence.Column
-import javax.persistence.Embeddable
 
 /**
  * JPA composite id used for data entries.

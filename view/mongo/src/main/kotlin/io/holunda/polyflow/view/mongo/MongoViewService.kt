@@ -14,6 +14,8 @@ import io.holunda.polyflow.view.query.FilterQuery
 import io.holunda.polyflow.view.query.data.*
 import io.holunda.polyflow.view.query.task.*
 import io.holunda.polyflow.view.task
+import jakarta.annotation.PostConstruct
+import jakarta.annotation.PreDestroy
 import mu.KLogging
 import org.axonframework.config.EventProcessingConfiguration
 import org.axonframework.config.ProcessingGroup
@@ -36,8 +38,6 @@ import java.time.Clock
 import java.time.Duration
 import java.util.*
 import java.util.concurrent.CompletableFuture
-import javax.annotation.PostConstruct
-import javax.annotation.PreDestroy
 
 /**
  * Mongo-based projection.

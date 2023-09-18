@@ -4,7 +4,6 @@ import io.holunda.camunda.taskpool.api.business.CreateDataEntryCommand
 import io.holunda.camunda.taskpool.api.business.CreateOrUpdateDataEntryCommand
 import io.holunda.camunda.taskpool.api.business.UpdateDataEntryCommand
 import io.holunda.polyflow.datapool.core.DeletionStrategy
-import io.holunda.polyflow.datapool.ifPresentOrElse
 import mu.KLogging
 import org.axonframework.commandhandling.CommandHandler
 import org.axonframework.eventsourcing.EventSourcingRepository
@@ -23,7 +22,8 @@ class CreateOrUpdateCommandHandler(
   private val deletionStrategy: DeletionStrategy
 ) {
 
-  companion object: KLogging()
+  companion object : KLogging()
+
   /**
    * Receives create-or-update and decides what to do.
    * @param command command to create or update the aggregate.
@@ -32,31 +32,31 @@ class CreateOrUpdateCommandHandler(
   @CommandHandler
   fun createOrUpdate(command: CreateOrUpdateDataEntryCommand, metaData: MetaData) {
     logger.trace { "Processing createOrUpdate command for ${command.dataIdentity}" }
-    loadAggregate(command.dataIdentity).ifPresentOrElse(
-      presentConsumer = { aggregate ->
-        val updateCommand = UpdateDataEntryCommand(
-          dataEntryChange = command.dataEntryChange
+    // Apply the command only once - either by creating a new aggregate instance or by updating the existing one
+    // If a new one is created, it should not be updated immediately afterward with the same data.
+    var commandApplied = false
+    val aggregate = eventSourcingRepository.loadOrCreate(command.dataIdentity) {
+      val createCommand = CreateDataEntryCommand(
+        dataEntryChange = command.dataEntryChange
+      )
+      logger.trace { "No aggregate found. Creating a new data entry aggregate and passing command $command" }
+      commandApplied = true
+      DataEntryAggregate(
+        command = createCommand
+      )
+    }
+    if (!commandApplied) {
+      val updateCommand = UpdateDataEntryCommand(
+        dataEntryChange = command.dataEntryChange
+      )
+      logger.trace { "Aggregate found. Updating it passing command $updateCommand" }
+      aggregate.invoke {
+        it.handle(
+          command = updateCommand,
+          deletionStrategy = deletionStrategy
         )
-        logger.trace { "Aggregate found. Updating it passing command $updateCommand" }
-        aggregate.invoke {
-          it.handle(
-            command = updateCommand,
-            deletionStrategy = deletionStrategy
-          )
-        }
-      },
-      missingCallback = {
-        val createCommand = CreateDataEntryCommand(
-          dataEntryChange = command.dataEntryChange
-        )
-        logger.trace { "No aggregate found. Creating a new data entry aggregate and passing command $command" }
-        eventSourcingRepository.newInstance {
-          DataEntryAggregate(
-            command = createCommand
-          )
-        }
       }
-    )
+    }
   }
 
   /**

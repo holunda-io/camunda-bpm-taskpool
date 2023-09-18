@@ -15,6 +15,7 @@ import io.holunda.polyflow.view.jpa.itest.TestApplication
 import io.holunda.polyflow.view.query.data.DataEntriesForUserQuery
 import io.holunda.polyflow.view.query.data.DataEntriesQuery
 import io.holunda.polyflow.view.query.data.DataEntriesQueryResult
+import jakarta.transaction.Transactional
 import mu.KLogging
 import org.assertj.core.api.Assertions.assertThat
 import org.axonframework.eventhandling.GenericEventMessage
@@ -24,11 +25,9 @@ import org.axonframework.queryhandling.QueryGateway
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
-import org.springframework.test.context.junit.jupiter.SpringExtension
 import java.time.Instant
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
@@ -37,7 +36,6 @@ import java.util.*
 import java.util.concurrent.Callable
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
-import javax.transaction.Transactional
 
 @SpringBootTest(
   classes = [TestApplication::class],

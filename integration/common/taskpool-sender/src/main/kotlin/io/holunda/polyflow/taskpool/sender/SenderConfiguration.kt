@@ -15,6 +15,7 @@ import io.holunda.polyflow.taskpool.sender.task.EngineTaskCommandSender
 import io.holunda.polyflow.taskpool.sender.task.SimpleEngineTaskCommandSender
 import io.holunda.polyflow.taskpool.sender.task.accumulator.EngineTaskCommandAccumulator
 import io.holunda.polyflow.taskpool.sender.task.accumulator.ProjectingCommandAccumulator
+import jakarta.annotation.PostConstruct
 import org.axonframework.commandhandling.gateway.CommandGateway
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -24,7 +25,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.context.annotation.Bean
-import javax.annotation.PostConstruct
 
 /**
  * Main configuration of the taskpool sender component.

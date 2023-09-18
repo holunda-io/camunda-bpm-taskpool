@@ -4,17 +4,15 @@ import io.holunda.camunda.taskpool.api.process.definition.ProcessDefinitionRegis
 import io.holunda.polyflow.view.auth.User
 import io.holunda.polyflow.view.jpa.itest.TestApplication
 import io.holunda.polyflow.view.query.process.ProcessDefinitionsStartableByUserQuery
+import jakarta.transaction.Transactional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
-import org.springframework.test.context.junit.jupiter.SpringExtension
 import java.util.*
-import javax.transaction.Transactional
 
 @SpringBootTest(
   classes = [TestApplication::class],

@@ -113,9 +113,9 @@ An optional `sort` parameter allows to sort the results by a field attribute. Th
 * java.util.Date
 * java.time.Instant
 
-To filter the results, you might supply a list of filters. A filter is an expression in format `fieldName<op>value`, where `fieldName` is addressing the attribute of the search result,
+To filter the results, you can supply a list of filters. A filter is an expression in format `fieldName<op>value`, where `fieldName` is addressing the attribute of the search result,
 `<op>` is one of `<`, `=`, `%` and `>` and `value` is a string representation of the values. The `fieldName` can point to an attribute of the result entity itself (`Task`, `TaskWithDataEntries` 
-or `DataEntry`) or point to the attribute inside the payload. To avoid a possible name clash, you must prefix the field name with `task.` if you want to filter on direct attributes of a task,
+or `DataEntry`) or point to the attribute inside the payload. To avoid name clashes, you must prefix the field name with `task` if you want to filter on direct attributes of a task,
 and you must prefix the field name with `data` if you want to filter on direct attributes of a data entry. For example, `task.priority=50` would deliver tasks with priority set to 50,
 and `data.entryType=info.polyflow.Order` will deliver data entries of type `info.polyflow.Order` only.
 
@@ -125,12 +125,21 @@ Following operations are supported:
 |--------|--------------|--------------|-------------------------------------------------------------------|--------------------------------------------------------------------------|----------------------------|------------------------------------|
 | `<`    | Less than    | all, payload | `followUpDate`, `dueDate`                                         | none                                                                     | all, payload               | all, payload                       | 
 | `>`    | Greater than | all, payload | `followUpDate`, `dueDate`                                         | none                                                                     | all, payload               | all, payload                       |
-| `=`    | Equals       | all, payload | payload, `businessKey`, `followUpDate`, `dueDate`                 | `entryId`, `entryType`, `type`, payload, `processingState`, `userStatus` | all, payload               | all, payload                       |
+| `=`    | Equals       | all, payload | payload, `businessKey`, `followUpDate`, `dueDate`, `priority`     | `entryId`, `entryType`, `type`, payload, `processingState`, `userStatus` | all, payload               | all, payload                       |
 | `%`    | Like         | all, payload | `businessKey`, `name`, `description`, `processName`, `textSearch` | none                                                                     | none                       | none                               |
 
 !!! info
-    There are several special reserved filters which can be passed to the task query: `task.processName=<value>` check equality of the process name, `task.processName%<value>` makes a like-search on
-process name, `task.textSearch%some-substring` makes a special OR-combined like-search on task name, task description and task process name. 
+    There are several special reserved filters which can be passed to the task query: `task.processName=<value>` checks equality of the process name, `task.processName%<value>` makes a like-search on
+    process name, `task.textSearch%some-substring` makes a special OR-combined like-search on task name, task description and task process name. 
 
-If the field name has no prefix of above, it is considered as an attribute inside the payload of data entry or enriched variables of a user task. For example, imagine
-you have a data entry with payload attributes `{ "attribute": "value", "another": 45 }`. In order to search for those, just specify `attribute=value` in your filter criteria. 
+If the field name does not have one of the above prefixes, it is considered as an attribute inside the payload of data entry or enriched variables of a user task. For example, imagine
+you have a data entry with payload attributes `{ "attribute": "value", "another": 45 }`. In order to search for those, just specify `attribute=value` in your filter criteria.
+
+Filters are composed with logical AND, meaning that all given filters have to match in order for a task to be included in the result of the query. For example, given the filters
+`task.priority=50` and `foo=bar`, the query result would only contain tasks that have a priority of 50 **and** a payload attribute named foo with the value bar.
+
+!!! warning
+    The [JPA View](view-jpa.md) has a different implementation when applying filters. Filters that target the same attribute are OR-composed before being AND-composed
+    with filters that target other attributes. For example, given the filters `customerName=ABC`, `customerName=DEF` and `task.priority=50`, the filters for the
+    customer name would first get OR-composed before being AND-composed with the task priority filter, resulting in a filtering expression logically equivalent to
+    `(customerName=ABC OR customerName=DEF) AND task.priority=50`.
