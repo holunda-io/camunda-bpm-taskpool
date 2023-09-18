@@ -242,13 +242,13 @@ internal class DataEntryRepositoryITest {
   @Test
   fun `should find by filter payload attribute`() {
 
-    val byPayloadFilterByChildKeyNumberValue = dataEntryRepository.findAll(where(hasDataEntryPayloadAttribute("child.key-number", "42")))
+    val byPayloadFilterByChildKeyNumberValue = dataEntryRepository.findAll(where(hasDataEntryPayloadAttribute("child.key-number", listOf("42"))))
     assertThat(byPayloadFilterByChildKeyNumberValue).containsExactlyInAnyOrderElementsOf(listOf(dataEntry, dataEntry2))
 
     val byPayloadFilterByChildKeyValue =
       dataEntryRepository.findAll(
-        where(hasDataEntryPayloadAttribute("child.key", "value"))
-          .and(hasDataEntryPayloadAttribute("id", dataEntry.dataEntryId.entryId))
+        where(hasDataEntryPayloadAttribute("child.key", listOf("value")))
+          .and(hasDataEntryPayloadAttribute("id", listOf(dataEntry.dataEntryId.entryId)))
       )
     assertThat(byPayloadFilterByChildKeyValue).containsExactlyInAnyOrderElementsOf(listOf(dataEntry))
   }

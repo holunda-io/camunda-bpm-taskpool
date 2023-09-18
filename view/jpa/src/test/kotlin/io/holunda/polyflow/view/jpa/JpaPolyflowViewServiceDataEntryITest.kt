@@ -265,7 +265,7 @@ internal class JpaPolyflowViewServiceDataEntryITest {
   fun `should find the entry by filter`() {
     assertResultIsTestEntry1And2(
       jpaPolyflowViewService.query(
-        DataEntriesQuery(filters = listOf("key=value"))
+        DataEntriesQuery(filters = listOf("key=value", "key=value2", "key=value3"))
       )
     )
   }
