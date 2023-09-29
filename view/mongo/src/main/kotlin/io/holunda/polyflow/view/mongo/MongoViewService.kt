@@ -506,3 +506,13 @@ internal fun sort(sort: String?): Sort =
   } else {
     Sort.unsorted()
   }
+
+internal fun sort(sort: List<String>): Sort {
+  return if (sort.isNotEmpty()) {
+    val combinedSort = sort.map { sort(it) }.filter { it.isSorted }
+    if (combinedSort.isEmpty()) Sort.unsorted()
+    else combinedSort.reduce { combined, element -> combined.and(element) }
+  } else {
+    Sort.unsorted()
+  }
+}

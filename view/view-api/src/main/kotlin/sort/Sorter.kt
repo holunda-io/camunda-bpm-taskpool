@@ -2,19 +2,21 @@ package io.holunda.polyflow.view.sort
 
 import io.holunda.polyflow.view.DataEntry
 import io.holunda.polyflow.view.Task
+import io.holunda.polyflow.view.TaskWithDataEntries
 import io.holunda.polyflow.view.filter.*
 import io.holunda.polyflow.view.filter.isDataEntryAttribute
 import io.holunda.polyflow.view.filter.isTaskAttribute
 import java.lang.reflect.Field
 import java.time.Instant
 import java.util.*
+import kotlin.Comparator
 
 /**
  * Creates a new data entry comparator.
  * @param sort a sort string (like +field or -name)
  * @return comparator for the sort string.
  */
-fun dataComparator(sort: String?): DataEntryComparator? {
+internal fun dataComparator(sort: String?): DataEntryComparator? {
   if (sort.isNullOrBlank()) return null
   val sortDirection = parse(sort) ?: return null
   val fieldName = if (isDataEntryAttribute(sort.substring(1))) {
@@ -26,12 +28,22 @@ fun dataComparator(sort: String?): DataEntryComparator? {
   return DataEntryComparator(field to sortDirection)
 }
 
+// TODO: why do i need to cast?
+/**
+ * Creates a new data entry comparator.
+ * @param sort a list of sort strings (like +field or -name)
+ * @return comparator for the sort strings.
+ */
+fun dataComparator(sort: List<String>): Comparator<DataEntry>? {
+  return mapComparator(sort.map { dataComparator(it) })
+}
+
 /**
  * Creates a new task comparator.
  * @param sort a sort string (like +field or -name)
  * @return comparator for the sort string.
  */
-fun taskComparator(sort: String?): TaskComparator? {
+internal fun taskComparator(sort: String?): TaskComparator? {
   if (sort.isNullOrBlank()) return null
   val sortDirection = parse(sort) ?: return null
   val fieldName = if (isTaskAttribute(sort.substring(1))) {
@@ -45,11 +57,21 @@ fun taskComparator(sort: String?): TaskComparator? {
 }
 
 /**
+ * Creates a new task comparator.
+ * @param sort a list of sort strings (like +field or -name)
+ * @return comparator for the sort strings.
+ */
+fun taskComparator(sort: List<String>): Comparator<Task>? {
+  if (sort.isEmpty()) return null
+  return mapComparator(sort.map { taskComparator(it) })
+}
+
+/**
  * Creates a new task with data entries comparator.
  * @param sort a sort string (like +field or -name)
  * @return comparator for the sort string.
  */
-fun taskWithDataEntriesComparator(sort: String?): TasksWithDataEntriesComparator? {
+internal fun taskWithDataEntriesComparator(sort: String?): TasksWithDataEntriesComparator? {
   if (sort.isNullOrBlank()) return null
   val sortDirection = parse(sort) ?: return null
   val fieldName = if (isTaskAttribute(sort.substring(1))) {
@@ -62,6 +84,20 @@ fun taskWithDataEntriesComparator(sort: String?): TasksWithDataEntriesComparator
   val field = extractField(targetClass = Task::class.java, name = fieldName)
     ?: return null
   return TasksWithDataEntriesComparator(field to sortDirection)
+}
+
+/**
+ * Creates a new task with data entries comparator.
+ * @param sort a list of sort strings (like +field or -name)
+ * @return comparator for the sort strings.
+ */
+fun taskWithDataEntriesComparator(sort: List<String>): Comparator<TaskWithDataEntries>? {
+  if (sort.isEmpty()) return null;
+  return mapComparator(sort.map { taskWithDataEntriesComparator(it) });
+}
+
+private fun <T> mapComparator(sort: List<Comparator<T>?>): Comparator<T>? {
+  return sort.filterNotNull().reduceOrNull { combined, element -> combined.then(element) }
 }
 
 /**

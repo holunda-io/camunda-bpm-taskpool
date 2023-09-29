@@ -56,7 +56,7 @@ class SimpleTaskPoolGivenStage<SELF : SimpleTaskPoolGivenStage<SELF>> : Abstract
   private fun procRef(applicationName: String = "app") = ProcessReference("instance1", "exec1", "def1", "def-key", "proce1", applicationName)
 
   private fun task(i: Int, applicationName: String = "app") = TestTaskData(
-    id ="id$i",
+    id = "id$i",
     sourceReference = procRef(applicationName),
     taskDefinitionKey = "task-key-$i",
     businessKey = "BUS-$i",
@@ -103,7 +103,7 @@ class SimpleTaskPoolWhenStage<SELF : SimpleTaskPoolWhenStage<SELF>> : AbstractSi
   private var returnedTasksForApplication = TaskQueryResult(listOf())
 
   private fun query(page: Int, size: Int) = TasksWithDataEntriesForUserQuery(User("kermit", setOf()), true, page, size)
-  private fun filterQuery(sort: String, filters: List<String>) = TasksForUserQuery(assignedToMeOnly = false, user = User("kermit", setOf()), filters = filters, sort = sort)
+  private fun filterQuery(sort: List<String>, filters: List<String>) = TasksForUserQuery(assignedToMeOnly = false, user = User("kermit", setOf()), filters = filters, sort = sort)
 
   @As("Page $ is queried with a page size of $")
   fun page_is_queried(page: Int, size: Int) = step {
@@ -122,12 +122,12 @@ class SimpleTaskPoolWhenStage<SELF : SimpleTaskPoolWhenStage<SELF>> : AbstractSi
 
   @As("Tasks are queried with filter $")
   fun tasks_are_queried(filters: List<String>) = step {
-    queriedTasks.addAll(simpleTaskPoolService.query(filterQuery("+createdDate", filters)).elements.map { TaskWithDataEntries(it) })
+    queriedTasks.addAll(simpleTaskPoolService.query(filterQuery(listOf("+createdDate"), filters)).elements.map { TaskWithDataEntries(it) })
   }
 
   @As("All tasks are queried with filter $")
-  fun all_tasks_are_queried(filters: List<String>) = step {
-    queriedTasks.addAll(simpleTaskPoolService.query(AllTasksQuery(sort = "+name", filters = filters)).elements.map { TaskWithDataEntries(it) })
+  fun all_tasks_are_queried(filters: List<String>, sort: List<String> = listOf("+name")) = step {
+    queriedTasks.addAll(simpleTaskPoolService.query(AllTasksQuery(sort = sort, filters = filters)).elements.map { TaskWithDataEntries(it) })
   }
 
 }
@@ -154,13 +154,23 @@ class SimpleTaskPoolThenStage<SELF : SimpleTaskPoolThenStage<SELF>> : AbstractSi
 
   @As("expected tasks are returned")
   fun tasks_are_returned(@Hidden expected: List<TaskWithDataEntries>) = step {
-    assertThat(queriedTasks).containsExactlyInAnyOrderElementsOf( expected )
+    assertThat(queriedTasks).containsExactlyInAnyOrderElementsOf(expected)
   }
 
   @As("all tasks are returned once")
   fun all_tasks_are_returned() = step {
     assertThat(queriedTasks).isEqualTo(tasks)
   }
+
+  @As("all tasks are returned and sorted once")
+  fun <R : Comparable<R>> all_task_are_returned_and_sorted_by(reversed: Boolean = false , selector: (TaskWithDataEntries) -> R?) {
+    if (reversed) {
+    assertThat(queriedTasks).isEqualTo(tasks.sortedByDescending(selector))
+    } else {
+      assertThat(queriedTasks).isEqualTo(tasks.sortedBy(selector))
+    }
+  }
+
 
   @As("tasks $ are returned for application")
   fun tasks_are_returned_for_application(@Hidden vararg expectedTasks: Task) = step {
@@ -208,7 +218,7 @@ class SimpleTaskPoolThenStage<SELF : SimpleTaskPoolThenStage<SELF>> : AbstractSi
     assertThat(returnedTaskCounts).containsOnly(*entries)
   }
 
-  fun task_does_not_exist(taskId: String) = step  {
+  fun task_does_not_exist(taskId: String) = step {
     val result = simpleTaskPoolService.query(TaskForIdQuery(taskId))
     assertThat(result).isNotPresent
   }

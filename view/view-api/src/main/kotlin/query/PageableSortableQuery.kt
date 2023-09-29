@@ -11,7 +11,7 @@ import kotlin.reflect.full.declaredMemberProperties
 interface PageableSortableQuery {
   val page: Int
   val size: Int
-  val sort: String?
+  val sort: List<String>
 
   /**
    * Checks that the sort parameter is correctly specified.
@@ -25,19 +25,22 @@ interface PageableSortableQuery {
    * Checks that the sort parameter is correctly specified.
    */
   fun sanitizeSort(fieldNames: Set<String>) {
-    if (sort == null) {
+    if (sort.isEmpty()) {
       return
     }
-    val direction = sort!!.substring(0, 1)
-    require(
-      direction == ASCENDING.sign
-        || direction == DESCENDING.sign
-    ) { "Sort must start either with '${ASCENDING.sign}' or '${DESCENDING.sign}' but it was starting with '$direction'" }
-    val parameter = sort!!.substring(1)
-    require(fieldNames.contains(parameter)) {
-      "Sort parameter must be one of ${
-        fieldNames.joinToString(", ")
-      } but it was $parameter."
+    sort.forEach {
+
+      val direction = it!!.substring(0, 1)
+      require(
+        direction == ASCENDING.sign
+          || direction == DESCENDING.sign
+      ) { "Sort must start either with '${ASCENDING.sign}' or '${DESCENDING.sign}' but it was starting with '$direction'" }
+      val parameter = it!!.substring(1)
+      require(fieldNames.contains(parameter)) {
+        "Sort parameter must be one of ${
+          fieldNames.joinToString(", ")
+        } but it was $parameter."
+      }
     }
   }
 

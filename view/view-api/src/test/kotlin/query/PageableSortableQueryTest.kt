@@ -13,20 +13,20 @@ import kotlin.reflect.full.declaredMemberProperties
 
 internal class PageableSortableQueryTest {
 
-  private val createTimeAsc = "+createTime"
-  private val nameDesc = "-name"
-  private val badField = "+someTaskField"
-  private val badOrdering = "*createTime"
+  private val createTimeAsc = listOf("+createTime")
+  private val nameDesc = listOf("-name")
+  private val badField = listOf("+someTaskField")
+  private val badOrdering = listOf("*createTime")
   private val user = User(username = "kermit", groups = setOf())
 
   @Test
   fun should_sanitize_task_query() {
     assertThat(AllTasksQuery(sort = createTimeAsc).apply { sanitizeSort(Task::class) }.sort).isEqualTo(createTimeAsc)
-    assertThat(AllTasksQuery(sort = null).apply { sanitizeSort(Task::class) }.sort).isNull()
+    assertThat(AllTasksQuery(sort = listOf()).apply { sanitizeSort(Task::class) }.sort).isNull()
     val badFieldException = assertThrows<IllegalArgumentException> { AllTasksQuery(sort = badField).apply { sanitizeSort(Task::class) } }
     assertThat(badFieldException.message).isEqualTo(
       "Sort parameter must be one of ${Task::class.declaredMemberProperties.joinToString(", ") { it.name }} but it was ${
-        badField.substring(
+        badField[0].substring(
           1
         )
       }."
@@ -39,12 +39,12 @@ internal class PageableSortableQueryTest {
   @Test
   fun should_sanitize_task_with_dataentry_query() {
     assertThat(TasksWithDataEntriesForGroupQuery(user = user, sort = createTimeAsc).apply { sanitizeSort(Task::class) }.sort).isEqualTo(createTimeAsc)
-    assertThat(TasksWithDataEntriesForGroupQuery(user = user, sort = null).apply { sanitizeSort(Task::class) }.sort).isNull()
+    assertThat(TasksWithDataEntriesForGroupQuery(user = user, sort = listOf()).apply { sanitizeSort(Task::class) }.sort).isNull()
     val badFieldException =
       assertThrows<IllegalArgumentException> { TasksWithDataEntriesForGroupQuery(user = user, sort = badField).apply { sanitizeSort(Task::class) } }
     assertThat(badFieldException.message).isEqualTo(
       "Sort parameter must be one of ${Task::class.declaredMemberProperties.joinToString(", ") { it.name }} but it was ${
-        badField.substring(
+        badField[0].substring(
           1
         )
       }."
@@ -58,11 +58,11 @@ internal class PageableSortableQueryTest {
   @Test
   fun should_sanitize_dataentry_query() {
     assertThat(DataEntriesQuery(sort = nameDesc).apply { sanitizeSort(DataEntry::class) }.sort).isEqualTo(nameDesc)
-    assertThat(DataEntriesQuery(sort = null).apply { sanitizeSort(DataEntry::class) }.sort).isNull()
+    assertThat(DataEntriesQuery(sort = listOf()).apply { sanitizeSort(DataEntry::class) }.sort).isNull()
     val badFieldException = assertThrows<IllegalArgumentException> { DataEntriesQuery(sort = badField).apply { sanitizeSort(DataEntry::class) } }
     assertThat(badFieldException.message).isEqualTo(
       "Sort parameter must be one of ${DataEntry::class.declaredMemberProperties.joinToString(", ") { it.name }} but it was ${
-        badField.substring(
+        badField[0].substring(
           1
         )
       }."
