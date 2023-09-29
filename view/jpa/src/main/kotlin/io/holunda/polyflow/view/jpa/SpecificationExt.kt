@@ -93,7 +93,13 @@ fun pageRequest(page: Int, size: Int, sort: String?): PageRequest {
   }
 }
 
-fun pageRequest(page: Int, size: Int, sort: List<String>): PageRequest {
+/**
+ * Constructs page request.
+ * @param page page number.
+ * @param size page size
+ * @param sort optional sort, where each element in format +filedName or -fieldName
+ */
+fun pageRequest(page: Int, size: Int, sort: List<String> = listOf()): PageRequest {
   val sortCriteria = sort.map { s ->
     val direction = if (s.substring(0, 1) == "+") {
       Direction.ASC
