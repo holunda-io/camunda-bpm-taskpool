@@ -24,6 +24,7 @@ import org.axonframework.messaging.MetaData
 import org.axonframework.queryhandling.QueryHandler
 import org.axonframework.queryhandling.QueryUpdateEmitter
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Component
@@ -44,6 +45,7 @@ import javax.annotation.PreDestroy
  */
 @Component
 @ProcessingGroup(MongoViewService.PROCESSING_GROUP)
+@ConditionalOnMissingBean
 class MongoViewService(
   private val properties: TaskPoolMongoViewProperties,
   private val taskRepository: TaskRepository,
