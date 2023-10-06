@@ -46,6 +46,10 @@ import javax.annotation.PreDestroy
  */
 @Configuration
 class MongoViewServiceConfiguration {
+
+  /**
+   * Produces the mongoViewService bean if no bean of the type exists.
+   */
   @Bean
   @ConditionalOnMissingBean
   fun mongoViewService(
