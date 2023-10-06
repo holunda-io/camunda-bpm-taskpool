@@ -25,9 +25,10 @@ import org.axonframework.queryhandling.QueryHandler
 import org.axonframework.queryhandling.QueryUpdateEmitter
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
+import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Configuration
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
-import org.springframework.stereotype.Component
 import reactor.core.Disposable
 import reactor.core.publisher.Mono
 import reactor.kotlin.core.publisher.switchIfEmpty
@@ -41,11 +42,41 @@ import javax.annotation.PostConstruct
 import javax.annotation.PreDestroy
 
 /**
+ * Configuration class for conditionally creating the MongoViewService.
+ */
+@Configuration
+class MongoViewServiceConfiguration {
+  @Bean
+  @ConditionalOnMissingBean
+  fun mongoViewService(
+    properties: TaskPoolMongoViewProperties,
+    taskRepository: TaskRepository,
+    dataEntryRepository: DataEntryRepository,
+    taskWithDataEntriesRepository: TaskWithDataEntriesRepository,
+    @Autowired(required = false)
+    taskChangeTracker: TaskChangeTracker?,
+    @Autowired(required = false)
+    dataEntryChangeTracker: DataEntryChangeTracker?,
+    queryUpdateEmitter: QueryUpdateEmitter,
+    configuration: EventProcessingConfiguration,
+    clock: Clock
+  ) = MongoViewService(
+    properties,
+    taskRepository,
+    dataEntryRepository,
+    taskWithDataEntriesRepository,
+    taskChangeTracker,
+    dataEntryChangeTracker,
+    queryUpdateEmitter,
+    configuration,
+    clock
+  )
+}
+
+/**
  * Mongo-based projection.
  */
-@Component
 @ProcessingGroup(MongoViewService.PROCESSING_GROUP)
-@ConditionalOnMissingBean
 class MongoViewService(
   private val properties: TaskPoolMongoViewProperties,
   private val taskRepository: TaskRepository,
