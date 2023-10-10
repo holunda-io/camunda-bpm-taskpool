@@ -32,6 +32,7 @@ import io.holunda.polyflow.view.query.PageableSortableQuery
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.data.domain.Sort.Direction
+import org.springframework.data.domain.Sort.Order
 import org.springframework.data.jpa.domain.Specification
 import org.springframework.data.jpa.domain.Specification.where
 import java.time.Instant
@@ -93,31 +94,53 @@ fun pageRequest(page: Int, size: Int, sort: String?): PageRequest {
 }
 
 /**
+ * Constructs page request.
+ * @param page page number.
+ * @param size page size
+ * @param sort optional sort, where each element in format +filedName or -fieldName
+ */
+fun pageRequest(page: Int, size: Int, sort: List<String> = listOf()): PageRequest {
+  val sortCriteria = sort.map { s ->
+    val direction = if (s.substring(0, 1) == "+") {
+      Direction.ASC
+    } else {
+      Direction.DESC
+    }
+    Order.by(s.substring(1)).with(direction)
+  }.toList()
+
+
+    return PageRequest.of(page, size, Sort.by(sortCriteria))
+}
+
+/**
  * Map sort string from the view API to implementation sort of the entities.
  */
-fun PageableSortableQuery.mapTaskSort(): String {
-  return if (this.sort == null) {
+fun PageableSortableQuery.mapTaskSort(): List<String> {
+  return if (this.sort.isEmpty()) {
     // no sort is specified, we don't want unsorted results.
-    "-${TaskEntity::createdDate.name}"
+    listOf("-${TaskEntity::createdDate.name}")
   } else {
-    val direction = sort!!.substring(0, 1)
-    val field = sort!!.substring(1)
-    return when (field) {
-      Task::name.name -> TaskEntity::name.name
-      Task::description.name -> TaskEntity::description.name
-      Task::assignee.name -> TaskEntity::assignee.name
-      Task::createTime.name -> TaskEntity::createdDate.name
-      Task::dueDate.name -> TaskEntity::dueDate.name
-      Task::followUpDate.name -> TaskEntity::followUpDate.name
-      Task::owner.name -> TaskEntity::owner.name
-      Task::priority.name -> TaskEntity::priority.name
-      Task::formKey.name -> TaskEntity::formKey.name
-      Task::businessKey.name -> TaskEntity::businessKey.name
-      Task::id.name -> TaskEntity::taskId.name
-      Task::taskDefinitionKey.name -> TaskEntity::taskDefinitionKey.name
-      else -> throw IllegalArgumentException("'$field' is not supported for sorting in JPA View")
-    }.let { "$direction$it" }
-  }
+    sort.map {
+      val direction = it.substring(0,1)
+      val field = it.substring(1)
+      when (field) {
+        Task::name.name -> TaskEntity::name.name
+        Task::description.name -> TaskEntity::description.name
+        Task::assignee.name -> TaskEntity::assignee.name
+        Task::createTime.name -> TaskEntity::createdDate.name
+        Task::dueDate.name -> TaskEntity::dueDate.name
+        Task::followUpDate.name -> TaskEntity::followUpDate.name
+        Task::owner.name -> TaskEntity::owner.name
+        Task::priority.name -> TaskEntity::priority.name
+        Task::formKey.name -> TaskEntity::formKey.name
+        Task::businessKey.name -> TaskEntity::businessKey.name
+        Task::id.name -> TaskEntity::taskId.name
+        Task::taskDefinitionKey.name -> TaskEntity::taskDefinitionKey.name
+        else -> throw IllegalArgumentException("'$field' is not supported for sorting in JPA View")
+      }.let { "$direction$it" }
+      }
+    }
 }
 
 

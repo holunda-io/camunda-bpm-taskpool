@@ -5,7 +5,7 @@
   <parent>
     <groupId>io.holunda.polyflow</groupId>
     <artifactId>polyflow-parent</artifactId>
-    <version>3.15.0</version>
+    <version>3.19.0</version>
     <relativePath>../../bom/parent/pom.xml</relativePath>
   </parent>
 
@@ -16,7 +16,7 @@
   <properties>
     <camunda-bpm.version>7.19.0</camunda-bpm.version>
     <camunda-bpm-assert.version>${camunda-bpm.version}</camunda-bpm-assert.version>
-    <camunda-platform-7-mockito.version>6.19.0</camunda-platform-7-mockito.version>
+    <camunda-platform-7-mockito.version>6.19.1</camunda-platform-7-mockito.version>
   </properties>
 
   <modules>

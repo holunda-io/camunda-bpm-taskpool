@@ -269,12 +269,12 @@ internal class JpaPolyflowViewServiceTaskITest {
   fun `should find the task by user with data entries and sort results correctly`() {
     val strawhats = jpaPolyflowViewService.query(TasksWithDataEntriesForUserQuery(
       user = User("other", setOf("strawhats")),
-      sort = "+name",
+      sort = listOf("+name"),
       assignedToMeOnly = false
     ))
     val strawhatsInverse = jpaPolyflowViewService.query(TasksWithDataEntriesForUserQuery(
       user = User("other", setOf("strawhats")),
-      sort = "-name",
+      sort = listOf("-name"),
       assignedToMeOnly = false
     ))
 
@@ -285,12 +285,25 @@ internal class JpaPolyflowViewServiceTaskITest {
   }
 
   @Test
+  fun `should find the task with data entries and sort by multiple correctly`() {
+    val query = jpaPolyflowViewService.query(AllTasksWithDataEntriesQuery(
+      sort = listOf("+priority", "-name")
+    ))
+
+    val inverseQuery = jpaPolyflowViewService.query(AllTasksWithDataEntriesQuery(
+      sort = listOf("-priority", "+name")
+    ))
+    assertThat(query.elements.map { it.task.id }).containsExactly(id4, id3, id)
+    assertThat(inverseQuery.elements.map { it.task.id }).containsExactly(id, id3, id4)
+  }
+
+  @Test
   fun `should not execute query because of wrong sort`() {
     val user = User("other", setOf("strawhats"))
     assertThat(assertThrows<IllegalArgumentException> {
       jpaPolyflowViewService.query(TasksWithDataEntriesForUserQuery(
         user = user,
-        sort = "+createdTime", // entity property
+        sort = listOf("+createdTime"), // entity property
         assignedToMeOnly = false
       ))
     }.message).startsWith("Sort parameter must be one of ").endsWith(" but it was createdTime.")
@@ -298,7 +311,7 @@ internal class JpaPolyflowViewServiceTaskITest {
     assertThat(assertThrows<IllegalArgumentException> {
       jpaPolyflowViewService.query(TasksWithDataEntriesForUserQuery(
         user = user,
-        sort = "+candidateUsers", // unsupported by JPA view
+        sort = listOf("+candidateUsers"), // unsupported by JPA view
         assignedToMeOnly = false
       ))
     }.message).isEqualTo("'candidateUsers' is not supported for sorting in JPA View")
@@ -306,7 +319,7 @@ internal class JpaPolyflowViewServiceTaskITest {
     assertThat(assertThrows<IllegalArgumentException> {
       jpaPolyflowViewService.query(TasksWithDataEntriesForUserQuery(
         user = user,
-        sort = "*name", // wrong order
+        sort = listOf("*name"), // wrong order
         assignedToMeOnly = false
       ))
     }.message).isEqualTo("Sort must start either with '+' or '-' but it was starting with '*'")

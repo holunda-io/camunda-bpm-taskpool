@@ -68,6 +68,7 @@ internal class JpaPolyflowViewServiceDataEntryITest {
   private val id = UUID.randomUUID().toString()
   private val id2 = UUID.randomUUID().toString()
   private val id3 = UUID.randomUUID().toString()
+  private val id4 = UUID.randomUUID().toString()
   private val now = Instant.now()
 
   @BeforeEach
@@ -185,6 +186,29 @@ internal class JpaPolyflowViewServiceDataEntryITest {
       ),
       metaData = MetaData.emptyInstance()
     )
+
+    jpaPolyflowViewService.on(
+      event = DataEntryCreatedEvent(
+        entryType = "io.polyflow.test",
+        entryId = id4,
+        type = "Test sort",
+        applicationName = "test-application",
+        name = "Test Entry 4",
+        state = ProcessingType.IN_PROGRESS.of("In review"),
+        payload = serialize(payload = mapOf("key-int" to 2, "key" to "other-value"), mapper = objectMapper),
+        authorizations = listOf(
+          addUser("hulk"),
+          addGroup("avenger")
+        ),
+        createModification = Modification(
+          time = OffsetDateTime.ofInstant(now, ZoneOffset.UTC),
+          username = "piggy",
+          log = "Created",
+          logNotes = "Created the entry"
+        )
+      ),
+      metaData = MetaData.emptyInstance()
+    )
   }
 
   @AfterEach
@@ -278,6 +302,24 @@ internal class JpaPolyflowViewServiceDataEntryITest {
     )
     assertThat(result).isNotNull
     assertThat(result.payload).isNull()
+  }
+
+  @Test
+  fun `should sort entries with multiple criteria`() {
+
+    val result = jpaPolyflowViewService.query(
+      DataEntriesQuery(sort = listOf("+type", "-name"))
+    )
+    assertThat(result.payload.elements.map { it.entryId }).containsExactly(id2, id, id4)
+  }
+
+  @Test
+  fun `sort should be backwards compatible`() {
+
+    val result = jpaPolyflowViewService.query(
+      DataEntriesQuery(sort = "+type")
+    )
+    assertThat(result.payload.elements.map { it.entryId }).containsExactly(id, id2, id4)
   }
 
 
