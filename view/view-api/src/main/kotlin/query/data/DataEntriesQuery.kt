@@ -26,7 +26,7 @@ data class DataEntriesQuery(
   constructor(page: Int = 0, size: Int = Int.MAX_VALUE, sort: String, filters: List<String> = listOf()): this(
     page = page,
     size = size,
-    sort = listOf(sort),
+    sort = if (sort.isBlank()) listOf() else listOf(sort),
     filters = filters
   )
 

@@ -27,7 +27,7 @@ data class TasksForUserQuery(
     assignedToMeOnly = assignedToMeOnly,
     page = page,
     size = size,
-    sort = listOf(sort),
+    sort = if (sort.isBlank()) listOf() else listOf(sort),
     filters = filters
   )
 
@@ -35,12 +35,12 @@ data class TasksForUserQuery(
    * Compatibility constructor for old clients.
    */
   @Deprecated(message = "Please use other constructor setting the assignedToMeOnly.")
-  constructor(user: User, page: Int = 0, size: Int = Int.MAX_VALUE, sort: List<String> = listOf(), filters: List<String> = listOf()): this(
+  constructor(user: User, page: Int = 0, size: Int = Int.MAX_VALUE, sort: String? = null, filters: List<String> = listOf()): this(
     user = user,
     assignedToMeOnly = false,
     page = page,
     size = size,
-    sort = sort,
+    sort = if (sort.isNullOrBlank()) listOf() else listOf(sort),
     filters = filters
   )
 

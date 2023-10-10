@@ -25,15 +25,15 @@ data class TasksWithDataEntriesForUserQuery(
 
   @Deprecated("Please use other constructor setting sort as List<String>")
   constructor(user: User, assignedToMeOnly: Boolean = false, page: Int = 0, size: Int = Int.MAX_VALUE, sort: String, filters: List<String> = listOf()) : this(
-    user = user, assignedToMeOnly = assignedToMeOnly, page = page, size = size, sort = listOf(sort), filters = filters
+    user = user, assignedToMeOnly = assignedToMeOnly, page = page, size = size, sort = if (sort.isBlank()) listOf() else listOf(sort), filters = filters
   )
 
   /**
    * Compatibility constructor for old clients.
    */
   @Deprecated("Please use other constructor setting the assignedToMeOnly.")
-  constructor(user: User, page: Int = 0, size: Int = Int.MAX_VALUE, sort: List<String> = listOf(), filters: List<String> = listOf()) : this(
-    user = user, assignedToMeOnly = false, page = page, size = size, sort = sort, filters = filters
+  constructor(user: User, page: Int = 0, size: Int = Int.MAX_VALUE, sort: String? = null, filters: List<String> = listOf()) : this(
+    user = user, assignedToMeOnly = false, page = page, size = size, sort = if (sort.isNullOrBlank()) listOf() else listOf(sort), filters = filters
   )
 
   override fun applyFilter(element: TaskWithDataEntries): Boolean =

@@ -27,7 +27,7 @@ data class TasksForCandidateUserAndGroupQuery(
     includeAssigned = includeAssigned,
     page = page,
     size = size,
-    sort = listOf(sort),
+    sort = if (sort.isBlank()) listOf() else listOf(sort),
     filters = filters
   )
 
