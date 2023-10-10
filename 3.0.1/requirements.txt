@@ -1,4 +1,0 @@
-mkdocs
-mkdocs-git-committers-plugin
-mkdocs-material
-mike
