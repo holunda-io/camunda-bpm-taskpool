@@ -26,9 +26,11 @@ import org.axonframework.messaging.MetaData
 import org.axonframework.queryhandling.QueryHandler
 import org.axonframework.queryhandling.QueryUpdateEmitter
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
+import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Configuration
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
-import org.springframework.stereotype.Component
 import reactor.core.Disposable
 import reactor.core.publisher.Mono
 import reactor.kotlin.core.publisher.switchIfEmpty
@@ -40,9 +42,44 @@ import java.util.*
 import java.util.concurrent.CompletableFuture
 
 /**
+ * Configuration class for conditionally creating the MongoViewService.
+ */
+@Configuration
+class MongoViewServiceConfiguration {
+
+  /**
+   * Produces the mongoViewService bean if no bean of the type exists.
+   */
+  @Bean
+  @ConditionalOnMissingBean
+  fun mongoViewService(
+    properties: TaskPoolMongoViewProperties,
+    taskRepository: TaskRepository,
+    dataEntryRepository: DataEntryRepository,
+    taskWithDataEntriesRepository: TaskWithDataEntriesRepository,
+    @Autowired(required = false)
+    taskChangeTracker: TaskChangeTracker?,
+    @Autowired(required = false)
+    dataEntryChangeTracker: DataEntryChangeTracker?,
+    queryUpdateEmitter: QueryUpdateEmitter,
+    configuration: EventProcessingConfiguration,
+    clock: Clock
+  ) = MongoViewService(
+    properties,
+    taskRepository,
+    dataEntryRepository,
+    taskWithDataEntriesRepository,
+    taskChangeTracker,
+    dataEntryChangeTracker,
+    queryUpdateEmitter,
+    configuration,
+    clock
+  )
+}
+
+/**
  * Mongo-based projection.
  */
-@Component
 @ProcessingGroup(MongoViewService.PROCESSING_GROUP)
 class MongoViewService(
   private val properties: TaskPoolMongoViewProperties,
@@ -506,3 +543,13 @@ internal fun sort(sort: String?): Sort =
   } else {
     Sort.unsorted()
   }
+
+internal fun sort(sort: List<String>): Sort {
+  return if (sort.isNotEmpty()) {
+    val combinedSort = sort.map { sort(it) }.filter { it.isSorted }
+    if (combinedSort.isEmpty()) Sort.unsorted()
+    else combinedSort.reduce { combined, element -> combined.and(element) }
+  } else {
+    Sort.unsorted()
+  }
+}

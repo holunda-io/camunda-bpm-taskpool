@@ -195,11 +195,11 @@ class TaskRepositoryITest {
 
   @Test
   fun `should find by payload attribute`() {
-    val result = taskRepository.findAll(hasTaskPayloadAttribute("complex.child2", "small"))
+    val result = taskRepository.findAll(hasTaskPayloadAttribute("complex.child2", listOf("small")))
     assertThat(result).hasSize(1)
     assertThat(result).containsExactlyInAnyOrder(task1)
 
-    val notfound = taskRepository.findAll(hasTaskPayloadAttribute("complex.child1", "13"))
+    val notfound = taskRepository.findAll(hasTaskPayloadAttribute("complex.child1", listOf("13")))
     assertThat(notfound).isEmpty()
   }
 

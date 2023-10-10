@@ -32,6 +32,7 @@ import io.holunda.polyflow.view.query.PageableSortableQuery
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.data.domain.Sort.Direction
+import org.springframework.data.domain.Sort.Order
 import org.springframework.data.jpa.domain.Specification
 import org.springframework.data.jpa.domain.Specification.where
 import java.time.Instant
@@ -83,31 +84,53 @@ fun pageRequest(page: Int, size: Int, sort: String?): PageRequest {
 }
 
 /**
+ * Constructs page request.
+ * @param page page number.
+ * @param size page size
+ * @param sort optional sort, where each element in format +filedName or -fieldName
+ */
+fun pageRequest(page: Int, size: Int, sort: List<String> = listOf()): PageRequest {
+  val sortCriteria = sort.map { s ->
+    val direction = if (s.substring(0, 1) == "+") {
+      Direction.ASC
+    } else {
+      Direction.DESC
+    }
+    Order.by(s.substring(1)).with(direction)
+  }.toList()
+
+
+    return PageRequest.of(page, size, Sort.by(sortCriteria))
+}
+
+/**
  * Map sort string from the view API to implementation sort of the entities.
  */
-fun PageableSortableQuery.mapTaskSort(): String {
-  return if (this.sort == null) {
+fun PageableSortableQuery.mapTaskSort(): List<String> {
+  return if (this.sort.isEmpty()) {
     // no sort is specified, we don't want unsorted results.
-    "-${TaskEntity::createdDate.name}"
+    listOf("-${TaskEntity::createdDate.name}")
   } else {
-    val direction = sort!!.substring(0, 1)
-    val field = sort!!.substring(1)
-    return when (field) {
-      Task::name.name -> TaskEntity::name.name
-      Task::description.name -> TaskEntity::description.name
-      Task::assignee.name -> TaskEntity::assignee.name
-      Task::createTime.name -> TaskEntity::createdDate.name
-      Task::dueDate.name -> TaskEntity::dueDate.name
-      Task::followUpDate.name -> TaskEntity::followUpDate.name
-      Task::owner.name -> TaskEntity::owner.name
-      Task::priority.name -> TaskEntity::priority.name
-      Task::formKey.name -> TaskEntity::formKey.name
-      Task::businessKey.name -> TaskEntity::businessKey.name
-      Task::id.name -> TaskEntity::taskId.name
-      Task::taskDefinitionKey.name -> TaskEntity::taskDefinitionKey.name
-      else -> throw IllegalArgumentException("'$field' is not supported for sorting in JPA View")
-    }.let { "$direction$it" }
-  }
+    sort.map {
+      val direction = it.substring(0,1)
+      val field = it.substring(1)
+      when (field) {
+        Task::name.name -> TaskEntity::name.name
+        Task::description.name -> TaskEntity::description.name
+        Task::assignee.name -> TaskEntity::assignee.name
+        Task::createTime.name -> TaskEntity::createdDate.name
+        Task::dueDate.name -> TaskEntity::dueDate.name
+        Task::followUpDate.name -> TaskEntity::followUpDate.name
+        Task::owner.name -> TaskEntity::owner.name
+        Task::priority.name -> TaskEntity::priority.name
+        Task::formKey.name -> TaskEntity::formKey.name
+        Task::businessKey.name -> TaskEntity::businessKey.name
+        Task::id.name -> TaskEntity::taskId.name
+        Task::taskDefinitionKey.name -> TaskEntity::taskDefinitionKey.name
+        else -> throw IllegalArgumentException("'$field' is not supported for sorting in JPA View")
+      }.let { "$direction$it" }
+      }
+    }
 }
 
 
@@ -142,7 +165,7 @@ internal fun List<Criterion>.toDataEntryPayloadSpecification(): Specification<Da
   val relevant = this.filterIsInstance<Criterion.PayloadEntryCriterion>()
   // compose criteria with same name with OR and criteria with different names with AND
   val relevantByName = relevant.groupBy { it.name }
-  val orComposedByName = relevantByName.map { (_, criteria) -> composeOr(criteria.map { it.toDataEntrySpecification() }) }
+  val orComposedByName = relevantByName.map { (_, criteria) -> criteria.toOrDataEntrySpecification() }
 
   return composeAnd(orComposedByName)
 }
@@ -154,7 +177,7 @@ internal fun List<Criterion>.toTaskPayloadSpecification(): Specification<TaskEnt
   val relevant = this.filterIsInstance<Criterion.PayloadEntryCriterion>()
   // compose criteria with same name with OR and criteria with different names with AND
   val relevantByName = relevant.groupBy { it.name }
-  val orComposedByName = relevantByName.map { (_, criteria) -> composeOr(criteria.map { it.toTaskSpecification() }) }
+  val orComposedByName = relevantByName.map { (_, criteria) -> criteria.toOrTaskSpecification() }
 
   return composeAnd(orComposedByName)
 }
@@ -208,13 +231,15 @@ internal fun Criterion.TaskCriterion.toTaskSpecification(): Specification<TaskEn
 }
 
 /**
- * Creates JPA Specification for query of payload attributes based on JSON paths.
+ * Creates JPA Specification for query of payload attributes based on JSON paths. All criteria must have the same path
+ * and will be composed by the logical OR operator.
  */
-internal fun Criterion.PayloadEntryCriterion.toTaskSpecification(): Specification<TaskEntity> {
-  return when (this.operator) {
-    EQUALS -> hasTaskPayloadAttribute(this.name, this.value)
-    else -> throw IllegalArgumentException("JPA View currently supports only equals as operator for filtering of payload attributes.")
-  }
+internal fun List<Criterion.PayloadEntryCriterion>.toOrTaskSpecification(): Specification<TaskEntity> {
+  require(this.isNotEmpty()) { "List of criteria must not be empty." }
+  require(this.all { it.operator == EQUALS }) { "JPA View currently supports only equals as operator for filtering of payload attributes." }
+  require(this.distinctBy { it.name }.size == 1) { "All criteria must have the same path." }
+
+  return hasTaskPayloadAttribute(this.first().name, this.map { it.value })
 }
 
 /**
@@ -232,13 +257,15 @@ internal fun Criterion.DataEntryCriterion.toDataEntrySpecification(): Specificat
 }
 
 /**
- * Creates JPA Specification for query of payload attributes based on JSON paths.
+ * Creates JPA Specification for query of payload attributes based on JSON paths. All criteria must have the same path
+ * and will be composed by the logical OR operator.
  */
-internal fun Criterion.PayloadEntryCriterion.toDataEntrySpecification(): Specification<DataEntryEntity> {
-  return when (this.operator) {
-    EQUALS -> hasDataEntryPayloadAttribute(this.name, this.value)
-    else -> throw IllegalArgumentException("JPA View currently supports only equals as operator for filtering of payload attributes.")
-  }
+internal fun List<Criterion.PayloadEntryCriterion>.toOrDataEntrySpecification(): Specification<DataEntryEntity> {
+  require(this.isNotEmpty()) { "List of criteria must not be empty." }
+  require(this.all { it.operator == EQUALS }) { "JPA View currently supports only equals as operator for filtering of payload attributes." }
+  require(this.distinctBy { it.name }.size == 1) { "All criteria must have the same path." }
+
+  return hasDataEntryPayloadAttribute(this.first().name, this.map { it.value })
 }
 
 

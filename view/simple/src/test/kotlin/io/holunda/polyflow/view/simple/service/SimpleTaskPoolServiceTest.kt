@@ -278,6 +278,18 @@ class SimpleTaskPoolServiceTest : ScenarioTest<SimpleTaskPoolGivenStage<*>, Simp
       .tasks_are_returned(listOf(then().tasks[5]))
   }
 
+  @Test
+  fun `retrieves all task sort by multiple values`() {
+    given()
+      .tasks_exist(5)
+
+    `when`()
+      .all_tasks_are_queried(filters = listOf(), sort = listOf("+task.dueDate", "-task.businessKey"))
+
+    then()
+      .all_task_are_returned_and_sorted_by(reversed = true) { it.task.businessKey }
+  }
+
   private infix fun String.withTaskCount(taskCount: Int) = ApplicationWithTaskCount(this, taskCount)
 }
 

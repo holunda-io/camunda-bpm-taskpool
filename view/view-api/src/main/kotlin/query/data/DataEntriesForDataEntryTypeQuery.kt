@@ -15,8 +15,16 @@ data class DataEntriesForDataEntryTypeQuery(
   val entryType: EntryType,
   override val page: Int = 0,
   override val size: Int = Int.MAX_VALUE,
-  override val sort: String? = null
+  override val sort: List<String> = listOf()
 ) : FilterQuery<DataEntry>, PageableSortableQuery {
+
+  @Deprecated("Please use other constructor setting sort as List<String>")
+  constructor(entryType: EntryType, page: Int = 0, size: Int = Int.MAX_VALUE, sort: String): this(
+    entryType = entryType,
+    page = page,
+    size = size,
+    sort = listOf(sort),
+  )
 
   override fun applyFilter(element: DataEntry) = element.entryType == this.entryType
 }

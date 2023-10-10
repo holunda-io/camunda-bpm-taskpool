@@ -105,7 +105,7 @@ interface PageableSortableQuery {
 The `page` parameter denotes the page number to deliver (starting with `0`). The `size` parameter denotes the number of elements on a page. By default, the `page` is set to `0`
 and the size is set to `Int.MAX`. 
 
-An optional `sort` parameter allows to sort the results by a field attribute. The format of the `sort` string is `<+|->fieldName`, `+fieldName` means sort by `fieldName` ascending,
+An optional `sort` list allows to sort the results by multiple field attributes. The format of the `sort` string is `<+|->fieldName`, `+fieldName` means sort by `fieldName` ascending,
 `-fieldName` means sort by `fieldName` descending. The field must be a direct member of the result (`Task` for queries on `Task` and `TaskWithDataEntries` or `DataEntry`) and must be one of the following type:
 
 * java.lang.Integer

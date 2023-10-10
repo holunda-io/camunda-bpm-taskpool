@@ -19,9 +19,14 @@ data class TasksWithDataEntriesForGroupQuery(
   val includeAssigned: Boolean = false,
   override val page: Int = 0,
   override val size: Int = Int.MAX_VALUE,
-  override val sort: String? = null,
+  override val sort: List<String> = listOf(),
   val filters: List<String> = listOf()
 ) : FilterQuery<TaskWithDataEntries>, PageableSortableQuery {
+
+  @Deprecated("Please use other constructor setting sort as List<String>")
+  constructor(user: User, includeAssigned: Boolean = false, page: Int = 0, size: Int = Int.MAX_VALUE, sort: String, filters: List<String> = listOf()) : this(
+    user = user, includeAssigned = includeAssigned, page = page, size = size, sort = listOf(sort), filters = filters
+  )
 
   override fun applyFilter(element: TaskWithDataEntries): Boolean =
     TasksForGroupQuery(user, includeAssigned, page, size, sort, filters).applyFilter(element.task)

@@ -484,7 +484,7 @@ class JpaPolyflowViewTaskService(
   }
 
   private fun reportMissingFeature(query: PageableSortableQuery) {
-    if (query.sort != null) {
+    if (query.sort.isEmpty()) {
       logger.warn { "Sorting is currently not supported, but the sort was requested: ${query.sort}, see https://github.com/holunda-io/camunda-bpm-taskpool/issues/701" }
     }
     if (query.page != 1 || query.size != Int.MAX_VALUE) {
