@@ -2181,7 +2181,7 @@ The queries implement the <code>PageableSortableQuery</code> interface, allowing
 </code></pre></div>
 The <code>page</code> parameter denotes the page number to deliver (starting with <code>0</code>). The <code>size</code> parameter denotes the number of elements on a page. By default, the <code>page</code> is set to <code>0</code>
 and the size is set to <code>Int.MAX</code>. </p>
-<p>An optional <code>sort</code> list allows to sort the results by multiple field attributes. The format of the <code>sort</code> string is <code>&lt;+|-&gt;fieldName</code>, <code>+fieldName</code> means sort by <code>fieldName</code> ascending,
+<p>An optional <code>sort</code> parameter allows to sort the results by a field attribute. The format of the <code>sort</code> string is <code>&lt;+|-&gt;fieldName</code>, <code>+fieldName</code> means sort by <code>fieldName</code> ascending,
 <code>-fieldName</code> means sort by <code>fieldName</code> descending. The field must be a direct member of the result (<code>Task</code> for queries on <code>Task</code> and <code>TaskWithDataEntries</code> or <code>DataEntry</code>) and must be one of the following type:</p>
 <ul>
 <li>java.lang.Integer</li>
@@ -2268,7 +2268,7 @@ customer name would first get OR-composed before being AND-composed with the tas
   <small>
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">October 10, 2023</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">September 22, 2023</span>
       
     
   </small>
