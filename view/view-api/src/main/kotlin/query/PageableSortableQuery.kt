@@ -30,12 +30,12 @@ interface PageableSortableQuery {
     }
     sort.forEach {
 
-      val direction = it!!.substring(0, 1)
+      val direction = it.substring(0, 1)
       require(
         direction == ASCENDING.sign
           || direction == DESCENDING.sign
       ) { "Sort must start either with '${ASCENDING.sign}' or '${DESCENDING.sign}' but it was starting with '$direction'" }
-      val parameter = it!!.substring(1)
+      val parameter = it.substring(1)
       require(fieldNames.contains(parameter)) {
         "Sort parameter must be one of ${
           fieldNames.joinToString(", ")

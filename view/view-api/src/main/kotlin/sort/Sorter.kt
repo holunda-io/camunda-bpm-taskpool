@@ -17,7 +17,9 @@ import kotlin.Comparator
  * @return comparator for the sort string.
  */
 internal fun dataComparator(sort: String?): DataEntryComparator? {
-  if (sort.isNullOrBlank()) return null
+  if (sort.isNullOrBlank()) {
+    return null
+  }
   val sortDirection = parse(sort) ?: return null
   val fieldName = if (isDataEntryAttribute(sort.substring(1))) {
     sort.substring(1).substring(DATA_PREFIX.length)
@@ -28,7 +30,6 @@ internal fun dataComparator(sort: String?): DataEntryComparator? {
   return DataEntryComparator(field to sortDirection)
 }
 
-// TODO: why do i need to cast?
 /**
  * Creates a new data entry comparator.
  * @param sort a list of sort strings (like +field or -name)
@@ -44,7 +45,9 @@ fun dataComparator(sort: List<String>): Comparator<DataEntry>? {
  * @return comparator for the sort string.
  */
 internal fun taskComparator(sort: String?): TaskComparator? {
-  if (sort.isNullOrBlank()) return null
+  if (sort.isNullOrBlank()) {
+    return null
+  }
   val sortDirection = parse(sort) ?: return null
   val fieldName = if (isTaskAttribute(sort.substring(1))) {
     sort.substring(1).substring(TASK_PREFIX.length)
@@ -62,7 +65,9 @@ internal fun taskComparator(sort: String?): TaskComparator? {
  * @return comparator for the sort strings.
  */
 fun taskComparator(sort: List<String>): Comparator<Task>? {
-  if (sort.isEmpty()) return null
+  if (sort.isEmpty()) {
+    return null
+  }
   return mapComparator(sort.map { taskComparator(it) })
 }
 
@@ -72,7 +77,9 @@ fun taskComparator(sort: List<String>): Comparator<Task>? {
  * @return comparator for the sort string.
  */
 internal fun taskWithDataEntriesComparator(sort: String?): TasksWithDataEntriesComparator? {
-  if (sort.isNullOrBlank()) return null
+  if (sort.isNullOrBlank()) {
+    return null
+  }
   val sortDirection = parse(sort) ?: return null
   val fieldName = if (isTaskAttribute(sort.substring(1))) {
     sort.substring(1).substring(TASK_PREFIX.length)
@@ -92,7 +99,9 @@ internal fun taskWithDataEntriesComparator(sort: String?): TasksWithDataEntriesC
  * @return comparator for the sort strings.
  */
 fun taskWithDataEntriesComparator(sort: List<String>): Comparator<TaskWithDataEntries>? {
-  if (sort.isEmpty()) return null;
+  if (sort.isEmpty()) {
+    return null
+  };
   return mapComparator(sort.map { taskWithDataEntriesComparator(it) });
 }
 

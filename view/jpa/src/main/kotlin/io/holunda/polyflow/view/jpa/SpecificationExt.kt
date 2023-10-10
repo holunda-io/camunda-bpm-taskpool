@@ -122,8 +122,8 @@ fun PageableSortableQuery.mapTaskSort(): List<String> {
     listOf("-${TaskEntity::createdDate.name}")
   } else {
     sort.map {
-      val direction = it!!.substring(0,1)
-      val field = it!!.substring(1)
+      val direction = it.substring(0,1)
+      val field = it.substring(1)
       when (field) {
         Task::name.name -> TaskEntity::name.name
         Task::description.name -> TaskEntity::description.name
