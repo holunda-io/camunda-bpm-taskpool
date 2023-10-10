@@ -14,9 +14,18 @@ import io.holunda.polyflow.view.query.PageableSortableQuery
 data class AllTasksQuery(
   override val page: Int = 0,
   override val size: Int = Int.MAX_VALUE,
-  override val sort: String? = null,
+  override val sort: List<String> = listOf(),
   override val filters: List<String> = listOf()
 ) : PageableSortableFilteredTaskQuery {
+
+  @Deprecated("Please use other constructor setting sort as List<String>")
+  constructor(page: Int = 0, size: Int = Int.MAX_VALUE, sort: String, filters: List<String> = listOf()): this(
+    page = page,
+    size = size,
+    sort = listOf(sort),
+    filters = filters
+  )
+
   override fun applyFilter(element: Task): Boolean = true
 }
 

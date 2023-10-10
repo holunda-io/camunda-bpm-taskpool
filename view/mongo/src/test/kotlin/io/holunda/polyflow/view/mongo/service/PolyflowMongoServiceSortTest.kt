@@ -9,6 +9,7 @@ class PolyflowMongoServiceSortTest {
 
   @Test
   fun `should be unsorted for null, empty or wrong sort`() {
+    assertThat(sort(listOf())).isEqualTo(Sort.unsorted())
     assertThat(sort(null)).isEqualTo(Sort.unsorted())
     assertThat(sort("")).isEqualTo(Sort.unsorted())
     assertThat(sort("foo")).isEqualTo(Sort.unsorted())
@@ -20,5 +21,13 @@ class PolyflowMongoServiceSortTest {
     assertThat(sort("-bar")).isEqualTo(Sort.by(Sort.Direction.DESC, "bar"))
     assertThat(sort("-b")).isEqualTo(Sort.by(Sort.Direction.DESC, "b"))
   }
+
+  @Test
+  fun `should combine sort`() {
+    assertThat(sort(listOf("+foo", "-bar"))).isEqualTo(Sort.by(Sort.Direction.ASC, "foo").and(Sort.by(Sort.Direction.DESC, "bar")))
+    assertThat(sort(listOf("+foo", ""))).isEqualTo(Sort.by(Sort.Direction.ASC, "foo"))
+    assertThat(sort(listOf("", "foo"))).isEqualTo(Sort.unsorted())
+  }
+
 
 }
