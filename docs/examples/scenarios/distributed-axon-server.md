@@ -52,8 +52,8 @@ packaged application using:
 
 
 ```bash
+java -jar process-platform-jpa/target/*.jar
 java -jar taskpool-application/target/*.jar
-java -jar process-application/target/*.jar
 ```
 
 ## Useful URLs
