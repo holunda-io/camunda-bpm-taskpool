@@ -62,6 +62,7 @@ class ProcessDefinitionServiceITest {
     val startEventId = "start"
     val modelInstance = Bpmn
       .createExecutableProcess(processId)
+      .camundaHistoryTimeToLive(1)
       .startEvent(startEventId)
       .endEvent("end")
       .done().apply {
@@ -93,6 +94,7 @@ class ProcessDefinitionServiceITest {
     val startEventId = "start"
     val modelInstance = Bpmn
       .createExecutableProcess(processId)
+      .camundaHistoryTimeToLive(1)
       .startEvent(startEventId)
       .endEvent("end")
       .done().apply {
