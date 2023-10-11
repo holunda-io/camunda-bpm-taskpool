@@ -1918,12 +1918,8 @@ Both applications are built as SpringBoot applications.</p>
 <p>Before you begin, please build the entire project with <code>mvn clean install</code> from the command line in the project root directory.</p>
 <p>You will need some backing services (Axon Server, PostgreSQL, MongoDB) and you can easily start them locally
 by using the provided <code>docker-compose.yml</code> file.</p>
-<p>Before you start change the directory to <code>examples/scenarios/distributed-axon-server</code> and run a preparation script <code>.docker/setup.sh</code>.
-You can do it with the following code from your command line (you need to do it once):</p>
-<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>examples/scenarios/distributed-axon-server
-.docker/setup.sh
-</code></pre></div>
-<p>Now, start required containers. The easiest way to do so is to run:</p>
+<p>Before you start change the directory to <code>examples/scenarios/distributed-axon-server</code>:
+Now, start required containers. The easiest way to do so is to run:</p>
 <div class="highlight"><pre><span></span><code>docker-compose<span class="w"> </span>up<span class="w"> </span>-d
 </code></pre></div>
 <p>To verify it is running, open your browser <a href="http://localhost:8024/">http://localhost:8024/</a>. You should see
@@ -1937,8 +1933,8 @@ of them in the following order:</p>
 </ol>
 <p>The modules can be started by running from command line in the <code>examples/scenarios/distributed-axon-server</code> directory using Maven or start the
 packaged application using:</p>
-<div class="highlight"><pre><span></span><code>java<span class="w"> </span>-jar<span class="w"> </span>taskpool-application/target/*.jar
-java<span class="w"> </span>-jar<span class="w"> </span>process-application/target/*.jar
+<div class="highlight"><pre><span></span><code>java<span class="w"> </span>-jar<span class="w"> </span>process-platform-jpa/target/*.jar
+java<span class="w"> </span>-jar<span class="w"> </span>taskpool-application/target/*.jar
 </code></pre></div>
 <h2 id="useful-urls">Useful URLs<a class="headerlink" href="#useful-urls" title="Permanent link">#</a></h2>
 <h3 id="process-platform">Process Platform<a class="headerlink" href="#process-platform" title="Permanent link">#</a></h3>
@@ -1958,7 +1954,7 @@ java<span class="w"> </span>-jar<span class="w"> </span>process-application/targ
   <small>
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">September 22, 2023</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">October 11, 2023</span>
       
     
   </small>

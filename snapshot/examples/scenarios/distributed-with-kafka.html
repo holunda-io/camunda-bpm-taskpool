@@ -1730,6 +1730,54 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#system-requirements" class="md-nav__link">
+    System Requirements
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#preparations" class="md-nav__link">
+    Preparations
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#start" class="md-nav__link">
+    Start
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#useful-urls" class="md-nav__link">
+    Useful URLs
+  </a>
+  
+    <nav class="md-nav" aria-label="Useful URLs">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#process-platform" class="md-nav__link">
+    Process Platform
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#process-application" class="md-nav__link">
+    Process Application
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1885,13 +1933,48 @@ persistence of the query model.</p>
 <p><img alt="Process Application to Kafka Messaging" src="../../img/scenario_process_application_to_kafka_detail.png" /></p>
 <h4 id="from-kafka-to-tasklist-api">From Kafka to Tasklist API<a class="headerlink" href="#from-kafka-to-tasklist-api" title="Permanent link">#</a></h4>
 <p><img alt="Kafka to Tasklist API Messaging" src="../../img/scenario_kafka_to_tasklist_detail.png" /></p>
+<h3 id="system-requirements">System Requirements<a class="headerlink" href="#system-requirements" title="Permanent link">#</a></h3>
+<ul>
+<li>JDK 11</li>
+<li>Docker</li>
+<li>Docker Compose</li>
+</ul>
+<h3 id="preparations">Preparations<a class="headerlink" href="#preparations" title="Permanent link">#</a></h3>
+<p>Before you begin, please build the entire project with <code>mvn clean install</code> from the command line in the project root directory.</p>
+<p>You will need some backing services (Kafka, PostgreSQL) and you can easily start them locally
+by using the provided <code>docker-compose.yml</code> file.</p>
+<p>Before you start change the directory to <code>examples/scenarios/distributed-kafka</code> and start required containers. The easiest way to do so is to run:</p>
+<div class="highlight"><pre><span></span><code>docker-compose<span class="w"> </span>up<span class="w"> </span>-d
+</code></pre></div>
+<h3 id="start">Start<a class="headerlink" href="#start" title="Permanent link">#</a></h3>
+<p>The demo application consists of several Maven modules. In order to start the example, you will need to start only two
+of them in the following order:</p>
+<ol>
+<li>taskpool-application (process platform)</li>
+<li>process-application (example process application)</li>
+</ol>
+<p>The modules can be started by running from command line in the <code>examples/scenarios/distributed-kafka</code> directory using Maven or start the
+packaged application using:</p>
+<div class="highlight"><pre><span></span><code>java<span class="w"> </span>-jar<span class="w"> </span>process-application-local-polyflow/target/*.jar
+java<span class="w"> </span>-jar<span class="w"> </span>process-platform-view-only/target/*.jar
+</code></pre></div>
+<h2 id="useful-urls">Useful URLs<a class="headerlink" href="#useful-urls" title="Permanent link">#</a></h2>
+<h3 id="process-platform">Process Platform<a class="headerlink" href="#process-platform" title="Permanent link">#</a></h3>
+<ul>
+<li><a href="http://localhost:8081/polyflow/tasks">http://localhost:8081/polyflow/tasks</a></li>
+<li><a href="http://localhost:8081/polyflow/archive">http://localhost:8081/polyflow/archive</a></li>
+</ul>
+<h3 id="process-application">Process Application<a class="headerlink" href="#process-application" title="Permanent link">#</a></h3>
+<ul>
+<li><a href="http://localhost:8080/camunda/app/">http://localhost:8080/camunda/app/</a></li>
+</ul>
 
   <hr>
 <div class="md-source-file">
   <small>
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">September 22, 2023</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">October 11, 2023</span>
       
     
   </small>
