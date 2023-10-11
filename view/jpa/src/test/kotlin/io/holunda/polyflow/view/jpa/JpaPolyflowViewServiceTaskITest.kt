@@ -299,12 +299,13 @@ internal class JpaPolyflowViewServiceTaskITest {
       sort = listOf()
     ))
 
-    val sortWithSortNutSuppliedQuery = jpaPolyflowViewService.query(AllTasksWithDataEntriesQuery())
+    val sortWithSortNotSuppliedQuery = jpaPolyflowViewService.query(AllTasksWithDataEntriesQuery())
 
-    assertThat(sortWithEmptyStringQuery.elements).isEqualTo(sortWithSortNutSuppliedQuery.elements)
-    assertThat(sortWithSortNutSuppliedQuery.elements).isEqualTo(sortWithEmptyListQuery.elements)
-    assertThat(sortWithEmptyListQuery.elements).isEqualTo(sortWithEmptyStringQuery.elements)
-    assertThat(sortWithSortNutSuppliedQuery.elements).isEqualTo(sortWithEmptyStringQuery.elements)
+
+    assertThat(sortWithNullQuery.elements).isEqualTo(sortWithEmptyStringQuery.elements)
+    assertThat(sortWithEmptyStringQuery.elements).isEqualTo(sortWithEmptyListQuery.elements)
+    assertThat(sortWithEmptyListQuery.elements).isEqualTo(sortWithSortNotSuppliedQuery.elements)
+    assertThat(sortWithSortNotSuppliedQuery.elements).isEqualTo(sortWithNullQuery.elements)
   }
 
   @Test

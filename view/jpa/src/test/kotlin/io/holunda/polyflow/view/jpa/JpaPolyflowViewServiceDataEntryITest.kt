@@ -313,6 +313,7 @@ internal class JpaPolyflowViewServiceDataEntryITest {
     assertThat(result.payload.elements.map { it.entryId }).containsExactly(id2, id, id4)
   }
 
+  @Suppress("DEPRECATION")
   @Test
   fun `sort should be backwards compatible`() {
 
