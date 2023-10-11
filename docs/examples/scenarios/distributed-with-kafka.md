@@ -29,3 +29,48 @@ persistence of the query model.
 #### From Kafka to Tasklist API
 
 ![Kafka to Tasklist API Messaging](../../img/scenario_kafka_to_tasklist_detail.png)
+
+### System Requirements
+
+* JDK 11
+* Docker
+* Docker Compose
+
+### Preparations
+
+Before you begin, please build the entire project with `mvn clean install` from the command line in the project root directory.
+
+You will need some backing services (Kafka, PostgreSQL) and you can easily start them locally
+by using the provided `docker-compose.yml` file.
+
+Before you start change the directory to `examples/scenarios/distributed-kafka` and start required containers. The easiest way to do so is to run:
+
+```bash
+docker-compose up -d
+```
+
+### Start
+
+The demo application consists of several Maven modules. In order to start the example, you will need to start only two
+of them in the following order:
+
+1. taskpool-application (process platform)
+2. process-application (example process application)
+
+The modules can be started by running from command line in the `examples/scenarios/distributed-kafka` directory using Maven or start the
+packaged application using:
+
+
+```bash
+java -jar process-application-local-polyflow/target/*.jar
+java -jar process-platform-view-only/target/*.jar
+```
+
+## Useful URLs
+
+### Process Platform
+* [http://localhost:8081/polyflow/tasks](http://localhost:8081/polyflow/tasks)
+* [http://localhost:8081/polyflow/archive](http://localhost:8081/polyflow/archive)
+
+### Process Application
+* [http://localhost:8080/camunda/app/](http://localhost:8080/camunda/app/)
