@@ -19,6 +19,24 @@ internal class PageableSortableQueryTest {
   private val badOrdering = listOf("*createTime")
   private val user = User(username = "kermit", groups = setOf())
 
+
+  @Test
+  fun should_sanitize_blank_sort() {
+
+    class TestQuery(
+      override val page: Int,
+      override val size: Int,
+      override val sort: List<String>,
+    ) : PageableSortableQuery
+
+    assertThat(assertThrows<IllegalArgumentException> { TestQuery(1, 1, listOf("")).sanitizeSort(Task::class) }.message).isEqualTo("Sort parameter must not be blank")
+    assertThat(assertThrows<IllegalArgumentException> { TestQuery(1, 1, listOf("\t")).sanitizeSort(Task::class) }.message).isEqualTo("Sort parameter must not be blank")
+    assertThat(assertThrows<IllegalArgumentException> { TestQuery(1, 1, listOf("\t\r\n")).sanitizeSort(Task::class) }.message).isEqualTo("Sort parameter must not be blank")
+    assertThat(assertThrows<IllegalArgumentException> { TestQuery(1, 1, listOf("  \t")).sanitizeSort(Task::class) }.message).isEqualTo("Sort parameter must not be blank")
+    assertThat(assertThrows<IllegalArgumentException> { TestQuery(1, 1, listOf("  \n")).sanitizeSort(Task::class) }.message).isEqualTo("Sort parameter must not be blank")
+  }
+
+
   @Test
   fun should_sanitize_task_query() {
     assertThat(AllTasksQuery(sort = createTimeAsc).apply { sanitizeSort(Task::class) }.sort).isEqualTo(createTimeAsc)

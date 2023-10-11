@@ -284,6 +284,30 @@ internal class JpaPolyflowViewServiceTaskITest {
     assertThat(strawhatsInverse.elements.map { it.task.id }).containsExactly(id4, id3)
   }
 
+  @Suppress("DEPRECATION")
+  @Test
+  fun `should sort with empty string, null or empty list correctly`() {
+    val sortWithNullQuery = jpaPolyflowViewService.query(AllTasksWithDataEntriesQuery(
+      sort = null
+    ))
+
+    val sortWithEmptyStringQuery =jpaPolyflowViewService.query(AllTasksWithDataEntriesQuery(
+      sort = ""
+    ))
+
+    val sortWithEmptyListQuery =jpaPolyflowViewService.query(AllTasksWithDataEntriesQuery(
+      sort = listOf()
+    ))
+
+    val sortWithSortNotSuppliedQuery = jpaPolyflowViewService.query(AllTasksWithDataEntriesQuery())
+
+
+    assertThat(sortWithNullQuery.elements).isEqualTo(sortWithEmptyStringQuery.elements)
+    assertThat(sortWithEmptyStringQuery.elements).isEqualTo(sortWithEmptyListQuery.elements)
+    assertThat(sortWithEmptyListQuery.elements).isEqualTo(sortWithSortNotSuppliedQuery.elements)
+    assertThat(sortWithSortNotSuppliedQuery.elements).isEqualTo(sortWithNullQuery.elements)
+  }
+
   @Test
   fun `should find the task with data entries and sort by multiple correctly`() {
     val query = jpaPolyflowViewService.query(AllTasksWithDataEntriesQuery(
@@ -323,6 +347,12 @@ internal class JpaPolyflowViewServiceTaskITest {
         assignedToMeOnly = false
       ))
     }.message).isEqualTo("Sort must start either with '+' or '-' but it was starting with '*'")
+
+    assertThat(assertThrows<IllegalArgumentException> {
+      jpaPolyflowViewService.query(AllTasksWithDataEntriesQuery(
+        sort = listOf("")
+      ))
+    }.message).isEqualTo("Sort parameter must not be blank")
 
   }
 
