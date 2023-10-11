@@ -19,11 +19,15 @@ data class DataEntriesForDataEntryTypeQuery(
 ) : FilterQuery<DataEntry>, PageableSortableQuery {
 
   @Deprecated("Please use other constructor setting sort as List<String>")
-  constructor(entryType: EntryType, page: Int = 0, size: Int = Int.MAX_VALUE, sort: String): this(
+  constructor(entryType: EntryType, page: Int = 0, size: Int = Int.MAX_VALUE, sort: String?) : this(
     entryType = entryType,
     page = page,
     size = size,
-    sort = listOf(sort),
+    sort = if (sort.isNullOrBlank()) {
+      listOf()
+    } else {
+      listOf(sort)
+    },
   )
 
   override fun applyFilter(element: DataEntry) = element.entryType == this.entryType
