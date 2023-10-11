@@ -28,8 +28,9 @@ interface PageableSortableQuery {
     if (sort.isEmpty()) {
       return
     }
-    sort.forEach {
 
+    sort.forEach {
+      require(it.isNotBlank()) { "Sort parameter can not be blank" }
       val direction = it.substring(0, 1)
       require(
         direction == ASCENDING.sign
@@ -43,5 +44,6 @@ interface PageableSortableQuery {
       }
     }
   }
+
 
 }
