@@ -25,11 +25,16 @@ data class TasksWithDataEntriesForGroupQuery(
 
   @Deprecated("Please use other constructor setting sort as List<String>")
   constructor(user: User, includeAssigned: Boolean = false, page: Int = 0, size: Int = Int.MAX_VALUE, sort: String?, filters: List<String> = listOf()) : this(
-    user = user, includeAssigned = includeAssigned, page = page, size = size, sort = if (sort.isNullOrBlank()) {
-    listOf()
-  } else {
-    listOf(sort)
-  }, filters = filters
+    user = user,
+    includeAssigned = includeAssigned,
+    page = page,
+    size = size,
+    sort = if (sort.isNullOrBlank()) {
+      listOf()
+    } else {
+      listOf(sort)
+    },
+    filters = filters
   )
 
   override fun applyFilter(element: TaskWithDataEntries): Boolean =

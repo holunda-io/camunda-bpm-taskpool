@@ -284,6 +284,7 @@ internal class JpaPolyflowViewServiceTaskITest {
     assertThat(strawhatsInverse.elements.map { it.task.id }).containsExactly(id4, id3)
   }
 
+  @Suppress("DEPRECATION")
   @Test
   fun `should sort with empty string, null or empty list correctly`() {
     val sortWithNullQuery = jpaPolyflowViewService.query(AllTasksWithDataEntriesQuery(
@@ -350,7 +351,7 @@ internal class JpaPolyflowViewServiceTaskITest {
       jpaPolyflowViewService.query(AllTasksWithDataEntriesQuery(
         sort = listOf("")
       ))
-    }.message).isEqualTo("Sort parameter can not be blank")
+    }.message).isEqualTo("Sort parameter must not be blank")
 
   }
 
