@@ -22,12 +22,16 @@ data class TasksForUserQuery(
 ) : PageableSortableFilteredTaskQuery {
 
   @Deprecated("Please use other constructor setting sort as List<String>")
-  constructor(user: User, assignedToMeOnly: Boolean = false, page: Int = 0, size: Int = Int.MAX_VALUE, sort: String, filters: List<String> = listOf()): this(
+  constructor(user: User, assignedToMeOnly: Boolean = false, page: Int = 0, size: Int = Int.MAX_VALUE, sort: String?, filters: List<String> = listOf()): this(
     user = user,
     assignedToMeOnly = assignedToMeOnly,
     page = page,
     size = size,
-    sort = if (sort.isBlank()) listOf() else listOf(sort),
+    sort = if (sort.isNullOrBlank()) {
+      listOf()
+    } else {
+      listOf(sort)
+    },
     filters = filters
   )
 
@@ -40,7 +44,11 @@ data class TasksForUserQuery(
     assignedToMeOnly = false,
     page = page,
     size = size,
-    sort = if (sort.isNullOrBlank()) listOf() else listOf(sort),
+    sort = if (sort.isNullOrBlank()) {
+      listOf()
+    } else {
+      listOf(sort)
+    },
     filters = filters
   )
 
