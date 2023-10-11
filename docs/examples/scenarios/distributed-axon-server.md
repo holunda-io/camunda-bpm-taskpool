@@ -29,17 +29,8 @@ Before you begin, please build the entire project with `mvn clean install` from 
 You will need some backing services (Axon Server, PostgreSQL, MongoDB) and you can easily start them locally
 by using the provided `docker-compose.yml` file.
 
-Before you start change the directory to `examples/scenarios/distributed-axon-server` and run a preparation script `.docker/setup.sh`.
-You can do it with the following code from your command line (you need to do it once):
-
-
-```bash
-cd examples/scenarios/distributed-axon-server
-.docker/setup.sh
-```
-
+Before you start change the directory to `examples/scenarios/distributed-axon-server`:
 Now, start required containers. The easiest way to do so is to run:
-
 
 ```bash
 docker-compose up -d
@@ -61,8 +52,8 @@ packaged application using:
 
 
 ```bash
+java -jar process-platform-jpa/target/*.jar
 java -jar taskpool-application/target/*.jar
-java -jar process-application/target/*.jar
 ```
 
 ## Useful URLs
