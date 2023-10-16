@@ -5,7 +5,7 @@
 
   <groupId>io.holunda.polyflow</groupId>
   <artifactId>polyflow-root</artifactId>
-  <version>3.19.2-SNAPSHOT</version>
+  <version>4.0.0-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>POM: ${project.artifactId}</name>
@@ -16,8 +16,7 @@
 
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <java.version>11</java.version>
-    <version.java>${java.version}</version.java>
+    <java.version>17</java.version>
     <version.java>${java.version}</version.java>
 
     <kotlin.version>1.9.10</kotlin.version>
@@ -92,7 +91,7 @@
                   <version>3.6.0</version>
                 </requireMavenVersion>
                 <requireJavaVersion>
-                  <version>11</version>
+                  <version>17</version>
                 </requireJavaVersion>
               </rules>
             </configuration>
@@ -234,6 +233,8 @@
     <developer>
       <id>lbilger</id>
       <name>Lars Bilger</name>
+      <organization>Lufthansa Technik AG</organization>
+      <organizationUrl>https://www.lufthansa-technik.com</organizationUrl>
     </developer>
     <developer>
       <id>a-hegerath</id>

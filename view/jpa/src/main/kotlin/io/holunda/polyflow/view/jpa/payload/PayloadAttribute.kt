@@ -1,8 +1,8 @@
 package io.holunda.polyflow.view.jpa.payload
 
+import jakarta.persistence.Column
+import jakarta.persistence.Embeddable
 import java.io.Serializable
-import javax.persistence.Column
-import javax.persistence.Embeddable
 
 /**
  * Represents a searchable payload attribute consisting of the (JSON)-path pf the attribute and its value.

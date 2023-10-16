@@ -30,7 +30,6 @@ import org.axonframework.queryhandling.QueryUpdateEmitter
 import org.springframework.data.domain.Page
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Component
-import java.util.*
 
 /**
  * Implementation of the Polyflow Data Entry View API using JPA to create the persistence model.
@@ -80,11 +79,7 @@ class JpaPolyflowViewDataEntryService(
     val specification = criteria.toDataEntrySpecification()
     val pageRequest = pageRequest(query.page, query.size, query.sort)
 
-    val page = if (specification != null) {
-      dataEntryRepository.findAll(specification.and(isAuthorizedFor(authorizedPrincipals)), pageRequest)
-    } else {
-      dataEntryRepository.findAll(isAuthorizedFor(authorizedPrincipals), pageRequest)
-    }
+    val page = dataEntryRepository.findAll(specification.and(isAuthorizedFor(authorizedPrincipals)), pageRequest)
     return constructDataEntryResponse(page)
   }
 
@@ -95,11 +90,7 @@ class JpaPolyflowViewDataEntryService(
     val specification = criteria.toDataEntrySpecification()
     val pageRequest = pageRequest(query.page, query.size, query.sort)
 
-    val page = if (specification != null) {
-      dataEntryRepository.findAll(specification, pageRequest)
-    } else {
-      dataEntryRepository.findAll(null, pageRequest)
-    }
+    val page = dataEntryRepository.findAll(specification, pageRequest)
     return constructDataEntryResponse(page)
   }
 

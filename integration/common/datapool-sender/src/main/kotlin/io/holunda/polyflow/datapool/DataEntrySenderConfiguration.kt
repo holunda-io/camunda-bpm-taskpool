@@ -5,18 +5,20 @@ import io.holunda.polyflow.bus.jackson.config.FallbackPayloadObjectMapperAutoCon
 import io.holunda.polyflow.datapool.projector.DataEntryProjectionSupplier
 import io.holunda.polyflow.datapool.projector.DataEntryProjector
 import io.holunda.polyflow.datapool.sender.*
+import io.holunda.polyflow.spring.ApplicationNameBeanPostProcessor
 import org.axonframework.commandhandling.gateway.CommandGateway
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.Import
 
 /**
  * Polyflow sender configuration.
  */
 @EnableConfigurationProperties(DataEntrySenderProperties::class)
+@Import(ApplicationNameBeanPostProcessor::class)
 class DataEntrySenderConfiguration(
   val properties: DataEntrySenderProperties
 ) {
@@ -63,6 +65,7 @@ class DataEntrySenderConfiguration(
         errorHandler = dataEntryCommandErrorHandler,
         objectMapper = objectMapper
       )
+
       else -> throw IllegalStateException("Could not initialize sender, used unknown ${properties.type} type.")
     }
   }

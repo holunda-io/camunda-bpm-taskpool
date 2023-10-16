@@ -46,6 +46,7 @@ class TestDriver(
       otherTaskDefinitionKey: String = "another-user-task"
     ): BpmnModelInstance = Bpmn
       .createExecutableProcess(processId)
+      .camundaHistoryTimeToLive(1)
       // start event
       .startEvent("start").camundaAsyncAfter(asyncOnStart)
       // user task

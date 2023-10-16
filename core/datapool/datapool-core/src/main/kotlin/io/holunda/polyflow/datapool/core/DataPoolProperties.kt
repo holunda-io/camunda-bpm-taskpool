@@ -2,12 +2,10 @@ package io.holunda.polyflow.datapool.core
 
 import org.axonframework.eventsourcing.EventSourcingRepository
 import org.springframework.boot.context.properties.ConfigurationProperties
-import org.springframework.boot.context.properties.ConstructorBinding
 
 /**
  * Properties effecting data pool command model.
  */
-@ConstructorBinding
 @ConfigurationProperties(prefix = "polyflow.core.data-entry")
 data class DataPoolProperties(
   /**

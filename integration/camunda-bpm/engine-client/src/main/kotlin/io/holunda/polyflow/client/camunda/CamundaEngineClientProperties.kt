@@ -1,8 +1,7 @@
 package io.holunda.polyflow.client.camunda
 
-import org.springframework.beans.factory.annotation.Value
+import io.holunda.polyflow.spring.ApplicationNameBeanPostProcessor.Companion.UNSET_APPLICATION_NAME
 import org.springframework.boot.context.properties.ConfigurationProperties
-import org.springframework.boot.context.properties.ConstructorBinding
 
 /**
  * Properties to configure Camunda to receive interaction commands via Axon.
@@ -14,7 +13,6 @@ data class CamundaEngineClientProperties(
    * Denotes the (logical) name of the process application.
    * As Default, spring.application.name will be used
    */
-  @Value("\${spring.application.name}")
-  var applicationName: String
+  // The default is set by ApplicationNameBeanPostProcessor
+  var applicationName: String = UNSET_APPLICATION_NAME
 )
-

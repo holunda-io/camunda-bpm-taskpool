@@ -1,3 +1,0 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  io.holunda.polyflow.taskpool.collector.FallbackProcessVariablesCorrelatorConfiguration,\
-  io.holunda.polyflow.taskpool.collector.FallbackProcessVariablesFilterConfiguration
