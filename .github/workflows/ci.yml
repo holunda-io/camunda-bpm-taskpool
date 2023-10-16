@@ -3,10 +3,10 @@ name: CI for special branches
 on:
   push:
     branches:
+      - '**'
       - '!master'
       - '!develop'
       - '!snapshot-producer'
-      - '**'
 
 jobs:
   build:
