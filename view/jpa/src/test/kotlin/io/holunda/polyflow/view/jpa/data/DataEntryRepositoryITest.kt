@@ -11,6 +11,8 @@ import io.holunda.polyflow.view.jpa.data.DataEntryRepository.Companion.hasState
 import io.holunda.polyflow.view.jpa.data.DataEntryRepository.Companion.isAuthorizedFor
 import io.holunda.polyflow.view.jpa.itest.TestApplication
 import io.holunda.polyflow.view.jpa.payload.PayloadAttribute
+import jakarta.persistence.EntityManager
+import jakarta.transaction.Transactional
 import org.assertj.core.api.Assertions.assertThat
 import org.camunda.bpm.engine.variable.Variables.createVariables
 import org.junit.jupiter.api.AfterEach
@@ -26,8 +28,6 @@ import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.ContextConfiguration
 import java.time.Instant
 import java.util.*
-import javax.persistence.EntityManager
-import javax.transaction.Transactional
 
 @DataJpaTest(showSql = false)
 @Transactional

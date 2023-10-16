@@ -3,20 +3,14 @@ name: CI for special branches
 on:
   push:
     branches:
+      - '**'
       - '!master'
       - '!develop'
-      - '!release/*'
-      - 'dependabot/**'
-      - 'feature/**'
-      - 'bugfix/**'
+      - '!snapshot-producer'
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        jdk: ['11.0.5']
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -25,7 +19,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           distribution: 'zulu'
-          java-version: ${{ matrix.jdk }}
+          java-version: 17
           cache: maven
 
       - name: Prepare Maven Wrapper
@@ -44,3 +38,9 @@ jobs:
         uses: codecov/codecov-action@v3
         with:
           token: "${{ secrets.CODECOV_TOKEN }}"
+
+      - name: Upload test coverage to Codacy
+        if: github.event_name == 'push' && github.actor != 'dependabot[bot]'
+        run: bash <(curl -Ls https://coverage.codacy.com/get.sh)
+        env:
+          CODACY_PROJECT_TOKEN: "${{secrets.CODACY_PROJECT_TOKEN}}"

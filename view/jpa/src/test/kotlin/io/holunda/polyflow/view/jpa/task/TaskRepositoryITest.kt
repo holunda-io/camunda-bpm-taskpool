@@ -26,6 +26,7 @@ import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.likeDescriptio
 import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.likeName
 import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.likeProcessName
 import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.likeTextSearch
+import jakarta.persistence.EntityManager
 import org.assertj.core.api.Assertions.assertThat
 import org.camunda.bpm.engine.variable.Variables.createVariables
 import org.junit.jupiter.api.AfterEach
@@ -39,7 +40,6 @@ import org.springframework.test.context.ContextConfiguration
 import java.time.LocalDate
 import java.time.ZoneOffset
 import java.util.*
-import javax.persistence.EntityManager
 
 @DataJpaTest(showSql = false)
 @ContextConfiguration(classes = [TestApplicationDataJpa::class])
@@ -223,6 +223,7 @@ class TaskRepositoryITest {
     assertThat(result).hasSize(1)
     assertThat(result).containsExactlyInAnyOrder(task2)
   }
+
   @Test
   fun `should find by follow-up date`() {
     val result = taskRepository.findAll(hasFollowUpDate(dayAfterTomorrow))

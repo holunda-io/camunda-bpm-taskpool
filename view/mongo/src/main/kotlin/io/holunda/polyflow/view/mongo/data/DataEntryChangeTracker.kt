@@ -4,6 +4,8 @@ import com.mongodb.MongoCommandException
 import io.holunda.polyflow.view.DataEntry
 import io.holunda.polyflow.view.mongo.TaskPoolMongoViewProperties
 import io.holunda.polyflow.view.mongo.util.CronTriggerWithJitter
+import jakarta.annotation.PostConstruct
+import jakarta.annotation.PreDestroy
 import mu.KLogging
 import org.bson.BsonValue
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
@@ -21,8 +23,6 @@ import java.time.Duration
 import java.time.Instant
 import java.util.concurrent.TimeUnit
 import java.util.logging.Level
-import javax.annotation.PostConstruct
-import javax.annotation.PreDestroy
 
 /**
  * Tracks changes of data entries. Also makes sure that data entries marked as deleted are 'really' deleted shortly after.

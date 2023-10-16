@@ -6,7 +6,7 @@
   <parent>
     <groupId>io.holunda.polyflow</groupId>
     <artifactId>polyflow-view-parent</artifactId>
-    <version>3.19.1</version>
+    <version>4.0.0</version>
   </parent>
 
   <artifactId>polyflow-view-mongo</artifactId>
@@ -50,7 +50,8 @@
     </dependency>
     <dependency>
       <groupId>de.flapdoodle.embed</groupId>
-      <artifactId>de.flapdoodle.embed.mongo</artifactId>
+      <artifactId>de.flapdoodle.embed.mongo.spring30x</artifactId>
+      <version>4.9.2</version>
       <scope>test</scope>
     </dependency>
     <dependency>

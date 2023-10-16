@@ -73,30 +73,17 @@ class JpaPolyflowViewTaskService(
       )
     }
 
-    val page = if (taskSpecification != null) {
-      taskRepository.findAll(taskSpecification.and(userQuery), pageRequest)
-    } else {
-      taskRepository.findAll(userQuery, pageRequest)
-    }
+    val page = taskRepository.findAll(taskSpecification.and(userQuery), pageRequest)
       .map { taskEntity ->
         TaskWithDataEntries(
           task = taskEntity.toTask(objectMapper),
           dataEntries = taskEntity.correlations.map { id ->
-            if (dataEntrySpecification != null) {
-              dataEntryRepository.findAll(
-                dataEntrySpecification
-                  .and(DataEntryRepository.isAuthorizedFor(authorizedPrincipals))
-                  .and(DataEntryRepository.hasEntryId(id.entryId))
-                  .and(DataEntryRepository.hasEntryType(id.entryType))
-              )
-            } else {
-              dataEntryRepository.findAll(
-                DataEntryRepository
-                  .isAuthorizedFor(authorizedPrincipals)
-                  .and(DataEntryRepository.hasEntryId(id.entryId))
-                  .and(DataEntryRepository.hasEntryType(id.entryType))
-              )
-            }
+            dataEntryRepository.findAll(
+              dataEntrySpecification
+                .and(DataEntryRepository.isAuthorizedFor(authorizedPrincipals))
+                .and(DataEntryRepository.hasEntryId(id.entryId))
+                .and(DataEntryRepository.hasEntryType(id.entryType))
+            )
           }.flatten().map { it.toDataEntry(objectMapper) }
         )
       }
@@ -124,29 +111,17 @@ class JpaPolyflowViewTaskService(
     }.mapTaskSort()
     val pageRequest = pageRequest(query.page, query.size, sort)
 
-    val page = if (taskSpecification != null) {
-      taskRepository.findAll(taskSpecification.and(taskAuthorizationSpecification), pageRequest)
-    } else {
-      taskRepository.findAll(taskAuthorizationSpecification, pageRequest)
-    }
+    val page = taskRepository.findAll(taskSpecification.and(taskAuthorizationSpecification), pageRequest)
       .map { taskEntity ->
         TaskWithDataEntries(
           task = taskEntity.toTask(objectMapper),
           dataEntries = taskEntity.correlations.map { id ->
-            if (dataEntrySpecification != null) {
-              dataEntryRepository.findAll(
-                dataEntrySpecification
-                  .and(dataAuthorizationSpecification)
-                  .and(DataEntryRepository.hasEntryId(id.entryId))
-                  .and(DataEntryRepository.hasEntryType(id.entryType))
-              )
-            } else {
-              dataEntryRepository.findAll(
-                dataAuthorizationSpecification
-                  .and(DataEntryRepository.hasEntryId(id.entryId))
-                  .and(DataEntryRepository.hasEntryType(id.entryType))
-              )
-            }
+            dataEntryRepository.findAll(
+              dataEntrySpecification
+                .and(dataAuthorizationSpecification)
+                .and(DataEntryRepository.hasEntryId(id.entryId))
+                .and(DataEntryRepository.hasEntryType(id.entryType))
+            )
           }.flatten().map { it.toDataEntry(objectMapper) }
         )
       }
@@ -166,27 +141,15 @@ class JpaPolyflowViewTaskService(
     }.mapTaskSort()
     val pageRequest = pageRequest(query.page, query.size, sort)
 
-    val page = if (taskSpecification != null) {
-      taskRepository.findAll(taskSpecification, pageRequest)
-    } else {
-      taskRepository.findAll(null, pageRequest)
-    }.map { taskEntity ->
+    val page = taskRepository.findAll(taskSpecification, pageRequest).map { taskEntity ->
       TaskWithDataEntries(
         task = taskEntity.toTask(objectMapper),
         dataEntries = taskEntity.correlations.map { id ->
-          if (dataEntrySpecification != null) {
-            dataEntryRepository.findAll(
-              dataEntrySpecification
-                .and(DataEntryRepository.hasEntryId(id.entryId))
-                .and(DataEntryRepository.hasEntryType(id.entryType))
-            )
-          } else {
-            dataEntryRepository.findAll(
-              DataEntryRepository
-                .hasEntryId(id.entryId)
-                .and(DataEntryRepository.hasEntryType(id.entryType))
-            )
-          }
+          dataEntryRepository.findAll(
+            dataEntrySpecification
+              .and(DataEntryRepository.hasEntryId(id.entryId))
+              .and(DataEntryRepository.hasEntryType(id.entryType))
+          )
         }.flatten().map { it.toDataEntry(objectMapper) }
       )
     }
@@ -216,11 +179,7 @@ class JpaPolyflowViewTaskService(
       )
     }
 
-    val page = if (specification != null) {
-      taskRepository.findAll(specification.and(userQuery), pageRequest)
-    } else {
-      taskRepository.findAll(userQuery, pageRequest)
-    }.map { taskEntity -> taskEntity.toTask(objectMapper) }
+    val page = taskRepository.findAll(specification.and(userQuery), pageRequest).map { taskEntity -> taskEntity.toTask(objectMapper) }
 
     return TaskQueryResult(
       elements = page.toList(),
@@ -242,11 +201,7 @@ class JpaPolyflowViewTaskService(
     }.mapTaskSort()
     val pageRequest = pageRequest(query.page, query.size, sort)
 
-    val page = if (taskSpecification != null) {
-      taskRepository.findAll(taskSpecification.and(authorizationSpecification), pageRequest)
-    } else {
-      taskRepository.findAll(authorizationSpecification, pageRequest)
-    }.map { taskEntity -> taskEntity.toTask(objectMapper) }
+    val page = taskRepository.findAll(taskSpecification.and(authorizationSpecification), pageRequest).map { taskEntity -> taskEntity.toTask(objectMapper) }
 
     return TaskQueryResult(
       elements = page.toList(),
@@ -273,11 +228,7 @@ class JpaPolyflowViewTaskService(
     }.mapTaskSort()
     val pageRequest = pageRequest(query.page, query.size, sort)
 
-    val page = if (taskSpecification != null) {
-      taskRepository.findAll(taskSpecification.and(authorizationSpecification), pageRequest)
-    } else {
-      taskRepository.findAll(authorizationSpecification, pageRequest)
-    }.map { taskEntity -> taskEntity.toTask(objectMapper) }
+    val page = taskRepository.findAll(taskSpecification.and(authorizationSpecification), pageRequest).map { taskEntity -> taskEntity.toTask(objectMapper) }
 
     return TaskQueryResult(
       elements = page.toList(),
@@ -292,11 +243,7 @@ class JpaPolyflowViewTaskService(
       sanitizeSort(Task::class)
     }.mapTaskSort()
     val pageRequest = pageRequest(query.page, query.size, sort)
-    val page = if (specification != null) {
-      taskRepository.findAll(specification, pageRequest)
-    } else {
-      taskRepository.findAll(null, pageRequest)
-    }.map { taskEntity -> taskEntity.toTask(objectMapper) }
+    val page = taskRepository.findAll(specification, pageRequest).map { taskEntity -> taskEntity.toTask(objectMapper) }
 
     return TaskQueryResult(
       elements = page.toList(),

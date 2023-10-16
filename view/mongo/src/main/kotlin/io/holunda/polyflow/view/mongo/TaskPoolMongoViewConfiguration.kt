@@ -1,6 +1,7 @@
 package io.holunda.polyflow.view.mongo
 
 import io.holunda.polyflow.view.mongo.task.TaskDocument
+import jakarta.annotation.PostConstruct
 import mu.KLogging
 import org.axonframework.eventhandling.tokenstore.TokenStore
 import org.axonframework.extensions.mongo.DefaultMongoTemplate
@@ -18,7 +19,6 @@ import org.springframework.data.mongodb.MongoDatabaseFactory
 import org.springframework.data.mongodb.core.convert.MappingMongoConverter
 import org.springframework.data.mongodb.repository.config.EnableReactiveMongoRepositories
 import java.time.Clock
-import javax.annotation.PostConstruct
 
 /**
  * Main configuration of the Mongo-DB based view.

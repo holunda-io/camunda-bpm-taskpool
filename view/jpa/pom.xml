@@ -6,7 +6,7 @@
   <parent>
     <groupId>io.holunda.polyflow</groupId>
     <artifactId>polyflow-view-parent</artifactId>
-    <version>3.19.1</version>
+    <version>4.0.0</version>
   </parent>
 
   <artifactId>polyflow-view-jpa</artifactId>
@@ -118,9 +118,9 @@
         <groupId>org.jetbrains.kotlin</groupId>
         <configuration>
           <pluginOptions>
-            <option>all-open:annotation=javax.persistence.Entity</option>
-            <option>all-open:annotation=javax.persistence.Embeddable</option>
-            <option>all-open:annotation=javax.persistence.MappedSuperclass</option>
+            <option>all-open:annotation=jakarta.persistence.Entity</option>
+            <option>all-open:annotation=jakarta.persistence.Embeddable</option>
+            <option>all-open:annotation=jakarta.persistence.MappedSuperclass</option>
           </pluginOptions>
         </configuration>
       </plugin>

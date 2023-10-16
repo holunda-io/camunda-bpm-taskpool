@@ -40,33 +40,23 @@ import java.time.Instant
 /**
  * Creates a JPQL specification out of predicate wrapper.
  */
-fun List<Criterion>.toDataEntrySpecification(): Specification<DataEntryEntity>? {
+fun List<Criterion>.toDataEntrySpecification(): Specification<DataEntryEntity> {
 
   val attributeSpec = toDataEntryAttributeSpecification()
   val payloadSpec = toDataEntryPayloadSpecification()
 
-  return when {
-    attributeSpec != null && payloadSpec != null -> where(attributeSpec).and(payloadSpec)
-    attributeSpec != null -> attributeSpec
-    payloadSpec != null -> payloadSpec
-    else -> null
-  }
+  return where(attributeSpec).and(payloadSpec)
 }
 
 /**
  * Creates a JPQL specification out of predicate wrapper.
  */
-fun List<Criterion>.toTaskSpecification(): Specification<TaskEntity>? {
+fun List<Criterion>.toTaskSpecification(): Specification<TaskEntity> {
 
   val attributeSpec = toTaskAttributeSpecification()
   val payloadSpec = toTaskPayloadSpecification()
 
-  return when {
-    attributeSpec != null && payloadSpec != null -> where(attributeSpec).and(payloadSpec)
-    attributeSpec != null -> attributeSpec
-    payloadSpec != null -> payloadSpec
-    else -> null
-  }
+  return where(attributeSpec).and(payloadSpec)
 }
 
 /**
@@ -147,7 +137,7 @@ fun PageableSortableQuery.mapTaskSort(): List<String> {
 /**
  * Specification for query on task attributes.
  */
-internal fun List<Criterion>.toTaskAttributeSpecification(): Specification<TaskEntity>? {
+internal fun List<Criterion>.toTaskAttributeSpecification(): Specification<TaskEntity> {
   val relevant = this.filterIsInstance<Criterion.TaskCriterion>()
   // compose criteria with same name with OR and criteria with different names with AND
   val relevantByName = relevant.groupBy { it.name }
@@ -159,7 +149,7 @@ internal fun List<Criterion>.toTaskAttributeSpecification(): Specification<TaskE
 /**
  * Specification for query on data entry attributes.
  */
-internal fun List<Criterion>.toDataEntryAttributeSpecification(): Specification<DataEntryEntity>? {
+internal fun List<Criterion>.toDataEntryAttributeSpecification(): Specification<DataEntryEntity> {
   val relevant = this.filterIsInstance<Criterion.DataEntryCriterion>()
   // compose criteria with same name with OR and criteria with different names with AND
   val relevantByName = relevant.groupBy { it.name }
@@ -171,7 +161,7 @@ internal fun List<Criterion>.toDataEntryAttributeSpecification(): Specification<
 /**
  * Specification on payload.
  */
-internal fun List<Criterion>.toDataEntryPayloadSpecification(): Specification<DataEntryEntity>? {
+internal fun List<Criterion>.toDataEntryPayloadSpecification(): Specification<DataEntryEntity> {
   val relevant = this.filterIsInstance<Criterion.PayloadEntryCriterion>()
   // compose criteria with same name with OR and criteria with different names with AND
   val relevantByName = relevant.groupBy { it.name }
@@ -183,7 +173,7 @@ internal fun List<Criterion>.toDataEntryPayloadSpecification(): Specification<Da
 /**
  * Specification on payload.
  */
-internal fun List<Criterion>.toTaskPayloadSpecification(): Specification<TaskEntity>? {
+internal fun List<Criterion>.toTaskPayloadSpecification(): Specification<TaskEntity> {
   val relevant = this.filterIsInstance<Criterion.PayloadEntryCriterion>()
   // compose criteria with same name with OR and criteria with different names with AND
   val relevantByName = relevant.groupBy { it.name }
@@ -282,10 +272,10 @@ internal fun List<Criterion.PayloadEntryCriterion>.toOrDataEntrySpecification():
 /**
  * Compose multiple specifications into one specification using conjunction.
  */
-internal fun <T> composeAnd(specifications: List<Specification<T>?>): Specification<T>? {
+internal fun <T> composeAnd(specifications: List<Specification<T>?>): Specification<T> {
   return when (specifications.size) {
-    0 -> null
-    1 -> specifications[0]
+    0 -> where(null)
+    1 -> where(specifications[0])
     else -> where(specifications[0]).and(composeAnd(specifications.subList(1, specifications.size)))
   }
 }
@@ -293,10 +283,11 @@ internal fun <T> composeAnd(specifications: List<Specification<T>?>): Specificat
 /**
  * Compose multiple specifications into one specification using disjunction.
  */
-internal fun <T> composeOr(specifications: List<Specification<T>?>): Specification<T>? {
+internal fun <T> composeOr(specifications: List<Specification<T>?>): Specification<T> {
+  // TODO: This doesn't seem correct, ORing an empty list should yield a specification that never matches, shouldn't it?
   return when (specifications.size) {
-    0 -> null
-    1 -> specifications[0]
+    0 -> where(null)
+    1 -> where(specifications[0])
     else -> where(specifications[0]).or(composeOr(specifications.subList(1, specifications.size)))
   }
 }

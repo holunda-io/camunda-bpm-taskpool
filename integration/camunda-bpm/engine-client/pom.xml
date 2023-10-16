@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>io.holunda.polyflow</groupId>
     <artifactId>polyflow-integration-camunda-bpm-engine-parent</artifactId>
-    <version>3.19.1</version>
+    <version>4.0.0</version>
   </parent>
 
   <artifactId>polyflow-camunda-bpm-engine-client</artifactId>
@@ -14,6 +15,10 @@
     <dependency>
       <groupId>io.holunda.polyflow</groupId>
       <artifactId>polyflow-taskpool-event</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.holunda.polyflow</groupId>
+      <artifactId>polyflow-spring-utils</artifactId>
     </dependency>
 
     <dependency>

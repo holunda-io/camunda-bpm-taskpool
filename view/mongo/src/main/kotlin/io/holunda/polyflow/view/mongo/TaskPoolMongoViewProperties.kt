@@ -1,7 +1,6 @@
 package io.holunda.polyflow.view.mongo
 
 import org.springframework.boot.context.properties.ConfigurationProperties
-import org.springframework.boot.context.properties.ConstructorBinding
 import org.springframework.boot.context.properties.NestedConfigurationProperty
 import java.time.Duration
 import java.time.ZoneId
@@ -11,7 +10,6 @@ import java.time.ZoneOffset
  * Configures mongo projection mode.
  */
 @ConfigurationProperties(prefix = "polyflow.view.mongo")
-@ConstructorBinding
 data class TaskPoolMongoViewProperties(
   /**
    * Tracking mode, defaults to event handler.
@@ -37,7 +35,6 @@ data class TaskPoolMongoViewProperties(
 /**
  * Configures the change stream-based change tracking. Only relevant if [TaskPoolMongoViewProperties.changeTrackingMode] is `CHANGE_STREAM`.
  */
-@ConstructorBinding
 data class ChangeStream(
   /**
    * Configures mode for task deletion.
@@ -54,7 +51,6 @@ data class ChangeStream(
 /**
  * Configures how and when deleted documents (as in marked as deleted) are cleared (as in gone from the database).
  */
-@ConstructorBinding
 data class ClearDeletedDocuments(
   /** How long should we keep deleted documents around before clearing them? Default: immediately. */
   val after: Duration = Duration.ZERO,
@@ -89,7 +85,6 @@ data class ClearDeletedDocuments(
 /**
  * Defines which indexes are created by default.
  */
-@ConstructorBinding
 data class Indexes(
   /**
    * Controls the index of the token store.
