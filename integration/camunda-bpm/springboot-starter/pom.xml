@@ -12,6 +12,10 @@
   <artifactId>polyflow-camunda-bpm-springboot-starter</artifactId>
   <name>integration/camunda-bpm/${project.artifactId}</name>
 
+  <properties>
+    <jacoco.skip>true</jacoco.skip>
+  </properties>
+
   <dependencies>
     <dependency>
       <groupId>io.holunda.polyflow</groupId>
