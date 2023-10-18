@@ -2,9 +2,7 @@ package io.holunda.polyflow.view.mongo
 
 import io.holunda.camunda.taskpool.api.business.*
 import io.holunda.camunda.taskpool.api.task.*
-import io.holunda.polyflow.view.DataEntry
-import io.holunda.polyflow.view.Task
-import io.holunda.polyflow.view.TaskWithDataEntries
+import io.holunda.polyflow.view.*
 import io.holunda.polyflow.view.filter.toCriteria
 import io.holunda.polyflow.view.mongo.data.DataEntryChangeTracker
 import io.holunda.polyflow.view.mongo.data.DataEntryRepository
@@ -13,7 +11,6 @@ import io.holunda.polyflow.view.mongo.task.*
 import io.holunda.polyflow.view.query.FilterQuery
 import io.holunda.polyflow.view.query.data.*
 import io.holunda.polyflow.view.query.task.*
-import io.holunda.polyflow.view.task
 import jakarta.annotation.PostConstruct
 import jakarta.annotation.PreDestroy
 import mu.KLogging
@@ -80,6 +77,7 @@ class MongoViewServiceConfiguration {
 /**
  * Mongo-based projection.
  */
+@ComponentLike
 @ProcessingGroup(MongoViewService.PROCESSING_GROUP)
 class MongoViewService(
   private val properties: TaskPoolMongoViewProperties,

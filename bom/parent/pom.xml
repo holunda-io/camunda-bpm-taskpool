@@ -466,6 +466,7 @@
               <option>all-open:annotation=org.axonframework.eventhandling.EventHandler</option>
               <option>all-open:annotation=org.axonframework.queryhandling.QueryHandler</option>
               <option>all-open:annotation=com.tngtech.jgiven.integration.spring.JGivenStage</option>
+              <option>all-open:annotation=io.holunda.polyflow.view.ComponentLike</option>
             </pluginOptions>
           </configuration>
           <executions>
