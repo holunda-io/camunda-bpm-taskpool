@@ -14,13 +14,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Get GPG private key into GPG
-      - name: Import GPG Owner Trust
-        run: echo ${{ secrets.GPG_OWNERTRUST }} | base64 --decode | gpg --import-ownertrust
-
-      - name: Import GPG key
-        run: echo ${{ secrets.GPG_SECRET_KEYS }} | base64 --decode | gpg --import --no-tty --batch --yes
-
       # Setup JDK and Maven
       - name: Set up JDK 17
         uses: actions/setup-java@v3
@@ -44,12 +37,27 @@ jobs:
       - name: Run I-Tests with Maven
         run: ./mvnw integration-test failsafe:verify -Pitest -B -T4 -ntp
 
+  deploy:
+    needs: [build]
+    runs-on: ubuntu-latest
+    steps:
+      # Get GPG private key into GPG
+      - name: Import GPG Owner Trust
+        run: echo ${{ secrets.GPG_OWNERTRUST }} | base64 --decode | gpg --import-ownertrust
+
+      - name: Import GPG key
+        run: echo ${{ secrets.GPG_SECRET_KEYS }} | base64 --decode | gpg --import --no-tty --batch --yes
+
       - name: Deploy a new version to central
         run: ./mvnw deploy -B -ntp -DskipTests -Prelease -Dgpg.keyname="${{secrets.GPG_KEYNAME}}" -Dgpg.passphrase="${{secrets.GPG_PASSPHRASE}}"
         env:
           OSS_CENTRAL_USERNAME: "${{ secrets.SONATYPE_USERNAME }}"
           OSS_CENTRAL_PASSWORD: "${{ secrets.SONATYPE_PASSWORD }}"
 
+  coverage:
+    needs: [build]
+    runs-on: ubuntu-latest
+    steps:
       - name: Upload coverage information to CodeCov
         uses: codecov/codecov-action@v3
         with:
