@@ -34,10 +34,6 @@ jobs:
       - name: Run I-Tests with Maven
         run: ./mvnw integration-test failsafe:verify -Pitest -B -T4
 
-  coverage:
-    needs: [build]
-    runs-on: ubuntu-latest
-    steps:
       - name: Upload coverage information
         uses: codecov/codecov-action@v3
         with:
