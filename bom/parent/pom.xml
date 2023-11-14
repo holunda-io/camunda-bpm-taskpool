@@ -6,7 +6,7 @@
   <parent>
     <groupId>io.holunda.polyflow</groupId>
     <artifactId>polyflow-root</artifactId>
-    <version>4.0.0</version>
+    <version>4.0.1</version>
     <relativePath>../../pom.xml</relativePath>
   </parent>
 
@@ -22,7 +22,7 @@
     <camunda-commons-typed-values.version>7.20.0</camunda-commons-typed-values.version>
 
     <axon-bom.version>4.8.3</axon-bom.version>
-    <axon-kotlin.version>4.8.0</axon-kotlin.version>
+    <axon-kotlin.version>4.9.0</axon-kotlin.version>
     <axon-gateway-extension.version>2.0.0</axon-gateway-extension.version>
 
     <awaitility.version>4.2.0</awaitility.version>
@@ -311,7 +311,7 @@
         <plugin>
           <groupId>org.jacoco</groupId>
           <artifactId>jacoco-maven-plugin</artifactId>
-          <version>0.8.10</version>
+          <version>0.8.11</version>
           <executions>
             <execution>
               <id>pre-unit-test</id>
@@ -435,7 +435,7 @@
           <!-- for loading and unpacking artifacts -->
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-dependency-plugin</artifactId>
-          <version>3.6.0</version>
+          <version>3.6.1</version>
         </plugin>
 
         <plugin>
@@ -466,6 +466,7 @@
               <option>all-open:annotation=org.axonframework.eventhandling.EventHandler</option>
               <option>all-open:annotation=org.axonframework.queryhandling.QueryHandler</option>
               <option>all-open:annotation=com.tngtech.jgiven.integration.spring.JGivenStage</option>
+              <option>all-open:annotation=io.holunda.polyflow.view.ComponentLike</option>
             </pluginOptions>
           </configuration>
           <executions>
@@ -518,7 +519,7 @@
 
         <plugin>
           <artifactId>maven-surefire-plugin</artifactId>
-          <version>3.1.2</version>
+          <version>3.2.2</version>
           <configuration>
             <useSystemClassLoader>false</useSystemClassLoader>
             <runOrder>random</runOrder>
@@ -539,7 +540,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-failsafe-plugin</artifactId>
-          <version>3.1.2</version>
+          <version>3.2.2</version>
           <executions>
             <execution>
               <goals>
@@ -564,7 +565,7 @@
         <plugin>
           <groupId>org.jetbrains.dokka</groupId>
           <artifactId>dokka-maven-plugin</artifactId>
-          <version>1.9.0</version>
+          <version>1.9.10</version>
           <executions>
             <execution>
               <id>attach-javadocs</id>

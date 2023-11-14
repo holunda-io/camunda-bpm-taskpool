@@ -6,7 +6,7 @@
   <parent>
     <groupId>io.holunda.polyflow</groupId>
     <artifactId>polyflow-view-parent</artifactId>
-    <version>4.0.0</version>
+    <version>4.0.1</version>
   </parent>
 
   <artifactId>polyflow-form-url-resolver</artifactId>
@@ -26,7 +26,7 @@
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-text</artifactId>
-      <version>1.10.0</version>
+      <version>1.11.0</version>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
