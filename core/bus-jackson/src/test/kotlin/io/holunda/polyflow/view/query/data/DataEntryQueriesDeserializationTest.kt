@@ -33,12 +33,12 @@ internal class DataEntryQueriesDeserializationTest {
         DataEntriesForUserQuery(
           user = User(
             username = "kermit", groups = setOf("muppets")
-          ), page = 1, size = 50, sort = "+name", filters = listOf("data.name=test")
+          ), page = 1, size = 50, sort = listOf("+name"), filters = listOf("data.name=test")
         )
       ), Arguments.of(
         DataEntriesForDataEntryTypeQuery::class.java,
         DataEntriesForDataEntryTypeQuery(
-          entryType = "domain.type", page = 1, size = 50, sort = "+name"
+          entryType = "domain.type", page = 1, size = 50, sort = listOf("+name")
         )
       )
     )
