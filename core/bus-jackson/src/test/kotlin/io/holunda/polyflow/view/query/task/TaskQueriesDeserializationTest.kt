@@ -25,7 +25,7 @@ internal class TaskQueriesDeserializationTest {
         AllTasksQuery(
           page = 1,
           size = 50,
-          sort = "+name",
+          sort = listOf("+name"),
           filters = listOf("task.name=test")
         )
       ),
@@ -34,7 +34,7 @@ internal class TaskQueriesDeserializationTest {
         AllTasksWithDataEntriesQuery(
           page = 1,
           size = 50,
-          sort = "+name",
+          sort = listOf("+name"),
           filters = listOf("task.name=test")
         )
       ),
@@ -56,7 +56,7 @@ internal class TaskQueriesDeserializationTest {
           user = User(username = "kermit", groups = setOf("muppets")),
           page = 1,
           size = 50,
-          sort = "+name",
+          sort = listOf("+name"),
           filters = listOf("task.name=test")
         )
       ),
@@ -66,7 +66,7 @@ internal class TaskQueriesDeserializationTest {
           user = User(username = "kermit", groups = setOf("muppets")),
           page = 1,
           size = 50,
-          sort = "+name",
+          sort = listOf("+name"),
           filters = listOf("task.name=test")
         )
       ),
@@ -76,7 +76,7 @@ internal class TaskQueriesDeserializationTest {
           user = User(username = "kermit", groups = setOf("muppets")),
           page = 1,
           size = 50,
-          sort = "+name",
+          sort = listOf("+name"),
           filters = listOf("task.name=test")
         )
       ),
@@ -86,7 +86,7 @@ internal class TaskQueriesDeserializationTest {
           user = User(username = "kermit", groups = setOf("muppets")),
           page = 1,
           size = 50,
-          sort = "+name",
+          sort = listOf("+name"),
           filters = listOf("task.name=test")
         )
       ),
