@@ -1,5 +1,6 @@
 package io.holunda.polyflow.spring
 
+import io.holunda.polyflow.datapool.DataEntrySenderProperties
 import io.holunda.polyflow.spring.ApplicationNameBeanPostProcessor.Companion.UNSET_APPLICATION_NAME
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -20,10 +21,19 @@ internal class ApplicationNameBeanPostProcessorTest {
       .withPropertyValues(
         "spring.application.name=my-test-application"
       ).run {
-        val testProperties = it.getBean(TestProperties::class.java)
+        val privateTestProperties = it.getBean(PrivateTestProperties::class.java)
+        assertThat(privateTestProperties).isNotNull
+        assertThat(privateTestProperties.getApplicationNamePropertyValue()).isEqualTo("unset-application-name")
+      }
+    contextRunner
+      .withPropertyValues(
+        "spring.application.name=my-test-application",
+      ).run {
+        val testProperties = it.getBean(DataEntrySenderProperties::class.java)
         assertThat(testProperties).isNotNull
         assertThat(testProperties.applicationName).isEqualTo("my-test-application")
       }
+
   }
 
   @Test
@@ -31,9 +41,19 @@ internal class ApplicationNameBeanPostProcessorTest {
     contextRunner
       .withPropertyValues(
         "spring.application.name=my-test-application",
+        "polyflow.test.private.application-name=my-polyflow-test-application"
+      ).run {
+        val privateTestProperties = it.getBean(PrivateTestProperties::class.java)
+        assertThat(privateTestProperties).isNotNull
+        assertThat(privateTestProperties.getApplicationNamePropertyValue()).isEqualTo("my-polyflow-test-application")
+      }
+
+    contextRunner
+      .withPropertyValues(
+        "spring.application.name=my-test-application",
         "polyflow.test.application-name=my-polyflow-test-application"
       ).run {
-        val testProperties = it.getBean(TestProperties::class.java)
+        val testProperties = it.getBean(DataEntrySenderProperties::class.java)
         assertThat(testProperties).isNotNull
         assertThat(testProperties.applicationName).isEqualTo("my-polyflow-test-application")
       }
@@ -43,7 +63,13 @@ internal class ApplicationNameBeanPostProcessorTest {
   fun `leaves application name at default if spring-application-name is not set`() {
     contextRunner
       .run {
-        val testProperties = it.getBean(TestProperties::class.java)
+        val privateTestProperties = it.getBean(PrivateTestProperties::class.java)
+        assertThat(privateTestProperties).isNotNull
+        assertThat(privateTestProperties.getApplicationNamePropertyValue()).isEqualTo(UNSET_APPLICATION_NAME)
+      }
+    contextRunner
+      .run {
+        val testProperties = it.getBean(DataEntrySenderProperties::class.java)
         assertThat(testProperties).isNotNull
         assertThat(testProperties.applicationName).isEqualTo(UNSET_APPLICATION_NAME)
       }
@@ -51,9 +77,11 @@ internal class ApplicationNameBeanPostProcessorTest {
 }
 
 @Configuration
-@EnableConfigurationProperties(TestProperties::class)
+@EnableConfigurationProperties(value = [PrivateTestProperties::class, DataEntrySenderProperties::class])
 @Import(ApplicationNameBeanPostProcessor::class)
 class TestConfig
 
-@ConfigurationProperties(prefix = "polyflow.test")
-data class TestProperties(var applicationName: String = UNSET_APPLICATION_NAME)
+@ConfigurationProperties(prefix = "polyflow.test.private")
+data class PrivateTestProperties(private var applicationName: String = UNSET_APPLICATION_NAME) {
+  fun getApplicationNamePropertyValue() = this.applicationName
+}
