@@ -15,7 +15,7 @@ site_description: >-
  or multiple process engines (like Camunda BPM) providing a holistic enterprise-wide
  task pool and data entry pool.
 
-copyright: Copyright &copy; 2016 - 2022, Holisticon AG
+copyright: Copyright &copy; 2016 - 2024, Holisticon AG
 
 use_directory_urls: false
 
