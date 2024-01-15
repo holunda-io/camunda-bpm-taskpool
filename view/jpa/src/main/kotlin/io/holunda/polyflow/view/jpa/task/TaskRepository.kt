@@ -86,6 +86,17 @@ interface TaskRepository : CrudRepository<TaskEntity, String>, JpaSpecificationE
       }
 
     /**
+     * Specification for checking the assignee.
+     */
+    fun hasAssignee(assignee: String): Specification<TaskEntity> =
+      Specification { task, _, builder ->
+        builder.equal(
+          task.get<String>(TaskEntity::assignee.name),
+          assignee
+        )
+      }
+
+    /**
      * Specification for checking the priority.
      */
     fun hasPriority(priority: Int): Specification<TaskEntity> =
