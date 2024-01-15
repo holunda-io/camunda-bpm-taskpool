@@ -15,7 +15,7 @@ open class ProcessVariablesCorrelator(vararg correlations: ProcessVariableCorrel
   /**
    * Correlates variables from a given correlation map for a provided process definition and task definition.
    */
-  fun correlateVariables(processDefinitionKey: ProcessDefinitionKey, taskDefinitionKey: TaskDefinitionKey, variables: VariableMap): CorrelationMap {
+  open fun correlateVariables(processDefinitionKey: ProcessDefinitionKey, taskDefinitionKey: TaskDefinitionKey, variables: VariableMap): CorrelationMap {
 
     val result = newCorrelations()
     val processCorrelations: ProcessVariableCorrelation = all[processDefinitionKey] ?: return result

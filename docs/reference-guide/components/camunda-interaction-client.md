@@ -24,7 +24,7 @@ To use Camunda Engine Interaction Client please add the following artifact to yo
 ```xml
 <dependency>
   <groupId>io.holunda.polyflow</groupId>
-    <artifactId>polyflow-camunda-bpm-engine-client</artifactId>
+  <artifactId>polyflow-camunda-bpm-engine-client</artifactId>
 </dependency>
 ```
 

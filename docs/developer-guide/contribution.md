@@ -14,7 +14,7 @@ issue tracking system.
 
 ## Submit a Pull Request
 
-If you found a solution to an [open issue](https://github.com/holuda-io/camunda-bpm-taskpool/issues)
+If you found a solution to an [open issue](https://github.com/holunda-io/camunda-bpm-taskpool/issues)
 and implemented it, we would be happy to add your contribution in the code base. For doing so,
 please create a pull request. Prior to that, please make sure you:
 

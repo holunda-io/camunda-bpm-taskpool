@@ -5,7 +5,7 @@
 
   <groupId>io.holunda.polyflow</groupId>
   <artifactId>polyflow-root</artifactId>
-  <version>4.1.0</version>
+  <version>4.1.1</version>
   <packaging>pom</packaging>
 
   <name>POM: ${project.artifactId}</name>
@@ -19,7 +19,7 @@
     <java.version>17</java.version>
     <version.java>${java.version}</version.java>
 
-    <kotlin.version>1.9.20</kotlin.version>
+    <kotlin.version>1.9.22</kotlin.version>
     <kotlin.compiler.jvmTarget>${java.version}</kotlin.compiler.jvmTarget>
     <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
     <kotlin-logging.version>3.0.5</kotlin-logging.version>
@@ -46,7 +46,7 @@
         <plugin>
           <groupId>com.amashchenko.maven.plugin</groupId>
           <artifactId>gitflow-maven-plugin</artifactId>
-          <version>1.20.0</version>
+          <version>1.21.0</version>
           <configuration>
             <gitFlowConfig>
               <productionBranch>master</productionBranch>

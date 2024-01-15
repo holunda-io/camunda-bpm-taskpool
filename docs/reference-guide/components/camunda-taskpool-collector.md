@@ -48,11 +48,10 @@ In order to enable collector component, include the Maven dependency to your pro
 ```xml
 
 <dependency>
-  <groupId>io.holunda.polyflow
-    <groupId>
-      <artifactId>polyflow-camunda-bpm-taskpool-collector</artifactId>
-      <version>${camunda-taskpool.version}</version>
-      <dependency>
+  <groupId>io.holunda.polyflow<groupId>
+  <artifactId>polyflow-camunda-bpm-taskpool-collector</artifactId>
+  <version>${camunda-taskpool.version}</version>
+<dependency>
 
 ```
 

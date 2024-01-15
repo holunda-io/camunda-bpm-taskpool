@@ -73,26 +73,26 @@ polyflow:
           enabled: true
           enricher:
             type: processVariables
-  sender:
-    enabled: true
-    data-entry:
+    sender:
       enabled: true
-      type: simple
-      application-name: ${spring.application.name}  # default
-    process-definition:
-      enabled: true
-    process-instance:
-      enabled: true
-    process-variable:
-      enabled: true
-    task:
-      enabled: true
-      type: tx
-      send-within-transaction: true # Must be set to true in single node scenario.
-  form-url-resolver:
-      defaultTaskTemplate:  "/tasks/${formKey}/${id}?userId=%userId%"
-      defaultApplicationTemplate: "http://localhost:${server.port}/${applicationName}"
-      defaultProcessTemplate: "/${formKey}?userId=%userId%"
+      data-entry:
+        enabled: true
+        type: simple
+        application-name: ${spring.application.name}  # default
+      process-definition:
+        enabled: true
+      process-instance:
+        enabled: true
+      process-variable:
+        enabled: true
+      task:
+        enabled: true
+        type: tx
+        send-within-transaction: true # Must be set to true in single node scenario.
+    form-url-resolver:
+        defaultTaskTemplate:  "/tasks/${formKey}/${id}?userId=%userId%"
+        defaultApplicationTemplate: "http://localhost:${server.port}/${applicationName}"
+        defaultProcessTemplate: "/${formKey}?userId=%userId%"
 
 ```
 
