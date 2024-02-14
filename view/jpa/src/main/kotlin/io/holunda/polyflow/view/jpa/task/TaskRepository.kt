@@ -272,6 +272,11 @@ interface TaskRepository : CrudRepository<TaskEntity, String>, JpaSpecificationE
   }
 
 
+  /**
+   * Counts user tasks grouped by application name, resulting in a total amount of tasks per application (=process engine).
+   * Helpful for monitoring of tasks on the task pool projection side vs. engine side.
+   * @return list of count by application groupings.
+   */
   @Query("select new io.holunda.polyflow.view.jpa.CountByApplication(t.sourceReference.applicationName, count(t) ) from TaskEntity t group by t.sourceReference.applicationName")
   fun getCountByApplication(): List<CountByApplication>
 
