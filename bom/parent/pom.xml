@@ -28,7 +28,7 @@
     <awaitility.version>4.2.0</awaitility.version>
     <mockito-kotlin.version>5.2.1</mockito-kotlin.version>
     <jgiven.version>1.3.1</jgiven.version>
-    <jgiven-kotlin.version>1.3.0.0</jgiven-kotlin.version>
+    <jgiven-kotlin.version>1.3.1.0</jgiven-kotlin.version>
 
     <pattern.class.itest>**/*ITest.*</pattern.class.itest>
     <pattern.package.itest>**/itest/**/*.*</pattern.package.itest>
