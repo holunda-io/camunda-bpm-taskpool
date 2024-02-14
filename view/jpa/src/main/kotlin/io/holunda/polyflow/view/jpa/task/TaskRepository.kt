@@ -1,11 +1,13 @@
 package io.holunda.polyflow.view.jpa.task
 
+import io.holunda.polyflow.view.jpa.CountByApplication
 import io.holunda.polyflow.view.jpa.auth.AuthorizationPrincipal
 import io.holunda.polyflow.view.jpa.composeOr
 import io.holunda.polyflow.view.jpa.payload.PayloadAttribute
 import io.holunda.polyflow.view.jpa.process.SourceReferenceEmbeddable
 import org.springframework.data.jpa.domain.Specification
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor
+import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
 import java.time.Instant
 
@@ -268,4 +270,9 @@ interface TaskRepository : CrudRepository<TaskEntity, String>, JpaSpecificationE
         builder.and(pathEquals, valueAnyOf)
       }
   }
+
+
+  @Query("select new io.holunda.polyflow.view.jpa.CountByApplication(t.sourceReference.applicationName, count(t) ) from TaskEntity t group by t.sourceReference.applicationName")
+  fun getCountByApplication(): List<CountByApplication>
+
 }

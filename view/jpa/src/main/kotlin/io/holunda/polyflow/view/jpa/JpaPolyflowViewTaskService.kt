@@ -292,7 +292,9 @@ class JpaPolyflowViewTaskService(
 
   @QueryHandler
   override fun query(query: TaskCountByApplicationQuery): List<ApplicationWithTaskCount> {
-    TODO("Count by application query is not implemented yet")
+    return taskRepository.getCountByApplication().map {
+      ApplicationWithTaskCount(application = it.applicationName, taskCount = it.count.toInt())
+    }
   }
 
   @QueryHandler
