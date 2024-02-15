@@ -514,6 +514,16 @@ internal class JpaPolyflowViewServiceTaskITest {
 
   }
 
+  @Test
+  fun `should count tasks`() {
+
+    val counts = jpaPolyflowViewService.query(TaskCountByApplicationQuery())
+    assertThat(counts).isNotNull
+    assertThat(counts).hasSize(1)
+    assertThat(counts[0].application).isEqualTo("test-application")
+    assertThat(counts[0].taskCount).isEqualTo(3)
+  }
+
   private fun captureEmittedQueryUpdates(): List<QueryUpdate<Any>> {
     val queryTypeCaptor = argumentCaptor<Class<Any>>()
     val predicateCaptor = argumentCaptor<Predicate<Any>>()
