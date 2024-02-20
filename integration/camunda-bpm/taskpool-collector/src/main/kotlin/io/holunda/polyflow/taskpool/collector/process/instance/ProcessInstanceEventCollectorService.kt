@@ -93,6 +93,7 @@ class ProcessInstanceEventCollectorService(
         deleteReason = processInstance.deleteReason
       )
     // finish
+    HistoricProcessInstance.STATE_COMPLETED,
     HistoricProcessInstance.STATE_INTERNALLY_TERMINATED ->
       FinishProcessInstanceCommand(
         sourceReference = processInstance.sourceReference(repositoryService, camundaTaskpoolCollectorProperties.applicationName),
