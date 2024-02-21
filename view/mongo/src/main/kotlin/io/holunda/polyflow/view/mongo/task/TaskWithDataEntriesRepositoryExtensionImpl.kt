@@ -25,7 +25,7 @@ open class TaskWithDataEntriesRepositoryExtensionImpl(
 
 
   /**
-   * Retrieves a list of tasks for user matching provided critera.
+   * Retrieves a list of tasks for user matching provided criteria.
   <pre>
   db.tasks.aggregate([
   { $lookup: {
