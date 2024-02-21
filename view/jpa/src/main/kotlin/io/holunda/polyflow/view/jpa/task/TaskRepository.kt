@@ -5,11 +5,14 @@ import io.holunda.polyflow.view.jpa.auth.AuthorizationPrincipal
 import io.holunda.polyflow.view.jpa.composeOr
 import io.holunda.polyflow.view.jpa.payload.PayloadAttribute
 import io.holunda.polyflow.view.jpa.process.SourceReferenceEmbeddable
+import jakarta.persistence.Tuple
+import jakarta.persistence.criteria.Path
 import org.springframework.data.jpa.domain.Specification
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
 import java.time.Instant
+
 
 /**
  * Repository for accessing tasks.
@@ -52,7 +55,7 @@ interface TaskRepository : CrudRepository<TaskEntity, String>, JpaSpecificationE
             task.get<List<String>>(TaskEntity::authorizedPrincipals.name)
           )
         }
-      }) ?: Specification { _, _, _ -> null }
+      })
 
     /**
      * Specification for checking the application name.
@@ -269,6 +272,7 @@ interface TaskRepository : CrudRepository<TaskEntity, String>, JpaSpecificationE
 
         builder.and(pathEquals, valueAnyOf)
       }
+
   }
 
 

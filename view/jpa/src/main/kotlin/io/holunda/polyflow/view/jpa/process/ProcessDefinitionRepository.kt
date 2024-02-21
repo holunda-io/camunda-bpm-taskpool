@@ -23,6 +23,6 @@ interface ProcessDefinitionRepository : CrudRepository<ProcessDefinitionEntity, 
             processDefinition.get<List<String>>(ProcessDefinitionEntity::authorizedStarterPrincipals.name)
           )
         }
-      }) ?: Specification { _, _, _ -> null }
+      })
   }
 }
