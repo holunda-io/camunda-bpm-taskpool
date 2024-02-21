@@ -23,6 +23,7 @@ import io.holunda.polyflow.view.jpa.task.toTask
 import io.holunda.polyflow.view.jpa.update.updateTaskQuery
 import io.holunda.polyflow.view.query.PageableSortableQuery
 import io.holunda.polyflow.view.query.task.*
+import io.holunda.polyflow.view.task
 import mu.KLogging
 import org.axonframework.config.ProcessingGroup
 import org.axonframework.eventhandling.EventHandler
@@ -251,18 +252,6 @@ class JpaPolyflowViewTaskService(
     )
   }
 
-
-  /**
-   * Legacy handler to support old query.
-   */
-  @Deprecated("Will be removed in future versions", ReplaceWith("query(query: TaskWithDataEntriesForIdQuery): Optional<TaskWithDataEntries>"))
-  @QueryHandler
-  fun legacyQuery(query: TaskWithDataEntriesForIdQuery): TaskWithDataEntries? {
-    logger.warn { "You are using deprecated API, consider to switch to query(TaskWithDataEntriesForIdQuery): Optional<TaskWithDataEntries>" }
-    return query(query).orElse(null)
-  }
-
-
   @QueryHandler
   override fun query(query: TaskWithDataEntriesForIdQuery): Optional<TaskWithDataEntries> {
     return Optional.ofNullable(taskRepository.findByIdOrNull(query.id)?.let { taskEntity ->
@@ -273,16 +262,6 @@ class JpaPolyflowViewTaskService(
     })
   }
 
-
-  /**
-   * Legacy handler to support old query.
-   */
-  @Deprecated("Will be removed in future versions", ReplaceWith("query(TaskForIdQuery): Optional<Task>"))
-  @QueryHandler
-  fun legacyQuery(query: TaskForIdQuery): Task? {
-    logger.warn { "You are using deprecated API, consider to switch to query(TaskForIdQuery): Optional<Task>" }
-    return query(query).orElse(null)
-  }
 
   @QueryHandler
   override fun query(query: TaskForIdQuery): Optional<Task> {
