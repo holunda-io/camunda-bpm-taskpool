@@ -66,7 +66,7 @@ class DataPoolWhenStage<SELF : DataPoolWhenStage<SELF>> : DataPoolStage<SELF>() 
   @ProvidedScenarioState(resolution = ScenarioState.Resolution.NAME)
   private var queriedEntries: MutableList<DataEntry> = mutableListOf()
 
-  private fun query(sort: String, filters: List<String>) = DataEntriesForUserQuery(User("kermit", setOf()), 1, Integer.MAX_VALUE, sort, filters)
+  private fun query(sort: String, filters: List<String>) = DataEntriesForUserQuery(User("kermit", setOf()), 1, Integer.MAX_VALUE, listOf(sort), filters)
 
   fun data_queried(filters: List<String>) = step {
     queriedEntries.addAll(testee.query(query("+name", filters)).payload.elements)

@@ -23,7 +23,7 @@ interface ProcessInstanceRepository : CrudRepository<ProcessInstanceEntity, Stri
             state
           )
         }
-      }) ?: Specification { _, _, _ -> null }
+      })
 
   }
 }

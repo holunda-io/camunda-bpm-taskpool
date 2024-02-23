@@ -3,6 +3,7 @@ package io.holunda.polyflow.view.jpa.task
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.holunda.camunda.variable.serializer.toJsonPathsWithValues
 import io.holunda.camunda.variable.serializer.toPayloadJson
+import io.holunda.polyflow.view.jpa.CountByApplication
 import io.holunda.polyflow.view.jpa.DbCleaner
 import io.holunda.polyflow.view.jpa.auth.AuthorizationPrincipal.Companion.group
 import io.holunda.polyflow.view.jpa.auth.AuthorizationPrincipal.Companion.user
@@ -27,6 +28,7 @@ import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.likeName
 import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.likeProcessName
 import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.likeTextSearch
 import jakarta.persistence.EntityManager
+import jakarta.persistence.Tuple
 import org.assertj.core.api.Assertions.assertThat
 import org.camunda.bpm.engine.variable.Variables.createVariables
 import org.junit.jupiter.api.AfterEach
@@ -245,4 +247,11 @@ class TaskRepositoryITest {
     assertThat(result).containsExactlyInAnyOrder(task2)
   }
 
+  @Test
+  fun `should count grouped by applications`() {
+    val count = taskRepository.getCountByApplication()
+    assertThat(count).hasSize(2)
+    assertThat(count[0]).isEqualTo(CountByApplication("other-app", 1))
+    assertThat(count[1]).isEqualTo(CountByApplication("test-application", 1))
+  }
 }
