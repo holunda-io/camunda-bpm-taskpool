@@ -9,6 +9,7 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@master
+
     - name: Create Release Notes Markdown
       uses: docker://decathlon/release-notes-generator-action:3.1.5
       env:
@@ -21,6 +22,7 @@ jobs:
         echo "RELEASE_NOTES_FILE=$RELEASE_NOTES_FILE" >> $GITHUB_ENV
         VERSION=$(echo ${{ github.event.milestone.title }} | cut -d' ' -f2)
         echo "VERSION=$VERSION" >> $GITHUB_ENV
+
     - name: Create a Draft Release Notes on GitHub
       id: create_release
       uses: actions/create-release@v1
