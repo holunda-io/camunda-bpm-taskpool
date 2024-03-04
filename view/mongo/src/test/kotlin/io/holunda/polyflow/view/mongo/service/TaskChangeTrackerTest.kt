@@ -263,6 +263,8 @@ internal class TaskChangeTrackerTest {
   private fun publisher() = TestPublisher.create<ChangeStreamEvent<TaskDocument>>()
 
   private fun TestPublisher<ChangeStreamEvent<TaskDocument>>.returnForResumeToken(resumeToken: Int?) = apply {
+
+    //whenever(taskRepository.getTaskUpdates(anyOrNull())).thenReturn(this.flux())
     whenever(taskRepository.getTaskUpdates(resumeToken?.let { resumeToken(it) })).thenReturn(this.flux())
   }
 
