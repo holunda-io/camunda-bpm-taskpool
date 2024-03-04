@@ -180,7 +180,9 @@ class JpaPolyflowViewTaskService(
       )
     }
 
-    val page = taskRepository.findAll(specification.and(userQuery), pageRequest).map { taskEntity -> taskEntity.toTask(objectMapper) }
+    val page = taskRepository
+      .findAll(specification.and(userQuery), pageRequest)
+      .map { taskEntity -> taskEntity.toTask(objectMapper) }
 
     return TaskQueryResult(
       elements = page.toList(),
@@ -202,7 +204,9 @@ class JpaPolyflowViewTaskService(
     }.mapTaskSort()
     val pageRequest = pageRequest(query.page, query.size, sort)
 
-    val page = taskRepository.findAll(taskSpecification.and(authorizationSpecification), pageRequest).map { taskEntity -> taskEntity.toTask(objectMapper) }
+    val page = taskRepository
+      .findAll(taskSpecification.and(authorizationSpecification), pageRequest)
+      .map { taskEntity -> taskEntity.toTask(objectMapper) }
 
     return TaskQueryResult(
       elements = page.toList(),
@@ -229,7 +233,9 @@ class JpaPolyflowViewTaskService(
     }.mapTaskSort()
     val pageRequest = pageRequest(query.page, query.size, sort)
 
-    val page = taskRepository.findAll(taskSpecification.and(authorizationSpecification), pageRequest).map { taskEntity -> taskEntity.toTask(objectMapper) }
+    val page = taskRepository
+      .findAll(taskSpecification.and(authorizationSpecification), pageRequest)
+      .map { taskEntity -> taskEntity.toTask(objectMapper) }
 
     return TaskQueryResult(
       elements = page.toList(),
@@ -307,7 +313,7 @@ class JpaPolyflowViewTaskService(
         emitTaskUpdate(updated)
 
       }.ifPresent { entity ->
-        logger.debug("Cannot create task '${event.id}' because it already exists in the database")
+        logger.warn { "Will not create task '${event.id}' because it already exists in the database"}
         emitTaskUpdate(entity)
       }
   }
@@ -326,7 +332,7 @@ class JpaPolyflowViewTaskService(
     taskRepository
       .findById(event.id)
       .ifEmpty {
-        logger.warn("Cannot update task '${event.id}' because it does not exist in the database")
+        logger.warn { "Cannot update task '${event.id}' because it does not exist in the database" }
       }.ifPresent { entity ->
         entity.assignee = event.assignee
         val updated = taskRepository.save(entity)
@@ -347,7 +353,9 @@ class JpaPolyflowViewTaskService(
 
     taskRepository
       .findById(event.id)
-      .ifEmpty { "Cannot complete task '${event.id}' because it does not exist in the database" }
+      .ifEmpty {
+        logger.warn { "Cannot complete task '${event.id}' because it does not exist in the database" }
+      }
       .ifPresent { entity ->
         taskRepository.delete(entity)
         emitTaskUpdate(entity, deleted = true)
@@ -367,7 +375,9 @@ class JpaPolyflowViewTaskService(
 
     taskRepository
       .findById(event.id)
-      .ifEmpty { "Cannot delete task '${event.id}' because it does not exist in the database" }
+      .ifEmpty {
+        logger.warn { "Cannot delete task '${event.id}' because it does not exist in the database" }
+      }
       .ifPresent { entity ->
         taskRepository.delete(entity)
         emitTaskUpdate(entity, deleted = true)
@@ -387,7 +397,9 @@ class JpaPolyflowViewTaskService(
 
     taskRepository
       .findById(event.id)
-      .ifEmpty { "Cannot update task '${event.id}' because it does not exist in the database" }
+      .ifEmpty {
+        logger.warn { "Cannot update task '${event.id}' because it does not exist in the database" }
+      }
       .ifPresent { entity ->
 
         val updated = taskRepository.save(
@@ -416,7 +428,7 @@ class JpaPolyflowViewTaskService(
     taskRepository
       .findById(event.id)
       .ifEmpty {
-        logger.warn("Cannot update task '${event.id}' because it does not exist in the database")
+        logger.warn { "Cannot update task '${event.id}' because it does not exist in the database"}
       }.ifPresent { entity ->
         when (event.assignmentUpdateType) {
           CamundaTaskEventType.CANDIDATE_GROUP_ADD -> entity.authorizedPrincipals.add(group(event.groupId).toString())
@@ -441,7 +453,7 @@ class JpaPolyflowViewTaskService(
     taskRepository
       .findById(event.id)
       .ifEmpty {
-        logger.warn("Cannot update task '${event.id}' because it does not exist in the database")
+        logger.warn { "Cannot update task '${event.id}' because it does not exist in the database" }
       }
       .ifPresent { entity ->
 
