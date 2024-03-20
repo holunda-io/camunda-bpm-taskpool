@@ -23,7 +23,7 @@
 
     <axon-bom.version>4.9.4</axon-bom.version>
     <axon-kotlin.version>4.9.0</axon-kotlin.version>
-    <axon-gateway-extension.version>2.0.0</axon-gateway-extension.version>
+    <axon-gateway-extension.version>2.1.0</axon-gateway-extension.version>
 
     <awaitility.version>4.2.1</awaitility.version>
     <mockito-kotlin.version>5.2.1</mockito-kotlin.version>
