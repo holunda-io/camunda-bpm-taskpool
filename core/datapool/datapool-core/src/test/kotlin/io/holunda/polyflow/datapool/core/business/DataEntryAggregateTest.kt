@@ -2,8 +2,10 @@ package io.holunda.polyflow.datapool.core.business
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.holunda.camunda.taskpool.api.business.*
+import io.holunda.polyflow.bus.jackson.JsonAutoDetectAnyVisibility
 import io.holunda.polyflow.bus.jackson.configurePolyflowJacksonObjectMapper
 import io.holunda.polyflow.datapool.core.DeletionStrategy
+import io.holunda.polyflow.datapool.core.configurePolyflowJacksonObjectMapperForDatapool
 import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
 import org.axonframework.eventsourcing.AggregateDeletedException
@@ -373,7 +375,9 @@ class DataEntryAggregateTest {
   @Test
   fun `should serialize and deserialize an aggregate with data`() {
     // GIVEN an object mapper and a filled aggregate
-    val objectMapper = ObjectMapper().configurePolyflowJacksonObjectMapper()
+    val objectMapper = ObjectMapper()
+      .configurePolyflowJacksonObjectMapper()
+      .configurePolyflowJacksonObjectMapperForDatapool()
 
     val dataEntryAggregate = DataEntryAggregate().apply {
       on(
