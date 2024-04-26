@@ -1,13 +1,18 @@
 package io.holunda.polyflow.taskpool.core
 
+import com.fasterxml.jackson.databind.ObjectMapper
+import io.holunda.polyflow.bus.jackson.JsonAutoDetectAnyVisibility
 import io.holunda.polyflow.taskpool.core.process.ProcessDefinitionAggregate
 import io.holunda.polyflow.taskpool.core.process.ProcessInstanceAggregate
 import io.holunda.polyflow.taskpool.core.task.TaskAggregate
+import org.axonframework.common.caching.Cache
+import org.axonframework.common.caching.WeakReferenceCache
 import org.axonframework.eventsourcing.EventSourcingRepository
 import org.axonframework.eventsourcing.eventstore.EventStore
 import org.axonframework.messaging.annotation.ParameterResolverFactory
 import org.axonframework.modelling.command.Aggregate
 import org.axonframework.modelling.command.AggregateNotFoundException
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
@@ -22,6 +27,7 @@ class TaskPoolCoreConfiguration {
 
   companion object {
     const val TASK_AGGREGATE_REPOSITORY = "taskAggregateRepository"
+    const val TASK_CACHE = "taskCache"
     const val PROCESS_DEFINITION_AGGREGATE_REPOSITORY = "processDefinitionAggregateRepository"
     const val PROCESS_INSTANCE_AGGREGATE_REPOSITORY = "processInstanceAggregateRepository"
   }
@@ -62,6 +68,16 @@ class TaskPoolCoreConfiguration {
       .build()
   }
 
+  @Autowired
+  fun configureJackson(objectMapper: ObjectMapper) {
+    objectMapper.configurePolyflowJacksonObjectMapperForTaskPool()
+  }
+
+  /**
+   * Use weak reference cache.
+   */
+  @Bean(TASK_CACHE)
+  fun taskCache(): Cache = WeakReferenceCache()
 }
 
 /**
@@ -87,5 +103,10 @@ fun <T> Optional<T>.ifPresentOrElse(presentConsumer: (T) -> Unit, missingCallbac
   } else {
     missingCallback()
   }
+}
+
+fun ObjectMapper.configurePolyflowJacksonObjectMapperForTaskPool(): ObjectMapper {
+  addMixIn(TaskAggregate::class.java, JsonAutoDetectAnyVisibility::class.java)
+  return this
 }
 

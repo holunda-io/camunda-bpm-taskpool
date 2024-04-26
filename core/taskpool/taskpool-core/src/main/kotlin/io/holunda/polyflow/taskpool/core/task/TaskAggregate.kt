@@ -15,7 +15,10 @@ import org.axonframework.spring.stereotype.Aggregate
 /**
  * Main representation of the tasks available in the system.
  */
-@Aggregate(repository = TaskPoolCoreConfiguration.TASK_AGGREGATE_REPOSITORY)
+@Aggregate(
+  repository = TaskPoolCoreConfiguration.TASK_AGGREGATE_REPOSITORY,
+  cache = TaskPoolCoreConfiguration.TASK_CACHE,
+)
 class TaskAggregate() {
 
   companion object : KLogging()
