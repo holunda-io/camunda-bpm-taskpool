@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Lazy
 import org.springframework.stereotype.Component
 
 /**
- * This handler makes sure that an update of variables can be send without a create of the process instance..
+ * This handler makes sure that an update of variables can be sent without a create of the process instance.
  */
 @Component
 class ProcessInstanceVariablesChangeHandler(
