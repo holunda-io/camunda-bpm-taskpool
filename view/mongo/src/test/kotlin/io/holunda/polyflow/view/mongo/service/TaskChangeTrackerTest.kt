@@ -33,7 +33,6 @@ import java.time.Clock
 import java.time.Duration
 import java.time.Instant
 import java.time.ZoneOffset
-import java.util.*
 
 internal class TaskChangeTrackerTest {
   private val taskRepository: TaskRepository = mock()
@@ -224,6 +223,7 @@ internal class TaskChangeTrackerTest {
 
   @Test
   fun `schedules job for deleting leftover tasks`() {
+    publisherForResumeToken(null)
     properties = properties.copy(
       changeStream = properties.changeStream.copy(
         clearDeletedTasks = properties.changeStream.clearDeletedTasks.copy(
@@ -246,11 +246,11 @@ internal class TaskChangeTrackerTest {
     taskChangeTracker.initCleanupJob()
     verify(scheduler).schedule(deleteRunnableCaptor.capture(), triggerCaptor.capture())
     val trigger = triggerCaptor.firstValue
-    assertThat(trigger.nextExecutionTime(SimpleTriggerContext(Clock.fixed(Instant.EPOCH, ZoneOffset.UTC)).apply {
+    assertThat(trigger.nextExecution(SimpleTriggerContext(Clock.fixed(Instant.EPOCH, ZoneOffset.UTC)).apply {
       update(
-        Date.from(Instant.EPOCH.minus(Duration.ofHours(24))),
-        Date.from(Instant.EPOCH.minus(Duration.ofHours(24))),
-        Date.from(Instant.EPOCH.minus(Duration.ofHours(23)))
+        Instant.EPOCH.minus(Duration.ofHours(24)),
+        Instant.EPOCH.minus(Duration.ofHours(24)),
+        Instant.EPOCH.minus(Duration.ofHours(23))
       )
     })).isBetween(Instant.EPOCH, Instant.EPOCH.plus(Duration.ofHours(1)))
     deleteRunnableCaptor.firstValue.run()
@@ -283,6 +283,9 @@ internal class TaskChangeTrackerTest {
         null,
         null,
         Document("body", taskDocument(taskId, deleted, deleteTime)),
+        null,
+        null,
+        null,
         null,
         null,
         null,
