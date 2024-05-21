@@ -41,15 +41,12 @@ typealias JsonPathFilterFunction = (path: String) -> Boolean
 
 /**
  * Converts a deep map structure representing the payload into a map of one level keyed by the JSON path and valued by the value.
- * The map might contain primitive types or maps as value.
+ * The map might contain primitive types or maps TODO as value.
  * @param limit limit of levels to convert. Defaults to -1 meaning there is no limit.
  * @param filters filter object to identify properties to include into the result.
  */
-fun VariableMap.toJsonPathsWithValues(limit: Int = -1, filters: List<Pair<JsonPathFilterFunction, FilterType>> = emptyList()): Map<String, Any> {
-  val pathsWithValues: List<MutableMap<String, Any>> = this.entries.map {
-    it.toJsonPathWithValue(prefix = "", limit = limit, filter = filters).toMap().toMutableMap()
-  }
-  return pathsWithValues.reduceOrNull { result, memberList -> result.apply { putAll(memberList) } }?.toMap() ?: mapOf()
+fun VariableMap.toJsonPathsWithValues(limit: Int = -1, filters: List<Pair<JsonPathFilterFunction, FilterType>> = emptyList()): Set<Pair<String, Any>> {
+  return this.entries.map { it.toJsonPathWithValue(prefix = "", limit = limit, filter = filters) }.flatten().toSet()
 }
 
 internal fun MutableMap.MutableEntry<String, Any?>.toJsonPathWithValue(
@@ -87,6 +84,8 @@ internal fun MutableMap.MutableEntry<String, Any?>.toJsonPathWithValue(
   } else if (value is Map<*, *>) {
     @Suppress("UNCHECKED_CAST")
     (value as Map<String, Any?>).toMutableMap().entries.map { it.toJsonPathWithValue(key, limit, filter) }.flatten()
+  } else if (value is List<*> && value.first()?.isPrimitiveType() == true) {
+    value.filterNotNull().map { key to it }
   } else {
     // ignore complex objects
     listOf()
