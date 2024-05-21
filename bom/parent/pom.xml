@@ -19,7 +19,7 @@
 
   <properties>
     <springboot.version>3.1.5</springboot.version>
-    <camunda-commons-typed-values.version>7.20.0</camunda-commons-typed-values.version>
+    <camunda-commons-typed-values.version>7.21.0</camunda-commons-typed-values.version>
 
     <axon-bom.version>4.9.4</axon-bom.version>
     <axon-kotlin.version>4.9.0</axon-kotlin.version>
