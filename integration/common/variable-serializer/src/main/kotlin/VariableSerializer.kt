@@ -40,8 +40,11 @@ typealias JsonPathFilterFunction = (path: String) -> Boolean
 
 
 /**
- * Converts a deep map structure representing the payload into a map of one level keyed by the JSON path and valued by the value.
- * The map might contain primitive types or maps TODO as value.
+ * Converts a deep list of pairs representing the payload into a list of pairs of one level keyed by the JSON path and
+ * valued by the value. A map structure is not sufficient because there can be multiple (different) values for the same
+ * path. For example a pair with a list value of (customer, [foo, bar]) would be converted to the two pairs
+ * (customer, foo) and (customer, bar).
+ * Note: The initial map might contain primitive types, maps or lists as values.
  * @param limit limit of levels to convert. Defaults to -1 meaning there is no limit.
  * @param filters filter object to identify properties to include into the result.
  */
