@@ -49,10 +49,13 @@ typealias JsonPathFilterFunction = (path: String) -> Boolean
  * @param filters filter object to identify properties to include into the result.
  */
 fun VariableMap.toJsonPathsWithValues(limit: Int = -1, filters: List<Pair<JsonPathFilterFunction, FilterType>> = emptyList()): Set<Pair<String, Any>> {
-  return this.entries.map { it.toJsonPathWithValue(prefix = "", limit = limit, filter = filters) }.flatten().toSet()
+    return this.entries
+        .map { it.toPair() }
+        .map { it.toJsonPathWithValue(prefix = "", limit = limit, filter = filters) }
+        .flatten().toSet()
 }
 
-internal fun MutableMap.MutableEntry<String, Any?>.toJsonPathWithValue(
+internal fun Pair<String, Any?>.toJsonPathWithValue(
   prefix: String = "",
   limit: Int = -1,
   filter: List<Pair<JsonPathFilterFunction, FilterType>>
@@ -64,12 +67,12 @@ internal fun MutableMap.MutableEntry<String, Any?>.toJsonPathWithValue(
   }
   // compose the path key
   val key = if (prefix == "") {
-    this.key
+    this.first
   } else {
-    "$prefix.${this.key}"
+    "$prefix.${this.first}"
   }
 
-  val value = this.value
+  val value = this.second
   return if (value != null && value.isPrimitiveType()) {
 
     // check the filters
@@ -86,9 +89,12 @@ internal fun MutableMap.MutableEntry<String, Any?>.toJsonPathWithValue(
     listOf(key to value)
   } else if (value is Map<*, *>) {
     @Suppress("UNCHECKED_CAST")
-    (value as Map<String, Any?>).toMutableMap().entries.map { it.toJsonPathWithValue(key, limit, filter) }.flatten()
-  } else if (value is List<*> && value.first()?.isPrimitiveType() == true) {
-    value.filterNotNull().map { key to it }
+    (value as Map<String, Any?>).entries
+        .map { it.toPair() }
+        .map { it.toJsonPathWithValue(key, limit, filter) }
+        .flatten()
+  } else if (value is List<*>) {
+    value.map { (key to it).toJsonPathWithValue(prefix, limit, filter) }.flatten()
   } else {
     // ignore complex objects
     listOf()

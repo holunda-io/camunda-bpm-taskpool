@@ -224,6 +224,31 @@ internal class JsonPathWithValueTest {
     assertThat(result).contains("multiple" to "value-2")
   }
 
+  @Test
+  fun `should map list of lists`() {
+    val payload = createVariables().apply {
+      put("multiple", listOf(listOf("value-1", "value-2"), listOf("value-3", "value-4")))
+    }
+      val result = payload.toJsonPathsWithValues()
+
+      assertThat(result).hasSize(4)
+      assertThat(result).contains("multiple" to "value-1")
+      assertThat(result).contains("multiple" to "value-2")
+      assertThat(result).contains("multiple" to "value-3")
+      assertThat(result).contains("multiple" to "value-4")
+    }
+
+  @Test
+  fun `should map list of maps`() {
+    val payload = createVariables().apply {
+      put("multiple", listOf(mapOf("deepKey1" to "value-1"), mapOf("deepKey2" to "value-2")))
+    }
+    val result = payload.toJsonPathsWithValues()
+
+    assertThat(result).hasSize(2)
+    assertThat(result).contains("multiple.deepKey1" to "value-1")
+    assertThat(result).contains("multiple.deepKey2" to "value-2")
+  }
 }
 
 internal fun  Set<Pair<String, Any>>.keys(): List<String> {
