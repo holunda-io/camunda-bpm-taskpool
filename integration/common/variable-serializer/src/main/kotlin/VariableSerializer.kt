@@ -40,19 +40,22 @@ typealias JsonPathFilterFunction = (path: String) -> Boolean
 
 
 /**
- * Converts a deep map structure representing the payload into a map of one level keyed by the JSON path and valued by the value.
- * The map might contain primitive types or maps as value.
+ * Converts a deep list of pairs representing the payload into a list of pairs of one level keyed by the JSON path and
+ * valued by the value. A map structure is not sufficient because there can be multiple (different) values for the same
+ * path. For example a pair with a list value of (customer, [foo, bar]) would be converted to the two pairs
+ * (customer, foo) and (customer, bar).
+ * Note: The initial map might contain primitive types, maps or lists as values.
  * @param limit limit of levels to convert. Defaults to -1 meaning there is no limit.
  * @param filters filter object to identify properties to include into the result.
  */
-fun VariableMap.toJsonPathsWithValues(limit: Int = -1, filters: List<Pair<JsonPathFilterFunction, FilterType>> = emptyList()): Map<String, Any> {
-  val pathsWithValues: List<MutableMap<String, Any>> = this.entries.map {
-    it.toJsonPathWithValue(prefix = "", limit = limit, filter = filters).toMap().toMutableMap()
-  }
-  return pathsWithValues.reduceOrNull { result, memberList -> result.apply { putAll(memberList) } }?.toMap() ?: mapOf()
+fun VariableMap.toJsonPathsWithValues(limit: Int = -1, filters: List<Pair<JsonPathFilterFunction, FilterType>> = emptyList()): Set<Pair<String, Any>> {
+    return this.entries
+        .map { it.toPair() }
+        .map { it.toJsonPathWithValue(prefix = "", limit = limit, filter = filters) }
+        .flatten().toSet()
 }
 
-internal fun MutableMap.MutableEntry<String, Any?>.toJsonPathWithValue(
+internal fun Pair<String, Any?>.toJsonPathWithValue(
   prefix: String = "",
   limit: Int = -1,
   filter: List<Pair<JsonPathFilterFunction, FilterType>>
@@ -64,12 +67,12 @@ internal fun MutableMap.MutableEntry<String, Any?>.toJsonPathWithValue(
   }
   // compose the path key
   val key = if (prefix == "") {
-    this.key
+    this.first
   } else {
-    "$prefix.${this.key}"
+    "$prefix.${this.first}"
   }
 
-  val value = this.value
+  val value = this.second
   return if (value != null && value.isPrimitiveType()) {
 
     // check the filters
@@ -86,7 +89,12 @@ internal fun MutableMap.MutableEntry<String, Any?>.toJsonPathWithValue(
     listOf(key to value)
   } else if (value is Map<*, *>) {
     @Suppress("UNCHECKED_CAST")
-    (value as Map<String, Any?>).toMutableMap().entries.map { it.toJsonPathWithValue(key, limit, filter) }.flatten()
+    (value as Map<String, Any?>).entries
+        .map { it.toPair() }
+        .map { it.toJsonPathWithValue(key, limit, filter) }
+        .flatten()
+  } else if (value is List<*>) {
+    value.map { (key to it).toJsonPathWithValue(prefix, limit, filter) }.flatten()
   } else {
     // ignore complex objects
     listOf()
