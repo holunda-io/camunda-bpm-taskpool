@@ -115,7 +115,17 @@ The JPA View uses several tables to store the results. These are:
 * `PLF_TASK_AUTHORIZATIONS`: table for authorization information of user tasks
 * `PLF_TASK_CORRELATIONS`: table for user task correlation information
 * `PLF_TASK_PAYLOAD_ATTRIBUTES`: table for user task attribute search index
+* `PLF_VIEW_TASK_AND_DATA_ENTRY_PAYLOAD`: view for convenient taskWithDataEntry queries execution
 * `TRACKING_TOKEN`: table for Axon Tracking Tokens
 
 If you are interested in DDLs for the view, feel free to generate one using the following call of Apache Maven 
 `mvn -Pgenerate-sql -f view/jpa`. Currently, DDLs for the databases H2, MSSQL and PostgreSQL are generated into `target/` directory.
+*Note: The DDL for the view will not be generated correctly but you can use the following statement:*
+```
+create view PLF_VIEW_TASK_AND_DATA_ENTRY_PAYLOAD as
+((select pc.TASK_ID, dea.PATH, dea.VALUE
+ from PLF_TASK_CORRELATIONS pc
+          join PLF_DATA_ENTRY_PAYLOAD_ATTRIBUTES dea on pc.ENTRY_ID = dea.ENTRY_ID and pc.ENTRY_TYPE = dea.ENTRY_TYPE)
+union
+select * from PLF_TASK_PAYLOAD_ATTRIBUTES);
+```

@@ -1,12 +1,14 @@
 package io.holunda.polyflow.view.jpa.task
 
+import io.holunda.camunda.taskpool.api.business.ProcessingType
 import io.holunda.polyflow.view.jpa.CountByApplication
 import io.holunda.polyflow.view.jpa.auth.AuthorizationPrincipal
 import io.holunda.polyflow.view.jpa.composeOr
+import io.holunda.polyflow.view.jpa.data.DataEntryEntity
+import io.holunda.polyflow.view.jpa.data.DataEntryId
+import io.holunda.polyflow.view.jpa.data.DataEntryStateEmbeddable
 import io.holunda.polyflow.view.jpa.payload.PayloadAttribute
 import io.holunda.polyflow.view.jpa.process.SourceReferenceEmbeddable
-import jakarta.persistence.Tuple
-import jakarta.persistence.criteria.Path
 import org.springframework.data.jpa.domain.Specification
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor
 import org.springframework.data.jpa.repository.Query
@@ -273,6 +275,95 @@ interface TaskRepository : CrudRepository<TaskEntity, String>, JpaSpecificationE
         builder.and(pathEquals, valueAnyOf)
       }
 
+
+    /**
+     * Specification for checking the payload attribute of a task. If multiple values are given, one of them must match.
+     * payload.name = ? AND (payload.value = ? OR payload.value = ? OR ...)
+     */
+    fun hasTaskOrDataEntryPayloadAttribute(name: String, values: List<String>): Specification<TaskEntity> =
+      Specification { task, query, builder ->
+        query.distinct(true)
+        val join = task.join<TaskEntity, Set<TaskAndDataEntryPayloadAttributeEntity>>(TaskEntity::taskAndDataEntryPayloadAttributes.name)
+        val pathEquals = builder.equal(
+          join.get<TaskAndDataEntryPayloadAttributeEntityId>(TaskAndDataEntryPayloadAttributeEntity::id.name)
+            .get<String>(TaskAndDataEntryPayloadAttributeEntityId::path.name),
+          name
+        )
+
+        val valueAnyOf = values.map {
+          builder.equal(
+            join.get<TaskAndDataEntryPayloadAttributeEntityId>(TaskAndDataEntryPayloadAttributeEntity::id.name)
+              .get<String>(TaskAndDataEntryPayloadAttributeEntityId::value.name),
+            it
+          )
+        }.let { builder.or(*it.toTypedArray()) }
+
+        builder.and(pathEquals, valueAnyOf)
+      }
+
+    /**
+     * Specification for checking that a task has a correlated data entry with entry id
+     */
+    fun hasDataEntryEntryId(entryId: String): Specification<TaskEntity> =
+      Specification { task, query, builder ->
+        builder.equal(
+          task.join<TaskEntity, Set<DataEntryEntity>>(TaskEntity::dataEntryCorrelations.name)
+            .get<DataEntryId>(DataEntryEntity::dataEntryId.name)
+            .get<String>(DataEntryId::entryId.name),
+          entryId
+        )
+      }
+
+    /**
+     * Specification for checking that a task has a correlated data entry with entry type
+     */
+    fun hasDataEntryEntryType(entryType: String): Specification<TaskEntity> =
+      Specification { task, query, builder ->
+        builder.equal(
+          task.join<TaskEntity, Set<DataEntryEntity>>(TaskEntity::dataEntryCorrelations.name)
+            .get<DataEntryId>(DataEntryEntity::dataEntryId.name)
+            .get<String>(DataEntryId::entryType.name),
+          entryType
+        )
+      }
+
+    /**
+     * Specification for checking that a task has a correlated data entry with type
+     */
+    fun hasDataEntryType(type: String): Specification<TaskEntity> =
+      Specification { task, _, builder ->
+        builder.equal(
+          task.join<TaskEntity, Set<DataEntryEntity>>(TaskEntity::dataEntryCorrelations.name)
+            .get<String>(DataEntryEntity::type.name),
+          type
+        )
+      }
+
+    /**
+     * Specification for checking that a task has a correlated data entry with entry state
+     */
+    fun hasDataEntryState(state: String): Specification<TaskEntity> =
+      Specification { task, _, builder ->
+        builder.equal(
+          task.join<TaskEntity, Set<DataEntryEntity>>(TaskEntity::dataEntryCorrelations.name)
+            .get<DataEntryStateEmbeddable>(DataEntryEntity::state.name)
+            .get<String>(DataEntryStateEmbeddable::state.name),
+          state
+        )
+      }
+
+    /**
+     * Specification for checking that a task has a correlated data entry with processing type
+     */
+    fun hasDataEntryProcessingType(processingType: ProcessingType): Specification<TaskEntity> =
+      Specification { task, _, builder ->
+        builder.equal(
+          task.join<TaskEntity, Set<DataEntryEntity>>(TaskEntity::dataEntryCorrelations.name)
+            .get<DataEntryStateEmbeddable>(DataEntryEntity::state.name)
+            .get<ProcessingType>(DataEntryStateEmbeddable::processingType.name),
+          processingType.name
+        )
+      }
   }
 
 
