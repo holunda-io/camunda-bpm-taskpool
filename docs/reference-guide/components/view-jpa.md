@@ -119,8 +119,8 @@ The JPA View uses several tables to store the results. These are:
 * `TRACKING_TOKEN`: table for Axon Tracking Tokens
 
 If you are interested in DDLs for the view, feel free to generate one using the following call of Apache Maven 
-`mvn -Pgenerate-sql -f view/jpa`. Currently, DDLs for the databases H2, MSSQL and PostgreSQL are generated into `target/` directory.
-*Note: The DDL for the view will not be generated correctly but you can use the following statement:*
+`mvn -Pgenerate-sql -f view/jpa`. Currently, DDLs for the databases H2, MSSQL and PostgreSQL are generated into `target/` directory.  
+The DDL for the `PLF_VIEW_TASK_AND_DATA_ENTRY_PAYLOAD` cannot be auto-generated, therefore you need to use the following statement to create it:
 ```
 create view PLF_VIEW_TASK_AND_DATA_ENTRY_PAYLOAD as
 ((select pc.TASK_ID, dea.PATH, dea.VALUE

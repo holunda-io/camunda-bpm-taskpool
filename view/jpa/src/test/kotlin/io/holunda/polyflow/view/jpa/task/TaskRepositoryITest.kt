@@ -113,12 +113,10 @@ class TaskRepositoryITest {
     )
 
     val task1Id = UUID.randomUUID().toString()
-    val taskAndDataEntryPayloadAttributeEntity1 = TaskAndDataEntryPayloadAttributeEntity(TaskAndDataEntryPayloadAttributeEntityId(task1Id, "key", "value"))
-    val taskAndDataEntryPayloadAttributeEntity2 =
-      TaskAndDataEntryPayloadAttributeEntity(TaskAndDataEntryPayloadAttributeEntityId(task1Id, "complex.child1", "1"))
-    val taskAndDataEntryPayloadAttributeEntity3 =
-      TaskAndDataEntryPayloadAttributeEntity(TaskAndDataEntryPayloadAttributeEntityId(task1Id, "complex.child1", "small"))
-    val taskAndDataEntryPayloadAttributeEntity4 = TaskAndDataEntryPayloadAttributeEntity(TaskAndDataEntryPayloadAttributeEntityId(task1Id, "foo", "bar"))
+    val taskAndDataEntryPayloadAttribute1 = TaskAndDataEntryPayloadAttributeEntity(task1Id, "key", "value")
+    val taskAndDataEntryPayloadAttribute2 = TaskAndDataEntryPayloadAttributeEntity(task1Id, "complex.child1", "1")
+    val taskAndDataEntryPayloadAttribute3 = TaskAndDataEntryPayloadAttributeEntity(task1Id, "complex.child1", "small")
+    val taskAndDataEntryPayloadAttribute4 = TaskAndDataEntryPayloadAttributeEntity(task1Id, "foo", "bar")
 
     task1 = TaskEntity(
       taskId = task1Id,
@@ -134,9 +132,6 @@ class TaskRepositoryITest {
       priority = 50,
       sourceReference = processReference(),
       taskDefinitionKey = "task.def.0815",
-      taskAndDataEntryPayloadAttributes = setOf(
-
-      )
     )
 
     task2 = emptyTask().apply {
@@ -154,10 +149,10 @@ class TaskRepositoryITest {
     entityManager.persist(task1)
     entityManager.persist(task2)
 
-    entityManager.persist(taskAndDataEntryPayloadAttributeEntity1)
-    entityManager.persist(taskAndDataEntryPayloadAttributeEntity2)
-    entityManager.persist(taskAndDataEntryPayloadAttributeEntity3)
-    entityManager.persist(taskAndDataEntryPayloadAttributeEntity4)
+    entityManager.persist(taskAndDataEntryPayloadAttribute1)
+    entityManager.persist(taskAndDataEntryPayloadAttribute2)
+    entityManager.persist(taskAndDataEntryPayloadAttribute3)
+    entityManager.persist(taskAndDataEntryPayloadAttribute4)
 
     entityManager.flush()
   }

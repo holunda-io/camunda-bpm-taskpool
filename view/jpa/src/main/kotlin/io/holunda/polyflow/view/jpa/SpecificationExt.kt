@@ -215,7 +215,7 @@ internal fun List<Criterion>.toTaskWithDataEntryPayloadSpecification(): Specific
   val relevant = this.filterIsInstance<Criterion.PayloadEntryCriterion>()
   // compose criteria with same name with OR and criteria with different names with AND
   val relevantByName = relevant.groupBy { it.name }
-  val orComposedByName = relevantByName.map { (_, criteria) -> criteria.toOrTaskAndDataSpecification() }
+  val orComposedByName = relevantByName.map { (_, criteria) -> criteria.toTaskAndDataSpecification() }
 
   return composeAnd(orComposedByName)
 }
@@ -285,7 +285,7 @@ internal fun List<Criterion.PayloadEntryCriterion>.toOrTaskSpecification(): Spec
  * Creates JPA Specification for query of payload attributes from task and correlated date entries based on JSON paths. All criteria must have the same path
  * and will be composed by the logical OR operator.
  */
-internal fun List<Criterion.PayloadEntryCriterion>.toOrTaskAndDataSpecification(): Specification<TaskEntity> {
+internal fun List<Criterion.PayloadEntryCriterion>.toTaskAndDataSpecification(): Specification<TaskEntity> {
   require(this.isNotEmpty()) { "List of criteria must not be empty." }
   require(this.all { it.operator == EQUALS }) { "JPA View currently supports only equals as operator for filtering of payload attributes." }
   require(this.distinctBy { it.name }.size == 1) { "All criteria must have the same path." }
