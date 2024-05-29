@@ -20,7 +20,7 @@ class PayloadAttribute(
      * Factory method to create payload attributes out of map entries.
      * Check VariableSerializer methods how such map entries can be created.
      */
-    operator fun invoke(entry: Map.Entry<String, Any>) = PayloadAttribute(path = entry.key, value = entry.value.toString())
+    operator fun invoke(entry: Pair<String, Any>) = PayloadAttribute(path = entry.first, value = entry.second.toString())
   }
 
   override fun equals(other: Any?): Boolean {

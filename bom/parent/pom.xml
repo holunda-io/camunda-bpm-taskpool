@@ -6,7 +6,7 @@
   <parent>
     <groupId>io.holunda.polyflow</groupId>
     <artifactId>polyflow-root</artifactId>
-    <version>4.1.4</version>
+    <version>4.1.5</version>
     <relativePath>../../pom.xml</relativePath>
   </parent>
 
@@ -19,14 +19,14 @@
 
   <properties>
     <springboot.version>3.1.5</springboot.version>
-    <camunda-commons-typed-values.version>7.20.0</camunda-commons-typed-values.version>
+    <camunda-commons-typed-values.version>7.21.0</camunda-commons-typed-values.version>
 
     <axon-bom.version>4.9.4</axon-bom.version>
     <axon-kotlin.version>4.9.0</axon-kotlin.version>
-    <axon-gateway-extension.version>2.0.0</axon-gateway-extension.version>
+    <axon-gateway-extension.version>2.1.0</axon-gateway-extension.version>
 
-    <awaitility.version>4.2.0</awaitility.version>
-    <mockito-kotlin.version>5.2.1</mockito-kotlin.version>
+    <awaitility.version>4.2.1</awaitility.version>
+    <mockito-kotlin.version>5.3.1</mockito-kotlin.version>
     <jgiven.version>1.3.1</jgiven.version>
     <jgiven-kotlin.version>1.3.1.0</jgiven-kotlin.version>
 
@@ -311,7 +311,7 @@
         <plugin>
           <groupId>org.jacoco</groupId>
           <artifactId>jacoco-maven-plugin</artifactId>
-          <version>0.8.11</version>
+          <version>0.8.12</version>
           <executions>
             <execution>
               <id>pre-unit-test</id>
@@ -372,7 +372,7 @@
           <!-- java compiler -->
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
-          <version>3.12.1</version>
+          <version>3.13.0</version>
           <configuration>
             <encoding>UTF-8</encoding>
             <source>${java.version}</source>
@@ -420,7 +420,7 @@
           <!-- jar -->
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-jar-plugin</artifactId>
-          <version>3.3.0</version>
+          <version>3.4.1</version>
           <configuration>
             <archive>
               <manifest>
@@ -565,7 +565,7 @@
         <plugin>
           <groupId>org.jetbrains.dokka</groupId>
           <artifactId>dokka-maven-plugin</artifactId>
-          <version>1.9.10</version>
+          <version>1.9.20</version>
           <executions>
             <execution>
               <id>attach-javadocs</id>
@@ -581,7 +581,7 @@
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>build-helper-maven-plugin</artifactId>
-          <version>3.5.0</version>
+          <version>3.6.0</version>
           <executions>
             <execution>
               <phase>generate-sources</phase>
@@ -601,7 +601,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-source-plugin</artifactId>
-          <version>3.3.0</version>
+          <version>3.3.1</version>
           <executions>
             <execution>
               <id>attach-sources</id>
@@ -620,7 +620,7 @@
         <!-- Install -->
         <plugin>
           <artifactId>maven-install-plugin</artifactId>
-          <version>3.1.1</version>
+          <version>3.1.2</version>
         </plugin>
       </plugins>
     </pluginManagement>

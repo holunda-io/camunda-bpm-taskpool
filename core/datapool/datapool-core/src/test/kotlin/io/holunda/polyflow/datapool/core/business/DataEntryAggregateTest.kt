@@ -1,7 +1,13 @@
 package io.holunda.polyflow.datapool.core.business
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import io.holunda.camunda.taskpool.api.business.*
+import io.holunda.polyflow.bus.jackson.JsonAutoDetectAnyVisibility
+import io.holunda.polyflow.bus.jackson.configurePolyflowJacksonObjectMapper
 import io.holunda.polyflow.datapool.core.DeletionStrategy
+import io.holunda.polyflow.datapool.core.configurePolyflowJacksonObjectMapperForDatapool
+import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
 import org.axonframework.eventsourcing.AggregateDeletedException
 import org.axonframework.test.aggregate.AggregateTestFixture
 import org.camunda.bpm.engine.variable.Variables
@@ -353,5 +359,53 @@ class DataEntryAggregateTest {
       )
   }
 
+  @Test
+  fun `should serialize and deserialize an empty aggregate`() {
+    // GIVEN an object mapper and an empty aggregate
+    val objectMapper = ObjectMapper().configurePolyflowJacksonObjectMapper()
+    val dataEntryAggregate = DataEntryAggregate()
 
+    // WHEN we serialize and deserialize it
+    val serializedObj = objectMapper.writeValueAsString(dataEntryAggregate)
+    objectMapper.readValue(serializedObj, DataEntryAggregate::class.java)
+
+    // THEN no problem should occur
+  }
+
+  @Test
+  fun `should serialize and deserialize an aggregate with data`() {
+    // GIVEN an object mapper and a filled aggregate
+    val objectMapper = ObjectMapper()
+      .configurePolyflowJacksonObjectMapper()
+      .configurePolyflowJacksonObjectMapperForDatapool()
+
+    val dataEntryAggregate = DataEntryAggregate().apply {
+      on(
+        DataEntryCreatedEvent(
+          entryId = UUID.randomUUID().toString(),
+          entryType = "io.holunda.My",
+          name = "Some name",
+          type = "Another",
+          applicationName = "Different application",
+        )
+      )
+    }
+    val dataIdentityValue = dataEntryAggregate.getDataIdentityValueForTest()
+
+    // WHEN we serialize and deserialize it
+    val serializedObj = objectMapper.writeValueAsString(dataEntryAggregate)
+    val deserializedObj = objectMapper.readValue(serializedObj, DataEntryAggregate::class.java)
+
+    // THEN no problem should occur
+    assertThat(deserializedObj.getDataIdentityValueForTest()).isEqualTo(dataIdentityValue)
+  }
+
+}
+
+private fun DataEntryAggregate.getDataIdentityValueForTest(): String? {
+  return javaClass.getDeclaredField("dataIdentity").let {
+    it.isAccessible = true
+    val value = it.get(this) as String?
+    return@let value
+  }
 }

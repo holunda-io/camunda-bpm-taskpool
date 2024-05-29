@@ -41,10 +41,10 @@ internal class JsonPathWithValueTest {
 
     val result = payload.toJsonPathsWithValues(limit = -1)
 
-    assertThat(result.keys).containsExactlyInAnyOrderElementsOf(payload.keys)
+    assertThat(result.keys()).containsExactlyInAnyOrderElementsOf(payload.keys)
     payload.entries.forEach {
-      assertThat(result).containsKey(it.key)
-      assertThat(result[it.key]).isEqualTo(it.value)
+      assertThat(result.keys()).contains(it.key)
+      assertThat(result.first { entry -> entry.first == it.key }.second).isEqualTo(it.value)
     }
   }
 
@@ -72,7 +72,7 @@ internal class JsonPathWithValueTest {
 
     val result = deep.toJsonPathsWithValues(limit = -1)
 
-    assertThat(result.keys).containsExactlyInAnyOrderElementsOf(
+    assertThat(result.keys()).containsExactlyInAnyOrderElementsOf(
       flat.keys.plus(
         listOf(
           "key-map.child1",
@@ -82,13 +82,13 @@ internal class JsonPathWithValueTest {
       )
     )
     flat.entries.forEach {
-      assertThat(result).containsKey(it.key)
-      assertThat(result[it.key]).isEqualTo(it.value)
+      assertThat(result.keys()).contains(it.key)
+      assertThat(result.first { entry -> entry.first == it.key }.second).isEqualTo(it.value)
     }
 
-    assertThat(result["key-map.child1"]).isEqualTo("string")
-    assertThat(result["key-map.child2.grand-child1"]).isEqualTo("grand-child-value")
-    assertThat(result["key-map.child2.grand-child2"]).isEqualTo(451.01F)
+    assertThat(result).contains("key-map.child1" to "string")
+    assertThat(result).contains("key-map.child2.grand-child1" to "grand-child-value")
+    assertThat(result).contains("key-map.child2.grand-child2" to 451.01F)
   }
 
   @Test
@@ -115,7 +115,7 @@ internal class JsonPathWithValueTest {
 
     val result = deep.toJsonPathsWithValues(limit = 1)
 
-    assertThat(result.keys).containsExactlyInAnyOrderElementsOf(
+    assertThat(result.keys()).containsExactlyInAnyOrderElementsOf(
       flat.keys.plus(
         listOf(
           "key-map.child1"
@@ -123,11 +123,11 @@ internal class JsonPathWithValueTest {
       )
     )
     flat.entries.forEach {
-      assertThat(result).containsKey(it.key)
-      assertThat(result[it.key]).isEqualTo(it.value)
+      assertThat(result.keys()).contains(it.key)
+      assertThat(result).contains(it.key to it.value)
     }
-    assertThat(result["key-map.child1"]).isEqualTo("string")
-    assertThat(result["key-map.child2"]).isNull()
+    assertThat(result).contains("key-map.child1" to "string")
+    assertThat(result.keys()).doesNotContain("key-map.child2")
   }
 
   @Test
@@ -145,7 +145,7 @@ internal class JsonPathWithValueTest {
       put("key", "value")
       put("to-ignore", "should not be there")
     }
-    assertThat(payload.toJsonPathsWithValues(filters = listOf(eqExclude("to-ignore")))).containsOnlyKeys("key")
+    assertThat(payload.toJsonPathsWithValues(filters = listOf(eqExclude("to-ignore"))).keys()).containsOnly("key")
 
   }
 
@@ -155,7 +155,7 @@ internal class JsonPathWithValueTest {
       put("key", "value")
       put("to-ignore", "should not be there")
     }
-    assertThat(payload.toJsonPathsWithValues(filters = listOf(eqInclude("key")))).containsOnlyKeys("key")
+    assertThat(payload.toJsonPathsWithValues(filters = listOf(eqInclude("key"))).keys()).containsOnly("key")
   }
 
   @Test
@@ -172,8 +172,8 @@ internal class JsonPathWithValueTest {
           eqInclude("include2"),
           eqExclude("to-ignore")
         )
-      )
-    ).containsOnlyKeys("include1", "include2")
+      ).keys()
+    ).containsOnly("include1", "include2")
   }
 
   @Test
@@ -188,8 +188,8 @@ internal class JsonPathWithValueTest {
           eqInclude("include1.key"),
           eqInclude("include2"),
         )
-      )
-    ).containsOnlyKeys("include1.key", "include2")
+      ).keys()
+    ).containsOnly("include1.key", "include2")
   }
 
 
@@ -199,7 +199,7 @@ internal class JsonPathWithValueTest {
       put("key", "value")
       put("other", "value2")
     }
-    assertThat(payload.toJsonPathsWithValues(filters = listOf(all()))).containsOnlyKeys("key", "other")
+    assertThat(payload.toJsonPathsWithValues(filters = listOf(all())).keys()).containsOnly("key", "other")
   }
 
   @Test
@@ -211,4 +211,46 @@ internal class JsonPathWithValueTest {
     assertThat(payload.toJsonPathsWithValues(filters = listOf(none()))).isEmpty()
   }
 
+  @Test
+  fun `should map list to multiple pairs`() {
+    val payload = createVariables().apply {
+      put("multiple", listOf("value-1", "value-2"))
+    }
+
+    val result = payload.toJsonPathsWithValues()
+
+    assertThat(result).hasSize(2)
+    assertThat(result).contains("multiple" to "value-1")
+    assertThat(result).contains("multiple" to "value-2")
+  }
+
+  @Test
+  fun `should map list of lists`() {
+    val payload = createVariables().apply {
+      put("multiple", listOf(listOf("value-1", "value-2"), listOf("value-3", "value-4")))
+    }
+      val result = payload.toJsonPathsWithValues()
+
+      assertThat(result).hasSize(4)
+      assertThat(result).contains("multiple" to "value-1")
+      assertThat(result).contains("multiple" to "value-2")
+      assertThat(result).contains("multiple" to "value-3")
+      assertThat(result).contains("multiple" to "value-4")
+    }
+
+  @Test
+  fun `should map list of maps`() {
+    val payload = createVariables().apply {
+      put("multiple", listOf(mapOf("deepKey1" to "value-1"), mapOf("deepKey2" to "value-2")))
+    }
+    val result = payload.toJsonPathsWithValues()
+
+    assertThat(result).hasSize(2)
+    assertThat(result).contains("multiple.deepKey1" to "value-1")
+    assertThat(result).contains("multiple.deepKey2" to "value-2")
+  }
+}
+
+internal fun  Set<Pair<String, Any>>.keys(): List<String> {
+  return this.map { it.first }
 }

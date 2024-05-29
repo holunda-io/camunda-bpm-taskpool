@@ -124,4 +124,15 @@ class VariableSerializerTest {
     val elements = expectedPojoMap[Pojo1::anotherKey.name] as List<Map<String, Any>>
     assertThat(elements).containsExactly(linkedMapOf(Pojo2::keyZUZUZ.name to "p2", Pojo2::children.name to listOf<String>()))
   }
+
+  @Test
+  fun `should transform list of primitives to map`() {
+    val map = createVariables()
+      .putValue("many", listOf("value1", "value2"))
+
+    val result = serialize(map, mapper)
+
+    assertThat(result).containsKey("many")
+    assertThat(result["many"]).isEqualTo(listOf("value1", "value2"))
+  }
 }
