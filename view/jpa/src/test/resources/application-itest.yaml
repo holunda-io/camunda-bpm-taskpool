@@ -3,20 +3,23 @@ spring:
     open-in-view: true # disable JPA warning
     show-sql: false
     database-platform: io.holunda.polyflow.view.jpa.itest.FixedH2Dialect
-    generate-ddl: true
-    hibernate.ddl-auto: create-drop
+    generate-ddl: false
+    hibernate.ddl-auto: none
   datasource:
     # Explanation for the `random.uuid`: Spring caches application contexts for tests (see https://docs.spring.io/spring-framework/reference/testing/testcontext-framework/ctx-management/caching.html).
     # If each context uses the same database, we can get a situation where context A is initialized, then context B is initialized and shut down, then context A is reused. But the
     # shutdown of context B has destroyed (dropped the schema of) the shared database, so the second test using context A will find the database in an unexpected state and fails.
     # Adding a random identifier to the database name ensures that each context gets its own database that it can initialize and tear down according to its own lifecycle.
-    url: jdbc:h2:mem:testdb-${random.uuid};MODE=PostgreSQL;INIT=create schema if not exists PUBLIC;DB_CLOSE_DELAY=-1;NON_KEYWORDS=VALUE
+    url: jdbc:h2:mem:testdb-${random.uuid};MODE=PostgreSQL;INIT=create schema if not exists PUBLIC;DB_CLOSE_DELAY=-1;NON_KEYWORDS=VALUE;DB_CLOSE_ON_EXIT=FALSE
     username: sa
     password: sa
     hikari:
       connection-test-query: select 1 from dual;
       schema: PUBLIC
     driver-class-name: org.h2.Driver
+  flyway:
+    enabled: true
+    locations: "classpath:db/migrations/h2-postgresql"
 
 polyflow:
   view:

@@ -1,18 +1,27 @@
 package io.holunda.polyflow.view.jpa.task
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import io.holunda.camunda.taskpool.api.business.ProcessingType
 import io.holunda.camunda.variable.serializer.toJsonPathsWithValues
 import io.holunda.camunda.variable.serializer.toPayloadJson
 import io.holunda.polyflow.view.jpa.CountByApplication
 import io.holunda.polyflow.view.jpa.DbCleaner
 import io.holunda.polyflow.view.jpa.auth.AuthorizationPrincipal.Companion.group
 import io.holunda.polyflow.view.jpa.auth.AuthorizationPrincipal.Companion.user
+import io.holunda.polyflow.view.jpa.data.DataEntryEntity
 import io.holunda.polyflow.view.jpa.data.DataEntryId
+import io.holunda.polyflow.view.jpa.data.DataEntryStateEmbeddable
 import io.holunda.polyflow.view.jpa.emptyTask
 import io.holunda.polyflow.view.jpa.itest.TestApplicationDataJpa
 import io.holunda.polyflow.view.jpa.payload.PayloadAttribute
+import io.holunda.polyflow.view.jpa.processReference
 import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.hasApplication
 import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.hasBusinessKey
+import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.hasDataEntryEntryId
+import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.hasDataEntryEntryType
+import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.hasDataEntryProcessingType
+import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.hasDataEntryState
+import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.hasDataEntryType
 import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.hasDueDate
 import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.hasDueDateAfter
 import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.hasDueDateBefore
@@ -20,6 +29,7 @@ import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.hasFollowUpDat
 import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.hasFollowUpDateAfter
 import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.hasFollowUpDateBefore
 import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.hasProcessName
+import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.hasTaskOrDataEntryPayloadAttribute
 import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.hasTaskPayloadAttribute
 import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.isAuthorizedFor
 import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.likeBusinessKey
@@ -28,7 +38,6 @@ import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.likeName
 import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.likeProcessName
 import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.likeTextSearch
 import jakarta.persistence.EntityManager
-import jakarta.persistence.Tuple
 import org.assertj.core.api.Assertions.assertThat
 import org.camunda.bpm.engine.variable.Variables.createVariables
 import org.junit.jupiter.api.AfterEach
@@ -63,6 +72,9 @@ class TaskRepositoryITest {
   lateinit var task1: TaskEntity
   lateinit var task2: TaskEntity
 
+  lateinit var dataEntry1: DataEntryEntity
+  lateinit var dataEntry2: DataEntryEntity
+
   private val today = LocalDate.now().atStartOfDay().toInstant(ZoneOffset.UTC)
   private val tomorrow = LocalDate.now().atStartOfDay().plusDays(1).toInstant(ZoneOffset.UTC)
   private val dayAfterTomorrow = LocalDate.now().atStartOfDay().plusDays(2).toInstant(ZoneOffset.UTC)
@@ -83,19 +95,45 @@ class TaskRepositoryITest {
       )
     }
 
+    dataEntry1 = DataEntryEntity(
+      dataEntryId = DataEntryId("data-id-1", "io.holunda.data-1"),
+      type = "data-1",
+      name = "Data 1",
+      applicationName = "my-application",
+      state = DataEntryStateEmbeddable(ProcessingType.IN_PROGRESS.name, "INTERNAL_CHECK"),
+      payloadAttributes = mutableSetOf(PayloadAttribute("foo", "bar"))
+    )
 
-    task1 = emptyTask().apply {
-      this.taskId = UUID.randomUUID().toString()
-      this.name = "task 1"
-      this.businessKey = "ZZZ-1-YYY-2"
-      this.description = "some random description"
-      this.authorizedPrincipals = mutableSetOf(user("kermit").toString(), group("muppets").toString())
-      this.correlations = mutableSetOf(DataEntryId(entryType = "data-entry", entryId = "id"))
-      this.payload = payload.toPayloadJson(objectMapper)
-      this.payloadAttributes = payload.toJsonPathsWithValues().map { attr -> PayloadAttribute(attr) }.toMutableSet()
-      this.dueDate = tomorrow
-      this.followUpDate = dayAfterTomorrow
-    }
+    dataEntry2 = DataEntryEntity(
+      dataEntryId = DataEntryId("data-id-2", "io.holunda.data-2"),
+      type = "data-2",
+      name = "Data 2",
+      applicationName = "my-application",
+      state = DataEntryStateEmbeddable(ProcessingType.PRELIMINARY.name, "IN_PREPARATION")
+    )
+
+    val task1Id = UUID.randomUUID().toString()
+    val taskAndDataEntryPayloadAttribute1 = TaskAndDataEntryPayloadAttributeEntity(task1Id, "key", "value")
+    val taskAndDataEntryPayloadAttribute2 = TaskAndDataEntryPayloadAttributeEntity(task1Id, "complex.child1", "1")
+    val taskAndDataEntryPayloadAttribute3 = TaskAndDataEntryPayloadAttributeEntity(task1Id, "complex.child1", "small")
+    val taskAndDataEntryPayloadAttribute4 = TaskAndDataEntryPayloadAttributeEntity(task1Id, "foo", "bar")
+
+    task1 = TaskEntity(
+      taskId = task1Id,
+      name = "task 1",
+      businessKey = "ZZZ-1-YYY-2",
+      description = "some random description",
+      authorizedPrincipals = mutableSetOf(user("kermit").toString(), group("muppets").toString()),
+      correlations = mutableSetOf(DataEntryId(entryType = "io.holunda.data-1", entryId = "data-id-1"), DataEntryId(entryType = "io.holunda.data-2", entryId = "data-id-2")),
+      payload = payload.toPayloadJson(objectMapper),
+      payloadAttributes = payload.toJsonPathsWithValues().map { attr -> PayloadAttribute(attr) }.toMutableSet(),
+      dueDate = tomorrow,
+      followUpDate = dayAfterTomorrow,
+      priority = 50,
+      sourceReference = processReference(),
+      taskDefinitionKey = "task.def.0815",
+    )
+
     task2 = emptyTask().apply {
       this.taskId = UUID.randomUUID().toString()
       this.name = "task 2"
@@ -106,8 +144,15 @@ class TaskRepositoryITest {
       this.sourceReference.name = "other-process"
     }
 
+    entityManager.persist(dataEntry1)
+    entityManager.persist(dataEntry2)
     entityManager.persist(task1)
     entityManager.persist(task2)
+
+    entityManager.persist(taskAndDataEntryPayloadAttribute1)
+    entityManager.persist(taskAndDataEntryPayloadAttribute2)
+    entityManager.persist(taskAndDataEntryPayloadAttribute3)
+    entityManager.persist(taskAndDataEntryPayloadAttribute4)
 
     entityManager.flush()
   }
@@ -253,5 +298,47 @@ class TaskRepositoryITest {
     assertThat(count).hasSize(2)
     assertThat(count[0]).isEqualTo(CountByApplication("other-app", 1))
     assertThat(count[1]).isEqualTo(CountByApplication("test-application", 1))
+  }
+
+  @Test
+  fun `should find task by data entry id`() {
+    val result = taskRepository.findAll(hasDataEntryEntryId("data-id-1"))
+    assertThat(result).hasSize(1)
+    assertThat(result).containsExactlyInAnyOrder(task1)
+  }
+
+  @Test
+  fun `should find task by data entry entryType`() {
+    val result = taskRepository.findAll(hasDataEntryEntryType("io.holunda.data-2"))
+    assertThat(result).hasSize(1)
+    assertThat(result).containsExactlyInAnyOrder(task1)
+  }
+
+  @Test
+  fun `should find task by data entry type`() {
+    val result = taskRepository.findAll(hasDataEntryType("data-1"))
+    assertThat(result).hasSize(1)
+    assertThat(result).containsExactlyInAnyOrder(task1)
+  }
+
+  @Test
+  fun `should find task by data entry state`() {
+    val result = taskRepository.findAll(hasDataEntryState("IN_PREPARATION"))
+    assertThat(result).hasSize(1)
+    assertThat(result).containsExactlyInAnyOrder(task1)
+  }
+
+  @Test
+  fun `should find task by data entry processing type`() {
+    val result = taskRepository.findAll(hasDataEntryProcessingType(ProcessingType.IN_PROGRESS))
+    assertThat(result).hasSize(1)
+    assertThat(result).containsExactlyInAnyOrder(task1)
+  }
+
+  @Test
+  fun `should find task by data entry payload attribute`() {
+    val result = taskRepository.findAll(hasTaskOrDataEntryPayloadAttribute(name = "foo", values = listOf("bar")))
+    assertThat(result).hasSize(1)
+    assertThat(result).containsExactlyInAnyOrder(task1)
   }
 }

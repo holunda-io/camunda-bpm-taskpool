@@ -13,6 +13,7 @@ import io.holunda.polyflow.view.jpa.data.DataEntryRepository.Companion.hasProces
 import io.holunda.polyflow.view.jpa.data.DataEntryRepository.Companion.hasState
 import io.holunda.polyflow.view.jpa.data.DataEntryRepository.Companion.hasType
 import io.holunda.polyflow.view.jpa.task.TaskEntity
+import io.holunda.polyflow.view.jpa.task.TaskRepository
 import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.hasAssignee
 import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.hasBusinessKey
 import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.hasDueDate
@@ -24,6 +25,7 @@ import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.hasFollowUpDat
 import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.hasPriority
 import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.hasProcessName
 import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.hasTaskPayloadAttribute
+import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.hasTaskOrDataEntryPayloadAttribute
 import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.likeBusinessKey
 import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.likeDescription
 import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.likeName
@@ -58,6 +60,17 @@ fun List<Criterion>.toTaskSpecification(): Specification<TaskEntity> {
   val payloadSpec = toTaskPayloadSpecification()
 
   return where(attributeSpec).and(payloadSpec)
+}
+
+/**
+ * Creates a JPQL specification out of predicate wrapper.
+ */
+fun List<Criterion>.toTaskWithDataEntriesSpecification(): Specification<TaskEntity> {
+  val attributeSpec = toTaskAttributeSpecification()
+  val taskAndDataEntryPayloadSpec = toTaskWithDataEntryPayloadSpecification()
+  val dataEntryAttributeSpec = toTaskCorrelatedDataEntryAttributeSpecification()
+
+  return where(attributeSpec).and(taskAndDataEntryPayloadSpec).and(dataEntryAttributeSpec)
 }
 
 /**
@@ -148,6 +161,18 @@ internal fun List<Criterion>.toTaskAttributeSpecification(): Specification<TaskE
 }
 
 /**
+ * Specification for query tasks on data entry attributes.
+ */
+internal fun List<Criterion>.toTaskCorrelatedDataEntryAttributeSpecification(): Specification<TaskEntity> {
+  val relevant = this.filterIsInstance<Criterion.DataEntryCriterion>()
+  // compose criteria with same name with OR and criteria with different names with AND
+  val relevantByName = relevant.groupBy { it.name }
+  val orComposedByName = relevantByName.map { (_, criteria) -> composeOr(criteria.map { it.toTaskCorrelatedDataEntrySpecification() }) }
+
+  return composeAnd(orComposedByName)
+}
+
+/**
  * Specification for query on data entry attributes.
  */
 internal fun List<Criterion>.toDataEntryAttributeSpecification(): Specification<DataEntryEntity> {
@@ -179,6 +204,18 @@ internal fun List<Criterion>.toTaskPayloadSpecification(): Specification<TaskEnt
   // compose criteria with same name with OR and criteria with different names with AND
   val relevantByName = relevant.groupBy { it.name }
   val orComposedByName = relevantByName.map { (_, criteria) -> criteria.toOrTaskSpecification() }
+
+  return composeAnd(orComposedByName)
+}
+
+/**
+ * Specification on task with data entry payload.
+ */
+internal fun List<Criterion>.toTaskWithDataEntryPayloadSpecification(): Specification<TaskEntity> {
+  val relevant = this.filterIsInstance<Criterion.PayloadEntryCriterion>()
+  // compose criteria with same name with OR and criteria with different names with AND
+  val relevantByName = relevant.groupBy { it.name }
+  val orComposedByName = relevantByName.map { (_, criteria) -> criteria.toTaskAndDataSpecification() }
 
   return composeAnd(orComposedByName)
 }
@@ -245,6 +282,18 @@ internal fun List<Criterion.PayloadEntryCriterion>.toOrTaskSpecification(): Spec
 }
 
 /**
+ * Creates JPA Specification for query of payload attributes from task and correlated date entries based on JSON paths. All criteria must have the same path
+ * and will be composed by the logical OR operator.
+ */
+internal fun List<Criterion.PayloadEntryCriterion>.toTaskAndDataSpecification(): Specification<TaskEntity> {
+  require(this.isNotEmpty()) { "List of criteria must not be empty." }
+  require(this.all { it.operator == EQUALS }) { "JPA View currently supports only equals as operator for filtering of payload attributes." }
+  require(this.distinctBy { it.name }.size == 1) { "All criteria must have the same path." }
+
+  return hasTaskOrDataEntryPayloadAttribute(this.first().name, this.map { it.value })
+}
+
+/**
  * Creates JPA specification for the query of direct attributes of the data entry.
  */
 internal fun Criterion.DataEntryCriterion.toDataEntrySpecification(): Specification<DataEntryEntity> {
@@ -254,6 +303,20 @@ internal fun Criterion.DataEntryCriterion.toDataEntrySpecification(): Specificat
     DataEntry::type.name -> hasType(this.value)
     "${DataEntry::state.name}.${DataEntryState::state.name}" -> hasState(this.value)
     "${DataEntry::state.name}.${DataEntryState::processingType.name}" -> hasProcessingType(ProcessingType.valueOf(this.value))
+    else -> throw IllegalArgumentException("JPA View found unsupported data entry attribute: ${this.name}.")
+  }
+}
+
+/**
+ * Creates JPA specification for the query of direct attributes of task correlated data entry.
+ */
+internal fun Criterion.DataEntryCriterion.toTaskCorrelatedDataEntrySpecification(): Specification<TaskEntity> {
+  return when (this.name) {
+    DataEntry::entryId.name -> TaskRepository.hasDataEntryEntryId(this.value)
+    DataEntry::entryType.name -> TaskRepository.hasDataEntryEntryType(this.value)
+    DataEntry::type.name -> TaskRepository.hasDataEntryType(this.value)
+    "${DataEntry::state.name}.${DataEntryState::state.name}" -> TaskRepository.hasDataEntryState(this.value)
+    "${DataEntry::state.name}.${DataEntryState::processingType.name}" -> TaskRepository.hasDataEntryProcessingType(ProcessingType.valueOf(this.value))
     else -> throw IllegalArgumentException("JPA View found unsupported data entry attribute: ${this.name}.")
   }
 }

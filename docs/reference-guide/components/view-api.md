@@ -135,6 +135,11 @@ Following operations are supported:
 If the field name does not have one of the above prefixes, it is considered as an attribute inside the payload of data entry or enriched variables of a user task. For example, imagine
 you have a data entry with payload attributes `{ "attribute": "value", "another": 45 }`. In order to search for those, just specify `attribute=value` in your filter criteria.
 
+!!! info
+    When filtering in the Task API, only the queries that include Data Entries (`AllTasksWithDataEntriesQuery`, `TasksWithDataEntriesForGroupQuery`, `TasksWithDataEntriesForUserQuery`)
+    support filtering on the attributes or payload of correlated data entries. Filters on Data Entry attributes or payload are ignored in queries that do not include Data Entries
+    (`AllTasksQuery`, `TasksForGroupQuery`, `TasksForUserQuery`, `TasksForCandidateUserAndGroupQuery`).
+
 Filters are composed with logical AND, meaning that all given filters have to match in order for a task to be included in the result of the query. For example, given the filters
 `task.priority=50` and `foo=bar`, the query result would only contain tasks that have a priority of 50 **and** a payload attribute named foo with the value bar.
 
