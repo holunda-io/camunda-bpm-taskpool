@@ -43,7 +43,7 @@ fun TaskCreatedEngineEvent.toEntity(
   createdDate = this.createTime?.toInstant() ?: Instant.now(),
   followUpDate = this.followUpDate?.toInstant(),
   dueDate = this.dueDate?.toInstant(),
-  owner = this.owner
+  owner = this.owner,
 )
 
 /**

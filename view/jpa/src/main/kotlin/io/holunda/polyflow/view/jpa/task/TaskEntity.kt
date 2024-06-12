@@ -1,9 +1,11 @@
 package io.holunda.polyflow.view.jpa.task
 
+import io.holunda.polyflow.view.jpa.data.DataEntryEntity
 import io.holunda.polyflow.view.jpa.data.DataEntryId
 import io.holunda.polyflow.view.jpa.payload.PayloadAttribute
 import io.holunda.polyflow.view.jpa.process.SourceReferenceEmbeddable
 import jakarta.persistence.*
+import org.hibernate.annotations.Immutable
 import java.time.Instant
 import java.time.ZoneOffset
 
@@ -67,7 +69,20 @@ class TaskEntity(
   var assignee: String? = null,
   @Column(name = "PAYLOAD")
   @Lob
-  var payload: String? = null
+  var payload: String? = null,
+
+  @Immutable
+  @OneToMany(fetch = FetchType.LAZY)
+  @JoinColumn(name="TASK_ID", updatable = false)
+  val taskAndDataEntryPayloadAttributes: Set<TaskAndDataEntryPayloadAttributeEntity>? = null,
+  @Immutable
+  @OneToMany(fetch = FetchType.LAZY)
+  @JoinTable(
+    name = "PLF_TASK_CORRELATIONS",
+    joinColumns = [JoinColumn(name = "TASK_ID")],
+    inverseJoinColumns = [JoinColumn(name = "ENTRY_ID"), JoinColumn(name = "ENTRY_TYPE")]
+  )
+  val dataEntryCorrelations: Set<DataEntryEntity>? = null
 ) {
   override fun toString() = "Task[taskId=$taskId, taskDefinitionKey=$taskDefinitionKey, name=$name, created=${createdDate.atOffset(ZoneOffset.UTC)}]"
 }

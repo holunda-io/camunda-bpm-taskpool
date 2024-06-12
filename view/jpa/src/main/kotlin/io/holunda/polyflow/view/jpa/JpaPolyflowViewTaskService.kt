@@ -23,7 +23,6 @@ import io.holunda.polyflow.view.jpa.task.toTask
 import io.holunda.polyflow.view.jpa.update.updateTaskQuery
 import io.holunda.polyflow.view.query.PageableSortableQuery
 import io.holunda.polyflow.view.query.task.*
-import io.holunda.polyflow.view.task
 import mu.KLogging
 import org.axonframework.config.ProcessingGroup
 import org.axonframework.eventhandling.EventHandler
@@ -55,8 +54,7 @@ class JpaPolyflowViewTaskService(
   override fun query(query: TasksWithDataEntriesForUserQuery): TasksWithDataEntriesQueryResult {
     val authorizedPrincipals: Set<AuthorizationPrincipal> = setOf(user(query.user.username)).plus(query.user.groups.map { group(it) })
     val criteria = toCriteria(query.filters)
-    val taskSpecification = criteria.toTaskSpecification()
-    val dataEntrySpecification = criteria.toDataEntrySpecification()
+    val taskSpecification = criteria.toTaskWithDataEntriesSpecification()
     val sort = query.apply {
       sanitizeSort(Task::class)
     }.mapTaskSort()
@@ -80,8 +78,7 @@ class JpaPolyflowViewTaskService(
           task = taskEntity.toTask(objectMapper),
           dataEntries = taskEntity.correlations.map { id ->
             dataEntryRepository.findAll(
-              dataEntrySpecification
-                .and(DataEntryRepository.isAuthorizedFor(authorizedPrincipals))
+              DataEntryRepository.isAuthorizedFor(authorizedPrincipals)
                 .and(DataEntryRepository.hasEntryId(id.entryId))
                 .and(DataEntryRepository.hasEntryType(id.entryType))
             )
@@ -105,8 +102,7 @@ class JpaPolyflowViewTaskService(
     )
     val dataAuthorizationSpecification = DataEntryRepository.isAuthorizedFor(authorizedPrincipals)
     val criteria = toCriteria(query.filters)
-    val taskSpecification = criteria.toTaskSpecification()
-    val dataEntrySpecification = criteria.toDataEntrySpecification()
+    val taskSpecification = criteria.toTaskWithDataEntriesSpecification()
     val sort = query.apply {
       sanitizeSort(Task::class)
     }.mapTaskSort()
@@ -118,8 +114,7 @@ class JpaPolyflowViewTaskService(
           task = taskEntity.toTask(objectMapper),
           dataEntries = taskEntity.correlations.map { id ->
             dataEntryRepository.findAll(
-              dataEntrySpecification
-                .and(dataAuthorizationSpecification)
+              dataAuthorizationSpecification
                 .and(DataEntryRepository.hasEntryId(id.entryId))
                 .and(DataEntryRepository.hasEntryType(id.entryType))
             )
@@ -135,8 +130,7 @@ class JpaPolyflowViewTaskService(
 
   override fun query(query: AllTasksWithDataEntriesQuery): TasksWithDataEntriesQueryResult {
     val criteria = toCriteria(query.filters)
-    val taskSpecification = criteria.toTaskSpecification()
-    val dataEntrySpecification = criteria.toDataEntrySpecification()
+    val taskSpecification = criteria.toTaskWithDataEntriesSpecification()
     val sort = query.apply {
       sanitizeSort(Task::class)
     }.mapTaskSort()
@@ -147,8 +141,7 @@ class JpaPolyflowViewTaskService(
         task = taskEntity.toTask(objectMapper),
         dataEntries = taskEntity.correlations.map { id ->
           dataEntryRepository.findAll(
-            dataEntrySpecification
-              .and(DataEntryRepository.hasEntryId(id.entryId))
+            DataEntryRepository.hasEntryId(id.entryId)
               .and(DataEntryRepository.hasEntryType(id.entryType))
           )
         }.flatten().map { it.toDataEntry(objectMapper) }
@@ -313,7 +306,7 @@ class JpaPolyflowViewTaskService(
         emitTaskUpdate(updated)
 
       }.ifPresent { entity ->
-        logger.warn { "Will not create task '${event.id}' because it already exists in the database"}
+        logger.warn { "Will not create task '${event.id}' because it already exists in the database" }
         emitTaskUpdate(entity)
       }
   }
@@ -428,7 +421,7 @@ class JpaPolyflowViewTaskService(
     taskRepository
       .findById(event.id)
       .ifEmpty {
-        logger.warn { "Cannot update task '${event.id}' because it does not exist in the database"}
+        logger.warn { "Cannot update task '${event.id}' because it does not exist in the database" }
       }.ifPresent { entity ->
         when (event.assignmentUpdateType) {
           CamundaTaskEventType.CANDIDATE_GROUP_ADD -> entity.authorizedPrincipals.add(group(event.groupId).toString())
