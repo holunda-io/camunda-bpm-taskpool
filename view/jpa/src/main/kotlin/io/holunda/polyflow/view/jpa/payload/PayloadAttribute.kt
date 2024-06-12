@@ -10,9 +10,9 @@ import java.io.Serializable
 @Embeddable
 class PayloadAttribute(
   @Column(name = "PATH", nullable = false)
-  var path: String?,
+  var path: String,
   @Column(name = "VALUE", nullable = false)
-  var value: String?
+  var value: String
 ) : Serializable {
 
   companion object {
@@ -36,8 +36,8 @@ class PayloadAttribute(
   }
 
   override fun hashCode(): Int {
-    var result = path?.hashCode() ?: 0
-    result = 31 * result + (value?.hashCode() ?: 0)
+    var result = path.hashCode()
+    result = 31 * result + (value.hashCode())
     return result
   }
 }
