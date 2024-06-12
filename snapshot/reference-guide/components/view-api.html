@@ -2345,6 +2345,12 @@ process name, <code>task.textSearch%some-substring</code> makes a special OR-com
 </div>
 <p>If the field name does not have one of the above prefixes, it is considered as an attribute inside the payload of data entry or enriched variables of a user task. For example, imagine
 you have a data entry with payload attributes <code>{ "attribute": "value", "another": 45 }</code>. In order to search for those, just specify <code>attribute=value</code> in your filter criteria.</p>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>When filtering in the Task API, only the queries that include Data Entries (<code>AllTasksWithDataEntriesQuery</code>, <code>TasksWithDataEntriesForGroupQuery</code>, <code>TasksWithDataEntriesForUserQuery</code>)
+support filtering on the attributes or payload of correlated data entries. Filters on Data Entry attributes or payload are ignored in queries that do not include Data Entries
+(<code>AllTasksQuery</code>, <code>TasksForGroupQuery</code>, <code>TasksForUserQuery</code>, <code>TasksForCandidateUserAndGroupQuery</code>).</p>
+</div>
 <p>Filters are composed with logical AND, meaning that all given filters have to match in order for a task to be included in the result of the query. For example, given the filters
 <code>task.priority=50</code> and <code>foo=bar</code>, the query result would only contain tasks that have a priority of 50 <strong>and</strong> a payload attribute named foo with the value bar.</p>
 <div class="admonition warning">
