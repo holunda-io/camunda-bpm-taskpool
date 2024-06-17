@@ -87,6 +87,8 @@ class JpaPolyflowViewDataEntryService(
   override fun query(query: DataEntriesQuery, metaData: MetaData): QueryResponseMessage<DataEntriesQueryResult> {
 
     val criteria: List<Criterion> = toCriteria(query.filters)
+//    polyflowJpaViewProperties.includeCorrelatedDataEntriesInDataEntryQueries
+//    Should this method build a different specification or should the specification knows this property?
     val specification = criteria.toDataEntrySpecification()
     val pageRequest = pageRequest(query.page, query.size, query.sort)
 

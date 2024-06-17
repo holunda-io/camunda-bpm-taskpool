@@ -5,6 +5,7 @@ import io.holunda.polyflow.view.jpa.payload.PayloadAttribute
 import jakarta.persistence.*
 import org.hibernate.annotations.Fetch
 import org.hibernate.annotations.FetchMode
+import org.hibernate.annotations.Immutable
 import java.time.Instant
 
 /**
@@ -62,6 +63,19 @@ class DataEntryEntity(
   @OneToMany(mappedBy = "dataEntry", orphanRemoval = true, cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
   @Fetch(FetchMode.SELECT)
   var protocol: MutableList<ProtocolElement> = mutableListOf(),
+  @ElementCollection(fetch = FetchType.EAGER)
+  @CollectionTable(
+    name = "PLF_DATA_ENTRY_CORRELATIONS",
+    joinColumns = [
+      JoinColumn(name = "OWNING_ENTRY_TYPE", referencedColumnName = "ENTRY_TYPE"),
+      JoinColumn(name= "OWNING_ENTRY_ID", referencedColumnName = "ENTRY_ID"),
+    ]
+  )
+  var correlations: MutableSet<DataEntryId> = mutableSetOf(),
+  @Immutable
+  @OneToMany(fetch = FetchType.LAZY)
+  @JoinColumns(JoinColumn(name = "ENTRY_TYPE", referencedColumnName = "ENTRY_TYPE"), JoinColumn(name = "ENTRY_ID", referencedColumnName = "ENTRY_ID"))
+  val payloadAndCorrelatedPayloadAttributes: Set<DataEntryPayloadAttributeEntity>? = null,
 
   @Column(name = "PAYLOAD")
   @Lob
