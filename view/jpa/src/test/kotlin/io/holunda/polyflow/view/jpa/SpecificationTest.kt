@@ -8,7 +8,6 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.springframework.data.domain.Sort.Direction
-import java.lang.NumberFormatException
 
 /**
  * Tests conversion of criteria into JPA Specifications.
@@ -20,7 +19,7 @@ internal class SpecificationTest {
     val filters = listOf("data.state.state=In Progress")
     val criteria = toCriteria(filters)
 
-    val specification = criteria.toDataEntrySpecification(polyflowJpaViewProperties.includeCorrelatedDataEntriesInDataEntryQueries)
+    val specification = criteria.toDataEntrySpecification(false)
     assertThat(specification).isNotNull
   }
 
@@ -35,7 +34,7 @@ internal class SpecificationTest {
     )
     val criteria = toCriteria(filters)
 
-    val specification = criteria.toDataEntrySpecification(polyflowJpaViewProperties.includeCorrelatedDataEntriesInDataEntryQueries)
+    val specification = criteria.toDataEntrySpecification(false)
     assertThat(specification).isNotNull
   }
 

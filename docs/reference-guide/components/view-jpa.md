@@ -61,6 +61,7 @@ configuration of this indexing process by the following configuration options:
 polyflow.view.jpa:
   stored-items: task, data-entry, process-instance, process-definition
   payload-attribute-level-limit: 2
+  include-correlated-data-entries-in-data-entry-queries: false
   data-entry-filters:
     include: myProperty2.myOtherEmbeddedProperty3, myProperty2.myOtherEmbeddedProperty2
 #    exclude: myProperty
@@ -74,8 +75,13 @@ In addition, the `stored-items` property is holding a set of items to be persist
 stored items are: `task`, `data-entry`, `process-instance` and `process-definition`. By setting this property, you can disable
 storage of items not required by your application and save space consumption of your database. The property defaults to `data-entry`.
 
+The `include-correlated-data-entries-in-data-entry-queries` flag controls whether a data entry query (`DataEntriesForUserQuery` or `DataEntriesQuery`) considers
+the payload of correlated data entries. The data entry attributes (such as `entry_type`, `state.state`, ...) of correlated data entries are not considered.
+*Note:* Only one level of correlation depth is considered here and there is no option yet to change the depth.
+
 The attributes `data-entry-filters` and `task-filters` hold `include` / `exclude` lists of property paths which will be taken in 
 consideration during the search index creation.
+
 
 !!! note
     Please make sure you understand that the **payload enrichment** performed during collection and **indexing for search** are two different
@@ -132,6 +138,7 @@ select * from PLF_TASK_PAYLOAD_ATTRIBUTES);
 ```
 
 ```
+create view PLF_VIEW_DATA_ENTRY_PAYLOAD as (
 select *
 from PLF_DATA_ENTRY_PAYLOAD_ATTRIBUTES
 union
@@ -143,4 +150,5 @@ union
      join PLF_DATA_ENTRY_PAYLOAD_ATTRIBUTES ep
  on
      ec.ENTRY_ID = ep.ENTRY_ID and ec.ENTRY_TYPE = ep.ENTRY_TYPE)
+)
 ```

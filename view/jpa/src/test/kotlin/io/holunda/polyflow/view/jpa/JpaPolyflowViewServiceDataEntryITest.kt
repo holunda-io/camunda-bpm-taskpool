@@ -19,10 +19,10 @@ import org.axonframework.queryhandling.GenericSubscriptionQueryUpdateMessage
 import org.axonframework.queryhandling.QueryResponseMessage
 import org.axonframework.queryhandling.QueryUpdateEmitter
 import org.axonframework.queryhandling.SubscriptionQueryUpdateMessage
+import org.camunda.bpm.engine.variable.Variables
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.atLeast
 import org.mockito.kotlin.clearInvocations
@@ -31,7 +31,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.ActiveProfiles
-import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.transaction.annotation.Transactional
 import java.time.Instant
 import java.time.OffsetDateTime
@@ -43,7 +42,8 @@ import java.util.function.Predicate
 @SpringBootTest(
   classes = [TestApplication::class],
   properties = [
-    "polyflow.view.jpa.stored-items=data-entry"
+    "polyflow.view.jpa.stored-items=data-entry",
+    "polyflow.view.jpa.include-correlated-data-entries-in-data-entry-queries=false"
   ]
 )
 @ActiveProfiles("itest", "mock-query-emitter")
@@ -158,7 +158,7 @@ internal class JpaPolyflowViewServiceDataEntryITest {
         applicationName = "test-application",
         name = "Test Entry 3",
         state = ProcessingType.IN_PROGRESS.of("In review"),
-        payload = serialize(payload = mapOf("key-int" to 2, "key" to "value"), mapper = objectMapper),
+        payload = serialize(payload = mapOf("key-int" to 3, "key" to "value"), mapper = objectMapper),
         authorizations = listOf(
           addUser("piggy"),
           addGroup("muppets")
@@ -195,7 +195,7 @@ internal class JpaPolyflowViewServiceDataEntryITest {
         applicationName = "test-application",
         name = "Test Entry 4",
         state = ProcessingType.IN_PROGRESS.of("In review"),
-        payload = serialize(payload = mapOf("key-int" to 2, "key" to "other-value"), mapper = objectMapper),
+        payload = serialize(payload = mapOf("key-int" to 4, "key" to "other-value"), mapper = objectMapper),
         authorizations = listOf(
           addUser("hulk"),
           addGroup("avenger")
@@ -205,7 +205,8 @@ internal class JpaPolyflowViewServiceDataEntryITest {
           username = "piggy",
           log = "Created",
           logNotes = "Created the entry"
-        )
+        ),
+        correlations = Variables.createVariables().addCorrelation("io.polyflow.test", id2)
       ),
       metaData = MetaData.emptyInstance()
     )
@@ -321,6 +322,15 @@ internal class JpaPolyflowViewServiceDataEntryITest {
       DataEntriesQuery(sort = "+type")
     )
     assertThat(result.payload.elements.map { it.entryId }).containsExactly(id, id2, id4)
+  }
+
+  @Test
+  fun `should not find data entry with correlations`() {
+    val result = jpaPolyflowViewService.query(
+      DataEntriesQuery(filters = listOf("key-int=2")) // key-int 2 is an attribute of data entry 2
+    )
+
+    assertThat(result.payload.elements.map { it.entryId }).containsExactly(id2) // id4 is not found by correlation to id2, due to property
   }
 
 
