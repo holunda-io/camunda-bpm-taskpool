@@ -74,8 +74,11 @@ class DataEntryEntity(
   var correlations: MutableSet<DataEntryId> = mutableSetOf(),
   @Immutable
   @OneToMany(fetch = FetchType.LAZY)
-  @JoinColumns(JoinColumn(name = "ENTRY_TYPE", referencedColumnName = "ENTRY_TYPE"), JoinColumn(name = "ENTRY_ID", referencedColumnName = "ENTRY_ID"))
-  val payloadAndCorrelatedPayloadAttributes: Set<DataEntryPayloadAttributeEntity>? = null,
+  @JoinColumns(
+    JoinColumn(name = "ENTRY_TYPE", referencedColumnName = "ENTRY_TYPE", insertable = false, updatable = false),
+    JoinColumn(name = "ENTRY_ID", referencedColumnName = "ENTRY_ID", insertable = false, updatable = false)
+  )
+  var payloadAndCorrelatedPayloadAttributes: MutableSet<DataEntryPayloadAttributeEntity> = mutableSetOf(),
 
   @Column(name = "PAYLOAD")
   @Lob

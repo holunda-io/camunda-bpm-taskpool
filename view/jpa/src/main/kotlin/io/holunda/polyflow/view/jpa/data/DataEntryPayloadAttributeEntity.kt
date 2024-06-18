@@ -3,11 +3,13 @@ package io.holunda.polyflow.view.jpa.data
 import jakarta.persistence.EmbeddedId
 import jakarta.persistence.Entity
 import jakarta.persistence.Table
+import org.hibernate.annotations.Immutable
 
 /**
  * Entity that holds the combined payload attributes of the correlated DataEntries.
  */
 @Entity
+@Immutable
 @Table(name = "PLF_VIEW_DATA_ENTRY_PAYLOAD")
 class DataEntryPayloadAttributeEntity(
   @EmbeddedId
@@ -21,5 +23,7 @@ class DataEntryPayloadAttributeEntity(
       value = value
     )
   )
+
+  override fun toString(): String = "DataEntryPayloadAttributeEntity(id=$id)"
 }
 

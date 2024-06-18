@@ -2,20 +2,22 @@ package io.holunda.polyflow.view.jpa.data
 
 import jakarta.persistence.Column
 import jakarta.persistence.Embeddable
+import org.hibernate.annotations.Immutable
 import java.io.Serializable
 
 /**
  * Id class that holds the combined payload attributes of the correlated DataEntries.
  */
 @Embeddable
+@Immutable
 class DataEntryPayloadAttributeEntityId(
-  @Column(name = "ENTRY_TYPE", length = 64, nullable = false)
+  @Column(name = "ENTRY_TYPE", length = 64, nullable = false, updatable = false, insertable = false)
   var entryType: String,
-  @Column(name = "ENTRY_ID", length = 64, nullable = false)
+  @Column(name = "ENTRY_ID", length = 64, nullable = false, updatable = false, insertable = false)
   var entryId: String,
-  @Column(name = "PATH", nullable = false)
+  @Column(name = "PATH", nullable = false, updatable = false, insertable = false)
   var path: String,
-  @Column(name = "VALUE", nullable = false)
+  @Column(name = "VALUE", nullable = false, updatable = false, insertable = false)
   var value: String
 ) : Serializable {
 
