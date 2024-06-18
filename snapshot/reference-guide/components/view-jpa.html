@@ -2018,6 +2018,7 @@ configuration of this indexing process by the following configuration options:</
 <div class="highlight"><pre><span></span><code>polyflow.view.jpa:
   stored-items: task, data-entry, process-instance, process-definition
   payload-attribute-level-limit: 2
+  include-correlated-data-entries-in-data-entry-queries: false
   data-entry-filters:
     include: myProperty2.myOtherEmbeddedProperty3, myProperty2.myOtherEmbeddedProperty2
 #    exclude: myProperty
@@ -2028,6 +2029,9 @@ configuration of this indexing process by the following configuration options:</
 In addition, the <code>stored-items</code> property is holding a set of items to be persisted to the database. The possible values of 
 stored items are: <code>task</code>, <code>data-entry</code>, <code>process-instance</code> and <code>process-definition</code>. By setting this property, you can disable
 storage of items not required by your application and save space consumption of your database. The property defaults to <code>data-entry</code>.</p>
+<p>The <code>include-correlated-data-entries-in-data-entry-queries</code> flag controls whether a data entry query (<code>DataEntriesForUserQuery</code> or <code>DataEntriesQuery</code>) considers
+the payload of correlated data entries. The data entry attributes (such as <code>entry_type</code>, <code>state.state</code>, ...) of correlated data entries are not considered.
+<em>Note:</em> Only one level of correlation depth is considered here and there is no option yet to change the depth.</p>
 <p>The attributes <code>data-entry-filters</code> and <code>task-filters</code> hold <code>include</code> / <code>exclude</code> lists of property paths which will be taken in 
 consideration during the search index creation.</p>
 <div class="admonition note">
@@ -2062,11 +2066,12 @@ want to increase the logging level, please setup it e.g. in your <code>applicati
 <li><code>PLF_TASK_CORRELATIONS</code>: table for user task correlation information</li>
 <li><code>PLF_TASK_PAYLOAD_ATTRIBUTES</code>: table for user task attribute search index</li>
 <li><code>PLF_VIEW_TASK_AND_DATA_ENTRY_PAYLOAD</code>: view for convenient taskWithDataEntry queries execution</li>
+<li><code>PLF_DATA_ENTRY_PAYLOAD_ATTRIBUTES</code>: view for convenient data entry queries with correlations</li>
 <li><code>TRACKING_TOKEN</code>: table for Axon Tracking Tokens</li>
 </ul>
 <p>If you are interested in DDLs for the view, feel free to generate one using the following call of Apache Maven 
 <code>mvn -Pgenerate-sql -f view/jpa</code>. Currently, DDLs for the databases H2, MSSQL and PostgreSQL are generated into <code>target/</code> directory.<br />
-The DDL for the <code>PLF_VIEW_TASK_AND_DATA_ENTRY_PAYLOAD</code> cannot be auto-generated, therefore you need to use the following statement to create it:
+The DDL for the <code>PLF_VIEW_TASK_AND_DATA_ENTRY_PAYLOAD</code> and <code>PLF_DATA_ENTRY_PAYLOAD_ATTRIBUTES</code> cannot be auto-generated, therefore you need to use the following statements to create them:
 <div class="highlight"><pre><span></span><code>create view PLF_VIEW_TASK_AND_DATA_ENTRY_PAYLOAD as
 ((select pc.TASK_ID, dea.PATH, dea.VALUE
  from PLF_TASK_CORRELATIONS pc
@@ -2074,6 +2079,20 @@ The DDL for the <code>PLF_VIEW_TASK_AND_DATA_ENTRY_PAYLOAD</code> cannot be auto
 union
 select * from PLF_TASK_PAYLOAD_ATTRIBUTES);
 </code></pre></div></p>
+<div class="highlight"><pre><span></span><code>create view PLF_VIEW_DATA_ENTRY_PAYLOAD as (
+select *
+from PLF_DATA_ENTRY_PAYLOAD_ATTRIBUTES
+union
+(select ec.OWNING_ENTRY_ID   as ENTRY_ID,
+        ec.OWNING_ENTRY_TYPE as ENTRY_TYPE,
+        ep.path              as PATH,
+        ep.value             as VALUE
+ from PLF_DATA_ENTRY_CORRELATIONS ec
+     join PLF_DATA_ENTRY_PAYLOAD_ATTRIBUTES ep
+ on
+     ec.ENTRY_ID = ep.ENTRY_ID and ec.ENTRY_TYPE = ep.ENTRY_TYPE)
+)
+</code></pre></div>
 
 
 
