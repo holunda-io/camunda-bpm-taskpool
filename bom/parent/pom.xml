@@ -530,7 +530,7 @@
             </excludes>
             <!-- Sets the VM argument line used when unit tests are run. -->
             <!-- prevent the annoying ForkedBooter process from stealing window focus on Mac OS -->
-            <argLine>-Djava.awt.headless=true @{surefireArgLine} -XX:+StartAttachListener</argLine>
+            <argLine>-Djava.awt.headless=true @{surefireArgLine} -XX:+StartAttachListener --add-opens java.base/java.lang.invoke=ALL-UNNAMED --add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/java.util=ALL-UNNAMED</argLine>
             <systemPropertyVariables>
               <jgiven.report.dir>${project.build.directory}/jgiven-reports</jgiven.report.dir>
             </systemPropertyVariables>
@@ -557,7 +557,7 @@
             <!-- Sets the VM argument line used when integration tests are run. -->
             <!-- prevent the annoying ForkedBooter process from stealing window focus on Mac OS -->
             <!-- the add-opens is required for XStream -->
-            <argLine>-Djava.awt.headless=true @{failsafeArgLine} -XX:+StartAttachListener --add-opens java.base/java.util=ALL-UNNAMED</argLine>
+            <argLine>-Djava.awt.headless=true @{failsafeArgLine} -XX:+StartAttachListener --add-opens java.base/java.lang.invoke=ALL-UNNAMED --add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/java.util=ALL-UNNAMED</argLine>
           </configuration>
         </plugin>
 
