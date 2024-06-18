@@ -110,7 +110,7 @@ interface DataEntryRepository : CrudRepository<DataEntryEntity, DataEntryId>, Jp
      * Specification for checking the payload attributes of a data entry (including payload attributes from correlated data entries).
      * If multiple values are given, one of them must match. payload.name = ? AND (payload.value = ? OR payload.value = ? OR ...)
      */
-    fun hasTaskOrDataEntryPayloadAttribute(name: String, values: List<String>): Specification<DataEntryEntity> =
+    fun hasDataEntryPayloadAttributeIncludingCorrelations(name: String, values: List<String>): Specification<DataEntryEntity> =
       Specification { dataEntry, query, builder ->
         query.distinct(true)
         val join = dataEntry.join<DataEntryEntity, Set<DataEntryPayloadAttributeEntity>>(DataEntryEntity::payloadAndCorrelatedPayloadAttributes.name)

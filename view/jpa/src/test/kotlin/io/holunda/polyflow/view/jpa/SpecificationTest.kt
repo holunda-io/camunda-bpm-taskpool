@@ -20,7 +20,7 @@ internal class SpecificationTest {
     val filters = listOf("data.state.state=In Progress")
     val criteria = toCriteria(filters)
 
-    val specification = criteria.toDataEntrySpecification()
+    val specification = criteria.toDataEntrySpecification(polyflowJpaViewProperties.includeCorrelatedDataEntriesInDataEntryQueries)
     assertThat(specification).isNotNull
   }
 
@@ -35,7 +35,7 @@ internal class SpecificationTest {
     )
     val criteria = toCriteria(filters)
 
-    val specification = criteria.toDataEntrySpecification()
+    val specification = criteria.toDataEntrySpecification(polyflowJpaViewProperties.includeCorrelatedDataEntriesInDataEntryQueries)
     assertThat(specification).isNotNull
   }
 
