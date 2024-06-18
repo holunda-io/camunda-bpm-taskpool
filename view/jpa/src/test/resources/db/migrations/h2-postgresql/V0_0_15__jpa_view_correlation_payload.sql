@@ -1,11 +1,6 @@
-CREATE TABLE plf_view_task_and_data_entry_payload (
-  task_id   VARCHAR(64) NOT NULL,
-  path      VARCHAR(255) NOT NULL,
-  value     VARCHAR(255) NOT NULL,
-  PRIMARY KEY (task_id, path, value)
-);
-
-ALTER TABLE plf_view_task_and_data_entry_payload
-  ADD CONSTRAINT FK_view_task_and_data_entry_payload_have_task
-    FOREIGN KEY (task_id)
-      REFERENCES plf_task;
+create view PLF_VIEW_TASK_AND_DATA_ENTRY_PAYLOAD as
+((select pc.TASK_ID, dea.PATH, dea.VALUE
+  from PLF_TASK_CORRELATIONS pc
+         join PLF_DATA_ENTRY_PAYLOAD_ATTRIBUTES dea on pc.ENTRY_ID = dea.ENTRY_ID and pc.ENTRY_TYPE = dea.ENTRY_TYPE)
+union
+select * from PLF_TASK_PAYLOAD_ATTRIBUTES);
