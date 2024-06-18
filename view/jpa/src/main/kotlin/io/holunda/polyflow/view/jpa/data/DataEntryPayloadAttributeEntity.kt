@@ -4,6 +4,9 @@ import jakarta.persistence.EmbeddedId
 import jakarta.persistence.Entity
 import jakarta.persistence.Table
 
+/**
+ * Entity that holds the combined payload attributes of the correlated DataEntries.
+ */
 @Entity
 @Table(name = "PLF_VIEW_DATA_ENTRY_PAYLOAD")
 class DataEntryPayloadAttributeEntity(

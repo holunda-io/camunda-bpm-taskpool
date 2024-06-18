@@ -112,14 +112,8 @@ class TaskRepositoryITest {
       state = DataEntryStateEmbeddable(ProcessingType.PRELIMINARY.name, "IN_PREPARATION")
     )
 
-    val task1Id = UUID.randomUUID().toString()
-    val taskAndDataEntryPayloadAttribute1 = TaskAndDataEntryPayloadAttributeEntity(task1Id, "key", "value")
-    val taskAndDataEntryPayloadAttribute2 = TaskAndDataEntryPayloadAttributeEntity(task1Id, "complex.child1", "1")
-    val taskAndDataEntryPayloadAttribute3 = TaskAndDataEntryPayloadAttributeEntity(task1Id, "complex.child1", "small")
-    val taskAndDataEntryPayloadAttribute4 = TaskAndDataEntryPayloadAttributeEntity(task1Id, "foo", "bar")
-
     task1 = TaskEntity(
-      taskId = task1Id,
+      taskId = UUID.randomUUID().toString(),
       name = "task 1",
       businessKey = "ZZZ-1-YYY-2",
       description = "some random description",
@@ -148,11 +142,6 @@ class TaskRepositoryITest {
     entityManager.persist(dataEntry2)
     entityManager.persist(task1)
     entityManager.persist(task2)
-
-    entityManager.persist(taskAndDataEntryPayloadAttribute1)
-    entityManager.persist(taskAndDataEntryPayloadAttribute2)
-    entityManager.persist(taskAndDataEntryPayloadAttribute3)
-    entityManager.persist(taskAndDataEntryPayloadAttribute4)
 
     entityManager.flush()
   }

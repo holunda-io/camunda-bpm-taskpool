@@ -4,6 +4,9 @@ import jakarta.persistence.Column
 import jakarta.persistence.Embeddable
 import java.io.Serializable
 
+/**
+ * Id class that holds the combined payload attributes of the correlated DataEntries.
+ */
 @Embeddable
 class DataEntryPayloadAttributeEntityId(
   @Column(name = "ENTRY_TYPE", length = 64, nullable = false)

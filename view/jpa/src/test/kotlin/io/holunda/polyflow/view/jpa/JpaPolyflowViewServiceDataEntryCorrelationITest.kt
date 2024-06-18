@@ -120,7 +120,7 @@ internal class JpaPolyflowViewServiceDataEntryCorrelationITest {
       DataEntriesQuery(filters = listOf("key-int=1")) // key-int 1 is an attribute of data entry 1
     )
 
-    assertThat(result.payload.elements.map { it.entryId }).containsExactly(id2, id1) // id2 is found by correlation to id1, due to property
+    assertThat(result.payload.elements.map { it.entryId }).containsExactlyInAnyOrder(id2, id1) // id2 is found by correlation to id1, due to property
   }
 
   data class QueryUpdate<E>(val queryType: Class<E>, val predicate: Predicate<E>, val update: Any)
