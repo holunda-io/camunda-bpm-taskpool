@@ -116,11 +116,12 @@ The JPA View uses several tables to store the results. These are:
 * `PLF_TASK_CORRELATIONS`: table for user task correlation information
 * `PLF_TASK_PAYLOAD_ATTRIBUTES`: table for user task attribute search index
 * `PLF_VIEW_TASK_AND_DATA_ENTRY_PAYLOAD`: view for convenient taskWithDataEntry queries execution
+* `PLF_DATA_ENTRY_PAYLOAD_ATTRIBUTES`: view for convenient data entry queries with correlations
 * `TRACKING_TOKEN`: table for Axon Tracking Tokens
 
 If you are interested in DDLs for the view, feel free to generate one using the following call of Apache Maven 
 `mvn -Pgenerate-sql -f view/jpa`. Currently, DDLs for the databases H2, MSSQL and PostgreSQL are generated into `target/` directory.  
-The DDL for the `PLF_VIEW_TASK_AND_DATA_ENTRY_PAYLOAD` cannot be auto-generated, therefore you need to use the following statement to create it:
+The DDL for the `PLF_VIEW_TASK_AND_DATA_ENTRY_PAYLOAD` and `PLF_DATA_ENTRY_PAYLOAD_ATTRIBUTES` cannot be auto-generated, therefore you need to use the following statements to create them:
 ```
 create view PLF_VIEW_TASK_AND_DATA_ENTRY_PAYLOAD as
 ((select pc.TASK_ID, dea.PATH, dea.VALUE
@@ -128,4 +129,18 @@ create view PLF_VIEW_TASK_AND_DATA_ENTRY_PAYLOAD as
           join PLF_DATA_ENTRY_PAYLOAD_ATTRIBUTES dea on pc.ENTRY_ID = dea.ENTRY_ID and pc.ENTRY_TYPE = dea.ENTRY_TYPE)
 union
 select * from PLF_TASK_PAYLOAD_ATTRIBUTES);
+```
+
+```
+select *
+from PLF_DATA_ENTRY_PAYLOAD_ATTRIBUTES
+union
+(select ec.OWNING_ENTRY_ID   as ENTRY_ID,
+        ec.OWNING_ENTRY_TYPE as ENTRY_TYPE,
+        ep.path              as PATH,
+        ep.value             as VALUE
+ from PLF_DATA_ENTRY_CORRELATIONS ec
+     join PLF_DATA_ENTRY_PAYLOAD_ATTRIBUTES ep
+ on
+     ec.ENTRY_ID = ep.ENTRY_ID and ec.ENTRY_TYPE = ep.ENTRY_TYPE)
 ```
