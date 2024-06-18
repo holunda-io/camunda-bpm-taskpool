@@ -76,7 +76,7 @@ class JpaPolyflowViewDataEntryService(
 
     val authorizedPrincipals: Set<AuthorizationPrincipal> = setOf(user(query.user.username)).plus(query.user.groups.map { group(it) })
     val criteria: List<Criterion> = toCriteria(query.filters)
-    val specification = criteria.toDataEntrySpecification()
+    val specification = criteria.toDataEntrySpecification(polyflowJpaViewProperties.includeCorrelatedDataEntriesInDataEntryQueries)
     val pageRequest = pageRequest(query.page, query.size, query.sort)
 
     val page = dataEntryRepository.findAll(specification.and(isAuthorizedFor(authorizedPrincipals)), pageRequest)
@@ -87,7 +87,7 @@ class JpaPolyflowViewDataEntryService(
   override fun query(query: DataEntriesQuery, metaData: MetaData): QueryResponseMessage<DataEntriesQueryResult> {
 
     val criteria: List<Criterion> = toCriteria(query.filters)
-    val specification = criteria.toDataEntrySpecification()
+    val specification = criteria.toDataEntrySpecification(polyflowJpaViewProperties.includeCorrelatedDataEntriesInDataEntryQueries)
     val pageRequest = pageRequest(query.page, query.size, query.sort)
 
     val page = dataEntryRepository.findAll(specification, pageRequest)

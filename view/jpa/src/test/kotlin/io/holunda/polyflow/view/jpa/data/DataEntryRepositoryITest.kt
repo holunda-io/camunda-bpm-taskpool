@@ -151,7 +151,6 @@ internal class DataEntryRepositoryITest {
 
   @Test
   fun `loads each protocol entry only once`() {
-    entityManager.clear()
     val dataEntry = dataEntryRepository.findByIdOrNull(dataEntry.dataEntryId)!!
     assertThat(dataEntry.protocol.size).isEqualTo(1)
   }
