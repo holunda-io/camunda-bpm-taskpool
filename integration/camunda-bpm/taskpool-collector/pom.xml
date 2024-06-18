@@ -62,6 +62,11 @@
       <scope>test</scope>
     </dependency>
     <dependency>
+      <groupId>org.flywaydb</groupId>
+      <artifactId>flyway-core</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
       <groupId>org.camunda.community.mockito</groupId>
       <artifactId>camunda-platform-7-mockito</artifactId>
       <scope>test</scope>
