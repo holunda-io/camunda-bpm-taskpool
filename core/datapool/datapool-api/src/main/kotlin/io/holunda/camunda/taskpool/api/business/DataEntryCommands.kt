@@ -64,14 +64,34 @@ data class AnonymizeDataEntryCommand(
    * Entry id.
    */
   val entryId: EntryId,
+
   /**
    * Entry type.
    */
   val entryType: EntryType,
+
+  /**
+   * Human-readable type e.g. "purchase order"
+   */
+  val type: String,
+
   /**
    * The username that will replace the current username(s) in the protocol of the data entry
    */
   val anonymizedUsername: String,
+
+  /**
+   * Usernames that should be excluded from the anonymization. For example "SYSTEM"
+   */
+  val excludedUsernames: List<String> = listOf(),
+
+  // TODO: flag whether authorizations should be removed?
+
+  /**
+   * Modification information.
+   */
+  val anonymizeModification: Modification = Modification.NONE,
+
   /**
    * Addressing information.
    */

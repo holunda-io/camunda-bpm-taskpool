@@ -200,17 +200,20 @@ fun DataEntryAnonymizedEvent.toEntity(
   revisionValue: RevisionValue,
   oldEntry: DataEntryEntity,
 ) = oldEntry.also {
-  // TODO: provide usernames that are excluded (e.g. SYSTEM)?
   it.protocol.forEach { protocolEntry ->
-    if (protocolEntry.username != null) protocolEntry.username = this.anonymizedUsername
+    if (protocolEntry.username != null && !this.excludedUsernames.contains(protocolEntry.username))
+      protocolEntry.username = this.anonymizedUsername
   }
   it.authorizedPrincipals =
     it.authorizedPrincipals.filter { principal -> !principal.startsWith("USER:") }.toMutableSet()
+  it.type = this.type // TODO: is this necessary? probably no type change here -> remove type in whole chain then
+  it.lastModifiedDate = this.anonymizeModification.time.toInstant()
   it.revision = if (revisionValue != RevisionValue.NO_REVISION) {
     revisionValue.revision
   } else {
     it.revision
   }
-  // TODO: probably set lastModified date?
-  // TODO: protocol modification?
+}.apply {
+  // TODO: new state? Fixed or as parameter?
+  this.protocol = this.protocol.addModification(this, this@toEntity.anonymizeModification, this.state.toState())
 }

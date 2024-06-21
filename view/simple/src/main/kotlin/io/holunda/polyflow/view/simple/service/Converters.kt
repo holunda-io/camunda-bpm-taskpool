@@ -71,9 +71,13 @@ fun DataEntryAnonymizedEvent.toDataEntry(oldEntry: DataEntry) =
   oldEntry.copy(
     authorizedUsers = AuthorizationChange.applyUserAuthorization(oldEntry.authorizedUsers,
       oldEntry.authorizedUsers.map { AuthorizationChange.removeUser(it) }),
-    // TODO: provide usernames that are excluded (e.g. SYSTEM)?
-    // TODO: protocol modification?
-    protocol = oldEntry.protocol.map { it.copy(username = if (it.username != null) this.anonymizedUsername else null) })
+    type = this.type, // TODO: is this necessary? probably no type change here -> remove type in whole chain then
+    protocol = oldEntry.protocol.map {
+      it.copy(
+        username =
+        if (it.username != null && !this.excludedUsernames.contains(it.username))
+          this.anonymizedUsername else it.username) }
+      .addModification(this.anonymizeModification, oldEntry.state))
 
 /**
  * Converts event to view model.
