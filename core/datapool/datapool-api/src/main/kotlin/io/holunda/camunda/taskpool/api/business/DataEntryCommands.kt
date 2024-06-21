@@ -55,3 +55,26 @@ data class DeleteDataEntryCommand(
   @TargetAggregateIdentifier
   val dataIdentity: String = dataIdentityString(entryType = entryType, entryId = entryId),
 )
+
+/**
+ * Command to anonymize the aggregate.
+ */
+data class AnonymizeDataEntryCommand(
+  /**
+   * Entry id.
+   */
+  val entryId: EntryId,
+  /**
+   * Entry type.
+   */
+  val entryType: EntryType,
+  /**
+   * The username that will replace the current username(s) in the protocol of the data entry
+   */
+  val anonymizedUsername: String,
+  /**
+   * Addressing information.
+   */
+  @TargetAggregateIdentifier
+  val dataIdentity: String = dataIdentityString(entryType = entryType, entryId = entryId),
+)

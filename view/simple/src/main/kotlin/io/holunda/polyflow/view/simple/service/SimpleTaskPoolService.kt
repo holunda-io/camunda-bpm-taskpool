@@ -1,9 +1,6 @@
 package io.holunda.polyflow.view.simple.service
 
-import io.holunda.camunda.taskpool.api.business.DataEntryCreatedEvent
-import io.holunda.camunda.taskpool.api.business.DataEntryDeletedEvent
-import io.holunda.camunda.taskpool.api.business.DataEntryUpdatedEvent
-import io.holunda.camunda.taskpool.api.business.dataIdentityString
+import io.holunda.camunda.taskpool.api.business.*
 import io.holunda.camunda.taskpool.api.task.*
 import io.holunda.polyflow.view.DataEntry
 import io.holunda.polyflow.view.Task
@@ -354,6 +351,23 @@ class SimpleTaskPoolService(
     findTasksForDataEntry(entryId).forEach { taskId ->
       val task = tasks[taskId]!!
       updateFilteredQueryQuery(task.id)
+    }
+  }
+
+  /**
+   * Anonymize data entry.
+   */
+  @Suppress("unused")
+  @EventHandler
+  fun on(event: DataEntryAnonymizedEvent) {
+    logger.debug { "SIMPLE-VIEW-35: Business data entry anonymized $event" }
+    val entryId = dataIdentityString(entryType = event.entryType, entryId = event.entryId)
+    dataEntries[entryId]?.let {
+      dataEntries[entryId] = event.toDataEntry(it)
+      findTasksForDataEntry(entryId).forEach { taskId ->
+        val task = tasks[taskId]!!
+        updateFilteredQueryQuery(task.id)
+      }
     }
   }
 

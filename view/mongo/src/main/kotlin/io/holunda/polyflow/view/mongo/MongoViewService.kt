@@ -435,6 +435,16 @@ class MongoViewService(
     deleteDataEntry(dataIdentityString(entryType = event.entryType, entryId = event.entryId))
   }
 
+  /**
+   * Delivers data entry anonymized event.
+   */
+  @Suppress("unused")
+  @EventHandler
+  fun on(event: DataEntryAnonymizedEvent, metaData: MetaData) {
+    logger.debug { "Business data entry anonymized $event" }
+    throw NotImplementedError("Anonymizing data entries is not yet supported in the mongo view")
+  }
+
   private fun deleteDataEntry(id: String) {
     dataEntryRepository.findNotDeletedById(id)
       .retryIfEmpty { "Cannot delete data entry '$id' because it does not exist in the database" }

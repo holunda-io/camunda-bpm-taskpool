@@ -3,6 +3,7 @@ package io.holunda.polyflow.view.jpa
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.holixon.axon.gateway.query.QueryResponseMessageResponseType
 import io.holixon.axon.gateway.query.RevisionValue
+import io.holunda.camunda.taskpool.api.business.DataEntryAnonymizedEvent
 import io.holunda.camunda.taskpool.api.business.DataEntryCreatedEvent
 import io.holunda.camunda.taskpool.api.business.DataEntryDeletedEvent
 import io.holunda.camunda.taskpool.api.business.DataEntryUpdatedEvent
@@ -159,6 +160,25 @@ class JpaPolyflowViewDataEntryService(
       logger.debug { "JPA-VIEW-43: Business data entry deleted $event" }
     } else {
       logger.warn { "JPA-VIEW-44: Business data entry was already deleted. Ignored a duplicate event $event" }
+    }
+  }
+
+  @Suppress("unused")
+  @EventHandler
+  override fun on(event: DataEntryAnonymizedEvent, metaData: MetaData) {
+    if (isDisabledByProperty()) return
+
+    val savedEntity = dataEntryRepository.findByIdOrNull(DataEntryId(entryType = event.entryType, entryId = event.entryId))
+    if (savedEntity != null) {
+      val entity = dataEntryRepository.save(
+        event.toEntity(
+          revisionValue = RevisionValue.fromMetaData(metaData),
+          oldEntry = savedEntity,
+        )
+      ).apply {
+        logger.debug { "JPA-VIEW-45: Business data entry anonymized $event" }
+      }
+      emitDataEntryUpdate(entity)
     }
   }
 

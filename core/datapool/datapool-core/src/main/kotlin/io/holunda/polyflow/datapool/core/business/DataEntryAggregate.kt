@@ -72,6 +72,21 @@ class DataEntryAggregate() {
   }
 
   /**
+   * Handle anonymize.
+   */
+  @CommandHandler
+  fun handle(command: AnonymizeDataEntryCommand, @Autowired deletionStrategy: DeletionStrategy) {
+    if (deletionStrategy.strictMode()) {
+      if (deleted) {
+        throw AggregateDeletedException(this.dataIdentity, "The data entry has already been deleted")
+      }
+    }
+    AggregateLifecycle.apply(
+      command.anonymizeEvent()
+    )
+  }
+
+  /**
    * React on created event.
    */
   @EventSourcingHandler
@@ -118,4 +133,21 @@ class DataEntryAggregate() {
     // Don't use AggregateLifecycle.markDeleted() because then the combination of entryType / entryId is then really deleted forever
     this.deleted = true
   }
+
+  /**
+   * React on anonymized event.
+   */
+  @EventSourcingHandler
+  fun on(event: DataEntryAnonymizedEvent) {
+    if (this.deleted) {
+      this.deleted = false
+    }
+    if (logger.isDebugEnabled) {
+      logger.debug { "Anonymized $dataIdentity." }
+    }
+    if (logger.isTraceEnabled) {
+      logger.trace { "Anonymized $dataIdentity with: $event" }
+    }
+  }
+
 }

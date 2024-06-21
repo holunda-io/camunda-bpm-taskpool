@@ -2,10 +2,7 @@ package io.holunda.polyflow.view.simple.service
 
 import io.holixon.axon.gateway.query.QueryResponseMessageResponseType
 import io.holixon.axon.gateway.query.RevisionValue
-import io.holunda.camunda.taskpool.api.business.DataEntryCreatedEvent
-import io.holunda.camunda.taskpool.api.business.DataEntryDeletedEvent
-import io.holunda.camunda.taskpool.api.business.DataEntryUpdatedEvent
-import io.holunda.camunda.taskpool.api.business.dataIdentityString
+import io.holunda.camunda.taskpool.api.business.*
 import io.holunda.polyflow.view.DataEntry
 import io.holunda.polyflow.view.filter.createDataEntryPredicates
 import io.holunda.polyflow.view.filter.filterByPredicate
@@ -74,6 +71,22 @@ class SimpleDataEntryService(
     val entryId = dataIdentityString(entryType = event.entryType, entryId = event.entryId)
     dataEntries.remove(entryId)
     revisionSupport.deleteRevision(entryId)
+  }
+
+  /**
+   * Anonymized data entry.
+   */
+  @Suppress("unused")
+  @EventHandler
+  fun on(event: DataEntryAnonymizedEvent, metaData: MetaData) {
+    logger.debug { "SIMPLE-VIEW-34: Business data entry anonymized $event" }
+    val entryId = dataIdentityString(entryType = event.entryType, entryId = event.entryId)
+    dataEntries[entryId]?.let {
+      dataEntries[entryId] = event.toDataEntry(it)
+      revisionSupport.updateRevision(entryId, RevisionValue.fromMetaData(metaData))
+      updateDataEntryQuery(entryId)
+    }
+
   }
 
   /**

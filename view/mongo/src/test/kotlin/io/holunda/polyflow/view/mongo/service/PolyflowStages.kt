@@ -3,6 +3,7 @@ package io.holunda.polyflow.view.mongo.service
 import com.tngtech.jgiven.Stage
 import com.tngtech.jgiven.annotation.*
 import com.tngtech.jgiven.integration.spring.JGivenStage
+import io.holunda.camunda.taskpool.api.business.DataEntryAnonymizedEvent
 import io.holunda.camunda.taskpool.api.business.DataEntryCreatedEvent
 import io.holunda.camunda.taskpool.api.business.DataEntryDeletedEvent
 import io.holunda.camunda.taskpool.api.business.DataEntryUpdatedEvent
@@ -89,6 +90,10 @@ abstract class PolyflowStage<SELF : PolyflowStage<SELF>> : Stage<SELF>() {
   }
 
   fun data_entry_deleted_event_is_received(event: DataEntryDeletedEvent) = step {
+    service.on(event, MetaData.emptyInstance())
+  }
+
+  fun data_entry_anonymized_event_is_received(event: DataEntryAnonymizedEvent) = step {
     service.on(event, MetaData.emptyInstance())
   }
 

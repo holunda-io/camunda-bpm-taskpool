@@ -138,3 +138,25 @@ data class DataEntryDeletedEvent(
    */
   val state: DataEntryState = ProcessingType.UNDEFINED.of("")
 )
+
+/**
+ * Data entry anonymized.
+ */
+@Revision("1")
+data class DataEntryAnonymizedEvent(
+  /**
+   * Entry type
+   */
+  val entryType: EntryType,
+  /**
+   * Entry id.
+   */
+  val entryId: EntryId,
+
+  /**
+   * The username that will replace the current username(s) in the protocol of the data entry
+   */
+  val anonymizedUsername: String
+  // TODO: Modification?
+  // TODO: excluded usernames (e.g. SYSTEM)?
+)
