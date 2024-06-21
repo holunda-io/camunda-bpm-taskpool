@@ -11,6 +11,7 @@ import io.holunda.polyflow.view.query.PageableSortableQuery
 /**
  * Queries data entries for provided user.
  * @param user user authorized to access data entries.
+ * @param involvementsOnly controls of the result should contain only data entries where the `user` was involved
  * @param page current page, zero-based index.
  * @param size page size.
  * @param sort sort of data entries.
@@ -18,6 +19,7 @@ import io.holunda.polyflow.view.query.PageableSortableQuery
  */
 data class DataEntriesForUserQuery(
   val user: User,
+  val involvementsOnly: Boolean = false,
   override val page: Int = 0,
   override val size: Int = Int.MAX_VALUE,
   override val sort: List<String> = listOf(),
@@ -38,6 +40,15 @@ data class DataEntriesForUserQuery(
     filters = filters
   )
 
+  constructor(user: User, page: Int = 0, size: Int = Int.MAX_VALUE, sort: List<String>, filters: List<String> = listOf()): this(
+    user = user,
+    involvementsOnly = false,
+    page = page,
+    size = size,
+    sort = sort,
+    filters = filters
+  )
+
   // jackson serialization works because delegate property is private
   private val predicates by lazy { createDataEntryPredicates(toCriteria(filters)) }
 
@@ -49,4 +60,5 @@ data class DataEntriesForUserQuery(
         // authorized groups
         || (element.authorizedGroups.any { candidateGroup -> this.user.groups.contains(candidateGroup) })
       )
+      && (if (involvementsOnly) element.protocol.map { it.username }.contains(this.user.username) else true)
 }
