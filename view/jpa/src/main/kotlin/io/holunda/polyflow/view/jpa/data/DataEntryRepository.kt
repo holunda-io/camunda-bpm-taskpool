@@ -57,6 +57,15 @@ interface DataEntryRepository : CrudRepository<DataEntryEntity, DataEntryId>, Jp
         )
       }
 
+    fun hasUserInvolvement(userName: String): Specification<DataEntryEntity> =
+      Specification {dataEntry, _, builder ->
+        builder.equal(
+          dataEntry.join<DataEntryEntity, Set<ProtocolElement>>(DataEntryEntity::protocol.name)
+            .get<String>(ProtocolElement::username.name),
+          userName
+        )
+      }
+
     /**
      * Specification for the user-defined state.
      */

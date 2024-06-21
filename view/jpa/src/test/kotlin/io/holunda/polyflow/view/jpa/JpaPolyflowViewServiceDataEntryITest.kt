@@ -333,6 +333,14 @@ internal class JpaPolyflowViewServiceDataEntryITest {
     assertThat(result.payload.elements.map { it.entryId }).containsExactly(id2) // id4 is not found by correlation to id2, due to property
   }
 
+  @Test
+  fun `should find data entry by involvements`() {
+    val result = jpaPolyflowViewService.query(
+      DataEntriesForUserQuery(user = User("kermit", mutableSetOf("muppets")), involvementsOnly = true)
+    )
+
+    assertThat(result.payload.elements.map { it.entryId }).containsExactly(id); // user is allowed to see two dataEntries but has only one involvement
+  }
 
   private fun <T : Any> query_updates_have_been_emitted(query: T, id: String, revision: Long) {
     captureEmittedQueryUpdates()
