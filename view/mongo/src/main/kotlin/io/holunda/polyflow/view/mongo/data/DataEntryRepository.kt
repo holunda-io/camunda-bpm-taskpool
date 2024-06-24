@@ -1,8 +1,6 @@
 package io.holunda.polyflow.view.mongo.data
 
-import io.holunda.camunda.taskpool.api.business.DataIdentity
 import io.holunda.camunda.taskpool.api.business.EntryType
-import io.holunda.camunda.taskpool.api.business.dataIdentityString
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
 import org.springframework.data.mongodb.repository.Query
@@ -49,6 +47,12 @@ interface DataEntryRepository :
    */
   @Query("{ \$or: [ { 'authorizedUsers' : ?0 }, { 'authorizedGroups' : { \$in: ?1 } } ], 'deleted': { \$ne: true } }")
   fun findAllForUser(@Param("username") username: String, @Param("groupNames") groupNames: Set<String>): Flux<DataEntryDocument>
+
+  /**
+   * Finder for user.
+   */
+  @Query("{ \$or: [ { 'authorizedUsers' : ?0 }, { 'authorizedGroups' : { \$in: ?1 } } ], 'deleted': { \$ne: true }, 'protocol.username': ?0 }")
+  fun findAllForUserWithInvolvement(@Param("username") username: String, @Param("groupNames") groupNames: Set<String>): Flux<DataEntryDocument>
 
   /**
    * Retrieves all data entries for user.
