@@ -57,6 +57,9 @@ interface DataEntryRepository : CrudRepository<DataEntryEntity, DataEntryId>, Jp
         )
       }
 
+    /**
+     * Specification for data entries to check if a user appears in any ProtocolElement
+     */
     fun hasUserInvolvement(userName: String): Specification<DataEntryEntity> =
       Specification {dataEntry, _, builder ->
         builder.equal(
