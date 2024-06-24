@@ -52,7 +52,6 @@ fun DeleteDataEntryCommand.deletedEvent() = DataEntryDeletedEvent(
 fun AnonymizeDataEntryCommand.anonymizeEvent() = DataEntryAnonymizedEvent(
   entryId = this.entryId,
   entryType = this.entryType,
-  type = this.type,
   anonymizedUsername = this.anonymizedUsername,
   excludedUsernames = this.excludedUsernames,
   anonymizeModification = this.anonymizeModification

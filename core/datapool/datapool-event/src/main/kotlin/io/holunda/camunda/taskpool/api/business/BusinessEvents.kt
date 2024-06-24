@@ -155,11 +155,6 @@ data class DataEntryAnonymizedEvent(
   val entryId: EntryId,
 
   /**
-   * Human-readable type e.g. "purchase order"
-   */
-  val type: String,
-
-  /**
    * The username that will replace the current username(s) in the protocol of the data entry
    */
   val anonymizedUsername: String,
@@ -168,8 +163,6 @@ data class DataEntryAnonymizedEvent(
    * Usernames that should be excluded from the anonymization. For example "SYSTEM"
    */
   val excludedUsernames: List<String> = listOf(),
-
-  // TODO: flag whether authorizations should be removed?
 
   /**
    * Modification information.

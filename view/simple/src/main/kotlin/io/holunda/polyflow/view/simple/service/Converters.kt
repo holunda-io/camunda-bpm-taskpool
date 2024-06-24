@@ -71,7 +71,6 @@ fun DataEntryAnonymizedEvent.toDataEntry(oldEntry: DataEntry) =
   oldEntry.copy(
     authorizedUsers = AuthorizationChange.applyUserAuthorization(oldEntry.authorizedUsers,
       oldEntry.authorizedUsers.map { AuthorizationChange.removeUser(it) }),
-    type = this.type, // TODO: is this necessary? probably no type change here -> remove type in whole chain then
     protocol = oldEntry.protocol.map {
       it.copy(
         username =

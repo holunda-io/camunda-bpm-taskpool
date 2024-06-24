@@ -206,7 +206,6 @@ fun DataEntryAnonymizedEvent.toEntity(
   }
   it.authorizedPrincipals =
     it.authorizedPrincipals.filter { principal -> !principal.startsWith("USER:") }.toMutableSet()
-  it.type = this.type // TODO: is this necessary? probably no type change here -> remove type in whole chain then
   it.lastModifiedDate = this.anonymizeModification.time.toInstant()
   it.revision = if (revisionValue != RevisionValue.NO_REVISION) {
     revisionValue.revision
@@ -214,6 +213,5 @@ fun DataEntryAnonymizedEvent.toEntity(
     it.revision
   }
 }.apply {
-  // TODO: new state? Fixed or as parameter?
   this.protocol = this.protocol.addModification(this, this@toEntity.anonymizeModification, this.state.toState())
 }
