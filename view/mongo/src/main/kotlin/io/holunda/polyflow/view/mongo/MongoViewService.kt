@@ -442,6 +442,10 @@ class MongoViewService(
   @EventHandler
   fun on(event: DataEntryAnonymizedEvent, metaData: MetaData) {
     logger.debug { "Business data entry anonymized $event" }
+    dataEntryRepository.findNotDeletedById(dataIdentityString(entryType = event.entryType, entryId = event.entryId))
+      .map { oldEntry -> event.toDocument(oldEntry) }.map { dataEntryRepository.save(it) }
+      .then(updateDataEntryQuery(QueryDataIdentity(entryType = event.entryType, entryId = event.entryId)))
+      .block()
     throw NotImplementedError("Anonymizing data entries is not yet supported in the mongo view")
   }
 

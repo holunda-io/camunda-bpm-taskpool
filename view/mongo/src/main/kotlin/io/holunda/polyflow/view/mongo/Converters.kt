@@ -80,6 +80,31 @@ fun DataEntryUpdatedEvent.toDocument(oldDocument: DataEntryDocument?) = if (oldD
   )
 }
 
+/**
+ * Anonymized event to document.
+ */
+fun DataEntryAnonymizedEvent.toDocument(oldDocument: DataEntryDocument): DataEntryDocument {
+  val authorizedUsers = AuthorizationChange.applyUserAuthorization(
+    oldDocument.getAuthorizedUsers(),
+    oldDocument.getAuthorizedUsers().map { AuthorizationChange.removeUser(it) })
+
+  val protocol = oldDocument.protocol.map { it.toProtocol() }.map {
+    it.copy(
+      username = if (it.username != null && !this.excludedUsernames.contains(it.username)) this.anonymizedUsername else it.username
+    )
+  }.addModification(
+    this.anonymizeModification, DataEntryStateImpl(
+      ProcessingType.valueOf(oldDocument.statusType ?: ProcessingType.UNDEFINED.name), oldDocument.state ?: ""
+    )
+  ).map { it.toProtocolElement() }
+
+  return oldDocument.copy(
+    authorizedUsers = authorizedUsers,
+    authorizedPrincipals = DataEntryDocument.authorizedPrincipals(authorizedUsers, oldDocument.getAuthorizedGroups()),
+    protocol = protocol,
+    lastModifiedDate = this.anonymizeModification.time.toInstant()
+  )
+}
 
 /**
  * Create a task with data entries from the corresponding mongo document.
