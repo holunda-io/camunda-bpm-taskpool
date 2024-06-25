@@ -5,6 +5,7 @@ import io.holixon.axon.gateway.query.RevisionValue
 import io.holunda.camunda.taskpool.api.business.DataEntryAnonymizedEvent
 import io.holunda.camunda.taskpool.api.business.Modification
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.groups.Tuple.tuple
 import org.junit.jupiter.api.Test
 import java.time.OffsetDateTime
 
@@ -38,6 +39,7 @@ class ConverterExtKtTest {
 
         assertThat(anonymized.authorizedPrincipals).hasSize(1)
         assertThat(anonymized.authorizedPrincipals).allMatch { it.startsWith("GROUP") }
-        assertThat(anonymized.protocol).allMatch { it.username in listOf("SYSTEM", "ANONYMIZED") }
+        assertThat(anonymized.protocol).extracting(ProtocolElement::username)
+            .containsExactly(tuple("ANONYMIZED"), tuple("ANONYMIZED"), tuple("SYSTEM"), tuple("SYSTEM"))
     }
 }
