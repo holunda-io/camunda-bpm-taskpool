@@ -333,6 +333,31 @@ internal class JpaPolyflowViewServiceDataEntryITest {
     assertThat(result.payload.elements.map { it.entryId }).containsExactly(id2) // id4 is not found by correlation to id2, due to property
   }
 
+  @Test
+  fun `should anonymize data entry`() {
+    jpaPolyflowViewService.on(
+      event = DataEntryAnonymizedEvent(
+        entryType = "io.polyflow.test",
+        entryId = id4,
+        anonymizedUsername = "ANONYMOUS",
+        excludedUsernames = listOf("SYSTEM"),
+        anonymizeModification = Modification(
+          time = OffsetDateTime.ofInstant(now, ZoneOffset.UTC),
+          username = "SYSTEM",
+          log = "Created",
+          logNotes = "Created the entry"
+        ),
+      ),
+      metaData = MetaData.emptyInstance()
+    )
+
+    val result = jpaPolyflowViewService.query(
+      DataEntryForIdentityQuery(entryType = "io.polyflow.test", entryId = id4)
+    )
+
+    assertThat(result.payload).matches { entry -> entry.protocol.all { it.username in listOf("SYSTEM", "ANONYMOUS") } }
+    assertThat(result.payload).matches { entry -> entry.authorizedUsers.isEmpty() }
+  }
 
   private fun <T : Any> query_updates_have_been_emitted(query: T, id: String, revision: Long) {
     captureEmittedQueryUpdates()
