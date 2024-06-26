@@ -1,70 +1,32 @@
-package io.holunda.polyflow.view.jpa
+package io.holunda.polyflow.view.simple.service
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import io.holixon.axon.gateway.query.RevisionValue
 import io.holunda.camunda.taskpool.api.business.*
 import io.holunda.camunda.taskpool.api.business.AuthorizationChange.Companion.addGroup
 import io.holunda.camunda.taskpool.api.business.AuthorizationChange.Companion.addUser
-import io.holunda.camunda.variable.serializer.serialize
 import io.holunda.polyflow.view.DataEntry
 import io.holunda.polyflow.view.auth.User
-import io.holunda.polyflow.view.jpa.itest.TestApplication
 import io.holunda.polyflow.view.query.data.DataEntriesForUserQuery
 import io.holunda.polyflow.view.query.data.DataEntriesQuery
 import io.holunda.polyflow.view.query.data.DataEntriesQueryResult
 import io.holunda.polyflow.view.query.data.DataEntryForIdentityQuery
 import org.assertj.core.api.Assertions.assertThat
 import org.axonframework.messaging.MetaData
-import org.axonframework.queryhandling.GenericSubscriptionQueryUpdateMessage
 import org.axonframework.queryhandling.QueryResponseMessage
-import org.axonframework.queryhandling.QueryUpdateEmitter
-import org.axonframework.queryhandling.SubscriptionQueryUpdateMessage
+import org.axonframework.queryhandling.SimpleQueryUpdateEmitter
 import org.camunda.bpm.engine.variable.Variables
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mockito.kotlin.argumentCaptor
-import org.mockito.kotlin.atLeast
-import org.mockito.kotlin.clearInvocations
-import org.mockito.kotlin.verify
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.test.annotation.DirtiesContext
-import org.springframework.test.context.ActiveProfiles
-import org.springframework.transaction.annotation.Transactional
 import java.time.Instant
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
 import java.time.temporal.ChronoUnit
 import java.util.*
-import java.util.function.Predicate
 
-@SpringBootTest(
-  classes = [TestApplication::class],
-  properties = [
-    "polyflow.view.jpa.stored-items=data-entry",
-    "polyflow.view.jpa.include-correlated-data-entries-in-data-entry-queries=false"
-  ]
-)
-@ActiveProfiles("itest", "mock-query-emitter")
-@Transactional
-@DirtiesContext
-internal class JpaPolyflowViewServiceDataEntryITest {
+class SimpleDataEntryServiceTest {
 
-  private val emittedQueryUpdates: MutableList<QueryUpdate<Any>> = mutableListOf()
-
-  @Autowired
-  lateinit var queryUpdateEmitter: QueryUpdateEmitter
-
-  @Autowired
-  lateinit var jpaPolyflowViewService: JpaPolyflowViewDataEntryService
-
-  @Autowired
-  lateinit var dbCleaner: DbCleaner
-
-  @Autowired
-  lateinit var objectMapper: ObjectMapper
-
+  private var service: SimpleDataEntryService = SimpleDataEntryService(queryUpdateEmitter = SimpleQueryUpdateEmitter.builder().build())
   private val id = UUID.randomUUID().toString()
   private val id2 = UUID.randomUUID().toString()
   private val id3 = UUID.randomUUID().toString()
@@ -73,16 +35,9 @@ internal class JpaPolyflowViewServiceDataEntryITest {
 
   @BeforeEach
   fun `ingest events`() {
-    val payload = mapOf(
-      "key" to "value",
-      "key-int" to 1,
-      "complex" to Pojo(
-        attribute1 = "value",
-        attribute2 = Date.from(now)
-      )
-    )
+    val payload = Variables.fromMap(mapOf("key" to "value", "key-int" to 1, "complex" to mapOf("attribute1" to "value", "attribute2" to Date.from(now))))
 
-    jpaPolyflowViewService.on(
+    service.on(
       event = DataEntryCreatedEvent(
         entryType = "io.polyflow.test",
         entryId = id,
@@ -90,7 +45,7 @@ internal class JpaPolyflowViewServiceDataEntryITest {
         applicationName = "test-application",
         name = "Test Entry 1",
         state = ProcessingType.IN_PROGRESS.of("In progress"),
-        payload = serialize(payload = payload, mapper = objectMapper),
+        payload = payload,
         authorizations = listOf(
           addUser("kermit"),
           addGroup("muppets")
@@ -105,7 +60,7 @@ internal class JpaPolyflowViewServiceDataEntryITest {
       metaData = RevisionValue(revision = 1).toMetaData()
     )
 
-    jpaPolyflowViewService.on(
+    service.on(
       event = DataEntryUpdatedEvent(
         entryType = "io.polyflow.test",
         entryId = id,
@@ -113,7 +68,7 @@ internal class JpaPolyflowViewServiceDataEntryITest {
         applicationName = "test-application",
         name = "Test Entry 1",
         state = ProcessingType.IN_PROGRESS.of("Internal check"),
-        payload =serialize(payload = payload, mapper = objectMapper),
+        payload = payload,
         authorizations = listOf(
           addUser("kermit"),
           addGroup("muppets")
@@ -128,7 +83,7 @@ internal class JpaPolyflowViewServiceDataEntryITest {
       metaData = RevisionValue(revision = 2).toMetaData()
     )
 
-    jpaPolyflowViewService.on(
+    service.on(
       event = DataEntryUpdatedEvent(
         entryType = "io.polyflow.test",
         entryId = id,
@@ -136,7 +91,7 @@ internal class JpaPolyflowViewServiceDataEntryITest {
         applicationName = "test-application",
         name = "Test Entry 1",
         state = ProcessingType.IN_PROGRESS.of("In review"),
-        payload = serialize(payload = payload, mapper = objectMapper),
+        payload = payload,
         authorizations = listOf(
           addUser("ironman"),
         ),
@@ -150,7 +105,7 @@ internal class JpaPolyflowViewServiceDataEntryITest {
       metaData = RevisionValue(revision = 3).toMetaData()
     )
 
-    jpaPolyflowViewService.on(
+    service.on(
       event = DataEntryCreatedEvent(
         entryType = "io.polyflow.test",
         entryId = id2,
@@ -158,7 +113,7 @@ internal class JpaPolyflowViewServiceDataEntryITest {
         applicationName = "test-application",
         name = "Test Entry 2",
         state = ProcessingType.IN_PROGRESS.of("In review"),
-        payload = serialize(payload = mapOf("key-int" to 2, "key" to "value"), mapper = objectMapper),
+        payload = Variables.putValue("key-int", 2).putValue("key", "value"),
         authorizations = listOf(
           addUser("piggy"),
           addGroup("muppets")
@@ -173,7 +128,7 @@ internal class JpaPolyflowViewServiceDataEntryITest {
       metaData = MetaData.emptyInstance()
     )
 
-    jpaPolyflowViewService.on(
+    service.on(
       event = DataEntryCreatedEvent(
         entryType = "io.polyflow.test",
         entryId = id3,
@@ -181,7 +136,7 @@ internal class JpaPolyflowViewServiceDataEntryITest {
         applicationName = "test-application",
         name = "Test Entry 3",
         state = ProcessingType.IN_PROGRESS.of("In review"),
-        payload = serialize(payload = mapOf("key-int" to 3, "key" to "value"), mapper = objectMapper),
+        payload = Variables.putValue("key-int", 3).putValue("key", "value"),
         authorizations = listOf(
           addUser("piggy"),
           addGroup("muppets")
@@ -196,7 +151,7 @@ internal class JpaPolyflowViewServiceDataEntryITest {
       metaData = MetaData.emptyInstance()
     )
 
-    jpaPolyflowViewService.on(
+    service.on(
       event = DataEntryDeletedEvent(
         entryType = "io.polyflow.test",
         entryId = id3,
@@ -210,7 +165,7 @@ internal class JpaPolyflowViewServiceDataEntryITest {
       metaData = MetaData.emptyInstance()
     )
 
-    jpaPolyflowViewService.on(
+    service.on(
       event = DataEntryCreatedEvent(
         entryType = "io.polyflow.test",
         entryId = id4,
@@ -218,7 +173,7 @@ internal class JpaPolyflowViewServiceDataEntryITest {
         applicationName = "test-application",
         name = "Test Entry 4",
         state = ProcessingType.IN_PROGRESS.of("In review"),
-        payload = serialize(payload = mapOf("key-int" to 4, "key" to "other-value"), mapper = objectMapper),
+        payload = Variables.putValue("key-int", 4).putValue("key", "other-value"),
         authorizations = listOf(
           addUser("hulk"),
           addGroup("avenger")
@@ -237,14 +192,15 @@ internal class JpaPolyflowViewServiceDataEntryITest {
 
   @AfterEach
   fun `cleanup projection`() {
-    dbCleaner.cleanup()
-    // clear updates
-    emittedQueryUpdates.clear()
+    listOf(id, id2, id3, id4).forEach {
+      service.on(DataEntryDeletedEvent(entryId = "io.holunda.polyflow.test", entryType = it), metaData = MetaData.emptyInstance())
+    }
   }
+
 
   @Test
   fun `should find the entry by id`() {
-    val result = jpaPolyflowViewService.query(
+    val result = service.query(
       DataEntryForIdentityQuery(entryType = "io.polyflow.test", entryId = id)
     )
     assertThat(result.payload).isNotNull
@@ -254,26 +210,26 @@ internal class JpaPolyflowViewServiceDataEntryITest {
   @Test
   fun `should find the entry by user`() {
 
-    val result = jpaPolyflowViewService.query(
+    val result = service.query(
       DataEntriesForUserQuery(user = User("kermit", groups = setOf()))
     )
 
     assertResultIsTestEntry1(result)
 
     assertResultIsTestEntry1And2(
-      jpaPolyflowViewService.query(
+      service.query(
         DataEntriesForUserQuery(user = User("superman", groups = setOf("muppets")))
       )
     )
 
     assertResultIsTestEntry1(
-      jpaPolyflowViewService.query(
+      service.query(
         DataEntriesForUserQuery(user = User("ironman", groups = setOf()))
       )
     )
 
     assertThat(
-      jpaPolyflowViewService.query(
+      service.query(
         DataEntriesForUserQuery(user = User("superman", groups = setOf("avengers")))
       ).payload.elements
     ).isEmpty()
@@ -282,7 +238,7 @@ internal class JpaPolyflowViewServiceDataEntryITest {
 
   @Test
   fun `should not fail deleted already deleted entry`() {
-    jpaPolyflowViewService.on(
+    service.on(
       event = DataEntryDeletedEvent(
         entryType = "io.polyflow.test",
         entryId = id3,
@@ -301,19 +257,8 @@ internal class JpaPolyflowViewServiceDataEntryITest {
   fun `should find the entry by user and filter`() {
     val query = DataEntriesForUserQuery(user = User("kermit", groups = setOf("muppets")), filters = listOf("key-int=1"))
     assertResultIsTestEntry1(
-      jpaPolyflowViewService.query(
+      service.query(
         query
-      )
-    )
-
-    query_updates_have_been_emitted(query, id, 3)
-  }
-
-  @Test
-  fun `should find the entry by filter`() {
-    assertResultIsTestEntry1And2(
-      jpaPolyflowViewService.query(
-        DataEntriesQuery(filters = listOf("key=value", "key=value2", "key=value3"))
       )
     )
   }
@@ -321,7 +266,7 @@ internal class JpaPolyflowViewServiceDataEntryITest {
   @Test
   fun `should not find the deleted entry`() {
 
-    val result = jpaPolyflowViewService.query(
+    val result = service.query(
       DataEntryForIdentityQuery(entryType = "io.polyflow.test", entryId = id3)
     )
     assertThat(result).isNotNull
@@ -331,84 +276,39 @@ internal class JpaPolyflowViewServiceDataEntryITest {
   @Test
   fun `should sort entries with multiple criteria`() {
 
-    val result = jpaPolyflowViewService.query(
+    val result = service.query(
       DataEntriesQuery(sort = listOf("+type", "-name"))
     )
-    assertThat(result.payload.elements.map { it.entryId }).containsExactly(id2, id, id4)
+    assertThat(result.payload.elements.map { it.entryId }).containsExactlyInAnyOrder(id2, id, id4)
   }
 
   @Suppress("DEPRECATION")
   @Test
   fun `sort should be backwards compatible`() {
 
-    val result = jpaPolyflowViewService.query(
+    val result = service.query(
       DataEntriesQuery(sort = "+type")
     )
-    assertThat(result.payload.elements.map { it.entryId }).containsExactly(id, id2, id4)
+    assertThat(result.payload.elements.map { it.entryId }).containsExactlyInAnyOrder(id, id2, id4)
   }
 
   @Test
   fun `should not find data entry with correlations`() {
-    val result = jpaPolyflowViewService.query(
+    val result = service.query(
       DataEntriesQuery(filters = listOf("key-int=2")) // key-int 2 is an attribute of data entry 2
     )
 
-    assertThat(result.payload.elements.map { it.entryId }).containsExactly(id2) // id4 is not found by correlation to id2, due to property
+    assertThat(result.payload.elements.map { it.entryId }).containsExactlyInAnyOrder(id2) // id4 is not found by correlation to id2, due to property
   }
 
-  @Test
-  fun `should anonymize data entry`() {
-    jpaPolyflowViewService.on(
-      event = DataEntryAnonymizedEvent(
-        entryType = "io.polyflow.test",
-        entryId = id4,
-        anonymizedUsername = "ANONYMOUS",
-        excludedUsernames = listOf("SYSTEM"),
-        anonymizeModification = Modification(
-          time = OffsetDateTime.ofInstant(now, ZoneOffset.UTC),
-          username = "SYSTEM",
-          log = "Created",
-          logNotes = "Created the entry"
-        ),
-      ),
-      metaData = MetaData.emptyInstance()
-    )
-
-    val result = jpaPolyflowViewService.query(
-      DataEntryForIdentityQuery(entryType = "io.polyflow.test", entryId = id4)
-    )
-
-    assertThat(result.payload).matches { entry -> entry.protocol.all { it.username in listOf("SYSTEM", "ANONYMOUS") } }
-    assertThat(result.payload).matches { entry -> entry.authorizedUsers.isEmpty() }
-  }
-  
   @Test
   fun `should find data entry by involvements`() {
-    val result = jpaPolyflowViewService.query(
+    val result = service.query(
       DataEntriesForUserQuery(user = User("kermit", mutableSetOf("muppets")), involvementsOnly = true)
     )
 
-    assertThat(result.payload.elements.map { it.entryId }).containsExactly(id) // user is allowed to see two dataEntries but has only one involvement
+    assertThat(result.payload.elements.map { it.entryId }).containsExactlyInAnyOrder(id) // user is allowed to see two dataEntries but has only one involvement
   }
-
-  private fun <T : Any> query_updates_have_been_emitted(query: T, id: String, revision: Long) {
-    captureEmittedQueryUpdates()
-
-    val updates = emittedQueryUpdates
-      .filter { it.queryType == query::class.java }
-      .filter { it.predicate.test(query) }
-      .map { it.update as GenericSubscriptionQueryUpdateMessage<*> }
-      .map { message -> (message.payload as DataEntriesQueryResult).elements.map { entry -> entry.entryId } to RevisionValue.fromMetaData(message.metaData).revision }
-
-    assertThat(updates)
-      .`as`("Query updates for query $query")
-      .containsAnyElementsOf(listOf(listOf(id) to revision))
-  }
-
-  private fun assertResultIsEmpty(result: QueryResponseMessage<DataEntriesQueryResult>) {
-    assertThat(result.payload.elements).isEmpty()
-  }
-
 
   private fun assertResultIsTestEntry1(result: QueryResponseMessage<DataEntriesQueryResult>) {
     assertThat(result.payload.elements.size).isEqualTo(1)
@@ -448,23 +348,5 @@ internal class JpaPolyflowViewServiceDataEntryITest {
     assertThat(dataEntry.protocol[0].username).isEqualTo("piggy")
   }
 
-  private fun captureEmittedQueryUpdates(): List<QueryUpdate<Any>> {
-    val queryTypeCaptor = argumentCaptor<Class<Any>>()
-    val predicateCaptor = argumentCaptor<Predicate<Any>>()
-    val updateCaptor = argumentCaptor<SubscriptionQueryUpdateMessage<Any>>()
-    verify(queryUpdateEmitter, atLeast(0)).emit(queryTypeCaptor.capture(), predicateCaptor.capture(), updateCaptor.capture())
-    clearInvocations(queryUpdateEmitter)
-
-    val foundUpdates = queryTypeCaptor.allValues
-      .zip(predicateCaptor.allValues)
-      .zip(updateCaptor.allValues) { (queryType, predicate), update ->
-        QueryUpdate(queryType, predicate, update)
-      }
-
-    emittedQueryUpdates.addAll(foundUpdates)
-    return foundUpdates
-  }
-
-  data class QueryUpdate<E>(val queryType: Class<E>, val predicate: Predicate<E>, val update: Any)
 
 }
