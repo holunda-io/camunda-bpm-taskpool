@@ -446,7 +446,6 @@ class MongoViewService(
       .map { oldEntry -> event.toDocument(oldEntry) }.map { dataEntryRepository.save(it) }
       .then(updateDataEntryQuery(QueryDataIdentity(entryType = event.entryType, entryId = event.entryId)))
       .block()
-    throw NotImplementedError("Anonymizing data entries is not yet supported in the mongo view")
   }
 
   private fun deleteDataEntry(id: String) {
