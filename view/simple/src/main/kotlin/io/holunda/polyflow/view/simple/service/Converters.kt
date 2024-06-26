@@ -1,8 +1,6 @@
 package io.holunda.polyflow.view.simple.service
 
-import io.holunda.camunda.taskpool.api.business.AuthorizationChange
-import io.holunda.camunda.taskpool.api.business.DataEntryCreatedEvent
-import io.holunda.camunda.taskpool.api.business.DataEntryUpdatedEvent
+import io.holunda.camunda.taskpool.api.business.*
 import io.holunda.camunda.taskpool.api.process.instance.ProcessInstanceCancelledEvent
 import io.holunda.camunda.taskpool.api.process.instance.ProcessInstanceEndedEvent
 import io.holunda.camunda.taskpool.api.process.instance.ProcessInstanceStartedEvent
@@ -65,6 +63,20 @@ fun DataEntryCreatedEvent.toDataEntry() = DataEntry(
   authorizedGroups = AuthorizationChange.applyGroupAuthorization(setOf(), this.authorizations),
   protocol = listOf<ProtocolEntry>().addModification(this.createModification, this.state)
 )
+
+/**
+ * Event to entry for an update, if an optional entry exists.
+ */
+fun DataEntryAnonymizedEvent.toDataEntry(oldEntry: DataEntry) =
+  oldEntry.copy(
+    authorizedUsers = AuthorizationChange.applyUserAuthorization(oldEntry.authorizedUsers,
+      oldEntry.authorizedUsers.map { AuthorizationChange.removeUser(it) }),
+    protocol = oldEntry.protocol.map {
+      it.copy(
+        username =
+        if (it.username != null && !this.excludedUsernames.contains(it.username))
+          this.anonymizedUsername else it.username) }
+      .addModification(this.anonymizeModification, oldEntry.state))
 
 /**
  * Converts event to view model.

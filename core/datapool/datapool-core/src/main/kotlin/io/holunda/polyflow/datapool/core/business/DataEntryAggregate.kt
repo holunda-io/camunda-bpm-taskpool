@@ -72,6 +72,21 @@ class DataEntryAggregate() {
   }
 
   /**
+   * Handle anonymize.
+   */
+  @CommandHandler
+  fun handle(command: AnonymizeDataEntryCommand, @Autowired deletionStrategy: DeletionStrategy) {
+    if (deletionStrategy.strictMode()) {
+      if (deleted) {
+        throw AggregateDeletedException(this.dataIdentity, "The data entry has already been deleted")
+      }
+    }
+    AggregateLifecycle.apply(
+      command.anonymizeEvent()
+    )
+  }
+
+  /**
    * React on created event.
    */
   @EventSourcingHandler

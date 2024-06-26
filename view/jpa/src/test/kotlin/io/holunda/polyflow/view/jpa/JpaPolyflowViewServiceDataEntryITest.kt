@@ -357,6 +357,32 @@ internal class JpaPolyflowViewServiceDataEntryITest {
   }
 
   @Test
+  fun `should anonymize data entry`() {
+    jpaPolyflowViewService.on(
+      event = DataEntryAnonymizedEvent(
+        entryType = "io.polyflow.test",
+        entryId = id4,
+        anonymizedUsername = "ANONYMOUS",
+        excludedUsernames = listOf("SYSTEM"),
+        anonymizeModification = Modification(
+          time = OffsetDateTime.ofInstant(now, ZoneOffset.UTC),
+          username = "SYSTEM",
+          log = "Created",
+          logNotes = "Created the entry"
+        ),
+      ),
+      metaData = MetaData.emptyInstance()
+    )
+
+    val result = jpaPolyflowViewService.query(
+      DataEntryForIdentityQuery(entryType = "io.polyflow.test", entryId = id4)
+    )
+
+    assertThat(result.payload).matches { entry -> entry.protocol.all { it.username in listOf("SYSTEM", "ANONYMOUS") } }
+    assertThat(result.payload).matches { entry -> entry.authorizedUsers.isEmpty() }
+  }
+  
+  @Test
   fun `should find data entry by involvements`() {
     val result = jpaPolyflowViewService.query(
       DataEntriesForUserQuery(user = User("kermit", mutableSetOf("muppets")), involvementsOnly = true)

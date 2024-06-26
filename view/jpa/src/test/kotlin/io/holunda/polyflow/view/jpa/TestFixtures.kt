@@ -1,5 +1,6 @@
 package io.holunda.polyflow.view.jpa
 
+import io.holunda.camunda.taskpool.api.business.DataEntryAnonymizedEvent
 import io.holunda.camunda.taskpool.api.business.DataEntryCreatedEvent
 import io.holunda.camunda.taskpool.api.business.DataEntryDeletedEvent
 import io.holunda.camunda.taskpool.api.business.DataEntryUpdatedEvent
@@ -83,4 +84,5 @@ class JpaPolyflowViewServiceTxFacade(private val implementation: JpaPolyflowView
 
   override fun on(event: DataEntryDeletedEvent, metaData: MetaData) = implementation.on(event = event, metaData = metaData)
 
+  override fun on(event: DataEntryAnonymizedEvent, metaData: MetaData) = implementation.on(event = event, metaData = metaData)
 }

@@ -69,6 +69,13 @@ interface DataEntryCommandSender {
    * @param metaData meta data, will default to empty metadata.
    */
   fun sendDataEntryDelete(command: DeleteDataEntryCommand, metaData: MetaData = MetaData.emptyInstance())
+
+  /**
+   * Sends a data entry anonymize command.
+   * @param command command to send.
+   * @param metaData meta data, will default to empty metadata.
+   */
+  fun sendDataEntryAnonymize(command: AnonymizeDataEntryCommand, metaData: MetaData = MetaData.emptyInstance())
 }
 
 /**

@@ -192,3 +192,26 @@ fun DataEntryDeletedEvent.toEntity(
 }.apply {
   this.protocol = this.protocol.addModification(this, this@toEntity.deleteModification, this@toEntity.state)
 }
+
+/**
+ * Event to entity for an anonymization, if an optional entry exists.
+ */
+fun DataEntryAnonymizedEvent.toEntity(
+  revisionValue: RevisionValue,
+  oldEntry: DataEntryEntity,
+) = oldEntry.also {
+  it.protocol.forEach { protocolEntry ->
+    if (protocolEntry.username != null && !this.excludedUsernames.contains(protocolEntry.username))
+      protocolEntry.username = this.anonymizedUsername
+  }
+  it.authorizedPrincipals =
+    it.authorizedPrincipals.filter { principal -> !principal.startsWith("USER:") }.toMutableSet()
+  it.lastModifiedDate = this.anonymizeModification.time.toInstant()
+  it.revision = if (revisionValue != RevisionValue.NO_REVISION) {
+    revisionValue.revision
+  } else {
+    it.revision
+  }
+}.apply {
+  this.protocol = this.protocol.addModification(this, this@toEntity.anonymizeModification, this.state.toState())
+}
