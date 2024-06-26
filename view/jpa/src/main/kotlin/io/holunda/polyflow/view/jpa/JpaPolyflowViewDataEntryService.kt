@@ -16,6 +16,7 @@ import io.holunda.polyflow.view.jpa.auth.AuthorizationPrincipal.Companion.user
 import io.holunda.polyflow.view.jpa.data.*
 import io.holunda.polyflow.view.jpa.data.DataEntryRepository.Companion.hasEntryId
 import io.holunda.polyflow.view.jpa.data.DataEntryRepository.Companion.hasEntryType
+import io.holunda.polyflow.view.jpa.data.DataEntryRepository.Companion.hasUserInvolvement
 import io.holunda.polyflow.view.jpa.data.DataEntryRepository.Companion.isAuthorizedFor
 import io.holunda.polyflow.view.jpa.update.updateDataEntryQuery
 import io.holunda.polyflow.view.query.PageableSortableQuery
@@ -78,8 +79,10 @@ class JpaPolyflowViewDataEntryService(
     val criteria: List<Criterion> = toCriteria(query.filters)
     val specification = criteria.toDataEntrySpecification(polyflowJpaViewProperties.includeCorrelatedDataEntriesInDataEntryQueries)
     val pageRequest = pageRequest(query.page, query.size, query.sort)
-
-    val page = dataEntryRepository.findAll(specification.and(isAuthorizedFor(authorizedPrincipals)), pageRequest)
+    val userQuery = if (query.involvementsOnly) {
+      isAuthorizedFor(authorizedPrincipals).and(hasUserInvolvement(query.user.username))
+    } else { isAuthorizedFor(authorizedPrincipals)   }
+    val page = dataEntryRepository.findAll(specification.and(userQuery), pageRequest)
     return constructDataEntryResponse(page)
   }
 

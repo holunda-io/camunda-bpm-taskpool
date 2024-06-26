@@ -58,6 +58,18 @@ interface DataEntryRepository : CrudRepository<DataEntryEntity, DataEntryId>, Jp
       }
 
     /**
+     * Specification for data entries to check if a user appears in any ProtocolElement
+     */
+    fun hasUserInvolvement(userName: String): Specification<DataEntryEntity> =
+      Specification {dataEntry, _, builder ->
+        builder.equal(
+          dataEntry.join<DataEntryEntity, Set<ProtocolElement>>(DataEntryEntity::protocol.name)
+            .get<String>(ProtocolElement::username.name),
+          userName
+        )
+      }
+
+    /**
      * Specification for the user-defined state.
      */
     fun hasState(state: String): Specification<DataEntryEntity> =

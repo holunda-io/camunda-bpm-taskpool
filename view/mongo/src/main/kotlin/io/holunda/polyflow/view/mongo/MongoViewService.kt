@@ -141,11 +141,13 @@ class MongoViewService(
    */
   @QueryHandler
   override fun query(query: DataEntriesForUserQuery, metaData: MetaData): CompletableFuture<DataEntriesQueryResult> =
-    dataEntryRepository
-      .findAllForUser(
-        username = query.user.username,
-        groupNames = query.user.groups
-      )
+    (if (query.involvementsOnly)
+      dataEntryRepository
+        .findAllForUserWithInvolvement(
+          username = query.user.username,
+          groupNames = query.user.groups
+        )
+    else dataEntryRepository.findAllForUser(username = query.user.username, groupNames = query.user.groups))
       .map { it.dataEntry() }
       .collectList()
       .map { DataEntriesQueryResult(elements = it).slice(query) }
