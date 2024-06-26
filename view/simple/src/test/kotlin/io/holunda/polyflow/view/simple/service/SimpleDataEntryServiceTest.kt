@@ -67,6 +67,29 @@ class SimpleDataEntryServiceTest {
         type = "Test",
         applicationName = "test-application",
         name = "Test Entry 1",
+        state = ProcessingType.IN_PROGRESS.of("Internal check"),
+        payload = payload,
+        authorizations = listOf(
+          addUser("kermit"),
+          addGroup("muppets")
+        ),
+        updateModification = Modification(
+          time = OffsetDateTime.ofInstant(now, ZoneOffset.UTC).plus(5, ChronoUnit.SECONDS),
+          username = null,
+          log = "Updated",
+          logNotes = "Updates the entry"
+        )
+      ),
+      metaData = RevisionValue(revision = 2).toMetaData()
+    )
+
+    service.on(
+      event = DataEntryUpdatedEvent(
+        entryType = "io.polyflow.test",
+        entryId = id,
+        type = "Test",
+        applicationName = "test-application",
+        name = "Test Entry 1",
         state = ProcessingType.IN_PROGRESS.of("In review"),
         payload = payload,
         authorizations = listOf(
@@ -79,7 +102,7 @@ class SimpleDataEntryServiceTest {
           logNotes = "Updated the entry"
         )
       ),
-      metaData = RevisionValue(revision = 2).toMetaData()
+      metaData = RevisionValue(revision = 3).toMetaData()
     )
 
     service.on(
@@ -306,11 +329,13 @@ class SimpleDataEntryServiceTest {
     assertThat(dataEntry.entryType).isEqualTo("io.polyflow.test")
     assertThat(dataEntry.name).isEqualTo("Test Entry 1")
     assertThat(dataEntry.payload).containsKeys("key", "key-int", "complex")
-    assertThat(dataEntry.protocol.size).isEqualTo(2)
+    assertThat(dataEntry.protocol.size).isEqualTo(3)
     assertThat(dataEntry.protocol[0].time).isEqualTo(now)
     assertThat(dataEntry.protocol[0].username).isEqualTo("kermit")
-    assertThat(dataEntry.protocol[1].time).isEqualTo(now.plus(10, ChronoUnit.SECONDS))
-    assertThat(dataEntry.protocol[1].username).isEqualTo("ironman")
+    assertThat(dataEntry.protocol[1].time).isEqualTo(now.plus(5, ChronoUnit.SECONDS))
+    assertThat(dataEntry.protocol[1].username).isNull()
+    assertThat(dataEntry.protocol[2].time).isEqualTo(now.plus(10, ChronoUnit.SECONDS))
+    assertThat(dataEntry.protocol[2].username).isEqualTo("ironman")
   }
 
   private fun assertTestDataEntry2(dataEntry: DataEntry) {

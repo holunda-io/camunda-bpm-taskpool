@@ -112,6 +112,29 @@ internal class JpaPolyflowViewServiceDataEntryITest {
         type = "Test",
         applicationName = "test-application",
         name = "Test Entry 1",
+        state = ProcessingType.IN_PROGRESS.of("Internal check"),
+        payload =serialize(payload = payload, mapper = objectMapper),
+        authorizations = listOf(
+          addUser("kermit"),
+          addGroup("muppets")
+        ),
+        updateModification = Modification(
+          time = OffsetDateTime.ofInstant(now, ZoneOffset.UTC).plus(5, ChronoUnit.SECONDS),
+          username = null,
+          log = "Updated",
+          logNotes = "Updates the entry"
+        )
+      ),
+      metaData = RevisionValue(revision = 2).toMetaData()
+    )
+
+    jpaPolyflowViewService.on(
+      event = DataEntryUpdatedEvent(
+        entryType = "io.polyflow.test",
+        entryId = id,
+        type = "Test",
+        applicationName = "test-application",
+        name = "Test Entry 1",
         state = ProcessingType.IN_PROGRESS.of("In review"),
         payload = serialize(payload = payload, mapper = objectMapper),
         authorizations = listOf(
@@ -124,7 +147,7 @@ internal class JpaPolyflowViewServiceDataEntryITest {
           logNotes = "Updated the entry"
         )
       ),
-      metaData = RevisionValue(revision = 2).toMetaData()
+      metaData = RevisionValue(revision = 3).toMetaData()
     )
 
     jpaPolyflowViewService.on(
@@ -283,7 +306,7 @@ internal class JpaPolyflowViewServiceDataEntryITest {
       )
     )
 
-    query_updates_have_been_emitted(query, id, 2)
+    query_updates_have_been_emitted(query, id, 3)
   }
 
   @Test
@@ -339,7 +362,7 @@ internal class JpaPolyflowViewServiceDataEntryITest {
       DataEntriesForUserQuery(user = User("kermit", mutableSetOf("muppets")), involvementsOnly = true)
     )
 
-    assertThat(result.payload.elements.map { it.entryId }).containsExactly(id); // user is allowed to see two dataEntries but has only one involvement
+    assertThat(result.payload.elements.map { it.entryId }).containsExactly(id) // user is allowed to see two dataEntries but has only one involvement
   }
 
   private fun <T : Any> query_updates_have_been_emitted(query: T, id: String, revision: Long) {
@@ -380,11 +403,13 @@ internal class JpaPolyflowViewServiceDataEntryITest {
     assertThat(dataEntry.entryType).isEqualTo("io.polyflow.test")
     assertThat(dataEntry.name).isEqualTo("Test Entry 1")
     assertThat(dataEntry.payload).containsKeys("key", "key-int", "complex")
-    assertThat(dataEntry.protocol.size).isEqualTo(2)
+    assertThat(dataEntry.protocol.size).isEqualTo(3)
     assertThat(dataEntry.protocol[0].time).isEqualTo(now)
     assertThat(dataEntry.protocol[0].username).isEqualTo("kermit")
-    assertThat(dataEntry.protocol[1].time).isEqualTo(now.plus(10, ChronoUnit.SECONDS))
-    assertThat(dataEntry.protocol[1].username).isEqualTo("ironman")
+    assertThat(dataEntry.protocol[1].time).isEqualTo(now.plus(5, ChronoUnit.SECONDS))
+    assertThat(dataEntry.protocol[1].username).isNull()
+    assertThat(dataEntry.protocol[2].time).isEqualTo(now.plus(10, ChronoUnit.SECONDS))
+    assertThat(dataEntry.protocol[2].username).isEqualTo("ironman")
   }
 
   private fun assertTestDataEntry2(dataEntry: DataEntry) {
