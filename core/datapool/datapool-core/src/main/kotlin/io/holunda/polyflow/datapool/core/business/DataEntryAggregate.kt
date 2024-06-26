@@ -133,21 +133,4 @@ class DataEntryAggregate() {
     // Don't use AggregateLifecycle.markDeleted() because then the combination of entryType / entryId is then really deleted forever
     this.deleted = true
   }
-
-  /**
-   * React on anonymized event.
-   */
-  @EventSourcingHandler
-  fun on(event: DataEntryAnonymizedEvent) {
-    if (this.deleted) {
-      this.deleted = false
-    }
-    if (logger.isDebugEnabled) {
-      logger.debug { "Anonymized $dataIdentity." }
-    }
-    if (logger.isTraceEnabled) {
-      logger.trace { "Anonymized $dataIdentity with: $event" }
-    }
-  }
-
 }
