@@ -3,6 +3,7 @@ package io.holunda.polyflow.view.jpa
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.holixon.axon.gateway.query.QueryResponseMessageResponseType
 import io.holixon.axon.gateway.query.RevisionValue
+import io.holunda.camunda.taskpool.api.business.DataEntryAnonymizedEvent
 import io.holunda.camunda.taskpool.api.business.DataEntryCreatedEvent
 import io.holunda.camunda.taskpool.api.business.DataEntryDeletedEvent
 import io.holunda.camunda.taskpool.api.business.DataEntryUpdatedEvent
@@ -16,6 +17,7 @@ import io.holunda.polyflow.view.jpa.auth.AuthorizationPrincipal.Companion.user
 import io.holunda.polyflow.view.jpa.data.*
 import io.holunda.polyflow.view.jpa.data.DataEntryRepository.Companion.hasEntryId
 import io.holunda.polyflow.view.jpa.data.DataEntryRepository.Companion.hasEntryType
+import io.holunda.polyflow.view.jpa.data.DataEntryRepository.Companion.hasUserInvolvement
 import io.holunda.polyflow.view.jpa.data.DataEntryRepository.Companion.isAuthorizedFor
 import io.holunda.polyflow.view.jpa.update.updateDataEntryQuery
 import io.holunda.polyflow.view.query.PageableSortableQuery
@@ -76,10 +78,12 @@ class JpaPolyflowViewDataEntryService(
 
     val authorizedPrincipals: Set<AuthorizationPrincipal> = setOf(user(query.user.username)).plus(query.user.groups.map { group(it) })
     val criteria: List<Criterion> = toCriteria(query.filters)
-    val specification = criteria.toDataEntrySpecification()
+    val specification = criteria.toDataEntrySpecification(polyflowJpaViewProperties.includeCorrelatedDataEntriesInDataEntryQueries)
     val pageRequest = pageRequest(query.page, query.size, query.sort)
-
-    val page = dataEntryRepository.findAll(specification.and(isAuthorizedFor(authorizedPrincipals)), pageRequest)
+    val userQuery = if (query.involvementsOnly) {
+      isAuthorizedFor(authorizedPrincipals).and(hasUserInvolvement(query.user.username))
+    } else { isAuthorizedFor(authorizedPrincipals)   }
+    val page = dataEntryRepository.findAll(specification.and(userQuery), pageRequest)
     return constructDataEntryResponse(page)
   }
 
@@ -87,7 +91,7 @@ class JpaPolyflowViewDataEntryService(
   override fun query(query: DataEntriesQuery, metaData: MetaData): QueryResponseMessage<DataEntriesQueryResult> {
 
     val criteria: List<Criterion> = toCriteria(query.filters)
-    val specification = criteria.toDataEntrySpecification()
+    val specification = criteria.toDataEntrySpecification(polyflowJpaViewProperties.includeCorrelatedDataEntriesInDataEntryQueries)
     val pageRequest = pageRequest(query.page, query.size, query.sort)
 
     val page = dataEntryRepository.findAll(specification, pageRequest)
@@ -159,6 +163,25 @@ class JpaPolyflowViewDataEntryService(
       logger.debug { "JPA-VIEW-43: Business data entry deleted $event" }
     } else {
       logger.warn { "JPA-VIEW-44: Business data entry was already deleted. Ignored a duplicate event $event" }
+    }
+  }
+
+  @Suppress("unused")
+  @EventHandler
+  override fun on(event: DataEntryAnonymizedEvent, metaData: MetaData) {
+    if (isDisabledByProperty()) return
+
+    val savedEntity = dataEntryRepository.findByIdOrNull(DataEntryId(entryType = event.entryType, entryId = event.entryId))
+    if (savedEntity != null) {
+      val entity = dataEntryRepository.save(
+        event.toEntity(
+          revisionValue = RevisionValue.fromMetaData(metaData),
+          oldEntry = savedEntity,
+        )
+      ).apply {
+        logger.debug { "JPA-VIEW-45: Business data entry anonymized $event" }
+      }
+      emitDataEntryUpdate(entity)
     }
   }
 

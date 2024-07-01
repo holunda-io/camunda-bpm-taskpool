@@ -2,11 +2,9 @@ package io.holunda.polyflow.datapool.core.business
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.holunda.camunda.taskpool.api.business.*
-import io.holunda.polyflow.bus.jackson.JsonAutoDetectAnyVisibility
 import io.holunda.polyflow.bus.jackson.configurePolyflowJacksonObjectMapper
 import io.holunda.polyflow.datapool.core.DeletionStrategy
 import io.holunda.polyflow.datapool.core.configurePolyflowJacksonObjectMapperForDatapool
-import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
 import org.axonframework.eventsourcing.AggregateDeletedException
 import org.axonframework.test.aggregate.AggregateTestFixture
@@ -162,6 +160,113 @@ class DataEntryAggregateTest {
           state = command.state
         )
       )
+  }
+
+  @Test
+  fun `should anonymize aggregate`() {
+
+    val dataEntryChange = DataEntryChange(
+      entryType = "io.holunda.My",
+      entryId = UUID.randomUUID().toString(),
+      applicationName = "myApp",
+      name = "My Entry 4711",
+      type = "My",
+      payload = Variables.createVariables(),
+      correlations = newCorrelations()
+    )
+
+    val command = AnonymizeDataEntryCommand(
+      entryType = dataEntryChange.entryType,
+      entryId = dataEntryChange.entryId,
+      anonymizedUsername = "ANONYMOUS",
+      excludedUsernames = listOf("SYSTEM"),
+      anonymizeModification = Modification(OffsetDateTime.now(), "kermit", "kermit decided to anonymize", logNotes = "Let us anonymize this item")
+    )
+
+    fixture
+      .registerInjectableResource(LAX_POLICY)
+      .given(
+        DataEntryCreatedEvent(
+          entryId = dataEntryChange.entryId,
+          entryType = dataEntryChange.entryType,
+          name = "Some name",
+          type = "Another",
+          applicationName = "Different application",
+          state = dataEntryChange.state,
+          description = dataEntryChange.description,
+          payload = dataEntryChange.payload,
+          correlations = dataEntryChange.correlations,
+          createModification = dataEntryChange.modification,
+          authorizations = dataEntryChange.authorizationChanges,
+          formKey = dataEntryChange.formKey
+        )
+      )
+      .`when`(command)
+      .expectEvents(
+        DataEntryAnonymizedEvent(
+          entryId = command.entryId,
+          entryType = command.entryType,
+          anonymizedUsername = command.anonymizedUsername,
+          excludedUsernames = command.excludedUsernames,
+          anonymizeModification = command.anonymizeModification,
+        )
+      )
+  }
+
+  @Test
+  fun `should not anonymize deleted aggregate in strict mode`() {
+
+    val dataEntryChange = DataEntryChange(
+      entryType = "io.holunda.My",
+      entryId = UUID.randomUUID().toString(),
+      applicationName = "myApp",
+      name = "My Entry 4711",
+      type = "My",
+      payload = Variables.createVariables(),
+      correlations = newCorrelations()
+    )
+
+    val deleteCommand = DeleteDataEntryCommand(
+      entryType = dataEntryChange.entryType,
+      entryId = dataEntryChange.entryId,
+      modification = Modification(OffsetDateTime.now(), "kermit", "kermit decided to delete", logNotes = "Let us delete this item"),
+      state = ProcessingType.DELETED.of("deleted as irrelevant")
+    )
+
+    val anonymizeCommand = AnonymizeDataEntryCommand(
+      entryType = dataEntryChange.entryType,
+      entryId = dataEntryChange.entryId,
+      anonymizedUsername = "ANONYMOUS",
+      excludedUsernames = listOf("SYSTEM"),
+      anonymizeModification = Modification(OffsetDateTime.now(), "kermit", "kermit decided to anonymize", logNotes = "Let us anonymize this item")
+    )
+
+    fixture
+      .registerInjectableResource(STRICT_POLICY)
+      .given(
+        DataEntryCreatedEvent(
+          entryId = dataEntryChange.entryId,
+          entryType = dataEntryChange.entryType,
+          name = "Some name",
+          type = "Another",
+          applicationName = "Different application",
+          state = dataEntryChange.state,
+          description = dataEntryChange.description,
+          payload = dataEntryChange.payload,
+          correlations = dataEntryChange.correlations,
+          createModification = dataEntryChange.modification,
+          authorizations = dataEntryChange.authorizationChanges,
+          formKey = dataEntryChange.formKey
+        ),
+        DataEntryDeletedEvent(
+          entryId = deleteCommand.entryId,
+          entryType = deleteCommand.entryType,
+          deleteModification = deleteCommand.modification,
+          state = deleteCommand.state
+        )
+      )
+      .`when`(anonymizeCommand)
+      .expectException(AggregateDeletedException::class.java)
   }
 
   @Test

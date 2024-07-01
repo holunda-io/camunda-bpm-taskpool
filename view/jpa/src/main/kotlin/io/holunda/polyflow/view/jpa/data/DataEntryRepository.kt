@@ -58,6 +58,18 @@ interface DataEntryRepository : CrudRepository<DataEntryEntity, DataEntryId>, Jp
       }
 
     /**
+     * Specification for data entries to check if a user appears in any ProtocolElement
+     */
+    fun hasUserInvolvement(userName: String): Specification<DataEntryEntity> =
+      Specification {dataEntry, _, builder ->
+        builder.equal(
+          dataEntry.join<DataEntryEntity, Set<ProtocolElement>>(DataEntryEntity::protocol.name)
+            .get<String>(ProtocolElement::username.name),
+          userName
+        )
+      }
+
+    /**
      * Specification for the user-defined state.
      */
     fun hasState(state: String): Specification<DataEntryEntity> =
@@ -99,6 +111,31 @@ interface DataEntryRepository : CrudRepository<DataEntryEntity, DataEntryId>, Jp
         val valueAnyOf = values.map {
           builder.equal(
             join.get<String>(PayloadAttribute::value.name),
+            it
+          )
+        }.let { builder.or(*it.toTypedArray()) }
+
+        builder.and(pathEquals, valueAnyOf)
+      }
+
+    /**
+     * Specification for checking the payload attributes of a data entry (including payload attributes from correlated data entries).
+     * If multiple values are given, one of them must match. payload.name = ? AND (payload.value = ? OR payload.value = ? OR ...)
+     */
+    fun hasDataEntryPayloadAttributeIncludingCorrelations(name: String, values: List<String>): Specification<DataEntryEntity> =
+      Specification { dataEntry, query, builder ->
+        query.distinct(true)
+        val join = dataEntry.join<DataEntryEntity, Set<DataEntryPayloadAttributeEntity>>(DataEntryEntity::payloadAndCorrelatedPayloadAttributes.name)
+        val pathEquals = builder.equal(
+          join.get<DataEntryPayloadAttributeEntityId>(DataEntryPayloadAttributeEntity::id.name)
+            .get<String>(DataEntryPayloadAttributeEntityId::path.name),
+          name
+        )
+
+        val valueAnyOf = values.map {
+          builder.equal(
+            join.get<DataEntryPayloadAttributeEntityId>(DataEntryPayloadAttributeEntity::id.name)
+              .get<String>(DataEntryPayloadAttributeEntityId::value.name),
             it
           )
         }.let { builder.or(*it.toTypedArray()) }

@@ -49,6 +49,7 @@ jobs:
         env:
           OSS_CENTRAL_USERNAME: "${{ secrets.SONATYPE_USERNAME }}"
           OSS_CENTRAL_PASSWORD: "${{ secrets.SONATYPE_PASSWORD }}"
+        if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/snapshot-producer'
 
       - name: Upload coverage information to CodeCov
         uses: codecov/codecov-action@v4

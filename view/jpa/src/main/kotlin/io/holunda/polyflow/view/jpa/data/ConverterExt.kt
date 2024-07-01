@@ -12,6 +12,7 @@ import io.holunda.polyflow.view.jpa.auth.AuthorizationPrincipal.Companion.user
 import io.holunda.polyflow.view.jpa.auth.AuthorizationPrincipalType.GROUP
 import io.holunda.polyflow.view.jpa.auth.AuthorizationPrincipalType.USER
 import io.holunda.polyflow.view.jpa.payload.PayloadAttribute
+import org.camunda.bpm.engine.variable.Variables
 
 /**
  * Converts the entity into API type.
@@ -30,6 +31,7 @@ fun DataEntryEntity.toDataEntry(objectMapper: ObjectMapper) =
     authorizedUsers = this.authorizedPrincipals.asUsernames(),
     authorizedGroups = this.authorizedPrincipals.asGroupnames(),
     payload = this.payload.toPayloadVariableMap(objectMapper),
+    correlations = Variables.fromMap(this.correlations.associate { it.entryType to it.entryId })
   )
 
 /**
@@ -86,6 +88,7 @@ fun DataEntryCreatedEvent.toEntity(objectMapper: ObjectMapper, revisionValue: Re
   },
   authorizedPrincipals = AuthorizationChange.applyUserAuthorization(mutableSetOf(), this.authorizations).map { user(it).toString() }
     .plus(AuthorizationChange.applyGroupAuthorization(mutableSetOf(), this.authorizations).map { group(it).toString() }).toMutableSet(),
+  correlations = this.correlations.toMutableMap().map { entry -> DataEntryId(entryType = entry.key, entryId =  entry.value.toString()) }.toMutableSet()
 ).apply {
   this.protocol = this.protocol.addModification(this, this@toEntity.createModification, this@toEntity.state)
 }
@@ -188,4 +191,27 @@ fun DataEntryDeletedEvent.toEntity(
   }
 }.apply {
   this.protocol = this.protocol.addModification(this, this@toEntity.deleteModification, this@toEntity.state)
+}
+
+/**
+ * Event to entity for an anonymization, if an optional entry exists.
+ */
+fun DataEntryAnonymizedEvent.toEntity(
+  revisionValue: RevisionValue,
+  oldEntry: DataEntryEntity,
+) = oldEntry.also {
+  it.protocol.forEach { protocolEntry ->
+    if (protocolEntry.username != null && !this.excludedUsernames.contains(protocolEntry.username))
+      protocolEntry.username = this.anonymizedUsername
+  }
+  it.authorizedPrincipals =
+    it.authorizedPrincipals.filter { principal -> !principal.startsWith("USER:") }.toMutableSet()
+  it.lastModifiedDate = this.anonymizeModification.time.toInstant()
+  it.revision = if (revisionValue != RevisionValue.NO_REVISION) {
+    revisionValue.revision
+  } else {
+    it.revision
+  }
+}.apply {
+  this.protocol = this.protocol.addModification(this, this@toEntity.anonymizeModification, this.state.toState())
 }

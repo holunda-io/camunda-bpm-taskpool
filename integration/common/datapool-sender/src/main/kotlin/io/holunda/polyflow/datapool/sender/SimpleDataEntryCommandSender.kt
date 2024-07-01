@@ -126,5 +126,22 @@ class SimpleDataEntryCommandSender(
       logger.debug("Would have sent delete command $command")
     }
   }
+
+  override fun sendDataEntryAnonymize(command: AnonymizeDataEntryCommand, metaData: MetaData) {
+    if (properties.enabled) {
+      val message = GenericCommandMessage
+        .asCommandMessage<AnonymizeDataEntryCommand>(command)
+        .withMetaData(metaData)
+      gateway.send<Any, Any?>(message) { m, r ->
+        if (r.isExceptional) {
+          errorHandler.apply(m, r)
+        } else {
+          successHandler.apply(m, r)
+        }
+      }
+    } else {
+      logger.debug("Would have sent anonymize command $command")
+    }
+  }
 }
 

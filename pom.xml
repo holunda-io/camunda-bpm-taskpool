@@ -5,7 +5,7 @@
 
   <groupId>io.holunda.polyflow</groupId>
   <artifactId>polyflow-root</artifactId>
-  <version>4.1.6</version>
+  <version>4.2.0</version>
   <packaging>pom</packaging>
 
   <name>POM: ${project.artifactId}</name>
@@ -40,7 +40,7 @@
           <!-- cleaning -->
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-clean-plugin</artifactId>
-          <version>3.3.2</version>
+          <version>3.4.0</version>
         </plugin>
         <!-- gitflow -->
         <plugin>

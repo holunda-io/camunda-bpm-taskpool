@@ -7,6 +7,7 @@ import io.holunda.polyflow.view.Task
 import io.holunda.polyflow.view.filter.*
 import io.holunda.polyflow.view.jpa.data.DataEntryEntity
 import io.holunda.polyflow.view.jpa.data.DataEntryRepository.Companion.hasDataEntryPayloadAttribute
+import io.holunda.polyflow.view.jpa.data.DataEntryRepository.Companion.hasDataEntryPayloadAttributeIncludingCorrelations
 import io.holunda.polyflow.view.jpa.data.DataEntryRepository.Companion.hasEntryId
 import io.holunda.polyflow.view.jpa.data.DataEntryRepository.Companion.hasEntryType
 import io.holunda.polyflow.view.jpa.data.DataEntryRepository.Companion.hasProcessingType
@@ -24,8 +25,8 @@ import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.hasFollowUpDat
 import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.hasFollowUpDateBefore
 import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.hasPriority
 import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.hasProcessName
-import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.hasTaskPayloadAttribute
 import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.hasTaskOrDataEntryPayloadAttribute
+import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.hasTaskPayloadAttribute
 import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.likeBusinessKey
 import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.likeDescription
 import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.likeName
@@ -43,10 +44,10 @@ import java.time.Instant
 /**
  * Creates a JPQL specification out of predicate wrapper.
  */
-fun List<Criterion>.toDataEntrySpecification(): Specification<DataEntryEntity> {
+fun List<Criterion>.toDataEntrySpecification(includeCorrelatedDataEntries: Boolean): Specification<DataEntryEntity> {
 
   val attributeSpec = toDataEntryAttributeSpecification()
-  val payloadSpec = toDataEntryPayloadSpecification()
+  val payloadSpec = toDataEntryPayloadSpecification(includeCorrelatedDataEntries)
 
   return where(attributeSpec).and(payloadSpec)
 }
@@ -187,11 +188,11 @@ internal fun List<Criterion>.toDataEntryAttributeSpecification(): Specification<
 /**
  * Specification on payload.
  */
-internal fun List<Criterion>.toDataEntryPayloadSpecification(): Specification<DataEntryEntity> {
+internal fun List<Criterion>.toDataEntryPayloadSpecification(includeCorrelatedDataEntries: Boolean): Specification<DataEntryEntity> {
   val relevant = this.filterIsInstance<Criterion.PayloadEntryCriterion>()
   // compose criteria with same name with OR and criteria with different names with AND
   val relevantByName = relevant.groupBy { it.name }
-  val orComposedByName = relevantByName.map { (_, criteria) -> criteria.toOrDataEntrySpecification() }
+  val orComposedByName = relevantByName.map { (_, criteria) -> criteria.toOrDataEntrySpecification(includeCorrelatedDataEntries) }
 
   return composeAnd(orComposedByName)
 }
@@ -325,12 +326,16 @@ internal fun Criterion.DataEntryCriterion.toTaskCorrelatedDataEntrySpecification
  * Creates JPA Specification for query of payload attributes based on JSON paths. All criteria must have the same path
  * and will be composed by the logical OR operator.
  */
-internal fun List<Criterion.PayloadEntryCriterion>.toOrDataEntrySpecification(): Specification<DataEntryEntity> {
+internal fun List<Criterion.PayloadEntryCriterion>.toOrDataEntrySpecification(includeCorrelatedDataEntries: Boolean): Specification<DataEntryEntity> {
   require(this.isNotEmpty()) { "List of criteria must not be empty." }
   require(this.all { it.operator == EQUALS }) { "JPA View currently supports only equals as operator for filtering of payload attributes." }
   require(this.distinctBy { it.name }.size == 1) { "All criteria must have the same path." }
 
-  return hasDataEntryPayloadAttribute(this.first().name, this.map { it.value })
+  return if (includeCorrelatedDataEntries) {
+    hasDataEntryPayloadAttributeIncludingCorrelations(this.first().name, this.map { it.value })
+  } else {
+    hasDataEntryPayloadAttribute(this.first().name, this.map { it.value })
+  }
 }
 
 

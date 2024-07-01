@@ -1,5 +1,6 @@
 package io.holunda.polyflow.view.jpa.data
 
+import io.holunda.camunda.taskpool.api.business.DataEntryAnonymizedEvent
 import io.holunda.camunda.taskpool.api.business.DataEntryCreatedEvent
 import io.holunda.camunda.taskpool.api.business.DataEntryDeletedEvent
 import io.holunda.camunda.taskpool.api.business.DataEntryUpdatedEvent
@@ -24,4 +25,9 @@ interface DataEntryEventHandler {
    * Data entry deleted.
    */
   fun on(event: DataEntryDeletedEvent, metaData: MetaData)
+
+  /**
+   * Data entry anonymized.
+   */
+  fun on(event: DataEntryAnonymizedEvent, metaData: MetaData)
 }

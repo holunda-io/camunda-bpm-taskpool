@@ -6,7 +6,7 @@
   <parent>
     <groupId>io.holunda.polyflow</groupId>
     <artifactId>polyflow-integration-camunda-bpm-engine-parent</artifactId>
-    <version>4.1.6</version>
+    <version>4.2.0</version>
   </parent>
 
   <artifactId>polyflow-camunda-bpm-taskpool-collector</artifactId>
@@ -59,6 +59,11 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.flywaydb</groupId>
+      <artifactId>flyway-core</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>

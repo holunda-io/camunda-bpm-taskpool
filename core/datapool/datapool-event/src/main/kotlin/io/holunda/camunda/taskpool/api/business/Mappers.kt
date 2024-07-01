@@ -45,3 +45,14 @@ fun DeleteDataEntryCommand.deletedEvent() = DataEntryDeletedEvent(
   deleteModification = this.modification,
   state = this.state
 )
+
+/**
+ * Maps command to event.
+ */
+fun AnonymizeDataEntryCommand.anonymizeEvent() = DataEntryAnonymizedEvent(
+  entryId = this.entryId,
+  entryType = this.entryType,
+  anonymizedUsername = this.anonymizedUsername,
+  excludedUsernames = this.excludedUsernames,
+  anonymizeModification = this.anonymizeModification
+)

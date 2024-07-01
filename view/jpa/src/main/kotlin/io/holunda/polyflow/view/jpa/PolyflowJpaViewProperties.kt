@@ -30,7 +30,12 @@ data class PolyflowJpaViewProperties(
    * Filters for the path for indexing.
    */
   @NestedConfigurationProperty
-  private val taskFilters: PayloadAttributeFilterPaths = PayloadAttributeFilterPaths()
+  private val taskFilters: PayloadAttributeFilterPaths = PayloadAttributeFilterPaths(),
+
+  /**
+   * Controls if DataEntryQueries should consider the payload attributes of correlated data entries. Defaults to "false".
+   */
+  val includeCorrelatedDataEntriesInDataEntryQueries: Boolean = false
 
 ) {
   /**

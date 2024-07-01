@@ -141,11 +141,13 @@ class MongoViewService(
    */
   @QueryHandler
   override fun query(query: DataEntriesForUserQuery, metaData: MetaData): CompletableFuture<DataEntriesQueryResult> =
-    dataEntryRepository
-      .findAllForUser(
-        username = query.user.username,
-        groupNames = query.user.groups
-      )
+    (if (query.involvementsOnly)
+      dataEntryRepository
+        .findAllForUserWithInvolvement(
+          username = query.user.username,
+          groupNames = query.user.groups
+        )
+    else dataEntryRepository.findAllForUser(username = query.user.username, groupNames = query.user.groups))
       .map { it.dataEntry() }
       .collectList()
       .map { DataEntriesQueryResult(elements = it).slice(query) }
@@ -433,6 +435,19 @@ class MongoViewService(
   fun on(event: DataEntryDeletedEvent, metaData: MetaData) {
     logger.debug { "Business data entry deleted $event" }
     deleteDataEntry(dataIdentityString(entryType = event.entryType, entryId = event.entryId))
+  }
+
+  /**
+   * Delivers data entry anonymized event.
+   */
+  @Suppress("unused")
+  @EventHandler
+  fun on(event: DataEntryAnonymizedEvent, metaData: MetaData) {
+    logger.debug { "Business data entry anonymized $event" }
+    dataEntryRepository.findNotDeletedById(dataIdentityString(entryType = event.entryType, entryId = event.entryId))
+      .map { oldEntry -> event.toDocument(oldEntry) }.map { dataEntryRepository.save(it) }
+      .then(updateDataEntryQuery(QueryDataIdentity(entryType = event.entryType, entryId = event.entryId)))
+      .block()
   }
 
   private fun deleteDataEntry(id: String) {
