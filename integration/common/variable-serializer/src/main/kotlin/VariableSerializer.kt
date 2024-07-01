@@ -96,7 +96,7 @@ internal fun Pair<String, Any?>.toJsonPathWithValue(
   } else if (value is List<*>) {
     value.map { (key to it).toJsonPathWithValue(prefix, limit, filter) }.flatten()
   } else {
-    // ignore complex objects
+    // ignore complex objects, in default scenarios, complex objects got already deserialized by the sender in ProjectingCommandAccumulator.serializePayloadIfNeeded
     listOf()
   }
 }
