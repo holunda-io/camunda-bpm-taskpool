@@ -5,6 +5,8 @@ import io.holixon.axon.gateway.query.RevisionValue
 import io.holunda.camunda.taskpool.api.task.*
 import io.holunda.polyflow.view.Task
 import io.holunda.polyflow.view.TaskWithDataEntries
+import io.holunda.polyflow.view.filter.createTaskPredicates
+import io.holunda.polyflow.view.filter.filterByPredicate
 import io.holunda.polyflow.view.filter.toCriteria
 import io.holunda.polyflow.view.jpa.JpaPolyflowViewTaskService.Companion.PROCESSING_GROUP
 import io.holunda.polyflow.view.jpa.auth.AuthorizationPrincipal
@@ -29,6 +31,7 @@ import org.axonframework.eventhandling.EventHandler
 import org.axonframework.messaging.MetaData
 import org.axonframework.queryhandling.QueryHandler
 import org.axonframework.queryhandling.QueryUpdateEmitter
+import org.camunda.bpm.engine.variable.VariableMap
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Component
 import java.util.*
@@ -248,6 +251,42 @@ class JpaPolyflowViewTaskService(
     return TaskQueryResult(
       elements = page.toList(),
       totalElementCount = page.totalElements.toInt()
+    )
+  }
+
+  @QueryHandler
+  override fun query(query: TaskAttributeNamesQuery): TaskAttributeNamesQueryResult {
+    val specification = toCriteria(query.filters).toTaskSpecification()
+    val distinctFilteredKeys = taskRepository.findAll(specification)
+      .asSequence()
+      .map { it.toTask(objectMapper) }
+      .filter { query.applyFilter(it)}
+      .map { it.payload }
+      .flatMap(VariableMap::keys)
+      .distinct()
+      .toList()
+
+    return TaskAttributeNamesQueryResult(
+      elements = distinctFilteredKeys,
+      totalElementCount = distinctFilteredKeys.size
+    )
+  }
+
+  @QueryHandler
+  override fun query(query: TaskAttributeValuesQuery): TaskAttributeValuesQueryResult {
+    val specification = toCriteria(query.filters).toTaskSpecification()
+    val distinctFilteredKeys = taskRepository.findAll(specification)
+      .asSequence()
+      .map { it.toTask(objectMapper) }
+      .filter { query.applyFilter(it)}
+      .filter { taskEntity -> taskEntity.payload.containsKey(query.attributeName) }
+      .mapNotNull { it.payload[query.attributeName] }
+      .distinct()
+      .toList()
+
+    return TaskAttributeValuesQueryResult(
+      elements = distinctFilteredKeys,
+      totalElementCount = distinctFilteredKeys.size
     )
   }
 

@@ -94,6 +94,12 @@ class SimpleTaskPoolWhenStage<SELF : SimpleTaskPoolWhenStage<SELF>> : AbstractSi
   private lateinit var tasks: List<TaskWithDataEntries>
 
   @ProvidedScenarioState(resolution = ScenarioState.Resolution.NAME)
+  private var attributeNames: List<String> = listOf()
+
+  @ProvidedScenarioState(resolution = ScenarioState.Resolution.NAME)
+  private var attributeValues: List<Any> = listOf()
+
+  @ProvidedScenarioState(resolution = ScenarioState.Resolution.NAME)
   private var queriedTasks: MutableList<TaskWithDataEntries> = mutableListOf()
 
   @ProvidedScenarioState(resolution = ScenarioState.Resolution.NAME)
@@ -130,6 +136,16 @@ class SimpleTaskPoolWhenStage<SELF : SimpleTaskPoolWhenStage<SELF>> : AbstractSi
     queriedTasks.addAll(simpleTaskPoolService.query(AllTasksQuery(sort = sort, filters = filters)).elements.map { TaskWithDataEntries(it) })
   }
 
+  @As("Task Attribute Names are queried for user $ with group $")
+  fun task_attribute_names_are_queried(user: String, group: String) = step {
+    attributeNames = simpleTaskPoolService.query(TaskAttributeNamesQuery(user = User(user, setOf(group)))).elements
+  }
+
+  @As("Task Attribute Values are queried for name $ and user $ with group $")
+  fun task_attribute_values_are_queried(name: String, user: String, group: String) = step {
+    attributeValues = simpleTaskPoolService.query(TaskAttributeValuesQuery(attributeName = name, user = User(user, setOf(group)))).elements
+  }
+
 }
 
 @JGivenKotlinStage
@@ -146,6 +162,12 @@ class SimpleTaskPoolThenStage<SELF : SimpleTaskPoolThenStage<SELF>> : AbstractSi
 
   @ExpectedScenarioState(resolution = ScenarioState.Resolution.NAME, required = true)
   private lateinit var returnedTasksForApplication: TaskQueryResult
+
+  @ExpectedScenarioState(resolution = ScenarioState.Resolution.NAME)
+  private var attributeNames: List<String> = listOf()
+
+  @ExpectedScenarioState(resolution = ScenarioState.Resolution.NAME)
+  private var attributeValues: List<Any> = listOf()
 
   @As("$ tasks are returned")
   fun num_tasks_are_returned(numTasks: Int) = step {
@@ -175,6 +197,16 @@ class SimpleTaskPoolThenStage<SELF : SimpleTaskPoolThenStage<SELF>> : AbstractSi
   @As("tasks $ are returned for application")
   fun tasks_are_returned_for_application(@Hidden vararg expectedTasks: Task) = step {
     assertThat(returnedTasksForApplication.elements).containsExactlyInAnyOrder(*expectedTasks)
+  }
+
+  @As("attribute names $ are returned")
+  fun attribute_names_are_returned(count: Int) = step {
+    assertThat(attributeNames).hasSize(count)
+  }
+
+  @As("attribute values $ are returned")
+  fun attribute_values_are_returned(count: Int) = step {
+    assertThat(attributeValues).hasSize(count)
   }
 
   fun task_is_created(task: Task) = step {

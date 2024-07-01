@@ -63,4 +63,14 @@ interface TaskApi {
    * Retrieve all tasks.
    */
   fun query(query: AllTasksQuery): TaskQueryResult
+
+  /**
+   * Retrieves all task attribute names
+   */
+  fun query(query: TaskAttributeNamesQuery): TaskAttributeNamesQueryResult
+
+  /**
+   * Retrieves all task attribute values for an attribute name
+   */
+  fun query(query: TaskAttributeValuesQuery): TaskAttributeValuesQueryResult
 }

@@ -524,6 +524,34 @@ internal class JpaPolyflowViewServiceTaskITest {
     assertThat(counts[0].taskCount).isEqualTo(3)
   }
 
+  @Test
+  fun `should find task attribute names`() {
+    // Some for zoro in muppets
+    val names = jpaPolyflowViewService.query(TaskAttributeNamesQuery(user = User("zoro", setOf("muppets"))))
+    assertThat(names).isNotNull
+    assertThat(names.elements).hasSize(3)
+    assertThat(names.elements).contains("key", "key-int", "complex")
+
+    // But none for bud in heros
+    val namesOSH = jpaPolyflowViewService.query(TaskAttributeNamesQuery(user = User("bud", setOf("old_school_heros"))))
+    assertThat(namesOSH).isNotNull
+    assertThat(namesOSH.elements).hasSize(0)
+  }
+
+  @Test
+  fun `should find task attribute values`() {
+    // Some for zoro in muppets
+    val names = jpaPolyflowViewService.query(TaskAttributeValuesQuery(user = User("zoro", setOf("muppets")), attributeName = "key"))
+    assertThat(names).isNotNull
+    assertThat(names.elements).hasSize(2)
+    assertThat(names.elements).contains("value")
+
+    // But none for bud in heros
+    val namesOSH = jpaPolyflowViewService.query(TaskAttributeValuesQuery(user = User("bud", setOf("old_school_heros")), attributeName = "key"))
+    assertThat(namesOSH).isNotNull
+    assertThat(namesOSH.elements).hasSize(0)
+  }
+
   private fun captureEmittedQueryUpdates(): List<QueryUpdate<Any>> {
     val queryTypeCaptor = argumentCaptor<Class<Any>>()
     val predicateCaptor = argumentCaptor<Predicate<Any>>()
