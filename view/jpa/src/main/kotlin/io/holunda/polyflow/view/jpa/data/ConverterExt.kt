@@ -117,6 +117,7 @@ fun DataEntryUpdatedEvent.toEntity(
     formKey = this.formKey,
     authorizedPrincipals = AuthorizationChange.applyUserAuthorization(setOf(), this.authorizations).map { user(it).toString() }
       .plus(AuthorizationChange.applyGroupAuthorization(setOf(), this.authorizations).map { group(it).toString() }).toMutableSet(),
+    correlations = this.correlations.toMutableMap().map { entry -> DataEntryId(entryType = entry.key, entryId =  entry.value.toString()) }.toMutableSet(),
     revision = if (revisionValue != RevisionValue.NO_REVISION) {
       revisionValue.revision
     } else {
@@ -144,6 +145,7 @@ fun DataEntryUpdatedEvent.toEntity(
           this.authorizations
         ).map { group -> group(group).toString() })
         .toMutableSet()
+    it.correlations = this.correlations.toMutableMap().map { entry -> DataEntryId(entryType = entry.key, entryId =  entry.value.toString()) }.toMutableSet()
     it.revision = if (revisionValue != RevisionValue.NO_REVISION) {
       revisionValue.revision
     } else {
