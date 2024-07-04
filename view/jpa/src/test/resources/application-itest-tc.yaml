@@ -1,0 +1,39 @@
+spring:
+  jpa:
+    open-in-view: true # disable JPA warning
+    show-sql: false
+    database-platform: io.holunda.polyflow.view.jpa.itest.NoToastPostgresSQLDialect
+    #database-platform: org.hibernate.dialect.PostgreSQLDialect
+    generate-ddl: false
+    hibernate.ddl-auto: none
+  datasource:
+    url: jdbc:tc:postgresql:16.3:///testDb
+    username: sa
+    password: sa
+  flyway:
+    enabled: true
+    locations: "classpath:db/migrations/h2-postgresql"
+
+polyflow:
+  view:
+    jpa:
+      stored-items: TASK, DATA_ENTRY, PROCESS_INSTANCE, PROCESS_DEFINITION
+
+logging:
+  level:
+    root: INFO
+    org.springframework: INFO
+    org.axonframework: INFO
+    org.hibernate.type: INFO # activate this and generic ROOT logger to see SQL and binding
+    io.holixon.axon.gateway.query: INFO
+    io.holunda.polyflow.view.jpa: INFO
+
+axon:
+  axonserver:
+    enabled: false
+  eventhandling:
+    processors:
+      [io.holunda.polyflow.view.jpa.service.data]:
+        mode: subscribing
+        source: eventBus
+

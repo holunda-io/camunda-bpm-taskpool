@@ -32,11 +32,13 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.transaction.annotation.Transactional
+import org.testcontainers.junit.jupiter.Testcontainers
 import java.time.Instant
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
 import java.util.*
 import java.util.function.Predicate
+
 
 @SpringBootTest(
   classes = [TestApplication::class],
@@ -44,8 +46,9 @@ import java.util.function.Predicate
     "polyflow.view.jpa.stored-items=task,data-entry"
   ]
 )
-@ActiveProfiles("itest", "mock-query-emitter")
+@ActiveProfiles("itest-tc", "mock-query-emitter")
 @Transactional
+@Testcontainers
 internal class JpaPolyflowViewServiceTaskITest {
 
   private val emittedQueryUpdates: MutableList<QueryUpdate<Any>> = mutableListOf()
@@ -567,4 +570,5 @@ internal class JpaPolyflowViewServiceTaskITest {
       )
     )
   }
+
 }
