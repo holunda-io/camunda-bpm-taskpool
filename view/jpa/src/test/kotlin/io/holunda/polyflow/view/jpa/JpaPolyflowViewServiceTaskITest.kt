@@ -46,9 +46,8 @@ import java.util.function.Predicate
     "polyflow.view.jpa.stored-items=task,data-entry"
   ]
 )
-@ActiveProfiles("itest-tc", "mock-query-emitter")
+@ActiveProfiles("itest-tc-mariadb", "mock-query-emitter")
 @Transactional
-@Testcontainers
 internal class JpaPolyflowViewServiceTaskITest {
 
   private val emittedQueryUpdates: MutableList<QueryUpdate<Any>> = mutableListOf()
@@ -89,7 +88,7 @@ internal class JpaPolyflowViewServiceTaskITest {
         sourceReference = processReference().toSourceReference(),
         payload = createVariables().apply { putAll(createPayload()) },
         businessKey = "business-1",
-        createTime = Date.from(now),
+        createTime = Date.from(Instant.now()),
         candidateUsers = setOf("kermit"),
         candidateGroups = setOf("muppets")
       ), metaData = MetaData.emptyInstance()
@@ -104,7 +103,7 @@ internal class JpaPolyflowViewServiceTaskITest {
         sourceReference = processReference().toSourceReference(),
         payload = createVariables().apply { putAll(createPayload()) },
         businessKey = "business-1",
-        createTime = Date.from(now),
+        createTime = Date.from(Instant.now()),
         candidateUsers = setOf("kermit"),
         candidateGroups = setOf("muppets"),
         assignee = "kermit"
@@ -120,7 +119,7 @@ internal class JpaPolyflowViewServiceTaskITest {
         sourceReference = processReference().toSourceReference(),
         payload = createVariables().apply { putAll(createPayload()) },
         businessKey = "business-2",
-        createTime = Date.from(now),
+        createTime = Date.from(Instant.now()),
         candidateUsers = setOf("piggy"),
         candidateGroups = setOf("muppets")
       ), metaData = MetaData.emptyInstance()
@@ -135,7 +134,7 @@ internal class JpaPolyflowViewServiceTaskITest {
         sourceReference = processReference().toSourceReference(),
         payload = createVariables().apply { putAll(createPayload()) },
         businessKey = "business-2",
-        createTime = Date.from(now),
+        createTime = Date.from(Instant.now()),
         assignee = "piggy",
         candidateUsers = setOf("piggy"),
         candidateGroups = setOf("muppets")
@@ -153,7 +152,7 @@ internal class JpaPolyflowViewServiceTaskITest {
         payload = createVariables().apply { putAll(createPayload()) },
         correlations = newCorrelations().apply { put(dataType1, dataId1) },
         businessKey = "business-3",
-        createTime = Date.from(now),
+        createTime = Date.from(Instant.now()),
         candidateUsers = setOf("luffy"),
         candidateGroups = setOf("strawhats")
       ), metaData = MetaData.emptyInstance()
@@ -173,7 +172,7 @@ internal class JpaPolyflowViewServiceTaskITest {
           AuthorizationChange.addGroup("strawhats")
         ),
         createModification = Modification(
-          time = OffsetDateTime.ofInstant(now, ZoneOffset.UTC),
+          time = OffsetDateTime.ofInstant(Instant.now(), ZoneOffset.UTC),
           username = "luffy",
           log = "strawhats",
           logNotes = "Created the entry"
@@ -197,7 +196,7 @@ internal class JpaPolyflowViewServiceTaskITest {
         },
         assignee = "zoro",
         businessKey = "business-4",
-        createTime = Date.from(now),
+        createTime = Date.from(Instant.now()),
         candidateUsers = setOf("zoro"),
         candidateGroups = setOf("strawhats")
       ), metaData = MetaData.emptyInstance()
@@ -216,7 +215,7 @@ internal class JpaPolyflowViewServiceTaskITest {
           AuthorizationChange.addUser("zoro")
         ),
         createModification = Modification(
-          time = OffsetDateTime.ofInstant(now, ZoneOffset.UTC),
+          time = OffsetDateTime.ofInstant(Instant.now(), ZoneOffset.UTC),
           username = "zoro",
           log = "Created",
           logNotes = "Created the entry"
@@ -467,10 +466,10 @@ internal class JpaPolyflowViewServiceTaskITest {
 
     val assigned = jpaPolyflowViewService.query(TasksForCandidateUserAndGroupQuery(user = User("zoro", setOf("muppets")), includeAssigned = true))
     assertThat(assigned.elements).hasSize(2)
-    assertThat(assigned.elements[0].id).isEqualTo(id)
     assertThat(assigned.elements[0].name).isEqualTo("task name 1")
-    assertThat(assigned.elements[1].id).isEqualTo(id4)
+    assertThat(assigned.elements[0].id).isEqualTo(id)
     assertThat(assigned.elements[1].name).isEqualTo("task name 4")
+    assertThat(assigned.elements[1].id).isEqualTo(id4)
 
     val assignedToZoro = jpaPolyflowViewService.query(TasksForCandidateUserAndGroupQuery(user = User("zoro", setOf("muppets")), includeAssigned = true, filters = listOf("task.assignee=zoro")))
     assertThat(assignedToZoro.elements).hasSize(1)

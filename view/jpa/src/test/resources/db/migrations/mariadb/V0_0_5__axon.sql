@@ -14,8 +14,8 @@ CREATE TABLE domain_event_entry
 (
   global_index         BIGINT       NOT NULL,
   event_identifier     VARCHAR(255) NOT NULL,
-  meta_data            LONGBLOB,
-  payload              LONGBLOB        NOT NULL,
+  meta_data            BLOB,
+  payload              BLOB        NOT NULL,
   payload_revision     VARCHAR(255),
   payload_type         VARCHAR(255) NOT NULL,
   time_stamp           VARCHAR(255) NOT NULL,
@@ -30,7 +30,7 @@ CREATE TABLE saga_entry
   saga_id         VARCHAR(255) NOT NULL,
   revision        VARCHAR(255),
   saga_type       VARCHAR(255),
-  serialized_saga BYTEA,
+  serialized_saga BLOB,
   PRIMARY KEY (saga_id)
 );
 
@@ -40,8 +40,8 @@ CREATE TABLE snapshot_event_entry
   sequence_number      BIGINT       NOT NULL,
   type                 VARCHAR(255) NOT NULL,
   event_identifier     VARCHAR(255) NOT NULL,
-  meta_data            BYTEA,
-  payload              BYTEA        NOT NULL,
+  meta_data            BLOB,
+  payload              BLOB        NOT NULL,
   payload_revision     VARCHAR(255),
   payload_type         VARCHAR(255) NOT NULL,
   time_stamp           VARCHAR(255) NOT NULL,
@@ -54,7 +54,7 @@ CREATE TABLE token_entry
   segment        INTEGER      NOT NULL,
   owner          VARCHAR(255),
   timestamp      VARCHAR(255) NOT NULL,
-  token          BYTEA,
+  token          BLOB,
   token_type     VARCHAR(255),
   PRIMARY KEY (processor_name, segment)
 );

@@ -1,6 +1,7 @@
 package io.holunda.polyflow.view.jpa.itest
 
 import org.hibernate.boot.model.TypeContributions
+import org.hibernate.dialect.MariaDBDialect
 import org.hibernate.dialect.PostgreSQLDialect
 import org.hibernate.engine.jdbc.dialect.spi.DialectResolutionInfo
 import org.hibernate.service.ServiceRegistry
@@ -10,7 +11,7 @@ import org.hibernate.type.descriptor.sql.internal.DdlTypeImpl
 import java.sql.Types
 
 @Suppress("unused") // used in application.yaml
-class NoToastPostgresSQLDialect(info: DialectResolutionInfo) : PostgreSQLDialect(info) {
+class NoToastMariaDbSQLDialect(info: DialectResolutionInfo) : MariaDBDialect(info) {
 
   override fun registerColumnTypes(typeContributions: TypeContributions, serviceRegistry: ServiceRegistry) {
     super.registerColumnTypes(typeContributions, serviceRegistry)

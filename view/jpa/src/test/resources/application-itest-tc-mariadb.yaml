@@ -2,17 +2,16 @@ spring:
   jpa:
     open-in-view: true # disable JPA warning
     show-sql: false
-    database-platform: io.holunda.polyflow.view.jpa.itest.NoToastPostgresSQLDialect
-    #database-platform: org.hibernate.dialect.PostgreSQLDialect
+    database-platform: org.hibernate.dialect.MariaDBDialect
     generate-ddl: false
     hibernate.ddl-auto: none
   datasource:
-    url: jdbc:tc:postgresql:16.3:///testDb
+    url: jdbc:tc:mariadb:10.11:///testDb
     username: sa
     password: sa
   flyway:
     enabled: true
-    locations: "classpath:db/migrations/h2-postgresql"
+    locations: "classpath:db/migrations/mariadb"
 
 polyflow:
   view:

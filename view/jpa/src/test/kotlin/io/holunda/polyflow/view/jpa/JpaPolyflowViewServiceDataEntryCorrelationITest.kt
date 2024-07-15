@@ -34,7 +34,7 @@ import java.util.function.Predicate
     "polyflow.view.jpa.include-correlated-data-entries-in-data-entry-queries=true"
   ]
 )
-@ActiveProfiles("itest", "mock-query-emitter")
+@ActiveProfiles("itest-tc-mariadb", "mock-query-emitter")
 @Transactional
 @DirtiesContext
 internal class JpaPolyflowViewServiceDataEntryCorrelationITest {
