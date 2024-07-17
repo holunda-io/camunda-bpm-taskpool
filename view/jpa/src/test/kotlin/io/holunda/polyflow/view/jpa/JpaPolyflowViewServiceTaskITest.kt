@@ -466,10 +466,10 @@ internal class JpaPolyflowViewServiceTaskITest {
 
     val assigned = jpaPolyflowViewService.query(TasksForCandidateUserAndGroupQuery(user = User("zoro", setOf("muppets")), includeAssigned = true))
     assertThat(assigned.elements).hasSize(2)
-    assertThat(assigned.elements[0].name).isEqualTo("task name 1")
-    assertThat(assigned.elements[0].id).isEqualTo(id)
-    assertThat(assigned.elements[1].name).isEqualTo("task name 4")
-    assertThat(assigned.elements[1].id).isEqualTo(id4)
+    assertThat(assigned.elements[0].id).isEqualTo(id4)
+    assertThat(assigned.elements[0].name).isEqualTo("task name 4")
+    assertThat(assigned.elements[1].id).isEqualTo(id)
+    assertThat(assigned.elements[1].name).isEqualTo("task name 1")
 
     val assignedToZoro = jpaPolyflowViewService.query(TasksForCandidateUserAndGroupQuery(user = User("zoro", setOf("muppets")), includeAssigned = true, filters = listOf("task.assignee=zoro")))
     assertThat(assignedToZoro.elements).hasSize(1)
