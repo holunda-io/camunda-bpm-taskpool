@@ -342,7 +342,7 @@ internal class JpaPolyflowViewServiceDataEntryITest {
   fun `sort should be backwards compatible`() {
 
     val result = jpaPolyflowViewService.query(
-      DataEntriesQuery(sort = "+type")
+      DataEntriesQuery(sort = "+name")
     )
     assertThat(result.payload.elements.map { it.entryId }).containsExactly(id, id2, id4)
   }
