@@ -1,38 +1,38 @@
 package io.holunda.polyflow.view.mongo.service
 
-import io.holunda.polyflow.view.mongo.utils.MongoLauncher
-import org.junit.jupiter.api.AfterAll
+import io.holunda.polyflow.view.mongo.TaskPoolMongoViewConfiguration
 import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.BeforeAll
-import org.springframework.test.context.ActiveProfiles
-import org.springframework.test.context.TestPropertySource
+import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest
+import org.springframework.test.context.*
+import org.testcontainers.containers.MongoDBContainer
+import org.testcontainers.junit.jupiter.Container
+import org.testcontainers.junit.jupiter.Testcontainers
 
 @TestPropertySource(
   properties = [
     "polyflow.view.mongo.changeTrackingMode=CHANGE_STREAM",
-    "spring.data.mongodb.database=TaskPoolMongoServiceChangeStreamChangeTrackingITest"
   ]
 )
 @ActiveProfiles("itest-replicated")
+@Testcontainers
+@DataMongoTest
+@ContextConfiguration(classes = [TaskPoolMongoViewConfiguration::class])
 class PolyflowMongoServiceChangeStreamChangeTrackingITest : PolyflowMongoServiceITestBase() {
   companion object {
-    private val mongo = MongoLauncher.MongoInstance(true, "TaskPoolMongoServiceChangeStreamChangeTrackingITest")
-
-    @BeforeAll
+    @Container
     @JvmStatic
-    fun initMongo() {
-      mongo.init()
-    }
+    var mongoDBContainer: MongoDBContainer = MongoDBContainer("mongo:4.4.2")
+      .withCommand("mongod", "--replSet", "myReplicaSet")
 
-    @AfterAll
+    @DynamicPropertySource
     @JvmStatic
-    fun stop() {
-      mongo.stop()
+    fun setProperties(registry: DynamicPropertyRegistry) {
+      registry.add("spring.data.mongodb.uri") { mongoDBContainer.replicaSetUrl }
     }
   }
 
   @AfterEach
   fun clearMongo() {
-    mongo.clear()
+    mongoDBContainer.clear()
   }
 }
