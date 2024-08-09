@@ -501,7 +501,7 @@ internal class JpaPolyflowViewServiceTaskITest {
   @Test
   fun `query updates are sent`() {
     captureEmittedQueryUpdates()
-    assertThat(emittedQueryUpdates).hasSize(36)
+    assertThat(emittedQueryUpdates).hasSize(41)
 
     assertThat(emittedQueryUpdates.filter { it.queryType == TaskForIdQuery::class.java && it.asTask().id == id }).hasSize(2)
     assertThat(emittedQueryUpdates.filter { it.queryType == TaskForIdQuery::class.java && it.asTask().id == id2 }).hasSize(2)

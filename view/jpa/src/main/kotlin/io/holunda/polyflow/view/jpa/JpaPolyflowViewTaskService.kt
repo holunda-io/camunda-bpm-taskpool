@@ -12,7 +12,11 @@ import io.holunda.polyflow.view.jpa.auth.AuthorizationPrincipal.Companion.group
 import io.holunda.polyflow.view.jpa.auth.AuthorizationPrincipal.Companion.user
 import io.holunda.polyflow.view.jpa.data.DataEntryRepository
 import io.holunda.polyflow.view.jpa.data.toDataEntry
-import io.holunda.polyflow.view.jpa.task.*
+import io.holunda.polyflow.view.jpa.task.TaskRepository
+import io.holunda.polyflow.view.jpa.task.TaskEntity
+import io.holunda.polyflow.view.jpa.task.toTask
+import io.holunda.polyflow.view.jpa.task.update
+import io.holunda.polyflow.view.jpa.task.toEntity
 import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.hasApplication
 import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.isAssignedTo
 import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.isAssigneeSet

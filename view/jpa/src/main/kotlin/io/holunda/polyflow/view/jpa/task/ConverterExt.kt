@@ -59,11 +59,12 @@ fun TaskEntity.update(event: TaskAttributeUpdatedEngineEvent,
   this.priority = event.priority ?: this.priority
   if (event.correlations.isNotEmpty()) {
     this.correlations.clear()
-    this.correlations.addAll(event.correlations.map { entry -> DataEntryId(entryType = entry.key, entryId = "${entry.value}") }.toMutableSet())
+    this.correlations.addAll(event.correlations.map { entry -> DataEntryId(entryType = entry.key, entryId = "${entry.value}") })
   }
   if (event.payload.isNotEmpty()) {
     this.payload = event.payload.toPayloadJson(objectMapper)
-    this.payloadAttributes =  event.payload.toJsonPathsWithValues(limit, filters).map { attr -> PayloadAttribute(attr) }.toMutableSet()
+    this.payloadAttributes.clear()
+    this.payloadAttributes.addAll(event.payload.toJsonPathsWithValues(limit, filters).map { attr -> PayloadAttribute(attr) }.toMutableSet())
   }
   businessKey = event.businessKey ?: this.businessKey
   description = event.description ?: this.description
