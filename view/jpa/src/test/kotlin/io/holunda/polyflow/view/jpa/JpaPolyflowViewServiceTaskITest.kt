@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import io.holixon.axon.gateway.query.RevisionValue
 import io.holunda.camunda.taskpool.api.business.*
 import io.holunda.camunda.taskpool.api.task.TaskAssignedEngineEvent
+import io.holunda.camunda.taskpool.api.task.TaskAttributeUpdatedEngineEvent
 import io.holunda.camunda.taskpool.api.task.TaskCompletedEngineEvent
 import io.holunda.camunda.taskpool.api.task.TaskCreatedEngineEvent
 import io.holunda.camunda.variable.serializer.serialize
@@ -15,6 +16,7 @@ import io.holunda.polyflow.view.jpa.process.toSourceReference
 import io.holunda.polyflow.view.query.data.DataEntriesForUserQuery
 import io.holunda.polyflow.view.query.task.*
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.data.MapEntry
 import org.axonframework.messaging.MetaData
 import org.axonframework.queryhandling.GenericSubscriptionQueryUpdateMessage
 import org.axonframework.queryhandling.QueryUpdateEmitter
@@ -221,6 +223,22 @@ internal class JpaPolyflowViewServiceTaskITest {
       ),
       metaData = RevisionValue(revision = 1).toMetaData()
     )
+
+    jpaPolyflowViewService.on(
+      event = TaskAttributeUpdatedEngineEvent(
+        id = id4,
+        taskDefinitionKey = "task.def.0815",
+        name = "task name 4",
+        priority = 10,
+        sourceReference = processReference().toSourceReference(),
+        payload = createVariables().apply { putAll(createPayload("otherValue")) },
+        correlations = newCorrelations().apply {
+          put(dataType1, dataId1)
+          put(dataType2, dataId2)
+        },
+        businessKey = "business-4",
+      ), metaData = MetaData.emptyInstance()
+    )
   }
 
   @AfterEach
@@ -255,6 +273,10 @@ internal class JpaPolyflowViewServiceTaskITest {
     assertThat(zoro.elements[0].task.name).isEqualTo("task name 4")
     assertThat(zoro.elements[0].dataEntries).isNotEmpty.hasSize(1)
     assertThat(zoro.elements[0].dataEntries[0].entryId).isEqualTo(dataId2)
+    assertThat(zoro.elements[0].task.correlations).containsOnly(
+      MapEntry.entry("io.polyflow.test1", dataId1),
+      MapEntry.entry("io.polyflow.test2", dataId2)
+    )
 
     val strawhats = jpaPolyflowViewService.query(TasksWithDataEntriesForUserQuery(user = User("other", setOf("strawhats")), assignedToMeOnly = false))
     assertThat(strawhats.elements).isNotEmpty.hasSize(2)
@@ -479,7 +501,7 @@ internal class JpaPolyflowViewServiceTaskITest {
   @Test
   fun `query updates are sent`() {
     captureEmittedQueryUpdates()
-    assertThat(emittedQueryUpdates).hasSize(36)
+    assertThat(emittedQueryUpdates).hasSize(41)
 
     assertThat(emittedQueryUpdates.filter { it.queryType == TaskForIdQuery::class.java && it.asTask().id == id }).hasSize(2)
     assertThat(emittedQueryUpdates.filter { it.queryType == TaskForIdQuery::class.java && it.asTask().id == id2 }).hasSize(2)

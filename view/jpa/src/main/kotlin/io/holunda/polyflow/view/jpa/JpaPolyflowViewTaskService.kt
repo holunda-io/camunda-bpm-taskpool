@@ -12,14 +12,15 @@ import io.holunda.polyflow.view.jpa.auth.AuthorizationPrincipal.Companion.group
 import io.holunda.polyflow.view.jpa.auth.AuthorizationPrincipal.Companion.user
 import io.holunda.polyflow.view.jpa.data.DataEntryRepository
 import io.holunda.polyflow.view.jpa.data.toDataEntry
-import io.holunda.polyflow.view.jpa.task.TaskEntity
 import io.holunda.polyflow.view.jpa.task.TaskRepository
+import io.holunda.polyflow.view.jpa.task.TaskEntity
+import io.holunda.polyflow.view.jpa.task.toTask
+import io.holunda.polyflow.view.jpa.task.update
+import io.holunda.polyflow.view.jpa.task.toEntity
 import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.hasApplication
 import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.isAssignedTo
 import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.isAssigneeSet
 import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.isAuthorizedFor
-import io.holunda.polyflow.view.jpa.task.toEntity
-import io.holunda.polyflow.view.jpa.task.toTask
 import io.holunda.polyflow.view.jpa.update.updateTaskQuery
 import io.holunda.polyflow.view.query.PageableSortableQuery
 import io.holunda.polyflow.view.query.task.*
@@ -387,22 +388,14 @@ class JpaPolyflowViewTaskService(
     if (isDisabledByProperty()) {
       return
     }
-
     taskRepository
       .findById(event.id)
       .ifEmpty {
         logger.warn { "Cannot update task '${event.id}' because it does not exist in the database" }
       }
       .ifPresent { entity ->
-
-        val updated = taskRepository.save(
-          event.toEntity(
-            objectMapper,
-            entity,
-            polyflowJpaViewProperties.payloadAttributeLevelLimit,
-            polyflowJpaViewProperties.taskJsonPathFilters()
-          )
-        )
+        entity.update(event, objectMapper, polyflowJpaViewProperties.payloadAttributeLevelLimit, polyflowJpaViewProperties.taskJsonPathFilters())
+        val updated = taskRepository.save(entity)
         emitTaskUpdate(updated)
       }
   }

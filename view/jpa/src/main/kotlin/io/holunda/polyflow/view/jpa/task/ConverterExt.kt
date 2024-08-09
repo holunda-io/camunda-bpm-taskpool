@@ -13,7 +13,7 @@ import io.holunda.polyflow.view.jpa.payload.PayloadAttribute
 import io.holunda.polyflow.view.jpa.process.toSourceReference
 import io.holunda.polyflow.view.jpa.process.toSourceReferenceEmbeddable
 import org.camunda.bpm.engine.variable.VariableMap
-import org.camunda.bpm.engine.variable.Variables.createVariables
+import org.camunda.bpm.engine.variable.Variables
 import java.time.Instant
 
 
@@ -47,44 +47,31 @@ fun TaskCreatedEngineEvent.toEntity(
 )
 
 /**
- * Update event to entity.
+ * Applies a TaskAttributeUpdatedEngineEvent update to an existing TaskEntity
  */
-fun TaskAttributeUpdatedEngineEvent.toEntity(
-  objectMapper: ObjectMapper,
-  oldEntity: TaskEntity,
-  limit: Int,
-  filters: List<Pair<JsonPathFilterFunction, FilterType>>
-) = TaskEntity(
-  taskId = this.id,
-  taskDefinitionKey = this.taskDefinitionKey,
-  sourceReference = this.sourceReference.toSourceReferenceEmbeddable(),
-  authorizedPrincipals = oldEntity.authorizedPrincipals,
-  assignee = oldEntity.assignee,
-  name = this.name ?: oldEntity.name,
-  priority = this.priority ?: oldEntity.priority,
-  correlations = if (this.correlations.isNotEmpty()) {
-    this.correlations.map { entry -> DataEntryId(entryType = entry.key, entryId = "${entry.value}") }.toMutableSet()
-  } else {
-    oldEntity.correlations
-  },
-  payload = if (this.payload.isNotEmpty()) {
-    this.payload.toPayloadJson(objectMapper)
-  } else {
-    oldEntity.payload
-  },
-  payloadAttributes = if (this.payload.isNotEmpty()) {
-    this.payload.toJsonPathsWithValues(limit, filters).map { attr -> PayloadAttribute(attr) }.toMutableSet()
-  } else {
-    oldEntity.payloadAttributes
-  },
-  businessKey = this.businessKey ?: oldEntity.businessKey,
-  description = this.description ?: oldEntity.description,
-  formKey = oldEntity.formKey,
-  createdDate = oldEntity.createdDate,
-  followUpDate = this.followUpDate?.toInstant() ?: oldEntity.followUpDate,
-  dueDate = this.dueDate?.toInstant() ?: oldEntity.dueDate,
-  owner = this.owner ?: oldEntity.owner
-)
+fun TaskEntity.update(event: TaskAttributeUpdatedEngineEvent,
+                      objectMapper: ObjectMapper,
+                      limit: Int,
+                      filters: List<Pair<JsonPathFilterFunction, FilterType>>) {
+  this.taskDefinitionKey = event.taskDefinitionKey
+  this.sourceReference = event.sourceReference.toSourceReferenceEmbeddable()
+  this.name = event.name ?: this.name
+  this.priority = event.priority ?: this.priority
+  if (event.correlations.isNotEmpty()) {
+    this.correlations.clear()
+    this.correlations.addAll(event.correlations.map { entry -> DataEntryId(entryType = entry.key, entryId = "${entry.value}") })
+  }
+  if (event.payload.isNotEmpty()) {
+    this.payload = event.payload.toPayloadJson(objectMapper)
+    this.payloadAttributes.clear()
+    this.payloadAttributes.addAll(event.payload.toJsonPathsWithValues(limit, filters).map { attr -> PayloadAttribute(attr) }.toMutableSet())
+  }
+  businessKey = event.businessKey ?: this.businessKey
+  description = event.description ?: this.description
+  followUpDate = event.followUpDate?.toInstant() ?: this.followUpDate
+  dueDate = event.dueDate?.toInstant() ?: this.dueDate
+  owner = event.owner ?: this.owner
+}
 
 /**
  * Entity to API DTO.
@@ -116,4 +103,4 @@ fun TaskEntity.toTask(
 /**
  * Create a variable map from stored data entries list.
  */
-fun MutableSet<DataEntryId>.toCorrelations(): VariableMap = createVariables().apply { this@toCorrelations.associate { it.entryType to it.entryId } }
+fun MutableSet<DataEntryId>.toCorrelations(): VariableMap = Variables.fromMap(this.associate { it.entryType to it.entryId })
