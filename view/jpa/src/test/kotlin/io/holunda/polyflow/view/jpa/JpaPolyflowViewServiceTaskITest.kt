@@ -524,6 +524,34 @@ internal class JpaPolyflowViewServiceTaskITest {
     assertThat(counts[0].taskCount).isEqualTo(3)
   }
 
+  @Test
+  fun `should find task attribute names`() {
+    // Some for zoro in muppets
+    val names = jpaPolyflowViewService.query(TaskAttributeNamesQuery(user = User("zoro", setOf("muppets"))))
+    assertThat(names).isNotNull
+    assertThat(names.elements).hasSize(4)
+    assertThat(names.elements).contains("key", "key-int", "complex.attribute1", "complex.attribute2")
+
+    // But none for bud in heros
+    val namesOSH = jpaPolyflowViewService.query(TaskAttributeNamesQuery(user = User("bud", setOf("old_school_heros"))))
+    assertThat(namesOSH).isNotNull
+    assertThat(namesOSH.elements).hasSize(0)
+  }
+
+  @Test
+  fun `should find task attribute values`() {
+    // Some for zoro in muppets
+    val names = jpaPolyflowViewService.query(TaskAttributeValuesQuery(user = User("zoro", setOf("muppets")), attributeName = "key"))
+    assertThat(names).isNotNull
+    assertThat(names.elements).hasSize(2)
+    assertThat(names.elements).contains("value", "otherValue")
+
+    // But none for bud in heros
+    val namesOSH = jpaPolyflowViewService.query(TaskAttributeValuesQuery(user = User("bud", setOf("old_school_heros")), attributeName = "key"))
+    assertThat(namesOSH).isNotNull
+    assertThat(namesOSH.elements).hasSize(0)
+  }
+
   private fun captureEmittedQueryUpdates(): List<QueryUpdate<Any>> {
     val queryTypeCaptor = argumentCaptor<Class<Any>>()
     val predicateCaptor = argumentCaptor<Predicate<Any>>()
@@ -561,7 +589,9 @@ internal class JpaPolyflowViewServiceTaskITest {
     return mapOf(
       "key" to value,
       "key-int" to 1,
-      "complex" to Pojo(
+      "complex.attribute1" to "value",
+      "complex.attribute2" to Date.from(now),
+      "complexIgnored" to Pojo( // Normally, the event will never have a complex object like this in the payload. (Got already deserialized by the sender in ProjectingCommandAccumulator.serializePayloadIfNeeded)
         attribute1 = "value",
         attribute2 = Date.from(now)
       )
