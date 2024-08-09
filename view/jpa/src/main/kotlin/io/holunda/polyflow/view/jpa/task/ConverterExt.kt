@@ -46,6 +46,9 @@ fun TaskCreatedEngineEvent.toEntity(
   owner = this.owner,
 )
 
+/**
+ * Applies a TaskAttributeUpdatedEngineEvent update to an existing TaskEntity
+ */
 fun TaskEntity.update(event: TaskAttributeUpdatedEngineEvent,
                       objectMapper: ObjectMapper,
                       limit: Int,
