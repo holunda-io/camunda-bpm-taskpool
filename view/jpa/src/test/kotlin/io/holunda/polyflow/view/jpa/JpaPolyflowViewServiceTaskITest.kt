@@ -34,7 +34,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.transaction.annotation.Transactional
-import org.testcontainers.junit.jupiter.Testcontainers
 import java.time.Instant
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
@@ -180,7 +179,8 @@ internal class JpaPolyflowViewServiceTaskITest {
           logNotes = "Created the entry"
         )
       ),
-      metaData = RevisionValue(revision = 1).toMetaData()
+      metaData = RevisionValue(revision = 1).toMetaData(),
+      now
     )
 
     // for testing: fun query(query: TasksWithDataEntriesForUserQuery)
@@ -223,7 +223,8 @@ internal class JpaPolyflowViewServiceTaskITest {
           logNotes = "Created the entry"
         )
       ),
-      metaData = RevisionValue(revision = 1).toMetaData()
+      metaData = RevisionValue(revision = 1).toMetaData(),
+      now
     )
 
     jpaPolyflowViewService.on(

@@ -102,7 +102,8 @@ internal class JpaPolyflowViewServiceDataEntryITest {
           logNotes = "Created the entry"
         )
       ),
-      metaData = RevisionValue(revision = 1).toMetaData()
+      metaData = RevisionValue(revision = 1).toMetaData(),
+      now
     )
 
     jpaPolyflowViewService.on(
@@ -125,7 +126,8 @@ internal class JpaPolyflowViewServiceDataEntryITest {
           logNotes = "Updates the entry"
         )
       ),
-      metaData = RevisionValue(revision = 2).toMetaData()
+      metaData = RevisionValue(revision = 2).toMetaData(),
+      now
     )
 
     jpaPolyflowViewService.on(
@@ -147,7 +149,8 @@ internal class JpaPolyflowViewServiceDataEntryITest {
           logNotes = "Updated the entry"
         )
       ),
-      metaData = RevisionValue(revision = 3).toMetaData()
+      metaData = RevisionValue(revision = 3).toMetaData(),
+      now
     )
 
     jpaPolyflowViewService.on(
@@ -170,7 +173,8 @@ internal class JpaPolyflowViewServiceDataEntryITest {
           logNotes = "Created the entry"
         )
       ),
-      metaData = MetaData.emptyInstance()
+      metaData = MetaData.emptyInstance(),
+      now
     )
 
     jpaPolyflowViewService.on(
@@ -193,7 +197,8 @@ internal class JpaPolyflowViewServiceDataEntryITest {
           logNotes = "Created the entry"
         )
       ),
-      metaData = MetaData.emptyInstance()
+      metaData = MetaData.emptyInstance(),
+      now
     )
 
     jpaPolyflowViewService.on(
@@ -231,7 +236,33 @@ internal class JpaPolyflowViewServiceDataEntryITest {
         ),
         correlations = Variables.createVariables().addCorrelation("io.polyflow.test", id2)
       ),
-      metaData = MetaData.emptyInstance()
+      metaData = MetaData.emptyInstance(),
+      now
+    )
+
+    jpaPolyflowViewService.on(
+      event = DataEntryUpdatedEvent(
+        entryType = "io.polyflow.test",
+        entryId = id4,
+        type = "Test sort",
+        applicationName = "test-application",
+        name = "Updated Test Entry 4", // should be ignored
+        state = ProcessingType.IN_PROGRESS.of("In review"),
+        payload = serialize(payload = mapOf("key-int" to 4, "key" to "other-value"), mapper = objectMapper),
+        authorizations = listOf(
+          addUser("hulk"),
+          addGroup("avenger")
+        ),
+        updateModification = Modification(
+          time = OffsetDateTime.ofInstant(now, ZoneOffset.UTC),
+          username = "piggy",
+          log = "Created",
+          logNotes = "Created the entry"
+        ),
+        correlations = Variables.createVariables().addCorrelation("io.polyflow.test", id2)
+      ),
+      metaData = MetaData.emptyInstance(),
+      now.minusSeconds(1)
     )
   }
 
@@ -354,6 +385,15 @@ internal class JpaPolyflowViewServiceDataEntryITest {
     )
 
     assertThat(result.payload.elements.map { it.entryId }).containsExactly(id2) // id4 is not found by correlation to id2, due to property
+  }
+
+  @Test
+  fun `should ignore past events`() {
+    val result = jpaPolyflowViewService.query(
+      DataEntryForIdentityQuery(entryType = "io.polyflow.test", entryId = id4)
+    )
+
+    assertThat(result.payload.name).isEqualTo("Test Entry 4")
   }
 
   @Test
