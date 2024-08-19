@@ -8,6 +8,7 @@ import io.holunda.polyflow.view.TaskWithDataEntries
 import io.holunda.polyflow.view.filter.createTaskPredicates
 import io.holunda.polyflow.view.filter.filterByPredicate
 import io.holunda.polyflow.view.filter.toCriteria
+import io.holunda.polyflow.view.filter.toPayloadPredicates
 import io.holunda.polyflow.view.query.task.*
 import io.holunda.polyflow.view.simple.updateMapFilterQuery
 import io.holunda.polyflow.view.sort.taskComparator
@@ -18,6 +19,7 @@ import org.axonframework.config.ProcessingGroup
 import org.axonframework.eventhandling.EventHandler
 import org.axonframework.queryhandling.QueryHandler
 import org.axonframework.queryhandling.QueryUpdateEmitter
+import org.camunda.bpm.engine.variable.VariableMap
 import org.springframework.stereotype.Component
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
@@ -199,6 +201,52 @@ class SimpleTaskPoolService(
     return queryForTasks(query)
   }
 
+  /**
+   * Retrieves all task attribute names
+   */
+  @QueryHandler
+  override fun query(query: TaskAttributeNamesQuery): TaskAttributeNamesQueryResult {
+    val filterAssignee = query.assignedToMeOnly && query.user != null
+    val filterCandidates = query.user != null
+
+    val distinctFilteredKeys = tasks.values.asSequence()
+      .filter { !filterAssignee || it.assignee == query.user!!.username }
+      .filter { task -> !filterCandidates || (task.candidateUsers.contains(query.user!!.username) || task.candidateGroups.any { query.user!!.groups.contains(it) } ) }
+      .map(Task::payload)
+      .flatMap(VariableMap::keys)
+      .distinct()
+      .toList()
+
+    return TaskAttributeNamesQueryResult(
+      elements = distinctFilteredKeys,
+      totalElementCount = distinctFilteredKeys.size
+    )
+  }
+
+  /**
+   * Retrieves all task attribute values for an attribute name
+   */
+  @QueryHandler
+  override fun query(query: TaskAttributeValuesQuery): TaskAttributeValuesQueryResult {
+    val filterAssignee = query.assignedToMeOnly && query.user != null
+    val filterCandidates = query.user != null
+
+    val distinctFilteredValues = tasks.values.asSequence()
+      .filter { !filterAssignee || it.assignee == query.user!!.username }
+      .filter { task -> !filterCandidates || (task.candidateUsers.contains(query.user!!.username) || task.candidateGroups.any { query.user!!.groups.contains(it) } ) }
+      .map(Task::payload)
+      .filter { it.containsKey(query.attributeName) }
+      .mapNotNull { it[query.attributeName] }
+      .distinct()
+      .toList()
+
+    return TaskAttributeValuesQueryResult(
+      elements = distinctFilteredValues,
+      totalElementCount = distinctFilteredValues.size
+    )
+  }
+
+  @QueryHandler
   private fun queryForTasks(query: PageableSortableFilteredTaskQuery): TaskQueryResult {
     val predicates = createTaskPredicates(toCriteria(query.filters))
     val filtered = tasks.values.filter { query.applyFilter(it) }

@@ -113,4 +113,22 @@ open class TaskQueryClient(
     ResponseTypes.instanceOf(TaskQueryResult::class.java)
   )
 
+  /**
+   * @see io.holunda.polyflow.view.query.task.TaskApi.query
+   * @see io.holunda.polyflow.view.query.task.TaskAttributeNamesQuery
+   */
+  open fun query(query: TaskAttributeNamesQuery): CompletableFuture<TaskAttributeNamesQueryResult> = queryGateway.query(
+    query,
+    ResponseTypes.instanceOf(TaskAttributeNamesQueryResult::class.java)
+  )
+
+  /**
+   * @see io.holunda.polyflow.view.query.task.TaskApi.query
+   * @see io.holunda.polyflow.view.query.task.TaskAttributeValuesQuery
+   */
+  open fun query(query: TaskAttributeValuesQuery): CompletableFuture<TaskAttributeValuesQueryResult> = queryGateway.query(
+    query,
+    ResponseTypes.instanceOf(TaskAttributeValuesQueryResult::class.java)
+  )
+
 }
