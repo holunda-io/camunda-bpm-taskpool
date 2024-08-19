@@ -127,7 +127,7 @@ internal class JpaPolyflowViewServiceDataEntryITest {
         )
       ),
       metaData = RevisionValue(revision = 2).toMetaData(),
-      now
+      now.plusSeconds(1)
     )
 
     jpaPolyflowViewService.on(
@@ -150,7 +150,7 @@ internal class JpaPolyflowViewServiceDataEntryITest {
         )
       ),
       metaData = RevisionValue(revision = 3).toMetaData(),
-      now
+      now.plusSeconds(2)
     )
 
     jpaPolyflowViewService.on(
