@@ -14,8 +14,8 @@ CREATE TABLE domain_event_entry
 (
   global_index         BIGINT       NOT NULL,
   event_identifier     VARCHAR(255) NOT NULL,
-  meta_data            BYTEA,
-  payload              BYTEA        NOT NULL,
+  meta_data            LONGBLOB,
+  payload              LONGBLOB        NOT NULL,
   payload_revision     VARCHAR(255),
   payload_type         VARCHAR(255) NOT NULL,
   time_stamp           VARCHAR(255) NOT NULL,

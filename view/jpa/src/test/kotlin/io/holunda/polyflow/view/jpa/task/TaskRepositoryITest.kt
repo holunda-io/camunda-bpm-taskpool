@@ -55,7 +55,7 @@ import java.util.*
 @DataJpaTest(showSql = false)
 @ContextConfiguration(classes = [TestApplicationDataJpa::class])
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@ActiveProfiles("itest", "mock-query-emitter")
+@ActiveProfiles("itest-tc-mariadb", "mock-query-emitter")
 class TaskRepositoryITest {
   @Autowired
   lateinit var entityManager: EntityManager

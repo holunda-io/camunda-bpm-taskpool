@@ -5,6 +5,7 @@ import io.holixon.axon.gateway.query.RevisionValue
 import io.holunda.camunda.taskpool.api.task.*
 import io.holunda.polyflow.view.Task
 import io.holunda.polyflow.view.TaskWithDataEntries
+import io.holunda.polyflow.view.auth.User
 import io.holunda.polyflow.view.filter.toCriteria
 import io.holunda.polyflow.view.jpa.JpaPolyflowViewTaskService.Companion.PROCESSING_GROUP
 import io.holunda.polyflow.view.jpa.auth.AuthorizationPrincipal
@@ -12,14 +13,15 @@ import io.holunda.polyflow.view.jpa.auth.AuthorizationPrincipal.Companion.group
 import io.holunda.polyflow.view.jpa.auth.AuthorizationPrincipal.Companion.user
 import io.holunda.polyflow.view.jpa.data.DataEntryRepository
 import io.holunda.polyflow.view.jpa.data.toDataEntry
-import io.holunda.polyflow.view.jpa.task.TaskEntity
 import io.holunda.polyflow.view.jpa.task.TaskRepository
+import io.holunda.polyflow.view.jpa.task.TaskEntity
+import io.holunda.polyflow.view.jpa.task.toTask
+import io.holunda.polyflow.view.jpa.task.update
+import io.holunda.polyflow.view.jpa.task.toEntity
 import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.hasApplication
 import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.isAssignedTo
 import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.isAssigneeSet
 import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.isAuthorizedFor
-import io.holunda.polyflow.view.jpa.task.toEntity
-import io.holunda.polyflow.view.jpa.task.toTask
 import io.holunda.polyflow.view.jpa.update.updateTaskQuery
 import io.holunda.polyflow.view.query.PageableSortableQuery
 import io.holunda.polyflow.view.query.task.*
@@ -252,6 +254,28 @@ class JpaPolyflowViewTaskService(
   }
 
   @QueryHandler
+  override fun query(query: TaskAttributeNamesQuery): TaskAttributeNamesQueryResult {
+    val assignee = if(query.assignedToMeOnly) query.user?.username else null
+    val distinctKeys = taskRepository.getTaskAttributeNames(assignee, query.user?.toAuthorizationPrincipalStrings())
+
+    return TaskAttributeNamesQueryResult(
+      elements = distinctKeys.toList(),
+      totalElementCount = distinctKeys.size
+    )
+  }
+
+  @QueryHandler
+  override fun query(query: TaskAttributeValuesQuery): TaskAttributeValuesQueryResult {
+    val assignee = if(query.assignedToMeOnly) query.user?.username else null
+    val distinctValues = taskRepository.getTaskAttributeValues(query.attributeName, assignee, query.user?.toAuthorizationPrincipalStrings())
+
+    return TaskAttributeValuesQueryResult(
+      elements = distinctValues.toList(),
+      totalElementCount = distinctValues.size
+    )
+  }
+
+  @QueryHandler
   override fun query(query: TaskWithDataEntriesForIdQuery): Optional<TaskWithDataEntries> {
     return Optional.ofNullable(taskRepository.findByIdOrNull(query.id)?.let { taskEntity ->
       TaskWithDataEntries(
@@ -387,22 +411,14 @@ class JpaPolyflowViewTaskService(
     if (isDisabledByProperty()) {
       return
     }
-
     taskRepository
       .findById(event.id)
       .ifEmpty {
         logger.warn { "Cannot update task '${event.id}' because it does not exist in the database" }
       }
       .ifPresent { entity ->
-
-        val updated = taskRepository.save(
-          event.toEntity(
-            objectMapper,
-            entity,
-            polyflowJpaViewProperties.payloadAttributeLevelLimit,
-            polyflowJpaViewProperties.taskJsonPathFilters()
-          )
-        )
+        entity.update(event, objectMapper, polyflowJpaViewProperties.payloadAttributeLevelLimit, polyflowJpaViewProperties.taskJsonPathFilters())
+        val updated = taskRepository.save(entity)
         emitTaskUpdate(updated)
       }
   }
@@ -495,4 +511,8 @@ class JpaPolyflowViewTaskService(
     }
   }
 
+}
+
+private fun User.toAuthorizationPrincipalStrings(): Set<String> {
+  return this.groups.map(AuthorizationPrincipal.Companion::group).map { it.toString() }.toSet() + user(this.username).toString()
 }

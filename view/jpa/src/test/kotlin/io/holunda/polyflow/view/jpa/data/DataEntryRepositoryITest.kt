@@ -34,7 +34,7 @@ import java.util.*
 @DirtiesContext
 @ContextConfiguration(classes = [TestApplication::class])
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@ActiveProfiles("itest", "mock-query-emitter")
+@ActiveProfiles("itest-tc-mariadb", "mock-query-emitter")
 internal class DataEntryRepositoryITest {
   @Autowired
   lateinit var entityManager: EntityManager

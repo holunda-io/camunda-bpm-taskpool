@@ -366,7 +366,6 @@ interface TaskRepository : CrudRepository<TaskEntity, String>, JpaSpecificationE
       }
   }
 
-
   /**
    * Counts user tasks grouped by application name, resulting in a total amount of tasks per application (=process engine).
    * Helpful for monitoring of tasks on the task pool projection side vs. engine side.
@@ -375,4 +374,36 @@ interface TaskRepository : CrudRepository<TaskEntity, String>, JpaSpecificationE
   @Query("select new io.holunda.polyflow.view.jpa.CountByApplication(t.sourceReference.applicationName, count(t) ) from TaskEntity t group by t.sourceReference.applicationName")
   fun getCountByApplication(): List<CountByApplication>
 
+  /**
+   * Returns all task payload attribut names (path).
+   * If assignee is given, just attributes for the given assignee is queried.
+   * If authorizedPrincipals are given, just attributes for the given authorizedPrincipals are queried.
+   * @return list of task payload attribut names (path)
+   */
+  @Query("""
+            select att.path
+                from TaskEntity task
+                 join task.payloadAttributes att
+                 join task.authorizedPrincipals auth
+            where (?1 is null or task.assignee = ?1)
+                and (?2 is null or auth in ?2)
+         """)
+  fun getTaskAttributeNames(assignee: String?, principals: Set<String>?): Set<String>
+
+  /**
+   * Returns a list of all task payload attribute values for the given task payload attribute name.
+   * If assignee is given, just attributes for the given assignee is queried.
+   * If authorizedPrincipals are given, just attributes for the given authorizedPrincipals are queried.
+   * @return list of task payload attribut values
+   */
+  @Query("""
+            select att.value
+               from TaskEntity task
+                join task.payloadAttributes att
+                join task.authorizedPrincipals auth
+            where att.path = ?1
+                and (?2 is null or task.assignee = ?2)
+                and (?3 is null or auth in ?3)
+         """)
+  fun getTaskAttributeValues(attributeName: String, assignee: String?, principals: Set<String>?): Set<String>
 }

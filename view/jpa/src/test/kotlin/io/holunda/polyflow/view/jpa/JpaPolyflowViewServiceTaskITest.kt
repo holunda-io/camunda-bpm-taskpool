@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import io.holixon.axon.gateway.query.RevisionValue
 import io.holunda.camunda.taskpool.api.business.*
 import io.holunda.camunda.taskpool.api.task.TaskAssignedEngineEvent
+import io.holunda.camunda.taskpool.api.task.TaskAttributeUpdatedEngineEvent
 import io.holunda.camunda.taskpool.api.task.TaskCompletedEngineEvent
 import io.holunda.camunda.taskpool.api.task.TaskCreatedEngineEvent
 import io.holunda.camunda.variable.serializer.serialize
@@ -15,6 +16,7 @@ import io.holunda.polyflow.view.jpa.process.toSourceReference
 import io.holunda.polyflow.view.query.data.DataEntriesForUserQuery
 import io.holunda.polyflow.view.query.task.*
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.data.MapEntry
 import org.axonframework.messaging.MetaData
 import org.axonframework.queryhandling.GenericSubscriptionQueryUpdateMessage
 import org.axonframework.queryhandling.QueryUpdateEmitter
@@ -32,11 +34,13 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.transaction.annotation.Transactional
+import org.testcontainers.junit.jupiter.Testcontainers
 import java.time.Instant
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
 import java.util.*
 import java.util.function.Predicate
+
 
 @SpringBootTest(
   classes = [TestApplication::class],
@@ -44,7 +48,7 @@ import java.util.function.Predicate
     "polyflow.view.jpa.stored-items=task,data-entry"
   ]
 )
-@ActiveProfiles("itest", "mock-query-emitter")
+@ActiveProfiles("itest-tc-mariadb", "mock-query-emitter")
 @Transactional
 internal class JpaPolyflowViewServiceTaskITest {
 
@@ -86,7 +90,7 @@ internal class JpaPolyflowViewServiceTaskITest {
         sourceReference = processReference().toSourceReference(),
         payload = createVariables().apply { putAll(createPayload()) },
         businessKey = "business-1",
-        createTime = Date.from(now),
+        createTime = Date.from(Instant.now()),
         candidateUsers = setOf("kermit"),
         candidateGroups = setOf("muppets")
       ), metaData = MetaData.emptyInstance()
@@ -101,7 +105,7 @@ internal class JpaPolyflowViewServiceTaskITest {
         sourceReference = processReference().toSourceReference(),
         payload = createVariables().apply { putAll(createPayload()) },
         businessKey = "business-1",
-        createTime = Date.from(now),
+        createTime = Date.from(Instant.now()),
         candidateUsers = setOf("kermit"),
         candidateGroups = setOf("muppets"),
         assignee = "kermit"
@@ -117,7 +121,7 @@ internal class JpaPolyflowViewServiceTaskITest {
         sourceReference = processReference().toSourceReference(),
         payload = createVariables().apply { putAll(createPayload()) },
         businessKey = "business-2",
-        createTime = Date.from(now),
+        createTime = Date.from(Instant.now()),
         candidateUsers = setOf("piggy"),
         candidateGroups = setOf("muppets")
       ), metaData = MetaData.emptyInstance()
@@ -132,7 +136,7 @@ internal class JpaPolyflowViewServiceTaskITest {
         sourceReference = processReference().toSourceReference(),
         payload = createVariables().apply { putAll(createPayload()) },
         businessKey = "business-2",
-        createTime = Date.from(now),
+        createTime = Date.from(Instant.now()),
         assignee = "piggy",
         candidateUsers = setOf("piggy"),
         candidateGroups = setOf("muppets")
@@ -150,7 +154,7 @@ internal class JpaPolyflowViewServiceTaskITest {
         payload = createVariables().apply { putAll(createPayload()) },
         correlations = newCorrelations().apply { put(dataType1, dataId1) },
         businessKey = "business-3",
-        createTime = Date.from(now),
+        createTime = Date.from(Instant.now()),
         candidateUsers = setOf("luffy"),
         candidateGroups = setOf("strawhats")
       ), metaData = MetaData.emptyInstance()
@@ -170,7 +174,7 @@ internal class JpaPolyflowViewServiceTaskITest {
           AuthorizationChange.addGroup("strawhats")
         ),
         createModification = Modification(
-          time = OffsetDateTime.ofInstant(now, ZoneOffset.UTC),
+          time = OffsetDateTime.ofInstant(Instant.now(), ZoneOffset.UTC),
           username = "luffy",
           log = "strawhats",
           logNotes = "Created the entry"
@@ -194,7 +198,7 @@ internal class JpaPolyflowViewServiceTaskITest {
         },
         assignee = "zoro",
         businessKey = "business-4",
-        createTime = Date.from(now),
+        createTime = Date.from(Instant.now()),
         candidateUsers = setOf("zoro"),
         candidateGroups = setOf("strawhats")
       ), metaData = MetaData.emptyInstance()
@@ -213,13 +217,29 @@ internal class JpaPolyflowViewServiceTaskITest {
           AuthorizationChange.addUser("zoro")
         ),
         createModification = Modification(
-          time = OffsetDateTime.ofInstant(now, ZoneOffset.UTC),
+          time = OffsetDateTime.ofInstant(Instant.now(), ZoneOffset.UTC),
           username = "zoro",
           log = "Created",
           logNotes = "Created the entry"
         )
       ),
       metaData = RevisionValue(revision = 1).toMetaData()
+    )
+
+    jpaPolyflowViewService.on(
+      event = TaskAttributeUpdatedEngineEvent(
+        id = id4,
+        taskDefinitionKey = "task.def.0815",
+        name = "task name 4",
+        priority = 10,
+        sourceReference = processReference().toSourceReference(),
+        payload = createVariables().apply { putAll(createPayload("otherValue")) },
+        correlations = newCorrelations().apply {
+          put(dataType1, dataId1)
+          put(dataType2, dataId2)
+        },
+        businessKey = "business-4",
+      ), metaData = MetaData.emptyInstance()
     )
   }
 
@@ -255,6 +275,10 @@ internal class JpaPolyflowViewServiceTaskITest {
     assertThat(zoro.elements[0].task.name).isEqualTo("task name 4")
     assertThat(zoro.elements[0].dataEntries).isNotEmpty.hasSize(1)
     assertThat(zoro.elements[0].dataEntries[0].entryId).isEqualTo(dataId2)
+    assertThat(zoro.elements[0].task.correlations).containsOnly(
+      MapEntry.entry("io.polyflow.test1", dataId1),
+      MapEntry.entry("io.polyflow.test2", dataId2)
+    )
 
     val strawhats = jpaPolyflowViewService.query(TasksWithDataEntriesForUserQuery(user = User("other", setOf("strawhats")), assignedToMeOnly = false))
     assertThat(strawhats.elements).isNotEmpty.hasSize(2)
@@ -464,10 +488,10 @@ internal class JpaPolyflowViewServiceTaskITest {
 
     val assigned = jpaPolyflowViewService.query(TasksForCandidateUserAndGroupQuery(user = User("zoro", setOf("muppets")), includeAssigned = true))
     assertThat(assigned.elements).hasSize(2)
-    assertThat(assigned.elements[0].id).isEqualTo(id)
-    assertThat(assigned.elements[0].name).isEqualTo("task name 1")
-    assertThat(assigned.elements[1].id).isEqualTo(id4)
-    assertThat(assigned.elements[1].name).isEqualTo("task name 4")
+    assertThat(assigned.elements[0].id).isEqualTo(id4)
+    assertThat(assigned.elements[0].name).isEqualTo("task name 4")
+    assertThat(assigned.elements[1].id).isEqualTo(id)
+    assertThat(assigned.elements[1].name).isEqualTo("task name 1")
 
     val assignedToZoro = jpaPolyflowViewService.query(TasksForCandidateUserAndGroupQuery(user = User("zoro", setOf("muppets")), includeAssigned = true, filters = listOf("task.assignee=zoro")))
     assertThat(assignedToZoro.elements).hasSize(1)
@@ -479,7 +503,7 @@ internal class JpaPolyflowViewServiceTaskITest {
   @Test
   fun `query updates are sent`() {
     captureEmittedQueryUpdates()
-    assertThat(emittedQueryUpdates).hasSize(36)
+    assertThat(emittedQueryUpdates).hasSize(41)
 
     assertThat(emittedQueryUpdates.filter { it.queryType == TaskForIdQuery::class.java && it.asTask().id == id }).hasSize(2)
     assertThat(emittedQueryUpdates.filter { it.queryType == TaskForIdQuery::class.java && it.asTask().id == id2 }).hasSize(2)
@@ -524,6 +548,34 @@ internal class JpaPolyflowViewServiceTaskITest {
     assertThat(counts[0].taskCount).isEqualTo(3)
   }
 
+  @Test
+  fun `should find task attribute names`() {
+    // Some for zoro in muppets
+    val names = jpaPolyflowViewService.query(TaskAttributeNamesQuery(user = User("zoro", setOf("muppets"))))
+    assertThat(names).isNotNull
+    assertThat(names.elements).hasSize(4)
+    assertThat(names.elements).contains("key", "key-int", "complex.attribute1", "complex.attribute2")
+
+    // But none for bud in heros
+    val namesOSH = jpaPolyflowViewService.query(TaskAttributeNamesQuery(user = User("bud", setOf("old_school_heros"))))
+    assertThat(namesOSH).isNotNull
+    assertThat(namesOSH.elements).hasSize(0)
+  }
+
+  @Test
+  fun `should find task attribute values`() {
+    // Some for zoro in muppets
+    val names = jpaPolyflowViewService.query(TaskAttributeValuesQuery(user = User("zoro", setOf("muppets")), attributeName = "key"))
+    assertThat(names).isNotNull
+    assertThat(names.elements).hasSize(2)
+    assertThat(names.elements).contains("value", "otherValue")
+
+    // But none for bud in heros
+    val namesOSH = jpaPolyflowViewService.query(TaskAttributeValuesQuery(user = User("bud", setOf("old_school_heros")), attributeName = "key"))
+    assertThat(namesOSH).isNotNull
+    assertThat(namesOSH.elements).hasSize(0)
+  }
+
   private fun captureEmittedQueryUpdates(): List<QueryUpdate<Any>> {
     val queryTypeCaptor = argumentCaptor<Class<Any>>()
     val predicateCaptor = argumentCaptor<Predicate<Any>>()
@@ -561,10 +613,13 @@ internal class JpaPolyflowViewServiceTaskITest {
     return mapOf(
       "key" to value,
       "key-int" to 1,
-      "complex" to Pojo(
+      "complex.attribute1" to "value",
+      "complex.attribute2" to Date.from(now),
+      "complexIgnored" to Pojo( // Normally, the event will never have a complex object like this in the payload. (Got already deserialized by the sender in ProjectingCommandAccumulator.serializePayloadIfNeeded)
         attribute1 = "value",
         attribute2 = Date.from(now)
       )
     )
   }
+
 }

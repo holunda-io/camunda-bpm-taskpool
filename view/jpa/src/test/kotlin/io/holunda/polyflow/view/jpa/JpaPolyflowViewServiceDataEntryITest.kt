@@ -46,7 +46,7 @@ import java.util.function.Predicate
     "polyflow.view.jpa.include-correlated-data-entries-in-data-entry-queries=false"
   ]
 )
-@ActiveProfiles("itest", "mock-query-emitter")
+@ActiveProfiles("itest-tc-mariadb", "mock-query-emitter")
 @Transactional
 @DirtiesContext
 internal class JpaPolyflowViewServiceDataEntryITest {
@@ -342,7 +342,7 @@ internal class JpaPolyflowViewServiceDataEntryITest {
   fun `sort should be backwards compatible`() {
 
     val result = jpaPolyflowViewService.query(
-      DataEntriesQuery(sort = "+type")
+      DataEntriesQuery(sort = "+name")
     )
     assertThat(result.payload.elements.map { it.entryId }).containsExactly(id, id2, id4)
   }
@@ -381,7 +381,7 @@ internal class JpaPolyflowViewServiceDataEntryITest {
     assertThat(result.payload).matches { entry -> entry.protocol.all { it.username in listOf("SYSTEM", "ANONYMOUS") } }
     assertThat(result.payload).matches { entry -> entry.authorizedUsers.isEmpty() }
   }
-  
+
   @Test
   fun `should find data entry by involvements`() {
     val result = jpaPolyflowViewService.query(

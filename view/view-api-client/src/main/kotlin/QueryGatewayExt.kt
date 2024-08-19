@@ -134,4 +134,14 @@ object QueryGatewayExt {
    */
   fun QueryGateway.tasksForCandidateUserAndGroup(query: TasksForCandidateUserAndGroupQuery): CompletableFuture<TaskQueryResult> = TaskQueryClient(this).query(query)
 
+  /**
+   * @see [TaskAttributeNamesQuery]
+   */
+  fun QueryGateway.taskAttributeNames(query: TaskAttributeNamesQuery): CompletableFuture<TaskAttributeNamesQueryResult> = TaskQueryClient(this).query(query)
+
+  /**
+   * @see [TaskAttributeValuesQuery]
+   */
+  fun QueryGateway.taskAttributeValues(query: TaskAttributeValuesQuery): CompletableFuture<TaskAttributeValuesQueryResult> = TaskQueryClient(this).query(query)
+
 }

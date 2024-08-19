@@ -290,6 +290,78 @@ class SimpleTaskPoolServiceTest : ScenarioTest<SimpleTaskPoolGivenStage<*>, Simp
       .all_task_are_returned_and_sorted_by(reversed = true) { it.task.businessKey }
   }
 
+  @Test
+  fun `should find task attribute names`() {
+    given()
+      .tasks_exist(3)
+
+    `when`()
+      .task_attribute_names_are_queried("kermit", "muppetshow")
+
+    then()
+      .attribute_names_are_returned(3)
+  }
+
+  @Test
+  fun `should not find task attribute names if there is no matching candidate user`() {
+    given()
+      .tasks_exist(3)
+
+    `when`()
+      .task_attribute_names_are_queried("bud", "old_school_heros")
+
+    then()
+      .attribute_names_are_returned(0)
+  }
+
+  @Test
+  fun `should not find task attribute names for wrong assignee`() {
+    given()
+      .tasks_exist(3)
+
+    `when`()
+      .task_attribute_names_are_queried_for_assigned_user(user = "bud", group = null)
+
+    then()
+      .attribute_names_are_returned(0)
+  }
+
+  @Test
+  fun `should find task attribute values`() {
+    given()
+      .tasks_exist(3)
+
+    `when`()
+      .task_attribute_values_are_queried("payloadIdString", "kermit", "muppetshow")
+
+    then()
+      .attribute_values_are_returned(3)
+  }
+
+  @Test
+  fun `should not find task attribute values if there is no matching candidate user`() {
+    given()
+      .tasks_exist(3)
+
+    `when`()
+      .task_attribute_values_are_queried("payloadIdString", "bud", "old_school_heros")
+
+    then()
+      .attribute_values_are_returned(0)
+  }
+
+  @Test
+  fun `should not find task attribute values for wrong assignee`() {
+    given()
+      .tasks_exist(3)
+
+    `when`()
+      .task_attribute_values_are_queried_for_assigned_user("payloadIdString", "bud", null)
+
+    then()
+      .attribute_values_are_returned(0)
+  }
+
   private infix fun String.withTaskCount(taskCount: Int) = ApplicationWithTaskCount(this, taskCount)
 }
 
