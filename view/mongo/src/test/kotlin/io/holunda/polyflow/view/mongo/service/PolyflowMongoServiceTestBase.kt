@@ -1,5 +1,6 @@
 package io.holunda.polyflow.view.mongo.service
 
+import com.mongodb.client.MongoClients
 import com.tngtech.jgiven.integration.spring.junit5.SpringScenarioTest
 import com.tngtech.jgiven.junit5.JGivenExtension
 import io.holunda.camunda.taskpool.api.business.*
@@ -9,20 +10,18 @@ import io.holunda.polyflow.view.ProtocolEntry
 import io.holunda.polyflow.view.Task
 import io.holunda.polyflow.view.TaskWithDataEntries
 import io.holunda.polyflow.view.auth.User
-import io.holunda.polyflow.view.mongo.PolyflowMongoTestApplication
 import io.holunda.polyflow.view.query.data.DataEntriesForUserQuery
 import io.holunda.polyflow.view.query.task.*
 import org.camunda.bpm.engine.variable.VariableMap
 import org.camunda.bpm.engine.variable.Variables
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.annotation.DirtiesContext
+import org.testcontainers.containers.MongoDBContainer
 import java.time.OffsetDateTime
 import java.util.*
 
 @ExtendWith(JGivenExtension::class)
-@SpringBootTest(classes = [PolyflowMongoTestApplication::class])
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 abstract class PolyflowMongoServiceITestBase : SpringScenarioTest<PolyflowGivenStage<*>, PolyflowWhenStage<*>, PolyflowThenStage<*>>() {
 
@@ -685,3 +684,13 @@ data class TestDataEntryData(
 }
 
 private fun Task.withDataEntries(dataEntries: List<DataEntry> = listOf()) = TaskWithDataEntries(this, dataEntries)
+
+/**
+ * Clear client and db.
+ */
+fun MongoDBContainer.clear() {
+  MongoClients.create(this.connectionString).use {
+    val database = it.getDatabase("test")
+    database.drop()
+  }
+}

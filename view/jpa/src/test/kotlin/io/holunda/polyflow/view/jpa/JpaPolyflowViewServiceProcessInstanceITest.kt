@@ -23,7 +23,7 @@ import java.util.*
     "polyflow.view.jpa.stored-items=process-instance"
   ]
 )
-@ActiveProfiles("itest", "mock-query-emitter")
+@ActiveProfiles("itest-tc-mariadb", "mock-query-emitter")
 @Transactional
 internal class JpaPolyflowViewServiceProcessInstanceITest {
 

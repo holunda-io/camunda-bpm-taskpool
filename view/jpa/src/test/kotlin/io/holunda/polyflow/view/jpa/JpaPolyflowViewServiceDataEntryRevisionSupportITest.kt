@@ -46,7 +46,7 @@ import java.util.concurrent.Executors
   ]
 )
 @Transactional
-@ActiveProfiles("itest")
+@ActiveProfiles("itest-tc-mariadb")
 internal class JpaPolyflowViewServiceDataEntryRevisionSupportITest {
 
   companion object : KLogging()

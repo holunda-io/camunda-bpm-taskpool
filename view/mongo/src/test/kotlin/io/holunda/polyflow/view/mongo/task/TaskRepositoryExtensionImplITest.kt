@@ -1,30 +1,35 @@
 package io.holunda.polyflow.view.mongo.task
 
-import io.holunda.polyflow.view.mongo.PolyflowMongoTestApplication
-import io.holunda.polyflow.view.mongo.utils.MongoLauncher
+import io.holunda.polyflow.view.mongo.TaskPoolMongoViewConfiguration
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.*
-import org.junit.jupiter.api.extension.ExtendWith
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.test.context.ActiveProfiles
+import org.springframework.test.context.ContextConfiguration
+import org.springframework.test.context.DynamicPropertyRegistry
+import org.springframework.test.context.DynamicPropertySource
 import org.springframework.test.context.TestPropertySource
-import org.springframework.test.context.junit.jupiter.SpringExtension
+import org.testcontainers.containers.MongoDBContainer
+import org.testcontainers.junit.jupiter.Container
+import org.testcontainers.junit.jupiter.Testcontainers
 import reactor.core.publisher.Mono
 import java.time.Instant
 import java.util.*
 
+
 @TestPropertySource(
   properties = [
     "polyflow.view.mongo.changeTrackingMode=EVENT_HANDLER",
-    "spring.data.mongodb.database=TaskRepositoryExtensionImplITest"
   ]
 )
-@SpringBootTest(classes = [PolyflowMongoTestApplication::class])
+@Testcontainers
+@DataMongoTest
 @ActiveProfiles("itest-standalone")
-@ExtendWith(SpringExtension::class)
+@ContextConfiguration(classes = [TaskPoolMongoViewConfiguration::class])
 class TaskRepositoryExtensionImplITest {
 
   companion object {
@@ -39,19 +44,16 @@ class TaskRepositoryExtensionImplITest {
     const val PRIORITY_TWO = 90
     const val PRIORITY_THREE = 100
 
-    private val mongo = MongoLauncher.MongoInstance(false, "TaskRepositoryExtensionImplITest")
-
-    @BeforeAll
+    @Container
     @JvmStatic
-    fun initMongo() {
-      mongo.init()
+    var mongoDBContainer: MongoDBContainer = MongoDBContainer("mongo:4.4.2")
+
+    @DynamicPropertySource
+    @JvmStatic
+    fun setProperties(registry: DynamicPropertyRegistry) {
+      registry.add("spring.data.mongodb.uri") { mongoDBContainer.replicaSetUrl }
     }
 
-    @AfterAll
-    @JvmStatic
-    fun stop() {
-      mongo.stop()
-    }
   }
 
   @BeforeEach
@@ -61,12 +63,6 @@ class TaskRepositoryExtensionImplITest {
 
   @Autowired
   lateinit var taskRepository: TaskRepository
-
-  @AfterEach
-  fun clearMongo() {
-    mongo.clear()
-  }
-
 
   @Test
   fun finds_by_everything() {
