@@ -325,7 +325,7 @@ class JpaPolyflowViewTaskService(
             objectMapper,
             polyflowJpaViewProperties.payloadAttributeLevelLimit,
             polyflowJpaViewProperties.taskJsonPathFilters(),
-            polyflowJpaViewProperties.payLoadAttributeColumnLength
+            polyflowJpaViewProperties.payloadAttributeColumnLength
           )
         )
         emitTaskUpdate(updated)

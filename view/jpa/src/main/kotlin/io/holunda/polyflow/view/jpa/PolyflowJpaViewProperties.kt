@@ -22,7 +22,7 @@ data class PolyflowJpaViewProperties(
    * the events, which can cause the application to infinitely retry.
    * When set to null, values will not be trimmed or validated.
    */
-  val payLoadAttributeColumnLength: Int?,
+  val payloadAttributeColumnLength: Int?,
 
   /**
    * List of items to store in projection. Defaults to "DATA_ENTRY"

@@ -74,7 +74,7 @@ fun DataEntryCreatedEvent.toEntity(
   revisionValue: RevisionValue,
   limit: Int,
   filters: List<Pair<JsonPathFilterFunction, FilterType>>,
-  payLoadAttributeColumnLength: Int?
+  payLoadAttributeColumnLength: Int? = null
 ) = DataEntryEntity(
   dataEntryId = DataEntryId(entryType = this.entryType, entryId = this.entryId),
   payload = this.payload.toPayloadJson(objectMapper),
