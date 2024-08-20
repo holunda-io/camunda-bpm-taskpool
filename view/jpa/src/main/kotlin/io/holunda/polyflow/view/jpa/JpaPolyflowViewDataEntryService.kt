@@ -106,7 +106,7 @@ class JpaPolyflowViewDataEntryService(
     if (isDisabledByProperty()) return
 
     val savedEntity = dataEntryRepository.findByIdOrNull(DataEntryId(entryType = event.entryType, entryId = event.entryId))
-    val entity = if (savedEntity == null || (savedEntity.versionTimestamp < eventTimestamp.toEpochMilli() || polyflowJpaViewProperties.processOldEvents)) {
+    val entity = if (savedEntity == null || (savedEntity.versionTimestamp < eventTimestamp.toEpochMilli() || polyflowJpaViewProperties.processOutdatedEvents)) {
       /*
        * save the entity only if there is no newer entity in the database (possibly written by another instance of this service in HA setup)
        */
@@ -133,7 +133,7 @@ class JpaPolyflowViewDataEntryService(
     if (isDisabledByProperty()) return
 
     val savedEntity = dataEntryRepository.findByIdOrNull(DataEntryId(entryType = event.entryType, entryId = event.entryId))
-    val entity = if (savedEntity == null || (savedEntity.versionTimestamp < eventTimestamp.toEpochMilli() || polyflowJpaViewProperties.processOldEvents)) {
+    val entity = if (savedEntity == null || (savedEntity.versionTimestamp < eventTimestamp.toEpochMilli() || polyflowJpaViewProperties.processOutdatedEvents)) {
       /*
        * save the entity only if there is no newer entity in the database (possibly written by another instance of this service in HA setup)
        */

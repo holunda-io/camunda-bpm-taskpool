@@ -41,7 +41,7 @@ data class PolyflowJpaViewProperties(
    * By default if an Event with a more recent timestamp was processed older events will be ignored. If this is set to "true"
    * all events will be processed. Note that this can cause issues as older events can override more recent changes. Defaults to "false"
    */
-  val processOldEvents: Boolean = false
+  val processOutdatedEvents: Boolean = false
 
 ) {
   /**

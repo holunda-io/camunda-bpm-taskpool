@@ -62,7 +62,7 @@ polyflow.view.jpa:
   stored-items: task, data-entry, process-instance, process-definition
   payload-attribute-level-limit: 2
   include-correlated-data-entries-in-data-entry-queries: false
-  process-old-events: false
+  process-outdated-events: false
   data-entry-filters:
     include: myProperty2.myOtherEmbeddedProperty3, myProperty2.myOtherEmbeddedProperty2
 #    exclude: myProperty
@@ -80,7 +80,7 @@ The `include-correlated-data-entries-in-data-entry-queries` flag controls whethe
 the payload of correlated data entries. The data entry attributes (such as `entry_type`, `state.state`, ...) of correlated data entries are not considered.
 *Note:* Only one level of correlation depth is considered here and there is no option yet to change the depth.
 
-With the property `process-old-events` you can configure the view such that all events are processed, even when the event timestamp is older than a different event 
+With the property `process-outdated-events` you can configure the view such that all events are processed, even when the event timestamp is older than a different event 
 that was already processed. This might be helpful when doing technical updates but should be used with care as old event will override more recent changes if the 
 order is not guaranteed. Defaults to `false`.
 
