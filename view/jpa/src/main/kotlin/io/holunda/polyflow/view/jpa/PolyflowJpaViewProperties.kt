@@ -16,6 +16,14 @@ data class PolyflowJpaViewProperties(
    * Leg level during the path building for indexing the custom attributes. Set to -1 (no limit) as default.
    */
   val payloadAttributeLevelLimit: Int = -1,
+
+  /**
+   * Allows to specify the column length of the payload attribute values in order to trim values that are too long. This prevents exceptions when handling
+   * the events, which can cause the application to infinitely retry.
+   * When set to null, values will not be trimmed or validated.
+   */
+  val payLoadAttributeColumnLength: Int?,
+
   /**
    * List of items to store in projection. Defaults to "DATA_ENTRY"
    */
