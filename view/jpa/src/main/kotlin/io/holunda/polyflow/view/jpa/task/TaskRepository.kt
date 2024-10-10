@@ -131,7 +131,7 @@ interface TaskRepository : CrudRepository<TaskEntity, String>, JpaSpecificationE
     fun hasDueDateBefore(dueDate: Instant): Specification<TaskEntity> =
       Specification { task, _, builder ->
         builder.or(
-          builder.isNull(task.get<Instant>(TaskEntity::followUpDate.name)),
+          builder.isNull(task.get<Instant>(TaskEntity::dueDate.name)),
           builder.lessThan(
             task.get(TaskEntity::dueDate.name),
             dueDate
@@ -145,10 +145,31 @@ interface TaskRepository : CrudRepository<TaskEntity, String>, JpaSpecificationE
     fun hasDueDateAfter(dueDate: Instant): Specification<TaskEntity> =
       Specification { task, _, builder ->
         builder.or(
-          builder.isNull(task.get<Instant>(TaskEntity::followUpDate.name)),
+          builder.isNull(task.get<Instant>(TaskEntity::dueDate.name)),
           builder.greaterThan(
             task.get(TaskEntity::dueDate.name),
             dueDate
+          )
+        )
+      }
+
+    /**
+     * Specification for checking if the due date is in the specified range.
+     */
+    fun hasDueDateBetween(range: Pair<Instant, Instant>): Specification<TaskEntity> =
+      Specification { task, _, builder ->
+        val (from, to) = range
+        builder.or(
+          builder.isNull(task.get<Instant>(TaskEntity::dueDate.name)),
+          builder.and(
+            builder.greaterThan(
+              task.get(TaskEntity::dueDate.name),
+              from
+            ),
+            builder.lessThan(
+              task.get(TaskEntity::dueDate.name),
+              to
+            ),
           )
         )
       }
@@ -188,6 +209,27 @@ interface TaskRepository : CrudRepository<TaskEntity, String>, JpaSpecificationE
           builder.greaterThan(
             task.get(TaskEntity::followUpDate.name),
             followUpDate
+          )
+        )
+      }
+
+    /**
+     * Specification for checking if the follow-up date is in the specified range.
+     */
+    fun hasFollowUpDateBetween(range: Pair<Instant, Instant>): Specification<TaskEntity> =
+      Specification { task, _, builder ->
+        val (from, to) = range
+        builder.or(
+          builder.isNull(task.get<Instant>(TaskEntity::followUpDate.name)),
+          builder.and(
+            builder.greaterThan(
+              task.get(TaskEntity::followUpDate.name),
+              from
+            ),
+            builder.lessThan(
+              task.get(TaskEntity::followUpDate.name),
+              to
+            ),
           )
         )
       }

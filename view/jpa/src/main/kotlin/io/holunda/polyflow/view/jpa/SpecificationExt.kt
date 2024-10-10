@@ -20,9 +20,11 @@ import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.hasBusinessKey
 import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.hasDueDate
 import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.hasDueDateAfter
 import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.hasDueDateBefore
+import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.hasDueDateBetween
 import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.hasFollowUpDate
 import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.hasFollowUpDateAfter
 import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.hasFollowUpDateBefore
+import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.hasFollowUpDateBetween
 import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.hasPriority
 import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.hasProcessName
 import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.hasTaskOrDataEntryPayloadAttribute
@@ -266,8 +268,22 @@ internal fun Criterion.TaskCriterion.toTaskSpecification(): Specification<TaskEn
       }
     }
 
+    BETWEEN -> {
+      when (this.name) {
+        Task::dueDate.name -> hasDueDateBetween(this.value.toDatePair())
+        Task::followUpDate.name -> hasFollowUpDateBetween(this.value.toDatePair())
+        else -> throw IllegalArgumentException("JPA View found unsupported task attribute for [] (date range) comparison: ${this.name}.")
+      }
+    }
+
     else -> throw IllegalArgumentException("JPA View found unsupported comparison ${this.operator} for attribute ${this.name}.")
   }
+}
+
+private fun String.toDatePair(): Pair<Instant, Instant> {
+  val dates = this.split("|")
+  require(dates.size == 2) { "Value does not contain exactly two dates separated by |." }
+  return dates.map { Instant.parse(it) }.let { it[0] to it[1] }
 }
 
 /**

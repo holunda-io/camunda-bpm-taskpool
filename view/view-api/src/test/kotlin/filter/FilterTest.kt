@@ -14,21 +14,22 @@ import java.time.temporal.ChronoUnit
 class FilterTest {
 
   private val filtersList = listOf("task.name${EQUALS}myName", "task.assignee${EQUALS}kermit", "dataAttr1${EQUALS}value", "dataAttr2${EQUALS}another")
+  private val now = Instant.now()
 
   private val ref = ProcessReference("1", "2", "3", "4", "My Process", "myExample")
 
   // no match: task.assignee, dataAttr1, dataAttr2
   // match: task.name
-  private val task1 = TaskWithDataEntries(Task("id", ref, "key", name = "myName", priority = 90), listOf())
+  private val task1 = TaskWithDataEntries(Task("id1", ref, "key", name = "myName", priority = 90, dueDate = now), listOf())
 
   // no match: task.name, dataAttr1, dataAttr2
   // match: task.assignee
-  private val task2 = TaskWithDataEntries(Task("id", ref, "key", assignee = "kermit", priority = 91), listOf())
+  private val task2 = TaskWithDataEntries(Task("id2", ref, "key", assignee = "kermit", priority = 91, dueDate = now.minus(1, ChronoUnit.DAYS)), listOf())
 
   // no match: task.name, task.assignee, dataAttr2
   // match: dataEntries[0].payload -> dataAttr1
   private val task3 = TaskWithDataEntries(
-    Task("id", ref, "key", name = "foo", assignee = "gonzo", priority = 80), listOf(
+    Task("id3", ref, "key", name = "foo", assignee = "gonzo", priority = 80, dueDate = now.plus(1, ChronoUnit.DAYS)), listOf(
       DataEntry(
         entryType = "type",
         entryId = "4711",
@@ -43,7 +44,7 @@ class FilterTest {
   // no match: task.name, task.assignee, dataAttr2
   // match: dataEntries[0].payload -> dataAttr1
   private val task4 = TaskWithDataEntries(
-    Task("id", ref, "key", name = "foo", assignee = "gonzo", priority = 78), listOf(
+    Task("id4", ref, "key", name = "foo", assignee = "gonzo", priority = 78, dueDate = now.plus(5, ChronoUnit.DAYS)), listOf(
       DataEntry(
         entryType = "type",
         entryId = "4711",
@@ -58,7 +59,7 @@ class FilterTest {
   // no match: task.name, task.assignee, dataAttr1
   // match: dataEntries[0].payload -> dataAttr2
   private val task5 = TaskWithDataEntries(
-    Task("id", ref, "key", name = "foo", assignee = "gonzo", priority = 80), listOf(
+    Task("id5", ref, "key", name = "foo", assignee = "gonzo", priority = 80, dueDate = now.minus(4, ChronoUnit.DAYS)), listOf(
       DataEntry(
         entryType = "type",
         entryId = "4711",
@@ -74,7 +75,7 @@ class FilterTest {
   // match: task.payload -> dataAttr2
   private val task6 = TaskWithDataEntries(
     Task(
-      "id", ref, "key", name = "foo", assignee = "gonzo", priority = 1,
+      "id6", ref, "key", name = "foo", assignee = "gonzo", priority = 1,
       payload = Variables.createVariables().putValue("dataAttr2", "another").putValue("name", "myName")
     ), listOf()
   )
@@ -271,5 +272,16 @@ class FilterTest {
     assertThat(filtered).containsExactlyElementsOf(listOf(task2))
   }
 
+  @Test
+  fun `should filter tasks by due date range`() {
+    val twoDaysAgo = now.minus(2, ChronoUnit.DAYS)
+    val inTwoDays = now.plus(2, ChronoUnit.DAYS)
+    val dueDateFilter = listOf("task.dueDate[]$twoDaysAgo|$inTwoDays")
+
+
+    val filtered = filter(dueDateFilter, listOf(task1, task2, task3, task4, task5, task6))
+    // task1, task2 and task3 are in the date range. task6 does not have a dueDate which is counted as a match
+    assertThat(filtered).containsExactlyElementsOf(listOf(task1, task2, task3, task6))
+  }
 }
 
