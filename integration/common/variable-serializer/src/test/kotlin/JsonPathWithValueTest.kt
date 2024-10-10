@@ -249,6 +249,19 @@ internal class JsonPathWithValueTest {
     assertThat(result).contains("multiple.deepKey1" to "value-1")
     assertThat(result).contains("multiple.deepKey2" to "value-2")
   }
+
+  @Test
+  fun `should trim strings`() {
+    val payload = createVariables().apply {
+      put("key", "String with long content. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata")
+    }
+
+    val result = payload.toJsonPathsWithValues(valueLengthLimit = 25)
+
+    val trimmedStringContent = result.find { it.first == "key" }?.second.toString()
+    assertThat(trimmedStringContent).hasSize(25)
+      .isEqualTo("String with long content.")
+  }
 }
 
 internal fun  Set<Pair<String, Any>>.keys(): List<String> {

@@ -17,6 +17,7 @@ const val EQUALS = "="
 const val LIKE = "%"
 const val GREATER = ">"
 const val LESS = "<"
+const val BETWEEN = "[]"
 const val TASK_PREFIX = "task."
 const val DATA_PREFIX = "data."
 
@@ -25,7 +26,7 @@ const val DATA_PREFIX = "data."
  */
 typealias CompareOperator = (Any, Any?) -> Boolean
 
-val OPERATORS = Regex("[$EQUALS$LESS$GREATER$LIKE]")
+val OPERATORS = listOf(EQUALS, LIKE, GREATER, LESS, BETWEEN)
 
 /**
  * Implemented comparison support for some data types.
@@ -58,6 +59,19 @@ internal fun compareOperator(sign: String): CompareOperator =
       when (actual) {
         is String -> actual.contains(filter.toString())
         else -> actual.toString().contains(filter.toString())
+      }
+    }
+
+    BETWEEN -> { filter, actual ->
+      when(actual) {
+        is Comparable<*> -> {
+          val (from, to) = filter.toString().split("|")
+          compareOperator(GREATER)
+            .invoke(from, actual).and(compareOperator(LESS)
+              .invoke(to, actual))
+        }
+        null -> true // match tasks where actual is null
+        else -> throw IllegalArgumentException("Unsupported actual type ${actual.javaClass.name} for between operator. Type must be comparable")
       }
     }
 
@@ -235,7 +249,7 @@ internal fun toCriterion(filter: String): Criterion {
 
   require(filter.isNotBlank()) { "Failed to create criteria from empty filter '$filter'." }
 
-  if (!filter.contains(OPERATORS)) {
+  if (!OPERATORS.any { filter.contains(it) }) {
     return Criterion.EmptyCriterion
   }
 
@@ -244,6 +258,7 @@ internal fun toCriterion(filter: String): Criterion {
     filter.contains(LIKE) -> filter.split(LIKE).plus(LIKE)
     filter.contains(GREATER) -> filter.split(GREATER).plus(GREATER)
     filter.contains(LESS) -> filter.split(LESS).plus(LESS)
+    filter.contains(BETWEEN) -> filter.split(BETWEEN).plus(BETWEEN)
     else -> listOf()
   }.map { it.trim() }
 

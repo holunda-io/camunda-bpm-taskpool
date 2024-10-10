@@ -6,7 +6,7 @@
   <parent>
     <groupId>io.holunda.polyflow</groupId>
     <artifactId>polyflow-view-parent</artifactId>
-    <version>4.2.1</version>
+    <version>4.2.2</version>
   </parent>
 
   <artifactId>polyflow-view-jpa</artifactId>
@@ -40,6 +40,11 @@
     <dependency>
       <groupId>io.projectreactor.kotlin</groupId>
       <artifactId>reactor-kotlin-extensions</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-configuration-processor</artifactId>
+      <optional>true</optional>
     </dependency>
 
     <!-- Testing -->
@@ -264,12 +269,12 @@
               <dependency>
                 <groupId>com.microsoft.sqlserver</groupId>
                 <artifactId>mssql-jdbc</artifactId>
-                <version>12.8.0.jre11</version>
+                <version>12.8.1.jre11</version>
               </dependency>
               <dependency>
                 <groupId>org.postgresql</groupId>
                 <artifactId>postgresql</artifactId>
-                <version>42.7.3</version>
+                <version>42.7.4</version>
               </dependency>
             </dependencies>
           </plugin>

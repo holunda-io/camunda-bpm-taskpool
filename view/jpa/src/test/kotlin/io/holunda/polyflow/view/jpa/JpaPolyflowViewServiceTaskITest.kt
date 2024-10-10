@@ -34,10 +34,10 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.transaction.annotation.Transactional
-import org.testcontainers.junit.jupiter.Testcontainers
 import java.time.Instant
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
+import java.time.temporal.ChronoUnit
 import java.util.*
 import java.util.function.Predicate
 
@@ -92,7 +92,8 @@ internal class JpaPolyflowViewServiceTaskITest {
         businessKey = "business-1",
         createTime = Date.from(Instant.now()),
         candidateUsers = setOf("kermit"),
-        candidateGroups = setOf("muppets")
+        candidateGroups = setOf("muppets"),
+        dueDate = Date.from(now)
       ), metaData = MetaData.emptyInstance()
     )
 
@@ -156,7 +157,8 @@ internal class JpaPolyflowViewServiceTaskITest {
         businessKey = "business-3",
         createTime = Date.from(Instant.now()),
         candidateUsers = setOf("luffy"),
-        candidateGroups = setOf("strawhats")
+        candidateGroups = setOf("strawhats"),
+        dueDate = Date.from(now.plus(1, ChronoUnit.DAYS))
       ), metaData = MetaData.emptyInstance()
     )
 
@@ -200,7 +202,8 @@ internal class JpaPolyflowViewServiceTaskITest {
         businessKey = "business-4",
         createTime = Date.from(Instant.now()),
         candidateUsers = setOf("zoro"),
-        candidateGroups = setOf("strawhats")
+        candidateGroups = setOf("strawhats"),
+        dueDate = Date.from(now.plus(5, ChronoUnit.DAYS))
       ), metaData = MetaData.emptyInstance()
     )
 
@@ -574,6 +577,26 @@ internal class JpaPolyflowViewServiceTaskITest {
     val namesOSH = jpaPolyflowViewService.query(TaskAttributeValuesQuery(user = User("bud", setOf("old_school_heros")), attributeName = "key"))
     assertThat(namesOSH).isNotNull
     assertThat(namesOSH.elements).hasSize(0)
+  }
+
+  @Test
+  fun `should find tasks by date range`() {
+    val range = jpaPolyflowViewService.query(
+      AllTasksQuery(
+        filters = listOf("task.dueDate[]${now.minus(1, ChronoUnit.DAYS)}|${now.plus(2, ChronoUnit.DAYS)}")
+      )
+    )
+    assertThat(range.elements).hasSize(2)
+  }
+
+  @Test
+  fun `should not find tasks outsides of date range`() {
+    val range = jpaPolyflowViewService.query(
+      AllTasksQuery(
+        filters = listOf("task.dueDate[]${now.minus(5, ChronoUnit.DAYS)}|${now.minus(2, ChronoUnit.DAYS)}")
+      )
+    )
+    assertThat(range.elements).isEmpty()
   }
 
   private fun captureEmittedQueryUpdates(): List<QueryUpdate<Any>> {

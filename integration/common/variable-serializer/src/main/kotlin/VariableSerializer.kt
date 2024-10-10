@@ -48,17 +48,18 @@ typealias JsonPathFilterFunction = (path: String) -> Boolean
  * @param limit limit of levels to convert. Defaults to -1 meaning there is no limit.
  * @param filters filter object to identify properties to include into the result.
  */
-fun VariableMap.toJsonPathsWithValues(limit: Int = -1, filters: List<Pair<JsonPathFilterFunction, FilterType>> = emptyList()): Set<Pair<String, Any>> {
+fun VariableMap.toJsonPathsWithValues(limit: Int = -1, filters: List<Pair<JsonPathFilterFunction, FilterType>> = emptyList(), valueLengthLimit: Int? = null): Set<Pair<String, Any>> {
     return this.entries
         .map { it.toPair() }
-        .map { it.toJsonPathWithValue(prefix = "", limit = limit, filter = filters) }
+        .map { it.toJsonPathWithValue(prefix = "", limit = limit, filter = filters, valueLengthLimit) }
         .flatten().toSet()
 }
 
 internal fun Pair<String, Any?>.toJsonPathWithValue(
   prefix: String = "",
   limit: Int = -1,
-  filter: List<Pair<JsonPathFilterFunction, FilterType>>
+  filter: List<Pair<JsonPathFilterFunction, FilterType>>,
+  valueLengthLimit: Int?
 ): List<Pair<String, Any>> {
   // level limit check
   val currentLevel = prefix.count { ".".contains(it) }
@@ -72,8 +73,14 @@ internal fun Pair<String, Any?>.toJsonPathWithValue(
     "$prefix.${this.first}"
   }
 
-  val value = this.second
+  var value = this.second
   return if (value != null && value.isPrimitiveType()) {
+
+    // trim strings to the value length limit if provided
+    if(valueLengthLimit != null && value is String && value.length > valueLengthLimit) {
+      // TODO: logging
+      value = value.substring(0 until valueLengthLimit)
+    }
 
     // check the filters
     if (!filter.filter { (_, type) -> type == FilterType.EXCLUDE }.all { (filter, _) ->
@@ -91,10 +98,10 @@ internal fun Pair<String, Any?>.toJsonPathWithValue(
     @Suppress("UNCHECKED_CAST")
     (value as Map<String, Any?>).entries
         .map { it.toPair() }
-        .map { it.toJsonPathWithValue(key, limit, filter) }
+        .map { it.toJsonPathWithValue(key, limit, filter, valueLengthLimit) }
         .flatten()
   } else if (value is List<*>) {
-    value.map { (key to it).toJsonPathWithValue(prefix, limit, filter) }.flatten()
+    value.map { (key to it).toJsonPathWithValue(prefix, limit, filter, valueLengthLimit) }.flatten()
   } else {
     // ignore complex objects, in default scenarios, complex objects got already deserialized by the sender in ProjectingCommandAccumulator.serializePayloadIfNeeded
     listOf()
@@ -104,7 +111,7 @@ internal fun Pair<String, Any?>.toJsonPathWithValue(
 internal fun Any.isPrimitiveType(): Boolean {
   return when (this) {
     // TODO: ask Jackson for the supported list of types
-    is String, is Boolean, is Number, is Int, is Long, is Float, is Date, is Instant -> true
+    is String, is Boolean, is Number, is Date, is Instant -> true
     else -> false
   }
 }
