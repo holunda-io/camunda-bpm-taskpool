@@ -43,7 +43,13 @@ data class PolyflowJpaViewProperties(
   /**
    * Controls if DataEntryQueries should consider the payload attributes of correlated data entries. Defaults to "false".
    */
-  val includeCorrelatedDataEntriesInDataEntryQueries: Boolean = false
+  val includeCorrelatedDataEntriesInDataEntryQueries: Boolean = false,
+
+  /**
+   * By default if an Event with a more recent timestamp was processed older events will be ignored. If this is set to "true"
+   * all events will be processed. Note that this can cause issues as older events can override more recent changes. Defaults to "false"
+   */
+  val processOutdatedEvents: Boolean = false
 
 ) {
   /**

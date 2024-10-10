@@ -65,7 +65,7 @@ class ConverterExtKtTest {
       formKey = "test-entry-form"
     )
 
-    val entity = event.toEntity(objectMapper, RevisionValue.NO_REVISION, 2, listOf())
+    val entity = event.toEntity(objectMapper, Instant.now(), RevisionValue.NO_REVISION, 2, listOf())
 
     assertThat(entity.dataEntryId.entryId).isEqualTo("id")
     assertThat(entity.dataEntryId.entryType).isEqualTo("io.holunda.test")
@@ -104,6 +104,7 @@ class ConverterExtKtTest {
 
     val entity = event.toEntity(
       objectMapper,
+      Instant.now(),
       RevisionValue.NO_REVISION,
       null,
       2,
@@ -169,6 +170,7 @@ class ConverterExtKtTest {
 
     val entity = event.toEntity(
       objectMapper,
+      Instant.now(),
       RevisionValue.NO_REVISION,
       null,
       2,

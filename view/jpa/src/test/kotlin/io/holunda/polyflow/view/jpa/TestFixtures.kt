@@ -13,11 +13,13 @@ import io.holunda.polyflow.view.jpa.process.SourceReferenceEmbeddable
 import io.holunda.polyflow.view.jpa.task.TaskEntity
 import io.holunda.polyflow.view.jpa.task.TaskRepository
 import io.holunda.polyflow.view.query.data.*
+import org.axonframework.eventhandling.Timestamp
 import org.axonframework.messaging.MetaData
 import org.axonframework.queryhandling.QueryResponseMessage
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional
+import java.time.Instant
 import java.util.*
 
 data class Pojo(
@@ -78,9 +80,9 @@ class JpaPolyflowViewServiceTxFacade(private val implementation: JpaPolyflowView
   override fun query(query: DataEntriesQuery, metaData: MetaData): QueryResponseMessage<DataEntriesQueryResult> =
     implementation.query(query = query, metaData = metaData)
 
-  override fun on(event: DataEntryCreatedEvent, metaData: MetaData) = implementation.on(event = event, metaData = metaData)
+  override fun on(event: DataEntryCreatedEvent, metaData: MetaData, @Timestamp eventTimestamp: Instant) = implementation.on(event = event, metaData = metaData, eventTimestamp)
 
-  override fun on(event: DataEntryUpdatedEvent, metaData: MetaData) = implementation.on(event = event, metaData = metaData)
+  override fun on(event: DataEntryUpdatedEvent, metaData: MetaData, @Timestamp eventTimestamp: Instant) = implementation.on(event = event, metaData = metaData, eventTimestamp)
 
   override fun on(event: DataEntryDeletedEvent, metaData: MetaData) = implementation.on(event = event, metaData = metaData)
 

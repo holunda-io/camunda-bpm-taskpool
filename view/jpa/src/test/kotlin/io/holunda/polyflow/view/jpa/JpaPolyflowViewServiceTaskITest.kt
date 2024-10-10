@@ -182,7 +182,8 @@ internal class JpaPolyflowViewServiceTaskITest {
           logNotes = "Created the entry"
         )
       ),
-      metaData = RevisionValue(revision = 1).toMetaData()
+      metaData = RevisionValue(revision = 1).toMetaData(),
+      now
     )
 
     // for testing: fun query(query: TasksWithDataEntriesForUserQuery)
@@ -226,7 +227,8 @@ internal class JpaPolyflowViewServiceTaskITest {
           logNotes = "Created the entry"
         )
       ),
-      metaData = RevisionValue(revision = 1).toMetaData()
+      metaData = RevisionValue(revision = 1).toMetaData(),
+      now
     )
 
     jpaPolyflowViewService.on(

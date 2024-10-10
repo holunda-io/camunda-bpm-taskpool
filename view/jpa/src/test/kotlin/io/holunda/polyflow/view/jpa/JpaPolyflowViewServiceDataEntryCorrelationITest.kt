@@ -78,7 +78,8 @@ internal class JpaPolyflowViewServiceDataEntryCorrelationITest {
           logNotes = "Created the entry"
         )
       ),
-      metaData = MetaData.emptyInstance()
+      metaData = MetaData.emptyInstance(),
+      eventTimestamp = now
     )
 
 
@@ -103,7 +104,8 @@ internal class JpaPolyflowViewServiceDataEntryCorrelationITest {
         ),
         correlations = Variables.createVariables().addCorrelation("io.polyflow.test", id1)
       ),
-      metaData = MetaData.emptyInstance()
+      metaData = MetaData.emptyInstance(),
+      eventTimestamp = now
     )
   }
 
