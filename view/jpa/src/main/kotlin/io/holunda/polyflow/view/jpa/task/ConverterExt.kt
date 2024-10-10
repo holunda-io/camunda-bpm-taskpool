@@ -23,7 +23,8 @@ import java.time.Instant
 fun TaskCreatedEngineEvent.toEntity(
   objectMapper: ObjectMapper,
   limit: Int,
-  filters: List<Pair<JsonPathFilterFunction, FilterType>>
+  filters: List<Pair<JsonPathFilterFunction, FilterType>>,
+  payLoadAttributeColumnLength: Int?
 ) = TaskEntity(
   taskId = this.id,
   taskDefinitionKey = this.taskDefinitionKey,
@@ -35,7 +36,7 @@ fun TaskCreatedEngineEvent.toEntity(
     .toMutableSet(),
   correlations = this.correlations.map { entry -> DataEntryId(entryType = entry.key, entryId = "${entry.value}") }.toMutableSet(),
   payload = this.payload.toPayloadJson(objectMapper),
-  payloadAttributes = this.payload.toJsonPathsWithValues(limit, filters).map { attr -> PayloadAttribute(attr) }.toMutableSet(),
+  payloadAttributes = this.payload.toJsonPathsWithValues(limit, filters, payLoadAttributeColumnLength).map { attr -> PayloadAttribute(attr) }.toMutableSet(),
   assignee = this.assignee,
   businessKey = this.businessKey,
   description = this.description,
