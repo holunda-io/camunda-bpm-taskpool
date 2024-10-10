@@ -60,6 +60,7 @@ open class TaskWithDataEntriesRepositoryExtensionImpl(
           GREATER -> this.gt(it.typedValue())
           LESS -> this.lt(it.typedValue())
           // FIXME -> implement like
+          // FIXME -> implement BETWEEN
           else -> throw IllegalArgumentException("Unsupported operator ${it.operator}")
         }
       }

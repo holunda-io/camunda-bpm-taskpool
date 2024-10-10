@@ -62,6 +62,19 @@ internal fun compareOperator(sign: String): CompareOperator =
       }
     }
 
+    BETWEEN -> { filter, actual ->
+      when(actual) {
+        is Comparable<*> -> {
+          val (from, to) = filter.toString().split("|")
+          compareOperator(GREATER)
+            .invoke(from, actual).and(compareOperator(LESS)
+              .invoke(to, actual))
+        }
+        null -> true // match tasks where actual is null
+        else -> throw IllegalArgumentException("Unsupported actual type ${actual.javaClass.name} for between operator. Type must be comparable")
+      }
+    }
+
     EQUALS -> { filter, actual -> filter.toString() == actual.toString() }
 
     else -> throw IllegalArgumentException("Unsupported operator $sign")
