@@ -76,6 +76,11 @@ In addition, the `stored-items` property is holding a set of items to be persist
 stored items are: `task`, `data-entry`, `process-instance` and `process-definition`. By setting this property, you can disable
 storage of items not required by your application and save space consumption of your database. The property defaults to `data-entry`.
 
+With the `payload-attribute-column-length` property one can specify a maximum length for payload attribute values if they are strings. Values that exceed
+this length will automatically be trimmed to the max length in order to prevent exceptions when handling the event. This is especially necessary because
+relational databases have limits on the length of composite primary keys. Since the combination of (id, path, value) for tasks or (id, type, path, value) for
+data entries must be unique, the primary key is very large, which limits the amount of space available for the value.
+
 The `include-correlated-data-entries-in-data-entry-queries` flag controls whether a data entry query (`DataEntriesForUserQuery` or `DataEntriesQuery`) considers
 the payload of correlated data entries. The data entry attributes (such as `entry_type`, `state.state`, ...) of correlated data entries are not considered.
 *Note:* Only one level of correlation depth is considered here and there is no option yet to change the depth.

@@ -70,10 +70,17 @@ fun DataEntryState.toState() = DataEntryStateEmbeddable(processingType = this.pr
 /**
  * Event to entity.
  */
-fun DataEntryCreatedEvent.toEntity(objectMapper: ObjectMapper, eventTimestamp: Instant, revisionValue: RevisionValue, limit: Int, filters: List<Pair<JsonPathFilterFunction, FilterType>>) = DataEntryEntity(
+fun DataEntryCreatedEvent.toEntity(
+  objectMapper: ObjectMapper, 
+  eventTimestamp: Instant, 
+  revisionValue: RevisionValue, 
+  limit: Int, 
+  filters: List<Pair<JsonPathFilterFunction, FilterType>>,
+  payLoadAttributeColumnLength: Int? = null
+) = DataEntryEntity(
   dataEntryId = DataEntryId(entryType = this.entryType, entryId = this.entryId),
   payload = this.payload.toPayloadJson(objectMapper),
-  payloadAttributes = this.payload.toJsonPathsWithValues(limit, filters).map { attr -> PayloadAttribute(attr) }.toMutableSet(),
+  payloadAttributes = this.payload.toJsonPathsWithValues(limit, filters, payLoadAttributeColumnLength).map { attr -> PayloadAttribute(attr) }.toMutableSet(),
   name = this.name,
   applicationName = this.applicationName,
   type = this.type,
@@ -90,7 +97,7 @@ fun DataEntryCreatedEvent.toEntity(objectMapper: ObjectMapper, eventTimestamp: I
   versionTimestamp = eventTimestamp.toEpochMilli(),
   authorizedPrincipals = AuthorizationChange.applyUserAuthorization(mutableSetOf(), this.authorizations).map { user(it).toString() }
     .plus(AuthorizationChange.applyGroupAuthorization(mutableSetOf(), this.authorizations).map { group(it).toString() }).toMutableSet(),
-  correlations = this.correlations.toMutableMap().map { entry -> DataEntryId(entryType = entry.key, entryId =  entry.value.toString()) }.toMutableSet()
+  correlations = this.correlations.toMutableMap().map { entry -> DataEntryId(entryType = entry.key, entryId = entry.value.toString()) }.toMutableSet()
 ).apply {
   this.protocol = this.protocol.addModification(this, this@toEntity.createModification, this@toEntity.state)
 }
