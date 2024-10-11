@@ -111,12 +111,13 @@ fun DataEntryUpdatedEvent.toEntity(
   revisionValue: RevisionValue,
   oldEntry: DataEntryEntity?,
   limit: Int,
-  filters: List<Pair<JsonPathFilterFunction, FilterType>>
+  filters: List<Pair<JsonPathFilterFunction, FilterType>>,
+  payLoadAttributeColumnLength: Int? = null
 ) = if (oldEntry == null) {
   DataEntryEntity(
     dataEntryId = DataEntryId(entryType = this.entryType, entryId = this.entryId),
     payload = this.payload.toPayloadJson(objectMapper),
-    payloadAttributes = this.payload.toJsonPathsWithValues(limit, filters).map { attr -> PayloadAttribute(attr) }.toMutableSet(),
+    payloadAttributes = this.payload.toJsonPathsWithValues(limit, filters, payLoadAttributeColumnLength).map { attr -> PayloadAttribute(attr) }.toMutableSet(),
     name = this.name,
     applicationName = this.applicationName,
     type = this.type,

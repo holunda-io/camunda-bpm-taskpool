@@ -53,7 +53,8 @@ fun TaskCreatedEngineEvent.toEntity(
 fun TaskEntity.update(event: TaskAttributeUpdatedEngineEvent,
                       objectMapper: ObjectMapper,
                       limit: Int,
-                      filters: List<Pair<JsonPathFilterFunction, FilterType>>) {
+                      filters: List<Pair<JsonPathFilterFunction, FilterType>>,
+                      payLoadAttributeColumnLength: Int?) {
   this.taskDefinitionKey = event.taskDefinitionKey
   this.sourceReference = event.sourceReference.toSourceReferenceEmbeddable()
   this.name = event.name ?: this.name
@@ -65,7 +66,7 @@ fun TaskEntity.update(event: TaskAttributeUpdatedEngineEvent,
   if (event.payload.isNotEmpty()) {
     this.payload = event.payload.toPayloadJson(objectMapper)
     this.payloadAttributes.clear()
-    this.payloadAttributes.addAll(event.payload.toJsonPathsWithValues(limit, filters).map { attr -> PayloadAttribute(attr) }.toMutableSet())
+    this.payloadAttributes.addAll(event.payload.toJsonPathsWithValues(limit, filters, payLoadAttributeColumnLength).map { attr -> PayloadAttribute(attr) }.toMutableSet())
   }
   businessKey = event.businessKey ?: this.businessKey
   description = event.description ?: this.description

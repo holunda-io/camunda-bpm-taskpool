@@ -61,6 +61,7 @@ configuration of this indexing process by the following configuration options:
 polyflow.view.jpa:
   stored-items: task, data-entry, process-instance, process-definition
   payload-attribute-level-limit: 2
+  payload-attribute-column-length: 255
   include-correlated-data-entries-in-data-entry-queries: false
   process-outdated-events: false
   data-entry-filters:

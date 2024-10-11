@@ -145,7 +145,8 @@ class JpaPolyflowViewDataEntryService(
           revisionValue = RevisionValue.fromMetaData(metaData),
           oldEntry = savedEntity,
           limit = polyflowJpaViewProperties.payloadAttributeLevelLimit,
-          filters = polyflowJpaViewProperties.dataEntryJsonPathFilters()
+          filters = polyflowJpaViewProperties.dataEntryJsonPathFilters(),
+          payLoadAttributeColumnLength = polyflowJpaViewProperties.payloadAttributeColumnLength
         )
       ).apply {
         logger.debug { "JPA-VIEW-42: Business data entry updated $event" }

@@ -78,7 +78,6 @@ internal fun Pair<String, Any?>.toJsonPathWithValue(
 
     // trim strings to the value length limit if provided
     if(valueLengthLimit != null && value is String && value.length > valueLengthLimit) {
-      // TODO: logging
       value = value.substring(0 until valueLengthLimit)
     }
 
