@@ -12,6 +12,7 @@ CREATE TABLE plf_data_entry (
   processing_type    VARCHAR(255) NOT NULL,
   state              VARCHAR(255) NOT NULL,
   type               VARCHAR(255) NOT NULL,
+  version_timestamp  INT8,
   PRIMARY KEY (entry_id, entry_type)
 );
 

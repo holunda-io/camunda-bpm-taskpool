@@ -49,6 +49,9 @@ class DataEntryEntity(
   @Column(name = "AUTHORIZED_PRINCIPAL", nullable = false)
   var authorizedPrincipals: MutableSet<String> = mutableSetOf(),
 
+  @Column(name = "VERSION_TIMESTAMP")
+  var versionTimestamp: Long = 0L,
+
   @ElementCollection(fetch = FetchType.EAGER)
   @CollectionTable(
     name = "PLF_DATA_ENTRY_PAYLOAD_ATTRIBUTES",
