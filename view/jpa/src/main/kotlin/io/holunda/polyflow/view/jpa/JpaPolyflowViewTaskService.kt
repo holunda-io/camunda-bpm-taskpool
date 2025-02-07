@@ -418,7 +418,7 @@ class JpaPolyflowViewTaskService(
         logger.warn { "Cannot update task '${event.id}' because it does not exist in the database" }
       }
       .ifPresent { entity ->
-        entity.update(event, objectMapper, polyflowJpaViewProperties.payloadAttributeLevelLimit, polyflowJpaViewProperties.taskJsonPathFilters())
+        entity.update(event, objectMapper, polyflowJpaViewProperties.payloadAttributeLevelLimit, polyflowJpaViewProperties.taskJsonPathFilters(), polyflowJpaViewProperties.payloadAttributeColumnLength)
         val updated = taskRepository.save(entity)
         emitTaskUpdate(updated)
       }

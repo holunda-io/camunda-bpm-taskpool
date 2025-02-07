@@ -13,6 +13,7 @@ import io.holunda.polyflow.view.jpa.auth.AuthorizationPrincipalType.GROUP
 import io.holunda.polyflow.view.jpa.auth.AuthorizationPrincipalType.USER
 import io.holunda.polyflow.view.jpa.payload.PayloadAttribute
 import org.camunda.bpm.engine.variable.Variables
+import java.time.Instant
 
 /**
  * Converts the entity into API type.
@@ -70,9 +71,10 @@ fun DataEntryState.toState() = DataEntryStateEmbeddable(processingType = this.pr
  * Event to entity.
  */
 fun DataEntryCreatedEvent.toEntity(
-  objectMapper: ObjectMapper,
-  revisionValue: RevisionValue,
-  limit: Int,
+  objectMapper: ObjectMapper, 
+  eventTimestamp: Instant, 
+  revisionValue: RevisionValue, 
+  limit: Int, 
   filters: List<Pair<JsonPathFilterFunction, FilterType>>,
   payLoadAttributeColumnLength: Int? = null
 ) = DataEntryEntity(
@@ -92,6 +94,7 @@ fun DataEntryCreatedEvent.toEntity(
   } else {
     0L
   },
+  versionTimestamp = eventTimestamp.toEpochMilli(),
   authorizedPrincipals = AuthorizationChange.applyUserAuthorization(mutableSetOf(), this.authorizations).map { user(it).toString() }
     .plus(AuthorizationChange.applyGroupAuthorization(mutableSetOf(), this.authorizations).map { group(it).toString() }).toMutableSet(),
   correlations = this.correlations.toMutableMap().map { entry -> DataEntryId(entryType = entry.key, entryId = entry.value.toString()) }.toMutableSet()
@@ -104,15 +107,17 @@ fun DataEntryCreatedEvent.toEntity(
  */
 fun DataEntryUpdatedEvent.toEntity(
   objectMapper: ObjectMapper,
+  eventTimestamp: Instant,
   revisionValue: RevisionValue,
   oldEntry: DataEntryEntity?,
   limit: Int,
-  filters: List<Pair<JsonPathFilterFunction, FilterType>>
+  filters: List<Pair<JsonPathFilterFunction, FilterType>>,
+  payLoadAttributeColumnLength: Int? = null
 ) = if (oldEntry == null) {
   DataEntryEntity(
     dataEntryId = DataEntryId(entryType = this.entryType, entryId = this.entryId),
     payload = this.payload.toPayloadJson(objectMapper),
-    payloadAttributes = this.payload.toJsonPathsWithValues(limit, filters).map { attr -> PayloadAttribute(attr) }.toMutableSet(),
+    payloadAttributes = this.payload.toJsonPathsWithValues(limit, filters, payLoadAttributeColumnLength).map { attr -> PayloadAttribute(attr) }.toMutableSet(),
     name = this.name,
     applicationName = this.applicationName,
     type = this.type,
@@ -129,6 +134,7 @@ fun DataEntryUpdatedEvent.toEntity(
     } else {
       0L
     },
+    versionTimestamp = eventTimestamp.toEpochMilli(),
   )
 } else {
   oldEntry.also {

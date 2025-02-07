@@ -15,6 +15,7 @@ create table plf_data_entry
   processing_type    varchar(255) not null,
   state              varchar(255) not null,
   type               varchar(255) not null,
+  version_timestamp  bigint,
   primary key (entry_id, entry_type)
 );
 

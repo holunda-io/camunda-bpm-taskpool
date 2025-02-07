@@ -25,6 +25,7 @@ import io.holunda.polyflow.view.query.data.*
 import mu.KLogging
 import org.axonframework.config.ProcessingGroup
 import org.axonframework.eventhandling.EventHandler
+import org.axonframework.eventhandling.Timestamp
 import org.axonframework.messaging.MetaData
 import org.axonframework.queryhandling.QueryHandler
 import org.axonframework.queryhandling.QueryResponseMessage
@@ -32,6 +33,7 @@ import org.axonframework.queryhandling.QueryUpdateEmitter
 import org.springframework.data.domain.Page
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Component
+import java.time.Instant
 
 /**
  * Implementation of the Polyflow Data Entry View API using JPA to create the persistence model.
@@ -100,17 +102,18 @@ class JpaPolyflowViewDataEntryService(
 
   @Suppress("unused")
   @EventHandler
-  override fun on(event: DataEntryCreatedEvent, metaData: MetaData) {
+  override fun on(event: DataEntryCreatedEvent, metaData: MetaData, @Timestamp eventTimestamp: Instant) {
     if (isDisabledByProperty()) return
 
     val savedEntity = dataEntryRepository.findByIdOrNull(DataEntryId(entryType = event.entryType, entryId = event.entryId))
-    val entity = if (savedEntity == null || savedEntity.lastModifiedDate < event.createModification.time.toInstant()) {
+    val entity = if (savedEntity == null || (savedEntity.versionTimestamp < eventTimestamp.toEpochMilli() || polyflowJpaViewProperties.processOutdatedEvents)) {
       /*
        * save the entity only if there is no newer entity in the database (possibly written by another instance of this service in HA setup)
        */
       dataEntryRepository.save(
         event.toEntity(
           objectMapper = objectMapper,
+          eventTimestamp = eventTimestamp,
           revisionValue = RevisionValue.fromMetaData(metaData),
           limit = polyflowJpaViewProperties.payloadAttributeLevelLimit,
           filters = polyflowJpaViewProperties.dataEntryJsonPathFilters(),
@@ -127,21 +130,23 @@ class JpaPolyflowViewDataEntryService(
 
   @Suppress("unused")
   @EventHandler
-  override fun on(event: DataEntryUpdatedEvent, metaData: MetaData) {
+  override fun on(event: DataEntryUpdatedEvent, metaData: MetaData, @Timestamp eventTimestamp: Instant) {
     if (isDisabledByProperty()) return
 
     val savedEntity = dataEntryRepository.findByIdOrNull(DataEntryId(entryType = event.entryType, entryId = event.entryId))
-    val entity = if (savedEntity == null || savedEntity.lastModifiedDate < event.updateModification.time.toInstant()) {
+    val entity = if (savedEntity == null || (savedEntity.versionTimestamp < eventTimestamp.toEpochMilli() || polyflowJpaViewProperties.processOutdatedEvents)) {
       /*
        * save the entity only if there is no newer entity in the database (possibly written by another instance of this service in HA setup)
        */
       dataEntryRepository.save(
         event.toEntity(
           objectMapper = objectMapper,
+          eventTimestamp = eventTimestamp,
           revisionValue = RevisionValue.fromMetaData(metaData),
           oldEntry = savedEntity,
           limit = polyflowJpaViewProperties.payloadAttributeLevelLimit,
-          filters = polyflowJpaViewProperties.dataEntryJsonPathFilters()
+          filters = polyflowJpaViewProperties.dataEntryJsonPathFilters(),
+          payLoadAttributeColumnLength = polyflowJpaViewProperties.payloadAttributeColumnLength
         )
       ).apply {
         logger.debug { "JPA-VIEW-42: Business data entry updated $event" }
