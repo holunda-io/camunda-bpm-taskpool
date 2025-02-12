@@ -24,7 +24,13 @@ data class DataEntrySenderProperties(
   /**
    * Serialize payload to `Map<String, Object>`. Defaults to true.
    */
-  val serializePayload: Boolean = true
+  val serializePayload: Boolean = true,
+  /**
+   * This flag controls if the data entries are sent within an open transaction (value true, before commit)
+   * or not (value false, default, after commit). This setting is required if you move the command bus
+   * and the command handling on the engine side.
+   */
+  val sendWithinTransaction: Boolean = false
 )
 
 

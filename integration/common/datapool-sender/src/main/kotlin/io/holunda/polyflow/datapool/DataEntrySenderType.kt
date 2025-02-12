@@ -10,6 +10,11 @@ enum class DataEntrySenderType {
   simple,
 
   /**
+   * Sender using Tx synchronization sending commands directly.
+   */
+  tx,
+
+  /**
    * Custom = user-defined.
    */
   custom

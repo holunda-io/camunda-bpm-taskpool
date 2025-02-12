@@ -17,12 +17,10 @@ import org.slf4j.LoggerFactory
 /**
  * Simple data entry command sender.
  */
-class SimpleDataEntryCommandSender(
-  private val gateway: CommandGateway,
+class DataEntryCommandProcessor(
+  private val dataEntrySender: DataEntrySender,
   private val properties: DataEntrySenderProperties,
   private val dataEntryProjector: DataEntryProjector,
-  private val successHandler: DataEntryCommandSuccessHandler,
-  private val errorHandler: DataEntryCommandErrorHandler,
   private val objectMapper: ObjectMapper
 ) : DataEntryCommandSender {
 
@@ -98,13 +96,7 @@ class SimpleDataEntryCommandSender(
       val message = GenericCommandMessage
         .asCommandMessage<CreateOrUpdateDataEntryCommand>(command)
         .withMetaData(metaData)
-      gateway.send<Any, Any?>(message) { m, r ->
-        if (r.isExceptional) {
-          errorHandler.apply(m, r)
-        } else {
-          successHandler.apply(m, r)
-        }
-      }
+      dataEntrySender.send(message)
     } else {
       logger.debug("Would have sent change command $command")
     }
@@ -115,13 +107,7 @@ class SimpleDataEntryCommandSender(
       val message = GenericCommandMessage
         .asCommandMessage<DeleteDataEntryCommand>(command)
         .withMetaData(metaData)
-      gateway.send<Any, Any?>(message) { m, r ->
-        if (r.isExceptional) {
-          errorHandler.apply(m, r)
-        } else {
-          successHandler.apply(m, r)
-        }
-      }
+      dataEntrySender.send(message)
     } else {
       logger.debug("Would have sent delete command $command")
     }
@@ -132,13 +118,7 @@ class SimpleDataEntryCommandSender(
       val message = GenericCommandMessage
         .asCommandMessage<AnonymizeDataEntryCommand>(command)
         .withMetaData(metaData)
-      gateway.send<Any, Any?>(message) { m, r ->
-        if (r.isExceptional) {
-          errorHandler.apply(m, r)
-        } else {
-          successHandler.apply(m, r)
-        }
-      }
+      dataEntrySender.send(message)
     } else {
       logger.debug("Would have sent anonymize command $command")
     }

@@ -41,7 +41,7 @@ class DataEntrySenderPropertiesExtendedTest {
         "spring.application.name=my-test-application",
         "polyflow.integration.sender.data-entry.application-name=another-than-spring",
         "polyflow.integration.sender.data-entry.enabled=true",
-        "polyflow.integration.sender.data-entry.type=custom",
+        "polyflow.integration.sender.data-entry.type=tx",
       ).run {
 
         assertThat(it.getBean(DataEntrySenderProperties::class.java)).isNotNull
@@ -50,7 +50,7 @@ class DataEntrySenderPropertiesExtendedTest {
         assertThat(props.applicationName).isEqualTo("another-than-spring")
 
         assertThat(props.enabled).isTrue
-        assertThat(props.type).isEqualTo(DataEntrySenderType.custom)
+        assertThat(props.type).isEqualTo(DataEntrySenderType.tx)
       }
   }
 
