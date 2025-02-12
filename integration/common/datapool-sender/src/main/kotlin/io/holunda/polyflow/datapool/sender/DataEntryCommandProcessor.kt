@@ -7,7 +7,6 @@ import io.holunda.polyflow.datapool.DataEntrySenderProperties
 import io.holunda.polyflow.datapool.projector.DataEntryProjectionSupplier
 import io.holunda.polyflow.datapool.projector.DataEntryProjector
 import org.axonframework.commandhandling.GenericCommandMessage
-import org.axonframework.commandhandling.gateway.CommandGateway
 import org.axonframework.messaging.MetaData
 import org.camunda.bpm.engine.variable.VariableMap
 import org.slf4j.Logger

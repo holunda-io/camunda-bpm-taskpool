@@ -1,6 +1,5 @@
 package io.holunda.polyflow.datapool.sender
 
-import io.holunda.camunda.taskpool.api.business.*
 import io.holunda.polyflow.datapool.DataEntrySenderProperties
 import mu.KLogging
 import org.axonframework.commandhandling.CommandMessage

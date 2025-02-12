@@ -7,9 +7,12 @@ import io.holunda.polyflow.datapool.projector.DataEntryProjector
 import io.holunda.polyflow.datapool.sender.*
 import io.holunda.polyflow.datapool.sender.gateway.*
 import io.holunda.polyflow.spring.ApplicationNameBeanPostProcessor
+import jakarta.annotation.PostConstruct
 import org.axonframework.commandhandling.gateway.CommandGateway
+import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Qualifier
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
@@ -21,8 +24,10 @@ import org.springframework.context.annotation.Import
 @EnableConfigurationProperties(DataEntrySenderProperties::class)
 @Import(ApplicationNameBeanPostProcessor::class)
 class DataEntrySenderConfiguration(
-  val properties: DataEntrySenderProperties
+  private val properties: DataEntrySenderProperties
 ) {
+
+  private val logger: Logger = LoggerFactory.getLogger(DataEntrySenderConfiguration::class.java)
 
   /**
    * Initializes the projector.
@@ -45,6 +50,7 @@ class DataEntrySenderConfiguration(
     LoggingDataEntryCommandErrorHandler(LoggerFactory.getLogger(DataEntryCommandSender::class.java))
 
   @Bean
+  @ConditionalOnMissingBean(CommandListGateway::class)
   fun commandListGateway(
     commandGateway: CommandGateway,
     commandSuccessHandler: CommandSuccessHandler,
@@ -94,4 +100,15 @@ class DataEntrySenderConfiguration(
       properties
     )
 
+  /**
+   * Prints sender config.
+   */
+  @PostConstruct
+  fun printSenderConfiguration() {
+    if (properties.enabled) {
+      logger.info("SENDER-111: Datapool data entry commands will be distributed over command bus.")
+    } else {
+      logger.info("SENDER-112: Datakpool data entry command distribution is disabled by property.")
+    }
+  }
 }
