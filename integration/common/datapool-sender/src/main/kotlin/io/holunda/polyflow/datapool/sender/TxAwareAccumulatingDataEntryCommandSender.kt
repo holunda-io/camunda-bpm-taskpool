@@ -13,6 +13,7 @@ abstract class TxAwareAccumulatingDataEntryCommandSender(
   protected val dataEntrySenderProperties: DataEntrySenderProperties
 ) : DataEntrySender {
 
+  /** Logger instance for this class. */
   companion object : KLogging()
 
   private val registered: ThreadLocal<Boolean> = ThreadLocal.withInitial { false }

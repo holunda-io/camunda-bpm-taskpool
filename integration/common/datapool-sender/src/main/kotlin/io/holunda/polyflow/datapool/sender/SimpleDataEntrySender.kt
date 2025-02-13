@@ -13,6 +13,7 @@ class SimpleDataEntrySender(
   private val dataEntrySenderProperties: DataEntrySenderProperties
 ) : DataEntrySender {
 
+  /** Logger instance for this class. */
   companion object : KLogging()
 
   override fun <C> send(command: CommandMessage<C>) {

@@ -15,6 +15,7 @@ class AxonCommandListGateway(
   private val commandErrorHandler: CommandErrorHandler
 ) : CommandListGateway {
 
+  /** Logger instance for this class. */
   companion object : KLogging()
 
   /**

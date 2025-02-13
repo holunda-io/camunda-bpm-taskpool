@@ -31,6 +31,7 @@ import org.springframework.context.annotation.Bean
 @EnableConfigurationProperties(SenderProperties::class)
 class SenderConfiguration(private val senderProperties: SenderProperties) {
 
+  /** Logger instance for this class. */
   companion object : KLogging()
 
   /**

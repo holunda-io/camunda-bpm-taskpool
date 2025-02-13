@@ -28,6 +28,7 @@ class DataEntrySenderConfiguration(
   private val properties: DataEntrySenderProperties
 ) {
 
+  /** Logger instance for this class. */
   companion object : KLogging()
 
   /**
