@@ -7,6 +7,7 @@ import io.holunda.polyflow.datapool.projector.DataEntryProjector
 import io.holunda.polyflow.datapool.sender.*
 import io.holunda.polyflow.datapool.sender.gateway.*
 import io.holunda.polyflow.spring.ApplicationNameBeanPostProcessor
+import io.holunda.polyflow.view.DataEntry
 import jakarta.annotation.PostConstruct
 import mu.KLogging
 import org.axonframework.commandhandling.gateway.CommandGateway
@@ -16,6 +17,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Import
+import javax.xml.crypto.Data
 
 /**
  * Polyflow sender configuration.
@@ -46,6 +48,9 @@ class DataEntrySenderConfiguration(
   @Bean
   fun loggingDataEntryCommandErrorHandler(): CommandErrorHandler = LoggingDataEntryCommandErrorHandler(logger)
 
+  /**
+   * Creates a command list gateway, if none is provided.
+   */
   @Bean
   @ConditionalOnMissingBean(CommandListGateway::class)
   fun commandListGateway(
@@ -59,6 +64,9 @@ class DataEntrySenderConfiguration(
     commandErrorHandler
   )
 
+  /**
+   * Default data entry command processor wrapping the DataEntryCommands as Axon CommandMessage containing MetaData.
+   */
   @Bean
   fun dataEntryCommandProcessor(
     dataEntrySender: DataEntrySender,
@@ -79,7 +87,7 @@ class DataEntrySenderConfiguration(
   @Bean
   fun simpleDataEntryCommandSender(
     commandListGateway: CommandListGateway
-  ) = SimpleDataEntrySender(
+  ): DataEntrySender = SimpleDataEntrySender(
     commandListGateway,
     properties
   )
