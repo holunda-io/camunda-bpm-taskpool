@@ -3,6 +3,9 @@ package io.holunda.polyflow.datapool.sender
 import io.holunda.polyflow.datapool.DataEntrySenderProperties
 import io.holunda.polyflow.datapool.sender.gateway.CommandListGateway
 
+/**
+ * Accumulates commands and sends them directly in the same transaction.
+ */
 class DirectTxAwareAccumulatingDataEntryCommandSender(
   private val commandListGateway: CommandListGateway,
   dataEntrySenderProperties: DataEntrySenderProperties
