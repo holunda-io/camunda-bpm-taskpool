@@ -8,9 +8,8 @@ import io.holunda.polyflow.datapool.sender.*
 import io.holunda.polyflow.datapool.sender.gateway.*
 import io.holunda.polyflow.spring.ApplicationNameBeanPostProcessor
 import jakarta.annotation.PostConstruct
+import mu.KLogging
 import org.axonframework.commandhandling.gateway.CommandGateway
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
@@ -27,7 +26,7 @@ class DataEntrySenderConfiguration(
   private val properties: DataEntrySenderProperties
 ) {
 
-  private val logger: Logger = LoggerFactory.getLogger(DataEntrySenderConfiguration::class.java)
+  companion object : KLogging()
 
   /**
    * Initializes the projector.
@@ -39,15 +38,13 @@ class DataEntrySenderConfiguration(
    * Default handler.
    */
   @Bean
-  fun loggingDataEntryCommandSuccessHandler(): CommandSuccessHandler =
-    LoggingDataEntryCommandSuccessHandler(LoggerFactory.getLogger(DataEntryCommandSender::class.java))
+  fun loggingDataEntryCommandSuccessHandler(): CommandSuccessHandler = LoggingDataEntryCommandSuccessHandler(logger)
 
   /**
    * Default handler.
    */
   @Bean
-  fun loggingDataEntryCommandErrorHandler(): CommandErrorHandler =
-    LoggingDataEntryCommandErrorHandler(LoggerFactory.getLogger(DataEntryCommandSender::class.java))
+  fun loggingDataEntryCommandErrorHandler(): CommandErrorHandler = LoggingDataEntryCommandErrorHandler(logger)
 
   @Bean
   @ConditionalOnMissingBean(CommandListGateway::class)

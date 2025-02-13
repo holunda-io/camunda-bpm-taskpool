@@ -3,8 +3,6 @@ package io.holunda.polyflow.taskpool.sender.gateway
 import io.holunda.polyflow.taskpool.sender.SenderProperties
 import mu.KLogging
 import org.axonframework.commandhandling.gateway.CommandGateway
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 
 /**
  * Sends  a list commands via AXON command gateway one-by-one, only if the sender property is enabled.

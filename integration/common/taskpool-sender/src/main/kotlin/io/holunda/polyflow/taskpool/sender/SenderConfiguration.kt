@@ -16,9 +16,8 @@ import io.holunda.polyflow.taskpool.sender.task.SimpleEngineTaskCommandSender
 import io.holunda.polyflow.taskpool.sender.task.accumulator.EngineTaskCommandAccumulator
 import io.holunda.polyflow.taskpool.sender.task.accumulator.ProjectingCommandAccumulator
 import jakarta.annotation.PostConstruct
+import mu.KLogging
 import org.axonframework.commandhandling.gateway.CommandGateway
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
@@ -32,7 +31,7 @@ import org.springframework.context.annotation.Bean
 @EnableConfigurationProperties(SenderProperties::class)
 class SenderConfiguration(private val senderProperties: SenderProperties) {
 
-  private val logger: Logger = LoggerFactory.getLogger(SenderConfiguration::class.java)
+  companion object : KLogging()
 
   /**
    * Creates generic task publisher.
