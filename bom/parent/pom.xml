@@ -21,7 +21,7 @@
     <springboot.version>3.2.6</springboot.version>
     <camunda-commons-typed-values.version>7.22.0</camunda-commons-typed-values.version>
 
-    <axon-bom.version>4.10.4</axon-bom.version>
+    <axon-bom.version>4.11.0</axon-bom.version>
     <axon-kotlin.version>4.10.0</axon-kotlin.version>
     <axon-gateway-extension.version>2.1.0</axon-gateway-extension.version>
 
