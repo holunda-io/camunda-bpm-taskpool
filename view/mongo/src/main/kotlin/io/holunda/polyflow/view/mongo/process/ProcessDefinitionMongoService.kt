@@ -1,16 +1,18 @@
 package io.holunda.polyflow.view.mongo.process
 
+import io.github.oshai.kotlinlogging.KotlinLogging
 import io.holunda.camunda.taskpool.api.process.definition.ProcessDefinitionRegisteredEvent
 import io.holunda.polyflow.view.ProcessDefinition
 import io.holunda.polyflow.view.query.process.ProcessDefinitionsStartableByUserQuery
 import io.holunda.polyflow.view.query.process.ReactiveProcessDefinitionApi
-import mu.KLogging
 import org.axonframework.eventhandling.EventHandler
 import org.axonframework.messaging.MetaData
 import org.axonframework.queryhandling.QueryHandler
 import org.axonframework.queryhandling.QueryUpdateEmitter
 import org.springframework.stereotype.Component
 import java.util.concurrent.CompletableFuture
+
+private val logger = KotlinLogging.logger {}
 
 /**
  * Mongo process definition projection.
@@ -20,8 +22,6 @@ class ProcessDefinitionMongoService(
   private val queryUpdateEmitter: QueryUpdateEmitter,
   private val processDefinitionRepository: ProcessDefinitionRepository
 ) : ReactiveProcessDefinitionApi {
-
-  companion object : KLogging()
 
   /**
    * On new process definition.

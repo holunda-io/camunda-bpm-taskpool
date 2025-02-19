@@ -1,6 +1,6 @@
 package io.holunda.polyflow.taskpool.collector.process.definition
 
-import mu.KLogging
+import io.github.oshai.kotlinlogging.KotlinLogging
 import org.camunda.bpm.engine.impl.interceptor.Command
 import org.camunda.bpm.engine.impl.interceptor.CommandContext
 import org.camunda.bpm.engine.impl.jobexecutor.JobHandler
@@ -9,7 +9,8 @@ import org.camunda.bpm.engine.impl.persistence.entity.ExecutionEntity
 import org.camunda.bpm.engine.impl.persistence.entity.JobEntity
 import org.camunda.bpm.engine.impl.persistence.entity.MessageEntity
 import org.springframework.context.ApplicationEventPublisher
-import org.springframework.stereotype.Component
+
+private val logger = KotlinLogging.logger {}
 
 /**
  * Sends out commands containing information about deployed process definitions.
@@ -22,11 +23,16 @@ class RefreshProcessDefinitionsJobHandler(
   private val applicationEventPublisher: ApplicationEventPublisher
 ) : JobHandler<RefreshProcessDefinitionsJobConfiguration> {
 
-  companion object : KLogging() {
+  companion object {
     const val TYPE = "RefreshProcessDefinitionsJobHandler"
   }
 
-  override fun execute(configuration: RefreshProcessDefinitionsJobConfiguration, execution: ExecutionEntity?, commandContext: CommandContext, tenantId: String?) {
+  override fun execute(
+    configuration: RefreshProcessDefinitionsJobConfiguration,
+    execution: ExecutionEntity?,
+    commandContext: CommandContext,
+    tenantId: String?
+  ) {
 
     // deliver new commands on deployment of processes only.
     val commands = processDefinitionService.getProcessDefinitions(
@@ -49,8 +55,6 @@ class RefreshProcessDefinitionsJobHandler(
  * Command to inform about new process definition.
  */
 data class RefreshProcessDefinitionsJobCommand(val processDefinitionKey: String) : Command<String> {
-
-  companion object : KLogging()
 
   override fun execute(commandContext: CommandContext): String {
     logger.info { "EVENTING-021: New process definition detected. Sending the command for ${this.processDefinitionKey}." }

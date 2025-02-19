@@ -1,11 +1,10 @@
 package io.holunda.polyflow.view.simple.service
 
+import io.github.oshai.kotlinlogging.KotlinLogging
 import io.holunda.camunda.taskpool.api.process.definition.ProcessDefinitionRegisteredEvent
-import io.holunda.polyflow.view.DataEntry
 import io.holunda.polyflow.view.ProcessDefinition
 import io.holunda.polyflow.view.query.process.ProcessDefinitionApi
 import io.holunda.polyflow.view.query.process.ProcessDefinitionsStartableByUserQuery
-import mu.KLogging
 import org.axonframework.config.ProcessingGroup
 import org.axonframework.eventhandling.EventHandler
 import org.axonframework.queryhandling.QueryHandler
@@ -13,6 +12,8 @@ import org.axonframework.queryhandling.QueryUpdateEmitter
 import org.springframework.stereotype.Component
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
+
+private val logger = KotlinLogging.logger {}
 
 /**
  * Simple projection for process definitions.
@@ -23,8 +24,6 @@ class SimpleProcessDefinitionService(
   private val queryUpdateEmitter: QueryUpdateEmitter,
   private val processDefinitions: MutableMap<String, TreeSet<ProcessDefinition>> = ConcurrentHashMap()
 ) : ProcessDefinitionApi {
-
-  companion object : KLogging()
 
   /**
    * React on process definition registration.

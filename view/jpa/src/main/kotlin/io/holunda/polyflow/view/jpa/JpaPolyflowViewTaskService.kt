@@ -1,6 +1,7 @@
 package io.holunda.polyflow.view.jpa
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import io.github.oshai.kotlinlogging.KotlinLogging
 import io.holixon.axon.gateway.query.RevisionValue
 import io.holunda.camunda.taskpool.api.task.*
 import io.holunda.polyflow.view.Task
@@ -25,7 +26,6 @@ import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.isAuthorizedFo
 import io.holunda.polyflow.view.jpa.update.updateTaskQuery
 import io.holunda.polyflow.view.query.PageableSortableQuery
 import io.holunda.polyflow.view.query.task.*
-import mu.KLogging
 import org.axonframework.config.ProcessingGroup
 import org.axonframework.eventhandling.EventHandler
 import org.axonframework.messaging.MetaData
@@ -34,6 +34,8 @@ import org.axonframework.queryhandling.QueryUpdateEmitter
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Component
 import java.util.*
+
+private val logger = KotlinLogging.logger {}
 
 /**
  * Implementation of the Polyflow Task View API using JPA to create the persistence model.
@@ -48,7 +50,7 @@ class JpaPolyflowViewTaskService(
   val polyflowJpaViewProperties: PolyflowJpaViewProperties
 ) : TaskApi {
 
-  companion object : KLogging() {
+  companion object {
     const val PROCESSING_GROUP = "io.holunda.polyflow.view.jpa.service.task"
   }
 

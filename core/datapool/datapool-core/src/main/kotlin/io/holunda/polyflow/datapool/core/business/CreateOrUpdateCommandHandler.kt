@@ -1,10 +1,10 @@
 package io.holunda.polyflow.datapool.core.business
 
+import io.github.oshai.kotlinlogging.KotlinLogging
 import io.holunda.camunda.taskpool.api.business.CreateDataEntryCommand
 import io.holunda.camunda.taskpool.api.business.CreateOrUpdateDataEntryCommand
 import io.holunda.camunda.taskpool.api.business.UpdateDataEntryCommand
 import io.holunda.polyflow.datapool.core.DeletionStrategy
-import mu.KLogging
 import org.axonframework.commandhandling.CommandHandler
 import org.axonframework.eventsourcing.EventSourcingRepository
 import org.axonframework.messaging.MetaData
@@ -12,6 +12,8 @@ import org.axonframework.modelling.command.Aggregate
 import org.axonframework.modelling.command.AggregateNotFoundException
 import org.springframework.stereotype.Component
 import java.util.*
+
+private val logger = KotlinLogging.logger {}
 
 /**
  * Handler taking care of existence of data entry aggregate.
@@ -21,8 +23,6 @@ class CreateOrUpdateCommandHandler(
   private val eventSourcingRepository: EventSourcingRepository<DataEntryAggregate>,
   private val deletionStrategy: DeletionStrategy
 ) {
-
-  companion object : KLogging()
 
   /**
    * Receives create-or-update and decides what to do.

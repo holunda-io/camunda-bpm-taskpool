@@ -1,9 +1,11 @@
 package io.holunda.polyflow.taskpool.collector.task.assigner
 
-import io.holunda.camunda.taskpool.api.task.*
+import io.holunda.camunda.taskpool.api.task.AddCandidateUsersCommand
+import io.holunda.camunda.taskpool.api.task.AssignTaskCommand
+import io.holunda.camunda.taskpool.api.task.EngineTaskCommand
+import io.holunda.camunda.taskpool.api.task.SourceReference
 import io.holunda.polyflow.taskpool.sender.process.variable.CreateSingleProcessVariableCommand
 import io.holunda.polyflow.taskpool.sender.process.variable.UpdateSingleProcessVariableCommand
-import mu.KLogging
 import org.camunda.bpm.engine.TaskService
 import org.springframework.context.event.EventListener
 
@@ -19,8 +21,6 @@ class ProcessVariableChangeAssigningService(
   private val mapping: ProcessVariableTaskAssignerMapping
 ) {
 
-  companion object : KLogging()
-
   /**
    * React on new variables created.
    */
@@ -35,6 +35,7 @@ class ProcessVariableChangeAssigningService(
           assignee = command.value.value.asStringValue()
         )
       }
+
       mapping.candidateUsers -> {
         if (command.value.value != null) {
           AddCandidateUsersCommand(
@@ -45,6 +46,7 @@ class ProcessVariableChangeAssigningService(
           null
         }
       }
+
       mapping.candidateGroups -> {
         null
       }
@@ -66,6 +68,7 @@ class ProcessVariableChangeAssigningService(
           assignee = command.value.value.asStringValue()
         )
       }
+
       mapping.candidateUsers -> {
         if (command.value.value != null) {
           AddCandidateUsersCommand(
@@ -76,6 +79,7 @@ class ProcessVariableChangeAssigningService(
           null
         }
       }
+
       mapping.candidateGroups -> {
         null
       }

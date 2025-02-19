@@ -1,7 +1,7 @@
 package io.holunda.polyflow.taskpool.collector.task
 
+import io.github.oshai.kotlinlogging.KotlinLogging
 import io.holunda.camunda.taskpool.api.task.EngineTaskCommandFilter
-import io.holunda.polyflow.taskpool.collector.CamundaTaskpoolCollectorConfiguration
 import io.holunda.polyflow.taskpool.collector.CamundaTaskpoolCollectorProperties
 import io.holunda.polyflow.taskpool.collector.TaskAssignerType
 import io.holunda.polyflow.taskpool.collector.TaskCollectorEnricherType
@@ -26,6 +26,8 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+
+private val logger = KotlinLogging.logger {}
 
 /**
  * Constructs the task collector components.
@@ -147,7 +149,7 @@ class TaskCollectorConfiguration(
   ): TaskServiceCollectorService {
 
     if (engineTaskCommandFilter == null) {
-      CamundaTaskpoolCollectorConfiguration.logger.warn { "Task importer is configured, but no task filter is provided. All tasks commands will be rejected." }
+      logger.warn { "Task importer is configured, but no task filter is provided. All tasks commands will be rejected." }
     }
 
     return TaskServiceCollectorService(
@@ -157,6 +159,5 @@ class TaskCollectorConfiguration(
       applicationEventPublisher = applicationEventPublisher,
       engineTaskCommandFilter = engineTaskCommandFilter ?: object : EngineTaskCommandFilter {}
     )
-
   }
 }

@@ -2,18 +2,20 @@ package io.holunda.polyflow.bus.jackson.config
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import io.github.oshai.kotlinlogging.KotlinLogging
 import io.holunda.polyflow.bus.jackson.annotation.ConditionalOnMissingQualifiedBean
 import io.holunda.polyflow.bus.jackson.configurePolyflowJacksonObjectMapper
-import mu.KLogging
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.context.annotation.Bean
+
+private val logger = KotlinLogging.logger {}
 
 /**
  * No @configuration required, used as autoconfiguration.
  */
 class FallbackPayloadObjectMapperAutoConfiguration {
 
-  companion object : KLogging() {
+  companion object {
     const val PAYLOAD_OBJECT_MAPPER = "payloadObjectMapper"
   }
 

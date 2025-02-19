@@ -1,9 +1,11 @@
 package io.holunda.polyflow.taskpool.collector.process.instance
 
+import io.github.oshai.kotlinlogging.KotlinLogging
 import io.holunda.camunda.taskpool.api.process.instance.ProcessInstanceCommand
 import io.holunda.polyflow.taskpool.sender.process.instance.ProcessInstanceCommandSender
-import mu.KLogging
 import org.springframework.context.event.EventListener
+
+private val logger = KotlinLogging.logger {}
 
 /**
  * Default process instance processor.
@@ -11,7 +13,6 @@ import org.springframework.context.event.EventListener
 class ProcessInstanceProcessor(
   private val processInstanceCommandSender: ProcessInstanceCommandSender
 ) {
-  companion object : KLogging()
 
   /**
    * Reacts on incoming process instance commands.
@@ -19,7 +20,7 @@ class ProcessInstanceProcessor(
    */
   @EventListener
   fun process(command: ProcessInstanceCommand) {
-    if (logger.isTraceEnabled) {
+    if (logger.isTraceEnabled()) {
       logger.trace { "COLLECTOR-006: Sending process instance command: $command" }
     }
     processInstanceCommandSender.send(command)

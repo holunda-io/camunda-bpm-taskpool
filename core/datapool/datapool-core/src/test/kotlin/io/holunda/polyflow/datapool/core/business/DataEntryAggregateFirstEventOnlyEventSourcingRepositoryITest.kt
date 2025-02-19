@@ -1,8 +1,8 @@
 package io.holunda.polyflow.datapool.core.business
 
+import io.github.oshai.kotlinlogging.KotlinLogging
 import io.holunda.camunda.taskpool.api.business.*
 import io.holunda.polyflow.datapool.core.itest.TestApplication
-import mu.KLogging
 import org.assertj.core.api.Assertions.assertThat
 import org.axonframework.commandhandling.gateway.CommandGateway
 import org.axonframework.eventhandling.EventBus
@@ -16,13 +16,12 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit.jupiter.SpringExtension
 
+private val logger = KotlinLogging.logger {}
 
 @SpringBootTest(classes = [TestApplication::class])
 @ActiveProfiles("itest-first-event-only")
 @ExtendWith(SpringExtension::class)
 internal class DataEntryAggregateFirstEventOnlyEventSourcingRepositoryITest {
-
-  companion object: KLogging()
 
   @Autowired
   private lateinit var commandGateway: CommandGateway

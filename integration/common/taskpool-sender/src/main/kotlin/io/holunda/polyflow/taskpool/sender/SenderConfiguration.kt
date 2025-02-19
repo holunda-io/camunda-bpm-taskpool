@@ -1,6 +1,7 @@
 package io.holunda.polyflow.taskpool.sender
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import io.github.oshai.kotlinlogging.KotlinLogging
 import io.holunda.polyflow.bus.jackson.config.FallbackPayloadObjectMapperAutoConfiguration.Companion.PAYLOAD_OBJECT_MAPPER
 import io.holunda.polyflow.taskpool.sender.gateway.*
 import io.holunda.polyflow.taskpool.sender.process.definition.ProcessDefinitionCommandSender
@@ -17,8 +18,6 @@ import io.holunda.polyflow.taskpool.sender.task.accumulator.EngineTaskCommandAcc
 import io.holunda.polyflow.taskpool.sender.task.accumulator.ProjectingCommandAccumulator
 import jakarta.annotation.PostConstruct
 import org.axonframework.commandhandling.gateway.CommandGateway
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
@@ -26,13 +25,13 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.context.annotation.Bean
 
+private val logger = KotlinLogging.logger {}
+
 /**
  * Main configuration of the taskpool sender component.
  */
 @EnableConfigurationProperties(SenderProperties::class)
 class SenderConfiguration(private val senderProperties: SenderProperties) {
-
-  private val logger: Logger = LoggerFactory.getLogger(SenderConfiguration::class.java)
 
   /**
    * Creates generic task publisher.
@@ -134,24 +133,24 @@ class SenderConfiguration(private val senderProperties: SenderProperties) {
   @PostConstruct
   fun printSenderConfiguration() {
     if (senderProperties.task.enabled) {
-      logger.info("SENDER-011: Taskpool task commands will be distributed over command bus.")
+      logger.info { "SENDER-011: Taskpool task commands will be distributed over command bus." }
     } else {
-      logger.info("SENDER-012: Taskpool task command distribution is disabled by property.")
+      logger.info { "SENDER-012: Taskpool task command distribution is disabled by property." }
     }
     if (senderProperties.processDefinition.enabled) {
-      logger.info("SENDER-013: Taskpool process definition commands will be distributed over command bus.")
+      logger.info { "SENDER-013: Taskpool process definition commands will be distributed over command bus." }
     } else {
-      logger.info("SENDER-014: Taskpool process definition command distribution is disabled by property.")
+      logger.info { "SENDER-014: Taskpool process definition command distribution is disabled by property." }
     }
     if (senderProperties.processInstance.enabled) {
-      logger.info("SENDER-015: Taskpool process instance commands will be distributed over command bus.")
+      logger.info { "SENDER-015: Taskpool process instance commands will be distributed over command bus." }
     } else {
-      logger.info("SENDER-016: Taskpool process instance command distribution is disabled by property.")
+      logger.info { "SENDER-016: Taskpool process instance command distribution is disabled by property." }
     }
     if (senderProperties.processVariable.enabled) {
-      logger.info("SENDER-017: Taskpool process variable commands will be distributed over command bus.")
+      logger.info { "SENDER-017: Taskpool process variable commands will be distributed over command bus." }
     } else {
-      logger.info("SENDER-018: Taskpool process variable command distribution is disabled by property.")
+      logger.info { "SENDER-018: Taskpool process variable command distribution is disabled by property." }
     }
   }
 

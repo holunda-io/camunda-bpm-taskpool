@@ -1,6 +1,7 @@
 package io.holunda.polyflow.taskpool.sender.process.variable
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import io.github.oshai.kotlinlogging.KotlinLogging
 import io.holunda.camunda.taskpool.api.process.variable.ChangeProcessVariablesForExecutionCommand
 import io.holunda.camunda.taskpool.api.process.variable.ProcessVariableCreate
 import io.holunda.camunda.taskpool.api.process.variable.ProcessVariableDelete
@@ -8,7 +9,8 @@ import io.holunda.camunda.taskpool.api.process.variable.ProcessVariableUpdate
 import io.holunda.polyflow.taskpool.sender.SenderProperties
 import io.holunda.polyflow.taskpool.sender.gateway.CommandListGateway
 import io.holunda.polyflow.taskpool.serialize
-import mu.KLogging
+
+private val logger = KotlinLogging.logger {}
 
 /**
  * Simple sender for process variable commands.
@@ -18,7 +20,6 @@ internal class SimpleProcessVariableCommandSender(
   private val senderProperties: SenderProperties,
   private val objectMapper: ObjectMapper
 ) : ProcessVariableCommandSender {
-  companion object : KLogging()
 
   override fun send(command: SingleProcessVariableCommand) {
     if (senderProperties.enabled && senderProperties.processVariable.enabled) {
@@ -37,6 +38,7 @@ internal class SimpleProcessVariableCommandSender(
                 )
               )
             )
+
             is UpdateSingleProcessVariableCommand -> ChangeProcessVariablesForExecutionCommand(
               sourceReference = command.sourceReference,
               variableChanges = listOf(
@@ -49,6 +51,7 @@ internal class SimpleProcessVariableCommandSender(
                 )
               )
             )
+
             is DeleteSingleProcessVariableCommand -> ChangeProcessVariablesForExecutionCommand(
               sourceReference = command.sourceReference,
               variableChanges = listOf(
@@ -60,6 +63,7 @@ internal class SimpleProcessVariableCommandSender(
                 )
               )
             )
+
             else -> throw IllegalArgumentException("Unknown variable command received $command")
           }
         )

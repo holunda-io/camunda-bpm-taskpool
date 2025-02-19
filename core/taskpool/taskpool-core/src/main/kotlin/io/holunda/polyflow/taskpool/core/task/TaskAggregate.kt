@@ -1,16 +1,18 @@
 package io.holunda.polyflow.taskpool.core.task
 
+import io.github.oshai.kotlinlogging.KotlinLogging
 import io.holunda.camunda.taskpool.api.task.*
 import io.holunda.camunda.taskpool.mapper.task.*
 import io.holunda.camunda.taskpool.model.Task
 import io.holunda.polyflow.taskpool.core.TaskPoolCoreConfiguration
-import mu.KLogging
 import org.axonframework.commandhandling.CommandHandler
 import org.axonframework.eventsourcing.EventSourcingHandler
 import org.axonframework.messaging.MetaData
 import org.axonframework.modelling.command.AggregateIdentifier
 import org.axonframework.modelling.command.AggregateLifecycle
 import org.axonframework.spring.stereotype.Aggregate
+
+private val logger = KotlinLogging.logger {}
 
 /**
  * Main representation of the tasks available in the system.
@@ -20,8 +22,6 @@ import org.axonframework.spring.stereotype.Aggregate
   cache = TaskPoolCoreConfiguration.TASK_CACHE,
 )
 class TaskAggregate() {
-
-  companion object : KLogging()
 
   @AggregateIdentifier
   private lateinit var id: String

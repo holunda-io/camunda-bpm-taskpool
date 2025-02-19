@@ -1,12 +1,12 @@
 package io.holunda.polyflow.datapool.core
 
-import mu.KLogging
+import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.context.annotation.Import
 
+private val logger = KotlinLogging.logger {}
 
 /**
  * Configuration of polyflow data pool core.
@@ -17,7 +17,6 @@ import org.springframework.context.annotation.Import
 )
 class DataPoolCoreConfiguration {
 
-  companion object: KLogging()
   /**
    * Deletion strategy for lax handling of updates after deletion (default).
    */

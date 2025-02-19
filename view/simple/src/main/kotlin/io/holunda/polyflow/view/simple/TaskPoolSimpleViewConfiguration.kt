@@ -1,10 +1,10 @@
 package io.holunda.polyflow.view.simple
 
+import io.github.oshai.kotlinlogging.KotlinLogging
 import io.holunda.polyflow.view.query.FilterQuery
 import io.holunda.polyflow.view.query.QueryResult
 import io.holunda.polyflow.view.simple.service.SimpleServiceViewProcessingGroup
 import jakarta.annotation.PostConstruct
-import mu.KLogging
 import org.axonframework.config.EventProcessingConfigurer
 import org.axonframework.eventhandling.tokenstore.inmemory.InMemoryTokenStore
 import org.axonframework.queryhandling.QueryUpdateEmitter
@@ -12,14 +12,14 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
 
+private val logger = KotlinLogging.logger {}
+
 /**
  * Configuration for in-memory polyflow view.
  */
 @ComponentScan
 @Configuration
 class TaskPoolSimpleViewConfiguration {
-
-  companion object : KLogging()
 
   /**
    * Configures the in-memory (simple) view to use an in-memory token store, to make sure that the

@@ -1,5 +1,6 @@
 package io.holunda.polyflow.view.simple.service
 
+import io.github.oshai.kotlinlogging.KotlinLogging
 import io.holixon.axon.gateway.query.QueryResponseMessageResponseType
 import io.holixon.axon.gateway.query.RevisionValue
 import io.holunda.camunda.taskpool.api.business.*
@@ -9,7 +10,6 @@ import io.holunda.polyflow.view.filter.filterByPredicate
 import io.holunda.polyflow.view.filter.toCriteria
 import io.holunda.polyflow.view.query.data.*
 import io.holunda.polyflow.view.sort.dataComparator
-import mu.KLogging
 import org.axonframework.config.ProcessingGroup
 import org.axonframework.eventhandling.EventHandler
 import org.axonframework.messaging.MetaData
@@ -17,8 +17,9 @@ import org.axonframework.queryhandling.QueryHandler
 import org.axonframework.queryhandling.QueryResponseMessage
 import org.axonframework.queryhandling.QueryUpdateEmitter
 import org.springframework.stereotype.Component
-import java.util.*
 import java.util.concurrent.ConcurrentHashMap
+
+private val logger = KotlinLogging.logger {}
 
 /**
  * Data entry in-memory projection.
@@ -30,8 +31,6 @@ class SimpleDataEntryService(
   private val revisionSupport: RevisionSupport = RevisionSupport(),
   private val dataEntries: ConcurrentHashMap<String, DataEntry> = ConcurrentHashMap<String, DataEntry>()
 ) : DataEntryApi {
-
-  companion object : KLogging()
 
   /**
    * Creates new data entry.
