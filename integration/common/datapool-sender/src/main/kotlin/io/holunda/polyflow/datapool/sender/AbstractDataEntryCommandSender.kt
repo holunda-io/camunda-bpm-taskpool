@@ -6,6 +6,7 @@ import io.holunda.camunda.variable.serializer.serialize
 import io.holunda.polyflow.datapool.DataEntrySenderProperties
 import io.holunda.polyflow.datapool.projector.DataEntryProjectionSupplier
 import io.holunda.polyflow.datapool.projector.DataEntryProjector
+import org.axonframework.commandhandling.CommandMessage
 import org.axonframework.commandhandling.GenericCommandMessage
 import org.axonframework.messaging.MetaData
 import org.camunda.bpm.engine.variable.VariableMap
@@ -16,9 +17,8 @@ import org.slf4j.LoggerFactory
 /**
  * Simple data entry command sender.
  */
-class DataEntryCommandProcessor(
-  private val dataEntrySender: DataEntrySender,
-  private val properties: DataEntrySenderProperties,
+abstract class AbstractDataEntryCommandSender(
+  val properties: DataEntrySenderProperties,
   private val dataEntryProjector: DataEntryProjector,
   private val objectMapper: ObjectMapper
 ) : DataEntryCommandSender {
@@ -95,7 +95,7 @@ class DataEntryCommandProcessor(
       val message = GenericCommandMessage
         .asCommandMessage<CreateOrUpdateDataEntryCommand>(command)
         .withMetaData(metaData)
-      dataEntrySender.send(message)
+      send(message)
     } else {
       logger.debug("Would have sent change command $command")
     }
@@ -106,7 +106,7 @@ class DataEntryCommandProcessor(
       val message = GenericCommandMessage
         .asCommandMessage<DeleteDataEntryCommand>(command)
         .withMetaData(metaData)
-      dataEntrySender.send(message)
+      send(message)
     } else {
       logger.debug("Would have sent delete command $command")
     }
@@ -117,10 +117,12 @@ class DataEntryCommandProcessor(
       val message = GenericCommandMessage
         .asCommandMessage<AnonymizeDataEntryCommand>(command)
         .withMetaData(metaData)
-      dataEntrySender.send(message)
+      send(message)
     } else {
       logger.debug("Would have sent anonymize command $command")
     }
   }
+
+  abstract fun <C> send(command: CommandMessage<C>)
 }
 

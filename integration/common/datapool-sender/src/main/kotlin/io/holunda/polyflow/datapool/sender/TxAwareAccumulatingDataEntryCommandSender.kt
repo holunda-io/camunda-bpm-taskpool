@@ -1,6 +1,8 @@
 package io.holunda.polyflow.datapool.sender
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import io.holunda.polyflow.datapool.DataEntrySenderProperties
+import io.holunda.polyflow.datapool.projector.DataEntryProjector
 import mu.KLogging
 import org.axonframework.commandhandling.CommandMessage
 import org.springframework.transaction.support.TransactionSynchronization
@@ -10,8 +12,10 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
  * Collects commands of one transaction, accumulates them to one command and sends it after TX commit.
  */
 abstract class TxAwareAccumulatingDataEntryCommandSender(
-  protected val dataEntrySenderProperties: DataEntrySenderProperties
-) : DataEntrySender {
+  properties: DataEntrySenderProperties,
+  dataEntryProjector: DataEntryProjector,
+  objectMapper: ObjectMapper
+) : AbstractDataEntryCommandSender(properties, dataEntryProjector, objectMapper) {
 
   /** Logger instance for this class. */
   companion object : KLogging()
@@ -35,7 +39,7 @@ abstract class TxAwareAccumulatingDataEntryCommandSender(
          * Execute send if flag is set to send inside the TX.
          */
         override fun beforeCommit(readOnly: Boolean) {
-          if (dataEntrySenderProperties.sendWithinTransaction) {
+          if (properties.sendWithinTransaction) {
             send()
           }
         }
@@ -44,7 +48,7 @@ abstract class TxAwareAccumulatingDataEntryCommandSender(
          * Execute send if flag is set to send outside the TX.
          */
         override fun afterCommit() {
-          if (!dataEntrySenderProperties.sendWithinTransaction) {
+          if (!properties.sendWithinTransaction) {
             send()
           }
         }

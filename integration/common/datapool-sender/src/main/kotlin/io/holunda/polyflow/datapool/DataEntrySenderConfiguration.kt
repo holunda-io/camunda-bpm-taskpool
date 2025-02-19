@@ -7,7 +7,6 @@ import io.holunda.polyflow.datapool.projector.DataEntryProjector
 import io.holunda.polyflow.datapool.sender.*
 import io.holunda.polyflow.datapool.sender.gateway.*
 import io.holunda.polyflow.spring.ApplicationNameBeanPostProcessor
-import io.holunda.polyflow.view.DataEntry
 import jakarta.annotation.PostConstruct
 import mu.KLogging
 import org.axonframework.commandhandling.gateway.CommandGateway
@@ -17,7 +16,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Import
-import javax.xml.crypto.Data
 
 /**
  * Polyflow sender configuration.
@@ -66,31 +64,19 @@ class DataEntrySenderConfiguration(
   )
 
   /**
-   * Default data entry command processor wrapping the DataEntryCommands as Axon CommandMessage containing MetaData.
-   */
-  @Bean
-  fun dataEntryCommandProcessor(
-    dataEntrySender: DataEntrySender,
-    dataEntryProjector: DataEntryProjector,
-    @Qualifier(PAYLOAD_OBJECT_MAPPER)
-    objectMapper: ObjectMapper,
-  ): DataEntryCommandSender = DataEntryCommandProcessor(
-    dataEntrySender = dataEntrySender,
-    properties = properties,
-    dataEntryProjector = dataEntryProjector,
-    objectMapper = objectMapper
-  )
-
-  /**
    * Creates simple (direct) command sender for data entries.
    */
   @ConditionalOnProperty(value = ["polyflow.integration.sender.data-entry.type"], havingValue = "simple", matchIfMissing = true)
   @Bean
   fun simpleDataEntryCommandSender(
-    commandListGateway: CommandListGateway
-  ): DataEntrySender = SimpleDataEntrySender(
+    commandListGateway: CommandListGateway,
+    dataEntryProjector: DataEntryProjector,
+    objectMapper: ObjectMapper
+  ): AbstractDataEntryCommandSender = SimpleDataEntrySender(
     commandListGateway,
-    properties
+    properties,
+    dataEntryProjector,
+    objectMapper
   )
 
   /**
@@ -99,11 +85,15 @@ class DataEntrySenderConfiguration(
   @Bean
   @ConditionalOnProperty(value = ["polyflow.integration.sender.data-entry.type"], havingValue = "tx", matchIfMissing = false)
   fun txAwareDataEntryCommandSender(
-    commandListGateway: CommandListGateway
-  ): DataEntrySender =
+    commandListGateway: CommandListGateway,
+    dataEntryProjector: DataEntryProjector,
+    objectMapper: ObjectMapper
+  ): AbstractDataEntryCommandSender =
     DirectTxAwareAccumulatingDataEntryCommandSender(
-      commandListGateway = commandListGateway,
-      properties
+      commandListGateway,
+      properties,
+      dataEntryProjector,
+      objectMapper
     )
 
   /**

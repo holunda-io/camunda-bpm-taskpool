@@ -1,6 +1,8 @@
 package io.holunda.polyflow.datapool.sender
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import io.holunda.polyflow.datapool.DataEntrySenderProperties
+import io.holunda.polyflow.datapool.projector.DataEntryProjector
 import io.holunda.polyflow.datapool.sender.gateway.CommandListGateway
 
 /**
@@ -8,9 +10,11 @@ import io.holunda.polyflow.datapool.sender.gateway.CommandListGateway
  */
 class DirectTxAwareAccumulatingDataEntryCommandSender(
   private val commandListGateway: CommandListGateway,
-  dataEntrySenderProperties: DataEntrySenderProperties
+  properties: DataEntrySenderProperties,
+  dataEntryProjector: DataEntryProjector,
+  objectMapper: ObjectMapper
 ) : TxAwareAccumulatingDataEntryCommandSender(
-  dataEntrySenderProperties = dataEntrySenderProperties
+  properties, dataEntryProjector, objectMapper
 ) {
 
   override fun send() {
@@ -19,7 +23,7 @@ class DirectTxAwareAccumulatingDataEntryCommandSender(
       logger.debug("SENDER-105: Handling ${commands.size} commands for data entry $identifier")
       // handle messages for every data entry
       if (// FIXME: senderProperties.enabled &&
-          dataEntrySenderProperties.enabled) {
+        properties.enabled) {
         commandListGateway.sendToGateway(commands)
         logger.trace {
           "SENDER-TRACE: sending commands for data entry [${commands.first().identifier}]: " + commands.joinToString(
