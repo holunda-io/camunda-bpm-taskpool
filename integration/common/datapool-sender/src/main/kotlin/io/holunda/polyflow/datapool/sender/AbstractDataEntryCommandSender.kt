@@ -123,6 +123,10 @@ abstract class AbstractDataEntryCommandSender(
     }
   }
 
+  /**
+   * Sends a command message.
+   * @param command command message to send.
+   */
   abstract fun <C> send(command: CommandMessage<C>)
 }
 
