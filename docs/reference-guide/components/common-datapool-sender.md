@@ -43,8 +43,17 @@ In order to control sending of commands to command gateway, the command sender a
 `polyflow.integration.sender.data-entry.enabled` (default is `true`) is available. If disabled, the command sender
 will log any command instead of sending it to the command gateway.
 
-In addition, you can control by the property `polyflow.integration.sender.data-entry.type` if you want to use the default command sender or provide your own implementation.
-The default provided command sender (type: `simple`) just sends the commands synchronously using Axon Command Bus.
+### Command sender types
+
+Out of the box, Polyflow supplies two command senders to match your deployment scenario. The property
+`polyflow.integration.sender.data-entry.type`  is used to switch between different commands senders.
+
+
+| Sender type          | Property value | Description                                                                                                 |
+|----------------------|----------------|-------------------------------------------------------------------------------------------------------------|
+| Simple               | simple         | Simple command sender, used to send every command directly to Command Bus.                                  |
+| Transactional Direct | tx             | Transactional accumulating command sender, sending accumulated commands along with the running transaction. |
+| Custom               | custom         | Setting to provide your own sender implementation                                                           |
 
 !!! note
        If you want to implement a custom command sending, please provide your own implementation of the interface `DataEntryCommandSender`
