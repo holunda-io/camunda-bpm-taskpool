@@ -17,7 +17,6 @@ import io.holunda.polyflow.taskpool.sender.task.SimpleEngineTaskCommandSender
 import io.holunda.polyflow.taskpool.sender.task.accumulator.EngineTaskCommandAccumulator
 import io.holunda.polyflow.taskpool.sender.task.accumulator.ProjectingCommandAccumulator
 import jakarta.annotation.PostConstruct
-import mu.KLogging
 import org.axonframework.commandhandling.gateway.CommandGateway
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
@@ -35,7 +34,7 @@ private val logger = KotlinLogging.logger {}
 class SenderConfiguration(private val senderProperties: SenderProperties) {
 
   /** Logger instance for this class. */
-  companion object : KLogging()
+  private val logger = KotlinLogging.logger {}
 
   /**
    * Creates generic task publisher.

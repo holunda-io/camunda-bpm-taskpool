@@ -1,7 +1,7 @@
 package io.holunda.polyflow.datapool.sender
 
+import io.github.oshai.kotlinlogging.KotlinLogging
 import io.holunda.camunda.taskpool.api.business.*
-import mu.KLogging
 import org.axonframework.commandhandling.CommandResultMessage
 import org.axonframework.messaging.MetaData
 import java.util.function.BiFunction
@@ -11,7 +11,11 @@ import java.util.function.BiFunction
  */
 interface DataEntryCommandSender {
 
-  companion object : KLogging()
+  /** Logger instance for all implementations of this interface. */
+  companion object {
+    val logger = KotlinLogging.logger {}
+  }
+
   /**
    * Sends command about data entry creation or update.
    * @param entryType type of entry.

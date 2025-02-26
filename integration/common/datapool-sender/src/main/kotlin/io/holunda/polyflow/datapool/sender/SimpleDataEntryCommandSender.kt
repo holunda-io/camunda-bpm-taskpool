@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import io.holunda.polyflow.datapool.DataEntrySenderProperties
 import io.holunda.polyflow.datapool.projector.DataEntryProjector
 import io.holunda.polyflow.datapool.sender.gateway.CommandListGateway
-import mu.KLogging
 import org.axonframework.commandhandling.CommandMessage
 
 /**

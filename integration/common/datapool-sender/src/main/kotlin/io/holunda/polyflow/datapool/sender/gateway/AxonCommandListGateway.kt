@@ -1,7 +1,7 @@
 package io.holunda.polyflow.datapool.sender.gateway
 
+import io.github.oshai.kotlinlogging.KotlinLogging
 import io.holunda.polyflow.datapool.DataPoolSenderProperties
-import mu.KLogging
 import org.axonframework.commandhandling.gateway.CommandGateway
 
 /**
@@ -15,7 +15,7 @@ class AxonCommandListGateway(
 ) : CommandListGateway {
 
   /** Logger instance for this class. */
-  companion object : KLogging()
+  private val logger = KotlinLogging.logger {}
 
   /**
    * Sends data to gateway. Ignores any errors, but logs.

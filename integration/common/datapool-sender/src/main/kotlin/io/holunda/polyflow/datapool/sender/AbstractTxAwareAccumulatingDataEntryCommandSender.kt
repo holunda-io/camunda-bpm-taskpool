@@ -3,7 +3,6 @@ package io.holunda.polyflow.datapool.sender
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.holunda.polyflow.datapool.DataEntrySenderProperties
 import io.holunda.polyflow.datapool.projector.DataEntryProjector
-import mu.KLogging
 import org.axonframework.commandhandling.CommandMessage
 import org.springframework.transaction.support.TransactionSynchronization
 import org.springframework.transaction.support.TransactionSynchronizationManager

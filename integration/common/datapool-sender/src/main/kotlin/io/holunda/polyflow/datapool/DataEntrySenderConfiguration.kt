@@ -1,13 +1,15 @@
 package io.holunda.polyflow.datapool
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import io.github.oshai.kotlinlogging.KotlinLogging
 import io.holunda.polyflow.datapool.projector.DataEntryProjectionSupplier
 import io.holunda.polyflow.datapool.projector.DataEntryProjector
-import io.holunda.polyflow.datapool.sender.*
+import io.holunda.polyflow.datapool.sender.AbstractDataEntryCommandSender
+import io.holunda.polyflow.datapool.sender.DirectTxAwareAccumulatingDataEntryCommandSender
+import io.holunda.polyflow.datapool.sender.SimpleDataEntryCommandSender
 import io.holunda.polyflow.datapool.sender.gateway.*
 import io.holunda.polyflow.spring.ApplicationNameBeanPostProcessor
 import jakarta.annotation.PostConstruct
-import mu.KLogging
 import org.axonframework.commandhandling.gateway.CommandGateway
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
@@ -25,7 +27,7 @@ class DataEntrySenderConfiguration(
 ) {
 
   /** Logger instance for this class. */
-  companion object : KLogging()
+  private val logger = KotlinLogging.logger {}
 
   /**
    * Initializes the projector.
