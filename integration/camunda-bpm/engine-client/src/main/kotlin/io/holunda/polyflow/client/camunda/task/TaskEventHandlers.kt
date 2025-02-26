@@ -1,12 +1,14 @@
 package io.holunda.polyflow.client.camunda.task
 
+import io.github.oshai.kotlinlogging.KotlinLogging
 import io.holunda.camunda.taskpool.api.task.*
 import io.holunda.polyflow.client.camunda.CamundaEngineClientProperties
-import mu.KLogging
 import org.axonframework.eventhandling.EventHandler
 import org.camunda.bpm.engine.ProcessEngineException
 import org.camunda.bpm.engine.TaskService
 import org.springframework.stereotype.Component
+
+private val logger = KotlinLogging.logger {}
 
 /**
  * Handles task events controls Camunda Task Service.
@@ -16,8 +18,6 @@ class TaskEventHandlers(
   private val taskService: TaskService,
   private val properties: CamundaEngineClientProperties
 ) {
-
-  companion object : KLogging()
 
   /**
    * Engine reaction to claim.
@@ -35,7 +35,7 @@ class TaskEventHandlers(
           logger.error { "CLIENT-004: Task with id ${event.id} was not found in the engine. Ignoring the event $event." }
         }
       } catch (e: ProcessEngineException) {
-        logger.error("CLIENT-001: Error claiming task", e)
+        logger.error(e) { "CLIENT-001: Error claiming task" }
       }
     }
   }
@@ -56,7 +56,7 @@ class TaskEventHandlers(
           logger.error { "CLIENT-005: Task with id ${event.id} was not found in the engine. Ignoring the event $event." }
         }
       } catch (e: ProcessEngineException) {
-        logger.error("CLIENT-002: Error un-claiming task", e)
+        logger.error(e) { "CLIENT-002: Error un-claiming task" }
       }
     }
   }
@@ -77,7 +77,7 @@ class TaskEventHandlers(
           logger.error { "CLIENT-006: Task with id ${event.id} was not found in the engine. Ignoring the event $event." }
         }
       } catch (e: ProcessEngineException) {
-        logger.error("CLIENT-003: Error completing task", e)
+        logger.error(e) { "CLIENT-003: Error completing task" }
       }
     }
   }
@@ -97,13 +97,13 @@ class TaskEventHandlers(
             task.followUpDate = event.followUpDate
             taskService.saveTask(task)
           } else {
-            logger.debug("CLIENT-008: Task deferred event ignored because task with id ${event.id} had equal follow-up date set already.")
+            logger.debug { "CLIENT-008: Task deferred event ignored because task with id ${event.id} had equal follow-up date set already." }
           }
         } else {
           logger.error { "CLIENT-006: Task with id ${event.id} was not found in the engine. Ignoring the event $event." }
         }
       } catch (e: ProcessEngineException) {
-        logger.error("CLIENT-003: Error deferring task", e)
+        logger.error(e) { "CLIENT-003: Error deferring task" }
       }
     }
   }
@@ -123,13 +123,13 @@ class TaskEventHandlers(
             task.followUpDate = null
             taskService.saveTask(task)
           } else {
-            logger.debug("CLIENT-007: Task undeferred event ignored because task with id ${event.id} was not deferred.")
+            logger.debug { "CLIENT-007: Task undeferred event ignored because task with id ${event.id} was not deferred." }
           }
         } else {
           logger.error { "CLIENT-006: Task with id ${event.id} was not found in the engine. Ignoring the event $event." }
         }
       } catch (e: ProcessEngineException) {
-        logger.error("CLIENT-003: Error deferring task", e)
+        logger.error(e) { "CLIENT-003: Error deferring task" }
       }
     }
   }

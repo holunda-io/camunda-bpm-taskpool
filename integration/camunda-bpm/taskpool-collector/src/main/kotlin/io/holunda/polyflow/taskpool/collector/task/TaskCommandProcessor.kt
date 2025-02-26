@@ -1,10 +1,12 @@
 package io.holunda.polyflow.taskpool.collector.task
 
+import io.github.oshai.kotlinlogging.KotlinLogging
 import io.holunda.camunda.taskpool.api.task.EngineTaskCommand
 import io.holunda.camunda.taskpool.api.task.TaskIdentityWithPayloadAndCorrelations
 import io.holunda.polyflow.taskpool.sender.task.EngineTaskCommandSender
-import mu.KLogging
 import org.springframework.context.event.EventListener
+
+private val logger = KotlinLogging.logger {}
 
 /**
  * Task command processor service.
@@ -17,7 +19,6 @@ class TaskCommandProcessor(
   private val enricher: VariablesEnricher,
   private val taskAssigner: TaskAssigner
 ) {
-  companion object : KLogging()
 
   /**
    * Receives engine task command and delivers it to the sender.
@@ -31,7 +32,7 @@ class TaskCommandProcessor(
     }.let {
       taskAssigner.setAssignment(it)
     }.also { commandToSend ->
-      if (logger.isTraceEnabled) {
+      if (logger.isTraceEnabled()) {
         logger.trace {"COLLECTOR-008: Sending engine task command: $commandToSend." }
       }
       // enrich and send

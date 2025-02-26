@@ -1,8 +1,8 @@
 package io.holunda.polyflow.taskpool.collector.task
 
+import io.github.oshai.kotlinlogging.KotlinLogging
 import io.holunda.camunda.taskpool.api.task.*
 import io.holunda.polyflow.taskpool.callInProcessEngineContext
-import mu.KLogging
 import org.camunda.bpm.engine.RuntimeService
 import org.camunda.bpm.engine.TaskService
 import org.camunda.bpm.engine.impl.db.entitymanager.DbEntityManager
@@ -11,6 +11,8 @@ import org.camunda.bpm.engine.impl.interceptor.CommandContextListener
 import org.camunda.bpm.engine.impl.interceptor.CommandExecutor
 import org.camunda.bpm.engine.variable.VariableMap
 import org.camunda.bpm.engine.variable.Variables
+
+private val logger = KotlinLogging.logger {}
 
 /**
  * Facility to load variables in a command context.
@@ -23,7 +25,6 @@ class TaskVariableLoader(
   private val taskService: TaskService,
   private val commandExecutor: CommandExecutor,
 ) {
-  companion object : KLogging()
 
   /**
    * Retrieves typed variables from the context of a command.

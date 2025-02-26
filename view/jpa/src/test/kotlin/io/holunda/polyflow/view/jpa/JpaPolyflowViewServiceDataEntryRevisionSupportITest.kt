@@ -1,6 +1,7 @@
 package io.holunda.polyflow.view.jpa
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import io.github.oshai.kotlinlogging.KotlinLogging
 import io.holixon.axon.gateway.query.QueryResponseMessageResponseType
 import io.holixon.axon.gateway.query.RevisionValue
 import io.holunda.camunda.taskpool.api.business.AuthorizationChange.Companion.addGroup
@@ -16,7 +17,6 @@ import io.holunda.polyflow.view.query.data.DataEntriesForUserQuery
 import io.holunda.polyflow.view.query.data.DataEntriesQuery
 import io.holunda.polyflow.view.query.data.DataEntriesQueryResult
 import jakarta.transaction.Transactional
-import mu.KLogging
 import org.assertj.core.api.Assertions.assertThat
 import org.axonframework.eventhandling.GenericEventMessage
 import org.axonframework.eventsourcing.eventstore.EventStore
@@ -37,6 +37,8 @@ import java.util.concurrent.Callable
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
+private val logger = KotlinLogging.logger {}
+
 @SpringBootTest(
   classes = [TestApplication::class],
   properties = [
@@ -48,8 +50,6 @@ import java.util.concurrent.Executors
 @Transactional
 @ActiveProfiles("itest-tc-mariadb")
 internal class JpaPolyflowViewServiceDataEntryRevisionSupportITest {
-
-  companion object : KLogging()
 
   lateinit var executorService: ExecutorService
 

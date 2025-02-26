@@ -1,12 +1,12 @@
 package io.holunda.polyflow.taskpool.collector.process.variable
 
+import io.github.oshai.kotlinlogging.KotlinLogging
 import io.holunda.camunda.taskpool.api.process.variable.TypedValueProcessVariableValue
+import io.holunda.polyflow.taskpool.collector.CamundaTaskpoolCollectorProperties
 import io.holunda.polyflow.taskpool.sender.process.variable.CreateSingleProcessVariableCommand
 import io.holunda.polyflow.taskpool.sender.process.variable.DeleteSingleProcessVariableCommand
 import io.holunda.polyflow.taskpool.sender.process.variable.UpdateSingleProcessVariableCommand
 import io.holunda.polyflow.taskpool.sourceReference
-import io.holunda.polyflow.taskpool.collector.CamundaTaskpoolCollectorProperties
-import mu.KLogging
 import org.camunda.bpm.engine.RepositoryService
 import org.camunda.bpm.engine.impl.history.event.HistoricVariableUpdateEventEntity
 import org.camunda.bpm.engine.impl.history.event.HistoryEventTypes
@@ -14,7 +14,9 @@ import org.camunda.bpm.engine.impl.persistence.entity.HistoricDetailVariableInst
 import org.camunda.bpm.engine.impl.persistence.entity.HistoricVariableInstanceEntity
 import org.springframework.context.event.EventListener
 import org.springframework.core.annotation.Order
-import org.springframework.stereotype.Component
+
+
+private val logger = KotlinLogging.logger {}
 
 /**
  * Collects process variable events from camunda and create corresponding process variable commands.
@@ -31,7 +33,7 @@ class ProcessVariableEventCollectorService(
   private val repositoryService: RepositoryService
 ) {
 
-  companion object : KLogging() {
+  companion object {
     // high order to be later than all other listeners and work on changed entity
     const val ORDER = Integer.MAX_VALUE - 100
   }

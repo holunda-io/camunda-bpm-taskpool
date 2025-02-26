@@ -1,14 +1,15 @@
 package io.holunda.camunda.taskpool.upcast.definition
 
+import io.github.oshai.kotlinlogging.KotlinLogging
 import io.holunda.camunda.taskpool.upcast.AnnotatedEventUpcaster
 import io.holunda.camunda.taskpool.upcast.AnnotationBasedSingleEventUpcaster
-import io.holunda.camunda.taskpool.upcast.RepresentationContentType
 import io.holunda.camunda.taskpool.upcast.RepresentationContentType.JSON
-import mu.KLogging
 import org.axonframework.serialization.SimpleSerializedType
 import org.axonframework.serialization.upcasting.event.IntermediateEventRepresentation
 import org.dom4j.Document
 import java.util.function.Function
+
+private val logger = KotlinLogging.logger {}
 
 /**
  * Upcaster to put revision 1 into the event and remove unneeded attributes.
@@ -16,7 +17,7 @@ import java.util.function.Function
 @AnnotatedEventUpcaster("io.holunda.camunda.taskpool.api.task.ProcessDefinitionRegisteredEvent")
 class ProcessDefinitionEventXMLNullTo1Upcaster : AnnotationBasedSingleEventUpcaster() {
 
-  companion object : KLogging() {
+  companion object {
     const val RESULT_OBJECT_TYPE = "io.holunda.camunda.taskpool.api.process.definition.ProcessDefinitionRegisteredEvent"
   }
 
@@ -47,7 +48,7 @@ class ProcessDefinitionEventXMLNullTo1Upcaster : AnnotationBasedSingleEventUpcas
 @AnnotatedEventUpcaster("io.holunda.camunda.taskpool.api.task.ProcessDefinitionRegisteredEvent", representationContentType = JSON)
 class ProcessDefinitionEventJSONNullTo1Upcaster : AnnotationBasedSingleEventUpcaster() {
 
-  companion object : KLogging() {
+  companion object {
     const val RESULT_OBJECT_TYPE = "io.holunda.camunda.taskpool.api.process.definition.ProcessDefinitionRegisteredEvent"
   }
 

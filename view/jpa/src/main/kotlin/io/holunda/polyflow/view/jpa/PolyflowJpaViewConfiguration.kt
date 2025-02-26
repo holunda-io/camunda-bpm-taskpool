@@ -1,7 +1,7 @@
 package io.holunda.polyflow.view.jpa
 
+import io.github.oshai.kotlinlogging.KotlinLogging
 import jakarta.annotation.PostConstruct
-import mu.KLogging
 import org.axonframework.eventhandling.deadletter.jpa.DeadLetterEntry
 import org.axonframework.eventhandling.tokenstore.jpa.TokenEntry
 import org.axonframework.modelling.saga.repository.jpa.SagaEntry
@@ -10,6 +10,8 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories
+
+private val logger = KotlinLogging.logger {}
 
 /**
  * From here and below, scan for components, entities and JPA repositories.
@@ -36,7 +38,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories
 class PolyflowJpaViewConfiguration(
   val polyflowJpaViewProperties: PolyflowJpaViewProperties
 ) {
-  companion object : KLogging()
 
   /**
    * Logs a little.

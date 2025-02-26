@@ -1,12 +1,12 @@
 package io.holunda.polyflow.view.mongo.data
 
 import com.mongodb.MongoCommandException
+import io.github.oshai.kotlinlogging.KotlinLogging
 import io.holunda.polyflow.view.DataEntry
 import io.holunda.polyflow.view.mongo.TaskPoolMongoViewProperties
 import io.holunda.polyflow.view.mongo.util.CronTriggerWithJitter
 import jakarta.annotation.PostConstruct
 import jakarta.annotation.PreDestroy
-import mu.KLogging
 import org.bson.BsonValue
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.scheduling.TaskScheduler
@@ -24,6 +24,8 @@ import java.time.Instant
 import java.util.concurrent.TimeUnit
 import java.util.logging.Level
 
+private val logger = KotlinLogging.logger {}
+
 /**
  * Tracks changes of data entries. Also makes sure that data entries marked as deleted are 'really' deleted shortly after.
  * Only active if `polyflow.view.mongo.changeTrackingMode` is set to `CHANGE_STREAM`.
@@ -35,8 +37,6 @@ class DataEntryChangeTracker(
   private val properties: TaskPoolMongoViewProperties,
   private val scheduler: TaskScheduler
 ) {
-
-  companion object : KLogging()
 
   private var lastSeenResumeToken: BsonValue? = null
 

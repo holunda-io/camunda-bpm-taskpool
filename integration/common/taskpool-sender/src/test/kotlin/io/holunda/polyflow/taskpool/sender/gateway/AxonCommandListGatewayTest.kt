@@ -1,10 +1,10 @@
 package io.holunda.polyflow.taskpool.sender.gateway
 
+import io.github.oshai.kotlinlogging.KotlinLogging
 import io.holunda.camunda.taskpool.api.task.AssignTaskCommand
 import io.holunda.camunda.taskpool.api.task.CreateTaskCommand
 import io.holunda.camunda.taskpool.api.task.ProcessReference
 import io.holunda.polyflow.taskpool.sender.SenderProperties
-import mu.KLogging
 import org.axonframework.commandhandling.CommandCallback
 import org.axonframework.commandhandling.GenericCommandMessage
 import org.axonframework.commandhandling.GenericCommandResultMessage
@@ -20,10 +20,10 @@ import org.mockito.Mockito.verify
 import org.mockito.Mockito.verifyNoMoreInteractions
 import org.mockito.junit.jupiter.MockitoExtension
 
+private val logger = KotlinLogging.logger {}
+
 @ExtendWith(MockitoExtension::class)
 class AxonCommandListGatewayTest {
-
-  companion object : KLogging()
 
   @Mock
   lateinit var commandGateway: CommandGateway

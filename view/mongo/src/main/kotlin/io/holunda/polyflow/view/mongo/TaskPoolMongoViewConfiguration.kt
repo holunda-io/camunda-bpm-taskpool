@@ -1,8 +1,8 @@
 package io.holunda.polyflow.view.mongo
 
+import io.github.oshai.kotlinlogging.KotlinLogging
 import io.holunda.polyflow.view.mongo.task.TaskDocument
 import jakarta.annotation.PostConstruct
-import mu.KLogging
 import org.axonframework.eventhandling.tokenstore.TokenStore
 import org.axonframework.extensions.mongo.DefaultMongoTemplate
 import org.axonframework.extensions.mongo.MongoTemplate
@@ -20,6 +20,8 @@ import org.springframework.data.mongodb.core.convert.MappingMongoConverter
 import org.springframework.data.mongodb.repository.config.EnableReactiveMongoRepositories
 import java.time.Clock
 
+private val logger = KotlinLogging.logger {}
+
 /**
  * Main configuration of the Mongo-DB based view.
  */
@@ -30,7 +32,7 @@ import java.time.Clock
 @EntityScan(basePackageClasses = [TaskDocument::class])
 class TaskPoolMongoViewConfiguration {
 
-  companion object : KLogging() {
+  companion object {
     const val COLLECTION_TOKENS = "tracking-tokens"
     const val COLLECTION_EVENTS = "domain-events"
     const val COLLECTION_SAGAS = "sagas"

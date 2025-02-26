@@ -1,10 +1,9 @@
 package io.holunda.polyflow.datapool.core.business
 
+import io.github.oshai.kotlinlogging.KotlinLogging
 import io.holunda.camunda.taskpool.api.business.*
 import io.holunda.polyflow.datapool.core.DataPoolCoreAxonConfiguration
-import io.holunda.polyflow.datapool.core.DataPoolCoreConfiguration
 import io.holunda.polyflow.datapool.core.DeletionStrategy
-import mu.KLogging
 import org.axonframework.commandhandling.CommandHandler
 import org.axonframework.eventsourcing.AggregateDeletedException
 import org.axonframework.eventsourcing.EventSourcingHandler
@@ -12,6 +11,8 @@ import org.axonframework.modelling.command.AggregateIdentifier
 import org.axonframework.modelling.command.AggregateLifecycle
 import org.axonframework.spring.stereotype.Aggregate
 import org.springframework.beans.factory.annotation.Autowired
+
+private val logger = KotlinLogging.logger {}
 
 /**
  * Aggregate representing a data entry.
@@ -24,8 +25,6 @@ import org.springframework.beans.factory.annotation.Autowired
   cache = DataPoolCoreAxonConfiguration.DATA_ENTRY_CACHE,
 )
 class DataEntryAggregate() {
-
-  companion object : KLogging()
 
   @AggregateIdentifier
   private lateinit var dataIdentity: String
@@ -95,10 +94,10 @@ class DataEntryAggregate() {
     if (this.deleted) {
       this.deleted = false
     }
-    if (logger.isDebugEnabled) {
+    if (logger.isDebugEnabled()) {
       logger.debug { "Created $dataIdentity." }
     }
-    if (logger.isTraceEnabled) {
+    if (logger.isTraceEnabled()) {
       logger.trace { "Created $dataIdentity with: $event" }
     }
   }
@@ -111,10 +110,10 @@ class DataEntryAggregate() {
     if (this.deleted) {
       this.deleted = false
     }
-    if (logger.isDebugEnabled) {
+    if (logger.isDebugEnabled()) {
       logger.debug { "Updated $dataIdentity." }
     }
-    if (logger.isTraceEnabled) {
+    if (logger.isTraceEnabled()) {
       logger.trace { "Updated $dataIdentity with: $event" }
     }
   }
@@ -124,10 +123,10 @@ class DataEntryAggregate() {
    */
   @EventSourcingHandler
   fun on(event: DataEntryDeletedEvent) {
-    if (logger.isDebugEnabled) {
+    if (logger.isDebugEnabled()) {
       logger.debug { "Deleted $dataIdentity." }
     }
-    if (logger.isTraceEnabled) {
+    if (logger.isTraceEnabled()) {
       logger.trace { "Deleted $dataIdentity with: $event" }
     }
     // Don't use AggregateLifecycle.markDeleted() because then the combination of entryType / entryId is then really deleted forever

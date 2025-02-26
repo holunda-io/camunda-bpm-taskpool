@@ -106,7 +106,7 @@ class SimpleDataEntryCommandSender(
         }
       }
     } else {
-      logger.debug("Would have sent change command $command")
+      logger.debug("Would have sent change command {}", command)
     }
   }
 
@@ -123,7 +123,7 @@ class SimpleDataEntryCommandSender(
         }
       }
     } else {
-      logger.debug("Would have sent delete command $command")
+      logger.debug("Would have sent delete command {}", command)
     }
   }
 
@@ -140,7 +140,7 @@ class SimpleDataEntryCommandSender(
         }
       }
     } else {
-      logger.debug("Would have sent anonymize command $command")
+      logger.debug("Would have sent anonymize command {}", command)
     }
   }
 }
