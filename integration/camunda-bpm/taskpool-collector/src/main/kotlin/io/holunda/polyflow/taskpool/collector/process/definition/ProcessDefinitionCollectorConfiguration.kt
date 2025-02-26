@@ -1,14 +1,16 @@
 package io.holunda.polyflow.taskpool.collector.process.definition
 
+import io.github.oshai.kotlinlogging.KotlinLogging
 import io.holunda.polyflow.taskpool.collector.CamundaTaskpoolCollectorProperties
 import io.holunda.polyflow.taskpool.sender.process.definition.ProcessDefinitionCommandSender
-import mu.KLogging
 import org.camunda.bpm.engine.impl.cfg.ProcessEngineConfigurationImpl
 import org.camunda.bpm.spring.boot.starter.util.SpringBootProcessEnginePlugin
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+
+private val logger = KotlinLogging.logger {}
 
 /**
  * Configuration for collecting the process definitions and sending them to taskpool core as commands.
@@ -19,8 +21,6 @@ class ProcessDefinitionCollectorConfiguration(
   private val camundaTaskpoolCollectorProperties: CamundaTaskpoolCollectorProperties
 ) {
 
-  companion object : KLogging()
-
   /**
    * Registers a plugin that is got refreshed on parse of BPMN.
    */
@@ -28,13 +28,13 @@ class ProcessDefinitionCollectorConfiguration(
   fun processDefinitionEnginePlugin() = object : SpringBootProcessEnginePlugin() {
     override fun preInit(processEngineConfiguration: ProcessEngineConfigurationImpl) {
       if (camundaTaskpoolCollectorProperties.processDefinition.enabled) {
-        logger.info("EVENTING-010: Process definition registration plugin activated.")
+        logger.info { "EVENTING-010: Process definition registration plugin activated." }
 
         processEngineConfiguration.customPostBPMNParseListeners.add(
           RefreshProcessDefinitionRegistrationParseListener(processEngineConfiguration)
         )
       } else {
-        logger.info("EVENTING-011: Process definition registration disabled by property.")
+        logger.info { "EVENTING-011: Process definition registration disabled by property." }
       }
     }
   }

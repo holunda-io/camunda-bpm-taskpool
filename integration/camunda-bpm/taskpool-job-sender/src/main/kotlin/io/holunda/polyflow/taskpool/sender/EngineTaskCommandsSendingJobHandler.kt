@@ -3,7 +3,6 @@ package io.holunda.polyflow.taskpool.sender
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.holunda.camunda.taskpool.api.task.EngineTaskCommand
 import io.holunda.polyflow.taskpool.sender.gateway.CommandListGateway
-import mu.KLogging
 import org.camunda.bpm.engine.impl.interceptor.CommandContext
 import org.camunda.bpm.engine.impl.jobexecutor.JobHandler
 import org.camunda.bpm.engine.impl.persistence.entity.ExecutionEntity
@@ -18,7 +17,7 @@ class EngineTaskCommandsSendingJobHandler(
   private val commandListGateway: CommandListGateway
 ) : JobHandler<EngineTaskCommandsSendingJobHandlerConfiguration> {
 
-  companion object : KLogging() {
+  companion object {
     const val TYPE = "polyflow-engine-task-command-sending"
   }
 

@@ -1,6 +1,7 @@
 package io.holunda.polyflow.view.jpa
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import io.github.oshai.kotlinlogging.KotlinLogging
 import io.holixon.axon.gateway.query.QueryResponseMessageResponseType
 import io.holixon.axon.gateway.query.RevisionValue
 import io.holunda.camunda.taskpool.api.business.DataEntryAnonymizedEvent
@@ -22,7 +23,6 @@ import io.holunda.polyflow.view.jpa.data.DataEntryRepository.Companion.isAuthori
 import io.holunda.polyflow.view.jpa.update.updateDataEntryQuery
 import io.holunda.polyflow.view.query.PageableSortableQuery
 import io.holunda.polyflow.view.query.data.*
-import mu.KLogging
 import org.axonframework.config.ProcessingGroup
 import org.axonframework.eventhandling.EventHandler
 import org.axonframework.eventhandling.Timestamp
@@ -34,6 +34,8 @@ import org.springframework.data.domain.Page
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Component
 import java.time.Instant
+
+private val logger = KotlinLogging.logger {}
 
 /**
  * Implementation of the Polyflow Data Entry View API using JPA to create the persistence model.
@@ -47,7 +49,7 @@ class JpaPolyflowViewDataEntryService(
   val polyflowJpaViewProperties: PolyflowJpaViewProperties
 ) : DataEntryApi, DataEntryEventHandler {
 
-  companion object : KLogging() {
+  companion object {
     const val PROCESSING_GROUP = "io.holunda.polyflow.view.jpa.service.data"
   }
 

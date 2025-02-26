@@ -1,5 +1,6 @@
 package io.holunda.polyflow.view.jpa
 
+import io.github.oshai.kotlinlogging.KotlinLogging
 import io.holunda.camunda.taskpool.api.process.definition.ProcessDefinitionRegisteredEvent
 import io.holunda.polyflow.view.ProcessDefinition
 import io.holunda.polyflow.view.jpa.JpaPolyflowViewProcessDefinitionService.Companion.PROCESSING_GROUP
@@ -14,12 +15,13 @@ import io.holunda.polyflow.view.jpa.process.toProcessDefinition
 import io.holunda.polyflow.view.jpa.update.updateProcessDefinitionQuery
 import io.holunda.polyflow.view.query.process.ProcessDefinitionApi
 import io.holunda.polyflow.view.query.process.ProcessDefinitionsStartableByUserQuery
-import mu.KLogging
 import org.axonframework.config.ProcessingGroup
 import org.axonframework.eventhandling.EventHandler
 import org.axonframework.queryhandling.QueryHandler
 import org.axonframework.queryhandling.QueryUpdateEmitter
 import org.springframework.stereotype.Component
+
+private val logger = KotlinLogging.logger {}
 
 /**
  * Implementation of the Polyflow Process Definition View API using JPA to create the persistence model.
@@ -32,7 +34,7 @@ class JpaPolyflowViewProcessDefinitionService(
   val polyflowJpaViewProperties: PolyflowJpaViewProperties
 ) : ProcessDefinitionApi {
 
-  companion object : KLogging() {
+  companion object {
     const val PROCESSING_GROUP = "io.holunda.polyflow.view.jpa.service.process.definition"
   }
 

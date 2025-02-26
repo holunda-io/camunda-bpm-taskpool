@@ -1,8 +1,8 @@
 package io.holunda.camunda.taskpool.upcast.task
 
+import io.github.oshai.kotlinlogging.KotlinLogging
 import io.holunda.camunda.taskpool.upcast.AnnotatedEventUpcaster
 import io.holunda.camunda.taskpool.upcast.AnnotationBasedSingleEventUpcaster
-import mu.KLogging
 import org.axonframework.serialization.SimpleSerializedType
 import org.axonframework.serialization.upcasting.event.IntermediateEventRepresentation
 import org.dom4j.Document
@@ -152,13 +152,15 @@ class TaskUndeferredEvent2To4Upcaster : AbstractSourceReferenceElementRemovingUp
   override fun getType(): String = RESULT_OBJECT_TYPE
 }
 
+private val logger = KotlinLogging.logger {}
+
 /**
  * Abstract upcaster to be used for all task events. Removes the element duplicates from the source-reference tag introduced by the
  * usage of a sealed class instead of the interface.
  */
 abstract class AbstractSourceReferenceElementRemovingUpcaster : AnnotationBasedSingleEventUpcaster() {
 
-  companion object : KLogging() {
+  companion object {
     val TAG_NAMES = arrayOf("instanceId", "executionId", "definitionId", "definitionKey", "name", "applicationName")
   }
 

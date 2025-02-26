@@ -3,7 +3,6 @@ package io.holunda.polyflow.taskpool.sender.task
 import io.holunda.camunda.taskpool.api.task.EngineTaskCommand
 import io.holunda.polyflow.taskpool.sender.SenderProperties
 import io.holunda.polyflow.taskpool.sender.task.accumulator.EngineTaskCommandAccumulator
-import mu.KLogging
 import org.springframework.transaction.support.TransactionSynchronization
 import org.springframework.transaction.support.TransactionSynchronizationManager
 
@@ -14,8 +13,6 @@ abstract class AbstractTxAwareAccumulatingEngineTaskCommandSender(
   protected val engineTaskCommandAccumulator: EngineTaskCommandAccumulator,
   protected val senderProperties: SenderProperties
 ) : EngineTaskCommandSender {
-
-  companion object : KLogging()
 
   private val registered: ThreadLocal<Boolean> = ThreadLocal.withInitial { false }
 

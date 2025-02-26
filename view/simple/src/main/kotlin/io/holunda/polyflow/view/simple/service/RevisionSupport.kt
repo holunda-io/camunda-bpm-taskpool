@@ -1,15 +1,15 @@
 package io.holunda.polyflow.view.simple.service
 
+import io.github.oshai.kotlinlogging.KotlinLogging
 import io.holixon.axon.gateway.query.RevisionValue
-import mu.KLogging
 import java.util.concurrent.ConcurrentHashMap
+
+private val logger = KotlinLogging.logger {}
 
 /**
  * Helper to create revision supported projection.
  */
 class RevisionSupport {
-
-  companion object : KLogging()
 
   private val revisionInfo = ConcurrentHashMap<String, RevisionValue>()
 

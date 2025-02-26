@@ -21,11 +21,11 @@
     <springboot.version>3.2.6</springboot.version>
     <camunda-commons-typed-values.version>7.22.0</camunda-commons-typed-values.version>
 
-    <axon-bom.version>4.10.4</axon-bom.version>
-    <axon-kotlin.version>4.10.0</axon-kotlin.version>
+    <axon-bom.version>4.11.1</axon-bom.version>
+    <axon-kotlin.version>4.11.0</axon-kotlin.version>
     <axon-gateway-extension.version>2.1.0</axon-gateway-extension.version>
 
-    <awaitility.version>4.2.2</awaitility.version>
+    <awaitility.version>4.3.0</awaitility.version>
     <mockito-kotlin.version>5.4.0</mockito-kotlin.version>
     <jgiven.version>2.0.1</jgiven.version>
     <jgiven-kotlin.version>2.0.1.0</jgiven-kotlin.version>
@@ -197,7 +197,7 @@
 
       <!-- Logging -->
       <dependency>
-        <groupId>io.github.microutils</groupId>
+        <groupId>io.github.oshai</groupId>
         <artifactId>kotlin-logging-jvm</artifactId>
         <version>${kotlin-logging.version}</version>
       </dependency>
@@ -273,7 +273,7 @@
       <artifactId>kotlin-reflect</artifactId>
     </dependency>
     <dependency>
-      <groupId>io.github.microutils</groupId>
+      <groupId>io.github.oshai</groupId>
       <artifactId>kotlin-logging-jvm</artifactId>
     </dependency>
     <dependency>
@@ -372,7 +372,7 @@
           <!-- java compiler -->
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
-          <version>3.13.0</version>
+          <version>3.14.0</version>
           <configuration>
             <encoding>UTF-8</encoding>
             <source>${java.version}</source>

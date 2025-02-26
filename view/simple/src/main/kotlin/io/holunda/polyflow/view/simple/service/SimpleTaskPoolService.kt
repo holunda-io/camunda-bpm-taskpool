@@ -1,5 +1,6 @@
 package io.holunda.polyflow.view.simple.service
 
+import io.github.oshai.kotlinlogging.KotlinLogging
 import io.holunda.camunda.taskpool.api.business.*
 import io.holunda.camunda.taskpool.api.task.*
 import io.holunda.polyflow.view.DataEntry
@@ -8,13 +9,11 @@ import io.holunda.polyflow.view.TaskWithDataEntries
 import io.holunda.polyflow.view.filter.createTaskPredicates
 import io.holunda.polyflow.view.filter.filterByPredicate
 import io.holunda.polyflow.view.filter.toCriteria
-import io.holunda.polyflow.view.filter.toPayloadPredicates
 import io.holunda.polyflow.view.query.task.*
 import io.holunda.polyflow.view.simple.updateMapFilterQuery
 import io.holunda.polyflow.view.sort.taskComparator
 import io.holunda.polyflow.view.sort.taskWithDataEntriesComparator
 import io.holunda.polyflow.view.task
-import mu.KLogging
 import org.axonframework.config.ProcessingGroup
 import org.axonframework.eventhandling.EventHandler
 import org.axonframework.queryhandling.QueryHandler
@@ -23,6 +22,8 @@ import org.camunda.bpm.engine.variable.VariableMap
 import org.springframework.stereotype.Component
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
+
+private val logger = KotlinLogging.logger {}
 
 /**
  * Simple in-memory implementation of the Task API.
@@ -34,8 +35,6 @@ class SimpleTaskPoolService(
   private val tasks: ConcurrentHashMap<String, Task> = ConcurrentHashMap<String, Task>(),
   private val dataEntries: ConcurrentHashMap<String, DataEntry> = ConcurrentHashMap<String, DataEntry>()
 ) : TaskApi {
-
-  companion object : KLogging()
 
   /**
    * Retrieves a task for given task id.
@@ -105,7 +104,7 @@ class SimpleTaskPoolService(
 
     val predicates = createTaskPredicates(toCriteria(query.filters))
 
-    val filtered = tasks.values.filter { TasksForUserQuery(user = query.user, assignedToMeOnly = query.assignedToMeOnly ).applyFilter(it) }
+    val filtered = tasks.values.filter { TasksForUserQuery(user = query.user, assignedToMeOnly = query.assignedToMeOnly).applyFilter(it) }
       .asSequence()
       .map { task -> TaskWithDataEntries.correlate(task, dataEntries) }
       .filter { filterByPredicate(it, predicates) }
@@ -211,7 +210,7 @@ class SimpleTaskPoolService(
 
     val distinctFilteredKeys = tasks.values.asSequence()
       .filter { !filterAssignee || it.assignee == query.user!!.username }
-      .filter { task -> !filterCandidates || (task.candidateUsers.contains(query.user!!.username) || task.candidateGroups.any { query.user!!.groups.contains(it) } ) }
+      .filter { task -> !filterCandidates || (task.candidateUsers.contains(query.user!!.username) || task.candidateGroups.any { query.user!!.groups.contains(it) }) }
       .map(Task::payload)
       .flatMap(VariableMap::keys)
       .distinct()
@@ -233,7 +232,7 @@ class SimpleTaskPoolService(
 
     val distinctFilteredValues = tasks.values.asSequence()
       .filter { !filterAssignee || it.assignee == query.user!!.username }
-      .filter { task -> !filterCandidates || (task.candidateUsers.contains(query.user!!.username) || task.candidateGroups.any { query.user!!.groups.contains(it) } ) }
+      .filter { task -> !filterCandidates || (task.candidateUsers.contains(query.user!!.username) || task.candidateGroups.any { query.user!!.groups.contains(it) }) }
       .map(Task::payload)
       .filter { it.containsKey(query.attributeName) }
       .mapNotNull { it[query.attributeName] }

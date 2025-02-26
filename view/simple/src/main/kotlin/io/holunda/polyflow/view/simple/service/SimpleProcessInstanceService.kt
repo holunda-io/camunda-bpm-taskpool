@@ -1,5 +1,6 @@
 package io.holunda.polyflow.view.simple.service
 
+import io.github.oshai.kotlinlogging.KotlinLogging
 import io.holixon.axon.gateway.query.QueryResponseMessageResponseType
 import io.holixon.axon.gateway.query.RevisionValue
 import io.holunda.camunda.taskpool.api.process.instance.*
@@ -8,7 +9,6 @@ import io.holunda.polyflow.view.ProcessInstanceState
 import io.holunda.polyflow.view.query.process.ProcessInstanceApi
 import io.holunda.polyflow.view.query.process.ProcessInstanceQueryResult
 import io.holunda.polyflow.view.query.process.ProcessInstancesByStateQuery
-import mu.KLogging
 import org.axonframework.config.ProcessingGroup
 import org.axonframework.eventhandling.EventHandler
 import org.axonframework.messaging.MetaData
@@ -17,6 +17,8 @@ import org.axonframework.queryhandling.QueryResponseMessage
 import org.axonframework.queryhandling.QueryUpdateEmitter
 import org.springframework.stereotype.Component
 import java.util.concurrent.ConcurrentHashMap
+
+private val logger = KotlinLogging.logger {}
 
 /**
  * In-memory process instance projection.
@@ -28,8 +30,6 @@ class SimpleProcessInstanceService(
   private val revisionSupport: RevisionSupport = RevisionSupport(),
   private val processInstances: ConcurrentHashMap<String, ProcessInstance> = ConcurrentHashMap<String, ProcessInstance>()
 ) : ProcessInstanceApi {
-
-  companion object : KLogging()
 
   /**
    * Query by the state.

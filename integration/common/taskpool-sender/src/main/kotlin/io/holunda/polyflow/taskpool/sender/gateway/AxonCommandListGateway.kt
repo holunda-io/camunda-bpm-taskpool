@@ -1,8 +1,10 @@
 package io.holunda.polyflow.taskpool.sender.gateway
 
+import io.github.oshai.kotlinlogging.KotlinLogging
 import io.holunda.polyflow.taskpool.sender.SenderProperties
-import mu.KLogging
 import org.axonframework.commandhandling.gateway.CommandGateway
+
+private val logger = KotlinLogging.logger {}
 
 /**
  * Sends  a list commands via AXON command gateway one-by-one, only if the sender property is enabled.
@@ -13,8 +15,6 @@ class AxonCommandListGateway(
   private val commandSuccessHandler: CommandSuccessHandler,
   private val commandErrorHandler: CommandErrorHandler
 ) : CommandListGateway {
-
-  companion object: KLogging()
 
   /**
    * Sends data to gateway. Ignores any errors, but logs.

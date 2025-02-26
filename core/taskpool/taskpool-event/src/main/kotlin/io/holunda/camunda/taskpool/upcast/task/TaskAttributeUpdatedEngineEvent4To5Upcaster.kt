@@ -1,11 +1,13 @@
 package io.holunda.camunda.taskpool.upcast.task
 
+import io.github.oshai.kotlinlogging.KotlinLogging
 import io.holunda.camunda.taskpool.upcast.AnnotatedEventUpcaster
 import io.holunda.camunda.taskpool.upcast.AnnotationBasedSingleEventUpcaster
-import mu.KLogging
 import org.axonframework.serialization.SimpleSerializedType
 import org.axonframework.serialization.upcasting.event.IntermediateEventRepresentation
 import org.dom4j.Document
+
+private val logger = KotlinLogging.logger {}
 
 /**
  * Upcaster fixing payload and correlation changes introduced by #305, by adding the missing attributes to XML.
@@ -13,7 +15,7 @@ import org.dom4j.Document
 @AnnotatedEventUpcaster(TaskAttributeUpdatedEngineEvent4To5Upcaster.RESULT_OBJECT_TYPE, "4")
 class TaskAttributeUpdatedEngineEvent4To5Upcaster : AnnotationBasedSingleEventUpcaster() {
 
-  companion object : KLogging() {
+  companion object {
     const val RESULT_OBJECT_TYPE = "io.holunda.camunda.taskpool.api.task.TaskAttributeUpdatedEngineEvent"
   }
 
