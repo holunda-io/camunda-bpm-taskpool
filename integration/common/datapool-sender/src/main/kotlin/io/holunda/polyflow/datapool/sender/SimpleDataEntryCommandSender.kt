@@ -10,21 +10,18 @@ import org.axonframework.commandhandling.CommandMessage
 /**
  * Sends commands using the gateway.
  */
-class SimpleDataEntrySender(
+class SimpleDataEntryCommandSender(
   private val commandListGateway: CommandListGateway,
   properties: DataEntrySenderProperties,
   dataEntryProjector: DataEntryProjector,
   objectMapper: ObjectMapper
 ) : AbstractDataEntryCommandSender(properties, dataEntryProjector, objectMapper) {
 
-  /** Logger instance for this class. */
-  companion object : KLogging()
-
   override fun <C> send(command: CommandMessage<C>) {
     if (properties.enabled) {
       commandListGateway.sendToGateway(listOf(command))
     } else {
-      logger.debug { "SENDER-104: Data entry sending is disabled by property. Would have sent $command." }
+      DataEntryCommandSender.logger.debug { "SENDER-104: Data entry sending is disabled by property. Would have sent $command." }
     }
   }
 

@@ -1,7 +1,7 @@
 package io.holunda.polyflow.taskpool.sender
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import io.holunda.polyflow.taskpool.sender.task.TxAwareAccumulatingEngineTaskCommandSender
+import io.holunda.polyflow.taskpool.sender.task.AbstractTxAwareAccumulatingEngineTaskCommandSender
 import io.holunda.polyflow.taskpool.sender.task.accumulator.EngineTaskCommandAccumulator
 import org.camunda.bpm.engine.impl.cfg.ProcessEngineConfigurationImpl
 import org.camunda.bpm.engine.impl.persistence.entity.MessageEntity
@@ -17,7 +17,7 @@ class TxAwareAccumulatingCamundaJobEngineTaskCommandSender(
   private val objectMapper: ObjectMapper,
   engineTaskCommandAccumulator: EngineTaskCommandAccumulator,
   senderProperties: SenderProperties
-) : TxAwareAccumulatingEngineTaskCommandSender(
+) : AbstractTxAwareAccumulatingEngineTaskCommandSender(
   engineTaskCommandAccumulator = engineTaskCommandAccumulator,
   senderProperties = senderProperties,
 ) {

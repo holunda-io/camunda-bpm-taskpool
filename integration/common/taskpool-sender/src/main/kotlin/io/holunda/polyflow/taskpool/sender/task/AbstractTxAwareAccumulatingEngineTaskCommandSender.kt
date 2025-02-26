@@ -1,33 +1,35 @@
-package io.holunda.polyflow.datapool.sender
+package io.holunda.polyflow.taskpool.sender.task
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import io.holunda.polyflow.datapool.DataEntrySenderProperties
-import io.holunda.polyflow.datapool.projector.DataEntryProjector
+import io.holunda.camunda.taskpool.api.task.EngineTaskCommand
+import io.holunda.polyflow.taskpool.sender.SenderProperties
+import io.holunda.polyflow.taskpool.sender.task.accumulator.EngineTaskCommandAccumulator
 import mu.KLogging
-import org.axonframework.commandhandling.CommandMessage
 import org.springframework.transaction.support.TransactionSynchronization
 import org.springframework.transaction.support.TransactionSynchronizationManager
 
 /**
  * Collects commands of one transaction, accumulates them to one command and sends it after TX commit.
  */
-abstract class TxAwareAccumulatingDataEntryCommandSender(
-  properties: DataEntrySenderProperties,
-  dataEntryProjector: DataEntryProjector,
-  objectMapper: ObjectMapper
-) : AbstractDataEntryCommandSender(properties, dataEntryProjector, objectMapper) {
+abstract class AbstractTxAwareAccumulatingEngineTaskCommandSender(
+  protected val engineTaskCommandAccumulator: EngineTaskCommandAccumulator,
+  protected val senderProperties: SenderProperties
+) : EngineTaskCommandSender {
 
-  /** Logger instance for this class. */
   companion object : KLogging()
 
   private val registered: ThreadLocal<Boolean> = ThreadLocal.withInitial { false }
 
-  protected val dataEntryCommands: ThreadLocal<MutableMap<String, MutableList<CommandMessage<*>>>> =
-    ThreadLocal.withInitial { mutableMapOf() }
+  @Suppress("RemoveExplicitTypeArguments")
+  protected val taskCommands: ThreadLocal<MutableMap<String, MutableList<EngineTaskCommand>>> =
+    ThreadLocal.withInitial { mutableMapOf<String, MutableList<EngineTaskCommand>>() }
 
-  override fun <C> send(command: CommandMessage<C>) {
+  /**
+   * Sends an engine task command (after commit).
+   */
+  override fun send(command: EngineTaskCommand) {
+
     // add command to list
-    dataEntryCommands.get().getOrPut(command.identifier) { mutableListOf() }.add(command)
+    taskCommands.get().getOrPut(command.id) { mutableListOf() }.add(command)
 
     // register synchronization only once
     if (!registered.get()) {
@@ -39,7 +41,7 @@ abstract class TxAwareAccumulatingDataEntryCommandSender(
          * Execute send if flag is set to send inside the TX.
          */
         override fun beforeCommit(readOnly: Boolean) {
-          if (properties.sendWithinTransaction) {
+          if (senderProperties.task.sendWithinTransaction) {
             send()
           }
         }
@@ -48,7 +50,7 @@ abstract class TxAwareAccumulatingDataEntryCommandSender(
          * Execute send if flag is set to send outside the TX.
          */
         override fun afterCommit() {
-          if (!properties.sendWithinTransaction) {
+          if (!senderProperties.task.sendWithinTransaction) {
             send()
           }
         }
@@ -57,7 +59,7 @@ abstract class TxAwareAccumulatingDataEntryCommandSender(
          * Clean-up the thread on completion.
          */
         override fun afterCompletion(status: Int) {
-          dataEntryCommands.remove()
+          taskCommands.remove()
           registered.remove()
         }
       })

@@ -6,7 +6,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 /**
  * Configuration properties for data entry sender (data pool)
  */
-@ConfigurationProperties(prefix = "polyflow.integration.sender.data-entry")
+@ConfigurationProperties(prefix = "polyflow.integration.sender.data-entry") // must be declared to let ApplicationNameBeanPostProcessor work correctly
 data class DataEntrySenderProperties(
   /**
    * Flag to activate or de-activate the entire sender.

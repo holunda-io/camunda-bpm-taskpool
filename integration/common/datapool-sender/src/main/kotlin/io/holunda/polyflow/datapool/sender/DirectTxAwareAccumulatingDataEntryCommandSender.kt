@@ -13,19 +13,18 @@ class DirectTxAwareAccumulatingDataEntryCommandSender(
   properties: DataEntrySenderProperties,
   dataEntryProjector: DataEntryProjector,
   objectMapper: ObjectMapper
-) : TxAwareAccumulatingDataEntryCommandSender(
+) : AbstractTxAwareAccumulatingDataEntryCommandSender(
   properties, dataEntryProjector, objectMapper
 ) {
 
   override fun send() {
     // iterate over messages and send them
     dataEntryCommands.get().forEach { (identifier, commands) ->
-      logger.debug("SENDER-105: Handling ${commands.size} commands for data entry $identifier")
+      DataEntryCommandSender.logger.debug("SENDER-105: Handling ${commands.size} commands for data entry $identifier")
       // handle messages for every data entry
-      if (// FIXME: senderProperties.enabled &&
-        properties.enabled) {
+      if (properties.enabled) {
         commandListGateway.sendToGateway(commands)
-        logger.trace {
+        DataEntryCommandSender.logger.trace {
           "SENDER-TRACE: sending commands for data entry [${commands.first().identifier}]: " + commands.joinToString(
             ", ",
             "'",
@@ -35,7 +34,7 @@ class DirectTxAwareAccumulatingDataEntryCommandSender(
           ) { it.commandName }
         }
       } else {
-        logger.debug { "SENDER-104: Data entry sending is disabled by property. Would have sent $commands." }
+        DataEntryCommandSender.logger.debug { "SENDER-104: Data entry sending is disabled by property. Would have sent $commands." }
       }
     }
   }

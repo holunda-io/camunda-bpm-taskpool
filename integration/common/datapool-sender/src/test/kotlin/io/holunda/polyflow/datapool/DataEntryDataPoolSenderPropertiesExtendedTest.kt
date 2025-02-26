@@ -11,13 +11,13 @@ import org.springframework.boot.context.annotation.UserConfigurations
 import org.springframework.boot.test.context.runner.ApplicationContextRunner
 import org.springframework.context.annotation.Bean
 
-class DataEntrySenderPropertiesExtendedTest {
+class DataEntryDataPoolSenderPropertiesExtendedTest {
 
   private val contextRunner = ApplicationContextRunner()
     .withConfiguration(UserConfigurations.of(DataEntrySenderConfiguration::class.java))
 
   @Test
-  fun testMinimal() {
+  fun `test minimal`() {
     contextRunner
       .withUserConfiguration(TestMockConfiguration::class.java)
       .withPropertyValues(
@@ -30,11 +30,12 @@ class DataEntrySenderPropertiesExtendedTest {
         assertThat(props.applicationName).isEqualTo("my-test-application")
         assertThat(props.enabled).isFalse
         assertThat(props.type).isEqualTo(DataEntrySenderType.simple)
+        assertThat(props.sendWithinTransaction).isFalse()
       }
   }
 
   @Test
-  fun testAllChanged() {
+  fun `test all changed`() {
     contextRunner
       .withUserConfiguration(TestMockConfiguration::class.java)
       .withPropertyValues(
@@ -42,6 +43,7 @@ class DataEntrySenderPropertiesExtendedTest {
         "polyflow.integration.sender.data-entry.application-name=another-than-spring",
         "polyflow.integration.sender.data-entry.enabled=true",
         "polyflow.integration.sender.data-entry.type=tx",
+        "polyflow.integration.sender.data-entry.send-within-transaction=true",
       ).run {
 
         assertThat(it.getBean(DataEntrySenderProperties::class.java)).isNotNull
@@ -51,6 +53,7 @@ class DataEntrySenderPropertiesExtendedTest {
 
         assertThat(props.enabled).isTrue
         assertThat(props.type).isEqualTo(DataEntrySenderType.tx)
+        assertThat(props.sendWithinTransaction).isTrue
       }
   }
 

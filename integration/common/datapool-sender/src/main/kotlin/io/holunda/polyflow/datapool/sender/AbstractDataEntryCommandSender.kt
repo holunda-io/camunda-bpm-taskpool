@@ -23,8 +23,6 @@ abstract class AbstractDataEntryCommandSender(
   private val objectMapper: ObjectMapper
 ) : DataEntryCommandSender {
 
-  private val logger: Logger = LoggerFactory.getLogger(DataEntryCommandSender::class.java)
-
   /** to be more java friendly **/
   override fun sendDataEntryChange(
     entryType: EntryType,
@@ -97,7 +95,7 @@ abstract class AbstractDataEntryCommandSender(
         .withMetaData(metaData)
       send(message)
     } else {
-      logger.debug("Would have sent change command $command")
+      DataEntryCommandSender.logger.debug { "Would have sent change command $command" }
     }
   }
 
@@ -108,7 +106,7 @@ abstract class AbstractDataEntryCommandSender(
         .withMetaData(metaData)
       send(message)
     } else {
-      logger.debug("Would have sent delete command $command")
+      DataEntryCommandSender.logger.debug{ "Would have sent delete command $command" }
     }
   }
 
@@ -119,7 +117,7 @@ abstract class AbstractDataEntryCommandSender(
         .withMetaData(metaData)
       send(message)
     } else {
-      logger.debug("Would have sent anonymize command $command")
+      DataEntryCommandSender.logger.debug { "Would have sent anonymize command $command" }
     }
   }
 

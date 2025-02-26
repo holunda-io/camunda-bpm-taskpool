@@ -1,7 +1,6 @@
 package io.holunda.polyflow.datapool
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import io.holunda.polyflow.bus.jackson.config.FallbackPayloadObjectMapperAutoConfiguration.Companion.PAYLOAD_OBJECT_MAPPER
 import io.holunda.polyflow.datapool.projector.DataEntryProjectionSupplier
 import io.holunda.polyflow.datapool.projector.DataEntryProjector
 import io.holunda.polyflow.datapool.sender.*
@@ -10,7 +9,6 @@ import io.holunda.polyflow.spring.ApplicationNameBeanPostProcessor
 import jakarta.annotation.PostConstruct
 import mu.KLogging
 import org.axonframework.commandhandling.gateway.CommandGateway
-import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.context.properties.EnableConfigurationProperties
@@ -20,10 +18,10 @@ import org.springframework.context.annotation.Import
 /**
  * Polyflow sender configuration.
  */
-@EnableConfigurationProperties(DataEntrySenderProperties::class)
+@EnableConfigurationProperties(DataPoolSenderProperties::class)
 @Import(ApplicationNameBeanPostProcessor::class)
 class DataEntrySenderConfiguration(
-  private val properties: DataEntrySenderProperties
+  private val senderProperties: DataPoolSenderProperties
 ) {
 
   /** Logger instance for this class. */
@@ -52,16 +50,22 @@ class DataEntrySenderConfiguration(
    */
   @Bean
   @ConditionalOnMissingBean(CommandListGateway::class)
-  fun commandListGateway(
+  fun dataEntryCommandListGateway(
     commandGateway: CommandGateway,
     commandSuccessHandler: CommandSuccessHandler,
     commandErrorHandler: CommandErrorHandler
   ) = AxonCommandListGateway(
     commandGateway,
-    properties,
+    senderProperties,
     commandSuccessHandler,
     commandErrorHandler
   )
+
+  /**
+   * Provide data entry sender properties as injectable Spring bean.
+   */
+  @Bean
+  fun dataEntrySenderProperties() = senderProperties.dataEntry
 
   /**
    * Creates simple (direct) command sender for data entries.
@@ -72,9 +76,9 @@ class DataEntrySenderConfiguration(
     commandListGateway: CommandListGateway,
     dataEntryProjector: DataEntryProjector,
     objectMapper: ObjectMapper
-  ): AbstractDataEntryCommandSender = SimpleDataEntrySender(
+  ): AbstractDataEntryCommandSender = SimpleDataEntryCommandSender(
     commandListGateway,
-    properties,
+    senderProperties.dataEntry,
     dataEntryProjector,
     objectMapper
   )
@@ -84,27 +88,26 @@ class DataEntrySenderConfiguration(
    */
   @Bean
   @ConditionalOnProperty(value = ["polyflow.integration.sender.data-entry.type"], havingValue = "tx", matchIfMissing = false)
-  fun txAwareDataEntryCommandSender(
+  fun txAwareDirectDataEntryCommandSender(
     commandListGateway: CommandListGateway,
     dataEntryProjector: DataEntryProjector,
     objectMapper: ObjectMapper
-  ): AbstractDataEntryCommandSender =
-    DirectTxAwareAccumulatingDataEntryCommandSender(
-      commandListGateway,
-      properties,
-      dataEntryProjector,
-      objectMapper
-    )
+  ): AbstractDataEntryCommandSender = DirectTxAwareAccumulatingDataEntryCommandSender(
+    commandListGateway,
+    senderProperties.dataEntry,
+    dataEntryProjector,
+    objectMapper
+  )
 
   /**
    * Prints sender config.
    */
   @PostConstruct
   fun printSenderConfiguration() {
-    if (properties.enabled) {
+    if (senderProperties.dataEntry.enabled) {
       logger.info("SENDER-111: Datapool data entry commands will be distributed over command bus.")
     } else {
-      logger.info("SENDER-112: Datakpool data entry command distribution is disabled by property.")
+      logger.info("SENDER-112: Datapool data entry command distribution is disabled by property.")
     }
   }
 }

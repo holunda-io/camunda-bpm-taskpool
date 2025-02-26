@@ -1,16 +1,15 @@
 package io.holunda.polyflow.datapool.sender.gateway
 
-import io.holunda.polyflow.datapool.DataEntrySenderProperties
+import io.holunda.polyflow.datapool.DataPoolSenderProperties
 import mu.KLogging
 import org.axonframework.commandhandling.gateway.CommandGateway
 
-// FIXME: extract together with io.holunda.polyflow.taskpool.sender.gateway.AxonCommandListGateway
 /**
  * Sends  a list commands via AXON command gateway one-by-one, only if the sender property is enabled.
  */
 class AxonCommandListGateway(
   private val commandGateway: CommandGateway,
-  private val senderProperties: DataEntrySenderProperties, // FIXME: should be SenderPorperties
+  private val senderProperties: DataPoolSenderProperties,
   private val commandSuccessHandler: CommandSuccessHandler,
   private val commandErrorHandler: CommandErrorHandler
 ) : CommandListGateway {
@@ -37,7 +36,7 @@ class AxonCommandListGateway(
           sendToGateway(remainingCommands)
         }
       } else {
-        logger.debug("SENDER-101: Sending command over gateway disabled by property. Would have sent command $nextCommand")
+        logger.debug { "SENDER-101: Sending command over gateway disabled by property. Would have sent command $nextCommand" }
         sendToGateway(remainingCommands)
       }
     }

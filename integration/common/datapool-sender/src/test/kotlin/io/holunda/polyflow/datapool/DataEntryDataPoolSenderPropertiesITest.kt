@@ -13,7 +13,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
 @SpringBootTest(classes = [PropertiesTestApplication::class], webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @ActiveProfiles("properties-itest")
 @PropertySource
-class DataEntrySenderPropertiesITest {
+class DataEntryDataPoolSenderPropertiesITest {
 
   @Autowired
   lateinit var props: DataEntrySenderProperties
@@ -23,6 +23,7 @@ class DataEntrySenderPropertiesITest {
     assertThat(props.applicationName).isEqualTo("Foo")
     assertThat(props.enabled).isFalse
     assertThat(props.type).isEqualTo(DataEntrySenderType.simple)
+    assertThat(props.sendWithinTransaction).isFalse()
   }
 }
 

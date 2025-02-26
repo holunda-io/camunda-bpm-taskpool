@@ -1,6 +1,7 @@
 package io.holunda.polyflow.datapool.sender
 
 import io.holunda.camunda.taskpool.api.business.*
+import mu.KLogging
 import org.axonframework.commandhandling.CommandResultMessage
 import org.axonframework.messaging.MetaData
 import java.util.function.BiFunction
@@ -10,6 +11,7 @@ import java.util.function.BiFunction
  */
 interface DataEntryCommandSender {
 
+  companion object : KLogging()
   /**
    * Sends command about data entry creation or update.
    * @param entryType type of entry.
@@ -33,7 +35,11 @@ interface DataEntryCommandSender {
     state: DataEntryState = ProcessingType.UNDEFINED.of(),
     modification: Modification = Modification.now(),
     correlations: CorrelationMap = newCorrelations(),
-    authorizationChanges: List<AuthorizationChange> = if (modification.username != null) listOf(AuthorizationChange.addUser(modification.username!!)) else listOf(),
+    authorizationChanges: List<AuthorizationChange> = if (modification.username != null) {
+      listOf(AuthorizationChange.addUser(modification.username!!))
+    } else {
+      listOf()
+    },
     metaData: MetaData = MetaData.emptyInstance()
   )
 
