@@ -3,8 +3,8 @@ package io.holunda.polyflow.bus.jackson.config
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.github.oshai.kotlinlogging.KotlinLogging
-import io.holunda.polyflow.bus.jackson.annotation.ConditionalOnMissingQualifiedBean
 import io.holunda.polyflow.bus.jackson.configurePolyflowJacksonObjectMapper
+import io.toolisticon.spring.condition.ConditionalOnMissingQualifiedBean
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.context.annotation.Bean
 

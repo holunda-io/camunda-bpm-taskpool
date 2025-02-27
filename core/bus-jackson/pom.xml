@@ -60,9 +60,8 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-autoconfigure</artifactId>
-      <scope>provided</scope>
+      <groupId>io.toolisticon.spring</groupId>
+      <artifactId>spring-boot-conditions</artifactId>
     </dependency>
 
     <!-- For test only -->
