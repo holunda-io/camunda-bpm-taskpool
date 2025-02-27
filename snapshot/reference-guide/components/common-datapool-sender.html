@@ -883,7 +883,16 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Command transmission">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#command-sender-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      Command sender types
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Command sender types">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -2067,8 +2076,35 @@ a business data projection. In doing so, it collects and transmits it to Datapoo
 <p>In order to control sending of commands to command gateway, the command sender activation property
 <code>polyflow.integration.sender.data-entry.enabled</code> (default is <code>true</code>) is available. If disabled, the command sender
 will log any command instead of sending it to the command gateway.</p>
-<p>In addition, you can control by the property <code>polyflow.integration.sender.data-entry.type</code> if you want to use the default command sender or provide your own implementation.
-The default provided command sender (type: <code>simple</code>) just sends the commands synchronously using Axon Command Bus.</p>
+<h3 id="command-sender-types">Command sender types<a class="headerlink" href="#command-sender-types" title="Permanent link">#</a></h3>
+<p>Out of the box, Polyflow supplies two command senders to match your deployment scenario. The property
+<code>polyflow.integration.sender.data-entry.type</code>  is used to switch between different commands senders.</p>
+<table>
+<thead>
+<tr>
+<th>Sender type</th>
+<th>Property value</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Simple</td>
+<td>simple</td>
+<td>Simple command sender, used to send every command directly to Command Bus.</td>
+</tr>
+<tr>
+<td>Transactional Direct</td>
+<td>tx</td>
+<td>Transactional accumulating command sender, sending accumulated commands along with the running transaction.</td>
+</tr>
+<tr>
+<td>Custom</td>
+<td>custom</td>
+<td>Setting to provide your own sender implementation</td>
+</tr>
+</tbody>
+</table>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>If you want to implement a custom command sending, please provide your own implementation of the interface <code>DataEntryCommandSender</code>
@@ -2124,7 +2160,7 @@ it is possible to provide own handlers for success and error command outcome.</p
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">February 26, 2025</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">February 27, 2025</span>
   </span>
 
     

@@ -2088,7 +2088,7 @@ as commands.</p>
 will log any command instead of aggregating sending it to the command gateway.</p>
 <h3 id="command-sender-types">Command sender types<a class="headerlink" href="#command-sender-types" title="Permanent link">#</a></h3>
 <p>Out of the box, Polyflow supplies several command senders to match your deployment scenario. The property 
-<code>polyflow.integration.task.sender.type</code>  is used to switch between different commands senders.</p>
+<code>polyflow.integration.sender.task.type</code>  is used to switch between different commands senders.</p>
 <table>
 <thead>
 <tr>
@@ -2126,7 +2126,7 @@ by the <code>AxonCommandListGateway</code> for sending the result over to the Ax
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>If you want to implement a custom command sending, please provide your own implementation of the interface <code>EngineTaskCommandSender</code>
-(register a Spring Component of the type) and set the property <code>polyflow.integration.task.sender.type</code> to <code>custom</code>.</p>
+(register a Spring Component of the type) and set the property <code>polyflow.integration.sender.task.type</code> to <code>custom</code>.</p>
 </div>
 <h3 id="command-aggregation">Command aggregation<a class="headerlink" href="#command-aggregation" title="Permanent link">#</a></h3>
 <p>The Spring event listeners receiving events from the Camunda Engine plugin are called before the engine commits the transaction.
@@ -2134,7 +2134,7 @@ Since all processing inside collector component and enricher is performed synchr
 be successfully committed before sending any commands to the Command Gateway. Otherwise, on any error
 the transaction would be rolled-back and the command would create an inconsistency between the taskpool and the engine.</p>
 <p>Depending on your deployment scenario, you may want to control the exact point in time, when the commands are sent to command gateway.
-The property <code>polyflow.integration.task.sender.send-within-transaction</code> is designed to influence this. If set to <code>true</code>, the commands
+The property <code>polyflow.integration.sender.task.send-within-transaction</code> is designed to influence this. If set to <code>true</code>, the commands
 are accumulated <em>before</em> the process engine transaction is committed, otherwise commands are sent <em>after</em> the process engine transaction is committed.</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
@@ -2149,7 +2149,7 @@ perform the transmission of the commands to the Command Bus. This sender is in p
 <h4 id="serialization-of-payload">Serialization of payload<a class="headerlink" href="#serialization-of-payload" title="Permanent link">#</a></h4>
 <p>By default, the data entry sender will serialize payload of the <code>DataEntry</code> into a JSON-Map structure, in order to be received by projections (Data Pool View)
 and storage of it, independent of the classes which might be not on the classpath of the projection (generic structure instead of a typed Java object structure).
-This serialization can be disabled by the sender property <code>polyflow.integration.task.sender.serialize-payload=false</code>.</p>
+This serialization can be disabled by the sender property <code>polyflow.integration.sender.task.serialize-payload=false</code>.</p>
 <h4 id="handling-command-transmission">Handling command transmission<a class="headerlink" href="#handling-command-transmission" title="Permanent link">#</a></h4>
 <p>The commands sent via gateway (e.g. <code>AxonCommandListGateway</code>) are received by Command Handlers. The latter may accept or reject commands, depending
 on the state of the aggregate and other components. The <code>AxonCommandListGateway</code> is informed about the command outcome. By default, it will log the outcome
@@ -2324,7 +2324,7 @@ the <code>CommandSuccessHandler</code>and <code>CommandErrorHandler</code> accor
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">February 26, 2025</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">February 27, 2025</span>
   </span>
 
     
