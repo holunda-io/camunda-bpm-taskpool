@@ -14,7 +14,7 @@ class DirectTxAwareAccumulatingEngineTaskCommandSender(
   private val commandListGateway: CommandListGateway,
   engineTaskCommandAccumulator: EngineTaskCommandAccumulator,
   senderProperties: SenderProperties
-) : TxAwareAccumulatingEngineTaskCommandSender(
+) : AbstractTxAwareAccumulatingEngineTaskCommandSender(
   engineTaskCommandAccumulator = engineTaskCommandAccumulator,
   senderProperties = senderProperties
 ) {

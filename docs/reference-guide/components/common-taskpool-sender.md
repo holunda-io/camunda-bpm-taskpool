@@ -40,7 +40,7 @@ will log any command instead of aggregating sending it to the command gateway.
 ### Command sender types
 
 Out of the box, Polyflow supplies several command senders to match your deployment scenario. The property 
-`polyflow.integration.task.sender.type`  is used to switch between different commands senders.
+`polyflow.integration.sender.task.type`  is used to switch between different commands senders.
 
 
 | Sender type          | Property value | Description                                                                                                 |
@@ -57,7 +57,7 @@ by the `AxonCommandListGateway` for sending the result over to the Axon command 
 
 !!! note
     If you want to implement a custom command sending, please provide your own implementation of the interface `EngineTaskCommandSender`
-    (register a Spring Component of the type) and set the property `polyflow.integration.task.sender.type` to `custom`.
+    (register a Spring Component of the type) and set the property `polyflow.integration.sender.task.type` to `custom`.
 
 
 ### Command aggregation
@@ -68,7 +68,7 @@ be successfully committed before sending any commands to the Command Gateway. Ot
 the transaction would be rolled-back and the command would create an inconsistency between the taskpool and the engine.
 
 Depending on your deployment scenario, you may want to control the exact point in time, when the commands are sent to command gateway.
-The property `polyflow.integration.task.sender.send-within-transaction` is designed to influence this. If set to `true`, the commands
+The property `polyflow.integration.sender.task.send-within-transaction` is designed to influence this. If set to `true`, the commands
 are accumulated _before_ the process engine transaction is committed, otherwise commands are sent _after_ the process engine transaction is committed.
 
 !!! warning
@@ -85,7 +85,7 @@ perform the transmission of the commands to the Command Bus. This sender is in p
 
 By default, the data entry sender will serialize payload of the `DataEntry` into a JSON-Map structure, in order to be received by projections (Data Pool View)
 and storage of it, independent of the classes which might be not on the classpath of the projection (generic structure instead of a typed Java object structure).
-This serialization can be disabled by the sender property `polyflow.integration.task.sender.serialize-payload=false`.
+This serialization can be disabled by the sender property `polyflow.integration.sender.task.serialize-payload=false`.
 
 
 #### Handling command transmission

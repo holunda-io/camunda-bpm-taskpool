@@ -33,6 +33,9 @@ private val logger = KotlinLogging.logger {}
 @EnableConfigurationProperties(SenderProperties::class)
 class SenderConfiguration(private val senderProperties: SenderProperties) {
 
+  /** Logger instance for this class. */
+  private val logger = KotlinLogging.logger {}
+
   /**
    * Creates generic task publisher.
    */

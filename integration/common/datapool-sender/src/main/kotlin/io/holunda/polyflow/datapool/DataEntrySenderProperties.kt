@@ -6,7 +6,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 /**
  * Configuration properties for data entry sender (data pool)
  */
-@ConfigurationProperties(prefix = "polyflow.integration.sender.data-entry")
+@ConfigurationProperties(prefix = "polyflow.integration.sender.data-entry") // must be declared to let ApplicationNameBeanPostProcessor work correctly
 data class DataEntrySenderProperties(
   /**
    * Flag to activate or de-activate the entire sender.
@@ -24,7 +24,13 @@ data class DataEntrySenderProperties(
   /**
    * Serialize payload to `Map<String, Object>`. Defaults to true.
    */
-  val serializePayload: Boolean = true
+  val serializePayload: Boolean = true,
+  /**
+   * This flag controls if the data entries are sent within an open transaction (value true, before commit)
+   * or not (value false, default, after commit). This setting is required if you move the command bus
+   * and the command handling on the engine side.
+   */
+  val sendWithinTransaction: Boolean = false
 )
 
 
