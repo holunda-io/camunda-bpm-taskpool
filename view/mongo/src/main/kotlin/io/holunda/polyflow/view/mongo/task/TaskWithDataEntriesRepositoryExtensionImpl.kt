@@ -1,9 +1,11 @@
 package io.holunda.polyflow.view.mongo.task
 
 import io.holunda.polyflow.view.auth.User
-import io.holunda.polyflow.view.filter.*
+import io.holunda.polyflow.view.filter.Criterion
+import io.holunda.polyflow.view.filter.EQUALS
+import io.holunda.polyflow.view.filter.GREATER
+import io.holunda.polyflow.view.filter.LESS
 import io.holunda.polyflow.view.mongo.data.DataEntryDocument
-import mu.KLogging
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate
@@ -19,10 +21,9 @@ open class TaskWithDataEntriesRepositoryExtensionImpl(
   private val mongoTemplate: ReactiveMongoTemplate
 ) : TaskWithDataEntriesRepositoryExtension {
 
-  companion object : KLogging() {
+  companion object {
     val DEFAULT_SORT = Sort.by(Sort.Direction.DESC, TaskWithDataEntriesDocument::dueDate.name)
   }
-
 
   /**
    * Retrieves a list of tasks for user matching provided criteria.

@@ -6,7 +6,6 @@ import io.holunda.polyflow.datapool.core.business.CreateOrUpdateCommandHandler
 import io.holunda.polyflow.datapool.core.business.DataEntryAggregate
 import io.holunda.polyflow.datapool.core.business.upcaster.DataEntryCreatedEventUpcaster
 import io.holunda.polyflow.datapool.core.repository.FirstEventOnlyEventSourcingRepository
-import mu.KLogging
 import org.axonframework.common.caching.Cache
 import org.axonframework.common.caching.WeakReferenceCache
 import org.axonframework.eventsourcing.EventCountSnapshotTriggerDefinition
@@ -22,7 +21,6 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Import
 
-
 /**
  * Configuration of polyflow data pool core axon setup.
  */
@@ -33,7 +31,7 @@ import org.springframework.context.annotation.Import
   DataEntryCreatedEventUpcaster::class
 )
 class DataPoolCoreAxonConfiguration {
-  companion object : KLogging() {
+  companion object {
     const val DATA_ENTRY_REPOSITORY = "dataEntryEventSourcingRepository"
     const val DATA_ENTRY_SNAPSHOTTER = "dataEntrySnapshotter"
     const val DATA_ENTRY_CACHE = "dataEntryCache"

@@ -1,5 +1,6 @@
 package io.holunda.polyflow.view.jpa
 
+import io.github.oshai.kotlinlogging.KotlinLogging
 import io.holixon.axon.gateway.query.QueryResponseMessageResponseType
 import io.holunda.camunda.taskpool.api.process.instance.*
 import io.holunda.polyflow.view.jpa.JpaPolyflowViewProcessInstanceService.Companion.PROCESSING_GROUP
@@ -9,13 +10,14 @@ import io.holunda.polyflow.view.jpa.update.updateProcessInstanceQuery
 import io.holunda.polyflow.view.query.process.ProcessInstanceApi
 import io.holunda.polyflow.view.query.process.ProcessInstanceQueryResult
 import io.holunda.polyflow.view.query.process.ProcessInstancesByStateQuery
-import mu.KLogging
 import org.axonframework.config.ProcessingGroup
 import org.axonframework.eventhandling.EventHandler
 import org.axonframework.queryhandling.QueryHandler
 import org.axonframework.queryhandling.QueryResponseMessage
 import org.axonframework.queryhandling.QueryUpdateEmitter
 import org.springframework.stereotype.Component
+
+private val logger = KotlinLogging.logger {}
 
 /**
  * Implementation of the Polyflow Process Instance View API using JPA to create the persistence model.
@@ -28,7 +30,7 @@ class JpaPolyflowViewProcessInstanceService(
   val polyflowJpaViewProperties: PolyflowJpaViewProperties
 ) : ProcessInstanceApi {
 
-  companion object : KLogging() {
+  companion object {
     const val PROCESSING_GROUP = "io.holunda.polyflow.view.jpa.service.process.instance"
   }
 

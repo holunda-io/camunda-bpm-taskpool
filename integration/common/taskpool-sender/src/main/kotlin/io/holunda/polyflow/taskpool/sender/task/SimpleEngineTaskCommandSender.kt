@@ -1,9 +1,11 @@
 package io.holunda.polyflow.taskpool.sender.task
 
+import io.github.oshai.kotlinlogging.KotlinLogging
 import io.holunda.camunda.taskpool.api.task.EngineTaskCommand
 import io.holunda.polyflow.taskpool.sender.SenderProperties
 import io.holunda.polyflow.taskpool.sender.gateway.CommandListGateway
-import mu.KLogging
+
+private val logger = KotlinLogging.logger {}
 
 /**
  * Sends commands using the gateway.
@@ -12,8 +14,6 @@ class SimpleEngineTaskCommandSender(
   private val commandListGateway: CommandListGateway,
   private val senderProperties: SenderProperties
 ) : EngineTaskCommandSender {
-
-  companion object : KLogging()
 
   override fun send(command: EngineTaskCommand) {
     if (senderProperties.task.enabled) {

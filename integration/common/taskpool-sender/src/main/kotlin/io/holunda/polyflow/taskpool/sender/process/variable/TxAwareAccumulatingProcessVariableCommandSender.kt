@@ -1,6 +1,7 @@
 package io.holunda.polyflow.taskpool.sender.process.variable
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import io.github.oshai.kotlinlogging.KotlinLogging
 import io.holunda.camunda.taskpool.api.process.variable.ChangeProcessVariablesForExecutionCommand
 import io.holunda.camunda.taskpool.api.process.variable.ProcessVariableCreate
 import io.holunda.camunda.taskpool.api.process.variable.ProcessVariableDelete
@@ -8,9 +9,10 @@ import io.holunda.camunda.taskpool.api.process.variable.ProcessVariableUpdate
 import io.holunda.polyflow.taskpool.sender.SenderProperties
 import io.holunda.polyflow.taskpool.sender.gateway.CommandListGateway
 import io.holunda.polyflow.taskpool.serialize
-import mu.KLogging
 import org.springframework.transaction.support.TransactionSynchronization
 import org.springframework.transaction.support.TransactionSynchronizationManager
+
+private val logger = KotlinLogging.logger {}
 
 /**
  * This sender collects all variable updates during one transaction and groups them by the
@@ -21,8 +23,6 @@ class TxAwareAccumulatingProcessVariableCommandSender(
   private val senderProperties: SenderProperties,
   private val objectMapper: ObjectMapper
 ) : ProcessVariableCommandSender {
-
-  companion object : KLogging()
 
   private val registered: ThreadLocal<Boolean> = ThreadLocal.withInitial { false }
 
@@ -85,6 +85,7 @@ class TxAwareAccumulatingProcessVariableCommandSender(
                   revision = command.revision,
                   scopeActivityInstanceId = command.scopeActivityInstanceId
                 )
+
                 is UpdateSingleProcessVariableCommand -> ProcessVariableUpdate(
                   value = command.value.serialize(objectMapper),
                   variableInstanceId = command.variableInstanceId,
@@ -92,12 +93,14 @@ class TxAwareAccumulatingProcessVariableCommandSender(
                   revision = command.revision,
                   scopeActivityInstanceId = command.scopeActivityInstanceId
                 )
+
                 is DeleteSingleProcessVariableCommand -> ProcessVariableDelete(
                   variableInstanceId = command.variableInstanceId,
                   variableName = command.variableName,
                   revision = command.revision,
                   scopeActivityInstanceId = command.scopeActivityInstanceId
                 )
+
                 else -> throw IllegalArgumentException("Unsupported variable sender command.")
               }
             }

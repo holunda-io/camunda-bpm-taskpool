@@ -1,9 +1,11 @@
 package io.holunda.polyflow.taskpool.sender.process.definition
 
+import io.github.oshai.kotlinlogging.KotlinLogging
 import io.holunda.camunda.taskpool.api.process.definition.ProcessDefinitionCommand
 import io.holunda.polyflow.taskpool.sender.SenderProperties
 import io.holunda.polyflow.taskpool.sender.gateway.CommandListGateway
-import mu.KLogging
+
+private val logger = KotlinLogging.logger {}
 
 /**
  * Simple sender for process definition commands
@@ -12,8 +14,6 @@ internal class SimpleProcessDefinitionCommandSender(
   private val commandListGateway: CommandListGateway,
   private val senderProperties: SenderProperties
 ) : ProcessDefinitionCommandSender {
-
-  companion object : KLogging()
 
   override fun send(command: ProcessDefinitionCommand) {
     if (senderProperties.enabled && senderProperties.processDefinition.enabled) {

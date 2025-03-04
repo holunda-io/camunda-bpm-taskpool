@@ -1,20 +1,21 @@
-package io.holunda.polyflow.taskpool.sender.gateway
+package io.holunda.polyflow.datapool.sender.gateway
 
 import io.github.oshai.kotlinlogging.KotlinLogging
-import io.holunda.polyflow.taskpool.sender.SenderProperties
+import io.holunda.polyflow.datapool.DataPoolSenderProperties
 import org.axonframework.commandhandling.gateway.CommandGateway
-
-private val logger = KotlinLogging.logger {}
 
 /**
  * Sends  a list commands via AXON command gateway one-by-one, only if the sender property is enabled.
  */
 class AxonCommandListGateway(
   private val commandGateway: CommandGateway,
-  private val senderProperties: SenderProperties,
+  private val senderProperties: DataPoolSenderProperties,
   private val commandSuccessHandler: CommandSuccessHandler,
   private val commandErrorHandler: CommandErrorHandler
 ) : CommandListGateway {
+
+  /** Logger instance for this class. */
+  private val logger = KotlinLogging.logger {}
 
   /**
    * Sends data to gateway. Ignores any errors, but logs.
@@ -35,7 +36,7 @@ class AxonCommandListGateway(
           sendToGateway(remainingCommands)
         }
       } else {
-        logger.debug { "SENDER-001: Sending command over gateway disabled by property. Would have sent command $nextCommand" }
+        logger.debug { "SENDER-101: Sending command over gateway disabled by property. Would have sent command $nextCommand" }
         sendToGateway(remainingCommands)
       }
     }

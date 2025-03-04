@@ -3,6 +3,7 @@ package io.holunda.polyflow.view.mongo.service
 import com.tngtech.jgiven.Stage
 import com.tngtech.jgiven.annotation.*
 import com.tngtech.jgiven.integration.spring.JGivenStage
+import io.github.oshai.kotlinlogging.KotlinLogging
 import io.holunda.camunda.taskpool.api.business.DataEntryAnonymizedEvent
 import io.holunda.camunda.taskpool.api.business.DataEntryCreatedEvent
 import io.holunda.camunda.taskpool.api.business.DataEntryDeletedEvent
@@ -17,7 +18,6 @@ import io.holunda.polyflow.view.query.data.DataEntriesForUserQuery
 import io.holunda.polyflow.view.query.data.DataEntryForIdentityQuery
 import io.holunda.polyflow.view.query.task.*
 import io.toolisticon.testing.jgiven.step
-import mu.KLogging
 import org.assertj.core.api.Assertions.assertThat
 import org.awaitility.Awaitility
 import org.awaitility.core.ConditionTimeoutException
@@ -32,8 +32,9 @@ import org.springframework.beans.factory.annotation.Autowired
 import java.util.concurrent.TimeUnit
 import java.util.function.Predicate
 
+private val logger = KotlinLogging.logger {}
+
 abstract class PolyflowStage<SELF : PolyflowStage<SELF>> : Stage<SELF>() {
-  companion object : KLogging()
 
   @Autowired
   @ScenarioState

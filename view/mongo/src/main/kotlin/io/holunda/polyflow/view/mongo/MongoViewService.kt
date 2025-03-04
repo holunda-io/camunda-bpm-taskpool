@@ -1,5 +1,6 @@
 package io.holunda.polyflow.view.mongo
 
+import io.github.oshai.kotlinlogging.KotlinLogging
 import io.holunda.camunda.taskpool.api.business.*
 import io.holunda.camunda.taskpool.api.task.*
 import io.holunda.polyflow.view.*
@@ -13,7 +14,6 @@ import io.holunda.polyflow.view.query.data.*
 import io.holunda.polyflow.view.query.task.*
 import jakarta.annotation.PostConstruct
 import jakarta.annotation.PreDestroy
-import mu.KLogging
 import org.axonframework.config.EventProcessingConfiguration
 import org.axonframework.config.ProcessingGroup
 import org.axonframework.eventhandling.EventHandler
@@ -74,6 +74,8 @@ class MongoViewServiceConfiguration {
   )
 }
 
+private val logger = KotlinLogging.logger {}
+
 /**
  * Mongo-based projection.
  */
@@ -93,7 +95,7 @@ class MongoViewService(
   private val clock: Clock
 ) : ReactiveTaskApi, ReactiveDataEntryApi {
 
-  companion object : KLogging() {
+  companion object {
     const val PROCESSING_GROUP = "io.holunda.camunda.taskpool.view.mongo.service"
   }
 

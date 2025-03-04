@@ -116,7 +116,7 @@ enum class SenderType {
   simple,
 
   /**
-   * Sending using Tx synchronization sending commands directly.
+   * Sender using Tx synchronization sending commands directly.
    */
   tx,
 

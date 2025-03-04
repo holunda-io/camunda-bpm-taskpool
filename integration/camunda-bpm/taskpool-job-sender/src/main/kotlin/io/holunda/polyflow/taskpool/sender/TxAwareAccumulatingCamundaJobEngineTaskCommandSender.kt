@@ -1,13 +1,16 @@
 package io.holunda.polyflow.taskpool.sender
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import io.holunda.polyflow.taskpool.sender.task.TxAwareAccumulatingEngineTaskCommandSender
+import io.github.oshai.kotlinlogging.KotlinLogging
+import io.holunda.polyflow.taskpool.sender.task.AbstractTxAwareAccumulatingEngineTaskCommandSender
 import io.holunda.polyflow.taskpool.sender.task.accumulator.EngineTaskCommandAccumulator
 import org.camunda.bpm.engine.impl.cfg.ProcessEngineConfigurationImpl
 import org.camunda.bpm.engine.impl.persistence.entity.MessageEntity
 import org.camunda.bpm.engine.impl.persistence.entity.ResourceEntity
 import java.time.Instant
 import java.util.*
+
+private val logger = KotlinLogging.logger {}
 
 /**
  * Command sender writing a Camunda Jobj which will send commands later.
@@ -17,7 +20,7 @@ class TxAwareAccumulatingCamundaJobEngineTaskCommandSender(
   private val objectMapper: ObjectMapper,
   engineTaskCommandAccumulator: EngineTaskCommandAccumulator,
   senderProperties: SenderProperties
-) : TxAwareAccumulatingEngineTaskCommandSender(
+) : AbstractTxAwareAccumulatingEngineTaskCommandSender(
   engineTaskCommandAccumulator = engineTaskCommandAccumulator,
   senderProperties = senderProperties,
 ) {
@@ -28,7 +31,7 @@ class TxAwareAccumulatingCamundaJobEngineTaskCommandSender(
     taskCommands.get().forEach { (taskId, taskCommands) ->
       // handle messages for every task
       val accumulatorName = engineTaskCommandAccumulator::class.simpleName
-      logger.debug("SENDER-005: Handling ${taskCommands.size} commands for task $taskId using command accumulator $accumulatorName")
+      logger.debug { "SENDER-005: Handling ${taskCommands.size} commands for task $taskId using command accumulator $accumulatorName" }
       val commands = engineTaskCommandAccumulator.invoke(taskCommands)
 
 

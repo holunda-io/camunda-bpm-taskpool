@@ -4,15 +4,14 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.jsontype.impl.LaissezFaireSubTypeValidator
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import io.holunda.polyflow.bus.jackson.annotation.ConditionalOnMissingQualifiedBean
 import io.holunda.polyflow.bus.jackson.configurePolyflowJacksonObjectMapper
 import io.holunda.polyflow.taskpool.sender.gateway.CommandListGateway
 import io.holunda.polyflow.taskpool.sender.task.EngineTaskCommandSender
 import io.holunda.polyflow.taskpool.sender.task.accumulator.EngineTaskCommandAccumulator
+import io.toolisticon.spring.condition.ConditionalOnMissingQualifiedBean
 import org.camunda.bpm.engine.impl.cfg.ProcessEngineConfigurationImpl
 import org.camunda.bpm.engine.spring.SpringProcessEnginePlugin
 import org.springframework.beans.factory.annotation.Qualifier
-import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.context.annotation.Bean
 

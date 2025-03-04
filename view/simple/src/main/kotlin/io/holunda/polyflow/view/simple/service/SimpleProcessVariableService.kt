@@ -1,5 +1,6 @@
 package io.holunda.polyflow.view.simple.service
 
+import io.github.oshai.kotlinlogging.KotlinLogging
 import io.holixon.axon.gateway.query.QueryResponseMessageResponseType
 import io.holixon.axon.gateway.query.RevisionValue
 import io.holunda.camunda.taskpool.api.process.variable.ProcessVariableCreate
@@ -10,7 +11,6 @@ import io.holunda.polyflow.view.ProcessVariable
 import io.holunda.polyflow.view.query.process.variable.ProcessVariableApi
 import io.holunda.polyflow.view.query.process.variable.ProcessVariableQueryResult
 import io.holunda.polyflow.view.query.process.variable.ProcessVariablesForInstanceQuery
-import mu.KLogging
 import org.axonframework.config.ProcessingGroup
 import org.axonframework.eventhandling.EventHandler
 import org.axonframework.messaging.MetaData
@@ -19,6 +19,8 @@ import org.axonframework.queryhandling.QueryResponseMessage
 import org.axonframework.queryhandling.QueryUpdateEmitter
 import org.springframework.stereotype.Component
 import java.util.concurrent.ConcurrentHashMap
+
+private val logger = KotlinLogging.logger {}
 
 /**
  * In-memory process instance projection.
@@ -30,8 +32,6 @@ class SimpleProcessVariableService(
   private val revisionSupport: RevisionSupport = RevisionSupport(),
   private val processVariables: ConcurrentHashMap<String, MutableSet<ProcessVariable>> = ConcurrentHashMap<String, MutableSet<ProcessVariable>>()
 ) : ProcessVariableApi {
-
-  companion object : KLogging()
 
   /**
    * Query for process variables of a process instance.

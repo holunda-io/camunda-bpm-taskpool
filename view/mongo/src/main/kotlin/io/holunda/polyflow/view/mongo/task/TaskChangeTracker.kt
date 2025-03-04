@@ -1,6 +1,7 @@
 package io.holunda.polyflow.view.mongo.task
 
 import com.mongodb.MongoCommandException
+import io.github.oshai.kotlinlogging.KotlinLogging
 import io.holunda.camunda.taskpool.api.business.dataIdentityString
 import io.holunda.polyflow.view.Task
 import io.holunda.polyflow.view.TaskWithDataEntries
@@ -11,7 +12,6 @@ import io.holunda.polyflow.view.mongo.util.CronTriggerWithJitter
 import io.holunda.polyflow.view.query.task.ApplicationWithTaskCount
 import jakarta.annotation.PostConstruct
 import jakarta.annotation.PreDestroy
-import mu.KLogging
 import org.bson.BsonValue
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.scheduling.TaskScheduler
@@ -29,6 +29,8 @@ import java.time.Instant
 import java.util.concurrent.TimeUnit
 import java.util.logging.Level
 
+private val logger = KotlinLogging.logger {}
+
 /**
  * Observes the change stream on the mongo db and provides `Flux`es of changes for the various result types of queries. Also makes sure that tasks marked as
  * deleted are 'really' deleted shortly after.
@@ -42,7 +44,6 @@ class TaskChangeTracker(
   private val properties: TaskPoolMongoViewProperties,
   private val scheduler: TaskScheduler
 ) {
-  companion object : KLogging()
 
   private var lastSeenResumeToken: BsonValue? = null
 
