@@ -22,7 +22,7 @@
     <camunda-commons-typed-values.version>7.22.0</camunda-commons-typed-values.version>
 
     <axon-bom.version>4.11.2</axon-bom.version>
-    <axon-kotlin.version>4.11.0</axon-kotlin.version>
+    <axon-kotlin.version>4.11.1</axon-kotlin.version>
     <axon-gateway-extension.version>2.1.0</axon-gateway-extension.version>
 
     <awaitility.version>4.3.0</awaitility.version>
