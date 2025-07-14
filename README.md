@@ -49,11 +49,7 @@ If you have any questions regarding the main concepts, configuration of individu
 the [Reference Guide](https://www.holunda.io/camunda-bpm-taskpool/stable/reference-guide/) acting as a primary documentation. If you want to have a technical
 discussion on any issue, feel free to look into [GitHub Project Discussion](https://github.com/holunda-io/camunda-bpm-taskpool/stable/discussions/)
 
-Finally, there are:
-- [![Gitter chat](https://badges.gitter.im/gitterHQ/gitter.png)](https://gitter.im/holunda-io/camunda-bpm-taskpool?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
-- [![Slack](https://img.shields.io/badge/slack-@holunda/taskpool-green.svg?logo=slack")](https://holunda.slack.com/messages/taskpool/)
-
-available, if you want to discuss more issues with the developers.
+Finally, there is [![Slack](https://img.shields.io/badge/slack-@holunda/taskpool-green.svg?logo=slack")](https://holunda.slack.com/messages/taskpool/) available, if you want to discuss more issues with the developers.
 
 ### Working Example
 
@@ -68,7 +64,7 @@ This library is developed under
 
 ### Contribution
 
-This project is open source and we love if the community contributes to this project. If you are willing to help, start
+This project is open source, and we love if the community contributes to this project. If you are willing to help, start
 with [Developer Guide](https://www.holunda.io/camunda-bpm-taskpool/stable/developer-guide/contribution.html).
 
 ### Sponsors and Customers
