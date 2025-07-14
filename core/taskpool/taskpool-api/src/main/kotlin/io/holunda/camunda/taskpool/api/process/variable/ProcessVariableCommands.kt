@@ -2,8 +2,6 @@ package io.holunda.camunda.taskpool.api.process.variable
 
 import io.holunda.camunda.taskpool.api.task.SourceReference
 import org.axonframework.modelling.command.TargetAggregateIdentifier
-import org.camunda.bpm.engine.variable.VariableMap
-import org.camunda.bpm.engine.variable.Variables.createVariables
 
 /**
  * Represents a change of process variables of a given process execution.

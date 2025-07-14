@@ -300,7 +300,7 @@ interface TaskRepository : CrudRepository<TaskEntity, String>, JpaSpecificationE
      */
     fun hasTaskPayloadAttribute(name: String, values: List<String>): Specification<TaskEntity> =
       Specification { task, query, builder ->
-        query.distinct(true)
+        requireNotNull(query).distinct(true)
         val join = task.join<TaskEntity, Set<PayloadAttribute>>(TaskEntity::payloadAttributes.name)
         val pathEquals = builder.equal(
           join.get<String>(PayloadAttribute::path.name),
@@ -324,7 +324,7 @@ interface TaskRepository : CrudRepository<TaskEntity, String>, JpaSpecificationE
      */
     fun hasTaskOrDataEntryPayloadAttribute(name: String, values: List<String>): Specification<TaskEntity> =
       Specification { task, query, builder ->
-        query.distinct(true)
+        requireNotNull(query).distinct(true)
         val join = task.join<TaskEntity, Set<TaskAndDataEntryPayloadAttributeEntity>>(TaskEntity::taskAndDataEntryPayloadAttributes.name)
         val pathEquals = builder.equal(
           join.get<TaskAndDataEntryPayloadAttributeEntityId>(TaskAndDataEntryPayloadAttributeEntity::id.name)

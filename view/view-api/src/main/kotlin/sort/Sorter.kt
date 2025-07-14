@@ -4,12 +4,9 @@ import io.holunda.polyflow.view.DataEntry
 import io.holunda.polyflow.view.Task
 import io.holunda.polyflow.view.TaskWithDataEntries
 import io.holunda.polyflow.view.filter.*
-import io.holunda.polyflow.view.filter.isDataEntryAttribute
-import io.holunda.polyflow.view.filter.isTaskAttribute
 import java.lang.reflect.Field
 import java.time.Instant
 import java.util.*
-import kotlin.Comparator
 
 /**
  * Creates a new data entry comparator.

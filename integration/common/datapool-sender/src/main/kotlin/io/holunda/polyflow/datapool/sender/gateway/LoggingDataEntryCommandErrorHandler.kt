@@ -2,7 +2,6 @@ package io.holunda.polyflow.datapool.sender.gateway
 
 import io.github.oshai.kotlinlogging.KLogger
 import org.axonframework.commandhandling.CommandResultMessage
-import org.slf4j.Logger
 
 /**
  * Error handler, logging the error.

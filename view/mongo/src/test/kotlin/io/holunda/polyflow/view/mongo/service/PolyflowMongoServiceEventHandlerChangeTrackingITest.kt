@@ -1,6 +1,5 @@
 package io.holunda.polyflow.view.mongo.service
 
-import com.mongodb.client.MongoClients
 import io.holunda.polyflow.view.mongo.TaskPoolMongoViewConfiguration
 import org.axonframework.extensions.mongo.MongoTemplate
 import org.junit.jupiter.api.AfterEach

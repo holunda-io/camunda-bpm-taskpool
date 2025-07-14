@@ -2,7 +2,6 @@ package io.holunda.polyflow.view.query.task
 
 import io.holunda.camunda.taskpool.api.task.ProcessReference
 import io.holunda.polyflow.view.Task
-import io.holunda.polyflow.view.auth.User
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 

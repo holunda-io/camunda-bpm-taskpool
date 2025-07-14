@@ -1,6 +1,9 @@
 package io.holunda.polyflow.taskpool.sender.task.accumulator
 
-import io.holunda.camunda.taskpool.api.task.*
+import io.holunda.camunda.taskpool.api.task.AddCandidateUsersCommand
+import io.holunda.camunda.taskpool.api.task.CreateTaskCommand
+import io.holunda.camunda.taskpool.api.task.DeleteCandidateUsersCommand
+import io.holunda.camunda.taskpool.api.task.UpdateAttributesHistoricTaskCommand
 
 /**
  * Due to Camunda event handling implementation eventing might be slightly strange.

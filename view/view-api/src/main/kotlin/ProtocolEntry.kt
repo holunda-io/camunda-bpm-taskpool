@@ -2,7 +2,6 @@ package io.holunda.polyflow.view
 
 import io.holunda.camunda.taskpool.api.business.DataEntryState
 import java.time.Instant
-import java.util.*
 
 /**
  * Represents a protocol entry.
