@@ -107,9 +107,9 @@ class DataEntrySenderConfiguration(
   @PostConstruct
   fun printSenderConfiguration() {
     if (senderProperties.dataEntry.enabled) {
-      logger.info("SENDER-111: Datapool data entry commands will be distributed over command bus.")
+      logger.info{ "SENDER-111: Datapool data entry commands will be distributed over command bus." }
     } else {
-      logger.info("SENDER-112: Datapool data entry command distribution is disabled by property.")
+      logger.info{ "SENDER-112: Datapool data entry command distribution is disabled by property." }
     }
   }
 }

@@ -456,8 +456,8 @@
           <version>${kotlin.version}</version>
           <configuration>
             <jvmTarget>${java.version}</jvmTarget>
-            <apiVersion>1.9</apiVersion>
-            <languageVersion>1.9</languageVersion>
+            <apiVersion>2.0</apiVersion>
+            <languageVersion>2.0</languageVersion>
             <args>
               <arg>-Xjsr305=strict</arg>
             </args>
@@ -670,17 +670,6 @@
           </plugin>
         </plugins>
       </build>
-      <pluginRepositories>
-        <pluginRepository>
-          <id>jcenter</id>
-          <name>JCenter</name>
-          <url>https://jcenter.bintray.com/</url>
-          <releases>
-            <enabled>true</enabled>
-          </releases>
-        </pluginRepository>
-      </pluginRepositories>
-
     </profile>
 
     <profile>
@@ -708,7 +697,6 @@
         </plugins>
       </build>
     </profile>
-
   </profiles>
 
 </project>

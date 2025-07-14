@@ -20,7 +20,7 @@ class DirectTxAwareAccumulatingDataEntryCommandSender(
   override fun send() {
     // iterate over messages and send them
     dataEntryCommands.get().forEach { (identifier, commands) ->
-      DataEntryCommandSender.logger.debug("SENDER-105: Handling ${commands.size} commands for data entry $identifier")
+      DataEntryCommandSender.logger.debug{ "SENDER-105: Handling ${commands.size} commands for data entry $identifier" }
       // handle messages for every data entry
       if (properties.enabled) {
         commandListGateway.sendToGateway(commands)
