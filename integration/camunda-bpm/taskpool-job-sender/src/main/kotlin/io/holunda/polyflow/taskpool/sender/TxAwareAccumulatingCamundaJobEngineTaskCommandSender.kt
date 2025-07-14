@@ -13,7 +13,7 @@ import java.util.*
 private val logger = KotlinLogging.logger {}
 
 /**
- * Command sender writing a Camunda Jobj which will send commands later.
+ * Command sender writing a Camunda Job which will send commands later.
  */
 class TxAwareAccumulatingCamundaJobEngineTaskCommandSender(
   private val processEngineConfiguration: ProcessEngineConfigurationImpl,

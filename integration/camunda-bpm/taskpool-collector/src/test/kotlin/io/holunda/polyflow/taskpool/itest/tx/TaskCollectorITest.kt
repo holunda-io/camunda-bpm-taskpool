@@ -26,18 +26,18 @@ import org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.*
 import org.camunda.bpm.engine.variable.Variables
 import org.camunda.bpm.spring.boot.starter.annotation.EnableProcessApplication
 import org.junit.jupiter.api.Test
-import org.mockito.Mockito.*
+import org.mockito.Mockito.verify
 import org.mockito.kotlin.verifyNoMoreInteractions
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Primary
 import org.springframework.context.event.EventListener
 import org.springframework.core.annotation.Order
 import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.ActiveProfiles
+import org.springframework.test.context.bean.override.mockito.MockitoBean
 import java.time.Instant.now
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -60,7 +60,7 @@ internal class TaskCollectorITest {
   @Autowired
   lateinit var commandExecutor: CommandExecutor
 
-  @MockBean
+  @MockitoBean
   lateinit var commandListGateway: CommandListGateway
 
   private val driver: TestDriver by lazy {

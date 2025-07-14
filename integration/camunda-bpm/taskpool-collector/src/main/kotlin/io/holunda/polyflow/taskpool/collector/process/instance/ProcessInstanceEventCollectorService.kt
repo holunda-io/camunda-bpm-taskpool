@@ -2,8 +2,8 @@ package io.holunda.polyflow.taskpool.collector.process.instance
 
 import io.github.oshai.kotlinlogging.KotlinLogging
 import io.holunda.camunda.taskpool.api.process.instance.*
-import io.holunda.polyflow.taskpool.sourceReference
 import io.holunda.polyflow.taskpool.collector.CamundaTaskpoolCollectorProperties
+import io.holunda.polyflow.taskpool.sourceReference
 import org.camunda.bpm.engine.RepositoryService
 import org.camunda.bpm.engine.history.HistoricProcessInstance
 import org.camunda.bpm.engine.impl.history.event.HistoricProcessInstanceEventEntity

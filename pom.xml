@@ -5,7 +5,7 @@
 
   <groupId>io.holunda.polyflow</groupId>
   <artifactId>polyflow-root</artifactId>
-  <version>4.4.0</version>
+  <version>4.4.1</version>
   <packaging>pom</packaging>
 
   <name>POM: ${project.artifactId}</name>
@@ -19,10 +19,10 @@
     <java.version>17</java.version>
     <version.java>${java.version}</version.java>
 
-    <kotlin.version>2.1.10</kotlin.version>
+    <kotlin.version>2.2.0</kotlin.version>
     <kotlin.compiler.jvmTarget>${java.version}</kotlin.compiler.jvmTarget>
     <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
-    <kotlin-logging.version>7.0.4</kotlin-logging.version>
+    <kotlin-logging.version>7.0.7</kotlin-logging.version>
 
   </properties>
 
@@ -40,7 +40,7 @@
           <!-- cleaning -->
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-clean-plugin</artifactId>
-          <version>3.4.1</version>
+          <version>3.5.0</version>
         </plugin>
         <!-- gitflow -->
         <plugin>
@@ -78,7 +78,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-enforcer-plugin</artifactId>
-        <version>3.5.0</version>
+        <version>3.6.0</version>
         <executions>
           <execution>
             <id>enforce-maven</id>
@@ -136,29 +136,21 @@
             </configuration>
           </plugin>
           <plugin>
-            <groupId>org.sonatype.plugins</groupId>
-            <artifactId>nexus-staging-maven-plugin</artifactId>
-            <version>1.7.0</version>
-            <executions>
-              <execution>
-                <id>default-deploy</id>
-                <phase>deploy</phase>
-                <goals>
-                  <goal>deploy</goal>
-                </goals>
-                <configuration>
-                  <serverId>ossrh</serverId>
-                  <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-                  <autoReleaseAfterClose>true</autoReleaseAfterClose>
-                </configuration>
-              </execution>
-            </executions>
+            <groupId>org.sonatype.central</groupId>
+            <artifactId>central-publishing-maven-plugin</artifactId>
+            <version>0.8.0</version>
+            <extensions>true</extensions>
+            <configuration>
+              <publishingServerId>central</publishingServerId>
+              <autoPublish>true</autoPublish>
+            </configuration>
           </plugin>
+
           <!-- To sign the artifacts -->
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-gpg-plugin</artifactId>
-            <version>3.2.7</version>
+            <version>3.2.8</version>
             <configuration>
               <!-- pass -Dgpg.keyname=.. and -Dgpg.passphrase=... -->
               <gpgArguments>
@@ -198,22 +190,6 @@
     <developerConnection>scm:git:git@github.com:holunda-io/camunda-bpm-taskpool.git</developerConnection>
     <tag>HEAD</tag>
   </scm>
-
-  <distributionManagement>
-    <site>
-      <id>docs</id>
-      <name>Documentation</name>
-      <url>https://www.holunda.io/camunda-bpm-taskpool/</url>
-    </site>
-    <snapshotRepository>
-      <id>ossrh</id>
-      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-    </snapshotRepository>
-    <repository>
-      <id>ossrh</id>
-      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-    </repository>
-  </distributionManagement>
 
   <developers>
     <developer>

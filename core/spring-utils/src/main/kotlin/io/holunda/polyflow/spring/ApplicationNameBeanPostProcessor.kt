@@ -8,10 +8,6 @@ import org.springframework.core.annotation.AnnotationUtils
 import org.springframework.core.env.get
 import kotlin.reflect.KMutableProperty1
 import kotlin.reflect.full.memberProperties
-import kotlin.reflect.jvm.isAccessible
-import kotlin.reflect.jvm.javaField
-import kotlin.reflect.jvm.javaGetter
-import kotlin.reflect.jvm.javaSetter
 
 /**
  * A bean post processor that inspects all [ConfigurationProperties] beans, looks for a mutable property of type `String` called `applicationName` and replaces it with the value

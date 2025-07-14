@@ -1,7 +1,6 @@
 package io.holunda.polyflow.view.sort
 
 import io.holunda.polyflow.view.Task
-import io.holunda.polyflow.view.TaskWithDataEntries
 import io.holunda.polyflow.view.filter.extractValue
 import java.lang.reflect.Field
 import javax.xml.datatype.DatatypeConstants.LESSER

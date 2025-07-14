@@ -4,9 +4,7 @@ import io.holunda.camunda.taskpool.api.task.CaseReference
 import io.holunda.camunda.taskpool.api.task.ProcessReference
 import io.holunda.camunda.taskpool.api.task.SourceReference
 import io.holunda.camunda.taskpool.api.task.UpdateAttributeTaskCommand
-import org.apache.commons.lang3.reflect.FieldUtils
 import org.camunda.bpm.engine.delegate.DelegateTask
-import org.camunda.bpm.engine.impl.persistence.entity.PropertyChange
 import org.camunda.bpm.engine.impl.persistence.entity.TaskEntity
 
 /**

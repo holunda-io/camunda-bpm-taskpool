@@ -9,7 +9,6 @@ import io.holunda.polyflow.view.DataEntry
 import io.holunda.polyflow.view.auth.User
 import io.holunda.polyflow.view.query.data.DataEntriesForUserQuery
 import io.toolisticon.testing.jgiven.step
-import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
 import org.axonframework.messaging.MetaData
 import org.axonframework.queryhandling.QueryUpdateEmitter

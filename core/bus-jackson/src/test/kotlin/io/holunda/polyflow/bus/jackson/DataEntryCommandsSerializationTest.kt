@@ -7,7 +7,7 @@ import com.fasterxml.jackson.module.kotlin.readValue
 import io.holunda.camunda.taskpool.api.business.*
 import org.assertj.core.api.Assertions.assertThat
 import org.camunda.bpm.engine.variable.Variables
-import org.camunda.bpm.engine.variable.Variables.*
+import org.camunda.bpm.engine.variable.Variables.stringValue
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 

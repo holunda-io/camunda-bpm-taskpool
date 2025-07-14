@@ -3,8 +3,6 @@ package io.holunda.polyflow.taskpool
 import org.camunda.bpm.engine.context.ProcessEngineContext
 import org.camunda.bpm.engine.impl.cfg.ProcessEngineConfigurationImpl
 import org.camunda.bpm.engine.impl.interceptor.Command
-import org.camunda.bpm.engine.impl.persistence.entity.IdentityLinkEntity
-import org.camunda.bpm.engine.impl.persistence.entity.ProcessDefinitionEntity
 
 /**
  * Runs a command in command context.

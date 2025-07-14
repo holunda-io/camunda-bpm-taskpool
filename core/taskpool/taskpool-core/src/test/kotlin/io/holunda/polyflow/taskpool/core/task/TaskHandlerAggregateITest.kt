@@ -2,7 +2,9 @@ package io.holunda.polyflow.taskpool.core.task
 
 import io.holunda.camunda.taskpool.api.business.addCorrelation
 import io.holunda.camunda.taskpool.api.business.newCorrelations
-import io.holunda.camunda.taskpool.api.task.*
+import io.holunda.camunda.taskpool.api.task.CreateTaskCommand
+import io.holunda.camunda.taskpool.api.task.ProcessReference
+import io.holunda.camunda.taskpool.api.task.TaskCreatedEngineEvent
 import io.holunda.polyflow.taskpool.core.TestApplication
 import org.assertj.core.api.Assertions.assertThat
 import org.axonframework.commandhandling.gateway.CommandGateway

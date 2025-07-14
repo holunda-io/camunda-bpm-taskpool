@@ -6,7 +6,7 @@
   <parent>
     <groupId>io.holunda.polyflow</groupId>
     <artifactId>polyflow-root</artifactId>
-    <version>4.4.0</version>
+    <version>4.4.1</version>
     <relativePath>../../pom.xml</relativePath>
   </parent>
 
@@ -18,17 +18,17 @@
   <url>https://github.com/holunda-io/camunda-bpm-taskpool/</url>
 
   <properties>
-    <springboot.version>3.2.6</springboot.version>
-    <camunda-commons-typed-values.version>7.22.0</camunda-commons-typed-values.version>
+    <springboot.version>3.5.3</springboot.version>
+    <camunda-commons-typed-values.version>7.23.0</camunda-commons-typed-values.version>
 
-    <axon-bom.version>4.11.1</axon-bom.version>
-    <axon-kotlin.version>4.11.0</axon-kotlin.version>
+    <axon-bom.version>4.11.3</axon-bom.version>
+    <axon-kotlin.version>4.11.1</axon-kotlin.version>
     <axon-gateway-extension.version>2.1.0</axon-gateway-extension.version>
 
     <awaitility.version>4.3.0</awaitility.version>
     <mockito-kotlin.version>5.4.0</mockito-kotlin.version>
-    <jgiven.version>2.0.1</jgiven.version>
-    <jgiven-kotlin.version>2.0.1.0</jgiven-kotlin.version>
+    <jgiven.version>2.0.2</jgiven.version>
+    <jgiven-kotlin.version>2.0.2.1</jgiven-kotlin.version>
 
     <pattern.class.itest>**/*ITest.*</pattern.class.itest>
     <pattern.package.itest>**/itest/**/*.*</pattern.package.itest>
@@ -165,7 +165,7 @@
       <dependency>
         <groupId>io.toolisticon.spring</groupId>
         <artifactId>spring-boot-conditions</artifactId>
-        <version>1.0.0</version>
+        <version>1.0.1</version>
       </dependency>
 
       <dependency>
@@ -316,7 +316,7 @@
         <plugin>
           <groupId>org.jacoco</groupId>
           <artifactId>jacoco-maven-plugin</artifactId>
-          <version>0.8.12</version>
+          <version>0.8.13</version>
           <executions>
             <execution>
               <id>pre-unit-test</id>
@@ -456,8 +456,8 @@
           <version>${kotlin.version}</version>
           <configuration>
             <jvmTarget>${java.version}</jvmTarget>
-            <apiVersion>1.9</apiVersion>
-            <languageVersion>1.9</languageVersion>
+            <apiVersion>2.0</apiVersion>
+            <languageVersion>2.0</languageVersion>
             <args>
               <arg>-Xjsr305=strict</arg>
             </args>
@@ -524,7 +524,7 @@
 
         <plugin>
           <artifactId>maven-surefire-plugin</artifactId>
-          <version>3.5.2</version>
+          <version>3.5.3</version>
           <configuration>
             <useSystemClassLoader>false</useSystemClassLoader>
             <runOrder>random</runOrder>
@@ -545,7 +545,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-failsafe-plugin</artifactId>
-          <version>3.5.2</version>
+          <version>3.5.3</version>
           <executions>
             <execution>
               <goals>
@@ -586,7 +586,7 @@
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>build-helper-maven-plugin</artifactId>
-          <version>3.6.0</version>
+          <version>3.6.1</version>
           <executions>
             <execution>
               <phase>generate-sources</phase>
@@ -670,17 +670,6 @@
           </plugin>
         </plugins>
       </build>
-      <pluginRepositories>
-        <pluginRepository>
-          <id>jcenter</id>
-          <name>JCenter</name>
-          <url>https://jcenter.bintray.com/</url>
-          <releases>
-            <enabled>true</enabled>
-          </releases>
-        </pluginRepository>
-      </pluginRepositories>
-
     </profile>
 
     <profile>
@@ -708,7 +697,6 @@
         </plugins>
       </build>
     </profile>
-
   </profiles>
 
 </project>

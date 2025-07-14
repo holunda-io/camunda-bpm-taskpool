@@ -290,8 +290,10 @@ internal class TaskChangeTrackerTest {
         null,
         null,
         null,
+        null,
         null
-      ), TaskDocument::class.java, converter
+      ), TaskDocument::class.java,
+      converter
     )
   }
 

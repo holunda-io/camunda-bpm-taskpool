@@ -2,7 +2,6 @@ package io.holunda.polyflow.view.query.task
 
 import io.holunda.polyflow.view.Task
 import io.holunda.polyflow.view.TaskWithDataEntries
-import io.holunda.polyflow.view.query.process.ProcessDefinitionApi
 import java.util.*
 import java.util.concurrent.CompletableFuture
 

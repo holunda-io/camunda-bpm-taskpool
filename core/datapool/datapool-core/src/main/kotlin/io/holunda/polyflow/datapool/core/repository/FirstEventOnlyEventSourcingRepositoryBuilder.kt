@@ -1,7 +1,6 @@
 package io.holunda.polyflow.datapool.core.repository
 
 import org.axonframework.eventhandling.DomainEventMessage
-import org.axonframework.eventsourcing.CachingEventSourcingRepository
 import org.axonframework.eventsourcing.EventSourcingRepository
 import org.axonframework.eventsourcing.SnapshotTriggerDefinition
 import org.axonframework.eventsourcing.eventstore.EventStore
