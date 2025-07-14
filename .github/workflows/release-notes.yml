@@ -1,8 +1,13 @@
+name: Milestone Closure
+
+permissions:
+  contents: write
+
 # Trigger the workflow on milestone events
 on:
   milestone:
     types: [closed]
-name: Milestone Closure
+
 jobs:
   create-release-notes:
     runs-on: ubuntu-latest

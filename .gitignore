@@ -36,7 +36,6 @@ hs_err_pid*
 .Trashes
 ehthumbs.db
 Thumbs.db
-.java-version
 
 # Avoid ignoring Maven wrapper jar file (.jar files are usually ignored)
 !/.mvn/wrapper/maven-wrapper.jar
