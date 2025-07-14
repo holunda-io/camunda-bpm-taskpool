@@ -3,7 +3,6 @@ package io.holunda.polyflow.view.query.task
 import io.holunda.polyflow.view.Task
 import io.holunda.polyflow.view.auth.User
 import io.holunda.polyflow.view.query.FilterQuery
-import io.holunda.polyflow.view.query.PageableSortableQuery
 
 /**
  * Query and distinct tasks attribute values for the given attribute name.

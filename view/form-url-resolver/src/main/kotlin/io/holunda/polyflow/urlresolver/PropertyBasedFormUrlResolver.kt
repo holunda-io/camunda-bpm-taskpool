@@ -2,13 +2,11 @@ package io.holunda.polyflow.urlresolver
 
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
-import io.holunda.polyflow.bus.jackson.config.FallbackPayloadObjectMapperAutoConfiguration.Companion.PAYLOAD_OBJECT_MAPPER
 import io.holunda.polyflow.view.DataEntry
 import io.holunda.polyflow.view.FormUrlResolver
 import io.holunda.polyflow.view.ProcessDefinition
 import io.holunda.polyflow.view.Task
 import org.apache.commons.text.StringSubstitutor
-import org.springframework.beans.factory.annotation.Qualifier
 
 /**
  * URL resolver backed with properties from yaml.

@@ -2,8 +2,8 @@ package io.holunda.polyflow.taskpool.collector.process.definition
 
 import io.holunda.camunda.taskpool.api.process.definition.RegisterProcessDefinitionCommand
 import io.holunda.polyflow.taskpool.asCommand
-import io.holunda.polyflow.taskpool.executeInCommandContext
 import io.holunda.polyflow.taskpool.collector.CamundaTaskpoolCollectorProperties
+import io.holunda.polyflow.taskpool.executeInCommandContext
 import org.camunda.bpm.engine.FormService
 import org.camunda.bpm.engine.RepositoryService
 import org.camunda.bpm.engine.impl.cfg.ProcessEngineConfigurationImpl

@@ -1,7 +1,6 @@
 package io.holunda.polyflow.datapool.projector
 
 import io.holunda.camunda.taskpool.api.business.EntryType
-import org.springframework.stereotype.Component
 
 /**
  * Component responsible for retrieving property projectors for given entry types.

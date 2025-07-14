@@ -10,8 +10,6 @@ import org.axonframework.commandhandling.CommandMessage
 import org.axonframework.commandhandling.GenericCommandMessage
 import org.axonframework.messaging.MetaData
 import org.camunda.bpm.engine.variable.VariableMap
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 
 // FIXME: reason about the API and refactor it...
 /**

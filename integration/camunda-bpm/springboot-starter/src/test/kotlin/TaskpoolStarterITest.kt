@@ -1,7 +1,6 @@
 package io.holunda.polyflow.taskpool
 
 import io.holunda.polyflow.datapool.sender.DataEntryCommandSender
-import io.holunda.polyflow.taskpool.EnableTaskpoolEngineSupport
 import io.holunda.polyflow.taskpool.sender.task.EngineTaskCommandSender
 import org.assertj.core.api.Assertions.assertThat
 import org.axonframework.commandhandling.gateway.DefaultCommandGateway

@@ -1,6 +1,6 @@
 package io.holunda.polyflow.taskpool.itest.txjob
 
-import io.holunda.camunda.taskpool.api.task.*
+import io.holunda.camunda.taskpool.api.task.CreateTaskCommand
 import io.holunda.polyflow.taskpool.EnableCamundaTaskpoolCollector
 import io.holunda.polyflow.taskpool.EnableTaskpoolSender
 import io.holunda.polyflow.taskpool.itest.TestDriver
@@ -14,27 +14,27 @@ import org.camunda.bpm.engine.RepositoryService
 import org.camunda.bpm.engine.RuntimeService
 import org.camunda.bpm.engine.delegate.TaskListener
 import org.camunda.bpm.engine.impl.persistence.entity.MessageEntity
-import org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.*
+import org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.assertThat
+import org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.execute
 import org.camunda.bpm.engine.variable.Variables
 import org.camunda.bpm.spring.boot.starter.annotation.EnableProcessApplication
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
-import org.mockito.Mockito.*
+import org.mockito.Mockito.verify
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verifyNoMoreInteractions
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Primary
 import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.ActiveProfiles
+import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.transaction.support.TransactionTemplate
-import java.util.*
 import java.util.concurrent.TimeUnit
 
 
@@ -45,7 +45,7 @@ import java.util.concurrent.TimeUnit
 @Disabled("This test sometimes fails because it can't create a new TX (Entity Manager is closed).")
 internal class TaskTxJobSenderITest {
 
-  @MockBean
+  @MockitoBean
   lateinit var commandListGateway: CommandListGateway
 
   @Autowired

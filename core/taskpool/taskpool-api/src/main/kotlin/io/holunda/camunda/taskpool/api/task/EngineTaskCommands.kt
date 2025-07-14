@@ -4,7 +4,6 @@ import io.holunda.camunda.taskpool.api.business.CorrelationMap
 import io.holunda.camunda.taskpool.api.business.newCorrelations
 import io.holunda.camunda.taskpool.api.task.CamundaTaskEventType.Companion.ASSIGN
 import io.holunda.camunda.taskpool.api.task.CamundaTaskEventType.Companion.ATTRIBUTES
-import io.holunda.camunda.taskpool.api.task.CamundaTaskEventType.Companion.BATCH
 import io.holunda.camunda.taskpool.api.task.CamundaTaskEventType.Companion.CANDIDATE_GROUP_ADD
 import io.holunda.camunda.taskpool.api.task.CamundaTaskEventType.Companion.CANDIDATE_GROUP_DELETE
 import io.holunda.camunda.taskpool.api.task.CamundaTaskEventType.Companion.CANDIDATE_USER_ADD

@@ -101,7 +101,7 @@ interface DataEntryRepository : CrudRepository<DataEntryEntity, DataEntryId>, Jp
      */
     fun hasDataEntryPayloadAttribute(name: String, values: List<String>): Specification<DataEntryEntity> =
       Specification { dataEntry, query, builder ->
-        query.distinct(true)
+        requireNotNull(query).distinct(true)
         val join = dataEntry.join<DataEntryEntity, Set<PayloadAttribute>>(DataEntryEntity::payloadAttributes.name)
         val pathEquals = builder.equal(
           join.get<String>(PayloadAttribute::path.name),
@@ -124,7 +124,7 @@ interface DataEntryRepository : CrudRepository<DataEntryEntity, DataEntryId>, Jp
      */
     fun hasDataEntryPayloadAttributeIncludingCorrelations(name: String, values: List<String>): Specification<DataEntryEntity> =
       Specification { dataEntry, query, builder ->
-        query.distinct(true)
+        requireNotNull(query).distinct(true)
         val join = dataEntry.join<DataEntryEntity, Set<DataEntryPayloadAttributeEntity>>(DataEntryEntity::payloadAndCorrelatedPayloadAttributes.name)
         val pathEquals = builder.equal(
           join.get<DataEntryPayloadAttributeEntityId>(DataEntryPayloadAttributeEntity::id.name)

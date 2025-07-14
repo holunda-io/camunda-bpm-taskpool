@@ -1,7 +1,6 @@
 package io.holunda.polyflow.view
 
 import io.holunda.polyflow.view.query.process.ProcessDefinitionsStartableByUserQuery
-import io.holunda.polyflow.view.query.task.*
 import org.axonframework.messaging.responsetypes.ResponseTypes
 import org.axonframework.queryhandling.QueryGateway
 import java.util.concurrent.CompletableFuture

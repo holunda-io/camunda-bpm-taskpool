@@ -3,7 +3,6 @@ package io.holunda.polyflow.view.sort
 import io.holunda.polyflow.view.DataEntry
 import io.holunda.polyflow.view.filter.extractValue
 import java.lang.reflect.Field
-import java.util.Comparator
 import javax.xml.datatype.DatatypeConstants
 
 

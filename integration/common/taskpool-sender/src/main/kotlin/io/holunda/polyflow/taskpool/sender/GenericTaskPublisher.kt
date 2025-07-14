@@ -3,7 +3,6 @@ package io.holunda.polyflow.taskpool.sender
 import io.holunda.camunda.taskpool.api.task.*
 import io.holunda.polyflow.taskpool.sender.api.Task
 import org.springframework.context.ApplicationEventPublisher
-import org.springframework.stereotype.Component
 
 /**
  * Emits Task Commands

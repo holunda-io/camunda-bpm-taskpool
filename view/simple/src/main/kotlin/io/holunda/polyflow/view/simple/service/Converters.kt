@@ -1,6 +1,9 @@
 package io.holunda.polyflow.view.simple.service
 
-import io.holunda.camunda.taskpool.api.business.*
+import io.holunda.camunda.taskpool.api.business.AuthorizationChange
+import io.holunda.camunda.taskpool.api.business.DataEntryAnonymizedEvent
+import io.holunda.camunda.taskpool.api.business.DataEntryCreatedEvent
+import io.holunda.camunda.taskpool.api.business.DataEntryUpdatedEvent
 import io.holunda.camunda.taskpool.api.process.instance.ProcessInstanceCancelledEvent
 import io.holunda.camunda.taskpool.api.process.instance.ProcessInstanceEndedEvent
 import io.holunda.camunda.taskpool.api.process.instance.ProcessInstanceStartedEvent
