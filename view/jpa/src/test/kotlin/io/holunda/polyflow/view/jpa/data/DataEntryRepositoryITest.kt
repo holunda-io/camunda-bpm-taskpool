@@ -21,7 +21,6 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
-import org.springframework.data.jpa.domain.Specification.where
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.ActiveProfiles
@@ -220,20 +219,20 @@ internal class DataEntryRepositoryITest {
 
   @Test
   fun `should find by filter state`() {
-    val byStateInProgress = dataEntryRepository.findAll(where(hasState("In progress")))
+    val byStateInProgress = dataEntryRepository.findAll(hasState("In progress"))
     assertThat(byStateInProgress).containsExactlyInAnyOrderElementsOf(listOf(dataEntry))
 
-    val byStateInReview = dataEntryRepository.findAll(where(hasState("In review")))
+    val byStateInReview = dataEntryRepository.findAll(hasState("In review"))
     assertThat(byStateInReview).containsExactlyInAnyOrderElementsOf(listOf(dataEntry2))
 
   }
 
   @Test
   fun `should find by filter processing type`() {
-    val byProcessingTypeInProgress = dataEntryRepository.findAll(where(hasProcessingType(ProcessingType.IN_PROGRESS)))
+    val byProcessingTypeInProgress = dataEntryRepository.findAll(hasProcessingType(ProcessingType.IN_PROGRESS))
     assertThat(byProcessingTypeInProgress).containsExactlyInAnyOrderElementsOf(listOf(dataEntry, dataEntry2))
 
-    val byProcessingTypeCompleted = dataEntryRepository.findAll(where(hasProcessingType(ProcessingType.COMPLETED)))
+    val byProcessingTypeCompleted = dataEntryRepository.findAll(hasProcessingType(ProcessingType.COMPLETED))
     assertThat(byProcessingTypeCompleted).isEmpty()
 
   }
@@ -241,12 +240,12 @@ internal class DataEntryRepositoryITest {
   @Test
   fun `should find by filter payload attribute`() {
 
-    val byPayloadFilterByChildKeyNumberValue = dataEntryRepository.findAll(where(hasDataEntryPayloadAttribute("child.key-number", listOf("42"))))
+    val byPayloadFilterByChildKeyNumberValue = dataEntryRepository.findAll(hasDataEntryPayloadAttribute("child.key-number", listOf("42")))
     assertThat(byPayloadFilterByChildKeyNumberValue).containsExactlyInAnyOrderElementsOf(listOf(dataEntry, dataEntry2))
 
     val byPayloadFilterByChildKeyValue =
       dataEntryRepository.findAll(
-        where(hasDataEntryPayloadAttribute("child.key", listOf("value")))
+        hasDataEntryPayloadAttribute("child.key", listOf("value"))
           .and(hasDataEntryPayloadAttribute("id", listOf(dataEntry.dataEntryId.entryId)))
       )
     assertThat(byPayloadFilterByChildKeyValue).containsExactlyInAnyOrderElementsOf(listOf(dataEntry))
