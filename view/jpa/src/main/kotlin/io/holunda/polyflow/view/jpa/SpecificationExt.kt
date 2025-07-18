@@ -40,7 +40,6 @@ import org.springframework.data.domain.Sort
 import org.springframework.data.domain.Sort.Direction
 import org.springframework.data.domain.Sort.Order
 import org.springframework.data.jpa.domain.Specification
-import org.springframework.data.jpa.domain.Specification.where
 import java.time.Instant
 
 /**
@@ -51,7 +50,7 @@ fun List<Criterion>.toDataEntrySpecification(includeCorrelatedDataEntries: Boole
   val attributeSpec = toDataEntryAttributeSpecification()
   val payloadSpec = toDataEntryPayloadSpecification(includeCorrelatedDataEntries)
 
-  return where(attributeSpec).and(payloadSpec)
+  return attributeSpec.and(payloadSpec)
 }
 
 /**
@@ -62,7 +61,7 @@ fun List<Criterion>.toTaskSpecification(): Specification<TaskEntity> {
   val attributeSpec = toTaskAttributeSpecification()
   val payloadSpec = toTaskPayloadSpecification()
 
-  return where(attributeSpec).and(payloadSpec)
+  return attributeSpec.and(payloadSpec)
 }
 
 /**
@@ -73,7 +72,7 @@ fun List<Criterion>.toTaskWithDataEntriesSpecification(): Specification<TaskEnti
   val taskAndDataEntryPayloadSpec = toTaskWithDataEntryPayloadSpecification()
   val dataEntryAttributeSpec = toTaskCorrelatedDataEntryAttributeSpecification()
 
-  return where(attributeSpec).and(taskAndDataEntryPayloadSpec).and(dataEntryAttributeSpec)
+  return attributeSpec.and(taskAndDataEntryPayloadSpec).and(dataEntryAttributeSpec)
 }
 
 /**
@@ -358,23 +357,25 @@ internal fun List<Criterion.PayloadEntryCriterion>.toOrDataEntrySpecification(in
 /**
  * Compose multiple specifications into one specification using conjunction.
  */
-internal fun <T> composeAnd(specifications: List<Specification<T>?>): Specification<T> {
+internal fun <T> composeAnd(specifications: List<Specification<T>>): Specification<T> {
   return when (specifications.size) {
-    0 -> where(null)
-    1 -> where(specifications[0])
-    else -> where(specifications[0]).and(composeAnd(specifications.subList(1, specifications.size)))
+    0 -> alwaysTrue()
+    1 -> specifications[0]
+    else -> specifications[0].and(composeAnd(specifications.subList(1, specifications.size)))
   }
 }
 
 /**
  * Compose multiple specifications into one specification using disjunction.
  */
-internal fun <T> composeOr(specifications: List<Specification<T>?>): Specification<T> {
-  // TODO: This doesn't seem correct, ORing an empty list should yield a specification that never matches, shouldn't it?
+internal fun <T> composeOr(specifications: List<Specification<T>>): Specification<T> {
   return when (specifications.size) {
-    0 -> where(null)
-    1 -> where(specifications[0])
-    else -> where(specifications[0]).or(composeOr(specifications.subList(1, specifications.size)))
+    0 -> alwaysTrue()
+    1 -> specifications[0]
+    else -> specifications[0].or(composeOr(specifications.subList(1, specifications.size)))
   }
 }
 
+private fun <T> alwaysTrue(): Specification<T>  {
+  return Specification{ root, query, builder -> builder.conjunction() }
+}
