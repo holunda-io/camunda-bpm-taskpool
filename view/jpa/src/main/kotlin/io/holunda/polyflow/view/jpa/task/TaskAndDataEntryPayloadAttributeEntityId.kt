@@ -4,6 +4,9 @@ import jakarta.persistence.Column
 import jakarta.persistence.Embeddable
 import java.io.Serializable
 
+/**
+ * Embeddable key for a combination of a task id, property path and its value.
+ */
 @Embeddable
 class TaskAndDataEntryPayloadAttributeEntityId(
   @Column(name = "TASK_ID", length = 64, nullable = false)

@@ -15,6 +15,9 @@ class PayloadAttribute(
   var value: String
 ) : Serializable {
 
+  /**
+   * Static factory methods.
+   */
   companion object {
     /**
      * Factory method to create payload attributes out of map entries.

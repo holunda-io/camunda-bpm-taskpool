@@ -24,6 +24,9 @@ data class Modification(
    */
   val logNotes: String? = null
 ) {
+  /**
+   * Null objects.
+   */
   companion object {
     /**
      * No modification null-object.

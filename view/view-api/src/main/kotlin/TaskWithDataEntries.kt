@@ -13,6 +13,9 @@ data class TaskWithDataEntries(
    */
   val dataEntries: List<DataEntry> = listOf()
 ) {
+  /**
+   * Static functions.
+   */
   companion object {
     /**
      * Helper function to correlate.

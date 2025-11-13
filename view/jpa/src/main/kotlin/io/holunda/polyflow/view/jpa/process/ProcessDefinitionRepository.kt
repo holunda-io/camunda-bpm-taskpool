@@ -10,8 +10,10 @@ import org.springframework.data.repository.CrudRepository
  * Spring Data JPA for Process definitions.
  */
 interface ProcessDefinitionRepository : CrudRepository<ProcessDefinitionEntity, String>, JpaSpecificationExecutor<ProcessDefinitionEntity> {
+  /**
+   * Static methods.
+   */
   companion object {
-
     /**
      * Specification for checking authorization of multiple principals.
      */

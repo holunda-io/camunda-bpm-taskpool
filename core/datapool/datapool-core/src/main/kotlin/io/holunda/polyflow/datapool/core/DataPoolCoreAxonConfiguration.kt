@@ -31,6 +31,9 @@ import org.springframework.context.annotation.Import
   DataEntryCreatedEventUpcaster::class
 )
 class DataPoolCoreAxonConfiguration {
+  /**
+   * Provide constants.
+   */
   companion object {
     const val DATA_ENTRY_REPOSITORY = "dataEntryEventSourcingRepository"
     const val DATA_ENTRY_SNAPSHOTTER = "dataEntrySnapshotter"
@@ -100,12 +103,19 @@ class DataPoolCoreAxonConfiguration {
   @Bean(DATA_ENTRY_CACHE)
   fun dataEntryCache(): Cache = WeakReferenceCache()
 
+  /**
+   * Setup object mapper with configuration required for Polyflow.
+   * @param objectMapper Jackson object mapper to configure.
+   */
   @Autowired
   fun configureJackson(objectMapper: ObjectMapper) {
     objectMapper.configurePolyflowJacksonObjectMapperForDatapool()
   }
 }
 
+/**
+ * Extension function for Jackson Object Mapper configuration.
+ */
 fun ObjectMapper.configurePolyflowJacksonObjectMapperForDatapool(): ObjectMapper {
   addMixIn(DataEntryAggregate::class.java, JsonAutoDetectAnyVisibility::class.java)
   return this

@@ -21,8 +21,10 @@ import java.time.Instant
  */
 interface TaskRepository : CrudRepository<TaskEntity, String>, JpaSpecificationExecutor<TaskEntity> {
 
+  /**
+   * Static methods.
+   */
   companion object {
-
     /**
      * Specification for checking that the assignee is set.
      */

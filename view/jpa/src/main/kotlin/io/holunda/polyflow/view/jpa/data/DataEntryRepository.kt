@@ -17,6 +17,9 @@ interface DataEntryRepository : CrudRepository<DataEntryEntity, DataEntryId>, Jp
    */
   fun findAllByAuthorizedPrincipalsIn(authorizedPrincipalIds: Collection<String>): List<DataEntryEntity>
 
+  /**
+   * Static methods.
+   */
   companion object {
 
     /**

@@ -44,6 +44,9 @@ data class DataEntryDocument(
   val deleteTime: Instant? = null,
   val protocol: List<ProtocolElement> = listOf()
 ) {
+  /**
+   * Public constants.
+   */
   companion object {
     const val COLLECTION = "data-entries"
     const val AUTHORIZED_ENTITY_PREFIX_USER = "user:"

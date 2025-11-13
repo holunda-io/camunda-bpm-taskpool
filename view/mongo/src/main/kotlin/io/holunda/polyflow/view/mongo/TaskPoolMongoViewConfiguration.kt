@@ -32,6 +32,9 @@ private val logger = KotlinLogging.logger {}
 @EntityScan(basePackageClasses = [TaskDocument::class])
 class TaskPoolMongoViewConfiguration {
 
+  /**
+   * Collection names.
+   */
   companion object {
     const val COLLECTION_TOKENS = "tracking-tokens"
     const val COLLECTION_EVENTS = "domain-events"

@@ -15,6 +15,9 @@ private val logger = KotlinLogging.logger {}
 @AnnotatedEventUpcaster(TaskAttributeUpdatedEngineEvent4To5Upcaster.RESULT_OBJECT_TYPE, "4")
 class TaskAttributeUpdatedEngineEvent4To5Upcaster : AnnotationBasedSingleEventUpcaster() {
 
+  /**
+   * Static constants.
+   */
   companion object {
     const val RESULT_OBJECT_TYPE = "io.holunda.camunda.taskpool.api.task.TaskAttributeUpdatedEngineEvent"
   }

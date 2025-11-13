@@ -95,6 +95,9 @@ class MongoViewService(
   private val clock: Clock
 ) : ReactiveTaskApi, ReactiveDataEntryApi {
 
+  /**
+   * Processing group.
+   */
   companion object {
     const val PROCESSING_GROUP = "io.holunda.camunda.taskpool.view.mongo.service"
   }
@@ -544,6 +547,9 @@ class MongoViewService(
   }
 }
 
+/**
+ * Special exception.
+ */
 internal class MonoIsEmptyException : RuntimeException()
 
 internal fun sort(sort: String?): Sort =

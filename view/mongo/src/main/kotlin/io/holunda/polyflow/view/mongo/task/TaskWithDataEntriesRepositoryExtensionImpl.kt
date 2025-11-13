@@ -21,6 +21,9 @@ open class TaskWithDataEntriesRepositoryExtensionImpl(
   private val mongoTemplate: ReactiveMongoTemplate
 ) : TaskWithDataEntriesRepositoryExtension {
 
+  /**
+   * Static constants.
+   */
   companion object {
     val DEFAULT_SORT = Sort.by(Sort.Direction.DESC, TaskWithDataEntriesDocument::dueDate.name)
   }

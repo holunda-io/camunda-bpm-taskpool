@@ -30,6 +30,9 @@ class JpaPolyflowViewProcessInstanceService(
   val polyflowJpaViewProperties: PolyflowJpaViewProperties
 ) : ProcessInstanceApi {
 
+  /**
+   * Processing group.
+   */
   companion object {
     const val PROCESSING_GROUP = "io.holunda.polyflow.view.jpa.service.process.instance"
   }

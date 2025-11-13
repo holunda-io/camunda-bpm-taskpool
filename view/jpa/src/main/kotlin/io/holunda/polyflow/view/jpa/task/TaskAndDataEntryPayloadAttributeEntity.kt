@@ -4,6 +4,9 @@ import jakarta.persistence.EmbeddedId
 import jakarta.persistence.Entity
 import jakarta.persistence.Table
 
+/**
+ * Entity mapping task id, property path and its value.
+ */
 @Entity
 @Table(name = "PLF_VIEW_TASK_AND_DATA_ENTRY_PAYLOAD")
 class TaskAndDataEntryPayloadAttributeEntity(

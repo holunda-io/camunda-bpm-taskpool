@@ -7,6 +7,9 @@ data class AuthorizationPrincipal(
   val name: String,
   val type: AuthorizationPrincipalType
 ) {
+  /**
+   * Factory methods.
+   */
   companion object {
     /**
      * Factory method to construct principal out of string.

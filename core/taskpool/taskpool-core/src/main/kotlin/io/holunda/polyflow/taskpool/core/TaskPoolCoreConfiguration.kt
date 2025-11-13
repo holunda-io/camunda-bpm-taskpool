@@ -25,6 +25,9 @@ import java.util.*
 @ComponentScan
 class TaskPoolCoreConfiguration {
 
+  /**
+   * Constants for bean names.
+   */
   companion object {
     const val TASK_AGGREGATE_REPOSITORY = "taskAggregateRepository"
     const val TASK_CACHE = "taskCache"
@@ -68,6 +71,10 @@ class TaskPoolCoreConfiguration {
       .build()
   }
 
+  /**
+   * Configures Jackson's object mapper.
+   * @param object mapper to configure.
+   */
   @Autowired
   fun configureJackson(objectMapper: ObjectMapper) {
     objectMapper.configurePolyflowJacksonObjectMapperForTaskPool()
@@ -105,6 +112,9 @@ fun <T> Optional<T>.ifPresentOrElse(presentConsumer: (T) -> Unit, missingCallbac
   }
 }
 
+/**
+ * Extension function to configure Jackson Object Mapper.
+ */
 fun ObjectMapper.configurePolyflowJacksonObjectMapperForTaskPool(): ObjectMapper {
   addMixIn(TaskAggregate::class.java, JsonAutoDetectAnyVisibility::class.java)
   return this

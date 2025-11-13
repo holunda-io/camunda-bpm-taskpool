@@ -5,6 +5,9 @@ package io.holunda.camunda.taskpool.api.business
  */
 sealed class AuthorizationChange {
 
+  /**
+   * Static methods to create concrete subclasses.
+   */
   companion object {
     /**
      * Adds a user.

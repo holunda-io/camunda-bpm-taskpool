@@ -54,6 +54,9 @@ data class TaskDocument(
   @Indexed
   val deleteTime: Instant? = null
 ) {
+  /**
+   * Name of the collection.
+   */
   companion object {
     const val COLLECTION = "tasks"
   }

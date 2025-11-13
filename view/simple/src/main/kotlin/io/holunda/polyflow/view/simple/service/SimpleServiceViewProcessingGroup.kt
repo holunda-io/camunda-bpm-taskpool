@@ -15,6 +15,9 @@ class SimpleServiceViewProcessingGroup(
   private val configuration: EventProcessingConfiguration
 ) {
 
+  /**
+   * Static constants.
+   */
   companion object {
     const val PROCESSING_GROUP = "io.holunda.polyflow.view.simple"
   }
