@@ -14,6 +14,9 @@ import org.springframework.data.mongodb.core.mapping.Document
  * Reference.
  */
 sealed class ReferenceDocument {
+  /**
+   * Constants.
+   */
   companion object {
 
     const val COLLECTION = "sources"

@@ -10,7 +10,10 @@ import java.util.*
  */
 class Task {
 
-  // anchor for static extension functions.
+
+  /**
+   * Required as an anchor for static extension functions.
+   */
   companion object {
     // don't delete even if empty.
   }

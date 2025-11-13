@@ -14,6 +14,9 @@ data class EngineTaskCommandsSendingJobHandlerConfiguration(
   val commandByteArrayId: String
 ) : JobHandlerConfiguration {
 
+  /**
+   * Provide static factories.
+   */
   companion object {
     /**
      * Reconstructs the configuration from JSON String.

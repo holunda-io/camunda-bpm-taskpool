@@ -11,6 +11,9 @@ import org.springframework.data.repository.CrudRepository
  */
 interface ProcessInstanceRepository : CrudRepository<ProcessInstanceEntity, String>, JpaSpecificationExecutor<ProcessInstanceEntity> {
 
+  /**
+   * Static methods.
+   */
   companion object {
     /**
      * Checks if the instance has one of provided states.

@@ -33,6 +33,9 @@ class ProcessVariableEventCollectorService(
   private val repositoryService: RepositoryService
 ) {
 
+  /**
+   * Constants.
+   */
   companion object {
     // high order to be later than all other listeners and work on changed entity
     const val ORDER = Integer.MAX_VALUE - 100

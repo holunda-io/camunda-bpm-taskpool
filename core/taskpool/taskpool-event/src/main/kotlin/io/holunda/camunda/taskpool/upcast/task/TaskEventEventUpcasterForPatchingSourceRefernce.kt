@@ -12,6 +12,9 @@ import org.dom4j.Document
  */
 @AnnotatedEventUpcaster(TaskCreatedEngineEvent3To4Upcaster.RESULT_OBJECT_TYPE, "3")
 class TaskCreatedEngineEvent3To4Upcaster : AbstractSourceReferenceElementRemovingUpcaster() {
+  /**
+   * Static constants.
+   */
   companion object {
     const val RESULT_OBJECT_TYPE = "io.holunda.camunda.taskpool.api.task.TaskCreatedEngineEvent"
   }

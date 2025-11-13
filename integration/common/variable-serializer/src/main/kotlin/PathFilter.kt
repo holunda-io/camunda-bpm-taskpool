@@ -8,6 +8,9 @@ data class EqualityPathFilter(
   val type: FilterType
 ) : JsonPathFilterFunction {
 
+  /**
+   * Operators.
+   */
   companion object {
     /**
      * Constructs an equality exclude filter.

@@ -23,7 +23,9 @@ class TaskEventCollectorService(
   private val repositoryService: RepositoryService
 ) {
 
-
+  /**
+   * Static constants.
+   */
   companion object {
     const val NAME = "taskEventCollectorService"
 

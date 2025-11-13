@@ -30,6 +30,9 @@ fun ObjectMapper.configurePolyflowJacksonObjectMapper(): ObjectMapper = this
  * Helper to configure an existing object mapper from Java.
  */
 class ObjectMapperConfigurationHelper {
+  /**
+   * Static methods.
+   */
   companion object {
     /**
      * Registers modules required fo polyflow.

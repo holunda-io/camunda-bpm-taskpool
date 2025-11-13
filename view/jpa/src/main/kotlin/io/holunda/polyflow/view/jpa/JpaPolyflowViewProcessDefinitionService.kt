@@ -34,6 +34,9 @@ class JpaPolyflowViewProcessDefinitionService(
   val polyflowJpaViewProperties: PolyflowJpaViewProperties
 ) : ProcessDefinitionApi {
 
+  /**
+   * Static constants.
+   */
   companion object {
     const val PROCESSING_GROUP = "io.holunda.polyflow.view.jpa.service.process.definition"
   }

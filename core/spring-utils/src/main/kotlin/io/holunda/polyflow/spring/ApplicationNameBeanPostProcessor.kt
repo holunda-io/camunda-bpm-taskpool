@@ -15,6 +15,9 @@ import kotlin.reflect.full.memberProperties
  */
 class ApplicationNameBeanPostProcessor(private val applicationContext: ApplicationContext) : BeanPostProcessor {
 
+  /**
+   * Static constants.
+   */
   companion object {
     const val UNSET_APPLICATION_NAME = "unset-application-name"
     val CANDIDATES = arrayOf(

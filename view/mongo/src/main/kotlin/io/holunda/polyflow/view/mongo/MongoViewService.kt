@@ -95,6 +95,9 @@ class MongoViewService(
   private val clock: Clock
 ) : ReactiveTaskApi, ReactiveDataEntryApi {
 
+  /**
+   * Processing group.
+   */
   companion object {
     const val PROCESSING_GROUP = "io.holunda.camunda.taskpool.view.mongo.service"
   }
@@ -532,10 +535,11 @@ class MongoViewService(
     firstBackoff: Duration = Duration.ofMillis(100),
     crossinline logMessage: () -> String
   ): Mono<T> {
-    return this.switchIfEmpty {
-      logger.debug { "${logMessage()}, but will retry." }
-      Mono.error(MonoIsEmptyException())
-    }.retryWhen(Retry.backoff(numRetries, firstBackoff))
+    return this.switchIfEmpty(
+      Mono.error(MonoIsEmptyException().apply {
+        logger.debug { "${logMessage()}, but will retry." }
+      })
+    ).retryWhen(Retry.backoff(numRetries, firstBackoff))
       .onErrorMap { if (it is IllegalStateException && it.cause is MonoIsEmptyException) it.cause else it }
       .onErrorResume(MonoIsEmptyException::class.java) {
         logger.warn { "${logMessage()} and retries are exhausted." }
@@ -544,7 +548,10 @@ class MongoViewService(
   }
 }
 
-internal class MonoIsEmptyException : RuntimeException()
+/**
+ * Special exception.
+ */
+internal class MonoIsEmptyException : RuntimeException("Mono is empty")
 
 internal fun sort(sort: String?): Sort =
   if (sort != null && sort.length > 1) {
