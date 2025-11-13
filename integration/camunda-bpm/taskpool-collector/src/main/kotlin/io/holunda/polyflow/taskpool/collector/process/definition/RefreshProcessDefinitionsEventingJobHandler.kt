@@ -23,6 +23,9 @@ class RefreshProcessDefinitionsJobHandler(
   private val applicationEventPublisher: ApplicationEventPublisher
 ) : JobHandler<RefreshProcessDefinitionsJobConfiguration> {
 
+  /**
+   * Handler type.
+   */
   companion object {
     const val TYPE = "RefreshProcessDefinitionsJobHandler"
   }

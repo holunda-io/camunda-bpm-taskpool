@@ -22,6 +22,9 @@ class CamundaJobSenderConfiguration(
   private val senderProperties: SenderProperties
 ) {
 
+  /**
+   * Name of the bean.
+   */
   companion object {
     const val COMMAND_BYTEARRAY_OBJECT_MAPPER = "commandByteArrayObjectMapper"
   }

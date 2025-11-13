@@ -46,6 +46,9 @@ class JpaPolyflowViewTaskService(
   val polyflowJpaViewProperties: PolyflowJpaViewProperties
 ) : TaskApi {
 
+  /**
+   * Processing group.
+   */
   companion object {
     const val PROCESSING_GROUP = "io.holunda.polyflow.view.jpa.service.task"
   }

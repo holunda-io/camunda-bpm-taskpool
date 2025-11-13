@@ -27,6 +27,9 @@ data class ProcessDefinitionDocument(
   val candidateStarterGroups: Set<String> = setOf()
 ) {
 
+  /**
+   * Name of the collection.
+   */
   companion object {
     const val COLLECTION = "processes"
   }

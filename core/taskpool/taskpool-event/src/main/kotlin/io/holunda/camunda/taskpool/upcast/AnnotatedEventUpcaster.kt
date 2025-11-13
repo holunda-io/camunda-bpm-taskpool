@@ -20,6 +20,9 @@ annotation class AnnotatedEventUpcaster(
    */
   val representationContentType: RepresentationContentType = RepresentationContentType.XML
 ) {
+  /**
+   * Null value.
+   */
   companion object {
     const val NULL_VALUE = "SINGLE_EVENT_UPCASTER_NULL_VALUE"
   }

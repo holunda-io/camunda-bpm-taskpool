@@ -16,6 +16,9 @@ class DataEntryId(
   var entryType: String
 ) : Serializable {
 
+  /**
+   * Static operators.
+   */
   companion object {
     /**
      * Factory method to construct the Data Entry Id from a string.

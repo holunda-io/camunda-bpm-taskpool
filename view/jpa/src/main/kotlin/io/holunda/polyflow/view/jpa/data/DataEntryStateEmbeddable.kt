@@ -15,6 +15,9 @@ class DataEntryStateEmbeddable(
   @Column(name = "STATE", length = 64, nullable = false)
   var state: String
 ) : Serializable {
+  /**
+   * Static methods.
+   */
   companion object {
     /**
      * Factory method.

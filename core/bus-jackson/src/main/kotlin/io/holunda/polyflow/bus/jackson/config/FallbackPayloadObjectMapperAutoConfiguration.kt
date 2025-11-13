@@ -15,6 +15,9 @@ private val logger = KotlinLogging.logger {}
  */
 class FallbackPayloadObjectMapperAutoConfiguration {
 
+  /**
+   * Static constants for bean names.
+   */
   companion object {
     const val PAYLOAD_OBJECT_MAPPER = "payloadObjectMapper"
   }

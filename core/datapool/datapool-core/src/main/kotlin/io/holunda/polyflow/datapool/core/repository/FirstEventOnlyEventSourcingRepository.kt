@@ -19,6 +19,9 @@ open class FirstEventOnlyEventSourcingRepository<T>(
   private val internalBuilder: FirstEventOnlyEventSourcingRepositoryBuilder<T>
 ) : EventSourcingRepository<T>(internalBuilder) {
 
+  /**
+   * Static methods.
+   */
   companion object {
     /**
      * Repository builder.

@@ -9,6 +9,9 @@ interface CamundaTaskEventType {
    */
   val eventName: String
 
+  /**
+   * Constants.
+   */
   companion object {
     const val CREATE = "create"
     const val ASSIGN = "assignment"

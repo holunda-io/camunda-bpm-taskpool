@@ -49,6 +49,9 @@ class JpaPolyflowViewDataEntryService(
   val polyflowJpaViewProperties: PolyflowJpaViewProperties
 ) : DataEntryApi, DataEntryEventHandler {
 
+  /**
+   * Static constants.
+   */
   companion object {
     const val PROCESSING_GROUP = "io.holunda.polyflow.view.jpa.service.data"
   }

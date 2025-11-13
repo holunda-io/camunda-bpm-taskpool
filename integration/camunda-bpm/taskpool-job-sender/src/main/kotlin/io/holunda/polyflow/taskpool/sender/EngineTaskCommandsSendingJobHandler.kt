@@ -17,6 +17,9 @@ class EngineTaskCommandsSendingJobHandler(
   private val commandListGateway: CommandListGateway
 ) : JobHandler<EngineTaskCommandsSendingJobHandlerConfiguration> {
 
+  /**
+   * Handler type.
+   */
   companion object {
     const val TYPE = "polyflow-engine-task-command-sending"
   }

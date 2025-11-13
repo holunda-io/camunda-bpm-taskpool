@@ -17,6 +17,9 @@ private val logger = KotlinLogging.logger {}
 @AnnotatedEventUpcaster("io.holunda.camunda.taskpool.api.task.ProcessDefinitionRegisteredEvent")
 class ProcessDefinitionEventXMLNullTo1Upcaster : AnnotationBasedSingleEventUpcaster() {
 
+  /**
+   * Type of upcasted result.
+   */
   companion object {
     const val RESULT_OBJECT_TYPE = "io.holunda.camunda.taskpool.api.process.definition.ProcessDefinitionRegisteredEvent"
   }

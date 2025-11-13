@@ -20,6 +20,9 @@ class BuiltInPublishDelegateParseListener(
   publisher: ApplicationEventPublisher
 ) : AbstractBpmnParseListener() {
 
+  /**
+   * Constants.
+   */
   companion object {
     private val TASK_EVENTS = listOf(
       TaskListener.EVENTNAME_COMPLETE,

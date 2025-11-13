@@ -16,6 +16,9 @@ class PropertyBasedFormUrlResolver(
   private val objectMapper: ObjectMapper
 ) : FormUrlResolver {
 
+  /**
+   * Constants.
+   */
   companion object {
     const val APPLICATION_NAME_ATTRIBUTE = "applicationName"
   }
