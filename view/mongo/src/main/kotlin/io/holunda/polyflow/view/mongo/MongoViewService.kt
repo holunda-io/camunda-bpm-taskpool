@@ -535,10 +535,11 @@ class MongoViewService(
     firstBackoff: Duration = Duration.ofMillis(100),
     crossinline logMessage: () -> String
   ): Mono<T> {
-    return this.switchIfEmpty {
-      logger.debug { "${logMessage()}, but will retry." }
-      Mono.error(MonoIsEmptyException())
-    }.retryWhen(Retry.backoff(numRetries, firstBackoff))
+    return this.switchIfEmpty(
+      Mono.error(MonoIsEmptyException().apply {
+        logger.debug { "${logMessage()}, but will retry." }
+      })
+    ).retryWhen(Retry.backoff(numRetries, firstBackoff))
       .onErrorMap { if (it is IllegalStateException && it.cause is MonoIsEmptyException) it.cause else it }
       .onErrorResume(MonoIsEmptyException::class.java) {
         logger.warn { "${logMessage()} and retries are exhausted." }
@@ -550,7 +551,7 @@ class MongoViewService(
 /**
  * Special exception.
  */
-internal class MonoIsEmptyException : RuntimeException()
+internal class MonoIsEmptyException : RuntimeException("Mono is empty")
 
 internal fun sort(sort: String?): Sort =
   if (sort != null && sort.length > 1) {
