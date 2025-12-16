@@ -27,9 +27,3 @@ data class ProcessVariableCorrelation(
   )
 
 }
-
-
-data class CorrelationDefinition(
-  val entryIdVariableName: String,
-  val entryType: EntryType
-)
