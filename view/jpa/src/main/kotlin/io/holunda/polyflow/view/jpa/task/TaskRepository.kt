@@ -10,6 +10,7 @@ import io.holunda.polyflow.view.jpa.data.DataEntryStateEmbeddable
 import io.holunda.polyflow.view.jpa.data.ProtocolElement
 import io.holunda.polyflow.view.jpa.payload.PayloadAttribute
 import io.holunda.polyflow.view.jpa.process.SourceReferenceEmbeddable
+import jakarta.persistence.criteria.JoinType
 import org.springframework.data.jpa.domain.Specification
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor
 import org.springframework.data.jpa.repository.Query
@@ -53,12 +54,18 @@ interface TaskRepository : CrudRepository<TaskEntity, String>, JpaSpecificationE
      * Does user appear in correlated data entries in any ProtocolElement
      */
     fun hasUserInvolvement(username: String): Specification<TaskEntity> =
-      Specification { task, _, builder ->
+      Specification { task, query, builder ->
+        requireNotNull(query).distinct(true)
+
+        val dataEntryJoin = task.join<TaskEntity, Set<DataEntryEntity>>(
+          TaskEntity::dataEntryCorrelations.name, JoinType.LEFT
+        )
+        val protocolJoin = dataEntryJoin.join<DataEntryEntity, Set<ProtocolElement>>(
+          DataEntryEntity::protocol.name, JoinType.LEFT
+        )
+
         builder.equal(
-          task.join<TaskEntity, Set<DataEntryEntity>>(TaskEntity::dataEntryCorrelations.name)
-            .join<DataEntryEntity, Set<ProtocolElement>>(
-              DataEntryEntity::protocol.name
-            ).get<String>(ProtocolElement::username.name),
+          protocolJoin.get<String>(ProtocolElement::username.name),
           username
         )
       }
