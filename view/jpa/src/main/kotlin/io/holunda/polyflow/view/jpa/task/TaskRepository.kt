@@ -7,6 +7,7 @@ import io.holunda.polyflow.view.jpa.composeOr
 import io.holunda.polyflow.view.jpa.data.DataEntryEntity
 import io.holunda.polyflow.view.jpa.data.DataEntryId
 import io.holunda.polyflow.view.jpa.data.DataEntryStateEmbeddable
+import io.holunda.polyflow.view.jpa.data.ProtocolElement
 import io.holunda.polyflow.view.jpa.payload.PayloadAttribute
 import io.holunda.polyflow.view.jpa.process.SourceReferenceEmbeddable
 import org.springframework.data.jpa.domain.Specification
@@ -45,6 +46,20 @@ interface TaskRepository : CrudRepository<TaskEntity, String>, JpaSpecificationE
         builder.equal(
           task.get<String>(TaskEntity::assignee.name),
           assignee
+        )
+      }
+
+    /**
+     * Does user appear in correlated data entries in any ProtocolElement
+     */
+    fun hasUserInvolvement(username: String): Specification<TaskEntity> =
+      Specification { task, _, builder ->
+        builder.equal(
+          task.join<TaskEntity, Set<DataEntryEntity>>(TaskEntity::dataEntryCorrelations.name)
+            .join<DataEntryEntity, Set<ProtocolElement>>(
+              DataEntryEntity::protocol.name
+            ).get<String>(ProtocolElement::username.name),
+          username
         )
       }
 
@@ -177,7 +192,7 @@ interface TaskRepository : CrudRepository<TaskEntity, String>, JpaSpecificationE
       }
 
     /**
-     * Specification for checking the follow-up date.
+     * Specification for checking the <follow>-up date.
      */
     fun hasFollowUpDate(followUpDate: Instant): Specification<TaskEntity> =
       Specification { task, _, builder ->

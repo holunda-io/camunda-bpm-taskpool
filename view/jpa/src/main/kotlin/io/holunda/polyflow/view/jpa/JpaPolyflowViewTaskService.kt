@@ -16,6 +16,7 @@ import io.holunda.polyflow.view.jpa.data.DataEntryRepository
 import io.holunda.polyflow.view.jpa.data.toDataEntry
 import io.holunda.polyflow.view.jpa.task.*
 import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.hasApplication
+import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.hasUserInvolvement
 import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.isAssignedTo
 import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.isAssigneeSet
 import io.holunda.polyflow.view.jpa.task.TaskRepository.Companion.isAuthorizedFor
@@ -27,6 +28,7 @@ import org.axonframework.eventhandling.EventHandler
 import org.axonframework.messaging.MetaData
 import org.axonframework.queryhandling.QueryHandler
 import org.axonframework.queryhandling.QueryUpdateEmitter
+import org.springframework.data.jpa.domain.Specification
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Component
 import java.util.*
@@ -64,16 +66,15 @@ class JpaPolyflowViewTaskService(
 
     val pageRequest = pageRequest(query.page, query.size, sort)
 
-    val userQuery = if (query.assignedToMeOnly) {
-      isAssignedTo(query.user.username)
-    } else {
-      composeOr(
+    val specifications = mutableListOf<Specification<TaskEntity>>()
+    if (query.assignedToMeOnly) specifications.add(isAssignedTo(query.user.username))
+    if (query.involvementsOnly) specifications.add(hasUserInvolvement(query.user.username))
+
+    val userQuery = if (specifications.isNotEmpty()) composeOr(specifications) else composeOr(
         listOf(
-          isAuthorizedFor(authorizedPrincipals),
-          isAssignedTo(query.user.username)
+            isAuthorizedFor(authorizedPrincipals), isAssignedTo(query.user.username)
         )
-      )
-    }
+    )
 
     val page = taskRepository.findAll(taskSpecification.and(userQuery), pageRequest)
       .map { taskEntity ->
@@ -165,16 +166,16 @@ class JpaPolyflowViewTaskService(
       sanitizeSort(Task::class)
     }.mapTaskSort()
     val pageRequest = pageRequest(query.page, query.size, sort)
-    val userQuery = if (query.assignedToMeOnly) {
-      isAssignedTo(query.user.username)
-    } else {
-      composeOr(
+
+    val specifications = mutableListOf<Specification<TaskEntity>>()
+    if (query.assignedToMeOnly) specifications.add(isAssignedTo(query.user.username))
+    if (query.involvementsOnly) specifications.add(hasUserInvolvement(query.user.username))
+
+    val userQuery = if (specifications.isNotEmpty()) composeOr(specifications) else composeOr(
         listOf(
-          isAuthorizedFor(authorizedPrincipals),
-          isAssignedTo(query.user.username)
+            isAuthorizedFor(authorizedPrincipals), isAssignedTo(query.user.username)
         )
-      )
-    }
+    )
 
     val page = taskRepository
       .findAll(specification.and(userQuery), pageRequest)
