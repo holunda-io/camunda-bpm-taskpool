@@ -199,7 +199,7 @@ interface TaskRepository : CrudRepository<TaskEntity, String>, JpaSpecificationE
       }
 
     /**
-     * Specification for checking the <follow>-up date.
+     * Specification for checking the follow-up date.
      */
     fun hasFollowUpDate(followUpDate: Instant): Specification<TaskEntity> =
       Specification { task, _, builder ->
