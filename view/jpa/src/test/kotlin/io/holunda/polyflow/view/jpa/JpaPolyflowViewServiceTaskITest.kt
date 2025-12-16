@@ -16,6 +16,7 @@ import io.holunda.polyflow.view.jpa.process.toSourceReference
 import io.holunda.polyflow.view.query.data.DataEntriesForUserQuery
 import io.holunda.polyflow.view.query.task.*
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.tuple
 import org.assertj.core.data.MapEntry
 import org.axonframework.messaging.MetaData
 import org.axonframework.queryhandling.GenericSubscriptionQueryUpdateMessage
@@ -254,7 +255,7 @@ internal class JpaPolyflowViewServiceTaskITest {
             id = id5,
             taskDefinitionKey = "task.def.0815",
             name = "task name 5",
-            priority = 10,
+            priority = 5,
             sourceReference = processReference().toSourceReference(),
             payload = createVariables().apply { putAll(createPayload("otherValue")) },
             assignee = "luffy",
@@ -363,8 +364,8 @@ internal class JpaPolyflowViewServiceTaskITest {
     val inverseQuery = jpaPolyflowViewService.query(AllTasksWithDataEntriesQuery(
       sort = listOf("-priority", "+name")
     ))
-    assertThat(query.elements.map { it.task.id }).containsExactly(id4, id3, id)
-    assertThat(inverseQuery.elements.map { it.task.id }).containsExactly(id, id3, id4)
+    assertThat(query.elements.map { it.task.id }).containsExactly(id5, id4, id3, id)
+    assertThat(inverseQuery.elements.map { it.task.id }).containsExactly(id, id3, id4, id5)
   }
 
   @Test
@@ -434,12 +435,12 @@ internal class JpaPolyflowViewServiceTaskITest {
   @Test
   fun `should find the task by user assigned to me`() {
     val luffy = jpaPolyflowViewService.query(TasksForUserQuery(user = User("luffy", setOf()), assignedToMeOnly = false))
-    assertThat(luffy.elements).isNotEmpty
-    assertThat(luffy.elements[0].id).isEqualTo(id3)
-    assertThat(luffy.elements[0].name).isEqualTo("task name 3")
+    assertThat(luffy.elements).hasSize(2)
+    assertThat(luffy.elements).extracting({ it.id }, { it.name })
+      .containsExactlyInAnyOrder(tuple(id3, "task name 3"), tuple(id5, "task name 5"))
 
     val zoro = jpaPolyflowViewService.query(TasksForUserQuery(user = User("zoro", setOf()), assignedToMeOnly = true))
-    assertThat(zoro.elements).isNotEmpty
+    assertThat(zoro.elements).hasSize(1)
     assertThat(zoro.elements[0].id).isEqualTo(id4)
     assertThat(zoro.elements[0].name).isEqualTo("task name 4")
 
@@ -554,7 +555,7 @@ internal class JpaPolyflowViewServiceTaskITest {
   @Test
   fun `query updates are sent`() {
     captureEmittedQueryUpdates()
-    assertThat(emittedQueryUpdates).hasSize(41)
+    assertThat(emittedQueryUpdates).hasSize(46)
 
     assertThat(emittedQueryUpdates.filter { it.queryType == TaskForIdQuery::class.java && it.asTask().id == id }).hasSize(2)
     assertThat(emittedQueryUpdates.filter { it.queryType == TaskForIdQuery::class.java && it.asTask().id == id2 }).hasSize(2)
@@ -596,7 +597,7 @@ internal class JpaPolyflowViewServiceTaskITest {
     assertThat(counts).isNotNull
     assertThat(counts).hasSize(1)
     assertThat(counts[0].application).isEqualTo("test-application")
-    assertThat(counts[0].taskCount).isEqualTo(3)
+    assertThat(counts[0].taskCount).isEqualTo(4)
   }
 
   @Test
