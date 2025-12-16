@@ -23,18 +23,18 @@ open class ProcessVariablesCorrelator(vararg correlations: ProcessVariableCorrel
     // handle global correlations
     processCorrelations.globalCorrelations.forEach{
       // get string representation of the variable, if found and store it under the entry type
-      if (variables.containsKey(it.key)) {
-        result.addCorrelation(it.value, variables.getValue(it.key).toString())
+      if (variables.containsKey(it.entryIdVariableName)) {
+        result.addCorrelation(it.entryType, variables.getValue(it.entryIdVariableName).toString())
       }
     }
 
     // handle task correlations
-    val taskCorrelations = processCorrelations.correlations[taskDefinitionKey] ?: emptyMap()
-    taskCorrelations.entries.forEach {
+    val taskCorrelations = processCorrelations.correlations[taskDefinitionKey] ?: emptyList()
+    taskCorrelations.forEach {
 
       // get string representation of the variable, if found and store it under the entry type
-      if (variables.containsKey(it.key)) {
-        result.addCorrelation(it.value, variables.getValue(it.key).toString())
+      if (variables.containsKey(it.entryIdVariableName)) {
+        result.addCorrelation(it.entryType, variables.getValue(it.entryIdVariableName).toString())
       }
     }
     return result
