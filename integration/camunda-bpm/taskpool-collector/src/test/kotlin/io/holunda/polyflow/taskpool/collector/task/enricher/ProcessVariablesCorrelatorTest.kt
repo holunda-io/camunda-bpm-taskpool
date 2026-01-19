@@ -21,10 +21,10 @@ class ProcessVariablesCorrelatorTest {
   fun `should correlate on task level`() {
     val correlator = ProcessVariablesCorrelator(
       ProcessVariableCorrelation("process_key", mapOf(
-        "task1" to mapOf(
-          "business_var2" to "MyCorrelationId",
-          "business_var3" to "MyOtherCorrelationId",
-          "business_var47" to "Will be empty"
+        "task1" to listOf(
+          CorrelationDefinition("business_var2", "MyCorrelationId"),
+          CorrelationDefinition("business_var3", "MyOtherCorrelationId"),
+          CorrelationDefinition("business_var47", "Will be empty")
         )
       ))
     )
@@ -39,10 +39,10 @@ class ProcessVariablesCorrelatorTest {
     val correlator = ProcessVariablesCorrelator(
       ProcessVariableCorrelation("process_key",
         emptyMap(),
-        mapOf(
-          "business_var2" to "MyCorrelationId",
-          "business_var3" to "MyOtherCorrelationId",
-          "business_var47" to "Will be empty"
+        listOf(
+          CorrelationDefinition("business_var2", "MyCorrelationId"),
+          CorrelationDefinition("business_var3", "MyOtherCorrelationId"),
+          CorrelationDefinition("business_var47", "Will be empty")
         )
       )
     )

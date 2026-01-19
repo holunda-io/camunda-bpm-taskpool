@@ -109,8 +109,8 @@ class SimpleTaskPoolWhenStage<SELF : SimpleTaskPoolWhenStage<SELF>> : AbstractSi
   @ProvidedScenarioState(resolution = ScenarioState.Resolution.NAME)
   private var returnedTasksForApplication = TaskQueryResult(listOf())
 
-  private fun query(page: Int, size: Int) = TasksWithDataEntriesForUserQuery(User("kermit", setOf()), true, page, size)
-  private fun filterQuery(sort: List<String>, filters: List<String>) = TasksForUserQuery(assignedToMeOnly = false, user = User("kermit", setOf()), filters = filters, sort = sort)
+  private fun query(page: Int, size: Int) = TasksWithDataEntriesForUserQuery(User("kermit", setOf()), true, false, page, size)
+  private fun filterQuery(sort: List<String>, filters: List<String>) = TasksForUserQuery(User("kermit", setOf()), filters = filters, sort = sort)
 
   @As("Page $ is queried with a page size of $")
   fun page_is_queried(page: Int, size: Int) = step {
