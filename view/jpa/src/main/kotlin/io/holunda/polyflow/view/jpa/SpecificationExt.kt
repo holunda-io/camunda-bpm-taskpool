@@ -4,7 +4,12 @@ import io.holunda.camunda.taskpool.api.business.DataEntryState
 import io.holunda.camunda.taskpool.api.business.ProcessingType
 import io.holunda.polyflow.view.DataEntry
 import io.holunda.polyflow.view.Task
-import io.holunda.polyflow.view.filter.*
+import io.holunda.polyflow.view.filter.BETWEEN
+import io.holunda.polyflow.view.filter.Criterion
+import io.holunda.polyflow.view.filter.EQUALS
+import io.holunda.polyflow.view.filter.GREATER
+import io.holunda.polyflow.view.filter.LESS
+import io.holunda.polyflow.view.filter.LIKE
 import io.holunda.polyflow.view.jpa.data.DataEntryEntity
 import io.holunda.polyflow.view.jpa.data.DataEntryRepository.Companion.hasDataEntryPayloadAttribute
 import io.holunda.polyflow.view.jpa.data.DataEntryRepository.Companion.hasDataEntryPayloadAttributeIncludingCorrelations
@@ -116,7 +121,7 @@ fun pageRequest(page: Int, size: Int, sort: List<String> = listOf()): PageReques
   }.toList()
 
 
-    return PageRequest.of(page, size, Sort.by(sortCriteria))
+  return PageRequest.of(page, size, Sort.by(sortCriteria))
 }
 
 /**
@@ -128,7 +133,7 @@ fun PageableSortableQuery.mapTaskSort(): List<String> {
     listOf("-${TaskEntity::createdDate.name}")
   } else {
     sort.map {
-      val direction = it.substring(0,1)
+      val direction = it.substring(0, 1)
       val field = it.substring(1)
       when (field) {
         Task::name.name -> TaskEntity::name.name
@@ -145,8 +150,8 @@ fun PageableSortableQuery.mapTaskSort(): List<String> {
         Task::taskDefinitionKey.name -> TaskEntity::taskDefinitionKey.name
         else -> throw IllegalArgumentException("'$field' is not supported for sorting in JPA View")
       }.let { "$direction$it" }
-      }
     }
+  }
 }
 
 
@@ -222,6 +227,9 @@ internal fun List<Criterion>.toTaskWithDataEntryPayloadSpecification(): Specific
   return composeAnd(orComposedByName)
 }
 
+internal fun parseWithNull(value: String): Instant? = if (value == "null") null else Instant.parse(value)
+
+
 
 /**
  * Creates JPA specification for the query of direct attributes of the task.
@@ -233,7 +241,7 @@ internal fun Criterion.TaskCriterion.toTaskSpecification(): Specification<TaskEn
         "processName" -> hasProcessName(this.value)
         Task::businessKey.name -> hasBusinessKey(this.value)
         Task::dueDate.name -> hasDueDate(Instant.parse(this.value))
-        Task::followUpDate.name -> hasFollowUpDate(Instant.parse(this.value))
+        Task::followUpDate.name -> hasFollowUpDate(parseWithNull(this.value))
         Task::priority.name -> hasPriority(this.value.toInt())
         Task::assignee.name -> hasAssignee(this.value)
         else -> throw IllegalArgumentException("JPA View found unsupported task attribute for equals comparison: ${this.name}.")
@@ -376,6 +384,6 @@ internal fun <T> composeOr(specifications: List<Specification<T>>): Specificatio
   }
 }
 
-private fun <T> alwaysTrue(): Specification<T>  {
-  return Specification{ root, query, builder -> builder.conjunction() }
+private fun <T> alwaysTrue(): Specification<T> {
+  return Specification { root, query, builder -> builder.conjunction() }
 }
