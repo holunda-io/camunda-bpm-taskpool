@@ -246,6 +246,7 @@ internal class JpaPolyflowViewServiceTaskITest {
           put(dataType2, dataId2)
         },
         businessKey = "business-4",
+        dueDate = Date.from(now.plus(5, ChronoUnit.DAYS))
       ), metaData = MetaData.emptyInstance()
     )
 
