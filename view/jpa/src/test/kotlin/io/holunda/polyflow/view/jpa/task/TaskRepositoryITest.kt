@@ -71,10 +71,12 @@ class TaskRepositoryITest {
 
   lateinit var task1: TaskEntity
   lateinit var task2: TaskEntity
+  lateinit var task3: TaskEntity
 
   lateinit var dataEntry1: DataEntryEntity
   lateinit var dataEntry2: DataEntryEntity
 
+  private val yesterday = LocalDate.now().atStartOfDay().minusDays(1).toInstant(ZoneOffset.UTC)
   private val today = LocalDate.now().atStartOfDay().toInstant(ZoneOffset.UTC)
   private val tomorrow = LocalDate.now().atStartOfDay().plusDays(1).toInstant(ZoneOffset.UTC)
   private val dayAfterTomorrow = LocalDate.now().atStartOfDay().plusDays(2).toInstant(ZoneOffset.UTC)
@@ -138,10 +140,26 @@ class TaskRepositoryITest {
       this.sourceReference.name = "other-process"
     }
 
+    task3 = TaskEntity(
+      taskId = UUID.randomUUID().toString(),
+      name = "task 3",
+      businessKey = "ZZZ-2-YYY-3",
+      description = "task with follow up date",
+      authorizedPrincipals = mutableSetOf(user("kermit").toString(), group("muppets").toString()),
+      payload = null,
+      payloadAttributes = mutableSetOf(),
+      dueDate = twoDaysAfterTomorrow,
+      followUpDate = yesterday,
+      priority = 50,
+      sourceReference = processReference(),
+      taskDefinitionKey = "task.def.0815",
+    )
+
     entityManager.persist(dataEntry1)
     entityManager.persist(dataEntry2)
     entityManager.persist(task1)
     entityManager.persist(task2)
+    entityManager.persist(task3)
 
     entityManager.flush()
   }
@@ -155,18 +173,18 @@ class TaskRepositoryITest {
   @Test
   fun `should find all`() {
     val result = taskRepository.findAll()
-    assertThat(result).hasSize(2)
-    assertThat(result).containsExactlyInAnyOrder(task1, task2)
+    assertThat(result).hasSize(3)
+    assertThat(result).containsExactlyInAnyOrder(task1, task2, task3)
   }
 
   @Test
   fun `should find by authorization`() {
     val all = taskRepository.findAll(isAuthorizedFor(listOf()))
-    assertThat(all).hasSize(2)
+    assertThat(all).hasSize(3)
 
     val result = taskRepository.findAll(isAuthorizedFor(listOf(user("kermit"))))
-    assertThat(result).hasSize(1)
-    assertThat(result).containsExactlyInAnyOrder(task1)
+    assertThat(result).hasSize(2)
+    assertThat(result).containsExactlyInAnyOrder(task1, task3)
   }
 
   @Test
@@ -256,8 +274,8 @@ class TaskRepositoryITest {
   @Test
   fun `should find by due date after`() {
     val result = taskRepository.findAll(hasDueDateAfter(tomorrow))
-    assertThat(result).hasSize(1)
-    assertThat(result).containsExactlyInAnyOrder(task2)
+    assertThat(result).hasSize(2)
+    assertThat(result).containsExactlyInAnyOrder(task2, task3)
   }
 
   @Test
@@ -268,17 +286,24 @@ class TaskRepositoryITest {
   }
 
   @Test
+  fun `should find task without follow up date`() {
+    val result = taskRepository.findAll(hasFollowUpDate(null))
+    assertThat(result).hasSize(1)
+    assertThat(result).containsExactlyInAnyOrder(task2)
+  }
+
+  @Test
   fun `should find by follow-up date before`() {
-    val result = taskRepository.findAll(hasFollowUpDateBefore(twoDaysAfterTomorrow))
-    assertThat(result).hasSize(2)
-    assertThat(result).containsExactlyInAnyOrder(task1, task2)
+    val result = taskRepository.findAll(hasFollowUpDateBefore(today))
+    assertThat(result).hasSize(1)
+    assertThat(result).containsExactlyInAnyOrder(task3)
   }
 
   @Test
   fun `should find by follow-up date after`() {
-    val result = taskRepository.findAll(hasFollowUpDateAfter(dayAfterTomorrow))
+    val result = taskRepository.findAll(hasFollowUpDateAfter(today))
     assertThat(result).hasSize(1)
-    assertThat(result).containsExactlyInAnyOrder(task2)
+    assertThat(result).containsExactlyInAnyOrder(task1)
   }
 
   @Test
@@ -286,7 +311,7 @@ class TaskRepositoryITest {
     val count = taskRepository.getCountByApplication()
     assertThat(count).hasSize(2)
     assertThat(count[0]).isEqualTo(CountByApplication("other-app", 1))
-    assertThat(count[1]).isEqualTo(CountByApplication("test-application", 1))
+    assertThat(count[1]).isEqualTo(CountByApplication("test-application", 2))
   }
 
   @Test

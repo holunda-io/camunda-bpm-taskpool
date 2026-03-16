@@ -68,11 +68,12 @@ fun TaskEntity.update(event: TaskAttributeUpdatedEngineEvent,
     this.payloadAttributes.clear()
     this.payloadAttributes.addAll(event.payload.toJsonPathsWithValues(limit, filters, payLoadAttributeColumnLength).map { attr -> PayloadAttribute(attr) }.toMutableSet())
   }
-  businessKey = event.businessKey ?: this.businessKey
-  description = event.description ?: this.description
-  followUpDate = event.followUpDate?.toInstant() ?: this.followUpDate
-  dueDate = event.dueDate?.toInstant() ?: this.dueDate
-  owner = event.owner ?: this.owner
+  formKey = event.formKey
+  businessKey = event.businessKey
+  description = event.description
+  followUpDate = event.followUpDate?.toInstant()
+  dueDate = event.dueDate?.toInstant()
+  owner = event.owner
 }
 
 /**
