@@ -201,12 +201,13 @@ interface TaskRepository : CrudRepository<TaskEntity, String>, JpaSpecificationE
     /**
      * Specification for checking the follow-up date.
      */
-    fun hasFollowUpDate(followUpDate: Instant): Specification<TaskEntity> =
+    fun hasFollowUpDate(followUpDate: Instant?): Specification<TaskEntity> =
       Specification { task, _, builder ->
-        builder.equal(
-          task.get<Instant>(TaskEntity::followUpDate.name),
-          followUpDate
-        )
+        if (followUpDate == null) {
+          builder.isNull(task.get<Instant>(TaskEntity::followUpDate.name))
+        } else {
+          builder.equal(task.get<Instant>(TaskEntity::followUpDate.name), followUpDate)
+        }
       }
 
     /**
@@ -214,12 +215,9 @@ interface TaskRepository : CrudRepository<TaskEntity, String>, JpaSpecificationE
      */
     fun hasFollowUpDateBefore(followUpDate: Instant): Specification<TaskEntity> =
       Specification { task, _, builder ->
-        builder.or(
-          builder.isNull(task.get<Instant>(TaskEntity::followUpDate.name)),
           builder.lessThan(
             task.get(TaskEntity::followUpDate.name),
             followUpDate
-          )
         )
       }
 
@@ -228,12 +226,9 @@ interface TaskRepository : CrudRepository<TaskEntity, String>, JpaSpecificationE
      */
     fun hasFollowUpDateAfter(followUpDate: Instant): Specification<TaskEntity> =
       Specification { task, _, builder ->
-        builder.or(
-          builder.isNull(task.get<Instant>(TaskEntity::followUpDate.name)),
-          builder.greaterThan(
-            task.get(TaskEntity::followUpDate.name),
-            followUpDate
-          )
+        builder.greaterThan(
+          task.get(TaskEntity::followUpDate.name),
+          followUpDate
         )
       }
 
@@ -446,14 +441,16 @@ interface TaskRepository : CrudRepository<TaskEntity, String>, JpaSpecificationE
    * If authorizedPrincipals are given, just attributes for the given authorizedPrincipals are queried.
    * @return list of task payload attribut names (path)
    */
-  @Query("""
+  @Query(
+    """
             select att.path
                 from TaskEntity task
                  join task.payloadAttributes att
                  join task.authorizedPrincipals auth
             where (?1 is null or task.assignee = ?1)
                 and (?2 is null or auth in ?2)
-         """)
+         """
+  )
   fun getTaskAttributeNames(assignee: String?, principals: Set<String>?): Set<String>
 
   /**
@@ -462,7 +459,8 @@ interface TaskRepository : CrudRepository<TaskEntity, String>, JpaSpecificationE
    * If authorizedPrincipals are given, just attributes for the given authorizedPrincipals are queried.
    * @return list of task payload attribut values
    */
-  @Query("""
+  @Query(
+    """
             select att.value
                from TaskEntity task
                 join task.payloadAttributes att
@@ -470,6 +468,7 @@ interface TaskRepository : CrudRepository<TaskEntity, String>, JpaSpecificationE
             where att.path = ?1
                 and (?2 is null or task.assignee = ?2)
                 and (?3 is null or auth in ?3)
-         """)
+         """
+  )
   fun getTaskAttributeValues(attributeName: String, assignee: String?, principals: Set<String>?): Set<String>
 }
