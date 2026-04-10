@@ -67,8 +67,12 @@ class JpaPolyflowViewTaskService(
     val pageRequest = pageRequest(query.page, query.size, sort)
 
     val specifications = mutableListOf<Specification<TaskEntity>>()
-    if (query.assignedToMeOnly) specifications.add(isAssignedTo(query.user.username))
-    if (query.involvementsOnly) specifications.add(composeAnd(listOf(hasUserInvolvement(query.user.username), isAuthorizedFor(authorizedPrincipals))))
+    if (query.assignedToMeOnly) {
+      specifications.add(isAssignedTo(query.user.username))
+    }
+    if (query.involvementsOnly) {
+      specifications.add(composeAnd(listOf(hasUserInvolvement(query.user.username), isAuthorizedFor(authorizedPrincipals))))
+    }
 
     val userQuery = if (specifications.isNotEmpty()) composeOr(specifications) else composeOr(
         listOf(
