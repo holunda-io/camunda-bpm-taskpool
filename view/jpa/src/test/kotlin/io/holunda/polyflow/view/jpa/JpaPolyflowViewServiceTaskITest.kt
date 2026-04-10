@@ -448,7 +448,7 @@ internal class JpaPolyflowViewServiceTaskITest {
   }
 
   @Test
-  fun `should find the task by involvement`() {
+  fun `should find the task by involvement_and_authorization`() {
       val tasksWithInvolvement = jpaPolyflowViewService.query(
           TasksForUserQuery(
               user = User("luffy", setOf()),
@@ -457,7 +457,8 @@ internal class JpaPolyflowViewServiceTaskITest {
           )
       )
 
-      assertThat(tasksWithInvolvement.elements).extracting<String> { it.id }.containsExactlyInAnyOrder(id3, id4)
+    // task4 has an involvement, but luffy is not authorized to view the task
+      assertThat(tasksWithInvolvement.elements).extracting<String> { it.id }.containsExactlyInAnyOrder(id3)
   }
 
   @Test
@@ -473,7 +474,7 @@ internal class JpaPolyflowViewServiceTaskITest {
       )
 
       // id5 is only found via assignment and has no correlations
-      assertThat(tasksWithInvolvement.elements).extracting<String> { it.id }.containsExactlyInAnyOrder(id3, id4, id5)
+      assertThat(tasksWithInvolvement.elements).extracting<String> { it.id }.containsExactlyInAnyOrder(id3, id5)
   }
 
   @Test
