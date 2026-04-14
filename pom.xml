@@ -5,7 +5,7 @@
 
   <groupId>io.holunda.polyflow</groupId>
   <artifactId>polyflow-root</artifactId>
-  <version>4.6.0</version>
+  <version>4.6.1</version>
   <packaging>pom</packaging>
 
   <name>POM: ${project.artifactId}</name>
@@ -19,7 +19,7 @@
     <java.version>17</java.version>
     <version.java>${java.version}</version.java>
 
-    <kotlin.version>2.3.10</kotlin.version>
+    <kotlin.version>2.3.20</kotlin.version>
     <kotlin.compiler.jvmTarget>${java.version}</kotlin.compiler.jvmTarget>
     <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
     <kotlin-logging.version>8.0.01</kotlin-logging.version>
