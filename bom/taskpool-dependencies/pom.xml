@@ -50,7 +50,17 @@
       </dependency>
       <dependency>
         <groupId>io.holunda.polyflow</groupId>
+        <artifactId>polyflow-process-engine-taskpool-collector</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.holunda.polyflow</groupId>
         <artifactId>polyflow-camunda-bpm-taskpool-job-sender</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.holunda.polyflow</groupId>
+        <artifactId>polyflow-process-engine-taskpool-job-sender</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
@@ -60,7 +70,17 @@
       </dependency>
       <dependency>
         <groupId>io.holunda.polyflow</groupId>
+        <artifactId>polyflow-process-engine-springboot-starter</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.holunda.polyflow</groupId>
         <artifactId>polyflow-camunda-bpm-engine-client</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.holunda.polyflow</groupId>
+        <artifactId>polyflow-process-engine-engine-client</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
