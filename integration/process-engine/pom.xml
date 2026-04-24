@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>io.holunda.polyflow</groupId>
+    <artifactId>polyflow-parent</artifactId>
+    <version>4.6.2-SNAPSHOT</version>
+    <relativePath>../../bom/parent/pom.xml</relativePath>
+  </parent>
+
+  <artifactId>polyflow-integration-process-engine-parent</artifactId>
+  <name>POM: integration/${project.artifactId}</name>
+  <packaging>pom</packaging>
+
+  <properties>
+    <camunda-bpm.version>7.24.0</camunda-bpm.version>
+    <camunda-bpm-assert.version>${camunda-bpm.version}</camunda-bpm-assert.version>
+    <camunda-platform-7-mockito.version>7.24.2</camunda-platform-7-mockito.version>
+  </properties>
+
+  <modules>
+    <module>taskpool-collector</module>
+    <module>taskpool-job-sender</module>
+    <module>engine-client</module>
+    <module>springboot-starter</module>
+    <module>springboot-autoconfigure</module>
+  </modules>
+
+  <dependencyManagement>
+    <dependencies>
+
+      <dependency>
+        <groupId>io.holunda.polyflow</groupId>
+        <artifactId>polyflow-process-engine-springboot-autoconfigure</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.holunda.polyflow</groupId>
+        <artifactId>polyflow-process-engine-engine-client</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.holunda.polyflow</groupId>
+        <artifactId>polyflow-process-engine-taskpool-collector</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.camunda.bpm</groupId>
+        <artifactId>camunda-bom</artifactId>
+        <version>${camunda-bpm.version}</version>
+        <scope>import</scope>
+        <type>pom</type>
+      </dependency>
+
+      <dependency>
+        <groupId>org.camunda.bpm.springboot</groupId>
+        <artifactId>camunda-bpm-spring-boot-starter-test</artifactId>
+        <version>${camunda-bpm.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.camunda.community.mockito</groupId>
+        <artifactId>camunda-platform-7-mockito</artifactId>
+        <version>${camunda-platform-7-mockito.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.camunda.bpm</groupId>
+        <artifactId>camunda-bpm-assert</artifactId>
+        <version>${camunda-bpm-assert.version}</version>
+        <scope>test</scope>
+      </dependency>
+
+    </dependencies>
+  </dependencyManagement>
+</project>

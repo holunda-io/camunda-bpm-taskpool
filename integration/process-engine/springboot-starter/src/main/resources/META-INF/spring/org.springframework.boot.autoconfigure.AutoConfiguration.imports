@@ -1,0 +1,3 @@
+io.holunda.polyflow.taskpool.collector.CamundaTaskpoolCollectorConfiguration
+io.holunda.polyflow.taskpool.sender.SenderConfiguration
+io.holunda.polyflow.datapool.DataEntrySenderConfiguration

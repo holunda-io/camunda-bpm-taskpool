@@ -1,0 +1,8 @@
+package io.holunda.polyflow.client.camunda
+
+import org.springframework.boot.autoconfigure.SpringBootApplication
+import org.springframework.boot.context.properties.EnableConfigurationProperties
+
+@SpringBootApplication
+@EnableConfigurationProperties(CamundaEngineClientProperties::class)
+class CamundaEngineClientPropertiesTestApplication
