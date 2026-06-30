@@ -7,7 +7,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties
  * Properties to configure Camunda to receive interaction commands via Axon.
  */
 @ConfigurationProperties("polyflow.integration.client.camunda")
-data class CamundaEngineClientProperties(
+data class EngineClientProperties(
 
   /**
    * Denotes the (logical) name of the process application.

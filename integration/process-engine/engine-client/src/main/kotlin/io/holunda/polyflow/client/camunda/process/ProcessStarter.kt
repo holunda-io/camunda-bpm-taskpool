@@ -1,14 +1,15 @@
 package io.holunda.polyflow.client.camunda.process
 
-import org.camunda.bpm.engine.RuntimeService
-import org.camunda.bpm.engine.variable.VariableMap
+import dev.bpmcrafters.processengineapi.CommonRestrictions
+import dev.bpmcrafters.processengineapi.process.StartProcessApi
+import dev.bpmcrafters.processengineapi.process.StartProcessByDefinitionCmd
 import org.springframework.stereotype.Component
 
 /**
  * Starts process.
  */
 @Component
-class ProcessStarter(private val runtimeService: RuntimeService) {
+class ProcessStarter(private val startProcessApi: StartProcessApi) {
 
   /**
    * Starts process.
@@ -19,14 +20,21 @@ class ProcessStarter(private val runtimeService: RuntimeService) {
    */
   fun startProcess(
     processDefinitionKey: String,
-    payload: VariableMap,
+    payload: Map<String, Object>,
     businessKey: String?
   ): String {
-    val instance = if (businessKey != null) {
-      runtimeService.startProcessInstanceByKey(processDefinitionKey, businessKey, payload)
-    } else {
-      runtimeService.startProcessInstanceByKey(processDefinitionKey, payload)
-    }
-    return instance.processInstanceId
+
+    val restrictions = mutableMapOf<String, String>()
+    businessKey?.let { restrictions[CommonRestrictions.BUSINESS_KEY] = it }
+
+    val startProcess = startProcessApi.startProcess(
+      StartProcessByDefinitionCmd(
+        definitionKey = processDefinitionKey,
+        payload = payload,
+        restrictions = restrictions
+      )
+    )
+    
+    return startProcess.get().instanceId
   }
 }

@@ -1,12 +1,21 @@
 package io.holunda.polyflow.client.camunda.task
 
+import dev.bpmcrafters.processengineapi.task.ChangeAssignmentModifyTaskCmd
+import dev.bpmcrafters.processengineapi.task.CompleteTaskCmd
+import dev.bpmcrafters.processengineapi.task.UserTaskCompletionApi
+import dev.bpmcrafters.processengineapi.task.UserTaskModificationApi
+import dev.bpmcrafters.processengineapi.task.support.UserTaskSupport
 import io.github.oshai.kotlinlogging.KotlinLogging
-import io.holunda.camunda.taskpool.api.task.*
-import io.holunda.polyflow.client.camunda.CamundaEngineClientProperties
+import io.holunda.camunda.taskpool.api.task.TaskClaimedEvent
+import io.holunda.camunda.taskpool.api.task.TaskDeferredEvent
+import io.holunda.camunda.taskpool.api.task.TaskIdentity
+import io.holunda.camunda.taskpool.api.task.TaskToBeCompletedEvent
+import io.holunda.camunda.taskpool.api.task.TaskUnclaimedEvent
+import io.holunda.camunda.taskpool.api.task.TaskUndeferredEvent
+import io.holunda.polyflow.client.camunda.EngineClientProperties
 import org.axonframework.eventhandling.EventHandler
-import org.camunda.bpm.engine.ProcessEngineException
-import org.camunda.bpm.engine.TaskService
 import org.springframework.stereotype.Component
+import java.sql.Date
 
 private val logger = KotlinLogging.logger {}
 
@@ -15,8 +24,10 @@ private val logger = KotlinLogging.logger {}
  */
 @Component
 class TaskEventHandlers(
-  private val taskService: TaskService,
-  private val properties: CamundaEngineClientProperties
+  private val taskService: UserTaskModificationApi,
+  private val taskCompletionService: UserTaskCompletionApi,
+  private val taskQuery: UserTaskSupport,
+  private val properties: EngineClientProperties
 ) {
 
   /**
@@ -28,13 +39,16 @@ class TaskEventHandlers(
     if (isAddressedToMe(event)) {
       try {
         logger.debug { "Claiming task $event" }
-        val task = taskService.createTaskQuery().taskId(event.id).singleResult()
-        if (task != null) {
-          taskService.setAssignee(event.id, event.assignee)
+        if (taskQuery.exists(event.id)) {
+          taskService.update(
+            ChangeAssignmentModifyTaskCmd.AssignTaskCmd(
+              taskId = event.id, assignee = event.assignee
+            )
+          )
         } else {
           logger.error { "CLIENT-004: Task with id ${event.id} was not found in the engine. Ignoring the event $event." }
         }
-      } catch (e: ProcessEngineException) {
+      } catch (e: RuntimeException) { //TODO: Exception?
         logger.error(e) { "CLIENT-001: Error claiming task" }
       }
     }
@@ -49,13 +63,16 @@ class TaskEventHandlers(
     if (isAddressedToMe(event)) {
       try {
         logger.debug { "Unclaiming task $event" }
-        val task = taskService.createTaskQuery().taskId(event.id).singleResult()
-        if (task != null) {
-          taskService.setAssignee(event.id, null)
+        if (taskQuery.exists(event.id)) {
+          taskService.update(
+            ChangeAssignmentModifyTaskCmd.UnassignTaskCmd(
+              taskId = event.id
+            )
+          )
         } else {
           logger.error { "CLIENT-005: Task with id ${event.id} was not found in the engine. Ignoring the event $event." }
         }
-      } catch (e: ProcessEngineException) {
+      } catch (e: RuntimeException) { //TODO: Exception?
         logger.error(e) { "CLIENT-002: Error un-claiming task" }
       }
     }
@@ -70,13 +87,12 @@ class TaskEventHandlers(
     if (isAddressedToMe(event)) {
       try {
         logger.debug { "Completing task $event" }
-        val task = taskService.createTaskQuery().taskId(event.id).singleResult()
-        if (task != null) {
-          taskService.complete(event.id, event.payload)
+        if (taskQuery.exists(event.id)) {
+          taskCompletionService.completeTask(CompleteTaskCmd(taskId = event.id, payload = event.payload))
         } else {
           logger.error { "CLIENT-006: Task with id ${event.id} was not found in the engine. Ignoring the event $event." }
         }
-      } catch (e: ProcessEngineException) {
+      } catch (e: RuntimeException) { //TODO: Exception?
         logger.error(e) { "CLIENT-003: Error completing task" }
       }
     }
@@ -91,18 +107,18 @@ class TaskEventHandlers(
     if (isAddressedToMe(event)) {
       try {
         logger.debug { "Deferring task $event" }
-        val task = taskService.createTaskQuery().taskId(event.id).singleResult()
-        if (task != null) {
-          if (task.followUpDate != event.followUpDate) {
-            task.followUpDate = event.followUpDate
-            taskService.saveTask(task)
+        if (taskQuery.exists(event.id)) {
+          var followUpDate = taskQuery.getTaskInformation(event.id).meta.get("followUpDate").let { Date.valueOf(it) }
+          if (followUpDate != event.followUpDate) {
+//            TODO: wait for api version 1.6
+//            taskService.update(SetFollowUpDateTaskCmd(taskId = event.id, followUpDate = followUpDate))
           } else {
             logger.debug { "CLIENT-008: Task deferred event ignored because task with id ${event.id} had equal follow-up date set already." }
           }
         } else {
           logger.error { "CLIENT-006: Task with id ${event.id} was not found in the engine. Ignoring the event $event." }
         }
-      } catch (e: ProcessEngineException) {
+      } catch (e: RuntimeException) { //TODO: Exception?
         logger.error(e) { "CLIENT-003: Error deferring task" }
       }
     }
@@ -117,18 +133,18 @@ class TaskEventHandlers(
     if (isAddressedToMe(event)) {
       try {
         logger.debug { "Deferring task $event" }
-        val task = taskService.createTaskQuery().taskId(event.id).singleResult()
-        if (task != null) {
-          if (task.followUpDate != null) {
-            task.followUpDate = null
-            taskService.saveTask(task)
+        if (taskQuery.exists(event.id)) {
+          val followUpDate = taskQuery.getTaskInformation(event.id).meta.get("followUpDate")
+          if (followUpDate != null) {
+//            TODO: wait for api version 1.6
+//            taskService.update(ClearFollowUpDateTaskCmd(taskId = event.id)
           } else {
             logger.debug { "CLIENT-007: Task undeferred event ignored because task with id ${event.id} was not deferred." }
           }
         } else {
           logger.error { "CLIENT-006: Task with id ${event.id} was not found in the engine. Ignoring the event $event." }
         }
-      } catch (e: ProcessEngineException) {
+      } catch (e: RuntimeException) { //TODO: Exception?
         logger.error(e) { "CLIENT-003: Error deferring task" }
       }
     }

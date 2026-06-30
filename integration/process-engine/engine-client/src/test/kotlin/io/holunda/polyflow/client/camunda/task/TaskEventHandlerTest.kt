@@ -1,23 +1,29 @@
 package io.holunda.polyflow.client.camunda.task
 
+import dev.bpmcrafters.processengineapi.task.ChangeAssignmentModifyTaskCmd
+import dev.bpmcrafters.processengineapi.task.ModifyTaskCmd
+import dev.bpmcrafters.processengineapi.task.TaskInformation
+import dev.bpmcrafters.processengineapi.task.UserTaskCompletionApi
+import dev.bpmcrafters.processengineapi.task.UserTaskModificationApi
+import dev.bpmcrafters.processengineapi.task.support.UserTaskSupport
 import io.holunda.camunda.taskpool.api.task.*
-import io.holunda.polyflow.client.camunda.CamundaEngineClientProperties
-import org.camunda.bpm.engine.TaskService
-import org.camunda.community.mockito.QueryMocks
-import org.camunda.community.mockito.task.TaskFake
+import io.holunda.polyflow.client.camunda.EngineClientProperties
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
+import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoMoreInteractions
+import org.mockito.kotlin.whenever
 import java.util.*
 
 @ExtendWith(MockitoExtension::class)
 class TaskEventHandlerTest {
 
-  private val properties = CamundaEngineClientProperties(applicationName = "myApplication")
+  private val properties = EngineClientProperties(applicationName = "myApplication")
   private val processReference = ProcessReference(
     instanceId = UUID.randomUUID().toString(),
     name = "My Process",
@@ -28,14 +34,24 @@ class TaskEventHandlerTest {
   )
 
 
-  @Mock
-  private lateinit var taskService: TaskService
+
+
+
+  @Mock private lateinit var  taskService: UserTaskModificationApi
+  @Mock private lateinit var  taskCompletionService: UserTaskCompletionApi
+  @Mock private lateinit var  taskQuery: UserTaskSupport
+
   private lateinit var taskEventHandlers: TaskEventHandlers
   private lateinit var now: Date
 
   @BeforeEach
   fun init() {
-    taskEventHandlers = TaskEventHandlers(taskService, properties)
+    taskEventHandlers = TaskEventHandlers(
+      taskService = taskService,
+      taskCompletionService = taskCompletionService,
+      taskQuery = taskQuery,
+      properties = properties
+    )
     now = Date()
   }
 
@@ -63,13 +79,12 @@ class TaskEventHandlerTest {
 
   @Test
   fun `should claim`() {
-
-    val taskFake = TaskFake.builder().id("4711").build()
-    QueryMocks.mockTaskQuery(taskService).singleResult(taskFake)
+    val taskFake = TaskInformation(taskId =  "4711", meta = mapOf())
+    whenever(taskQuery.exists("4711")).thenReturn(true)
 
     taskEventHandlers.on(
       TaskClaimedEvent(
-        id = taskFake.id,
+        id = taskFake.taskId,
         taskDefinitionKey = "TASK-001",
         sourceReference = processReference,
         assignee = "kermit",
@@ -77,8 +92,12 @@ class TaskEventHandlerTest {
       )
     )
 
-    verify(taskService).createTaskQuery()
-    verify(taskService).setAssignee("4711", "kermit")
+    val argumentCaptor = argumentCaptor<ModifyTaskCmd>()
+    verify(taskService).update(argumentCaptor.capture())
+    val modifyTaskCmd = argumentCaptor.firstValue
+    assertThat(modifyTaskCmd).isInstanceOf(ChangeAssignmentModifyTaskCmd.AssignTaskCmd::class.java)
+    modifyTaskCmd as ChangeAssignmentModifyTaskCmd.AssignTaskCmd
+    assertThat(modifyTaskCmd.assignee).isEqualTo("kermit")
 
     verifyNoMoreInteractions(taskService)
   }

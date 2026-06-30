@@ -1,8 +1,11 @@
 package io.holunda.polyflow.client.camunda
 
+import io.holunda.polyflow.spring.ApplicationNameBeanPostProcessor
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.context.properties.EnableConfigurationProperties
+import org.springframework.context.annotation.Import
 
 @SpringBootApplication
-@EnableConfigurationProperties(CamundaEngineClientProperties::class)
+@EnableConfigurationProperties(EngineClientProperties::class)
+@Import(ApplicationNameBeanPostProcessor::class)
 class CamundaEngineClientPropertiesTestApplication

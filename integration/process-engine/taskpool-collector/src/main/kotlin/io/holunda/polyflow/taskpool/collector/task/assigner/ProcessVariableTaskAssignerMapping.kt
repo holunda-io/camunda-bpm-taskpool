@@ -1,6 +1,5 @@
 package io.holunda.polyflow.taskpool.collector.task.assigner
 
-import org.camunda.bpm.engine.variable.VariableMap
 
 /**
  * A mapping defining the names of process variables used for assignment.
@@ -13,7 +12,7 @@ data class ProcessVariableTaskAssignerMapping(
   /**
    * Loads assignment from variables.
    */
-  fun loadAssignmentFromVariables(variables: VariableMap): Assignment =
+  fun loadAssignmentFromVariables(variables: Map<String, Any?>): Assignment =
     Assignment(
       assignee = if (assignee != null && variables.containsKey(assignee)) {
         variables[assignee].asStringValue()

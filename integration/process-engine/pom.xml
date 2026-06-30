@@ -15,9 +15,8 @@
   <packaging>pom</packaging>
 
   <properties>
-    <camunda-bpm.version>7.24.0</camunda-bpm.version>
-    <camunda-bpm-assert.version>${camunda-bpm.version}</camunda-bpm-assert.version>
-    <camunda-platform-7-mockito.version>7.24.2</camunda-platform-7-mockito.version>
+    <process-engine-api.version>1.5</process-engine-api.version>
+    <process-engine-adapter-c7.version>2025.06.1</process-engine-adapter-c7.version>
   </properties>
 
   <modules>
@@ -48,29 +47,19 @@
       </dependency>
 
       <dependency>
-        <groupId>org.camunda.bpm</groupId>
-        <artifactId>camunda-bom</artifactId>
-        <version>${camunda-bpm.version}</version>
-        <scope>import</scope>
-        <type>pom</type>
-      </dependency>
-
-      <dependency>
-        <groupId>org.camunda.bpm.springboot</groupId>
-        <artifactId>camunda-bpm-spring-boot-starter-test</artifactId>
-        <version>${camunda-bpm.version}</version>
-        <scope>test</scope>
+        <groupId>dev.bpm-crafters.process-engine-api</groupId>
+        <artifactId>process-engine-api</artifactId>
+        <version>${process-engine-api.version}</version>
       </dependency>
       <dependency>
-        <groupId>org.camunda.community.mockito</groupId>
-        <artifactId>camunda-platform-7-mockito</artifactId>
-        <version>${camunda-platform-7-mockito.version}</version>
-        <scope>test</scope>
+        <groupId>dev.bpm-crafters.process-engine-adapters</groupId>
+        <artifactId>process-engine-adapter-camunda-platform-c7-embedded-spring-boot-starter</artifactId>
+        <version>${process-engine-adapter-c7.version}</version>
       </dependency>
       <dependency>
-        <groupId>org.camunda.bpm</groupId>
-        <artifactId>camunda-bpm-assert</artifactId>
-        <version>${camunda-bpm-assert.version}</version>
+        <groupId>dev.bpm-crafters.process-engine-adapters</groupId>
+        <artifactId>process-engine-adapter-camunda-platform-c7-testing</artifactId>
+        <version>${process-engine-adapter-c7.version}</version>
         <scope>test</scope>
       </dependency>
 

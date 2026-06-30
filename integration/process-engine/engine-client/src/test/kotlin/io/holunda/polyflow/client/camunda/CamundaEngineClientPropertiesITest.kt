@@ -1,8 +1,10 @@
 package io.holunda.polyflow.client.camunda
 
+import dev.bpmcrafters.processengineapi.process.StartProcessApi
+import dev.bpmcrafters.processengineapi.task.UserTaskCompletionApi
+import dev.bpmcrafters.processengineapi.task.UserTaskModificationApi
+import dev.bpmcrafters.processengineapi.task.support.UserTaskSupport
 import org.assertj.core.api.Assertions.assertThat
-import org.camunda.bpm.engine.RuntimeService
-import org.camunda.bpm.engine.TaskService
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -14,14 +16,28 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean
 @ActiveProfiles("properties-itest")
 class CamundaEngineClientPropertiesITest {
 
-  @MockitoBean
-  lateinit var runtimeService: RuntimeService
+//  @MockitoBean
+//  lateinit var runtimeService: RuntimeService
+//
+//  @MockitoBean
+//  lateinit var taskService: TaskService
 
   @MockitoBean
-  lateinit var taskService: TaskService
+  lateinit var startProcessApi: StartProcessApi
+
+  @MockitoBean
+  lateinit var taskQuery: UserTaskSupport
+
+  @MockitoBean
+  lateinit var taskCompletionService: UserTaskCompletionApi
+
+  @MockitoBean
+  lateinit var userTaskModificationApi: UserTaskModificationApi
 
   @Autowired
-  lateinit var props: CamundaEngineClientProperties
+  lateinit var props: EngineClientProperties
+
+
 
   @Test
   fun test_properties() {
