@@ -2,7 +2,6 @@ package io.holunda.polyflow.taskpool.collector
 
 import io.holunda.polyflow.spring.ApplicationNameBeanPostProcessor.Companion.UNSET_APPLICATION_NAME
 import io.holunda.polyflow.taskpool.collector.task.assigner.ProcessVariableTaskAssignerMapping
-import org.camunda.bpm.engine.delegate.TaskListener
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.context.properties.NestedConfigurationProperty
 
@@ -23,23 +22,6 @@ class CamundaTaskpoolCollectorProperties(
    */
   @NestedConfigurationProperty
   var task: CamundaTaskCollectorProperties = CamundaTaskCollectorProperties(),
-  /**
-   * Process definition collector properties.
-   */
-  @NestedConfigurationProperty
-  var processDefinition: CamundaProcessDefinitionCollectorProperties = CamundaProcessDefinitionCollectorProperties(),
-
-  /**
-   * Process instance collector properties.
-   */
-  @NestedConfigurationProperty
-  var processInstance: CamundaProcessInstanceCollectorProperties = CamundaProcessInstanceCollectorProperties(),
-
-  /**
-   * Process variable collector properties.
-   */
-  @NestedConfigurationProperty
-  var processVariable: CamundaProcessVariableProperties = CamundaProcessVariableProperties()
 )
 
 /**
@@ -96,15 +78,6 @@ data class CamundaTaskCollectorProperties(
   fun collectHistoryEvent(eventName: String): Boolean = !excludedHistoryEventNames.contains(eventName)
 }
 
-/**
- * Process variable properties.
- */
-data class CamundaProcessVariableProperties(
-  /**
-   * Enabled by default.
-   */
-  val enabled: Boolean = true
-)
 
 /**
  * Task command enricher properties.
@@ -156,28 +129,7 @@ enum class TaskAssignerType {
   custom
 }
 
-/**
- * Properties controlling the transfer of process definitions deployments.
- */
-data class CamundaProcessDefinitionCollectorProperties(
 
-  /**
-   * Disable by default.
-   */
-  val enabled: Boolean = false
-)
-
-
-/**
- * Properties controlling the transfer of process instance.
- */
-data class CamundaProcessInstanceCollectorProperties(
-
-  /**
-   * Enabled by default.
-   */
-  val enabled: Boolean = true
-)
 
 /**
  * Properties to set up the task assigner.

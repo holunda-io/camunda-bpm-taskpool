@@ -1,1 +1,1 @@
-io.holunda.polyflow.client.camunda.CamundaEngineClientAutoConfiguration
+io.holunda.polyflow.client.camunda.EngineClientAutoConfiguration

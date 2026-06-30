@@ -27,8 +27,8 @@
     </dependency>
 
     <dependency>
-      <groupId>org.camunda.bpm.springboot</groupId>
-      <artifactId>camunda-bpm-spring-boot-starter</artifactId>
+      <groupId>dev.bpm-crafters.process-engine-adapters</groupId>
+      <artifactId>process-engine-adapter-camunda-platform-c7-embedded-spring-boot-starter</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>

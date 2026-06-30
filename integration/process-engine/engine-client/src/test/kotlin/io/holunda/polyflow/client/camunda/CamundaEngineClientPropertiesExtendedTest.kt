@@ -2,6 +2,10 @@ package io.holunda.polyflow.client.camunda
 
 import com.thoughtworks.xstream.XStream
 import com.thoughtworks.xstream.security.AnyTypePermission
+import dev.bpmcrafters.processengineapi.process.StartProcessApi
+import dev.bpmcrafters.processengineapi.task.UserTaskCompletionApi
+import dev.bpmcrafters.processengineapi.task.UserTaskModificationApi
+import dev.bpmcrafters.processengineapi.task.support.UserTaskSupport
 import org.assertj.core.api.Assertions
 import org.axonframework.commandhandling.CommandBus
 import org.axonframework.commandhandling.gateway.CommandGateway
@@ -10,8 +14,6 @@ import org.axonframework.queryhandling.QueryBus
 import org.axonframework.serialization.Serializer
 import org.axonframework.serialization.xml.XStreamSerializer
 import org.axonframework.springboot.autoconfig.MetricsAutoConfiguration
-import org.camunda.bpm.engine.RuntimeService
-import org.camunda.bpm.engine.TaskService
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.mock
 import org.springframework.boot.autoconfigure.AutoConfigurations
@@ -24,7 +26,7 @@ class CamundaEngineClientPropertiesExtendedTest {
   private val contextRunner = ApplicationContextRunner()
     .withConfiguration(AutoConfigurations.of(TestMockConfiguration::class.java))
     .withUserConfiguration(
-      CamundaEngineClientAutoConfiguration::class.java
+      EngineClientAutoConfiguration::class.java
     )
 
   @Test
@@ -36,8 +38,8 @@ class CamundaEngineClientPropertiesExtendedTest {
         "spring.application.name=my-test-application"
       ).run {
 
-        Assertions.assertThat(it.getBean(CamundaEngineClientProperties::class.java)).isNotNull
-        val props: CamundaEngineClientProperties = it.getBean(CamundaEngineClientProperties::class.java)
+        Assertions.assertThat(it.getBean(EngineClientProperties::class.java)).isNotNull
+        val props: EngineClientProperties = it.getBean(EngineClientProperties::class.java)
 
         Assertions.assertThat(props.applicationName).isEqualTo("my-test-application")
       }
@@ -53,8 +55,8 @@ class CamundaEngineClientPropertiesExtendedTest {
         "polyflow.integration.client.camunda.application-name=another-than-spring",
       ).run {
 
-        Assertions.assertThat(it.getBean(CamundaEngineClientProperties::class.java)).isNotNull
-        val props: CamundaEngineClientProperties = it.getBean(CamundaEngineClientProperties::class.java)
+        Assertions.assertThat(it.getBean(EngineClientProperties::class.java)).isNotNull
+        val props: EngineClientProperties = it.getBean(EngineClientProperties::class.java)
 
         Assertions.assertThat(props.applicationName).isEqualTo("another-than-spring")
       }
@@ -82,10 +84,16 @@ class CamundaEngineClientPropertiesExtendedTest {
     fun queryBus(): QueryBus = mock()
 
     @Bean
-    fun runtimeService(): RuntimeService = mock()
+    fun startProcessApi(): StartProcessApi = mock()
 
     @Bean
-    fun taskService(): TaskService = mock()
+    fun userTaskSupport(): UserTaskSupport = mock()
+
+    @Bean
+    fun userTaskCompletionApi(): UserTaskCompletionApi = mock()
+
+    @Bean
+    fun userTaskModificationApi(): UserTaskModificationApi = mock()
 
   }
 

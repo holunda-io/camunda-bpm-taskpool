@@ -6,5 +6,5 @@ import org.springframework.context.annotation.Import
  * Starts camunda client component accepting interaction commands.
  */
 @MustBeDocumented
-@Import(CamundaEngineClientAutoConfiguration::class)
-annotation class EnableCamundaEngineClient
+@Import(EngineClientAutoConfiguration::class)
+annotation class EnableEngineClient

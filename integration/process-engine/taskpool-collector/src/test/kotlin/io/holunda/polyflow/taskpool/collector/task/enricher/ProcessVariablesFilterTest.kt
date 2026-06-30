@@ -1,8 +1,9 @@
 package io.holunda.polyflow.taskpool.collector.task.enricher
 
+import org.assertj.core.api.Assertions.assertThat
 import org.camunda.bpm.engine.variable.Variables
 import org.camunda.bpm.engine.variable.Variables.stringValue
-import org.camunda.bpm.model.xml.test.assertions.ModelAssertions.assertThat
+
 import org.junit.jupiter.api.Test
 
 class ProcessVariablesFilterTest {

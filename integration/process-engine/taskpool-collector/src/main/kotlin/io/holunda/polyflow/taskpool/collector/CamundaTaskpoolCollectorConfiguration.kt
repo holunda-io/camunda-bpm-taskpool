@@ -2,9 +2,6 @@ package io.holunda.polyflow.taskpool.collector
 
 import io.github.oshai.kotlinlogging.KotlinLogging
 import io.holunda.polyflow.spring.ApplicationNameBeanPostProcessor
-import io.holunda.polyflow.taskpool.collector.process.definition.ProcessDefinitionCollectorConfiguration
-import io.holunda.polyflow.taskpool.collector.process.instance.ProcessInstanceCollectorConfiguration
-import io.holunda.polyflow.taskpool.collector.process.variable.ProcessVariableCollectorConfiguration
 import io.holunda.polyflow.taskpool.collector.task.TaskCollectorConfiguration
 import jakarta.annotation.PostConstruct
 import org.springframework.boot.context.properties.EnableConfigurationProperties
@@ -18,9 +15,6 @@ private val logger = KotlinLogging.logger {}
  */
 @ComponentScan(
   basePackageClasses = [
-    ProcessDefinitionCollectorConfiguration::class,
-    ProcessInstanceCollectorConfiguration::class,
-    ProcessVariableCollectorConfiguration::class,
     TaskCollectorConfiguration::class
   ]
 )
@@ -44,24 +38,6 @@ class CamundaTaskpoolCollectorConfiguration(
       }
     } else {
       logger.info { "COLLECTOR-002: Task commands won't be collected." }
-    }
-
-    if (properties.processDefinition.enabled) {
-      logger.info { "COLLECTOR-010: Process definition commands will be collected." }
-    } else {
-      logger.info { "COLLECTOR-011: Process definition commands won't be collected." }
-    }
-
-    if (properties.processInstance.enabled) {
-      logger.info { "COLLECTOR-012: Process instance commands will be collected." }
-    } else {
-      logger.info { "COLLECTOR-013: Process instance commands won't be collected." }
-    }
-
-    if (properties.processInstance.enabled) {
-      logger.info { "COLLECTOR-014: Process variable commands will be collected." }
-    } else {
-      logger.info { "COLLECTOR-015: Process variable commands won't be collected." }
     }
   }
 }
