@@ -5,12 +5,12 @@
 
   <parent>
     <groupId>io.holunda.polyflow</groupId>
-    <artifactId>polyflow-integration-process-engine-parent</artifactId>
+    <artifactId>polyflow-integration-process-engine-api-parent</artifactId>
     <version>4.6.2-SNAPSHOT</version>
   </parent>
 
-  <artifactId>polyflow-process-engine-taskpool-job-sender</artifactId>
-  <name>integration/process-engine/${project.artifactId}</name>
+  <artifactId>polyflow-process-engine-api-taskpool-job-sender</artifactId>
+  <name>integration/process-engine-api/${project.artifactId}</name>
 
   <dependencies>
     <dependency>

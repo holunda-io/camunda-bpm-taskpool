@@ -37,7 +37,7 @@
   <modules>
     <module>../../integration/common</module>
     <module>../../integration/camunda-bpm</module>
-    <module>../../integration/process-engine</module>
+    <module>../../integration/process-engine-api</module>
     <module>../../core/taskpool</module>
     <module>../../core/datapool</module>
     <module>../../core/bus-jackson</module>
@@ -87,7 +87,7 @@
       </dependency>
       <dependency>
         <groupId>io.holunda.polyflow</groupId>
-        <artifactId>polyflow-process-engine-taskpool-collector</artifactId>
+        <artifactId>polyflow-process-engine-api-taskpool-collector</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
@@ -97,7 +97,7 @@
       </dependency>
       <dependency>
         <groupId>io.holunda.polyflow</groupId>
-        <artifactId>polyflow-process-engine-engine-client</artifactId>
+        <artifactId>polyflow-process-engine-api-engine-client</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
@@ -132,7 +132,7 @@
       </dependency>
       <dependency>
         <groupId>io.holunda.polyflow</groupId>
-        <artifactId>polyflow-process-engine-taskpool-job-sender</artifactId>
+        <artifactId>polyflow-process-engine-api-taskpool-job-sender</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
