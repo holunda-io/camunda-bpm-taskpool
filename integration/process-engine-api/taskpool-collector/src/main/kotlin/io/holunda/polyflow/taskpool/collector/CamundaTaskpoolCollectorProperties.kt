@@ -8,7 +8,7 @@ import org.springframework.boot.context.properties.NestedConfigurationProperty
 /**
  * Configuration properties of Camunda Taskpool collector.
  */
-@ConfigurationProperties(prefix = "polyflow.integration.collector.camunda")
+@ConfigurationProperties(prefix = "polyflow.integration.collector.processengineapi")
 class CamundaTaskpoolCollectorProperties(
 
   /**

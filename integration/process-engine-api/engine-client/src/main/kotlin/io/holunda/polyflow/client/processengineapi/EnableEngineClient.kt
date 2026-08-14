@@ -1,4 +1,4 @@
-package io.holunda.polyflow.client.camunda
+package io.holunda.polyflow.client.processengineapi
 
 import org.springframework.context.annotation.Import
 

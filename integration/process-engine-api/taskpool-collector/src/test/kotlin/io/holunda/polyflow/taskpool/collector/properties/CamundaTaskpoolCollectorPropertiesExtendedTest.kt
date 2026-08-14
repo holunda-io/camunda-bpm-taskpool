@@ -52,12 +52,12 @@ internal class CamundaTaskpoolCollectorPropertiesExtendedTest {
       .withPropertyValues(
         "spring.application.name=my-test-application",
         "camunda.bpm.eventing.task=false",
-        "polyflow.integration.collector.camunda.applicationName=another-than-spring",
-        "polyflow.integration.collector.camunda.process-definition.enabled=true",
-        "polyflow.integration.collector.camunda.process-instance.enabled=false",
-        "polyflow.integration.collector.camunda.process-variable.enabled=false",
-        "polyflow.integration.collector.camunda.task.enabled=true",
-        "polyflow.integration.collector.camunda.task.enricher.type=custom",
+        "polyflow.integration.collector.processengineapi.applicationName=another-than-spring",
+        "polyflow.integration.collector.processengineapi.process-definition.enabled=true",
+        "polyflow.integration.collector.processengineapi.process-instance.enabled=false",
+        "polyflow.integration.collector.processengineapi.process-variable.enabled=false",
+        "polyflow.integration.collector.processengineapi.task.enabled=true",
+        "polyflow.integration.collector.processengineapi.task.enricher.type=custom",
       ).run {
 
         assertThat(it.getBean(CamundaTaskpoolCollectorProperties::class.java)).isNotNull
@@ -79,10 +79,10 @@ internal class CamundaTaskpoolCollectorPropertiesExtendedTest {
       .withPropertyValues(
         "spring.application.name=my-test-application",
         "camunda.bpm.eventing.task=false",
-        "polyflow.integration.collector.camunda.task.enabled=true",
-        "polyflow.integration.collector.camunda.task.enricher.type=custom",
-        "polyflow.integration.collector.camunda.task.excluded-task-event-names=assignment",
-        "polyflow.integration.collector.camunda.task.excluded-history-event-names=add-identity-link,delete-identity-link",
+        "polyflow.integration.collector.processengineapi.task.enabled=true",
+        "polyflow.integration.collector.processengineapi.task.enricher.type=custom",
+        "polyflow.integration.collector.processengineapi.task.excluded-task-event-names=assignment",
+        "polyflow.integration.collector.processengineapi.task.excluded-history-event-names=add-identity-link,delete-identity-link",
       ).run {
 
         assertThat(it.getBean(CamundaTaskpoolCollectorProperties::class.java)).isNotNull

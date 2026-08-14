@@ -1,4 +1,4 @@
-package io.holunda.polyflow.client.camunda.process
+package io.holunda.polyflow.client.processengineapi.process
 
 import dev.bpmcrafters.processengineapi.CommonRestrictions
 import dev.bpmcrafters.processengineapi.process.ProcessInformation

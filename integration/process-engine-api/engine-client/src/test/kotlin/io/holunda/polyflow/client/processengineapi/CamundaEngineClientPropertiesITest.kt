@@ -1,4 +1,4 @@
-package io.holunda.polyflow.client.camunda
+package io.holunda.polyflow.client.processengineapi
 
 import dev.bpmcrafters.processengineapi.process.StartProcessApi
 import dev.bpmcrafters.processengineapi.task.UserTaskCompletionApi
