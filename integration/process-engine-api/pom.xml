@@ -10,7 +10,7 @@
     <relativePath>../../bom/parent/pom.xml</relativePath>
   </parent>
 
-  <artifactId>polyflow-integration-process-engine-parent</artifactId>
+  <artifactId>polyflow-integration-process-engine-api-parent</artifactId>
   <name>POM: integration/${project.artifactId}</name>
   <packaging>pom</packaging>
 
@@ -32,17 +32,17 @@
 
       <dependency>
         <groupId>io.holunda.polyflow</groupId>
-        <artifactId>polyflow-process-engine-springboot-autoconfigure</artifactId>
+        <artifactId>polyflow-process-engine-api-springboot-autoconfigure</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>io.holunda.polyflow</groupId>
-        <artifactId>polyflow-process-engine-engine-client</artifactId>
+        <artifactId>polyflow-process-engine-api-engine-client</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>io.holunda.polyflow</groupId>
-        <artifactId>polyflow-process-engine-taskpool-collector</artifactId>
+        <artifactId>polyflow-process-engine-api-taskpool-collector</artifactId>
         <version>${project.version}</version>
       </dependency>
 

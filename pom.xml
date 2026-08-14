@@ -34,7 +34,7 @@
     <module>core/spring-utils</module>
     <module>integration/common</module>
     <module>integration/camunda-bpm</module>
-    <module>integration/process-engine</module>
+    <module>integration/process-engine-api</module>
     <module>view</module>
     <module>bom/datapool-dependencies</module>
     <module>bom/taskpool-dependencies</module>
