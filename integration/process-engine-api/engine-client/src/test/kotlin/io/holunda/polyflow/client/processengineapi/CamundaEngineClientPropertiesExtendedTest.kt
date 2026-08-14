@@ -1,4 +1,4 @@
-package io.holunda.polyflow.client.camunda
+package io.holunda.polyflow.client.processengineapi
 
 import com.thoughtworks.xstream.XStream
 import com.thoughtworks.xstream.security.AnyTypePermission
@@ -52,7 +52,7 @@ class CamundaEngineClientPropertiesExtendedTest {
         "camunda.bpm.enabled=false",
         "axon.axonserver.enabled=false",
         "spring.application.name=my-test-application",
-        "polyflow.integration.client.camunda.application-name=another-than-spring",
+        "polyflow.integration.client.processengineapi.application-name=another-than-spring",
       ).run {
 
         Assertions.assertThat(it.getBean(EngineClientProperties::class.java)).isNotNull

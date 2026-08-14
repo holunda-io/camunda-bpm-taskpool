@@ -1,4 +1,4 @@
-package io.holunda.polyflow.client.camunda.task
+package io.holunda.polyflow.client.processengineapi.task
 
 import dev.bpmcrafters.processengineapi.task.ChangeAssignmentModifyTaskCmd
 import dev.bpmcrafters.processengineapi.task.ModifyTaskCmd
@@ -7,7 +7,7 @@ import dev.bpmcrafters.processengineapi.task.UserTaskCompletionApi
 import dev.bpmcrafters.processengineapi.task.UserTaskModificationApi
 import dev.bpmcrafters.processengineapi.task.support.UserTaskSupport
 import io.holunda.camunda.taskpool.api.task.*
-import io.holunda.polyflow.client.camunda.EngineClientProperties
+import io.holunda.polyflow.client.processengineapi.EngineClientProperties
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

@@ -1,4 +1,4 @@
-package io.holunda.polyflow.client.camunda
+package io.holunda.polyflow.client.processengineapi
 
 import io.holunda.polyflow.spring.ApplicationNameBeanPostProcessor.Companion.UNSET_APPLICATION_NAME
 import org.springframework.boot.context.properties.ConfigurationProperties
@@ -6,7 +6,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 /**
  * Properties to configure Camunda to receive interaction commands via Axon.
  */
-@ConfigurationProperties("polyflow.integration.client.camunda")
+@ConfigurationProperties("polyflow.integration.client.processengineapi")
 data class EngineClientProperties(
 
   /**

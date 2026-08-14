@@ -22,7 +22,7 @@ class ApplicationNameBeanPostProcessor(private val applicationContext: Applicati
     const val UNSET_APPLICATION_NAME = "unset-application-name"
     val CANDIDATES = arrayOf(
       "io.holunda.polyflow.taskpool.collector.CamundaTaskpoolCollectorProperties",
-      "io.holunda.polyflow.client.camunda.EngineClientProperties",
+      "io.holunda.polyflow.client.processengineapi.EngineClientProperties",
       "io.holunda.polyflow.client.camunda.CamundaEngineClientProperties",
       "io.holunda.polyflow.datapool.DataEntrySenderProperties",
     )

@@ -1,4 +1,4 @@
-package io.holunda.polyflow.client.camunda.task
+package io.holunda.polyflow.client.processengineapi.task
 
 import dev.bpmcrafters.processengineapi.task.ChangeAssignmentModifyTaskCmd
 import dev.bpmcrafters.processengineapi.task.CompleteTaskCmd
@@ -12,7 +12,7 @@ import io.holunda.camunda.taskpool.api.task.TaskIdentity
 import io.holunda.camunda.taskpool.api.task.TaskToBeCompletedEvent
 import io.holunda.camunda.taskpool.api.task.TaskUnclaimedEvent
 import io.holunda.camunda.taskpool.api.task.TaskUndeferredEvent
-import io.holunda.polyflow.client.camunda.EngineClientProperties
+import io.holunda.polyflow.client.processengineapi.EngineClientProperties
 import org.axonframework.eventhandling.EventHandler
 import org.springframework.stereotype.Component
 import java.sql.Date

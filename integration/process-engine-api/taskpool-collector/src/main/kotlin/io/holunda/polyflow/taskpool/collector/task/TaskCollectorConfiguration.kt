@@ -27,7 +27,7 @@ private val logger = KotlinLogging.logger {}
  * Constructs the task collector components.
  */
 @Configuration
-@ConditionalOnProperty(value = ["polyflow.integration.collector.camunda.task.enabled"], havingValue = "true", matchIfMissing = false)
+@ConditionalOnProperty(value = ["polyflow.integration.collector.processengineapi.task.enabled"], havingValue = "true", matchIfMissing = false)
 class TaskCollectorConfiguration(
   private val camundaTaskpoolCollectorProperties: CamundaTaskpoolCollectorProperties,
 ) {
@@ -36,7 +36,7 @@ class TaskCollectorConfiguration(
    * Create enricher.
    */
   @Bean
-  @ConditionalOnExpression("'\${polyflow.integration.collector.camunda.task.enricher.type}' != 'custom'")
+  @ConditionalOnExpression("'\${polyflow.integration.collector.processengineapi.task.enricher.type}' != 'custom'")
   fun processVariablesEnricher(
     filter: ProcessVariablesFilter,
     correlator: ProcessVariablesCorrelator
@@ -55,7 +55,7 @@ class TaskCollectorConfiguration(
    * Creates an empty task assigner if no assigner is defined.
    */
   @Bean
-  @ConditionalOnExpression("'\${polyflow.integration.collector.camunda.task.assigner.type}' != 'custom'")
+  @ConditionalOnExpression("'\${polyflow.integration.collector.processengineapi.task.assigner.type}' != 'custom'")
   fun taskAssigner(): TaskAssigner =
     when (camundaTaskpoolCollectorProperties.task.assigner.type) {
       TaskAssignerType.no -> EmptyTaskAssigner()
@@ -70,7 +70,7 @@ class TaskCollectorConfiguration(
    * Service responsible for changing assignees on process variable change.
    */
   @Bean
-  @ConditionalOnExpression("'\${polyflow.integration.collector.camunda.task.assigner.type}' == 'process-variables' && '\${polyflow.integration.collector.camunda.process-variable.enabled}'")
+  @ConditionalOnExpression("'\${polyflow.integration.collector.processengineapi.task.assigner.type}' == 'process-variables' && '\${polyflow.integration.collector.processengineapi.process-variable.enabled}'")
   fun processVariableChangeAssigningService(userTaskSupport: UserTaskSupport) = ProcessVariableChangeAssigningService(
     userTaskSupport = userTaskSupport,
     mapping = camundaTaskpoolCollectorProperties.task.assigner.toMapping()
@@ -104,7 +104,7 @@ class TaskCollectorConfiguration(
    * Create a task collector service collecting tasks directly from the task service of the engine.
    */
   @Bean
-  @ConditionalOnProperty(value = ["polyflow.integration.collector.camunda.task.importer.enabled"], havingValue = "true", matchIfMissing = false)
+  @ConditionalOnProperty(value = ["polyflow.integration.collector.processengineapi.task.importer.enabled"], havingValue = "true", matchIfMissing = false)
   fun taskServiceCollectorService(
     userTaskSupport: UserTaskSupport,
     applicationEventPublisher: ApplicationEventPublisher,
