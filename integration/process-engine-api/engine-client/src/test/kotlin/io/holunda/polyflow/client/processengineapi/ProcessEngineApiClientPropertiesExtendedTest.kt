@@ -5,7 +5,6 @@ import com.thoughtworks.xstream.security.AnyTypePermission
 import dev.bpmcrafters.processengineapi.process.StartProcessApi
 import dev.bpmcrafters.processengineapi.task.UserTaskCompletionApi
 import dev.bpmcrafters.processengineapi.task.UserTaskModificationApi
-import dev.bpmcrafters.processengineapi.task.support.UserTaskSupport
 import org.assertj.core.api.Assertions
 import org.axonframework.commandhandling.CommandBus
 import org.axonframework.commandhandling.gateway.CommandGateway
@@ -21,7 +20,7 @@ import org.springframework.boot.autoconfigure.AutoConfigureBefore
 import org.springframework.boot.test.context.runner.ApplicationContextRunner
 import org.springframework.context.annotation.Bean
 
-class CamundaEngineClientPropertiesExtendedTest {
+class ProcessEngineApiClientPropertiesExtendedTest {
 
   private val contextRunner = ApplicationContextRunner()
     .withConfiguration(AutoConfigurations.of(TestMockConfiguration::class.java))
@@ -85,9 +84,6 @@ class CamundaEngineClientPropertiesExtendedTest {
 
     @Bean
     fun startProcessApi(): StartProcessApi = mock()
-
-    @Bean
-    fun userTaskSupport(): UserTaskSupport = mock()
 
     @Bean
     fun userTaskCompletionApi(): UserTaskCompletionApi = mock()

@@ -1,9 +1,13 @@
 package io.holunda.polyflow.client.processengineapi
 
 import io.holunda.polyflow.spring.ApplicationNameBeanPostProcessor
-
+import dev.bpmcrafters.processengineapi.task.TaskSubscriptionApi
+import dev.bpmcrafters.processengineapi.task.support.UserTaskSupport
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.ComponentScan
+import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Import
 
 /**
@@ -14,4 +18,16 @@ import org.springframework.context.annotation.Import
 //@AutoConfigureAfter(CamundaBpmAutoConfiguration::class)
 @EnableConfigurationProperties(EngineClientProperties::class)
 @Import(ApplicationNameBeanPostProcessor::class)
-class EngineClientAutoConfiguration
+class EngineClientAutoConfiguration {
+
+  @Bean
+  @ConditionalOnMissingBean
+  fun userTaskSupport(): UserTaskSupport = UserTaskSupport()
+
+  @Bean
+  @ConditionalOnBean(TaskSubscriptionApi::class)
+  fun userTaskSupportSubscription(
+    userTaskSupport: UserTaskSupport,
+    taskSubscriptionApi: TaskSubscriptionApi
+  ) = UserTaskSupportSubscription(userTaskSupport, taskSubscriptionApi)
+}

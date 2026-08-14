@@ -18,10 +18,10 @@ private val logger = KotlinLogging.logger {}
     TaskCollectorConfiguration::class
   ]
 )
-@EnableConfigurationProperties(CamundaTaskpoolCollectorProperties::class)
+@EnableConfigurationProperties(ProcessEngineApiTaskpoolCollectorProperties::class)
 @Import(ApplicationNameBeanPostProcessor::class)
-class CamundaTaskpoolCollectorConfiguration(
-  private val properties: CamundaTaskpoolCollectorProperties
+class ProcessEngineApiTaskpoolCollectorConfiguration(
+  private val properties: ProcessEngineApiTaskpoolCollectorProperties
 ) {
 
   /**

@@ -14,8 +14,6 @@ import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.util.*
 
-fun TaskInformation.isCreateEvent(): Boolean = this.meta[TaskInformation.REASON] == TaskInformation.CREATE
-
 fun TaskInformation.sourceReference(applicationName: String): SourceReference {
   return ProcessReference(
     instanceId = this.meta["processInstanceId"].toString(),
@@ -54,7 +52,7 @@ fun TaskInformation.asAssignCommand(): AssignTaskCommand = AssignTaskCommand(
   assignee = this.meta["taskAssignee"],
 )
 
-//TODO: C8 currently only sends update commands. So this will never update assignee or canddates
+//TODO: C8 currently only sends update commands. So this will never update assignee or candidates
 fun TaskInformation.asUpdateCommand(applicationName: String, payload: Map<String, Any?>): UpdateAttributeTaskCommand = UpdateAttributeTaskCommand(
   id = this.taskId,
   description = this.meta["taskDescription"],
@@ -83,4 +81,3 @@ fun convertToUTCLocalDateTime(dateString: String?): Date? {
     ZonedDateTime.parse(dateString).withZoneSameInstant(ZoneId.of("UTC"))
   return Date.from(zonedDateTime.toInstant())
 }
-

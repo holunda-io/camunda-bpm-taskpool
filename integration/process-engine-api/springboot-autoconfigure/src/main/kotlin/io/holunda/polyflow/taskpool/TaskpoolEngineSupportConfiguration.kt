@@ -5,6 +5,6 @@ import io.holunda.polyflow.datapool.EnableDataEntrySender
 /**
  * Configuration enabling engine components.
  */
-@EnableCamundaTaskpoolCollector
+@EnableProcessEngineApiTaskpoolCollector
 @EnableDataEntrySender
 class TaskpoolEngineSupportConfiguration

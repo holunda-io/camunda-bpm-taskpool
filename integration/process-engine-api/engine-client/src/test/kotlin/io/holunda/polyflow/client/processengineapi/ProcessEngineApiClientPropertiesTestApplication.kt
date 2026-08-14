@@ -8,4 +8,4 @@ import org.springframework.context.annotation.Import
 @SpringBootApplication
 @EnableConfigurationProperties(EngineClientProperties::class)
 @Import(ApplicationNameBeanPostProcessor::class)
-class CamundaEngineClientPropertiesTestApplication
+class ProcessEngineApiClientPropertiesTestApplication

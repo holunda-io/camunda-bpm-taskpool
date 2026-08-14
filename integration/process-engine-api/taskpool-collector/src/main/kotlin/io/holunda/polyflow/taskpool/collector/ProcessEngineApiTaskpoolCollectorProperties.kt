@@ -6,10 +6,10 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.context.properties.NestedConfigurationProperty
 
 /**
- * Configuration properties of Camunda Taskpool collector.
+ * Configuration properties of the Process Engine API Taskpool collector.
  */
 @ConfigurationProperties(prefix = "polyflow.integration.collector.processengineapi")
-class CamundaTaskpoolCollectorProperties(
+class ProcessEngineApiTaskpoolCollectorProperties(
 
   /**
    * Denotes the (logical) name of the process application, defaults to "spring.application.name".
@@ -21,13 +21,13 @@ class CamundaTaskpoolCollectorProperties(
    * Task collector properties.
    */
   @NestedConfigurationProperty
-  var task: CamundaTaskCollectorProperties = CamundaTaskCollectorProperties(),
+  var task: ProcessEngineApiTaskCollectorProperties = ProcessEngineApiTaskCollectorProperties(),
 )
 
 /**
  * Task collector properties.
  */
-data class CamundaTaskCollectorProperties(
+data class ProcessEngineApiTaskCollectorProperties(
   /**
    * Task enricher properties.
    */
@@ -44,39 +44,7 @@ data class CamundaTaskCollectorProperties(
    * Flag to enable or disable the collector.
    */
   val enabled: Boolean = true,
-
-  /**
-   * Properties of task importer.
-   */
-  @NestedConfigurationProperty
-  val importer: TaskImporterProperties = TaskImporterProperties(),
-
-  /**
-   * List of task events to be excluded from collector. Defaults to empty list, so all events are collected.
-   * Possible values are constants defined in [TaskListener].
-   */
-  val excludedTaskEventNames: List<String> = listOf(),
-
-  /**
-   * List of history events to restrict (HistoricTaskInstanceEventEntity, HistoricIdentityLinkLogEventEntity). Defaults to empty list, so all events are collected.
-   * Possible values are constants defined in [org.camunda.bpm.engine.impl.history.event.HistoryEventTypes] + "update".
-   */
-  val excludedHistoryEventNames: List<String> = listOf()
-) {
-  /**
-   * Determines if the provided event name should be collected.
-   * @param eventName event name to check.
-   * @return true if not excluded.
-   */
-  fun collectTaskEvent(eventName: String): Boolean = !excludedTaskEventNames.contains(eventName)
-
-  /**
-   * Determines if the provided event name should be collected.
-   * @param eventName event name to check.
-   * @return true if not excluded.
-   */
-  fun collectHistoryEvent(eventName: String): Boolean = !excludedHistoryEventNames.contains(eventName)
-}
+)
 
 
 /**
@@ -161,28 +129,3 @@ data class TaskAssignerProperties(
     candidateGroups = candidateGroups,
   )
 }
-
-/**
- * Configuration of the task importer.
- */
-data class TaskImporterProperties(
-  /**
-   * Enables or disabled importer. Defaults to false.
-   */
-  val enabled: Boolean = false,
-
-  /**
-   * Configures the type of engine task command filter.
-   * Defaults to `eventstore` allowing co-located deployed Taskpool Core to be used as a reference to filter commands.
-   */
-  val taskFilterType: EngineTaskCommandFilterType = EngineTaskCommandFilterType.eventstore
-)
-
-/**
- * Type
- */
-enum class EngineTaskCommandFilterType {
-  eventstore,
-  custom
-}
-

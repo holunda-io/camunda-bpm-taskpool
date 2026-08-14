@@ -12,9 +12,9 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment.MOCK
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.bean.override.mockito.MockitoBean
 
-@SpringBootTest(classes = [CamundaEngineClientPropertiesTestApplication::class], webEnvironment = MOCK)
+@SpringBootTest(classes = [ProcessEngineApiClientPropertiesTestApplication::class], webEnvironment = MOCK)
 @ActiveProfiles("properties-itest")
-class CamundaEngineClientPropertiesITest {
+class ProcessEngineApiClientPropertiesITest {
 
 //  @MockitoBean
 //  lateinit var runtimeService: RuntimeService

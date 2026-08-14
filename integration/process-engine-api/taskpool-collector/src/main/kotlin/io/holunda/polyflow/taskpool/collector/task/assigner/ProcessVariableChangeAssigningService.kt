@@ -1,13 +1,12 @@
 package io.holunda.polyflow.taskpool.collector.task.assigner
 
-import dev.bpmcrafters.processengineapi.CommonRestrictions
-import dev.bpmcrafters.processengineapi.task.support.UserTaskSupport
 import io.holunda.camunda.taskpool.api.task.AddCandidateUsersCommand
 import io.holunda.camunda.taskpool.api.task.AssignTaskCommand
 import io.holunda.camunda.taskpool.api.task.EngineTaskCommand
 import io.holunda.camunda.taskpool.api.task.SourceReference
 import io.holunda.polyflow.taskpool.sender.process.variable.CreateSingleProcessVariableCommand
 import io.holunda.polyflow.taskpool.sender.process.variable.UpdateSingleProcessVariableCommand
+import io.holunda.polyflow.taskpool.collector.task.TaskEventCollectorService
 import org.springframework.context.event.EventListener
 
 /**
@@ -18,7 +17,7 @@ import org.springframework.context.event.EventListener
  * In order to work properly, the collector needs to activate variable collection (even if the sender is disabled).
  */
 class ProcessVariableChangeAssigningService(
-  private val userTaskSupport: UserTaskSupport,
+  private val taskEventCollectorService: TaskEventCollectorService,
   private val mapping: ProcessVariableTaskAssignerMapping
 ) {
 
@@ -91,6 +90,6 @@ class ProcessVariableChangeAssigningService(
 
 
   private fun getTaskId(sourceReference: SourceReference): String? {
-    userTaskSupport.getAllTasks().first { it.meta[CommonRestrictions.EXECUTION_ID] == sourceReference.executionId }.let { return it.taskId }
+    return taskEventCollectorService.findTaskId(sourceReference.executionId)
   }
 }
