@@ -1,9 +1,7 @@
 package io.holunda.polyflow.taskpool.collector.task
 
-import dev.bpmcrafters.processengineapi.task.support.UserTaskSupport
-import io.github.oshai.kotlinlogging.KotlinLogging
-import io.holunda.camunda.taskpool.api.task.EngineTaskCommandFilter
-import io.holunda.polyflow.taskpool.collector.CamundaTaskpoolCollectorProperties
+import dev.bpmcrafters.processengineapi.task.TaskSubscriptionApi
+import io.holunda.polyflow.taskpool.collector.ProcessEngineApiTaskpoolCollectorProperties
 import io.holunda.polyflow.taskpool.collector.TaskAssignerType
 import io.holunda.polyflow.taskpool.collector.TaskCollectorEnricherType
 import io.holunda.polyflow.taskpool.collector.task.assigner.EmptyTaskAssigner
@@ -14,14 +12,11 @@ import io.holunda.polyflow.taskpool.collector.task.enricher.ProcessVariablesCorr
 import io.holunda.polyflow.taskpool.collector.task.enricher.ProcessVariablesFilter
 import io.holunda.polyflow.taskpool.collector.task.enricher.ProcessVariablesTaskCommandEnricher
 import io.holunda.polyflow.taskpool.sender.task.EngineTaskCommandSender
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-
-private val logger = KotlinLogging.logger {}
 
 /**
  * Constructs the task collector components.
@@ -29,7 +24,7 @@ private val logger = KotlinLogging.logger {}
 @Configuration
 @ConditionalOnProperty(value = ["polyflow.integration.collector.processengineapi.task.enabled"], havingValue = "true", matchIfMissing = false)
 class TaskCollectorConfiguration(
-  private val camundaTaskpoolCollectorProperties: CamundaTaskpoolCollectorProperties,
+  private val processEngineApiTaskpoolCollectorProperties: ProcessEngineApiTaskpoolCollectorProperties,
 ) {
 
   /**
@@ -41,14 +36,14 @@ class TaskCollectorConfiguration(
     filter: ProcessVariablesFilter,
     correlator: ProcessVariablesCorrelator
   ): VariablesEnricher =
-    when (camundaTaskpoolCollectorProperties.task.enricher.type) {
+    when (processEngineApiTaskpoolCollectorProperties.task.enricher.type) {
       TaskCollectorEnricherType.processVariables -> ProcessVariablesTaskCommandEnricher(
         processVariablesFilter = filter,
         processVariablesCorrelator = correlator,
       )
 
       TaskCollectorEnricherType.no -> EmptyTaskCommandEnricher()
-      else -> throw IllegalStateException("Could not initialize task enricher, used unknown ${camundaTaskpoolCollectorProperties.task.enricher.type} type.")
+      else -> throw IllegalStateException("Could not initialize task enricher, used unknown ${processEngineApiTaskpoolCollectorProperties.task.enricher.type} type.")
     }
 
   /**
@@ -57,13 +52,13 @@ class TaskCollectorConfiguration(
   @Bean
   @ConditionalOnExpression("'\${polyflow.integration.collector.processengineapi.task.assigner.type}' != 'custom'")
   fun taskAssigner(): TaskAssigner =
-    when (camundaTaskpoolCollectorProperties.task.assigner.type) {
+    when (processEngineApiTaskpoolCollectorProperties.task.assigner.type) {
       TaskAssignerType.no -> EmptyTaskAssigner()
       TaskAssignerType.processVariables -> ProcessVariablesTaskAssigner(
-        processVariableTaskAssignerMapping = camundaTaskpoolCollectorProperties.task.assigner.toMapping()
+        processVariableTaskAssignerMapping = processEngineApiTaskpoolCollectorProperties.task.assigner.toMapping()
       )
 
-      else -> throw IllegalStateException("Could not initialize task assigner, used unknown ${camundaTaskpoolCollectorProperties.task.assigner.type} type.")
+      else -> throw IllegalStateException("Could not initialize task assigner, used unknown ${processEngineApiTaskpoolCollectorProperties.task.assigner.type} type.")
     }
 
   /**
@@ -71,19 +66,19 @@ class TaskCollectorConfiguration(
    */
   @Bean
   @ConditionalOnExpression("'\${polyflow.integration.collector.processengineapi.task.assigner.type}' == 'process-variables' && '\${polyflow.integration.collector.processengineapi.process-variable.enabled}'")
-  fun processVariableChangeAssigningService(userTaskSupport: UserTaskSupport) = ProcessVariableChangeAssigningService(
-    userTaskSupport = userTaskSupport,
-    mapping = camundaTaskpoolCollectorProperties.task.assigner.toMapping()
+  fun processVariableChangeAssigningService(taskEventCollectorService: TaskEventCollectorService) = ProcessVariableChangeAssigningService(
+    taskEventCollectorService = taskEventCollectorService,
+    mapping = processEngineApiTaskpoolCollectorProperties.task.assigner.toMapping()
   )
 
   /**
-   * Constructs the task collector service responsible for collecting Camunda Spring events and building commands out of them.
+   * Constructs the task collector service and subscribes it directly to Process Engine API user-task delivery.
    */
   @Bean(TaskEventCollectorService.NAME)
-  fun taskEventCollectorService(userTaskSupport: UserTaskSupport, applicationEventPublisher: ApplicationEventPublisher) = TaskEventCollectorService(
-    camundaTaskpoolCollectorProperties = camundaTaskpoolCollectorProperties,
+  fun taskEventCollectorService(taskSubscriptionApi: TaskSubscriptionApi, applicationEventPublisher: ApplicationEventPublisher) = TaskEventCollectorService(
+    processEngineApiTaskpoolCollectorProperties = processEngineApiTaskpoolCollectorProperties,
     applicationEventPublisher = applicationEventPublisher,
-    userTaskSupport = userTaskSupport
+    taskSubscriptionApi = taskSubscriptionApi
   )
 
   /**
@@ -100,25 +95,4 @@ class TaskCollectorConfiguration(
     taskAssigner = taskAssigner
   )
 
-  /**
-   * Create a task collector service collecting tasks directly from the task service of the engine.
-   */
-  @Bean
-  @ConditionalOnProperty(value = ["polyflow.integration.collector.processengineapi.task.importer.enabled"], havingValue = "true", matchIfMissing = false)
-  fun taskServiceCollectorService(
-    userTaskSupport: UserTaskSupport,
-    applicationEventPublisher: ApplicationEventPublisher,
-    @Autowired(required = false) engineTaskCommandFilter: EngineTaskCommandFilter?
-  ): TaskServiceCollectorService {
-
-    if (engineTaskCommandFilter == null) {
-      logger.warn { "Task importer is configured, but no task filter is provided. All tasks commands will be rejected." }
-    }
-
-    return TaskServiceCollectorService(
-      userTaskSupport = userTaskSupport,
-      camundaTaskpoolCollectorProperties = camundaTaskpoolCollectorProperties,
-      applicationEventPublisher = applicationEventPublisher,
-    )
-  }
 }

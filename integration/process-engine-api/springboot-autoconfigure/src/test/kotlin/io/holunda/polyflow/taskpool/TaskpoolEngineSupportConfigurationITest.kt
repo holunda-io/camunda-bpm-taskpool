@@ -28,7 +28,7 @@ internal class TaskpoolEngineSupportConfigurationITest {
   @EnableTaskpoolEngineSupport
 //  @EnableProcessApplication
   @ImportAutoConfiguration(
-    io.holunda.polyflow.taskpool.collector.CamundaTaskpoolCollectorConfiguration::class,
+    io.holunda.polyflow.taskpool.collector.ProcessEngineApiTaskpoolCollectorConfiguration::class,
     io.holunda.polyflow.taskpool.sender.SenderConfiguration::class,
     io.holunda.polyflow.datapool.DataEntrySenderConfiguration::class
   )

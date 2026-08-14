@@ -21,7 +21,6 @@
 
   <modules>
     <module>taskpool-collector</module>
-    <module>taskpool-job-sender</module>
     <module>engine-client</module>
     <module>springboot-starter</module>
     <module>springboot-autoconfigure</module>
@@ -51,18 +50,6 @@
         <artifactId>process-engine-api</artifactId>
         <version>${process-engine-api.version}</version>
       </dependency>
-      <dependency>
-        <groupId>dev.bpm-crafters.process-engine-adapters</groupId>
-        <artifactId>process-engine-adapter-camunda-platform-c7-embedded-spring-boot-starter</artifactId>
-        <version>${process-engine-adapter-c7.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>dev.bpm-crafters.process-engine-adapters</groupId>
-        <artifactId>process-engine-adapter-camunda-platform-c7-testing</artifactId>
-        <version>${process-engine-adapter-c7.version}</version>
-        <scope>test</scope>
-      </dependency>
-
     </dependencies>
   </dependencyManagement>
 </project>

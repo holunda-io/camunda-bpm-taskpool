@@ -1,8 +1,8 @@
 package io.holunda.polyflow.taskpool.collector.properties
 
 import com.thoughtworks.xstream.XStream
-import io.holunda.polyflow.taskpool.collector.CamundaTaskpoolCollectorConfiguration
-import io.holunda.polyflow.taskpool.collector.CamundaTaskpoolCollectorProperties
+import io.holunda.polyflow.taskpool.collector.ProcessEngineApiTaskpoolCollectorConfiguration
+import io.holunda.polyflow.taskpool.collector.ProcessEngineApiTaskpoolCollectorProperties
 import io.holunda.polyflow.taskpool.collector.TaskCollectorEnricherType
 import io.holunda.polyflow.taskpool.collector.task.VariablesEnricher
 import io.holunda.polyflow.taskpool.sender.process.definition.ProcessDefinitionCommandSender
@@ -21,22 +21,21 @@ import org.springframework.boot.context.annotation.UserConfigurations
 import org.springframework.boot.test.context.runner.ApplicationContextRunner
 import org.springframework.context.annotation.Bean
 
-internal class CamundaTaskpoolCollectorPropertiesExtendedTest {
+internal class ProcessEngineApiTaskpoolCollectorPropertiesExtendedTest {
 
   private val contextRunner = ApplicationContextRunner()
-    .withConfiguration(UserConfigurations.of(CamundaTaskpoolCollectorConfiguration::class.java))
+    .withConfiguration(UserConfigurations.of(ProcessEngineApiTaskpoolCollectorConfiguration::class.java))
 
   @Test
   fun `loads minimal configuration without properties set`() {
     contextRunner
       .withUserConfiguration(TestMockConfiguration::class.java)
       .withPropertyValues(
-        "spring.application.name=my-test-application",
-        "camunda.bpm.eventing.task=false"
+        "spring.application.name=my-test-application"
       ).run {
 
-        assertThat(it.getBean(CamundaTaskpoolCollectorProperties::class.java)).isNotNull
-        val props: CamundaTaskpoolCollectorProperties = it.getBean(CamundaTaskpoolCollectorProperties::class.java)
+        assertThat(it.getBean(ProcessEngineApiTaskpoolCollectorProperties::class.java)).isNotNull
+        val props: ProcessEngineApiTaskpoolCollectorProperties = it.getBean(ProcessEngineApiTaskpoolCollectorProperties::class.java)
 
         assertThat(props.applicationName).isEqualTo("my-test-application")
         assertThat(props.task.enabled).isTrue
@@ -51,17 +50,13 @@ internal class CamundaTaskpoolCollectorPropertiesExtendedTest {
       .withUserConfiguration(AdditionalMockConfiguration::class.java)
       .withPropertyValues(
         "spring.application.name=my-test-application",
-        "camunda.bpm.eventing.task=false",
         "polyflow.integration.collector.processengineapi.applicationName=another-than-spring",
-        "polyflow.integration.collector.processengineapi.process-definition.enabled=true",
-        "polyflow.integration.collector.processengineapi.process-instance.enabled=false",
-        "polyflow.integration.collector.processengineapi.process-variable.enabled=false",
         "polyflow.integration.collector.processengineapi.task.enabled=true",
         "polyflow.integration.collector.processengineapi.task.enricher.type=custom",
       ).run {
 
-        assertThat(it.getBean(CamundaTaskpoolCollectorProperties::class.java)).isNotNull
-        val props: CamundaTaskpoolCollectorProperties = it.getBean(CamundaTaskpoolCollectorProperties::class.java)
+        assertThat(it.getBean(ProcessEngineApiTaskpoolCollectorProperties::class.java)).isNotNull
+        val props: ProcessEngineApiTaskpoolCollectorProperties = it.getBean(ProcessEngineApiTaskpoolCollectorProperties::class.java)
 
         assertThat(props.applicationName).isEqualTo("another-than-spring")
 
@@ -70,31 +65,6 @@ internal class CamundaTaskpoolCollectorPropertiesExtendedTest {
         assertThat(props.task.enricher.type).isEqualTo(TaskCollectorEnricherType.custom)
       }
   }
-
-//  @Test FIXME: fails
-  fun `loads properties configuration to ignore listeners`() {
-    contextRunner
-      .withUserConfiguration(TestMockConfiguration::class.java)
-      .withUserConfiguration(AdditionalMockConfiguration::class.java)
-      .withPropertyValues(
-        "spring.application.name=my-test-application",
-        "camunda.bpm.eventing.task=false",
-        "polyflow.integration.collector.processengineapi.task.enabled=true",
-        "polyflow.integration.collector.processengineapi.task.enricher.type=custom",
-        "polyflow.integration.collector.processengineapi.task.excluded-task-event-names=assignment",
-        "polyflow.integration.collector.processengineapi.task.excluded-history-event-names=add-identity-link,delete-identity-link",
-      ).run {
-
-        assertThat(it.getBean(CamundaTaskpoolCollectorProperties::class.java)).isNotNull
-        val props: CamundaTaskpoolCollectorProperties = it.getBean(CamundaTaskpoolCollectorProperties::class.java)
-
-        assertThat(props.task.enabled).isTrue
-        assertThat(props.task.collectTaskEvent("assignment")).isFalse()
-        assertThat(props.task.collectHistoryEvent("add-identity-link")).isFalse()
-        assertThat(props.task.collectHistoryEvent("delete-identity-link")).isFalse()
-      }
-  }
-
 
   /**
    * Config class without configuration annotation not to confuse others.

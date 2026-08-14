@@ -1,7 +1,7 @@
 package io.holunda.polyflow.taskpool.collector.properties
 
 import io.holunda.polyflow.spring.ApplicationNameBeanPostProcessor
-import io.holunda.polyflow.taskpool.collector.CamundaTaskpoolCollectorProperties
+import io.holunda.polyflow.taskpool.collector.ProcessEngineApiTaskpoolCollectorProperties
 import io.holunda.polyflow.taskpool.sender.SenderProperties
 import io.holunda.polyflow.taskpool.sender.gateway.CommandListGateway
 import org.mockito.kotlin.mock
@@ -14,12 +14,15 @@ import org.springframework.context.annotation.Import
 import org.springframework.context.annotation.Primary
 import org.springframework.test.context.ActiveProfiles
 
-@SpringBootTest(classes = [CamundaTaskpoolCollectorPropertiesITest.PropertiesTestApplication::class], webEnvironment = SpringBootTest.WebEnvironment.MOCK)
+@SpringBootTest(
+  classes = [ProcessEngineApiTaskpoolCollectorPropertiesITest.PropertiesTestApplication::class],
+  webEnvironment = SpringBootTest.WebEnvironment.MOCK
+)
 @ActiveProfiles("properties-itest")
-internal class CamundaTaskpoolCollectorPropertiesITest {
+internal class ProcessEngineApiTaskpoolCollectorPropertiesITest {
 
   @Autowired
-  private lateinit var props: CamundaTaskpoolCollectorProperties
+  private lateinit var props: ProcessEngineApiTaskpoolCollectorProperties
 
 //  FIXME: This fails
 //  @Test
@@ -30,7 +33,7 @@ internal class CamundaTaskpoolCollectorPropertiesITest {
 //  }
 
   @SpringBootApplication
-  @EnableConfigurationProperties(CamundaTaskpoolCollectorProperties::class, SenderProperties::class)
+  @EnableConfigurationProperties(ProcessEngineApiTaskpoolCollectorProperties::class, SenderProperties::class)
   @Import(ApplicationNameBeanPostProcessor::class)
   class PropertiesTestApplication {
     /**

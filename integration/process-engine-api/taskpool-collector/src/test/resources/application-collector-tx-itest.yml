@@ -34,7 +34,7 @@ camunda:
 polyflow:
   integration:
     collector:
-      camunda:
+      processengineapi:
         task:
           enabled: true
         process-instance:
