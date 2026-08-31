@@ -1,5 +1,9 @@
 This guide contains hints for upgrading to newer versions whenever there are breaking changes.
 
+## Migrating to Spring Boot 4
+
+See [Spring Boot 4 Migration Hints](spring-boot-4.md) for repository-specific migration risks and a suggested task order.
+
 ## Migrating to 4.x
 
 Version 4.x upgrades the Spring Boot dependency from 2.x to 3.x, which also requires upgrading Camunda to >=7.20 and Axon to >=4.7. It also means that Hibernate 6 is used now,
