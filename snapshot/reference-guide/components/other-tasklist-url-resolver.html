@@ -2445,10 +2445,10 @@ after completion.</p>
 <span class="nt">&lt;/dependency&gt;</span>
 </code></pre></div>
 <p>In your <code>application.yml</code> either configure the property for the static tasklist URL:</p>
-<div class="highlight"><pre><span></span><code>polyflow:
-  integration:
-    tasklist:
-      tasklist-url: http://my-task-list.application.url/
+<div class="highlight"><pre><span></span><code><span class="nt">polyflow</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">integration</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">tasklist</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">tasklist-url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://my-task-list.application.url/</span>
 </code></pre></div>
 <p>or provide your own implementation of the <code>TasklistUrlResolver</code> interface as Spring Bean in your configuration:</p>
 <p><div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">java.beans.BeanProperty</span><span class="p">;</span>

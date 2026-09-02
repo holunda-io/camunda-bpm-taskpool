@@ -2436,7 +2436,7 @@ It provides helper Jackson Modules to configure serialization of classes used by
 
 <span class="kd">class</span><span class="w"> </span><span class="nc">MyConfiguration</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="nd">@Bean</span>
-<span class="w">  </span><span class="nd">@Qualifier</span><span class="p">(</span><span class="s">&quot;payloadObjectMapper&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="nd">@Qualifier</span><span class="p">(</span><span class="s">"payloadObjectMapper"</span><span class="p">)</span>
 <span class="w">  </span><span class="kd">fun</span><span class="w"> </span><span class="nf">payloadObjectMapper</span><span class="p">():</span><span class="w"> </span><span class="n">ObjectMapper</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">ObjectMapper</span><span class="p">().</span><span class="na">configureTaskpoolJacksonObjectMapper</span><span class="p">()</span>
 <span class="w">  </span><span class="p">}</span>
@@ -2457,8 +2457,8 @@ is required. In your application properties, set-up the following properties:</p
 
 <span class="kd">class</span><span class="w"> </span><span class="nc">MyConfiguration</span><span class="w"> </span><span class="p">{</span>
 
-<span class="w">  </span><span class="nd">@Bean</span><span class="p">(</span><span class="s">&quot;defaultAxonObjectMapper&quot;</span><span class="p">)</span>
-<span class="w">  </span><span class="nd">@Qualifier</span><span class="p">(</span><span class="s">&quot;defaultAxonObjectMapper&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="nd">@Bean</span><span class="p">(</span><span class="s">"defaultAxonObjectMapper"</span><span class="p">)</span>
+<span class="w">  </span><span class="nd">@Qualifier</span><span class="p">(</span><span class="s">"defaultAxonObjectMapper"</span><span class="p">)</span>
 <span class="w">  </span><span class="kd">fun</span><span class="w"> </span><span class="nf">defaultAxonObjectMapper</span><span class="p">():</span><span class="w"> </span><span class="n">ObjectMapper</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">ObjectMapper</span><span class="p">().</span><span class="na">configureTaskpoolJacksonObjectMapper</span><span class="p">()</span>
 <span class="w">  </span><span class="p">}</span>

@@ -2451,11 +2451,11 @@ The following Camunda Interaction Events are supported:</p>
 <span class="nt">&lt;/dependency&gt;</span>
 </code></pre></div>
 <p>In your <code>application.yml</code> configure the application name of your process engine, to receive commands:</p>
-<div class="highlight"><pre><span></span><code>polyflow:
-  integration:
-    client:
-      camunda:
-        application-name: my-process-application # defaults to ${spring.application.name}
+<div class="highlight"><pre><span></span><code><span class="nt">polyflow</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">integration</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">client</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">camunda</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">application-name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-process-application</span><span class="w"> </span><span class="c1"># defaults to ${spring.application.name}</span>
 </code></pre></div>
 
 

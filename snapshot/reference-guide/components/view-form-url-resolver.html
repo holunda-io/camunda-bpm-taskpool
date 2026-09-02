@@ -2447,24 +2447,24 @@ default for the application or even the default template is taken.</p>
 <p><div class="highlight"><pre><span></span><code><span class="nt">polyflow</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">integration</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">form-url-resolver</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">defaultApplicationTemplate</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;http://localhost:8080/${applicationName}&quot;</span>
-<span class="w">      </span><span class="nt">defaultDataEntryTemplate</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/${entryType}/${entryId}&quot;</span>
-<span class="w">      </span><span class="nt">defaultProcessTemplate</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/${processDefinitionKey}/${formKey}&quot;</span>
-<span class="w">      </span><span class="nt">defaultTaskTemplate</span><span class="p">:</span><span class="w">  </span><span class="s">&quot;/forms/${formKey}/${id}&quot;</span>
+<span class="w">      </span><span class="nt">defaultApplicationTemplate</span><span class="p">:</span><span class="w"> </span><span class="s">"http://localhost:8080/${applicationName}"</span>
+<span class="w">      </span><span class="nt">defaultDataEntryTemplate</span><span class="p">:</span><span class="w"> </span><span class="s">"/${entryType}/${entryId}"</span>
+<span class="w">      </span><span class="nt">defaultProcessTemplate</span><span class="p">:</span><span class="w"> </span><span class="s">"/${processDefinitionKey}/${formKey}"</span>
+<span class="w">      </span><span class="nt">defaultTaskTemplate</span><span class="p">:</span><span class="w">  </span><span class="s">"/forms/${formKey}/${id}"</span>
 <span class="w">      </span><span class="nt">applications</span><span class="p">:</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">app1</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://app1.server.io/app&quot;</span>
+<span class="w">        </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="s">"https://app1.server.io/app"</span>
 <span class="w">        </span><span class="nt">tasks</span><span class="p">:</span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">task1</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/forms/task1/foo/${id}&quot;</span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">task2</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/bar/2/foo/${id}&quot;</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">task1</span><span class="p">:</span><span class="w"> </span><span class="s">"/forms/task1/foo/${id}"</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">task2</span><span class="p">:</span><span class="w"> </span><span class="s">"/bar/2/foo/${id}"</span>
 <span class="w">        </span><span class="nt">processes</span><span class="p">:</span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">process1</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/proc-1/start&quot;</span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">process2</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/proc/2/begin&quot;</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">process1</span><span class="p">:</span><span class="w"> </span><span class="s">"/proc-1/start"</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">process2</span><span class="p">:</span><span class="w"> </span><span class="s">"/proc/2/begin"</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">app2</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://foo.app2.com&quot;</span>
+<span class="w">        </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="s">"https://foo.app2.com"</span>
 <span class="w">        </span><span class="nt">tasks</span><span class="p">:</span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">otherTask1</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/views/task1/${id}&quot;</span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">otherTask2</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/other/2/foo/${id}&quot;</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">otherTask1</span><span class="p">:</span><span class="w"> </span><span class="s">"/views/task1/${id}"</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">otherTask2</span><span class="p">:</span><span class="w"> </span><span class="s">"/other/2/foo/${id}"</span>
 </code></pre></div>
 As you can see in the example above, the component supports simple text templating using <code>${}</code> to indicate
 the template variable. The variables which can be used are direct attributes of the object for which the URL is 

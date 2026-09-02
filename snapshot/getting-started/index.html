@@ -2476,9 +2476,9 @@ to your <code>pom.xml</code>:</p>
 <span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">tx</span>
 <span class="w">        </span><span class="nt">send-within-transaction</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"> </span><span class="c1"># Must be set to true in single node scenario.</span>
 <span class="w">    </span><span class="nt">form-url-resolver</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">defaultTaskTemplate</span><span class="p">:</span><span class="w">  </span><span class="s">&quot;/tasks/${formKey}/${id}?userId=%userId%&quot;</span>
-<span class="w">        </span><span class="nt">defaultApplicationTemplate</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;http://localhost:${server.port}/${applicationName}&quot;</span>
-<span class="w">        </span><span class="nt">defaultProcessTemplate</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/${formKey}?userId=%userId%&quot;</span>
+<span class="w">        </span><span class="nt">defaultTaskTemplate</span><span class="p">:</span><span class="w">  </span><span class="s">"/tasks/${formKey}/${id}?userId=%userId%"</span>
+<span class="w">        </span><span class="nt">defaultApplicationTemplate</span><span class="p">:</span><span class="w"> </span><span class="s">"http://localhost:${server.port}/${applicationName}"</span>
+<span class="w">        </span><span class="nt">defaultProcessTemplate</span><span class="p">:</span><span class="w"> </span><span class="s">"/${formKey}?userId=%userId%"</span>
 </code></pre></div>
 <p>Now, start your process engine. If you run into a user task, you should see on the console how this is passed to task pool.</p>
 <p>For more details on the configuration of different options, please consult the <a href="../reference-guide/components/">Polyflow Components</a> sections.</p>

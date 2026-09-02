@@ -2716,11 +2716,11 @@ of the correlator:</p>
 <span class="kd">fun</span><span class="w"> </span><span class="nf">processVariablesCorrelator</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ProcessVariablesCorrelator</span><span class="p">(</span>
 
 <span class="w">    </span><span class="n">ProcessVariableCorrelation</span><span class="p">(</span>
-<span class="w">      </span><span class="s">&quot;process_approval_process&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s">"process_approval_process"</span><span class="p">,</span>
 <span class="w">      </span><span class="n">mapOf</span><span class="p">(</span>
-<span class="w">        </span><span class="s">&quot;task_approve_request&quot;</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">mapOf</span><span class="p">(</span>
-<span class="w">          </span><span class="c1">// process variable &#39;varRequestId&#39; holds the id of a data entry of type &#39;io.my.approvalRequest&#39;</span>
-<span class="w">          </span><span class="s">&quot;varRequestId&quot;</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="s">&quot;io.my.approvalRequest&quot;</span>
+<span class="w">        </span><span class="s">"task_approve_request"</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">mapOf</span><span class="p">(</span>
+<span class="w">          </span><span class="c1">// process variable 'varRequestId' holds the id of a data entry of type 'io.my.approvalRequest'</span>
+<span class="w">          </span><span class="s">"varRequestId"</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="s">"io.my.approvalRequest"</span>
 <span class="w">        </span><span class="p">)</span>
 <span class="w">      </span><span class="p">)</span>
 <span class="w">    </span><span class="p">)</span>
@@ -2729,8 +2729,8 @@ of the correlator:</p>
 <p>If the process instance now contains the approval request id <code>"4711"</code> in the process variable <code>varRequestId</code>
 and the process reaches the task <code>task_approve_request</code>, the task will get the following correlation created
 (here written in JSON):</p>
-<div class="highlight"><pre><span></span><code><span class="nt">&quot;correlations&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;entryType&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;approvalRequest&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;entryId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;4711&quot;</span><span class="w"> </span><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><span class="nt">"correlations"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="nt">"entryType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"approvalRequest"</span><span class="p">,</span><span class="w"> </span><span class="nt">"entryId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"4711"</span><span class="w"> </span><span class="p">}</span>
 <span class="p">]</span>
 </code></pre></div>
 <h3 id="message-codes">Message codes<a class="headerlink" href="#message-codes" title="Permanent link">#</a></h3>

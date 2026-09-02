@@ -2525,16 +2525,16 @@ the following annotation to any class marked as Spring Configuration loaded duri
 </code></pre></div>
 <p>In addition, configure a Mongo connection to database called <code>tasks-payload</code> using <code>application.properties</code> or
 <code>application.yaml</code>:</p>
-<div class="highlight"><pre><span></span><code>spring:
-  data:
-    mongodb:
-      database: tasks-payload
-      host: localhost
-      port: 27017
+<div class="highlight"><pre><span></span><code><span class="nt">spring</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">data</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">mongodb</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">database</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">tasks-payload</span>
+<span class="w">      </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">localhost</span>
+<span class="w">      </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">27017</span>
 </code></pre></div>
 <p>The view implementation provides runtime details using standard logging facility. If you
 want to increase the logging level, please set up it e.g. in your <code>application.yaml</code>:</p>
-<div class="highlight"><pre><span></span><code>logging.level.io.holunda.polyflow.view.mongo: DEBUG
+<div class="highlight"><pre><span></span><code><span class="nt">logging.level.io.holunda.polyflow.view.mongo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DEBUG</span>
 </code></pre></div>
 <p>For further configuration, please check <a href="../configuration/view-mongo.html">Mongo DB View Configuration</a></p>
 <h3 id="collections">Collections<a class="headerlink" href="#collections" title="Permanent link">#</a></h3>
@@ -2549,43 +2549,43 @@ want to increase the logging level, please set up it e.g. in your <code>applicat
 <p>The data entries collection stores the business data entries in a uniform Datapool format.
 Here is an example:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;_id&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;io.holunda.camunda.taskpool.example.ApprovalRequest#2db47ced-83d4-4c74-a644-44dd738935f8&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;entryType&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;io.holunda.camunda.taskpool.example.ApprovalRequest&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;payload&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="nt">&quot;amount&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;900.00&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;subject&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Advanced training&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;currency&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;EUR&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;id&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2db47ced-83d4-4c74-a644-44dd738935f8&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;applicant&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;hulk&quot;</span>
+<span class="w">    </span><span class="nt">"_id"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"io.holunda.camunda.taskpool.example.ApprovalRequest#2db47ced-83d4-4c74-a644-44dd738935f8"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"entryType"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"io.holunda.camunda.taskpool.example.ApprovalRequest"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"payload"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">"amount"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"900.00"</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"subject"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"Advanced training"</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"currency"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"EUR"</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"id"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"2db47ced-83d4-4c74-a644-44dd738935f8"</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"applicant"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"hulk"</span>
 <span class="w">    </span><span class="p">},</span>
-<span class="w">    </span><span class="nt">&quot;correlations&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">{},</span>
-<span class="w">    </span><span class="nt">&quot;type&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Approval Request&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;name&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;AR 2db47ced-83d4-4c74-a644-44dd738935f8&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;applicationName&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;example-process-approval&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;description&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Advanced training&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;state&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Submitted&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;statusType&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;IN_PROGRESS&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;authorizedUsers&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">        </span><span class="s2">&quot;gonzo&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="s2">&quot;hulk&quot;</span>
+<span class="w">    </span><span class="nt">"correlations"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">{},</span>
+<span class="w">    </span><span class="nt">"type"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"Approval Request"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"name"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"AR 2db47ced-83d4-4c74-a644-44dd738935f8"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"applicationName"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"example-process-approval"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"description"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"Advanced training"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"state"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"Submitted"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"statusType"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"IN_PROGRESS"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"authorizedUsers"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="s2">"gonzo"</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">"hulk"</span>
 <span class="w">    </span><span class="p">],</span>
-<span class="w">    </span><span class="nt">&quot;authorizedGroups&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w"> </span>
-<span class="w">    </span><span class="nt">&quot;deleted&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;protocol&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="nt">"authorizedGroups"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w"> </span>
+<span class="w">    </span><span class="nt">"deleted"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"protocol"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">        </span><span class="p">{</span>
-<span class="w">            </span><span class="nt">&quot;time&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="err">ISODa</span><span class="kc">te</span><span class="err">(</span><span class="s2">&quot;2019-08-21T09:12:54.779Z&quot;</span><span class="err">)</span><span class="p">,</span>
-<span class="w">            </span><span class="nt">&quot;statusType&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;PRELIMINARY&quot;</span><span class="p">,</span>
-<span class="w">            </span><span class="nt">&quot;state&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Draft&quot;</span><span class="p">,</span>
-<span class="w">            </span><span class="nt">&quot;username&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;gonzo&quot;</span><span class="p">,</span>
-<span class="w">            </span><span class="nt">&quot;logMessage&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Draft created.&quot;</span><span class="p">,</span>
-<span class="w">            </span><span class="nt">&quot;logDetails&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Request draft on behalf of hulk created.&quot;</span>
+<span class="w">            </span><span class="nt">"time"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="err">ISODa</span><span class="kc">te</span><span class="err">(</span><span class="s2">"2019-08-21T09:12:54.779Z"</span><span class="err">)</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">"statusType"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"PRELIMINARY"</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">"state"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"Draft"</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">"username"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"gonzo"</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">"logMessage"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"Draft created."</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">"logDetails"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"Request draft on behalf of hulk created."</span>
 <span class="w">        </span><span class="p">},</span>
 <span class="w">        </span><span class="p">{</span>
-<span class="w">            </span><span class="nt">&quot;time&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="err">ISODa</span><span class="kc">te</span><span class="err">(</span><span class="s2">&quot;2019-08-21T09:12:55.060Z&quot;</span><span class="err">)</span><span class="p">,</span>
-<span class="w">            </span><span class="nt">&quot;statusType&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;IN_PROGRESS&quot;</span><span class="p">,</span>
-<span class="w">            </span><span class="nt">&quot;state&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Submitted&quot;</span><span class="p">,</span>
-<span class="w">            </span><span class="nt">&quot;username&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;gonzo&quot;</span><span class="p">,</span>
-<span class="w">            </span><span class="nt">&quot;logMessage&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;New approval request submitted.&quot;</span>
+<span class="w">            </span><span class="nt">"time"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="err">ISODa</span><span class="kc">te</span><span class="err">(</span><span class="s2">"2019-08-21T09:12:55.060Z"</span><span class="err">)</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">"statusType"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"IN_PROGRESS"</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">"state"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"Submitted"</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">"username"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"gonzo"</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">"logMessage"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"New approval request submitted."</span>
 <span class="w">        </span><span class="p">}</span>
 <span class="w">    </span><span class="p">]</span>
 <span class="p">}</span>
@@ -2593,43 +2593,43 @@ Here is an example:</p>
 <h4 id="tasks-collections">Tasks Collections<a class="headerlink" href="#tasks-collections" title="Permanent link">#</a></h4>
 <p>Tasks are stored in the following format (an example):</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;_id&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;dc1abe54-c3f3-11e9-86e8-4ab58cfe8f17&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;sourceReference&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="nt">&quot;_id&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;dc173bca-c3f3-11e9-86e8-4ab58cfe8f17&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;executionId&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;dc1a9742-c3f3-11e9-86e8-4ab58cfe8f17&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;definitionId&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;process_approve_request:1:91f2ff26-a64b-11e9-b117-3e6d125b91e2&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;definitionKey&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;process_approve_request&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;name&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Request Approval&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;applicationName&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;example-process-approval&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;_class&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;process&quot;</span>
+<span class="w">    </span><span class="nt">"_id"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"dc1abe54-c3f3-11e9-86e8-4ab58cfe8f17"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"sourceReference"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">"_id"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"dc173bca-c3f3-11e9-86e8-4ab58cfe8f17"</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"executionId"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"dc1a9742-c3f3-11e9-86e8-4ab58cfe8f17"</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"definitionId"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"process_approve_request:1:91f2ff26-a64b-11e9-b117-3e6d125b91e2"</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"definitionKey"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"process_approve_request"</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"name"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"Request Approval"</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"applicationName"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"example-process-approval"</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"_class"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"process"</span>
 <span class="w">    </span><span class="p">},</span>
-<span class="w">    </span><span class="nt">&quot;taskDefinitionKey&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;user_approve_request&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;payload&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="nt">&quot;request&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2db47ced-83d4-4c74-a644-44dd738935f8&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;originator&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;gonzo&quot;</span>
+<span class="w">    </span><span class="nt">"taskDefinitionKey"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"user_approve_request"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"payload"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">"request"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"2db47ced-83d4-4c74-a644-44dd738935f8"</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"originator"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"gonzo"</span>
 <span class="w">    </span><span class="p">},</span>
-<span class="w">    </span><span class="nt">&quot;correlations&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="nt">&quot;io:holunda:camunda:taskpool:example:ApprovalRequest&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2db47ced-83d4-4c74-a644-44dd738935f8&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;io:holunda:camunda:taskpool:example:User&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;gonzo&quot;</span>
+<span class="w">    </span><span class="nt">"correlations"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">"io:holunda:camunda:taskpool:example:ApprovalRequest"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"2db47ced-83d4-4c74-a644-44dd738935f8"</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"io:holunda:camunda:taskpool:example:User"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"gonzo"</span>
 <span class="w">    </span><span class="p">},</span>
-<span class="w">    </span><span class="nt">&quot;dataEntriesRefs&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">        </span><span class="s2">&quot;io.holunda.camunda.taskpool.example.ApprovalRequest#2db47ced-83d4-4c74-a644-44dd738935f8&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="s2">&quot;io.holunda.camunda.taskpool.example.User#gonzo&quot;</span>
+<span class="w">    </span><span class="nt">"dataEntriesRefs"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="s2">"io.holunda.camunda.taskpool.example.ApprovalRequest#2db47ced-83d4-4c74-a644-44dd738935f8"</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">"io.holunda.camunda.taskpool.example.User#gonzo"</span>
 <span class="w">    </span><span class="p">],</span>
-<span class="w">    </span><span class="nt">&quot;businessKey&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2db47ced-83d4-4c74-a644-44dd738935f8&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;name&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Approve Request&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;description&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Please approve request 2db47ced-83d4-4c74-a644-44dd738935f8 from gonzo on behalf of hulk.&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;formKey&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;approve-request&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;priority&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">23</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;createTime&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="err">ISODa</span><span class="kc">te</span><span class="err">(</span><span class="s2">&quot;2019-08-21T09:12:54.872Z&quot;</span><span class="err">)</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;candidateUsers&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">        </span><span class="s2">&quot;fozzy&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="s2">&quot;gonzo&quot;</span>
+<span class="w">    </span><span class="nt">"businessKey"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"2db47ced-83d4-4c74-a644-44dd738935f8"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"name"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"Approve Request"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"description"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"Please approve request 2db47ced-83d4-4c74-a644-44dd738935f8 from gonzo on behalf of hulk."</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"formKey"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"approve-request"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"priority"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">23</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"createTime"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="err">ISODa</span><span class="kc">te</span><span class="err">(</span><span class="s2">"2019-08-21T09:12:54.872Z"</span><span class="err">)</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"candidateUsers"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="s2">"fozzy"</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">"gonzo"</span>
 <span class="w">    </span><span class="p">],</span>
-<span class="w">    </span><span class="nt">&quot;candidateGroups&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">[],</span>
-<span class="w">    </span><span class="nt">&quot;dueDate&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="err">ISODa</span><span class="kc">te</span><span class="err">(</span><span class="s2">&quot;2019-06-26T07:55:00.000Z&quot;</span><span class="err">)</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;followUpDate&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="err">ISODa</span><span class="kc">te</span><span class="err">(</span><span class="s2">&quot;2023-06-26T07:55:00.000Z&quot;</span><span class="err">)</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;deleted&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
+<span class="w">    </span><span class="nt">"candidateGroups"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">[],</span>
+<span class="w">    </span><span class="nt">"dueDate"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="err">ISODa</span><span class="kc">te</span><span class="err">(</span><span class="s2">"2019-06-26T07:55:00.000Z"</span><span class="err">)</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"followUpDate"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="err">ISODa</span><span class="kc">te</span><span class="err">(</span><span class="s2">"2023-06-26T07:55:00.000Z"</span><span class="err">)</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"deleted"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
 <span class="p">}</span>
 </code></pre></div>
 <h4 id="process-collection">Process Collection<a class="headerlink" href="#process-collection" title="Permanent link">#</a></h4>
@@ -2637,18 +2637,18 @@ Here is an example:</p>
 This information is in particular interesting, if you are building a process-starter component and want to react
 dynamically on processes deployed in your landscape.</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;_id&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;process_approve_request:1:91f2ff26-a64b-11e9-b117-3e6d125b91e2&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;processDefinitionKey&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;process_approve_request&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;processDefinitionVersion&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;applicationName&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;example-process-approval&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;processName&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Request Approval&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;processDescription&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;This is a wonderful process.&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;formKey&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;start-approval&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;startableFromTasklist&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;candidateStarterUsers&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">[],</span>
-<span class="w">    </span><span class="nt">&quot;candidateStarterGroups&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">        </span><span class="s2">&quot;muppetshow&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="s2">&quot;avengers&quot;</span>
+<span class="w">    </span><span class="nt">"_id"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"process_approve_request:1:91f2ff26-a64b-11e9-b117-3e6d125b91e2"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"processDefinitionKey"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"process_approve_request"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"processDefinitionVersion"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"applicationName"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"example-process-approval"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"processName"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"Request Approval"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"processDescription"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"This is a wonderful process."</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"formKey"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"start-approval"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"startableFromTasklist"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"candidateStarterUsers"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">[],</span>
+<span class="w">    </span><span class="nt">"candidateStarterGroups"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="s2">"muppetshow"</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">"avengers"</span>
 <span class="w">    </span><span class="p">]</span>
 <span class="p">}</span>
 </code></pre></div>
@@ -2656,13 +2656,13 @@ dynamically on processes deployed in your landscape.</p>
 <p>The Axon Tracking Token reflects the index of the event processed by the Mongo View and is stored in the
 following format:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;_id&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="err">Objec</span><span class="kc">t</span><span class="err">Id(</span><span class="s2">&quot;5d2b45d6a9ca33042abea23b&quot;</span><span class="err">)</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;processorName&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;io.holunda.camunda.taskpool.view.mongo.service&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;segment&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;owner&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;18524@blackstar&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;timestamp&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="err">NumberLo</span><span class="kc">n</span><span class="err">g(</span><span class="mi">1566379093564</span><span class="err">)</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;token&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;$binary&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;PG9yZy5heG9uZnJhbWV3b3JrLmV2ZW50aGFuZGxpbmcuR2xvYmFsU2VxdWVuY2VUcmFja2luZ1Rva2VuPjxnbG9iYWxJbmRleD40NDwvZ2xvYmFsSW5kZXg+PC9vcmcuYXhvbmZyYW1ld29yay5ldmVudGhhbmRsaW5nLkdsb2JhbFNlcXVlbmNlVHJhY2tpbmdUb2tlbj4=&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;$type&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;00&quot;</span><span class="w"> </span><span class="p">},</span>
-<span class="w">    </span><span class="nt">&quot;tokenType&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;org.axonframework.eventhandling.GlobalSequenceTrackingToken&quot;</span>
+<span class="w">    </span><span class="nt">"_id"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="err">Objec</span><span class="kc">t</span><span class="err">Id(</span><span class="s2">"5d2b45d6a9ca33042abea23b"</span><span class="err">)</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"processorName"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"io.holunda.camunda.taskpool.view.mongo.service"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"segment"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"owner"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"18524@blackstar"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"timestamp"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="err">NumberLo</span><span class="kc">n</span><span class="err">g(</span><span class="mi">1566379093564</span><span class="err">)</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"token"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"$binary"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"PG9yZy5heG9uZnJhbWV3b3JrLmV2ZW50aGFuZGxpbmcuR2xvYmFsU2VxdWVuY2VUcmFja2luZ1Rva2VuPjxnbG9iYWxJbmRleD40NDwvZ2xvYmFsSW5kZXg+PC9vcmcuYXhvbmZyYW1ld29yay5ldmVudGhhbmRsaW5nLkdsb2JhbFNlcXVlbmNlVHJhY2tpbmdUb2tlbj4="</span><span class="p">,</span><span class="w"> </span><span class="nt">"$type"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"00"</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">"tokenType"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"org.axonframework.eventhandling.GlobalSequenceTrackingToken"</span>
 <span class="p">}</span>
 </code></pre></div>
 

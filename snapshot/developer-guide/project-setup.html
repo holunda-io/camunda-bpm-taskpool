@@ -2623,8 +2623,8 @@ artifacts will get into <code>Staging Repositories</code> of OSS Sonatype withou
 </div>
 <p>If you still want to execute the deployment from your local machine, you need to have GPG keys at place and
 to execute the following command on the <code>master</code> branch:</p>
-<div class="highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">GPG_KEYNAME</span><span class="o">=</span><span class="s2">&quot;&lt;keyname&gt;&quot;</span>
-<span class="nb">export</span><span class="w"> </span><span class="nv">GPG_PASSPHRASE</span><span class="o">=</span><span class="s2">&quot;&lt;secret&gt;&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">GPG_KEYNAME</span><span class="o">=</span><span class="s2">"&lt;keyname&gt;"</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">GPG_PASSPHRASE</span><span class="o">=</span><span class="s2">"&lt;secret&gt;"</span>
 ./mvnw<span class="w"> </span>clean<span class="w"> </span>deploy<span class="w"> </span>-B<span class="w"> </span>-DskipTests<span class="w"> </span>-DskipExamples<span class="w"> </span>-Prelease<span class="w"> </span>-Dgpg.keyname<span class="o">=</span><span class="nv">$GPG_KEYNAME</span><span class="w"> </span>-Dgpg.passphrase<span class="o">=</span><span class="nv">$GPG_PASSPHRASE</span>
 </code></pre></div>
 <h3 id="release-to-public-repositories">Release to public repositories<a class="headerlink" href="#release-to-public-repositories" title="Permanent link">#</a></h3>
