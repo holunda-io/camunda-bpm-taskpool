@@ -456,8 +456,8 @@
           <version>${kotlin.version}</version>
           <configuration>
             <jvmTarget>${java.version}</jvmTarget>
-            <apiVersion>2.0</apiVersion>
-            <languageVersion>2.0</languageVersion>
+            <apiVersion>2.2</apiVersion>
+            <languageVersion>2.2</languageVersion>
             <args>
               <arg>-Xjsr305=strict</arg>
             </args>

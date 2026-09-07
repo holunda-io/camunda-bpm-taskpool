@@ -1,0 +1,20 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+
+  <property name="db.name" value="h2" dbms="h2"/>
+  <property name="db.name" value="mariadb" dbms="mariadb"/>
+  <property name="db.name" value="mssql" dbms="mssql"/>
+  <property name="db.name" value="oracle" dbms="oracle"/>
+  <property name="db.name" value="postgres" dbms="postgresql"/>
+
+  <changeSet author="Holunda" id="core-baseline-4.6.1">
+    <sqlFile path="baseline/liquibase.${db.name}.axonframework-4-core.sql"
+             encoding="UTF-8"
+             relativeToChangelogFile="true"
+             splitStatements="true"
+             stripComments="true"/>
+  </changeSet>
+
+</databaseChangeLog>
