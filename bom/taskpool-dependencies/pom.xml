@@ -25,42 +25,7 @@
       </dependency>
       <dependency>
         <groupId>io.holunda.polyflow</groupId>
-        <artifactId>polyflow-bus-jackson</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>io.holunda.polyflow</groupId>
-        <artifactId>polyflow-taskpool-api</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>io.holunda.polyflow</groupId>
-        <artifactId>polyflow-taskpool-event</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>io.holunda.polyflow</groupId>
-        <artifactId>polyflow-taskpool-core</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>io.holunda.polyflow</groupId>
-        <artifactId>polyflow-camunda-bpm-taskpool-collector</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>io.holunda.polyflow</groupId>
-        <artifactId>polyflow-camunda-bpm-taskpool-job-sender</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>io.holunda.polyflow</groupId>
         <artifactId>polyflow-camunda-bpm-springboot-starter</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>io.holunda.polyflow</groupId>
-        <artifactId>polyflow-camunda-bpm-engine-client</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
@@ -70,32 +35,7 @@
       </dependency>
       <dependency>
         <groupId>io.holunda.polyflow</groupId>
-        <artifactId>polyflow-view-api</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>io.holunda.polyflow</groupId>
-        <artifactId>polyflow-view-simple</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>io.holunda.polyflow</groupId>
         <artifactId>polyflow-view-jpa</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>io.holunda.polyflow</groupId>
-        <artifactId>polyflow-view-mongo</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>io.holunda.polyflow</groupId>
-        <artifactId>polyflow-variable-serializer</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>io.holunda.polyflow</groupId>
-        <artifactId>polyflow-form-url-resolver</artifactId>
         <version>${project.version}</version>
       </dependency>
     </dependencies>

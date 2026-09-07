@@ -1,6 +1,6 @@
 package io.holunda.polyflow.urlresolver
 
-import com.fasterxml.jackson.databind.ObjectMapper
+import tools.jackson.databind.ObjectMapper
 import io.holunda.polyflow.bus.jackson.config.FallbackPayloadObjectMapperAutoConfiguration.Companion.PAYLOAD_OBJECT_MAPPER
 import io.holunda.polyflow.view.FormUrlResolver
 import org.springframework.beans.factory.annotation.Qualifier

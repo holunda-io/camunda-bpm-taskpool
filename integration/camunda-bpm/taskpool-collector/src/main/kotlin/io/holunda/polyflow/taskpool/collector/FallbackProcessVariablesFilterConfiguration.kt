@@ -3,6 +3,7 @@ package io.holunda.polyflow.taskpool.collector
 import io.holunda.polyflow.taskpool.collector.task.enricher.ProcessVariablesFilter
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Configuration
 
 /**
  * Configures fallback if no process variable filter is defined.
@@ -10,6 +11,7 @@ import org.springframework.context.annotation.Bean
  * Configuration used via auto-configuration.
  */
 @ConditionalOnMissingBean(ProcessVariablesFilter::class)
+@Configuration
 class FallbackProcessVariablesFilterConfiguration {
   /**
    * Empty process variable filter.

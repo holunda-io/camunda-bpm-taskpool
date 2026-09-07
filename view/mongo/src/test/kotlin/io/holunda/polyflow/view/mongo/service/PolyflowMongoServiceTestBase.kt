@@ -17,7 +17,8 @@ import org.camunda.bpm.engine.variable.Variables
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.test.annotation.DirtiesContext
-import org.testcontainers.containers.MongoDBContainer
+import org.testcontainers.mongodb.MongoDBContainer
+
 import java.time.OffsetDateTime
 import java.util.*
 

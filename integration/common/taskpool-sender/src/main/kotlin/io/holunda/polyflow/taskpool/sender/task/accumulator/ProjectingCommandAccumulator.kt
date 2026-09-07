@@ -1,6 +1,6 @@
 package io.holunda.polyflow.taskpool.sender.task.accumulator
 
-import com.fasterxml.jackson.databind.ObjectMapper
+import tools.jackson.databind.ObjectMapper
 import io.holunda.camunda.taskpool.api.business.WithCorrelations
 import io.holunda.camunda.taskpool.api.task.*
 import io.holunda.camunda.taskpool.api.task.CamundaTaskEventType.Companion.CANDIDATE_GROUP_DELETE

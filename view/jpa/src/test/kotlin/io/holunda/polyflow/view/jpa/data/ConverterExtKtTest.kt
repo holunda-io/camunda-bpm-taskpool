@@ -1,7 +1,8 @@
 package io.holunda.polyflow.view.jpa.data
 
 
-import com.fasterxml.jackson.databind.ObjectMapper
+import tools.jackson.databind.ObjectMapper
+import tools.jackson.databind.json.JsonMapper
 import io.holixon.axon.gateway.query.RevisionValue
 import io.holunda.camunda.taskpool.api.business.*
 import io.holunda.polyflow.view.jpa.payload.PayloadAttribute
@@ -49,7 +50,7 @@ class ConverterExtKtTest {
 
   @Test
   fun shouldCreateEntity() {
-    val objectMapper = ObjectMapper()
+    val objectMapper = JsonMapper()
     val event = DataEntryCreatedEvent(
       entryType = "io.holunda.test",
       entryId = "id",
@@ -86,7 +87,7 @@ class ConverterExtKtTest {
 
   @Test
   fun shouldCreateEntityIfNotPresent() {
-    val objectMapper = ObjectMapper()
+    val objectMapper = JsonMapper()
     val event = DataEntryUpdatedEvent(
       entryType = "io.holunda.test",
       entryId = "id",
@@ -130,7 +131,7 @@ class ConverterExtKtTest {
 
   @Test
   fun shouldUpdateEntity() {
-    val objectMapper = ObjectMapper()
+    val objectMapper = JsonMapper()
     val createdAt = Instant.now().minus(1, ChronoUnit.DAYS)
     val existingEntity = DataEntryEntity(
       dataEntryId = DataEntryId("id", "io.holunda.test"),

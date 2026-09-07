@@ -1,6 +1,6 @@
 package io.holunda.polyflow.taskpool
 
-import com.fasterxml.jackson.databind.ObjectMapper
+import tools.jackson.databind.ObjectMapper
 import io.holunda.polyflow.bus.jackson.configurePolyflowJacksonObjectMapper
 
 /**

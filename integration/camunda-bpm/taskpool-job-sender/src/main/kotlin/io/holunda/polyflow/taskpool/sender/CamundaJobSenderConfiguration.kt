@@ -1,9 +1,11 @@
 package io.holunda.polyflow.taskpool.sender
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.databind.jsontype.impl.LaissezFaireSubTypeValidator
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import tools.jackson.databind.DefaultTyping
+import tools.jackson.databind.ObjectMapper
+import tools.jackson.databind.json.JsonMapper
+import tools.jackson.databind.jsontype.BasicPolymorphicTypeValidator
+import tools.jackson.module.kotlin.jacksonObjectMapper
 import io.holunda.polyflow.bus.jackson.configurePolyflowJacksonObjectMapper
 import io.holunda.polyflow.taskpool.sender.gateway.CommandListGateway
 import io.holunda.polyflow.taskpool.sender.task.EngineTaskCommandSender
@@ -14,10 +16,12 @@ import org.camunda.bpm.engine.spring.SpringProcessEnginePlugin
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Configuration
 
 /**
  * Spring configuration building task sender, using Camunda job to decouple from originated transaction..
  */
+@Configuration
 class CamundaJobSenderConfiguration(
   private val senderProperties: SenderProperties
 ) {
@@ -75,7 +79,14 @@ class CamundaJobSenderConfiguration(
   fun fallbackCommandByteArrayObjectMapper(): ObjectMapper =
     jacksonObjectMapper()
       .configurePolyflowJacksonObjectMapper()
-      .apply {
-        activateDefaultTyping(LaissezFaireSubTypeValidator(), ObjectMapper.DefaultTyping.EVERYTHING, JsonTypeInfo.As.WRAPPER_ARRAY)
-      }
+      .rebuild<JsonMapper, JsonMapper.Builder>()
+      .activateDefaultTyping(
+        BasicPolymorphicTypeValidator.builder()
+          .allowIfSubType(Any::class.java)
+          .allowIfSubTypeIsArray()
+          .build(),
+        DefaultTyping.NON_FINAL_AND_ENUMS,
+        JsonTypeInfo.As.WRAPPER_ARRAY
+      )
+      .build()
 }

@@ -1,9 +1,9 @@
 package io.holunda.polyflow.taskpool.sender
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.databind.jsontype.impl.LaissezFaireSubTypeValidator
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import tools.jackson.databind.ObjectMapper
+import tools.jackson.databind.jsontype.impl.LaissezFaireSubTypeValidator
+import tools.jackson.module.kotlin.jacksonObjectMapper
 import io.holunda.camunda.taskpool.api.task.EngineTaskCommand
 import io.holunda.polyflow.bus.jackson.configurePolyflowJacksonObjectMapper
 import org.assertj.core.api.Assertions.assertThat

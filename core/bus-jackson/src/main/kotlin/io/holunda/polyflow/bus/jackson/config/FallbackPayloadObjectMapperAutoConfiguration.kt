@@ -1,18 +1,21 @@
 package io.holunda.polyflow.bus.jackson.config
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import tools.jackson.databind.ObjectMapper
+import tools.jackson.databind.json.JsonMapper
+import tools.jackson.module.kotlin.jacksonObjectMapper
 import io.github.oshai.kotlinlogging.KotlinLogging
 import io.holunda.polyflow.bus.jackson.configurePolyflowJacksonObjectMapper
 import io.toolisticon.spring.condition.ConditionalOnMissingQualifiedBean
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Configuration
 
 private val logger = KotlinLogging.logger {}
 
 /**
  * No @configuration required, used as autoconfiguration.
  */
+@Configuration
 class FallbackPayloadObjectMapperAutoConfiguration {
 
   /**
@@ -30,7 +33,9 @@ class FallbackPayloadObjectMapperAutoConfiguration {
   @ConditionalOnMissingQualifiedBean(beanClass = ObjectMapper::class, qualifier = PAYLOAD_OBJECT_MAPPER)
   fun taskCollectorObjectMapper(): ObjectMapper = jacksonObjectMapper()
     .configurePolyflowJacksonObjectMapper()
-    .findAndRegisterModules().apply {
+    .rebuild<JsonMapper, JsonMapper.Builder>()
+    .findAndAddModules()
+    .build().apply {
       logger.warn { "Fallback polyflow objectMapper is used, consider to provide an object mapper bean with qualifier '$PAYLOAD_OBJECT_MAPPER'" }
     }
 }

@@ -1,7 +1,7 @@
 package io.holunda.polyflow.taskpool.itest.tx
 
-import com.fasterxml.jackson.module.kotlin.convertValue
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import tools.jackson.module.kotlin.convertValue
+import tools.jackson.module.kotlin.jacksonObjectMapper
 import io.holunda.camunda.taskpool.api.task.*
 import io.holunda.polyflow.taskpool.EnableCamundaTaskpoolCollector
 import io.holunda.polyflow.taskpool.collector.task.TaskEventCollectorService
