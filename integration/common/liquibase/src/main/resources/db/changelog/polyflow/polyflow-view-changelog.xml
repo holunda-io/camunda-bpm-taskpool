@@ -9,7 +9,7 @@
   <property name="db.name" value="oracle" dbms="oracle"/>
   <property name="db.name" value="postgres" dbms="postgresql"/>
 
-  <changeSet author="Holunda" id="view-baseline-4.6.1">
+  <changeSet author="Holunda" id="view-baseline-4.6.2">
     <sqlFile path="baseline/liquibase.${db.name}.axonframework-4-view.sql"
              encoding="UTF-8"
              relativeToChangelogFile="true"
