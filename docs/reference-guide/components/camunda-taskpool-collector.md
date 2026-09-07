@@ -29,7 +29,7 @@ Spring eventing.
 - Enrichment of task engine commands with process variables
 - Attachment of correlation information to task engine commands
 - Transmission of commands to Axon command bus
-- Provision of properties for process application
+- Provision of properties for a process application
 
 ### Architecture
 
@@ -125,6 +125,27 @@ The `ProcessVariablesFilter` is a Spring bean holding a list of individual `Vari
 process definition key and optionally one without process definition key (a global filter). If the filter is not provded,
 a default filter is used which is an empty `EXCLUDE` filter, resulting in all process variables being attached to the user task.
 
+Alternatively, enable the property-backed filter. A filter with `processVariables` is process-level; a filter with
+`taskVariables` is task-level and therefore requires `processDefinitionKey`. Both can be configured together for a
+process; task-level rules further restrict the process-level rule. See
+[Remote Engine Process-Variable Configuration](../configuration/remote-engine-process-variable-configuration.md) for
+the complete property reference and remote-engine examples.
+
+```yaml
+polyflow:
+  integration:
+    collector:
+      camunda:
+        process-variables-filter:
+          enabled: true
+          filters:
+            - processDefinitionKey: approval
+              filterType: INCLUDE
+              processVariables: [requestId, applicant]
+              taskVariables:
+                approve: [requestId, applicant]
+```
+
 A `VariableFilter` can be of the following type:
 
 * `TaskVariableFilter`:
@@ -216,6 +237,28 @@ fun processVariablesCorrelator() = ProcessVariablesCorrelator(
       mapOf(ProcessApproveRequest.Variables.REQUEST_ID to BusinessDataEntry.REQUEST)
     )
   )
+```
+
+It can also be supplied from Spring properties. Enabling this configuration creates the correlator in place of the
+empty fallback bean. See [Remote Engine Process-Variable Configuration](../configuration/remote-engine-process-variable-configuration.md)
+for the complete property reference and remote-engine examples.
+
+```yaml
+polyflow:
+  integration:
+    collector:
+      camunda:
+        process-variables-correlator:
+          enabled: true
+          correlations:
+            - processDefinitionKey: approval
+              globalCorrelations:
+                - entryIdVariableName: requestId
+                  entryType: request
+              correlations:
+                approve:
+                  - entryIdVariableName: customerId
+                    entryType: customer
 ```
 
 The process variable correlator holds a list of process variable correlations - one for every process
@@ -321,4 +364,4 @@ polyflow:
 ```
 
 By doing so, the `TaskServiceCollectorService` Bean is made available and can be used to trigger the import. The `eventstore` filter is useful in scenarios,
-in which the [Taskpool Core](./core-taskpool) is deployed on together with Taskpool Collector as part of the Process Application.
+in which the [Taskpool Core](./core-taskpool) is deployed alonside with Taskpool Collector as part of the Process Application or Process Engine.
