@@ -1,6 +1,6 @@
 package io.holunda.polyflow.taskpool.sender
 
-import com.fasterxml.jackson.databind.ObjectMapper
+import tools.jackson.databind.ObjectMapper
 import io.holunda.camunda.taskpool.api.task.EngineTaskCommand
 import io.holunda.polyflow.taskpool.sender.gateway.CommandListGateway
 import org.camunda.bpm.engine.impl.interceptor.CommandContext

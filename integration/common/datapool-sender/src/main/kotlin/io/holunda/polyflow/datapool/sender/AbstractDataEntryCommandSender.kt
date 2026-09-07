@@ -1,6 +1,6 @@
 package io.holunda.polyflow.datapool.sender
 
-import com.fasterxml.jackson.databind.ObjectMapper
+import tools.jackson.databind.ObjectMapper
 import io.holunda.camunda.taskpool.api.business.*
 import io.holunda.camunda.variable.serializer.serialize
 import io.holunda.polyflow.datapool.DataEntrySenderProperties

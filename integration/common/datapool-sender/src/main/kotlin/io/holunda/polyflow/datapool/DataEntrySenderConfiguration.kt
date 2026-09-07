@@ -1,6 +1,6 @@
 package io.holunda.polyflow.datapool
 
-import com.fasterxml.jackson.databind.ObjectMapper
+import tools.jackson.databind.ObjectMapper
 import io.github.oshai.kotlinlogging.KotlinLogging
 import io.holunda.polyflow.datapool.projector.DataEntryProjectionSupplier
 import io.holunda.polyflow.datapool.projector.DataEntryProjector
@@ -15,11 +15,13 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Import
 
 /**
  * Polyflow sender configuration.
  */
+@Configuration
 @EnableConfigurationProperties(DataPoolSenderProperties::class)
 @Import(ApplicationNameBeanPostProcessor::class)
 class DataEntrySenderConfiguration(

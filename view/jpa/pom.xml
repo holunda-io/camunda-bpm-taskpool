@@ -24,6 +24,10 @@
       <version>${project.version}</version>
     </dependency>
     <dependency>
+      <groupId>tools.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-data-jpa</artifactId>
       <scope>provided</scope>
@@ -59,17 +63,17 @@
     </dependency>
     <dependency>
       <groupId>org.testcontainers</groupId>
-      <artifactId>junit-jupiter</artifactId>
+      <artifactId>testcontainers-junit-jupiter</artifactId>
     </dependency>
     <dependency>
       <groupId>org.testcontainers</groupId>
-      <artifactId>mariadb</artifactId>
+      <artifactId>testcontainers-mariadb</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.flywaydb</groupId>
-      <artifactId>flyway-core</artifactId>
-      <scope>test</scope>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-flyway</artifactId>
+      <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>org.flywaydb</groupId>
@@ -85,6 +89,11 @@
     <dependency>
       <groupId>org.postgresql</groupId>
       <artifactId>postgresql</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-data-jpa-test</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -129,11 +138,6 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>com.fasterxml.jackson.datatype</groupId>
-      <artifactId>jackson-datatype-jsr310</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
       <groupId>io.holixon.axon.gateway</groupId>
       <artifactId>axon-gateway-spring-boot-starter</artifactId>
       <scope>test</scope>
@@ -162,6 +166,7 @@
             <option>all-open:annotation=jakarta.persistence.Embeddable</option>
             <option>all-open:annotation=jakarta.persistence.MappedSuperclass</option>
           </pluginOptions>
+          <javaParameters>true</javaParameters>
         </configuration>
       </plugin>
     </plugins>

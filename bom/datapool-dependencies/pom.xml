@@ -52,6 +52,11 @@
         <artifactId>polyflow-datapool-sender</artifactId>
         <version>${project.version}</version>
       </dependency>
+      <dependency>
+        <groupId>io.holunda.polyflow</groupId>
+        <artifactId>polyflow-datapool-collector</artifactId>
+        <version>${project.version}</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 

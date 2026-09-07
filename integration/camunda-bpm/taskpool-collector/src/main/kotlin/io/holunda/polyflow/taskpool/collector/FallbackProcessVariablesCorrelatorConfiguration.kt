@@ -4,12 +4,14 @@ import io.holunda.polyflow.taskpool.collector.task.enricher.ProcessVariablesCorr
 import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Configuration
 
 /**
  * Configures fallback if no process variable correlator is defined.
  */
 @AutoConfiguration
 @ConditionalOnMissingBean(ProcessVariablesCorrelator::class)
+@Configuration
 class FallbackProcessVariablesCorrelatorConfiguration {
   /**
    * Creates the empty correlator used when neither a custom nor property-configured correlator is available.

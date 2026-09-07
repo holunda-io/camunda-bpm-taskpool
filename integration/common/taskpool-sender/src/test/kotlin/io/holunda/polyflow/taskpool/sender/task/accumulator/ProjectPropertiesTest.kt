@@ -1,6 +1,6 @@
 package io.holunda.polyflow.taskpool.sender.task.accumulator
 
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import tools.jackson.module.kotlin.jacksonObjectMapper
 import io.holunda.camunda.taskpool.api.task.ProcessReference
 import io.holunda.camunda.taskpool.api.task.SourceReference
 import io.holunda.camunda.taskpool.api.task.TaskIdentity

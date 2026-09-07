@@ -36,27 +36,7 @@
         <artifactId>polyflow-taskpool-view-api</artifactId>
         <version>${project.version}</version>
       </dependency>
-      <dependency>
-        <groupId>io.holunda.polyflow</groupId>
-        <artifactId>polyflow-taskpool-event</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>io.holunda.polyflow</groupId>
-        <artifactId>polyflow-datapool-event</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>io.holunda.polyflow</groupId>
-        <artifactId>polyflow-datapool-api</artifactId>
-        <version>${project.version}</version>
-      </dependency>
       <!-- Reactor -->
-      <dependency>
-        <groupId>io.projectreactor.kotlin</groupId>
-        <artifactId>reactor-kotlin-extensions</artifactId>
-        <version>${reactor-kotlin-extensions.version}</version>
-      </dependency>
     </dependencies>
   </dependencyManagement>
 

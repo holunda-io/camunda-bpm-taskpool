@@ -1,6 +1,6 @@
 package io.holunda.polyflow.datapool.sender
 
-import com.fasterxml.jackson.databind.ObjectMapper
+import tools.jackson.databind.ObjectMapper
 import io.holunda.polyflow.datapool.DataEntrySenderProperties
 import io.holunda.polyflow.datapool.projector.DataEntryProjector
 import org.axonframework.commandhandling.CommandMessage

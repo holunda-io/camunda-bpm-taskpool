@@ -1,6 +1,6 @@
 package io.holunda.polyflow.view.jpa
 
-import com.fasterxml.jackson.databind.ObjectMapper
+import tools.jackson.databind.ObjectMapper
 import io.holunda.camunda.taskpool.api.business.AuthorizationChange.Companion.addGroup
 import io.holunda.camunda.taskpool.api.business.AuthorizationChange.Companion.addUser
 import io.holunda.camunda.taskpool.api.business.DataEntryCreatedEvent

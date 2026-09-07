@@ -2,11 +2,11 @@ package io.holunda.polyflow.view.mongo.service
 
 import io.holunda.polyflow.view.mongo.TaskPoolMongoViewConfiguration
 import org.junit.jupiter.api.AfterEach
-import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest
+import org.springframework.boot.data.mongodb.test.autoconfigure.DataMongoTest
 import org.springframework.test.context.*
-import org.testcontainers.containers.MongoDBContainer
 import org.testcontainers.junit.jupiter.Container
 import org.testcontainers.junit.jupiter.Testcontainers
+import org.testcontainers.mongodb.MongoDBContainer
 
 @TestPropertySource(
   properties = [

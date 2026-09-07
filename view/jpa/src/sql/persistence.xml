@@ -1,4 +1,4 @@
-<persistence xmlns="http://xmlns.jcp.org/xml/ns/persistence" version="2.1">
+<persistence xmlns="https://jakarta.ee/xml/ns/persistence" version="3.0">
   <persistence-unit name="default">
 
     <!-- Uncomment this to generate the SQL for Axon Framework entities -->
@@ -15,5 +15,6 @@
     <class>io.holunda.polyflow.view.jpa.process.ProcessDefinitionEntity</class>
     <class>io.holunda.polyflow.view.jpa.process.ProcessInstanceEntity</class>
     <class>io.holunda.polyflow.view.jpa.task.TaskEntity</class>
+    <shared-cache-mode>NONE</shared-cache-mode>
   </persistence-unit>
 </persistence>

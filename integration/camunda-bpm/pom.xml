@@ -36,16 +36,6 @@
         <artifactId>polyflow-camunda-bpm-springboot-autoconfigure</artifactId>
         <version>${project.version}</version>
       </dependency>
-      <dependency>
-        <groupId>io.holunda.polyflow</groupId>
-        <artifactId>polyflow-camunda-bpm-engine-client</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>io.holunda.polyflow</groupId>
-        <artifactId>polyflow-camunda-bpm-taskpool-collector</artifactId>
-        <version>${project.version}</version>
-      </dependency>
 
       <dependency>
         <groupId>org.camunda.bpm</groupId>
