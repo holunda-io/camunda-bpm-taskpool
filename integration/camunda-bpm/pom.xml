@@ -17,7 +17,6 @@
   <properties>
     <camunda-bpm.version>7.24.0</camunda-bpm.version>
     <camunda-bpm-assert.version>${camunda-bpm.version}</camunda-bpm-assert.version>
-    <camunda-platform-7-mockito.version>7.24.2</camunda-platform-7-mockito.version>
   </properties>
 
   <modules>
@@ -62,9 +61,9 @@
         <scope>test</scope>
       </dependency>
       <dependency>
-        <groupId>org.camunda.community.mockito</groupId>
-        <artifactId>camunda-platform-7-mockito</artifactId>
-        <version>${camunda-platform-7-mockito.version}</version>
+        <groupId>io.holunda.c7</groupId>
+        <artifactId>c7-mockito</artifactId>
+        <version>${c7.version}</version>
         <scope>test</scope>
       </dependency>
       <dependency>

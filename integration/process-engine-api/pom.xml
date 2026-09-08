@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>io.holunda.polyflow</groupId>
+    <artifactId>polyflow-parent</artifactId>
+    <version>4.6.2-SNAPSHOT</version>
+    <relativePath>../../bom/parent/pom.xml</relativePath>
+  </parent>
+
+  <artifactId>polyflow-integration-process-engine-api-parent</artifactId>
+  <name>POM: integration/${project.artifactId}</name>
+  <packaging>pom</packaging>
+
+  <properties>
+    <process-engine-api.version>1.6</process-engine-api.version>
+    <process-engine-adapter-c7.version>2026.06.2</process-engine-adapter-c7.version>
+  </properties>
+
+  <modules>
+    <module>taskpool-collector</module>
+    <module>engine-client</module>
+    <module>springboot-starter</module>
+    <module>springboot-autoconfigure</module>
+  </modules>
+
+  <dependencyManagement>
+    <dependencies>
+
+      <dependency>
+        <groupId>io.holunda.polyflow</groupId>
+        <artifactId>polyflow-process-engine-api-springboot-autoconfigure</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.holunda.polyflow</groupId>
+        <artifactId>polyflow-process-engine-api-engine-client</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.holunda.polyflow</groupId>
+        <artifactId>polyflow-process-engine-api-taskpool-collector</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>dev.bpm-crafters.process-engine-api</groupId>
+        <artifactId>process-engine-api</artifactId>
+        <version>${process-engine-api.version}</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+</project>

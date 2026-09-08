@@ -30,6 +30,8 @@
     <jgiven.version>2.0.3</jgiven.version>
     <jgiven-kotlin.version>2.0.2.1</jgiven-kotlin.version>
 
+    <c7.version>2026.04.2</c7.version>
+
     <pattern.class.itest>**/*ITest.*</pattern.class.itest>
     <pattern.package.itest>**/itest/**/*.*</pattern.package.itest>
   </properties>
@@ -37,6 +39,7 @@
   <modules>
     <module>../../integration/common</module>
     <module>../../integration/camunda-bpm</module>
+    <module>../../integration/process-engine-api</module>
     <module>../../core/taskpool</module>
     <module>../../core/datapool</module>
     <module>../../core/bus-jackson</module>
@@ -86,7 +89,17 @@
       </dependency>
       <dependency>
         <groupId>io.holunda.polyflow</groupId>
+        <artifactId>polyflow-process-engine-api-taskpool-collector</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.holunda.polyflow</groupId>
         <artifactId>polyflow-camunda-bpm-engine-client</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.holunda.polyflow</groupId>
+        <artifactId>polyflow-process-engine-api-engine-client</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
