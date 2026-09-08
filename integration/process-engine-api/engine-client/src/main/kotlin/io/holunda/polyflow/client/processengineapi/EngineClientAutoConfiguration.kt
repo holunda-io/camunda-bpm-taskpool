@@ -20,10 +20,22 @@ import org.springframework.context.annotation.Import
 @Import(ApplicationNameBeanPostProcessor::class)
 class EngineClientAutoConfiguration {
 
+  /**
+   * Creates the default support component for accessing Process Engine API user tasks.
+   *
+   * @return the user-task support component when an application has not supplied one.
+   */
   @Bean
   @ConditionalOnMissingBean
   fun userTaskSupport(): UserTaskSupport = UserTaskSupport()
 
+  /**
+   * Creates the lifecycle-managed subscription for the configured Process Engine API task service.
+   *
+   * @param userTaskSupport the component to subscribe to the task service.
+   * @param taskSubscriptionApi the Process Engine API task subscription service.
+   * @return the subscription lifecycle component.
+   */
   @Bean
   @ConditionalOnBean(TaskSubscriptionApi::class)
   fun userTaskSupportSubscription(

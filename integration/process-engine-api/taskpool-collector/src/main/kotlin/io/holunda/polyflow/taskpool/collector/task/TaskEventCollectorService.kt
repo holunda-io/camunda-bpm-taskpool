@@ -41,6 +41,9 @@ class TaskEventCollectorService(
     const val NAME = "taskEventCollectorService"
   }
 
+  /**
+   * Subscribes the collector to Process Engine API user-task events.
+   */
   @PostConstruct
   fun subscribe() {
     subscription = taskSubscriptionApi.subscribeForTask(
@@ -55,6 +58,9 @@ class TaskEventCollectorService(
     ).join()
   }
 
+  /**
+   * Cancels the Process Engine API user-task subscription when one was established.
+   */
   @PreDestroy
   fun unsubscribe() {
     if (::subscription.isInitialized) {
@@ -78,6 +84,12 @@ class TaskEventCollectorService(
     applicationEventPublisher.publishEvent(task.asDeleteCommand())
   }
 
+  /**
+   * Finds the collected task identifier for an execution.
+   *
+   * @param executionId Process Engine API execution identifier.
+   * @return the associated task identifier, or `null` when no collected task matches.
+   */
   fun findTaskId(executionId: String): String? =
     knownTasks.values.firstOrNull { it.meta[CommonRestrictions.EXECUTION_ID] == executionId }?.taskId
 

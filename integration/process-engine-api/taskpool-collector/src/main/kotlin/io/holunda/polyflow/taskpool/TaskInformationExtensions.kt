@@ -14,6 +14,12 @@ import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.util.*
 
+/**
+ * Creates the Taskpool source reference represented by this Process Engine API task.
+ *
+ * @param applicationName name of the application that collects the task.
+ * @return the process reference used as the task's source reference.
+ */
 fun TaskInformation.sourceReference(applicationName: String): SourceReference {
   return ProcessReference(
     instanceId = this.meta["processInstanceId"].toString(),
@@ -26,7 +32,13 @@ fun TaskInformation.sourceReference(applicationName: String): SourceReference {
   )
 }
 
-
+/**
+ * Converts this Process Engine API task into a Taskpool create command.
+ *
+ * @param applicationName name of the application that collects the task.
+ * @param payload process variables delivered with the task.
+ * @return a command that creates the corresponding Taskpool task.
+ */
 fun TaskInformation.asCreatedCommand(applicationName: String, payload: Map<String, Any?>): CreateTaskCommand = CreateTaskCommand(
   id = this.taskId,
   assignee = this.meta["taskAssignee"],
@@ -47,12 +59,24 @@ fun TaskInformation.asCreatedCommand(applicationName: String, payload: Map<Strin
 )
 
 // TODO: Assign now means that any assignment has changed, either assigne, candidate user or candidate group
+/**
+ * Converts this Process Engine API task into a Taskpool assignment command.
+ *
+ * @return a command containing the task identifier and current assignee.
+ */
 fun TaskInformation.asAssignCommand(): AssignTaskCommand = AssignTaskCommand(
   id = this.taskId,
   assignee = this.meta["taskAssignee"],
 )
 
 //TODO: C8 currently only sends update commands. So this will never update assignee or candidates
+/**
+ * Converts this Process Engine API task into a Taskpool attribute-update command.
+ *
+ * @param applicationName name of the application that collects the task.
+ * @param payload process variables delivered with the task.
+ * @return a command that updates the corresponding Taskpool task attributes.
+ */
 fun TaskInformation.asUpdateCommand(applicationName: String, payload: Map<String, Any?>): UpdateAttributeTaskCommand = UpdateAttributeTaskCommand(
   id = this.taskId,
   description = this.meta["taskDescription"],
@@ -68,13 +92,29 @@ fun TaskInformation.asUpdateCommand(applicationName: String, payload: Map<String
   owner = null,
 )
 
+/**
+ * Converts this Process Engine API task into a Taskpool completion command.
+ *
+ * @return a command that completes the corresponding Taskpool task.
+ */
 fun TaskInformation.asCompleteCommand(): CompleteTaskCommand = CompleteTaskCommand(
   id = this.taskId,
 )
 
+/**
+ * Converts this Process Engine API task into a Taskpool deletion command.
+ *
+ * @return a command that deletes the corresponding Taskpool task.
+ */
 fun TaskInformation.asDeleteCommand(): DeleteTaskCommand = DeleteTaskCommand(
   id = this.taskId, deleteReason = null)
 
+/**
+ * Parses an ISO-8601 date-time string and expresses it as an instant in UTC.
+ *
+ * @param dateString the date-time string to parse, or `null`.
+ * @return the corresponding instant as a [Date], or `null` when [dateString] is `null`.
+ */
 fun convertToUTCLocalDateTime(dateString: String?): Date? {
   if (dateString == null) return null
   val zonedDateTime =
