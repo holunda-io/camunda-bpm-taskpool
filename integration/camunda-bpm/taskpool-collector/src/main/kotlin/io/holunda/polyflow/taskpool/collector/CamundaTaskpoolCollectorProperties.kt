@@ -136,6 +136,11 @@ data class ProcessVariablesFilterProperties(
   /** Filters to apply, optionally scoped to a process definition or individual task definitions. */
   val filters: List<ProcessVariableFilterProperties> = emptyList()
 ) {
+  /**
+   * Converts the configured definitions into the variable filters used by the task enricher.
+   *
+   * @return process-level and task-level filters represented by these properties.
+   */
   fun toVariableFilters(): Array<VariableFilter> = filters.flatMap { it.toVariableFilters() }.toTypedArray()
 }
 
@@ -150,6 +155,13 @@ data class ProcessVariableFilterProperties(
   /** Variables per task definition for a task-level filter. */
   val taskVariables: Map<String, List<String>> = emptyMap()
 ) {
+  /**
+   * Converts this definition into its applicable process-level and task-level filters.
+   *
+   * @return a process-level filter when [processVariables] is configured, a task-level filter when
+   * [taskVariables] is configured, or both when both property groups are present.
+   * @throws IllegalArgumentException if task variables are configured without a process definition key.
+   */
   fun toVariableFilters(): List<VariableFilter> = buildList {
     if (processVariables.isNotEmpty() || taskVariables.isEmpty()) {
       add(ProcessVariableFilter(processDefinitionKey, filterType, processVariables))

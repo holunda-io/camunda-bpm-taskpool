@@ -23,6 +23,12 @@ private val logger = KotlinLogging.logger {}
 @ConditionalOnMissingBean(ProcessVariablesFilter::class)
 class ProcessVariablesFilterConfiguration {
 
+  /**
+   * Creates the filter from the configured process-variable filter definitions.
+   *
+   * @param properties collector properties containing the filter definitions.
+   * @return the configured process-variable filter.
+   */
   @Bean
   fun processVariablesFilter(properties: CamundaTaskpoolCollectorProperties): ProcessVariablesFilter =
     ProcessVariablesFilter(*properties.task.enricher.processVariablesFilter.toVariableFilters())

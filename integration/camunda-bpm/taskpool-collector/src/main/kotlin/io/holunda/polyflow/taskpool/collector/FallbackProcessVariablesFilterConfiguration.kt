@@ -12,7 +12,9 @@ import org.springframework.context.annotation.Bean
 @ConditionalOnMissingBean(ProcessVariablesFilter::class)
 class FallbackProcessVariablesFilterConfiguration {
   /**
-   * Empty process variable filter.
+   * Creates the empty filter used when neither a custom nor property-configured filter is available.
+   *
+   * @return a filter that leaves process variables unchanged.
    */
   @Bean
   fun processVariablesFilterFallback(): ProcessVariablesFilter = ProcessVariablesFilter()

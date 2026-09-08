@@ -12,7 +12,9 @@ import org.springframework.context.annotation.Bean
 @ConditionalOnMissingBean(ProcessVariablesCorrelator::class)
 class FallbackProcessVariablesCorrelatorConfiguration {
   /**
-   * Empty correlator.
+   * Creates the empty correlator used when neither a custom nor property-configured correlator is available.
+   *
+   * @return a correlator with no process-variable correlation definitions.
    */
   @Bean
   fun processVariablesCorrelatorFallback(): ProcessVariablesCorrelator = ProcessVariablesCorrelator()

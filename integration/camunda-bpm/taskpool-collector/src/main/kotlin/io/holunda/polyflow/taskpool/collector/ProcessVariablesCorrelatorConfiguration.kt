@@ -23,6 +23,12 @@ private val logger = KotlinLogging.logger {}
 @ConditionalOnMissingBean(ProcessVariablesCorrelator::class)
 class ProcessVariablesCorrelatorConfiguration {
 
+  /**
+   * Creates the correlator from the configured process-variable correlation definitions.
+   *
+   * @param properties collector properties containing the correlation definitions.
+   * @return the configured process-variable correlator.
+   */
   @Bean
   fun processVariablesCorrelator(properties: CamundaTaskpoolCollectorProperties): ProcessVariablesCorrelator =
     ProcessVariablesCorrelator(*properties.task.enricher.processVariablesCorrelator.correlations.toTypedArray())

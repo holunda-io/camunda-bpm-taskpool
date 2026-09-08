@@ -16,8 +16,12 @@ open class ProcessVariablesFilter(
   private val commonFilters: List<VariableFilter> = variableFilters.filter { it.processDefinitionKey == null }
 
   /**
-   * Filters the list of variables.
-   * @return variables that have not been filtered out by the filters.
+   * Filters variables for a task using the filters applicable to its process definition.
+   *
+   * @param processDefinitionKey key of the process definition that owns the task.
+   * @param taskDefinitionKey key of the task definition receiving the variables.
+   * @param variables variables available from the process engine.
+   * @return variables that pass every applicable filter.
    */
   fun filterVariables(processDefinitionKey: ProcessDefinitionKey, taskDefinitionKey: TaskDefinitionKey, variables: VariableMap): VariableMap {
     val variableFilters = filtersFor(processDefinitionKey)
@@ -26,8 +30,11 @@ open class ProcessVariablesFilter(
   }
 
   /**
-   * Checks whether a variable is passing the variable filter or not.
-   * @return true, if the variable is passing the filter.
+   * Checks whether a variable is included by the filters applicable to a process definition.
+   *
+   * @param processDefinitionKey key of the process definition to evaluate.
+   * @param variableName name of the variable to evaluate.
+   * @return `true` when at least one applicable filter exists and every filter includes the variable.
    */
   fun isIncluded(processDefinitionKey: ProcessDefinitionKey, variableName: VariableName): Boolean {
     val variableFilters = filtersFor(processDefinitionKey)
