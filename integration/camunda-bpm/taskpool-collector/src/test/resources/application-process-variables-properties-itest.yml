@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: process-variables-properties-itest
+
+polyflow:
+  integration:
+    collector:
+      camunda:
+        task:
+          enricher:
+            process-variables-filter:
+              enabled: true
+              filters:
+                - process-definition-key: approval
+                  filter-type: INCLUDE
+                  process-variables: [requestId, customerId]
+                  task-variables:
+                    approve: [requestId, customerId]
+            process-variables-correlator:
+              enabled: true
+              correlations:
+                - process-definition-key: approval
+                  global-correlations:
+                    - entry-id-variable-name: requestId
+                      entry-type: request

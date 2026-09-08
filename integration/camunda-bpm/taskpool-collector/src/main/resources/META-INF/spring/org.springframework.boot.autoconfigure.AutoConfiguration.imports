@@ -1,2 +1,4 @@
+io.holunda.polyflow.taskpool.collector.ProcessVariablesCorrelatorConfiguration
+io.holunda.polyflow.taskpool.collector.ProcessVariablesFilterConfiguration
 io.holunda.polyflow.taskpool.collector.FallbackProcessVariablesCorrelatorConfiguration
 io.holunda.polyflow.taskpool.collector.FallbackProcessVariablesFilterConfiguration

@@ -6,7 +6,7 @@
   <parent>
     <groupId>io.holunda.polyflow</groupId>
     <artifactId>polyflow-parent</artifactId>
-    <version>4.6.1</version>
+    <version>4.6.2</version>
     <relativePath>../../bom/parent/pom.xml</relativePath>
   </parent>
 
@@ -16,6 +16,7 @@
 
   <modules>
     <module>datapool-sender</module>
+    <module>liquibase</module>
     <module>tasklist-url-resolver</module>
     <module>taskpool-sender</module>
     <module>variable-serializer</module>

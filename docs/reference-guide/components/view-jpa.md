@@ -136,30 +136,7 @@ The JPA View uses several tables to store the results. These are:
 * `PLF_DATA_ENTRY_PAYLOAD_ATTRIBUTES`: view for convenient data entry queries with correlations
 * `TRACKING_TOKEN`: table for Axon Tracking Tokens
 
-If you are interested in DDLs for the view, feel free to generate one using the following call of Apache Maven 
-`mvn -Pgenerate-sql -f view/jpa`. Currently, DDLs for the databases H2, MSSQL and PostgreSQL are generated into `target/` directory.  
-The DDL for the `PLF_VIEW_TASK_AND_DATA_ENTRY_PAYLOAD` and `PLF_DATA_ENTRY_PAYLOAD_ATTRIBUTES` cannot be auto-generated, therefore you need to use the following statements to create them:
-```
-create view PLF_VIEW_TASK_AND_DATA_ENTRY_PAYLOAD as
-((select pc.TASK_ID, dea.PATH, dea.VALUE
- from PLF_TASK_CORRELATIONS pc
-          join PLF_DATA_ENTRY_PAYLOAD_ATTRIBUTES dea on pc.ENTRY_ID = dea.ENTRY_ID and pc.ENTRY_TYPE = dea.ENTRY_TYPE)
-union
-select * from PLF_TASK_PAYLOAD_ATTRIBUTES);
-```
-
-```
-create view PLF_VIEW_DATA_ENTRY_PAYLOAD as (
-select *
-from PLF_DATA_ENTRY_PAYLOAD_ATTRIBUTES
-union
-(select ec.OWNING_ENTRY_ID   as ENTRY_ID,
-        ec.OWNING_ENTRY_TYPE as ENTRY_TYPE,
-        ep.path              as PATH,
-        ep.value             as VALUE
- from PLF_DATA_ENTRY_CORRELATIONS ec
-     join PLF_DATA_ENTRY_PAYLOAD_ATTRIBUTES ep
- on
-     ec.ENTRY_ID = ep.ENTRY_ID and ec.ENTRY_TYPE = ep.ENTRY_TYPE)
-)
-```
+Create these tables and views through the Polyflow Liquibase changelog. Add
+`polyflow-liquibase` to the application and include
+`polyflow-view-changelog.xml` from the application's central master
+changelog, as described in [Persistence configuration](../configuration/persistence.md).

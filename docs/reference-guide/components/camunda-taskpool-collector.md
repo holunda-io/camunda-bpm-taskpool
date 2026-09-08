@@ -29,7 +29,7 @@ Spring eventing.
 - Enrichment of task engine commands with process variables
 - Attachment of correlation information to task engine commands
 - Transmission of commands to Axon command bus
-- Provision of properties for process application
+- Provision of properties for a process application
 
 ### Architecture
 
@@ -96,8 +96,8 @@ polyflow:
     collector:
       camunda:
         task:
-          excludedTaskEventNames: assignment, delete
-          excludedHistoryEventNames: add-identity-link, delete-identity-link
+          excluded-task-event-names: assignment, delete
+          excluded-history-event-names: add-identity-link, delete-identity-link
 ```
 This particular setting is helpful, if you want to disable assignment in the engine entirely and want to provide you own custom task assignment algorithm or
 use assignment based on process variables (see below for more details).
@@ -121,9 +121,54 @@ purpose, active it, setting the property `polyflow.integration.collector.camunda
 put process variables into the task payload.
 
 You can control what variables will be put into task command payload by providing the Process Variables Filter.
-The `ProcessVariablesFilter` is a Spring bean holding a list of individual `VariableFilter` - at most one per
-process definition key and optionally one without process definition key (a global filter). If the filter is not provded,
-a default filter is used which is an empty `EXCLUDE` filter, resulting in all process variables being attached to the user task.
+The `ProcessVariablesFilter` is a Spring bean holding individual `VariableFilter` instances. Process-specific filters
+are combined; filters without a process definition key are global and apply when no process-specific filter exists. If
+the filter is not provided, a default empty `EXCLUDE` filter is used, resulting in all process variables being attached
+to the user task.
+
+Alternatively, enable the property-backed filter. A filter with `process-variables` is process-level; a filter with
+`task-variables` is task-level and therefore requires `process-definition-key`. Both can be configured together for a
+process; task-level rules further restrict the process-level rule. See
+[Remote Engine Process-Variable Configuration](../configuration/remote-engine-process-variable-configuration.md) for
+the complete property reference and remote-engine examples.
+
+```yaml
+polyflow:
+  integration:
+    collector:
+      camunda:
+        task:
+          enricher:
+            process-variables-filter:
+              enabled: true
+              filters:
+                - process-definition-key: approval
+                  filter-type: INCLUDE
+                  process-variables: [requestId, applicant]
+                  task-variables:
+                    approve: [requestId, applicant]
+```
+
+A global process-variable filter can be configured by omitting `process-definition-key`. It applies to processes
+without a dedicated filter; a process-specific filter takes precedence. For example, this excludes the technical
+`internalAudit` variable from every process that is not configured explicitly:
+
+```yaml
+polyflow:
+  integration:
+    collector:
+      camunda:
+        task:
+          enricher:
+            process-variables-filter:
+              enabled: true
+              filters:
+                - filter-type: EXCLUDE
+                  process-variables: [internalAudit]
+                - process-definition-key: approval
+                  filter-type: INCLUDE
+                  process-variables: [requestId, applicant]
+```
 
 A `VariableFilter` can be of the following type:
 
@@ -193,7 +238,7 @@ public class MyTaskCollectorConfiguration {
 ### Data Correlation
 
 Apart from task payload attached by the enricher, the so-called _Correlation_ with data entries can
-be configured. The data correlation allows to attach one or several references (that is a pair of values `entryType` and `entryId`) of
+be configured. The data correlation allows to attach one or several references (that is a pair of values `entry-type` and `entryId`) of
 business data entry(ies) to a task. In the projection (which is used for querying of tasks) these correlations are resolved and the
 information from business data events can be shown together with task information.
 
@@ -202,7 +247,7 @@ an example how this can be done:
 
 ```kotlin
 @Bean
-fun processVariablesCorrelator() = ProcessVariablesCorrelator(
+fun process-variablesCorrelator() = ProcessVariablesCorrelator(
     // define correlation for every process
     ProcessVariableCorrelation(
       ProcessApproveRequest.KEY,
@@ -218,6 +263,30 @@ fun processVariablesCorrelator() = ProcessVariablesCorrelator(
   )
 ```
 
+It can also be supplied from Spring properties. Enabling this configuration creates the correlator in place of the
+empty fallback bean. See [Remote Engine Process-Variable Configuration](../configuration/remote-engine-process-variable-configuration.md)
+for the complete property reference and remote-engine examples.
+
+```yaml
+polyflow:
+  integration:
+    collector:
+      camunda:
+        task:
+          enricher:
+            process-variables-correlator:
+              enabled: true
+              correlations:
+                - process-definition-key: approval
+                  global-correlations:
+                    - entry-id-variable-name: requestId
+                      entry-type: request
+                  correlations:
+                    approve:
+                      - entry-id-variable-name: customerId
+                        entry-type: customer
+```
+
 The process variable correlator holds a list of process variable correlations - one for every process
 definition key. Every `ProcessVariableCorrelation` configures for all tasks or for an individual task by providing a so-called correlation
 map. A correlation map is keyed by the name of a process variable inside Camunda Process Engine and holds the type of business data entry as value.
@@ -230,7 +299,7 @@ of the correlator:
 
 ```kotlin
 @Bean
-fun processVariablesCorrelator() = ProcessVariablesCorrelator(
+fun process-variablesCorrelator() = ProcessVariablesCorrelator(
 
     ProcessVariableCorrelation(
       "process_approval_process",
@@ -250,7 +319,7 @@ and the process reaches the task `task_approve_request`, the task will get the f
 
 ```json
 "correlations": [
-  { "entryType": "approvalRequest", "entryId": "4711" }
+  { "entry-type": "approvalRequest", "entryId": "4711" }
 ]
 ```
 
@@ -275,7 +344,7 @@ and the process reaches the task `task_approve_request`, the task will get the f
 
 User task assignment is a core functionality for every process application fostering task-oriented work. By default, Taskpool Collector uses
 information from Camunda User Task and maps that one-to-one to properties of the user task commands. The task attribute
-`assignee`, `candidateUsers` and `candidateGroups` are mapped to the corresponding attributes automatically.
+`assignee`, `candidate-users` and `candidate-groupss` are mapped to the corresponding attributes automatically.
 
 To control the task assignment mode you can configure Taskpool Collector using application properties. The property 
 `polyflow.integration.collector.camunda.task.assigner.type` has the following values:
@@ -296,8 +365,8 @@ polyflow:
           assigner:
             type: process-variables
             assignee: my-assignee-var
-            candidateUsers: my-candidate-users-var 
-            candidateGroup: my-candidate-group-var
+            candidate-users: my-candidate-users-var
+            candidate-groups: my-candidate-group-var
 ```
 
 ### Task Importer
@@ -321,4 +390,4 @@ polyflow:
 ```
 
 By doing so, the `TaskServiceCollectorService` Bean is made available and can be used to trigger the import. The `eventstore` filter is useful in scenarios,
-in which the [Taskpool Core](./core-taskpool) is deployed on together with Taskpool Collector as part of the Process Application.
+in which the [Taskpool Core](./core-taskpool) is deployed alonside with Taskpool Collector as part of the Process Application or Process Engine.
