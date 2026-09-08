@@ -129,6 +129,7 @@ nav:
       - Persistence Configuration: reference-guide/configuration/persistence.md
       - Datapool Aggregate Tuning: reference-guide/configuration/core-datapool-aggregate-tuning.md
       - Deployment of Core inside Process applications: reference-guide/configuration/local-core-deployment.md
+      - Remote Engine Process-Variable Configuration: reference-guide/configuration/remote-engine-process-variable-configuration.md
   - Examples:
     - Examples Overview: examples/index.md
     - Example Approval: examples/example-approval.md
