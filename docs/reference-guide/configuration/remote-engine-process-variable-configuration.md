@@ -17,7 +17,7 @@ The feature controls two distinct outputs added to task commands:
 | Component | What it controls | Result |
 | --- | --- | --- |
 | `ProcessVariablesFilter` | Which Camunda process variables may become task payload | A smaller, deliberate task payload |
-| `ProcessVariablesCorrelator` | Which process-variable values identify business data | Task correlations of `entryType` and `entryId` |
+| `ProcessVariablesCorrelator` | Which process-variable values identify business data | Task correlations of `entry-type` and `entryId` |
 
 Filtering does not create correlations, and correlation does not add a variable
 to the task payload. Configure both when the remote task platform needs both
@@ -71,30 +71,30 @@ polyflow:
           enabled: true
           enricher:
             type: process-variables
-        process-variables-filter:
-          enabled: true
-          filters:
-            - processDefinitionKey: approval
-              filterType: INCLUDE
-              processVariables:
-                - requestId
-                - applicant
-                - customerId
-              taskVariables:
-                approve:
-                  - requestId
-                  - customerId
-        process-variables-correlator:
-          enabled: true
-          correlations:
-            - processDefinitionKey: approval
-              globalCorrelations:
-                - entryIdVariableName: requestId
-                  entryType: request
+            process-variables-filter:
+              enabled: true
+              filters:
+                - process-definition-key: approval
+                  filter-type: INCLUDE
+                  process-variables:
+                    - requestId
+                    - applicant
+                    - customerId
+                  task-variables:
+                    approve:
+                      - requestId
+                      - customerId
+            process-variables-correlator:
+              enabled: true
               correlations:
-                approve:
-                  - entryIdVariableName: customerId
-                    entryType: customer
+                - process-definition-key: approval
+                  global-correlations:
+                    - entry-id-variable-name: requestId
+                      entry-type: request
+                  correlations:
+                    approve:
+                      - entry-id-variable-name: customerId
+                        entry-type: customer
     sender:
       task:
         enabled: true
@@ -109,20 +109,23 @@ Spring Boot's relaxed binding also accepts kebab-case names, for example
 Enable the property-backed filter with:
 
 ```text
-polyflow.integration.collector.camunda.process-variables-filter.enabled=true
+polyflow.integration.collector.camunda.task.enricher.process-variables-filter.enabled=true
 ```
+
+The YAML snippets below are the contents of
+`polyflow.integration.collector.camunda.task.enricher`.
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
 | `enabled` | Boolean | `false` | Creates the property-backed `ProcessVariablesFilter`. |
 | `filters` | list | empty | Filter definitions, each global or scoped to one process definition. |
-| `filters[].processDefinitionKey` | String | absent | Process definition key. Omit only for a global process-level filter. |
-| `filters[].filterType` | `INCLUDE` / `EXCLUDE` | `EXCLUDE` | Whether the listed variables are permitted or rejected. |
-| `filters[].processVariables` | list of String | empty | Variables for every task in the process. |
-| `filters[].taskVariables` | map of task key to list of String | empty | Variables per task; makes the definition task-level. |
+| `filters[].process-definition-key` | String | absent | Process definition key. Omit only for a global process-level filter. |
+| `filters[].filter-type` | `INCLUDE` / `EXCLUDE` | `EXCLUDE` | Whether the listed variables are permitted or rejected. |
+| `filters[].process-variables` | list of String | empty | Variables for every task in the process. |
+| `filters[].task-variables` | map of task key to list of String | empty | Variables per task; makes the definition task-level. |
 
-One definition can contain both `processVariables` and `taskVariables`. A
-task-level definition requires `processDefinitionKey`. When both fields are
+One definition can contain both `process-variables` and `task-variables`. A
+task-level definition requires `process-definition-key`. When both fields are
 supplied, the process-level rule applies to every task and the task-level rule
 is an additional restriction for the task keys listed. A variable must pass all
 applicable filters; in other words, the rules are combined as an allow-list
@@ -138,9 +141,9 @@ large objects are not accidentally sent to the remote task platform.
 process-variables-filter:
   enabled: true
   filters:
-    - processDefinitionKey: approval
-      filterType: INCLUDE
-      processVariables: [requestId, applicant, customerId]
+    - process-definition-key: approval
+      filter-type: INCLUDE
+      process-variables: [requestId, applicant, customerId]
 ```
 
 An `EXCLUDE` filter sends every variable except those named. It is useful when
@@ -151,32 +154,32 @@ local:
 process-variables-filter:
   enabled: true
   filters:
-    - processDefinitionKey: approval
-      filterType: EXCLUDE
-      processVariables: [internalAudit, transientToken]
+    - process-definition-key: approval
+      filter-type: EXCLUDE
+      process-variables: [internalAudit, transientToken]
 ```
 
 #### Task-level filters
 
 Use task-level filtering when individual tasks need different payloads. It can
 be combined with a process-level filter in the same definition. A task key
-absent from `taskVariables` is restricted only by the process-level rule.
+absent from `task-variables` is restricted only by the process-level rule.
 
 ```yaml
 process-variables-filter:
   enabled: true
   filters:
-    - processDefinitionKey: approval
-      filterType: INCLUDE
-      processVariables: [requestId, applicant, customerId]
-      taskVariables:
+    - process-definition-key: approval
+      filter-type: INCLUDE
+      process-variables: [requestId, applicant, customerId]
+      task-variables:
         submit: [requestId, applicant]
         approve: [requestId, applicant, customerId]
 ```
 
 #### Global filters and precedence
 
-A process-level filter without `processDefinitionKey` is global. It applies only
+A process-level filter without `process-definition-key` is global. It applies only
 to process definitions that do not have their own filter. A process-specific
 filter takes precedence over the global filter.
 
@@ -184,11 +187,11 @@ filter takes precedence over the global filter.
 process-variables-filter:
   enabled: true
   filters:
-    - filterType: EXCLUDE
-      processVariables: [internalAudit]
-    - processDefinitionKey: approval
-      filterType: INCLUDE
-      processVariables: [requestId, applicant]
+    - filter-type: EXCLUDE
+      process-variables: [internalAudit]
+    - process-definition-key: approval
+      filter-type: INCLUDE
+      process-variables: [requestId, applicant]
 ```
 
 ### Process-variable correlation
@@ -196,18 +199,21 @@ process-variables-filter:
 Enable the property-backed correlator with:
 
 ```text
-polyflow.integration.collector.camunda.process-variables-correlator.enabled=true
+polyflow.integration.collector.camunda.task.enricher.process-variables-correlator.enabled=true
 ```
+
+The YAML snippets below are the contents of
+`polyflow.integration.collector.camunda.task.enricher`.
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
 | `enabled` | Boolean | `false` | Creates the property-backed `ProcessVariablesCorrelator`. |
 | `correlations` | list | empty | One correlation definition per process definition key. |
-| `correlations[].processDefinitionKey` | String | required | Process definition key. |
-| `correlations[].globalCorrelations` | list | empty | Correlations applied to every task of the process. |
+| `correlations[].process-definition-key` | String | required | Process definition key. |
+| `correlations[].global-correlations` | list | empty | Correlations applied to every task of the process. |
 | `correlations[].correlations` | map of task key to list | empty | Additional correlations applied only to the named task. |
-| `*.entryIdVariableName` | String | required | Camunda variable whose value becomes the business entry ID. |
-| `*.entryType` | String | required | Business-data entry type associated with that ID. |
+| `*.entry-id-variable-name` | String | required | Camunda variable whose value becomes the business entry ID. |
+| `*.entry-type` | String | required | Business-data entry type associated with that ID. |
 
 A global correlation is useful for the primary business object of a process:
 
@@ -215,10 +221,10 @@ A global correlation is useful for the primary business object of a process:
 process-variables-correlator:
   enabled: true
   correlations:
-    - processDefinitionKey: approval
-      globalCorrelations:
-        - entryIdVariableName: requestId
-          entryType: request
+    - process-definition-key: approval
+      global-correlations:
+        - entry-id-variable-name: requestId
+          entry-type: request
 ```
 
 Add task-specific correlations for data that is relevant only at selected user
@@ -228,14 +234,14 @@ tasks:
 process-variables-correlator:
   enabled: true
   correlations:
-    - processDefinitionKey: approval
+    - process-definition-key: approval
       correlations:
         approve:
-          - entryIdVariableName: customerId
-            entryType: customer
+          - entry-id-variable-name: customerId
+            entry-type: customer
         amend:
-          - entryIdVariableName: previousRequestId
-            entryType: request
+          - entry-id-variable-name: previousRequestId
+            entry-type: request
 ```
 
 If the configured process variable is absent for a task, no correlation is

@@ -20,9 +20,9 @@ application-provided bean.
 
 Provide two opt-in Spring Boot auto-configurations:
 
-- `polyflow.integration.collector.camunda.process-variables-filter` creates a
+- `polyflow.integration.collector.camunda.task.enricher.process-variables-filter` creates a
   `ProcessVariablesFilter` when `enabled=true`.
-- `polyflow.integration.collector.camunda.process-variables-correlator` creates
+- `polyflow.integration.collector.camunda.task.enricher.process-variables-correlator` creates
   a `ProcessVariablesCorrelator` when `enabled=true`.
 
 Both configurations run before their empty fallback configuration and are
