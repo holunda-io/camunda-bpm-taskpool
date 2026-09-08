@@ -2,6 +2,11 @@ package io.holunda.polyflow.taskpool.collector
 
 import io.holunda.polyflow.spring.ApplicationNameBeanPostProcessor.Companion.UNSET_APPLICATION_NAME
 import io.holunda.polyflow.taskpool.collector.task.assigner.ProcessVariableTaskAssignerMapping
+import io.holunda.polyflow.taskpool.collector.task.enricher.FilterType
+import io.holunda.polyflow.taskpool.collector.task.enricher.ProcessVariableCorrelation
+import io.holunda.polyflow.taskpool.collector.task.enricher.ProcessVariableFilter
+import io.holunda.polyflow.taskpool.collector.task.enricher.TaskVariableFilter
+import io.holunda.polyflow.taskpool.collector.task.enricher.VariableFilter
 import org.camunda.bpm.engine.delegate.TaskListener
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.context.properties.NestedConfigurationProperty
@@ -114,6 +119,71 @@ data class TaskCollectorEnricherProperties(
    * Type of enricher, see TaskCollectorEnricherType values.
    */
   val type: TaskCollectorEnricherType = TaskCollectorEnricherType.processVariables,
+
+  /** Process-variable payload filter configuration. */
+  @NestedConfigurationProperty
+  val processVariablesFilter: ProcessVariablesFilterProperties = ProcessVariablesFilterProperties(),
+
+  /** Process-variable business-data correlation configuration. */
+  @NestedConfigurationProperty
+  val processVariablesCorrelator: ProcessVariablesCorrelatorProperties = ProcessVariablesCorrelatorProperties(),
+)
+
+/** Properties for the property-backed process-variable payload filter. */
+data class ProcessVariablesFilterProperties(
+  /** Enables creation of the property-backed filter. */
+  val enabled: Boolean = false,
+  /** Filters to apply, optionally scoped to a process definition or individual task definitions. */
+  val filters: List<ProcessVariableFilterProperties> = emptyList()
+) {
+  /**
+   * Converts the configured definitions into the variable filters used by the task enricher.
+   *
+   * @return process-level and task-level filters represented by these properties.
+   */
+  fun toVariableFilters(): Array<VariableFilter> = filters.flatMap { it.toVariableFilters() }.toTypedArray()
+}
+
+/** A single process-variable filter configured through application properties. */
+data class ProcessVariableFilterProperties(
+  /** Process definition key. Omit this for a global process-level filter. */
+  val processDefinitionKey: String? = null,
+  /** Whether the listed variables are included or excluded. */
+  val filterType: FilterType = FilterType.EXCLUDE,
+  /** Variables for a process-level filter. */
+  val processVariables: List<String> = emptyList(),
+  /** Variables per task definition for a task-level filter. */
+  val taskVariables: Map<String, List<String>> = emptyMap()
+) {
+  /**
+   * Converts this definition into its applicable process-level and task-level filters.
+   *
+   * @return a process-level filter when [processVariables] is configured, a task-level filter when
+   * [taskVariables] is configured, or both when both property groups are present.
+   * @throws IllegalArgumentException if task variables are configured without a process definition key.
+   */
+  fun toVariableFilters(): List<VariableFilter> = buildList {
+    if (processVariables.isNotEmpty() || taskVariables.isEmpty()) {
+      add(ProcessVariableFilter(processDefinitionKey, filterType, processVariables))
+    }
+    if (taskVariables.isNotEmpty()) {
+      add(
+        TaskVariableFilter(
+          requireNotNull(processDefinitionKey) { "processDefinitionKey is required when taskVariables are configured" },
+          filterType,
+          taskVariables
+        )
+      )
+    }
+  }
+}
+
+/** Properties for the property-backed process-variable business-data correlator. */
+data class ProcessVariablesCorrelatorProperties(
+  /** Enables creation of the property-backed correlator. */
+  val enabled: Boolean = false,
+  /** Correlations, one entry for each process definition key. */
+  val correlations: List<ProcessVariableCorrelation> = emptyList()
 )
 
 /**
@@ -233,4 +303,3 @@ enum class EngineTaskCommandFilterType {
   eventstore,
   custom
 }
-

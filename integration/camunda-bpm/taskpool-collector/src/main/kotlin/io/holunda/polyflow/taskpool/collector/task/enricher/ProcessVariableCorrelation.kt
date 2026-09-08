@@ -10,11 +10,18 @@ import io.holunda.camunda.taskpool.api.business.EntryType
  */
 data class ProcessVariableCorrelation(
   val processDefinitionKey: ProcessDefinitionKey,
-  val correlations: Map<TaskDefinitionKey, List<CorrelationDefinition>>,
+  val correlations: Map<TaskDefinitionKey, List<CorrelationDefinition>> = emptyMap(),
   val globalCorrelations: List<CorrelationDefinition> = emptyList()
 
 
 ) {
+  /**
+   * Creates a correlation definition from the legacy variable-name-to-entry-type map representation.
+   *
+   * @param processDefinitionKey process definition key to which the correlations apply.
+   * @param correlations task-specific correlations, keyed by task definition key and process variable name.
+   * @param globalCorrelations correlations applied to every task in the process.
+   */
   @Deprecated("Please use other constructor setting CorrelationDefinition.")
   constructor(
     processDefinitionKey: ProcessDefinitionKey,
