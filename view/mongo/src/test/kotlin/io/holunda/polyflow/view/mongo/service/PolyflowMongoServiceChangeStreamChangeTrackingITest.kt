@@ -22,12 +22,12 @@ class PolyflowMongoServiceChangeStreamChangeTrackingITest : PolyflowMongoService
     @Container
     @JvmStatic
     var mongoDBContainer: MongoDBContainer = MongoDBContainer("mongo:4.4.2")
-      .withCommand("mongod", "--replSet", "myReplicaSet")
+      .withReplicaSet()
 
     @DynamicPropertySource
     @JvmStatic
     fun setProperties(registry: DynamicPropertyRegistry) {
-      registry.add("spring.data.mongodb.uri") { mongoDBContainer.replicaSetUrl }
+      registry.add("spring.mongodb.uri") { mongoDBContainer.replicaSetUrl }
     }
   }
 

@@ -6,14 +6,13 @@ Fix the small set of Spring Boot 4 breaks discovered after the all-at-once migra
 
 ## Acceptance criteria
 
-- [ ] Boot 4 property renames discovered by tests are fixed.
-- [ ] JPA/Hibernate compile or DDL generation breaks are fixed if they occur.
-- [ ] MongoDB and Testcontainers test breaks are fixed if they occur.
-- [ ] Starter modularization changes are made only where Boot 4 requires them or where they remove confirmed deprecation/runtime issues.
-- [ ] Focused tests for changed modules pass.
+- [x] Boot 4 property renames discovered by tests are fixed.
+- [x] JPA/Hibernate compile or DDL generation breaks are fixed if they occur.
+- [x] MongoDB and Testcontainers test breaks are fixed if they occur.
+- [x] Starter modularization changes are made only where Boot 4 requires them or where they remove confirmed deprecation/runtime issues.
+- [x] Focused tests for changed modules pass.
 
 ## Blocked by
 
 - Issue 1: Perform a minimal Spring Boot 4 migration pass
 - Issue 2: Default to Jackson 3 while keeping the collector on Jackson 2
-
