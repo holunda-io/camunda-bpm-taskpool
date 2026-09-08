@@ -9,7 +9,9 @@ import org.springframework.stereotype.Component
  * Starts process.
  */
 @Component
-class ProcessStarter(private val startProcessApi: StartProcessApi) {
+class ProcessStarter(
+  private val startProcessApi: StartProcessApi
+) {
 
   /**
    * Starts process.
@@ -20,21 +22,21 @@ class ProcessStarter(private val startProcessApi: StartProcessApi) {
    */
   fun startProcess(
     processDefinitionKey: String,
-    payload: Map<String, Object>,
+    payload: Map<String, Any?>,
     businessKey: String?
   ): String {
 
     val restrictions = mutableMapOf<String, String>()
     businessKey?.let { restrictions[CommonRestrictions.BUSINESS_KEY] = it }
 
-    val startProcess = startProcessApi.startProcess(
+    val processInformation = startProcessApi.startProcess(
       StartProcessByDefinitionCmd(
         definitionKey = processDefinitionKey,
         payload = payload,
         restrictions = restrictions
       )
-    )
-    
-    return startProcess.get().instanceId
+    ).join()
+
+    return processInformation.instanceId
   }
 }

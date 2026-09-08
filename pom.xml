@@ -40,7 +40,6 @@
     <module>bom/taskpool-dependencies</module>
   </modules>
 
-
   <build>
     <defaultGoal>clean package</defaultGoal>
     <pluginManagement>

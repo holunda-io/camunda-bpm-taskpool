@@ -35,7 +35,7 @@ class ProcessStarterTest {
   @Test
   fun `should start process`() {
     val payload = mapOf(
-      "var1" to "value1" as Object,
+      "var1" to "value1" as Any?,
     )
 
     whenever(startProcessApi.startProcess(any())).thenReturn(

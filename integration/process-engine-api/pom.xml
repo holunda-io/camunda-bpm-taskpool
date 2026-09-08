@@ -15,8 +15,8 @@
   <packaging>pom</packaging>
 
   <properties>
-    <process-engine-api.version>1.5</process-engine-api.version>
-    <process-engine-adapter-c7.version>2025.06.1</process-engine-adapter-c7.version>
+    <process-engine-api.version>1.6</process-engine-api.version>
+    <process-engine-adapter-c7.version>2026.06.2</process-engine-adapter-c7.version>
   </properties>
 
   <modules>
