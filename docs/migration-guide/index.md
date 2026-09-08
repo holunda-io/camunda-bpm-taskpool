@@ -1,8 +1,8 @@
-This guide contains hints for upgrading to newer versions whenever there are breaking changes.
+This guide contains upgrade instructions for releases with breaking changes.
 
 ## Migrating to Spring Boot 4
 
-See [Spring Boot 4 Migration Hints](spring-boot-4.md) for repository-specific migration risks and a suggested task order.
+See [Migrating to Spring Boot 4](spring-boot-4.md) for the verified upgrade path and [Spring Boot 4 Release Notes](spring-boot-4-release-notes.md) for the required consumer actions.
 
 ## Migrating to 4.x
 
