@@ -6,13 +6,12 @@ Make Jackson 3 the default for Polyflow-owned serialization while keeping Jackso
 
 ## Acceptance criteria
 
-- [ ] Non-Camunda Polyflow-owned serialization uses Jackson 3 packages and dependencies where migration is required.
-- [ ] The collector/Camunda Spin serialization path remains on Jackson 2.
-- [ ] Jackson 2 dependencies are not promoted to a global default for all modules.
-- [ ] Jackson concrete types are not passed across the Jackson 2/3 boundary as public API.
-- [ ] Serialization tests cover representative existing payloads for both the collector lane and the Polyflow-owned Jackson 3 lane.
+- [x] Non-Camunda Polyflow-owned serialization uses Jackson 3 packages and dependencies where migration is required.
+- [x] The collector/Camunda Spin serialization path remains on Jackson 2.
+- [x] Jackson 2 dependencies are not promoted to a global default for all modules.
+- [x] Jackson concrete types are not passed across the Jackson 2/3 boundary as public API.
+- [x] Serialization tests cover representative existing payloads for both the collector lane and the Polyflow-owned Jackson 3 lane.
 
 ## Blocked by
 
 - Issue 1: Perform a minimal Spring Boot 4 migration pass
-

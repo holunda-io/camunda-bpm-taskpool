@@ -1,23 +1,12 @@
 package io.holunda.polyflow.taskpool.sender
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo
-import tools.jackson.databind.ObjectMapper
-import tools.jackson.databind.jsontype.impl.LaissezFaireSubTypeValidator
-import tools.jackson.module.kotlin.jacksonObjectMapper
 import io.holunda.camunda.taskpool.api.task.EngineTaskCommand
-import io.holunda.polyflow.bus.jackson.configurePolyflowJacksonObjectMapper
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
 class EngineTaskCommandsByteSerializationTest {
 
-  private val objectMapper = jacksonObjectMapper().configurePolyflowJacksonObjectMapper().apply {
-    activateDefaultTyping(
-      LaissezFaireSubTypeValidator(),
-      ObjectMapper.DefaultTyping.EVERYTHING,
-      JsonTypeInfo.As.WRAPPER_ARRAY
-    )
-  }
+  private val objectMapper = CamundaJobSenderConfiguration(SenderProperties()).fallbackCommandByteArrayObjectMapper()
   private val testObjectFactory = TestObjectFactory()
 
   @Test
