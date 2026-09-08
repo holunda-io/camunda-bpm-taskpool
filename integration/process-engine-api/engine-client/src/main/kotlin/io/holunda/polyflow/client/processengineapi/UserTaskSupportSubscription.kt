@@ -13,11 +13,17 @@ class UserTaskSupportSubscription(
   private val taskSubscriptionApi: TaskSubscriptionApi
 ) {
 
+  /**
+   * Subscribes user-task support to the Process Engine API task subscription service.
+   */
   @PostConstruct
   fun subscribe() {
     userTaskSupport.subscribe(taskSubscriptionApi)
   }
 
+  /**
+   * Removes the user-task support subscription from the Process Engine API task service.
+   */
   @PreDestroy
   fun unsubscribe() {
     userTaskSupport.unsubscribe(taskSubscriptionApi)
