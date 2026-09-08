@@ -16,6 +16,7 @@
 
   <modules>
     <module>datapool-sender</module>
+    <module>liquibase</module>
     <module>tasklist-url-resolver</module>
     <module>taskpool-sender</module>
     <module>variable-serializer</module>
