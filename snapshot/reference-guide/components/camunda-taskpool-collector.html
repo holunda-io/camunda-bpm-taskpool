@@ -1825,6 +1825,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../configuration/remote-engine-process-variable-configuration.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Remote Engine Process-Variable Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -2544,7 +2572,7 @@ Spring eventing.</p>
 <li>Enrichment of task engine commands with process variables</li>
 <li>Attachment of correlation information to task engine commands</li>
 <li>Transmission of commands to Axon command bus</li>
-<li>Provision of properties for process application</li>
+<li>Provision of properties for a process application</li>
 </ul>
 <h3 id="architecture">Architecture<a class="headerlink" href="#architecture" title="Permanent link">#</a></h3>
 <p><img alt="Taskpool collector building blocks" src="../../img/collector-building-blocks.png" /></p>
@@ -2594,8 +2622,8 @@ this behaviour by setting values of two properties:</p>
 <span class="w">    </span><span class="nt">collector</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">camunda</span><span class="p">:</span>
 <span class="w">        </span><span class="nt">task</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">excludedTaskEventNames</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">assignment, delete</span>
-<span class="w">          </span><span class="nt">excludedHistoryEventNames</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">add-identity-link, delete-identity-link</span>
+<span class="w">          </span><span class="nt">excluded-task-event-names</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">assignment, delete</span>
+<span class="w">          </span><span class="nt">excluded-history-event-names</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">add-identity-link, delete-identity-link</span>
 </code></pre></div>
 This particular setting is helpful, if you want to disable assignment in the engine entirely and want to provide you own custom task assignment algorithm or
 use assignment based on process variables (see below for more details).</p>
@@ -2614,9 +2642,48 @@ available as process variables and need to be attached to the task in the taskpo
 purpose, active it, setting the property <code>polyflow.integration.collector.camunda.task.enricher.type</code> to <code>process-variables</code> and the enricher will
 put process variables into the task payload.</p>
 <p>You can control what variables will be put into task command payload by providing the Process Variables Filter.
-The <code>ProcessVariablesFilter</code> is a Spring bean holding a list of individual <code>VariableFilter</code> - at most one per
-process definition key and optionally one without process definition key (a global filter). If the filter is not provded,
-a default filter is used which is an empty <code>EXCLUDE</code> filter, resulting in all process variables being attached to the user task.</p>
+The <code>ProcessVariablesFilter</code> is a Spring bean holding individual <code>VariableFilter</code> instances. Process-specific filters
+are combined; filters without a process definition key are global and apply when no process-specific filter exists. If
+the filter is not provided, a default empty <code>EXCLUDE</code> filter is used, resulting in all process variables being attached
+to the user task.</p>
+<p>Alternatively, enable the property-backed filter. A filter with <code>process-variables</code> is process-level; a filter with
+<code>task-variables</code> is task-level and therefore requires <code>process-definition-key</code>. Both can be configured together for a
+process; task-level rules further restrict the process-level rule. See
+<a href="../configuration/remote-engine-process-variable-configuration.html">Remote Engine Process-Variable Configuration</a> for
+the complete property reference and remote-engine examples.</p>
+<div class="highlight"><pre><span></span><code><span class="nt">polyflow</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">integration</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">collector</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">camunda</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">task</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">enricher</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">process-variables-filter</span><span class="p">:</span>
+<span class="w">              </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">              </span><span class="nt">filters</span><span class="p">:</span>
+<span class="w">                </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">process-definition-key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">approval</span>
+<span class="w">                  </span><span class="nt">filter-type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">INCLUDE</span>
+<span class="w">                  </span><span class="nt">process-variables</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">requestId</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">applicant</span><span class="p p-Indicator">]</span>
+<span class="w">                  </span><span class="nt">task-variables</span><span class="p">:</span>
+<span class="w">                    </span><span class="nt">approve</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">requestId</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">applicant</span><span class="p p-Indicator">]</span>
+</code></pre></div>
+<p>A global process-variable filter can be configured by omitting <code>process-definition-key</code>. It applies to processes
+without a dedicated filter; a process-specific filter takes precedence. For example, this excludes the technical
+<code>internalAudit</code> variable from every process that is not configured explicitly:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">polyflow</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">integration</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">collector</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">camunda</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">task</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">enricher</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">process-variables-filter</span><span class="p">:</span>
+<span class="w">              </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">              </span><span class="nt">filters</span><span class="p">:</span>
+<span class="w">                </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">filter-type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EXCLUDE</span>
+<span class="w">                  </span><span class="nt">process-variables</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">internalAudit</span><span class="p p-Indicator">]</span>
+<span class="w">                </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">process-definition-key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">approval</span>
+<span class="w">                  </span><span class="nt">filter-type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">INCLUDE</span>
+<span class="w">                  </span><span class="nt">process-variables</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">requestId</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">applicant</span><span class="p p-Indicator">]</span>
+</code></pre></div>
 <p>A <code>VariableFilter</code> can be of the following type:</p>
 <ul>
 <li><code>TaskVariableFilter</code>:
@@ -2683,13 +2750,13 @@ a default filter is used which is an empty <code>EXCLUDE</code> filter, resultin
 </div>
 <h3 id="data-correlation">Data Correlation<a class="headerlink" href="#data-correlation" title="Permanent link">#</a></h3>
 <p>Apart from task payload attached by the enricher, the so-called <em>Correlation</em> with data entries can
-be configured. The data correlation allows to attach one or several references (that is a pair of values <code>entryType</code> and <code>entryId</code>) of
+be configured. The data correlation allows to attach one or several references (that is a pair of values <code>entry-type</code> and <code>entryId</code>) of
 business data entry(ies) to a task. In the projection (which is used for querying of tasks) these correlations are resolved and the
 information from business data events can be shown together with task information.</p>
 <p>The correlation to data events can be configured by providing a <code>ProcessVariablesCorrelator</code> bean. Here is
 an example how this can be done:</p>
 <div class="highlight"><pre><span></span><code><span class="nd">@Bean</span>
-<span class="kd">fun</span><span class="w"> </span><span class="nf">processVariablesCorrelator</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ProcessVariablesCorrelator</span><span class="p">(</span>
+<span class="kd">fun</span><span class="w"> </span><span class="nf">process</span><span class="o">-</span><span class="n">variablesCorrelator</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ProcessVariablesCorrelator</span><span class="p">(</span>
 <span class="w">    </span><span class="c1">// define correlation for every process</span>
 <span class="w">    </span><span class="n">ProcessVariableCorrelation</span><span class="p">(</span>
 <span class="w">      </span><span class="n">ProcessApproveRequest</span><span class="p">.</span><span class="na">KEY</span><span class="p">,</span>
@@ -2704,6 +2771,27 @@ an example how this can be done:</p>
 <span class="w">    </span><span class="p">)</span>
 <span class="w">  </span><span class="p">)</span>
 </code></pre></div>
+<p>It can also be supplied from Spring properties. Enabling this configuration creates the correlator in place of the
+empty fallback bean. See <a href="../configuration/remote-engine-process-variable-configuration.html">Remote Engine Process-Variable Configuration</a>
+for the complete property reference and remote-engine examples.</p>
+<div class="highlight"><pre><span></span><code><span class="nt">polyflow</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">integration</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">collector</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">camunda</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">task</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">enricher</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">process-variables-correlator</span><span class="p">:</span>
+<span class="w">              </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">              </span><span class="nt">correlations</span><span class="p">:</span>
+<span class="w">                </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">process-definition-key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">approval</span>
+<span class="w">                  </span><span class="nt">global-correlations</span><span class="p">:</span>
+<span class="w">                    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">entry-id-variable-name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">requestId</span>
+<span class="w">                      </span><span class="nt">entry-type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">request</span>
+<span class="w">                  </span><span class="nt">correlations</span><span class="p">:</span>
+<span class="w">                    </span><span class="nt">approve</span><span class="p">:</span>
+<span class="w">                      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">entry-id-variable-name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">customerId</span>
+<span class="w">                        </span><span class="nt">entry-type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">customer</span>
+</code></pre></div>
 <p>The process variable correlator holds a list of process variable correlations - one for every process
 definition key. Every <code>ProcessVariableCorrelation</code> configures for all tasks or for an individual task by providing a so-called correlation
 map. A correlation map is keyed by the name of a process variable inside Camunda Process Engine and holds the type of business data entry as value.</p>
@@ -2713,7 +2801,7 @@ data and using the entry type <code>io.my.approvalRequest</code> and the id of t
 create a correlation in task <code>task_approve_request</code> of the <code>process_approval_process</code> we would provide the following configuration
 of the correlator:</p>
 <div class="highlight"><pre><span></span><code><span class="nd">@Bean</span>
-<span class="kd">fun</span><span class="w"> </span><span class="nf">processVariablesCorrelator</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ProcessVariablesCorrelator</span><span class="p">(</span>
+<span class="kd">fun</span><span class="w"> </span><span class="nf">process</span><span class="o">-</span><span class="n">variablesCorrelator</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ProcessVariablesCorrelator</span><span class="p">(</span>
 
 <span class="w">    </span><span class="n">ProcessVariableCorrelation</span><span class="p">(</span>
 <span class="w">      </span><span class="s">"process_approval_process"</span><span class="p">,</span>
@@ -2730,7 +2818,7 @@ of the correlator:</p>
 and the process reaches the task <code>task_approve_request</code>, the task will get the following correlation created
 (here written in JSON):</p>
 <div class="highlight"><pre><span></span><code><span class="nt">"correlations"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="nt">"entryType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"approvalRequest"</span><span class="p">,</span><span class="w"> </span><span class="nt">"entryId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"4711"</span><span class="w"> </span><span class="p">}</span>
+<span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="nt">"entry-type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"approvalRequest"</span><span class="p">,</span><span class="w"> </span><span class="nt">"entryId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"4711"</span><span class="w"> </span><span class="p">}</span>
 <span class="p">]</span>
 </code></pre></div>
 <h3 id="message-codes">Message codes<a class="headerlink" href="#message-codes" title="Permanent link">#</a></h3>
@@ -2823,7 +2911,7 @@ and the process reaches the task <code>task_approve_request</code>, the task wil
 <h3 id="task-assignment">Task Assignment<a class="headerlink" href="#task-assignment" title="Permanent link">#</a></h3>
 <p>User task assignment is a core functionality for every process application fostering task-oriented work. By default, Taskpool Collector uses
 information from Camunda User Task and maps that one-to-one to properties of the user task commands. The task attribute
-<code>assignee</code>, <code>candidateUsers</code> and <code>candidateGroups</code> are mapped to the corresponding attributes automatically.</p>
+<code>assignee</code>, <code>candidate-users</code> and <code>candidate-groupss</code> are mapped to the corresponding attributes automatically.</p>
 <p>To control the task assignment mode you can configure Taskpool Collector using application properties. The property 
 <code>polyflow.integration.collector.camunda.task.assigner.type</code> has the following values:</p>
 <ul>
@@ -2841,8 +2929,8 @@ information. The corresponding properties are:</p>
 <span class="w">          </span><span class="nt">assigner</span><span class="p">:</span>
 <span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">process-variables</span>
 <span class="w">            </span><span class="nt">assignee</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-assignee-var</span>
-<span class="w">            </span><span class="nt">candidateUsers</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-candidate-users-var</span><span class="w"> </span>
-<span class="w">            </span><span class="nt">candidateGroup</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-candidate-group-var</span>
+<span class="w">            </span><span class="nt">candidate-users</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-candidate-users-var</span>
+<span class="w">            </span><span class="nt">candidate-groups</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-candidate-group-var</span>
 </code></pre></div>
 <h3 id="task-importer">Task Importer<a class="headerlink" href="#task-importer" title="Permanent link">#</a></h3>
 <p>Alongside with the event-based Task Collector based on Camunda Eventing, there exists a dedicated service which can query Camunda database for existing
@@ -2860,7 +2948,7 @@ a Spring Bean. If you want to use this task importer facility, you need to activ
 <span class="w">            </span><span class="nt">task-filter-type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">eventstore</span>
 </code></pre></div>
 <p>By doing so, the <code>TaskServiceCollectorService</code> Bean is made available and can be used to trigger the import. The <code>eventstore</code> filter is useful in scenarios,
-in which the <a href="./core-taskpool">Taskpool Core</a> is deployed on together with Taskpool Collector as part of the Process Application.</p>
+in which the <a href="./core-taskpool">Taskpool Core</a> is deployed alonside with Taskpool Collector as part of the Process Application or Process Engine.</p>
 
 
 
@@ -2881,7 +2969,7 @@ in which the <a href="./core-taskpool">Taskpool Core</a> is deployed on together
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="January 15, 2024 11:43:47 UTC">January 15, 2024</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="September 8, 2026 19:20:15 UTC">September 8, 2026</span>
   </span>
 
     
