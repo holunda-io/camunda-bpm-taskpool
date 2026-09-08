@@ -15,9 +15,7 @@ open class ProcessVariablesTaskCommandEnricher(
 
   override fun <T : TaskIdentityWithPayloadAndCorrelations> enrich(command: T): T {
 
-
     // Payload enrichment
-
     command.payload.putAllTyped(
       processVariablesFilter.filterVariables(
         command.sourceReference.definitionKey,

@@ -31,7 +31,6 @@
     <!-- see profiles below for more modules -->
   </modules>
 
-
   <build>
     <defaultGoal>clean package</defaultGoal>
     <pluginManagement>

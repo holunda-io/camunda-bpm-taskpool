@@ -47,9 +47,9 @@ class TaskEventHandlerTest {
   @BeforeEach
   fun init() {
     taskEventHandlers = TaskEventHandlers(
-      taskService = taskService,
-      taskCompletionService = taskCompletionService,
-      taskQuery = taskQuery,
+      userTaskModificationApi = taskService,
+      userTaskCompletionApi = taskCompletionService,
+      userTaskSupport = taskQuery,
       properties = properties
     )
     now = Date()

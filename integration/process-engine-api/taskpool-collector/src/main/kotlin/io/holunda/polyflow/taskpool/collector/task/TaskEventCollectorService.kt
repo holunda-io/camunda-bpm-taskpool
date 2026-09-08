@@ -1,22 +1,12 @@
 package io.holunda.polyflow.taskpool.collector.task
 
-import dev.bpmcrafters.processengineapi.task.TaskInformation
-import dev.bpmcrafters.processengineapi.task.SubscribeForTaskCmd
-import dev.bpmcrafters.processengineapi.task.TaskSubscription
-import dev.bpmcrafters.processengineapi.task.TaskSubscriptionApi
-import dev.bpmcrafters.processengineapi.task.TaskTerminationHandler
-import dev.bpmcrafters.processengineapi.task.TaskType
-import dev.bpmcrafters.processengineapi.task.UnsubscribeFromTaskCmd
 import dev.bpmcrafters.processengineapi.CommonRestrictions
+import dev.bpmcrafters.processengineapi.task.*
 import io.github.oshai.kotlinlogging.KotlinLogging
-import io.holunda.polyflow.taskpool.asAssignCommand
-import io.holunda.polyflow.taskpool.asCompleteCommand
-import io.holunda.polyflow.taskpool.asCreatedCommand
-import io.holunda.polyflow.taskpool.asDeleteCommand
-import io.holunda.polyflow.taskpool.asUpdateCommand
+import io.holunda.polyflow.taskpool.*
 import io.holunda.polyflow.taskpool.collector.ProcessEngineApiTaskpoolCollectorProperties
-import jakarta.annotation.PreDestroy
 import jakarta.annotation.PostConstruct
+import jakarta.annotation.PreDestroy
 import org.springframework.context.ApplicationEventPublisher
 import java.util.concurrent.ConcurrentHashMap
 
@@ -69,10 +59,11 @@ class TaskEventCollectorService(
   }
 
   private fun onTaskDelivery(task: TaskInformation, payload: Map<String, Any?>) {
+    val appName = processEngineApiTaskpoolCollectorProperties.applicationName
     when (deliveryReason(task)) {
-      TaskInformation.CREATE -> applicationEventPublisher.publishEvent(task.asCreatedCommand(processEngineApiTaskpoolCollectorProperties.applicationName, payload))
+      TaskInformation.CREATE -> applicationEventPublisher.publishEvent(task.asCreatedCommand(applicationName = appName, payload = payload))
       TaskInformation.ASSIGN -> applicationEventPublisher.publishEvent(task.asAssignCommand())
-      TaskInformation.UPDATE -> applicationEventPublisher.publishEvent(task.asUpdateCommand(processEngineApiTaskpoolCollectorProperties.applicationName, payload))
+      TaskInformation.UPDATE -> applicationEventPublisher.publishEvent(task.asUpdateCommand(applicationName = appName, payload = payload))
       TaskInformation.COMPLETE -> applicationEventPublisher.publishEvent(task.asCompleteCommand())
       else -> logger.warn { "Received unexpected task delivery for task ${task.taskId}." }
     }
