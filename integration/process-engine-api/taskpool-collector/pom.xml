@@ -93,14 +93,6 @@
       <artifactId>jackson-datatype-jsr310</artifactId>
       <scope>test</scope>
     </dependency>
-    <!-- Tx job sender to itest it here -->
-    <dependency>
-      <groupId>io.holunda.polyflow</groupId>
-      <artifactId>polyflow-process-engine-api-taskpool-job-sender</artifactId>
-      <scope>test</scope>
-    </dependency>
-
-
   </dependencies>
 
 </project>
