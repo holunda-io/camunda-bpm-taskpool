@@ -29,7 +29,7 @@ class PolyflowMongoServiceEventHandlerChangeTrackingITest : PolyflowMongoService
     @DynamicPropertySource
     @JvmStatic
     fun setProperties(registry: DynamicPropertyRegistry) {
-      registry.add("spring.data.mongodb.uri") { mongoDBContainer.replicaSetUrl }
+      registry.add("spring.mongodb.uri") { mongoDBContainer.replicaSetUrl }
     }
   }
 
@@ -41,4 +41,3 @@ class PolyflowMongoServiceEventHandlerChangeTrackingITest : PolyflowMongoService
     mongoDBContainer.clear()
   }
 }
-
