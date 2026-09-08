@@ -6,3 +6,4 @@ Here are some dedicated articles:
 * [Mongo DB View configuration](view-mongo.md)
 * [Datapool Aggregate Tuning](core-datapool-aggregate-tuning.md)
 * [Deployment of Polyflow Core inside Process applications](local-core-deployment.md)
+* [Remote Engine Process-Variable Configuration](remote-engine-process-variable-configuration.md)

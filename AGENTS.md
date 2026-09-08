@@ -63,13 +63,8 @@ read-optimized views. It supports a process application/process platform archite
   - `developer-guide/`: setup, build, release, and contribution guidance.
 - `mkdocs.yml`: documentation navigation and site configuration; `docs/requirements.txt` pins Python documentation dependencies.
 
-Each publishable component is its own Maven module, normally with `src/main/kotlin`, `src/main/resources`, and mirrored `src/test/kotlin` trees. Place a change
-in the lowest-level module that owns its API or implementation; keep public APIs, event contracts, aggregate behavior, integrations, and views separated.
+## 3. Core Behaviors & Patterns
 
-## 3. Working Agreements
-
-- Respond in English; keep technical terms in English and never alter fenced code blocks unless asked.
-- Before changing code, inspect related usages, module dependencies, public APIs, event revisions/upcasters, and the corresponding reference documentation.
 - Prefer minimal, focused changes. Add no speculative compatibility path, fallback, or abstraction; fail explicitly when an impossible state is reached.
 - Use Kotlin idiomatically: `PascalCase` types, `camelCase` members, immutable `val` by default, and `data class`es for message/projection values. Preserve the
   package namespaces already used by the affected module.
@@ -90,3 +85,22 @@ in the lowest-level module that owns its API or implementation; keep public APIs
 - For every new feature: introduce it, run a short scope discussion, document the agreed behavior with acceptance criteria, clarify the technical approach, then
   implement it. Do not start implementation before those steps are complete. A feature is complete only after its acceptance criteria also cover a short feature
   description.
+- Maven modules are implemented primarily in Kotlin, with public APIs separated from core, integration, and view implementations.
+- Each publishable component is its own Maven module, normally with `src/main/kotlin`, `src/main/resources`, and mirrored `src/test/kotlin` trees. Place a change
+in the lowest-level module that owns its API or implementation; keep public APIs, event contracts, aggregate behavior, integrations, and views separated.
+- Components use Spring configuration and property classes for optional integration setup.
+- Kotlin Logging is used for operational logging; messages commonly carry a stable component identifier.
+- Tests are colocated in each module under `src/test` and mirror production packages.
+- Keep public API modules independent of concrete view and integration implementations.
+- Keep documentation in Markdown and add published pages to `mkdocs.yml` navigation when they should be reachable in the site.
+- Follow [ADR-000](specs/adr/000-adr-conventions.md) for ADR format and numbering.
+
+## 5. Working Agreements
+
+- Respond in English; keep technical terms in English and never alter fenced code blocks unless asked.
+- Before changing code, inspect related usages, module dependencies, public APIs, event revisions/upcasters, and the corresponding reference documentation.
+- Every feature or change requires an ADR in `specs/adr` and user-facing documentation in `docs`, normally under `docs/reference-guide`; document presence,
+  usage, and configuration.
+- For a request introduced as `New feature`, clarify the scope until it is understood, create the ADR and user-facing documentation, then wait for an explicit
+  implementation request. Do not implement during the planning phase.
+- Create tests or run lint/format tasks only when explicitly requested. Do not add tests for guarantees already provided by the type system.

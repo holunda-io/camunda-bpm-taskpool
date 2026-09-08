@@ -41,10 +41,10 @@ default for the application or even the default template is taken.
 polyflow:
   integration:
     form-url-resolver:
-      defaultApplicationTemplate: "http://localhost:8080/${applicationName}"
-      defaultDataEntryTemplate: "/${entryType}/${entryId}"
-      defaultProcessTemplate: "/${processDefinitionKey}/${formKey}"
-      defaultTaskTemplate:  "/forms/${formKey}/${id}"
+      default-application-template: "http://localhost:8080/${applicationName}"
+      default-data-entry-template: "/${entryType}/${entryId}"
+      default-process-template: "/${processDefinitionKey}/${formKey}"
+      default-task-template:  "/forms/${formKey}/${id}"
       applications:
       - app1:
         url: "https://app1.server.io/app"

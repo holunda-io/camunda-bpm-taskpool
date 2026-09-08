@@ -45,15 +45,12 @@ version is a Community Edition. Specify `-Pcamunda-ee` to switch to Camunda Ente
 require a valid Camunda license. You can put it into a file `~/.camunda/license.txt` and it will be detected
 automatically.
 
-### Generate SQL DDL
+### Database schema
 
-If you are using RDBMS (for example for the Polyflow JPA View or/and JPA storage of Axon Entities), you will require the SQL DDL.
-Consider to edit the `view/jpa/src/sql/persistence.xml` descriptor to control what to include into DDL generation.
-You can generate this by executing the following build command:
-
-```bash
-./mvnw -Pgenerate-sql -f view/jpa
-```
+Polyflow publishes PostgreSQL database changes through the
+`polyflow-liquibase` module. Do not generate DDL from the JPA model. Consumer
+applications include the required Polyflow master changelogs from their
+central Liquibase master changelog; see the [Persistence configuration](../reference-guide/configuration/persistence.md).
 
 
 
