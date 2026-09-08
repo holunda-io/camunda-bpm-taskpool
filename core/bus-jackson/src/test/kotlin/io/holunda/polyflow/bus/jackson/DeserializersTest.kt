@@ -1,7 +1,10 @@
 package io.holunda.polyflow.bus.jackson
 
 import tools.jackson.core.type.TypeReference
+import tools.jackson.databind.DefaultTyping
 import tools.jackson.databind.ObjectMapper
+import tools.jackson.databind.json.JsonMapper
+import tools.jackson.databind.jsontype.BasicPolymorphicTypeValidator
 import tools.jackson.module.kotlin.jacksonObjectMapper
 import tools.jackson.module.kotlin.readValue
 import io.holunda.camunda.taskpool.api.business.*
@@ -26,7 +29,11 @@ class DeserializersTest {
 
   @BeforeEach
   fun initMapper() {
-    mapper = jacksonObjectMapper().configurePolyflowJacksonObjectMapper().addMixIn(MyStructure::class.java, KotlinTypeInfo::class.java)
+    mapper = jacksonObjectMapper()
+      .configurePolyflowJacksonObjectMapper()
+      .rebuild<JsonMapper, JsonMapper.Builder>()
+      .addMixIn(MyStructure::class.java, KotlinTypeInfo::class.java)
+      .build()
   }
 
   @Test
@@ -55,7 +62,14 @@ class DeserializersTest {
   @Disabled("fails with: Could not resolve type id 'io.holunda.polyflow.bus.jackson.MyStructure' as a subtype of `java.util.Map<java.lang.String,java.lang.Object>`: Not a subtype at [Source: UNKNOWN; byte offset: #UNKNOWN]")
   fun `serialize and deserialize variable complex object`() {
 
-    mapper.activateDefaultTypingAsProperty(mapper.polymorphicTypeValidator, ObjectMapper.DefaultTyping.NON_FINAL, "@class")
+    mapper = mapper
+      .rebuild<JsonMapper, JsonMapper.Builder>()
+      .activateDefaultTypingAsProperty(
+        BasicPolymorphicTypeValidator.builder().allowIfSubType(Any::class.java).build(),
+        DefaultTyping.NON_FINAL,
+        "@class"
+      )
+      .build()
     val variables: VariableMap = Variables.createVariables().putValue("simple", "value").putValue("complex", DataStructure("some", 1))
 
     val original = MyStructure(
