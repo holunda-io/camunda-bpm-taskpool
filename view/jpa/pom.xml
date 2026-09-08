@@ -206,7 +206,7 @@
             <artifactId>maven-surefire-plugin</artifactId>
             <configuration>
               <includes>
-                <include>**/SchemaGenerationTest.*</include>
+                <include>**/SchemaGenerationTest.java</include>
               </includes>
               <systemPropertyVariables combine.children="append">
                 <generate-sql>${generate-sql}</generate-sql>
