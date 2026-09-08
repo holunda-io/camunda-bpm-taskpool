@@ -1,6 +1,6 @@
 package io.holunda.polyflow.bus.jackson
 
-import com.fasterxml.jackson.databind.module.SimpleModule
+import tools.jackson.databind.module.SimpleModule
 import org.camunda.bpm.engine.variable.VariableMap
 import org.camunda.bpm.engine.variable.impl.VariableMapImpl
 

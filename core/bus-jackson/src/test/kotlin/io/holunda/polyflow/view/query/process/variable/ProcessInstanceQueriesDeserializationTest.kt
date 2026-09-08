@@ -1,7 +1,7 @@
 package io.holunda.polyflow.view.query.process.variable
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import tools.jackson.databind.ObjectMapper
+import tools.jackson.module.kotlin.jacksonObjectMapper
 import io.holunda.polyflow.bus.jackson.configurePolyflowJacksonObjectMapper
 import io.holunda.polyflow.view.query.process.variable.filter.ProcessVariableFilterExactlyOne
 import io.holunda.polyflow.view.query.process.variable.filter.ProcessVariableFilterOneOf

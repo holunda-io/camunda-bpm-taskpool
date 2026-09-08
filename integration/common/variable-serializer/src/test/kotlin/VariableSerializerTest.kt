@@ -1,12 +1,13 @@
 package io.holunda.polyflow.variable.serializer
 
-import com.fasterxml.jackson.databind.SerializationFeature
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import tools.jackson.module.kotlin.jacksonObjectMapper
+import tools.jackson.databind.json.JsonMapper
 import io.holunda.camunda.variable.serializer.serialize
 import org.assertj.core.api.Assertions.assertThat
 import org.camunda.bpm.engine.variable.Variables.createVariables
 import org.junit.jupiter.api.Test
+import tools.jackson.databind.cfg.DateTimeFeature
+
 import java.text.SimpleDateFormat
 import java.time.Instant
 import java.time.ZoneOffset
@@ -14,6 +15,10 @@ import java.time.ZoneOffset
 class VariableSerializerTest {
 
   private val mapper = jacksonObjectMapper()
+    .rebuild<JsonMapper, JsonMapper.Builder>()
+    .defaultDateFormat(SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'"))
+    .disable(DateTimeFeature.WRITE_DATE_TIMESTAMPS_AS_NANOSECONDS)
+    .build()
 
   @Test
   fun `should return the empty map`() {
@@ -50,12 +55,6 @@ class VariableSerializerTest {
 
   @Test
   fun `should transform pojo with instant to map`() {
-
-    mapper.dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'")
-    mapper.registerModule(JavaTimeModule())
-    mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
-    mapper.configure(SerializationFeature.WRITE_DATE_TIMESTAMPS_AS_NANOSECONDS, false)
-
     val now = Instant.parse("2020-10-15T07:20:05.871641Z")
     val pojo = Pojo5(key = "value", ts = now, date = now.atOffset(ZoneOffset.UTC))
     val result = serialize(pojo, mapper)

@@ -62,8 +62,8 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.flywaydb</groupId>
-      <artifactId>flyway-core</artifactId>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-flyway</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>

@@ -100,6 +100,10 @@ nav:
     - Solution Architecture: introduction/solution-architecture.md
     - Deployment Strategies: introduction/deployment.md
   - Getting Started: getting-started/index.md
+  - Migration Guide:
+    - Overview: migration-guide/index.md
+    - Spring Boot 4: migration-guide/spring-boot-4.md
+    - Spring Boot 4 Release Notes: migration-guide/spring-boot-4-release-notes.md
   - Reference:
     - Reference Overview: reference-guide/index.md
     - Component Overview: reference-guide/components/index.md

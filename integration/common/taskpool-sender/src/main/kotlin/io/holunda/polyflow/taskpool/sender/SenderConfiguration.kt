@@ -1,6 +1,6 @@
 package io.holunda.polyflow.taskpool.sender
 
-import com.fasterxml.jackson.databind.ObjectMapper
+import tools.jackson.databind.ObjectMapper
 import io.github.oshai.kotlinlogging.KotlinLogging
 import io.holunda.polyflow.bus.jackson.config.FallbackPayloadObjectMapperAutoConfiguration.Companion.PAYLOAD_OBJECT_MAPPER
 import io.holunda.polyflow.taskpool.sender.gateway.*
@@ -24,12 +24,14 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Configuration
 
 private val logger = KotlinLogging.logger {}
 
 /**
  * Main configuration of the taskpool sender component.
  */
+@Configuration
 @EnableConfigurationProperties(SenderProperties::class)
 class SenderConfiguration(private val senderProperties: SenderProperties) {
 

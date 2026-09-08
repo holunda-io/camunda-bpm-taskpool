@@ -1,7 +1,7 @@
 package io.holunda.polyflow.taskpool.sender.task.accumulator
 
-import com.fasterxml.jackson.core.type.TypeReference
-import com.fasterxml.jackson.databind.ObjectMapper
+import tools.jackson.core.type.TypeReference
+import tools.jackson.databind.ObjectMapper
 import org.slf4j.LoggerFactory
 import kotlin.reflect.KClass
 import kotlin.reflect.full.memberProperties

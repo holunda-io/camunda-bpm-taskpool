@@ -50,12 +50,12 @@
     </dependency>
     <dependency>
       <groupId>org.testcontainers</groupId>
-      <artifactId>junit-jupiter</artifactId>
+      <artifactId>testcontainers-junit-jupiter</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.testcontainers</groupId>
-      <artifactId>mongodb</artifactId>
+      <artifactId>testcontainers-mongodb</artifactId>
       <scope>test</scope>
     </dependency>
 
@@ -82,6 +82,11 @@
     <dependency>
       <groupId>org.mockito.kotlin</groupId>
       <artifactId>mockito-kotlin</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-data-mongodb-reactive-test</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>

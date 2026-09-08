@@ -80,6 +80,7 @@
           <pluginOptions>
             <option>all-open:annotation=io.toolisticon.testing.jgiven.JGivenKotlinStage</option>
           </pluginOptions>
+          <javaParameters>true</javaParameters>
         </configuration>
       </plugin>
     </plugins>

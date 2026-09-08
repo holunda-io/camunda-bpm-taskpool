@@ -4,12 +4,14 @@ import io.holunda.polyflow.taskpool.collector.task.enricher.ProcessVariablesFilt
 import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Configuration
 
 /**
  * Configures fallback if no process variable filter is defined.
  */
 @AutoConfiguration
 @ConditionalOnMissingBean(ProcessVariablesFilter::class)
+@Configuration
 class FallbackProcessVariablesFilterConfiguration {
   /**
    * Creates the empty filter used when neither a custom nor property-configured filter is available.

@@ -1,6 +1,6 @@
 package io.holunda.polyflow.urlresolver
 
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import tools.jackson.module.kotlin.jacksonObjectMapper
 import io.holunda.camunda.taskpool.api.task.ProcessReference
 import io.holunda.polyflow.view.ProcessDefinition
 import io.holunda.polyflow.view.Task

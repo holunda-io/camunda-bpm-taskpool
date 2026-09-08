@@ -1,6 +1,7 @@
 package io.holunda.polyflow.view.jpa.task
 
-import com.fasterxml.jackson.databind.ObjectMapper
+import tools.jackson.databind.ObjectMapper
+import tools.jackson.databind.json.JsonMapper
 import io.holunda.camunda.taskpool.api.task.ProcessReference
 import io.holunda.camunda.taskpool.api.task.TaskAttributeUpdatedEngineEvent
 import io.holunda.polyflow.view.jpa.data.DataEntryId
@@ -17,7 +18,7 @@ class ConverterExtKtTest {
 
   @Test
   fun `should convert to task`() {
-    val objectMapper = ObjectMapper()
+    val objectMapper = JsonMapper()
     val entity = TaskEntity(
       taskId = "taskId",
       taskDefinitionKey = "taskDefinitionKey",
@@ -61,7 +62,7 @@ class ConverterExtKtTest {
 
   @Test
   fun `should process update`() {
-    val objectMapper = ObjectMapper()
+    val objectMapper = JsonMapper()
     val entity = TaskEntity(
       taskId = "taskId",
       taskDefinitionKey = "taskDefinitionKey",
@@ -115,7 +116,7 @@ class ConverterExtKtTest {
 
   @Test
   fun `should process update with nulls`() {
-    val objectMapper = ObjectMapper()
+    val objectMapper = JsonMapper()
     val entity = TaskEntity(
       taskId = "taskId",
       taskDefinitionKey = "taskDefinitionKey",

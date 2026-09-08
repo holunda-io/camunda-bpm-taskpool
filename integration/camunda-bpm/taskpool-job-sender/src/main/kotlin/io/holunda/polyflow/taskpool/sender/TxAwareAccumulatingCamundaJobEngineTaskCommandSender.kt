@@ -1,6 +1,6 @@
 package io.holunda.polyflow.taskpool.sender
 
-import com.fasterxml.jackson.databind.ObjectMapper
+import tools.jackson.databind.ObjectMapper
 import io.github.oshai.kotlinlogging.KotlinLogging
 import io.holunda.polyflow.taskpool.sender.task.AbstractTxAwareAccumulatingEngineTaskCommandSender
 import io.holunda.polyflow.taskpool.sender.task.accumulator.EngineTaskCommandAccumulator

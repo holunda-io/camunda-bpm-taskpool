@@ -1,6 +1,7 @@
 package io.holunda.polyflow.bus.jackson
 
-import com.fasterxml.jackson.databind.ObjectMapper
+import tools.jackson.databind.ObjectMapper
+import tools.jackson.databind.json.JsonMapper
 import io.holunda.camunda.taskpool.api.business.AuthorizationChange
 import io.holunda.camunda.taskpool.api.task.SourceReference
 import io.holunda.polyflow.view.filter.Criterion
@@ -10,21 +11,14 @@ import io.holunda.polyflow.view.query.process.variable.ProcessVariableFilter
  * Configures object mapper.
  */
 fun ObjectMapper.configurePolyflowJacksonObjectMapper(): ObjectMapper = this
-  /*
-   * List all custom modules.
-   */
-  .registerModule(VariableMapTypeMappingModule())
-  .registerModule(DataEntryStateTypeMappingModule())
-  .apply {
-    /*
-     * List here all interfaces used in messages, which have multiple implementations and require additional
-     * type descriminator.
-     */
-    addMixIn(SourceReference::class.java, KotlinTypeInfo::class.java)
-    addMixIn(AuthorizationChange::class.java, KotlinTypeInfo::class.java)
-    addMixIn(Criterion::class.java, KotlinTypeInfo::class.java)
-    addMixIn(ProcessVariableFilter::class.java, KotlinTypeInfo::class.java)
-  }
+  .rebuild<JsonMapper, JsonMapper.Builder>()
+  .addModule(VariableMapTypeMappingModule())
+  .addModule(DataEntryStateTypeMappingModule())
+  .addMixIn(SourceReference::class.java, KotlinTypeInfo::class.java)
+  .addMixIn(AuthorizationChange::class.java, KotlinTypeInfo::class.java)
+  .addMixIn(Criterion::class.java, KotlinTypeInfo::class.java)
+  .addMixIn(ProcessVariableFilter::class.java, KotlinTypeInfo::class.java)
+  .build()
 
 /**
  * Helper to configure an existing object mapper from Java.

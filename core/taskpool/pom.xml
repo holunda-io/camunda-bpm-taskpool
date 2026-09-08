@@ -19,35 +19,4 @@
     <module>taskpool-event</module>
     <module>taskpool-core</module>
   </modules>
-
-  <dependencyManagement>
-    <dependencies>
-      <dependency>
-        <groupId>io.holunda.polyflow</groupId>
-        <artifactId>polyflow-taskpool-api</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>io.holunda.polyflow</groupId>
-        <artifactId>polyflow-taskpool-event</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>io.holunda.polyflow</groupId>
-        <artifactId>polyflow-taskpool-core</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>io.holunda.polyflow</groupId>
-        <artifactId>polyflow-bus-jackson</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>io.holunda.polyflow</groupId>
-        <artifactId>polyflow-datapool-api</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-
-    </dependencies>
-  </dependencyManagement>
 </project>

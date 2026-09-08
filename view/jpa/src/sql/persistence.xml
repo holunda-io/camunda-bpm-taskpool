@@ -1,4 +1,4 @@
-<persistence xmlns="http://xmlns.jcp.org/xml/ns/persistence" version="2.1">
+<persistence xmlns="https://jakarta.ee/xml/ns/persistence" version="3.0">
   <persistence-unit name="default">
 
     <!-- Uncomment this to generate the SQL for Axon Framework entities -->
@@ -11,9 +11,12 @@
     <class>org.axonframework.eventhandling.deadletter.jpa.DeadLetterEntry</class>
     -->
     <class>io.holunda.polyflow.view.jpa.data.DataEntryEntity</class>
+    <class>io.holunda.polyflow.view.jpa.data.DataEntryPayloadAttributeEntity</class>
     <class>io.holunda.polyflow.view.jpa.data.ProtocolElement</class>
     <class>io.holunda.polyflow.view.jpa.process.ProcessDefinitionEntity</class>
     <class>io.holunda.polyflow.view.jpa.process.ProcessInstanceEntity</class>
     <class>io.holunda.polyflow.view.jpa.task.TaskEntity</class>
+    <class>io.holunda.polyflow.view.jpa.task.TaskAndDataEntryPayloadAttributeEntity</class>
+    <shared-cache-mode>NONE</shared-cache-mode>
   </persistence-unit>
 </persistence>

@@ -1,6 +1,6 @@
 package io.holunda.polyflow.taskpool.sender.process.variable
 
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import tools.jackson.module.kotlin.jacksonObjectMapper
 import io.holunda.camunda.taskpool.api.process.variable.*
 import io.holunda.camunda.taskpool.api.task.ProcessReference
 import io.holunda.polyflow.bus.jackson.configurePolyflowJacksonObjectMapper

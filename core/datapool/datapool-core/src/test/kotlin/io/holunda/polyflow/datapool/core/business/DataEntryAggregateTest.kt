@@ -1,6 +1,7 @@
 package io.holunda.polyflow.datapool.core.business
 
-import com.fasterxml.jackson.databind.ObjectMapper
+import tools.jackson.databind.ObjectMapper
+import tools.jackson.databind.json.JsonMapper
 import io.holunda.camunda.taskpool.api.business.*
 import io.holunda.polyflow.bus.jackson.configurePolyflowJacksonObjectMapper
 import io.holunda.polyflow.datapool.core.DeletionStrategy
@@ -467,7 +468,7 @@ class DataEntryAggregateTest {
   @Test
   fun `should serialize and deserialize an empty aggregate`() {
     // GIVEN an object mapper and an empty aggregate
-    val objectMapper = ObjectMapper().configurePolyflowJacksonObjectMapper()
+    val objectMapper = JsonMapper().configurePolyflowJacksonObjectMapper()
     val dataEntryAggregate = DataEntryAggregate()
 
     // WHEN we serialize and deserialize it
@@ -480,7 +481,7 @@ class DataEntryAggregateTest {
   @Test
   fun `should serialize and deserialize an aggregate with data`() {
     // GIVEN an object mapper and a filled aggregate
-    val objectMapper = ObjectMapper()
+    val objectMapper = JsonMapper()
       .configurePolyflowJacksonObjectMapper()
       .configurePolyflowJacksonObjectMapperForDatapool()
 
