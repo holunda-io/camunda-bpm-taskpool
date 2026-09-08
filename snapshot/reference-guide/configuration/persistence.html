@@ -1644,6 +1644,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#central-master-changelog" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Central master changelog
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2405,18 +2416,54 @@
   <h1>Persistence Configuration</h1>
 
 <h2 id="persistence">Persistence<a class="headerlink" href="#persistence" title="Permanent link">#</a></h2>
-<p>If you use relational databases for your Event Store of the <a href="../components/core-datapool.html">DataPool</a> or <a href="../components/core-taskpool.html">TaskPool</a> or your view,
-using the <a href="../components/view-jpa.html">JPA View</a>, Axon Framework, used as a component of Polyflow will detect and autoconfigure itself. Especially, if you use
-Spring Data JPA or Spring JDBC, Axon auto-configuration will try to reuse it. </p>
-<p>If you are using <code>@EntityScan</code> annotation, you need to add Axon entities to the scan. To do so, please the following code on top of a class marked with <code>@Configuration</code>.</p>
-<div class="highlight"><pre><span></span><code><span class="nd">@Configuration</span>
-<span class="nd">@EntityScan</span><span class="p">(</span>
-<span class="w">  </span><span class="n">basePackageClasses</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[</span>
-<span class="w">    </span><span class="n">TokenEntry</span><span class="o">::</span><span class="n">class</span><span class="p">,</span><span class="w"> </span><span class="n">DomainEventEntry</span><span class="o">::</span><span class="n">class</span><span class="p">,</span><span class="w"> </span><span class="n">SagaEntry</span><span class="o">::</span><span class="kd">class</span>
-<span class="w">  </span><span class="err">]</span>
-<span class="p">)</span>
-<span class="kd">class</span><span class="w"> </span><span class="nc">MyConfiguration</span><span class="w"> </span>
+<p>Polyflow ships the PostgreSQL database objects required by the Axon Framework
+core and the relational views in the <code>polyflow-liquibase</code> artifact. Manage
+these objects through Liquibase; do not generate Polyflow DDL through
+Hibernate or Maven.</p>
+<p>Add the Liquibase artifact alongside the Polyflow modules used by your
+application:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">&lt;dependency&gt;</span>
+<span class="w">  </span><span class="nt">&lt;groupId&gt;</span>io.holunda.polyflow<span class="nt">&lt;/groupId&gt;</span>
+<span class="w">  </span><span class="nt">&lt;artifactId&gt;</span>polyflow-liquibase<span class="nt">&lt;/artifactId&gt;</span>
+<span class="w">  </span><span class="nt">&lt;version&gt;</span>${polyflow.version}<span class="nt">&lt;/version&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
 </code></pre></div>
+<h2 id="central-master-changelog">Central master changelog<a class="headerlink" href="#central-master-changelog" title="Permanent link">#</a></h2>
+<p>Keep a master changelog in the application that owns the database, for
+example <code>src/main/resources/db/changelog/db.changelog-master.xml</code>. Include
+the Polyflow masters from that file, together with the application's own
+changesets. This makes the application master the single Liquibase entry
+point.</p>
+<div class="highlight"><pre><span></span><code><span class="cp">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="nt">&lt;databaseChangeLog</span><span class="w"> </span><span class="na">xmlns=</span><span class="s">"http://www.liquibase.org/xml/ns/dbchangelog"</span>
+<span class="w">                   </span><span class="na">xmlns:xsi=</span><span class="s">"http://www.w3.org/2001/XMLSchema-instance"</span>
+<span class="w">                   </span><span class="na">xsi:schemaLocation=</span><span class="s">"http://www.liquibase.org/xml/ns/dbchangelog</span>
+<span class="s">                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd"</span><span class="nt">&gt;</span>
+
+<span class="w">  </span><span class="cm">&lt;!-- Include when the application uses Polyflow core with a JPA/JDBC event store. --&gt;</span>
+<span class="w">  </span><span class="nt">&lt;include</span><span class="w"> </span><span class="na">file=</span><span class="s">"classpath:db/changelog/polyflow/polyflow-core-changelog.xml"</span><span class="nt">/&gt;</span>
+
+<span class="w">  </span><span class="cm">&lt;!-- Include when the application uses the Polyflow JPA View. --&gt;</span>
+<span class="w">  </span><span class="nt">&lt;include</span><span class="w"> </span><span class="na">file=</span><span class="s">"classpath:db/changelog/polyflow/polyflow-view-changelog.xml"</span><span class="nt">/&gt;</span>
+
+<span class="w">  </span><span class="cm">&lt;!-- Include the application's own changelogs here. --&gt;</span>
+<span class="nt">&lt;/databaseChangeLog&gt;</span>
+</code></pre></div>
+<p>Include only the Polyflow masters required by the modules in use. The masters
+can safely be included together for an application that uses both the core and
+the JPA View.</p>
+<p>Configure the application to run this central master changelog. For Spring
+Boot, use the following configuration and leave schema creation to Liquibase:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">spring</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">liquibase</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">change-log</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">classpath:db/changelog/db.changelog-master.xml</span>
+<span class="w">  </span><span class="nt">jpa</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">hibernate</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">ddl-auto</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">validate</span>
+</code></pre></div>
+<p>Polyflow currently supplies PostgreSQL changelogs. Schema changes shipped by a
+future Polyflow version are applied by upgrading the <code>polyflow-liquibase</code>
+dependency and running the same central master changelog.</p>
 
 
 
@@ -2437,7 +2484,7 @@ Spring Data JPA or Spring JDBC, Axon auto-configuration will try to reuse it. </
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 31, 2021 16:23:25 UTC">August 31, 2021</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="September 8, 2026 19:11:04 UTC">September 8, 2026</span>
   </span>
 
     
