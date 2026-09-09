@@ -20,6 +20,7 @@
     <dependency>
       <groupId>io.holunda.polyflow</groupId>
       <artifactId>polyflow-camunda-bpm-springboot-autoconfigure</artifactId>
+      <version>${project.version}</version>
     </dependency>
 
     <dependency>

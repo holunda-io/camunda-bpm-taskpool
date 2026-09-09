@@ -16,10 +16,12 @@
     <dependency>
       <groupId>io.holunda.polyflow</groupId>
       <artifactId>polyflow-taskpool-event</artifactId>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>io.holunda.polyflow</groupId>
       <artifactId>polyflow-datapool-event</artifactId>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>io.holixon.axon.gateway</groupId>

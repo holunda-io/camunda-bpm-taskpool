@@ -16,7 +16,7 @@
 
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <java.version>17</java.version>
+    <java.version>21</java.version>
     <version.java>${java.version}</version.java>
 
     <kotlin.version>2.4.10</kotlin.version>
@@ -28,7 +28,15 @@
 
   <modules>
     <module>bom/parent</module>
-    <!-- see profiles below for more modules -->
+    <module>core/datapool</module>
+    <module>core/taskpool</module>
+    <module>core/bus-jackson</module>
+    <module>core/spring-utils</module>
+    <module>integration/common</module>
+    <module>integration/camunda-bpm</module>
+    <module>view</module>
+    <module>bom/datapool-dependencies</module>
+    <module>bom/taskpool-dependencies</module>
   </modules>
 
 
@@ -91,8 +99,14 @@
                   <version>3.9.0</version>
                 </requireMavenVersion>
                 <requireJavaVersion>
-                  <version>17</version>
+                  <version>21</version>
                 </requireJavaVersion>
+                <bannedDependencies>
+                  <excludes>
+                    <exclude>org.springframework.boot:*:*:*:compile</exclude>
+                    <exclude>org.springframework:*:*:*:compile</exclude>
+                  </excludes>
+                </bannedDependencies>
               </rules>
             </configuration>
           </execution>
@@ -102,8 +116,9 @@
   </build>
 
   <profiles>
-
-    <!-- Define I-Test profile -->
+    <!--
+    Define I-Test profile for setting default goal.
+    -->
     <profile>
       <id>itest</id>
       <activation>
@@ -113,7 +128,6 @@
         <defaultGoal>integration-test failsafe:verify</defaultGoal>
       </build>
     </profile>
-
     <!--
       Profile creating all artifacts: JARs, POMs, Sources, JavaDoc and all signatures.
     -->
@@ -203,6 +217,20 @@
       <id>jangalinski</id>
       <name>Jan Galinski</name>
       <email>jan.galinski@holisticon.de</email>
+      <organization>Holisticon AG</organization>
+      <organizationUrl>https://www.holisticon.de</organizationUrl>
+    </developer>
+    <developer>
+      <id>S-Tim</id>
+      <name>Tim Holzke</name>
+      <email>tim.holzke@holisticon.de</email>
+      <organization>Holisticon AG</organization>
+      <organizationUrl>https://www.holisticon.de</organizationUrl>
+    </developer>
+    <developer>
+      <id>MichaelVonB</id>
+      <name>Michael von Bargen</name>
+      <email>michael.vonbargen@holisticon.de</email>
       <organization>Holisticon AG</organization>
       <organizationUrl>https://www.holisticon.de</organizationUrl>
     </developer>

@@ -16,10 +16,12 @@
     <dependency>
       <groupId>io.holunda.polyflow</groupId>
       <artifactId>polyflow-view-api</artifactId>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-data-mongodb-reactive</artifactId>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.axonframework.extensions.mongo</groupId>
