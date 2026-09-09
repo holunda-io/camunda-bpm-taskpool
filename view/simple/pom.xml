@@ -16,6 +16,7 @@
     <dependency>
       <groupId>io.holunda.polyflow</groupId>
       <artifactId>polyflow-view-api</artifactId>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>org.axonframework</groupId>
@@ -28,6 +29,7 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter</artifactId>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>io.projectreactor</groupId>
@@ -43,6 +45,7 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>
+      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>com.tngtech.jgiven</groupId>
@@ -86,4 +89,3 @@
   </build>
 
 </project>
-
