@@ -12,6 +12,9 @@ import org.springframework.core.env.MapPropertySource
  */
 class PolyflowLiquibaseAdoptionEnvironmentPostProcessor : EnvironmentPostProcessor, Ordered {
 
+  /**
+   * Constants used to activate and configure the one-shot adoption mode.
+   */
   companion object {
     const val ADOPTION_ENABLED = "polyflow.liquibase.adoption.enabled"
     const val PROPERTY_SOURCE = "polyflowLiquibaseAdoption"

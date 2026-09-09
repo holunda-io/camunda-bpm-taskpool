@@ -32,13 +32,13 @@ jobs:
         run: chmod +x ./mvnw
 
       - name: Build with Maven
-        run: ./mvnw clean verify -U -B -T4 -ntp
+        run: ./mvnw clean verify -U -T4 -ntp
 
       - name: Prepare I-Tests
         run: mkdir -p target/jgiven-reports/json
 
       - name: Run I-Tests with Maven
-        run: ./mvnw integration-test failsafe:verify -Pitest -B -T4 -ntp
+        run: ./mvnw integration-test failsafe:verify -Pitest -T4 -ntp
 
       # Get GPG private key into GPG
       - name: Import GPG Owner Trust

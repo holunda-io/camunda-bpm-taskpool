@@ -29,6 +29,7 @@
     <mockito-kotlin.version>6.3.0</mockito-kotlin.version>
     <jgiven.version>2.0.3</jgiven.version>
     <jgiven-kotlin.version>2.0.2.1</jgiven-kotlin.version>
+    <detekt.version>1.23.8</detekt.version>
 
     <pattern.class.itest>**/*ITest</pattern.class.itest>
     <pattern.package.itest>**/itest/**/*</pattern.package.itest>
@@ -648,6 +649,51 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-source-plugin</artifactId>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <profile>
+      <id>detekt</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>maven-antrun-plugin</artifactId>
+            <version>3.1.0</version>
+            <executions>
+              <execution>
+                <id>detekt</id>
+                <configuration>
+                  <target name="detekt">
+                    <java taskname="detekt"
+                          dir="${project.basedir}"
+                          fork="true"
+                          failonerror="true"
+                          classname="io.gitlab.arturbosch.detekt.cli.Main"
+                          classpathref="maven.plugin.classpath">
+                      <arg value="--input"/>
+                      <arg value="${project.basedir}/src/main/kotlin"/>
+                      <arg value="--config"/>
+                      <arg value="${maven.multiModuleProjectDirectory}/detekt.yml"/>
+                    </java>
+                  </target>
+                </configuration>
+                <goals>
+                  <goal>run</goal>
+                </goals>
+              </execution>
+            </executions>
+            <dependencies>
+              <dependency>
+                <groupId>io.gitlab.arturbosch.detekt</groupId>
+                <artifactId>detekt-cli</artifactId>
+                <version>${detekt.version}</version>
+              </dependency>
+            </dependencies>
           </plugin>
         </plugins>
       </build>

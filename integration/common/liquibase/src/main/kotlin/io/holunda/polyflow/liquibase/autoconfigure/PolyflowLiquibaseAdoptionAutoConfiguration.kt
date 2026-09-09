@@ -41,6 +41,10 @@ import javax.sql.DataSource
 @EnableConfigurationProperties(LiquibaseProperties::class)
 class PolyflowLiquibaseAdoptionAutoConfiguration {
 
+  /**
+   * Creates the one-shot runner that synchronizes and tags a verified schema
+   * before closing the application context.
+   */
   @Bean
   fun polyflowLiquibaseAdoptionRunner(
     dataSource: DataSource,

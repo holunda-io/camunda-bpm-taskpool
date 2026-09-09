@@ -48,3 +48,4 @@ read-model views.
 - For a request introduced as `New feature`, clarify the scope until it is understood, create the ADR and user-facing documentation, then wait for an explicit
   implementation request. Do not implement during the planning phase.
 - Create tests or run lint/format tasks only when explicitly requested. Do not add tests for guarantees already provided by the type system.
+- Public Kotlin classes, objects, companion objects, and functions require KDoc. Before committing Kotlin changes, run Detekt for the changed module: `./mvnw -P detekt -pl <module-path> antrun:run@detekt`. The command applies the repository's `detekt.yml` and fails on documentation-rule violations.
