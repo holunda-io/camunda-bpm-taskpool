@@ -49,7 +49,7 @@ jobs:
 
       - name: Deploy a new version to central
         if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/snapshot-producer'
-        run: ./mvnw deploy -B -ntp -Prelease -Dgpg.keyname="${{secrets.GPG_KEYNAME}}"
+        run: ./mvnw deploy -B -ntp -DskipTests -Prelease -Dgpg.keyname="${{secrets.GPG_KEYNAME}}"
         env:
           OSS_CENTRAL_USERNAME: "${{ secrets.SONATYPE_USERNAME }}"
           OSS_CENTRAL_PASSWORD: "${{ secrets.SONATYPE_PASSWORD }}"

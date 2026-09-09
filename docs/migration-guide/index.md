@@ -3,65 +3,61 @@ This guide contains hints for upgrading to newer versions whenever there are bre
 ## Adopting an existing Polyflow schema
 
 An installation that created Polyflow tables before adopting the
-`polyflow-liquibase` artifact does not have a Liquibase history. Do not run the
-baseline changelog as an update against that database: it would attempt to
-create objects that already exist. Instead, establish the current schema as the
-Liquibase baseline once, then let Liquibase apply all future changes.
+`polyflow-liquibase` artifact does not yet have Polyflow Liquibase history. It
+may already have a `DATABASECHANGELOG` containing application-specific
+changesets. Do not run the baseline changelog as an update against that
+database: it would attempt to create objects that already exist. Instead,
+establish the current schema as the Liquibase baseline once, then let Liquibase
+apply all future changes.
 
 Before adoption, take a database backup and verify that the existing schema
 matches the Polyflow release currently used by the application. Table existence
 alone is insufficient: columns, constraints, indexes, sequences, and views
 must also match. Reconcile any differences before recording the baseline.
 
-Use the same master changelog that the application will use afterwards:
+Use the same service-owned master changelog that the application will use
+afterwards. Its includes depend on the service topology:
 
 - the central master for a monolith;
 - `polyflow-core-changelog.xml` for the producer-side database; or
 - `polyflow-view-changelog.xml` for the consumer-side database.
 
-Run Liquibase's `changelog-sync` command with that master. It writes the
-current changelog's changesets to `DATABASECHANGELOG` without executing their
-DDL:
+### Spring Boot adoption mode
 
-```bash
-liquibase --changelog-file=db/changelog/db.changelog-master.xml changelog-sync
-```
-
-Then apply the release tag that corresponds to the adopted Polyflow schema.
-Tags use the major and minor version, so an application at `4.6.3` is tagged
-as `4.6`:
-
-```bash
-liquibase tag 4.6
-```
-
-Afterward, use the same master changelog for normal `update` executions.
-Liquibase will skip the synchronized baseline and apply changes introduced by
-later Polyflow releases. Do not use `changelog-sync` to bypass a pending
-release migration; it is only for the initial adoption of a verified existing
-schema.
-
-### Application adoption mode
-
-When a deployment cannot install the Liquibase CLI, the `polyflow-liquibase`
-module can perform the same one-time operation during Spring Boot startup. Add
-the following explicit setting to the deployment that uses the verified
-schema:
+The supported one-time adoption procedure is provided by the
+`polyflow-liquibase` Spring Boot auto-configuration. Configure the datasource
+and the service's normal master changelog as for a regular deployment, then
+enable adoption explicitly for a single startup:
 
 ```yaml
+spring:
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.xml
+  jpa:
+    hibernate:
+      ddl-auto: validate
+
 polyflow:
   liquibase:
     adoption:
       enabled: true
 ```
 
-The application uses its normal datasource and configured Liquibase root changelog, runs
-`changelog-sync`, tags the database with the module version's major and minor
-components, and exits. For example, module version `4.6.3` creates tag `4.6`.
-The mode permits existing application-specific changes in `DATABASECHANGELOG`;
-it does not attempt to decide whether the schema is safe to adopt. An engineer
-must verify it first. Remove the setting after the successful one-time run,
-then use normal application startup for future migrations.
+When the property is enabled, the auto-configuration disables Spring Boot's
+normal Liquibase update for that startup. It uses the configured datasource and
+root changelog to run `changelog-sync`, records the Polyflow module version's
+major and minor release tag, and closes the application context. For example,
+module version `4.6.3` records tag `4.6`.
+
+This operation preserves existing application-specific
+`DATABASECHANGELOG` entries. It does not compare the existing schema with the
+changelog: an engineer must verify the schema before enabling the property.
+Remove the property after the successful one-time startup. Future normal
+application starts use the same master changelog and apply only migrations
+introduced after the adopted baseline.
+
+Do not enable adoption to bypass a pending release migration; it is only for
+the initial adoption of a verified existing schema.
 
 ## Migrating to 4.x
 
