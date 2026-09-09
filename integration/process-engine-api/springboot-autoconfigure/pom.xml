@@ -6,7 +6,7 @@
   <parent>
     <groupId>io.holunda.polyflow</groupId>
     <artifactId>polyflow-integration-process-engine-api-parent</artifactId>
-    <version>4.6.2-SNAPSHOT</version>
+    <version>4.6.3-SNAPSHOT</version>
   </parent>
 
   <artifactId>polyflow-process-engine-api-springboot-autoconfigure</artifactId>
@@ -16,14 +16,17 @@
     <dependency>
       <groupId>io.holunda.polyflow</groupId>
       <artifactId>polyflow-process-engine-api-taskpool-collector</artifactId>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>io.holunda.polyflow</groupId>
       <artifactId>polyflow-datapool-sender</artifactId>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter</artifactId>
+      <scope>provided</scope>
     </dependency>
 
     <dependency>
