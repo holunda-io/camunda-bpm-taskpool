@@ -83,7 +83,6 @@
         <artifactId>polyflow-camunda-bpm-engine-client</artifactId>
         <version>${project.version}</version>
       </dependency>
-
       <dependency>
         <groupId>io.holunda.polyflow</groupId>
         <artifactId>polyflow-process-engine-api-engine-client</artifactId>
