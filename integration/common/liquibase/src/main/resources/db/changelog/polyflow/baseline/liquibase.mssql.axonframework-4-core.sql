@@ -1,106 +1,101 @@
-create sequence association_value_entry_seq start with 1 increment by 50;
-create sequence domain_event_entry_seq start with 1 increment by 50;
+create sequence ASSOCIATION_VALUE_ENTRY_SEQ start with 1 increment by 50;
+create sequence DOMAIN_EVENT_ENTRY_SEQ start with 1 increment by 50;
 
-create table association_value_entry
+create table ASSOCIATION_VALUE_ENTRY
 (
-  id                bigint         not null,
-  association_key   nvarchar(255) not null,
-  association_value nvarchar(255),
-  saga_id           nvarchar(255) not null,
-  saga_type         nvarchar(255),
-  primary key (id)
+  ID                bigint         not null,
+  ASSOCIATION_KEY   NVARCHAR(255) not null,
+  ASSOCIATION_VALUE NVARCHAR(255),
+  SAGA_ID           NVARCHAR(255) not null,
+  SAGA_TYPE         NVARCHAR(255),
+  constraint PK_ASSOCIATION_VALUE primary key (ID)
 );
 
-create table saga_entry
+create table SAGA_ENTRY
 (
-  saga_id         nvarchar(255) not null,
-  revision        nvarchar(255),
-  saga_type       nvarchar(255),
-  serialized_saga varbinary(max),
-  primary key (saga_id)
+  SAGA_ID         NVARCHAR(255) not null,
+  REVISION        NVARCHAR(255),
+  SAGA_TYPE       NVARCHAR(255),
+  SERIALIZED_SAGA varbinary(max),
+  constraint PK_SAGA primary key (SAGA_ID)
 );
 
-create table snapshot_event_entry
+create table SNAPSHOT_EVENT_ENTRY
 (
-  aggregate_identifier nvarchar(255) not null,
-  sequence_number      bigint       not null,
-  type                 nvarchar(255) not null,
-  event_identifier     nvarchar(255) not null,
-  meta_data            varbinary(max),
-  payload              varbinary(max)          not null,
-  payload_revision     nvarchar(255),
-  payload_type         nvarchar(255) not null,
-  time_stamp           nvarchar(255) not null,
-  primary key (aggregate_identifier, sequence_number, type)
+  AGGREGATE_IDENTIFIER NVARCHAR(255) not null,
+  SEQUENCE_NUMBER      bigint       not null,
+  TYPE                 NVARCHAR(255) not null,
+  EVENT_IDENTIFIER     NVARCHAR(255) not null,
+  META_DATA            varbinary(max),
+  PAYLOAD              varbinary(max)          not null,
+  PAYLOAD_REVISION     NVARCHAR(255),
+  PAYLOAD_TYPE         NVARCHAR(255) not null,
+  TIME_STAMP           NVARCHAR(255) not null,
+  constraint PK_SNAPSHOT_EVENT primary key (AGGREGATE_IDENTIFIER, SEQUENCE_NUMBER, TYPE),
+
+  constraint UK_SNAPSHOT_EVENT_EVENT_ID unique (EVENT_IDENTIFIER)
 );
 
-create table token_entry
+create table TOKEN_ENTRY
 (
-  processor_name nvarchar(255) not null,
-  segment        int         not null,
-  owner          nvarchar(255),
-  timestamp      nvarchar(255) not null,
-  token          varbinary(max),
-  token_type     nvarchar(255),
-  primary key (processor_name, segment)
+  PROCESSOR_NAME NVARCHAR(255) not null,
+  SEGMENT        int         not null,
+  OWNER          NVARCHAR(255),
+  timestamp      NVARCHAR(255) not null,
+  TOKEN          varbinary(max),
+  TOKEN_TYPE     NVARCHAR(255),
+  constraint PK_TOKEN primary key (PROCESSOR_NAME, SEGMENT)
 );
 
-create table domain_event_entry
+create table DOMAIN_EVENT_ENTRY
 (
-  global_index         bigint         not null,
-  event_identifier     nvarchar(255) not null,
-  meta_data            varbinary(max),
-  payload              varbinary(max)          not null,
-  payload_revision     nvarchar(255),
-  payload_type         nvarchar(255) not null,
-  time_stamp           nvarchar(255) not null,
-  aggregate_identifier nvarchar(255) not null,
-  sequence_number      bigint         not null,
-  type                 nvarchar(255),
-  primary key (global_index)
+  GLOBAL_INDEX         bigint         not null,
+  EVENT_IDENTIFIER     NVARCHAR(255) not null,
+  META_DATA            varbinary(max),
+  PAYLOAD              varbinary(max)          not null,
+  PAYLOAD_REVISION     NVARCHAR(255),
+  PAYLOAD_TYPE         NVARCHAR(255) not null,
+  TIME_STAMP           NVARCHAR(255) not null,
+  AGGREGATE_IDENTIFIER NVARCHAR(255) not null,
+  SEQUENCE_NUMBER      bigint         not null,
+  TYPE                 NVARCHAR(255),
+  constraint PK_DOMAIN_EVENT primary key (GLOBAL_INDEX),
+
+  constraint UK_DOMAIN_EVENT_AGG_SEQ unique (AGGREGATE_IDENTIFIER, SEQUENCE_NUMBER),
+  constraint UK_DOMAIN_EVENT_EVENT_ID unique (EVENT_IDENTIFIER)
 );
 
-CREATE TABLE dead_letter_entry
+create table DEAD_LETTER_ENTRY
 (
-  dead_letter_id       nvarchar(255) NOT NULL,
-  cause_message        nvarchar(255),
-  cause_type           nvarchar(255),
-  diagnostics          varbinary(max),
-  enqueued_at          datetime2    NOT NULL,
-  last_touched         datetime2,
-  aggregate_identifier nvarchar(255),
-  event_identifier     nvarchar(255) NOT NULL,
-  message_type         nvarchar(255) NOT NULL,
-  meta_data            varbinary(max),
-  payload              varbinary(max)          NOT NULL,
-  payload_revision     nvarchar(255),
-  payload_type         nvarchar(255) NOT NULL,
-  sequence_number      bigint,
-  time_stamp           nvarchar(255) NOT NULL,
-  token                varbinary(max),
-  token_type           nvarchar(255),
-  type                 nvarchar(255),
-  processing_group     nvarchar(255) NOT NULL,
-  processing_started   datetime2,
-  sequence_identifier  nvarchar(255) NOT NULL,
-  sequence_index       bigint         NOT NULL,
-  PRIMARY KEY (dead_letter_id)
+  DEAD_LETTER_ID       NVARCHAR(255) not null,
+  CAUSE_MESSAGE        NVARCHAR(255),
+  CAUSE_TYPE           NVARCHAR(255),
+  DIAGNOSTICS          varbinary(max),
+  ENQUEUED_AT          DATETIME2    not null,
+  LAST_TOUCHED         DATETIME2,
+  AGGREGATE_IDENTIFIER NVARCHAR(255),
+  EVENT_IDENTIFIER     NVARCHAR(255) not null,
+  MESSAGE_TYPE         NVARCHAR(255) not null,
+  META_DATA            varbinary(max),
+  PAYLOAD              varbinary(max)          not null,
+  PAYLOAD_REVISION     NVARCHAR(255),
+  PAYLOAD_TYPE         NVARCHAR(255) not null,
+  SEQUENCE_NUMBER      bigint,
+  TIME_STAMP           NVARCHAR(255) not null,
+  TOKEN                varbinary(max),
+  TOKEN_TYPE           NVARCHAR(255),
+  TYPE                 NVARCHAR(255),
+  PROCESSING_GROUP     NVARCHAR(255) not null,
+  PROCESSING_STARTED   DATETIME2,
+  SEQUENCE_IDENTIFIER  NVARCHAR(255) not null,
+  SEQUENCE_INDEX       bigint         not null,
+  constraint PK_DEAD_LETTER primary key (DEAD_LETTER_ID),
+
+  constraint UK_DEAD_LETTER_PROC_SEQ unique (PROCESSING_GROUP, SEQUENCE_IDENTIFIER, SEQUENCE_INDEX)
 );
 
-create index IDX_association_value_entry_stakav on association_value_entry (saga_type, association_key, association_value);
-create index IDX_association_value_entry_sist on association_value_entry (saga_id, saga_type);
+create index IDX_ASSOC_VALUE_SAGA_KEY_VAL on ASSOCIATION_VALUE_ENTRY (SAGA_TYPE, ASSOCIATION_KEY, ASSOCIATION_VALUE);
+create index IDX_ASSOC_VALUE_SAGA on ASSOCIATION_VALUE_ENTRY (SAGA_ID, SAGA_TYPE);
 
-create index IDX_dead_letter_entry_pg on dead_letter_entry (processing_group);
-create index IDX_dead_letter_entry_pgsi on dead_letter_entry (processing_group, sequence_identifier);
-
-alter table domain_event_entry
-  add constraint UC_domain_event_entry_aisn unique (aggregate_identifier, sequence_number);
-
-alter table domain_event_entry
-  add constraint UC_domain_event_entry_ei unique (event_identifier);
-
-alter table snapshot_event_entry
-  add constraint UC_snapshot_event_entry_ei unique (event_identifier);
-
-alter table dead_letter_entry
-  add constraint UC_dead_letter_entry_pgsisi unique (processing_group, sequence_identifier, sequence_index);
+create index IDX_DLQ_PROCESSING_GROUP on DEAD_LETTER_ENTRY (PROCESSING_GROUP);
+create index IDX_DLQ_PROCESSING_SEQUENCE on DEAD_LETTER_ENTRY (PROCESSING_GROUP, SEQUENCE_IDENTIFIER);

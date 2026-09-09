@@ -9,12 +9,11 @@
   <property name="db.name" value="oracle" dbms="oracle"/>
   <property name="db.name" value="postgres" dbms="postgresql"/>
 
+  <!-- A JPA View needs the Axon persistence objects as well. Reuse the
+       canonical core baseline so the two masters never provision it twice. -->
+  <include file="polyflow-core-changelog.xml" relativeToChangelogFile="true"/>
+
   <changeSet author="Holunda" id="view-baseline-4.6.2">
-    <sqlFile path="baseline/liquibase.${db.name}.axonframework-4-view.sql"
-             encoding="UTF-8"
-             relativeToChangelogFile="true"
-             splitStatements="true"
-             stripComments="true"/>
     <sqlFile path="baseline/liquibase.${db.name}.jpa-view.sql"
              encoding="UTF-8"
              relativeToChangelogFile="true"

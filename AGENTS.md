@@ -33,6 +33,10 @@ read-model views.
 - Keep public API modules independent of concrete view and integration implementations.
 - Keep documentation in Markdown and add published pages to `mkdocs.yml` navigation when they should be reachable in the site.
 - Follow [ADR-000](specs/adr/000-adr-conventions.md) for ADR format and numbering.
+- In Liquibase SQL, explicitly name primary keys, foreign keys, unique constraints, and indexes with `PK_`, `FK_`, `UK_`, and `IDX_` prefixes. Derive the remaining name from the owning table and referenced object or constrained/indexed columns; use concise names that fit Oracle's 30-character identifier limit.
+- In a Liquibase baseline, define columns and constraints in `CREATE TABLE` whenever the referenced table has already been created. Reserve `ALTER TABLE` for schema evolution that cannot be expressed during initial object creation.
+- In Liquibase SQL, write schema-object and column names in `CAPITAL_CASE`; write SQL keywords and data types in lowercase.
+- In Liquibase view definitions, enumerate every selected column; do not use `SELECT *`, including within `UNION` branches.
 
 ## 5. Working Agreements
 

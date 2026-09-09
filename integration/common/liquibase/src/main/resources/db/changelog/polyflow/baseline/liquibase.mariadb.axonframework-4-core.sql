@@ -1,104 +1,99 @@
-create table if not exists association_value_entry
+create table if not exists ASSOCIATION_VALUE_ENTRY
 (
-  id                bigint auto_increment not null,
-  association_key   varchar(255) not null,
-  association_value varchar(255),
-  saga_id           varchar(255) not null,
-  saga_type         varchar(255),
-  primary key (id)
+  ID                bigint auto_increment not null,
+  ASSOCIATION_KEY   varchar(255) not null,
+  ASSOCIATION_VALUE varchar(255),
+  SAGA_ID           varchar(255) not null,
+  SAGA_TYPE         varchar(255),
+  constraint PK_ASSOCIATION_VALUE primary key (ID)
 );
 
-create table if not exists dead_letter_entry
+create table if not exists DEAD_LETTER_ENTRY
 (
-  dead_letter_id       varchar(255) not null,
-  cause_message        varchar(255),
-  cause_type           varchar(255),
-  diagnostics          longblob,
-  enqueued_at          datetime(6) not null,
-  last_touched         datetime(6),
-  aggregate_identifier varchar(255),
-  event_identifier     varchar(255) not null,
-  message_type         varchar(255) not null,
-  meta_data            longblob,
-  payload              longblob     not null,
-  payload_revision     varchar(255),
-  payload_type         varchar(255) not null,
-  sequence_number      bigint,
-  time_stamp           varchar(255) not null,
-  token                longblob,
-  token_type           varchar(255),
-  type                 varchar(255),
-  processing_group     varchar(255) not null,
-  processing_started   datetime(6),
-  sequence_identifier  varchar(255) not null,
-  sequence_index       bigint       not null,
-  primary key (dead_letter_id)
+  DEAD_LETTER_ID       varchar(255) not null,
+  CAUSE_MESSAGE        varchar(255),
+  CAUSE_TYPE           varchar(255),
+  DIAGNOSTICS          longblob,
+  ENQUEUED_AT          datetime(6) not null,
+  LAST_TOUCHED         datetime(6),
+  AGGREGATE_IDENTIFIER varchar(255),
+  EVENT_IDENTIFIER     varchar(255) not null,
+  MESSAGE_TYPE         varchar(255) not null,
+  META_DATA            longblob,
+  PAYLOAD              longblob     not null,
+  PAYLOAD_REVISION     varchar(255),
+  PAYLOAD_TYPE         varchar(255) not null,
+  SEQUENCE_NUMBER      bigint,
+  TIME_STAMP           varchar(255) not null,
+  TOKEN                longblob,
+  TOKEN_TYPE           varchar(255),
+  TYPE                 varchar(255),
+  PROCESSING_GROUP     varchar(255) not null,
+  PROCESSING_STARTED   datetime(6),
+  SEQUENCE_IDENTIFIER  varchar(255) not null,
+  SEQUENCE_INDEX       bigint       not null,
+  constraint PK_DEAD_LETTER primary key (DEAD_LETTER_ID),
+
+  constraint UK_DEAD_LETTER_PROC_SEQ unique (PROCESSING_GROUP, SEQUENCE_IDENTIFIER, SEQUENCE_INDEX)
 );
 
-create table if not exists domain_event_entry
+create table if not exists DOMAIN_EVENT_ENTRY
 (
-  global_index         bigint auto_increment not null,
-  event_identifier     varchar(255) not null,
-  meta_data            longblob,
-  payload              longblob     not null,
-  payload_revision     varchar(255),
-  payload_type         varchar(255) not null,
-  time_stamp           varchar(255) not null,
-  aggregate_identifier varchar(255) not null,
-  sequence_number      bigint       not null,
-  type                 varchar(255),
-  primary key (global_index)
+  GLOBAL_INDEX         bigint auto_increment not null,
+  EVENT_IDENTIFIER     varchar(255) not null,
+  META_DATA            longblob,
+  PAYLOAD              longblob     not null,
+  PAYLOAD_REVISION     varchar(255),
+  PAYLOAD_TYPE         varchar(255) not null,
+  TIME_STAMP           varchar(255) not null,
+  AGGREGATE_IDENTIFIER varchar(255) not null,
+  SEQUENCE_NUMBER      bigint       not null,
+  TYPE                 varchar(255),
+  constraint PK_DOMAIN_EVENT primary key (GLOBAL_INDEX),
+
+  constraint UK_DOMAIN_EVENT_AGG_SEQ unique (AGGREGATE_IDENTIFIER, SEQUENCE_NUMBER),
+  constraint UK_DOMAIN_EVENT_EVENT_ID unique (EVENT_IDENTIFIER)
 );
 
-create table if not exists saga_entry
+create table if not exists SAGA_ENTRY
 (
-  saga_id         varchar(255) not null,
-  revision        varchar(255),
-  saga_type       varchar(255),
-  serialized_saga longblob,
-  primary key (saga_id)
+  SAGA_ID         varchar(255) not null,
+  REVISION        varchar(255),
+  SAGA_TYPE       varchar(255),
+  SERIALIZED_SAGA longblob,
+  constraint PK_SAGA primary key (SAGA_ID)
 );
 
-create table if not exists snapshot_event_entry
+create table if not exists SNAPSHOT_EVENT_ENTRY
 (
-  aggregate_identifier varchar(255) not null,
-  sequence_number      bigint       not null,
-  type                 varchar(255) not null,
-  event_identifier     varchar(255) not null,
-  meta_data            longblob,
-  payload              longblob     not null,
-  payload_revision     varchar(255),
-  payload_type         varchar(255) not null,
-  time_stamp           varchar(255) not null,
-  primary key (aggregate_identifier, sequence_number, type)
+  AGGREGATE_IDENTIFIER varchar(255) not null,
+  SEQUENCE_NUMBER      bigint       not null,
+  TYPE                 varchar(255) not null,
+  EVENT_IDENTIFIER     varchar(255) not null,
+  META_DATA            longblob,
+  PAYLOAD              longblob     not null,
+  PAYLOAD_REVISION     varchar(255),
+  PAYLOAD_TYPE         varchar(255) not null,
+  TIME_STAMP           varchar(255) not null,
+  constraint PK_SNAPSHOT_EVENT primary key (AGGREGATE_IDENTIFIER, SEQUENCE_NUMBER, TYPE),
+
+  constraint UK_SNAPSHOT_EVENT_EVENT_ID unique (EVENT_IDENTIFIER)
 );
 
-create table if not exists token_entry
+create table if not exists TOKEN_ENTRY
 (
-  processor_name varchar(255) not null,
-  segment        integer      not null,
-  owner          varchar(255),
+  PROCESSOR_NAME varchar(255) not null,
+  SEGMENT        integer      not null,
+  OWNER          varchar(255),
   timestamp      varchar(255) not null,
-  token          longblob,
-  token_type     varchar(255),
-  primary key (processor_name, segment)
+  TOKEN          longblob,
+  TOKEN_TYPE     varchar(255),
+  constraint PK_TOKEN primary key (PROCESSOR_NAME, SEGMENT)
 );
-create index if not exists IDXk45eqnxkgd8hpdn6xixn8sgft on association_value_entry (saga_type, association_key, association_value);
-create index if not exists IDXgv5k1v2mh6frxuy5c0hgbau94 on association_value_entry (saga_id, saga_type);
-create index if not exists IDXe67wcx5fiq9hl4y4qkhlcj9cg on dead_letter_entry (processing_group);
-create index if not exists IDXrwucpgs6sn93ldgoeh2q9k6bn on dead_letter_entry (processing_group, sequence_identifier);
-
-alter table dead_letter_entry
-  add constraint UKhlr8io86j74qy298xf720n16v unique (processing_group, sequence_identifier, sequence_index);
-
-alter table domain_event_entry
-  add constraint UK8s1f994p4la2ipb13me2xqm1w unique (aggregate_identifier, sequence_number);
-
-alter table domain_event_entry
-  add constraint UK_fwe6lsa8bfo6hyas6ud3m8c7x unique (event_identifier);
-
-alter table snapshot_event_entry
-  add constraint UK_e1uucjseo68gopmnd0vgdl44h unique (event_identifier);
+create index if not exists IDX_ASSOC_VALUE_SAGA_KEY_VAL on ASSOCIATION_VALUE_ENTRY (SAGA_TYPE, ASSOCIATION_KEY, ASSOCIATION_VALUE);
+create index if not exists IDX_ASSOC_VALUE_SAGA on ASSOCIATION_VALUE_ENTRY (SAGA_ID, SAGA_TYPE);
+create index if not exists IDX_DLQ_PROCESSING_GROUP on DEAD_LETTER_ENTRY (PROCESSING_GROUP);
+create index if not exists IDX_DLQ_PROCESSING_SEQUENCE on DEAD_LETTER_ENTRY (PROCESSING_GROUP, SEQUENCE_IDENTIFIER);
 
 
 
@@ -106,5 +101,9 @@ alter table snapshot_event_entry
 
 
 
-create sequence if not exists association_value_entry_seq start with 1 increment by 50;
-create sequence if not exists domain_event_entry_seq start with 1 increment by 50;
+
+
+
+
+create sequence if not exists ASSOCIATION_VALUE_ENTRY_SEQ start with 1 increment by 50;
+create sequence if not exists DOMAIN_EVENT_ENTRY_SEQ start with 1 increment by 50;
