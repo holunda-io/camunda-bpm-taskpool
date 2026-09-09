@@ -19,12 +19,27 @@
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-autoconfigure</artifactId>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-data-jpa</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.axonframework</groupId>
+      <artifactId>axon-eventsourcing</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.axonframework</groupId>
+      <artifactId>axon-modelling</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -80,6 +95,16 @@
   </dependencies>
 
   <build>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>false</filtering>
+      </resource>
+      <resource>
+        <directory>src/main/build-info</directory>
+        <filtering>true</filtering>
+      </resource>
+    </resources>
     <plugins>
       <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
@@ -90,18 +115,17 @@
       <plugin>
         <artifactId>maven-failsafe-plugin</artifactId>
         <configuration>
-          <includes>
-            <include>**/*Liquibase*ITest</include>
-          </includes>
+          <failIfNoTests>true</failIfNoTests>
+          <systemPropertyVariables>
+            <!--
+              Liquibase baseline IDs and database tags identify the schema by the Maven release's major.minor version.
+              Every major or minor release must therefore add matching tagDatabase entries to the core and view changelogs.
+              Patch releases do not change the database tag. The integration tests receive the resolved module version through
+              this property and fail when the tag recorded in DATABASECHANGELOG does not match it.
+            -->
+            <polyflow.liquibase.release-version>${project.version}</polyflow.liquibase.release-version>
+          </systemPropertyVariables>
         </configuration>
-        <executions>
-          <execution>
-            <id>verify-integration-tests</id>
-            <goals>
-              <goal>verify</goal>
-            </goals>
-          </execution>
-        </executions>
       </plugin>
     </plugins>
   </build>

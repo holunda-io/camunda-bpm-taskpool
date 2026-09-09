@@ -5,6 +5,9 @@ Several deployment scenarios of the components are possible depending on your re
 
 The simplest setup is to run all components on a single node. A more advanced scenario is to distribute components over the network and connect them.
 
+For the corresponding Axon service responsibilities and runtime configuration,
+see [Service Configuration](../reference-guide/configuration/service-configuration.md).
+
 In doing so, one of the challenging issues for distribution and connecting microservices is a setup of messaging technology supporting required message exchange
 patterns (MEPs) for a CQRS system. Because of different semantics of commands, events and queries and additional requirements of event-sourced persistence a
 special implementation of command bus, event bus and event store is required. In particular, two scenarios can be distinguished: using Axon Server or using a

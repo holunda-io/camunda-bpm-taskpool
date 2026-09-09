@@ -9,16 +9,28 @@
   <property name="db.name" value="oracle" dbms="oracle"/>
   <property name="db.name" value="postgres" dbms="postgresql"/>
 
-  <!-- A JPA View needs the Axon persistence objects as well. Reuse the
-       canonical core baseline so the two masters never provision it twice. -->
-  <include file="polyflow-core-changelog.xml" relativeToChangelogFile="true"/>
+  <!-- Event processors require token and dead-letter storage. Its logical path
+       is shared with the core master so a monolith applies it only once. -->
+  <changeSet author="Holunda"
+             id="event-baseline-4.6"
+             logicalFilePath="db/changelog/polyflow/event-processing-baseline.xml">
+    <sqlFile path="baseline/liquibase.${db.name}.axonframework-4-event.sql"
+             encoding="UTF-8"
+             relativeToChangelogFile="true"
+             splitStatements="true"
+             stripComments="true"/>
+  </changeSet>
 
-  <changeSet author="Holunda" id="view-baseline-4.6.2">
+  <changeSet author="Holunda" id="view-baseline-4.6">
     <sqlFile path="baseline/liquibase.${db.name}.jpa-view.sql"
              encoding="UTF-8"
              relativeToChangelogFile="true"
              splitStatements="true"
              stripComments="true"/>
+  </changeSet>
+
+  <changeSet author="Holunda" id="view-release-4.6">
+    <tagDatabase tag="4.6"/>
   </changeSet>
 
 </databaseChangeLog>

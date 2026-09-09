@@ -109,9 +109,6 @@
       <activation>
         <activeByDefault>false</activeByDefault>
       </activation>
-      <build>
-        <defaultGoal>integration-test failsafe:verify</defaultGoal>
-      </build>
     </profile>
 
     <!--

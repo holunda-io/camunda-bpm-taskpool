@@ -37,6 +37,7 @@ read-model views.
 - In a Liquibase baseline, define columns and constraints in `CREATE TABLE` whenever the referenced table has already been created. Reserve `ALTER TABLE` for schema evolution that cannot be expressed during initial object creation.
 - In Liquibase SQL, write schema-object and column names in `CAPITAL_CASE`; write SQL keywords and data types in lowercase.
 - In Liquibase view definitions, enumerate every selected column; do not use `SELECT *`, including within `UNION` branches.
+- Keep the two Liquibase deployment masters aligned with the runtime sides: `core` is the producer side (aggregate plus event processing) and `view` is the consumer side (projections plus event processing). Saga baseline SQL remains optional and is not included by either master. Shared event-processing changesets must use one logical Liquibase path so a monolith applies them once.
 
 ## 5. Working Agreements
 

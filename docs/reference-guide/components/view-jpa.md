@@ -134,9 +134,11 @@ The JPA View uses several tables to store the results. These are:
 * `PLF_TASK_PAYLOAD_ATTRIBUTES`: table for user task attribute search index
 * `PLF_VIEW_TASK_AND_DATA_ENTRY_PAYLOAD`: view for convenient taskWithDataEntry queries execution
 * `PLF_DATA_ENTRY_PAYLOAD_ATTRIBUTES`: view for convenient data entry queries with correlations
-* `TRACKING_TOKEN`: table for Axon Tracking Tokens
+* `TOKEN_ENTRY`: table for Axon processor tokens
+* `DEAD_LETTER_ENTRY`: table for Axon event-processor dead letters
 
 Create these tables and views through the Polyflow Liquibase changelog. Add
 `polyflow-liquibase` to the application and include
 `polyflow-view-changelog.xml` from the application's central master
-changelog, as described in [Persistence configuration](../configuration/persistence.md).
+changelog. It includes the required event-processing tables but not optional
+aggregate or saga persistence; see [Persistence configuration](../configuration/persistence.md).
