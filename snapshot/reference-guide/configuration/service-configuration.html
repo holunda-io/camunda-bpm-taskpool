@@ -12,13 +12,13 @@
         <meta name="author" content="Holisticon BPM Craftsman">
       
       
-        <link rel="canonical" href="https://www.holunda.io/camunda-bpm-taskpool/snapshot/reference-guide/configuration/persistence.html">
+        <link rel="canonical" href="https://www.holunda.io/camunda-bpm-taskpool/snapshot/reference-guide/configuration/service-configuration.html">
       
       
-        <link rel="prev" href="view-mongo.html">
+        <link rel="prev" href="persistence.html">
       
       
-        <link rel="next" href="service-configuration.html">
+        <link rel="next" href="core-datapool-aggregate-tuning.html">
       
       
         
@@ -29,7 +29,7 @@
     
     
       
-        <title>Persistence Configuration - Polyflow</title>
+        <title>Service Configuration - Polyflow</title>
       
     
     
@@ -82,7 +82,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#persistence" class="md-skip">
+        <a href="#service-configuration" class="md-skip">
           Skip to content
         </a>
       
@@ -121,7 +121,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Persistence Configuration
+              Service Configuration
             
           </span>
         </div>
@@ -1575,35 +1575,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Persistence Configuration
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="persistence.html" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="persistence.html" class="md-nav__link">
         
   
   
@@ -1619,96 +1594,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#persistence" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Persistence
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#service-owned-master-changelog" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Service-owned master changelog
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Service-owned master changelog">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#service-topology-configuration" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Service topology configuration
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#application-adoption-mode" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Application adoption mode
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#release-tags" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Release tags
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#schema-object-naming" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Schema object naming
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1718,10 +1603,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="service-configuration.html" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Service Configuration
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="service-configuration.html" class="md-nav__link md-nav__link--active">
         
   
   
@@ -1737,6 +1649,70 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#axon-service-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Axon service flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#core-service" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core service
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#view-service" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        View service
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#event-processing-and-sagas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Event processing and sagas
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -2519,165 +2495,75 @@
   
 
 
-  <h1>Persistence Configuration</h1>
-
-<h2 id="persistence">Persistence<a class="headerlink" href="#persistence" title="Permanent link">#</a></h2>
-<p>Polyflow ships the database objects required by the Axon Framework core and
-the relational views in the <code>polyflow-liquibase</code> artifact. The artifact
-supports H2, MariaDB, PostgreSQL, Oracle, Microsoft SQL Server, and Azure SQL.
-Manage these objects through Liquibase; do not generate Polyflow DDL through
-Hibernate or Maven.</p>
-<p>Add the Liquibase artifact alongside the Polyflow modules used by your
-application:</p>
-<div class="highlight"><pre><span></span><code><span class="nt">&lt;dependency&gt;</span>
-<span class="w">  </span><span class="nt">&lt;groupId&gt;</span>io.holunda.polyflow<span class="nt">&lt;/groupId&gt;</span>
-<span class="w">  </span><span class="nt">&lt;artifactId&gt;</span>polyflow-liquibase<span class="nt">&lt;/artifactId&gt;</span>
-<span class="w">  </span><span class="nt">&lt;version&gt;</span>${polyflow.version}<span class="nt">&lt;/version&gt;</span>
-<span class="nt">&lt;/dependency&gt;</span>
-</code></pre></div>
-<h2 id="service-owned-master-changelog">Service-owned master changelog<a class="headerlink" href="#service-owned-master-changelog" title="Permanent link">#</a></h2>
-<p>Each service that owns a database keeps a master changelog, for example
-<code>src/main/resources/db/changelog/db.changelog-master.xml</code>. The service includes
-the required Polyflow changelogs from that master alongside its own changesets.
-This makes the service master the single Liquibase entry point. It also means
-that the service configuration stays the same across topologies: only the
-contents of its master changelog change.</p>
-<div class="highlight"><pre><span></span><code><span class="cp">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
-<span class="nt">&lt;databaseChangeLog</span><span class="w"> </span><span class="na">xmlns=</span><span class="s">"http://www.liquibase.org/xml/ns/dbchangelog"</span>
-<span class="w">                   </span><span class="na">xmlns:xsi=</span><span class="s">"http://www.w3.org/2001/XMLSchema-instance"</span>
-<span class="w">                   </span><span class="na">xsi:schemaLocation=</span><span class="s">"http://www.liquibase.org/xml/ns/dbchangelog</span>
-<span class="s">                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd"</span><span class="nt">&gt;</span>
-
-<span class="w">  </span><span class="cm">&lt;!-- Producer: engine, aggregate persistence, and event processing. --&gt;</span>
-<span class="w">  </span><span class="nt">&lt;include</span><span class="w"> </span><span class="na">file=</span><span class="s">"classpath:db/changelog/polyflow/polyflow-core-changelog.xml"</span><span class="nt">/&gt;</span>
-
-<span class="w">  </span><span class="cm">&lt;!-- Consumer: JPA projections and event processing. --&gt;</span>
-<span class="w">  </span><span class="cm">&lt;!-- &lt;include file="classpath:db/changelog/polyflow/polyflow-view-changelog.xml"/&gt; --&gt;</span>
-
-<span class="w">  </span><span class="cm">&lt;!-- Include the application's own changelogs here. --&gt;</span>
-<span class="nt">&lt;/databaseChangeLog&gt;</span>
-</code></pre></div>
-<p>There are two deployment changelogs:</p>
+<h1 id="service-configuration">Service Configuration<a class="headerlink" href="#service-configuration" title="Permanent link">#</a></h1>
+<h2 id="axon-service-flow">Axon service flow<a class="headerlink" href="#axon-service-flow" title="Permanent link">#</a></h2>
+<p>Polyflow services communicate through Axon Framework. A collector converts an
+incoming process-engine trigger into an Axon command and sends it through the
+command bus to the core service. The core service loads its event-sourced
+aggregates, applies events, and publishes them through the event bus. A view
+service consumes that stream with tracking event processors and updates its
+projections.</p>
+<p>This flow determines each service's runtime configuration. It is separate from
+the Liquibase configuration, which only provisions the database objects needed
+by the selected service. See <a href="persistence.html">Persistence configuration</a> for
+the master changelog selected by each deployment topology.</p>
+<h2 id="core-service">Core service<a class="headerlink" href="#core-service" title="Permanent link">#</a></h2>
+<p>The core service owns Polyflow aggregates and command handling. It needs an
+Axon event store so aggregates can be loaded from their event history:</p>
 <ul>
-<li><code>polyflow-core-changelog.xml</code> is for the producer side: the engine,
-  aggregate event and snapshot storage (<code>DOMAIN_EVENT_ENTRY</code> and
-  <code>SNAPSHOT_EVENT_ENTRY</code>), and event-processing storage (<code>TOKEN_ENTRY</code> and
-  <code>DEAD_LETTER_ENTRY</code>).</li>
-<li><code>polyflow-view-changelog.xml</code> is for the consumer side: JPA view objects and
-  the same event-processing storage. It does not provision aggregate or saga
-  storage.</li>
+<li>With Axon Server, configure the Axon Server connection and use its event
+  store.</li>
+<li>Without Axon Server, configure a durable relational Axon event store. The
+  core Liquibase master provisions <code>DOMAIN_EVENT_ENTRY</code> and
+  <code>SNAPSHOT_EVENT_ENTRY</code> for this purpose.</li>
 </ul>
-<h3 id="service-topology-configuration">Service topology configuration<a class="headerlink" href="#service-topology-configuration" title="Permanent link">#</a></h3>
-<p>Choose the includes according to the service's responsibility, not according
-to the database product:</p>
-<table>
-<thead>
-<tr>
-<th>Service deployment</th>
-<th>Include in the service master changelog</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Monolith: engine, core, event processing, and JPA views in one service</td>
-<td>Core and view masters</td>
-</tr>
-<tr>
-<td>Producer: engine, core aggregate model, and event processing</td>
-<td>Core master</td>
-</tr>
-<tr>
-<td>Consumer: JPA views and event processing</td>
-<td>View master</td>
-</tr>
-<tr>
-<td>Central platform service that hosts both core and views</td>
-<td>Core and view masters</td>
-</tr>
-</tbody>
-</table>
-<p>For a monolith or central platform service, include both:</p>
-<div class="highlight"><pre><span></span><code><span class="nt">&lt;include</span><span class="w"> </span><span class="na">file=</span><span class="s">"classpath:db/changelog/polyflow/polyflow-core-changelog.xml"</span><span class="nt">/&gt;</span>
-<span class="nt">&lt;include</span><span class="w"> </span><span class="na">file=</span><span class="s">"classpath:db/changelog/polyflow/polyflow-view-changelog.xml"</span><span class="nt">/&gt;</span>
+<p>The core service also handles events and therefore needs token and dead-letter
+storage. The core master includes <code>TOKEN_ENTRY</code> and <code>DEAD_LETTER_ENTRY</code>.</p>
+<h2 id="view-service">View service<a class="headerlink" href="#view-service" title="Permanent link">#</a></h2>
+<p>An independently deployed view service is an event-tracking consumer. It does
+not load event-sourced aggregates and does not own the event store. Its durable
+state is its projections, the tracking token that identifies its event-stream
+position, and dead letters.</p>
+<p>Configure the independent view application with an in-memory Axon event store
+and saga store. Expose both as Spring beans so Axon uses them instead of JPA
+event-sourcing or saga persistence. The view Liquibase master still provides
+the projection, token, and dead-letter objects.</p>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="nn">io.holunda.polyflow.view.jpa.EnablePolyflowJpaView</span>
+<span class="k">import</span><span class="w"> </span><span class="nn">org.axonframework.eventsourcing.eventstore.inmemory.InMemoryEventStorageEngine</span>
+<span class="k">import</span><span class="w"> </span><span class="nn">org.axonframework.modelling.saga.repository.inmemory.InMemorySagaStore</span>
+<span class="k">import</span><span class="w"> </span><span class="nn">org.springframework.boot.autoconfigure.SpringBootApplication</span>
+<span class="k">import</span><span class="w"> </span><span class="nn">org.springframework.context.annotation.Bean</span>
+<span class="k">import</span><span class="w"> </span><span class="nn">org.springframework.context.annotation.Configuration</span>
+
+<span class="nd">@Configuration</span>
+<span class="kd">class</span><span class="w"> </span><span class="nc">ViewAxonConfiguration</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">  </span><span class="nd">@Bean</span>
+<span class="w">  </span><span class="kd">fun</span><span class="w"> </span><span class="nf">eventStorageEngine</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">InMemoryEventStorageEngine</span><span class="p">()</span>
+
+<span class="w">  </span><span class="nd">@Bean</span>
+<span class="w">  </span><span class="kd">fun</span><span class="w"> </span><span class="nf">sagaStore</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">InMemorySagaStore</span><span class="p">()</span>
+<span class="p">}</span>
+
+<span class="nd">@SpringBootApplication</span>
+<span class="nd">@EnablePolyflowJpaView</span>
+<span class="kd">class</span><span class="w"> </span><span class="nc">ViewApplication</span>
 </code></pre></div>
-<p>For separated services, the producer includes only the core master:</p>
-<div class="highlight"><pre><span></span><code><span class="nt">&lt;include</span><span class="w"> </span><span class="na">file=</span><span class="s">"classpath:db/changelog/polyflow/polyflow-core-changelog.xml"</span><span class="nt">/&gt;</span>
-</code></pre></div>
-<p>The consumer includes only the view master:</p>
-<div class="highlight"><pre><span></span><code><span class="nt">&lt;include</span><span class="w"> </span><span class="na">file=</span><span class="s">"classpath:db/changelog/polyflow/polyflow-view-changelog.xml"</span><span class="nt">/&gt;</span>
-</code></pre></div>
-<p>The common event-processing changeset has one logical Liquibase path, so
-including both masters in one service applies it once. In a separated
-deployment, each service applies event-processing storage to its own database.
-Saga storage is intentionally not part of either deployment master; the
-vendor-specific <code>axonframework-4-saga.sql</code> baseline remains available for
-services that explicitly need it.</p>
-<p>Configure the application to run this central master changelog. For Spring
-Boot, each service uses the same configuration and leaves schema creation to
-Liquibase:</p>
-<div class="highlight"><pre><span></span><code><span class="nt">spring</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">liquibase</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">change-log</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">classpath:db/changelog/db.changelog-master.xml</span>
-<span class="w">  </span><span class="nt">jpa</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">hibernate</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">ddl-auto</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">validate</span>
-</code></pre></div>
-<p>Schema changes shipped by a future Polyflow version are applied by upgrading
-the <code>polyflow-liquibase</code> dependency and running the same central master
-changelog.</p>
-<p>If the database already contains Polyflow tables but has no Liquibase history,
-adopt the verified existing schema before running updates. Follow
-<a href="../../migration-guide/index.html#adopting-an-existing-polyflow-schema">Adopting an existing Polyflow schema</a>
-for the one-time <code>changelog-sync</code> and release-tag procedure.</p>
-<h3 id="application-adoption-mode">Application adoption mode<a class="headerlink" href="#application-adoption-mode" title="Permanent link">#</a></h3>
-<p>The Liquibase module provides a one-shot Spring Boot adoption mode for
-deployments that cannot use the Liquibase CLI (see official docs of Liquibse).
-It is explicitly enabled and uses the application's normal datasource and root changelog:</p>
-<div class="highlight"><pre><span></span><code><span class="nt">polyflow</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">liquibase</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">adoption</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-</code></pre></div>
-<p>The mode synchronizes the verified existing schema, applies the release tag,
-and exits without starting the application. The tag is derived from the
-packaged <code>polyflow-liquibase</code> build version: <code>4.7.1-SNAPSHOT</code> produces tag
-<code>4.7</code>. It preserves unrelated application Liquibase history and does not try to
-infer whether arbitrary existing tables are equivalent to the Polyflow schema.
-Enable it only for the one-time adoption of a schema that an engineer has
-already verified.</p>
-<h2 id="release-tags">Release tags<a class="headerlink" href="#release-tags" title="Permanent link">#</a></h2>
-<p>Each deployment master records its completed Polyflow release with Liquibase's
-<code>tagDatabase</code> change. Baseline changeset IDs and tags use the major and minor
-version only: <code>4.6</code>, not <code>4.6.2</code>. Polyflow follows semantic versioning, so a
-persistence-structure change is released in a new minor version; patch
-versions do not introduce a new schema version or release tag.</p>
-<p>In a monolith, both masters record the same <code>4.6</code> tag. In separated
-deployments, the producer and consumer databases each record that tag after
-their respective baseline has completed.</p>
-<p>The Liquibase integration build verifies that this tag matches the major and
-minor components of the Maven release version. For example,
-<code>4.7.1-SNAPSHOT</code> requires tag <code>4.7</code>; a mismatch fails the build. Major-version
-tag changes are made deliberately as part of the release work.</p>
-<h2 id="schema-object-naming">Schema object naming<a class="headerlink" href="#schema-object-naming" title="Permanent link">#</a></h2>
-<p>Polyflow assigns explicit names to database objects so that database
-diagnostics and administration output remain readable across supported
-database products:</p>
-<ul>
-<li>Primary keys: <code>PK_&lt;OWNING_TABLE&gt;</code></li>
-<li>Foreign keys: <code>FK_&lt;OWNING_TABLE&gt;_&lt;REFERENCED_TABLE&gt;</code></li>
-<li>Unique constraints: <code>UK_&lt;OWNING_TABLE&gt;_&lt;CONSTRAINED_COLUMNS&gt;</code></li>
-<li>Indexes: <code>IDX_&lt;OWNING_TABLE&gt;_&lt;INDEXED_COLUMNS&gt;</code></li>
-</ul>
-<p>Use concise, unambiguous abbreviations where needed to keep names within
-Oracle's 30-character identifier limit.</p>
-<p>Write schema-object and column names in <code>CAPITAL_CASE</code>. Write SQL keywords and
-data types in lowercase, for example <code>create table PLF_TASK (...)</code>.</p>
-<p>Baseline SQL declares columns and constraints in each <code>create table</code> statement
-whenever the referenced object is already available. <code>alter table</code> is reserved
-for later schema evolution that cannot be represented during initial object
-creation.</p>
-<p>View definitions enumerate their selected columns explicitly, including every
-branch of a <code>union</code>; they do not use <code>select *</code>.</p>
+<p><code>@EnablePolyflowJpaView</code> is required for a JPA view service. It imports the
+Polyflow view configuration, including the JPA entity scan for projection
+entities and Axon's <code>TokenEntry</code> and <code>DeadLetterEntry</code> entities. Do not rely on
+the application's <code>@SpringBootApplication</code> package scan to discover them: the
+application package commonly does not contain the Polyflow entity packages.</p>
+<p>Do not use this configuration in a monolith where the core and view share the
+same Axon configuration: that service needs the core's durable or Axon Server
+event store.</p>
+<h2 id="event-processing-and-sagas">Event processing and sagas<a class="headerlink" href="#event-processing-and-sagas" title="Permanent link">#</a></h2>
+<p>Both core and view services process events. Both therefore require
+<code>TOKEN_ENTRY</code> and <code>DEAD_LETTER_ENTRY</code>; a dead-letter queue is event-processing
+infrastructure, not event-sourcing or saga infrastructure.</p>
+<p>Persistent sagas are optional in both services. Use Axon's in-memory saga store
+unless a service intentionally declares persistent sagas. The Polyflow core and
+view masters do not provision saga tables.</p>
 
 
 

@@ -1582,6 +1582,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../reference-guide/configuration/service-configuration.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Service Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../reference-guide/configuration/core-datapool-aggregate-tuning.html" class="md-nav__link">
         
   
@@ -2633,7 +2661,14 @@ is used to build the releases.</p>
 <div class="highlight"><pre><span></span><code>./mvnw<span class="w"> </span>gitflow:release-start
 ./mvnw<span class="w"> </span>gitflow:release-finish
 </code></pre></div>
-<p>This will update the versions in the <code>pom.xml</code> s accordingly and push the release tag to the <code>master</code> branch
+<p>This will update the versions in the <code>pom.xml</code> s accordingly and push the release tag to the <code>master</code> branch</p>
+<p>When changing the major or minor version, also update the Liquibase baseline
+and <code>tagDatabase</code> tags in <code>polyflow-liquibase</code> to the same <code>major.minor</code>
+value. The Liquibase integration tests derive this value from the module POM
+version and fail the build when the database tag differs. Patch releases do not
+change the Liquibase tag. For example, <code>4.7.1-SNAPSHOT</code> requires database tag
+<code>4.7</code>. Run <code>./mvnw verify</code> before releasing; the release workflow runs these
+tests and cannot publish a mismatched Liquibase tag.
 and update the <code>develop</code> branch for the new development version.</p>
 <h3 id="trigger-a-deploy">Trigger a deploy<a class="headerlink" href="#trigger-a-deploy" title="Permanent link">#</a></h3>
 <div class="admonition warning">
@@ -2681,7 +2716,7 @@ repository and all releases to Maven Central automatically.</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="September 8, 2026 19:11:04 UTC">September 8, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="September 10, 2026 09:46:15 UTC">September 10, 2026</span>
   </span>
 
     
