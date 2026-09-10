@@ -127,6 +127,7 @@ nav:
     - Configuration:
       - Mongo DB View Configuration: reference-guide/configuration/view-mongo.md
       - Persistence Configuration: reference-guide/configuration/persistence.md
+      - Service Configuration: reference-guide/configuration/service-configuration.md
       - Datapool Aggregate Tuning: reference-guide/configuration/core-datapool-aggregate-tuning.md
       - Deployment of Core inside Process applications: reference-guide/configuration/local-core-deployment.md
       - Remote Engine Process-Variable Configuration: reference-guide/configuration/remote-engine-process-variable-configuration.md
