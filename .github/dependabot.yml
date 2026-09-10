@@ -7,6 +7,13 @@ updates:
     open-pull-requests-limit: 19
     labels:
       - "Type: dependencies"
+    groups:
+      maven-patch-dependencies:
+        update-types:
+          - "patch"
+      maven-minor-dependencies:
+        update-types:
+          - "minor"
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
