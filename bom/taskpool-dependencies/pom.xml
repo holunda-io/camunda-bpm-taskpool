@@ -6,7 +6,7 @@
   <parent>
     <groupId>io.holunda.polyflow</groupId>
     <artifactId>polyflow-parent</artifactId>
-    <version>4.6.2</version>
+    <version>4.6.3</version>
     <relativePath>../parent/pom.xml</relativePath>
   </parent>
 
@@ -25,11 +25,6 @@
       </dependency>
       <dependency>
         <groupId>io.holunda.polyflow</groupId>
-        <artifactId>polyflow-bus-jackson</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>io.holunda.polyflow</groupId>
         <artifactId>polyflow-taskpool-api</artifactId>
         <version>${project.version}</version>
       </dependency>
@@ -41,6 +36,11 @@
       <dependency>
         <groupId>io.holunda.polyflow</groupId>
         <artifactId>polyflow-taskpool-core</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.holunda.polyflow</groupId>
+        <artifactId>polyflow-taskpool-sender</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
@@ -60,9 +60,15 @@
       </dependency>
       <dependency>
         <groupId>io.holunda.polyflow</groupId>
+        <artifactId>polyflow-camunda-bpm-springboot-autoconfigure</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.holunda.polyflow</groupId>
         <artifactId>polyflow-camunda-bpm-engine-client</artifactId>
         <version>${project.version}</version>
       </dependency>
+
       <dependency>
         <groupId>io.holunda.polyflow</groupId>
         <artifactId>polyflow-view-api-client</artifactId>
@@ -88,6 +94,7 @@
         <artifactId>polyflow-view-mongo</artifactId>
         <version>${project.version}</version>
       </dependency>
+
       <dependency>
         <groupId>io.holunda.polyflow</groupId>
         <artifactId>polyflow-variable-serializer</artifactId>
@@ -96,6 +103,11 @@
       <dependency>
         <groupId>io.holunda.polyflow</groupId>
         <artifactId>polyflow-form-url-resolver</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.holunda.polyflow</groupId>
+        <artifactId>polyflow-tasklist-url-resolver</artifactId>
         <version>${project.version}</version>
       </dependency>
     </dependencies>

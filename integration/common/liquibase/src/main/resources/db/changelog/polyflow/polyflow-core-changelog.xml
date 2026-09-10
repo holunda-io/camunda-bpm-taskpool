@@ -9,12 +9,26 @@
   <property name="db.name" value="oracle" dbms="oracle"/>
   <property name="db.name" value="postgres" dbms="postgresql"/>
 
-  <changeSet author="Holunda" id="core-baseline-4.6.2">
+  <changeSet author="Holunda" id="core-baseline-4.6">
     <sqlFile path="baseline/liquibase.${db.name}.axonframework-4-core.sql"
              encoding="UTF-8"
              relativeToChangelogFile="true"
              splitStatements="true"
              stripComments="true"/>
+  </changeSet>
+
+  <changeSet author="Holunda"
+             id="event-baseline-4.6"
+             logicalFilePath="db/changelog/polyflow/event-processing-baseline.xml">
+    <sqlFile path="baseline/liquibase.${db.name}.axonframework-4-event.sql"
+             encoding="UTF-8"
+             relativeToChangelogFile="true"
+             splitStatements="true"
+             stripComments="true"/>
+  </changeSet>
+
+  <changeSet author="Holunda" id="core-release-4.6">
+    <tagDatabase tag="4.6"/>
   </changeSet>
 
 </databaseChangeLog>

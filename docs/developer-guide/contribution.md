@@ -23,3 +23,9 @@ please create a pull request. Prior to that, please make sure you:
 - added test cases for the problem you are solving
 - added docs, describing the change
 - generally comply with codacy report
+
+## Dependency Scopes
+
+Published Polyflow libraries must not re-export Spring Framework or Spring Boot dependencies. Maven Enforcer rejects `org.springframework` and `org.springframework.boot` dependencies with `compile` scope.
+
+Use `provided` scope when production code requires Spring APIs. Test dependencies may use `test` scope. The rule is intentionally limited to Spring dependencies until further consumer-provided library groups are agreed.

@@ -5,7 +5,7 @@
 
   <groupId>io.holunda.polyflow</groupId>
   <artifactId>polyflow-root</artifactId>
-  <version>4.6.2</version>
+  <version>4.6.3</version>
   <packaging>pom</packaging>
 
   <name>POM: ${project.artifactId}</name>
@@ -28,7 +28,15 @@
 
   <modules>
     <module>bom/parent</module>
-    <!-- see profiles below for more modules -->
+    <module>core/datapool</module>
+    <module>core/taskpool</module>
+    <module>core/bus-jackson</module>
+    <module>core/spring-utils</module>
+    <module>integration/common</module>
+    <module>integration/camunda-bpm</module>
+    <module>view</module>
+    <module>bom/datapool-dependencies</module>
+    <module>bom/taskpool-dependencies</module>
   </modules>
 
 
@@ -93,6 +101,12 @@
                 <requireJavaVersion>
                   <version>17</version>
                 </requireJavaVersion>
+                <bannedDependencies>
+                  <excludes>
+                    <exclude>org.springframework.boot:*:*:*:compile</exclude>
+                    <exclude>org.springframework:*:*:*:compile</exclude>
+                  </excludes>
+                </bannedDependencies>
               </rules>
             </configuration>
           </execution>
@@ -102,18 +116,15 @@
   </build>
 
   <profiles>
-
-    <!-- Define I-Test profile -->
+    <!--
+    Define I-Test profile for setting default goal.
+    -->
     <profile>
       <id>itest</id>
       <activation>
         <activeByDefault>false</activeByDefault>
       </activation>
-      <build>
-        <defaultGoal>integration-test failsafe:verify</defaultGoal>
-      </build>
     </profile>
-
     <!--
       Profile creating all artifacts: JARs, POMs, Sources, JavaDoc and all signatures.
     -->
@@ -203,6 +214,20 @@
       <id>jangalinski</id>
       <name>Jan Galinski</name>
       <email>jan.galinski@holisticon.de</email>
+      <organization>Holisticon AG</organization>
+      <organizationUrl>https://www.holisticon.de</organizationUrl>
+    </developer>
+    <developer>
+      <id>S-Tim</id>
+      <name>Tim Holzke</name>
+      <email>tim.holzke@holisticon.de</email>
+      <organization>Holisticon AG</organization>
+      <organizationUrl>https://www.holisticon.de</organizationUrl>
+    </developer>
+    <developer>
+      <id>MichaelVonB</id>
+      <name>Michael von Bargen</name>
+      <email>michael.vonbargen@holisticon.de</email>
       <organization>Holisticon AG</organization>
       <organizationUrl>https://www.holisticon.de</organizationUrl>
     </developer>

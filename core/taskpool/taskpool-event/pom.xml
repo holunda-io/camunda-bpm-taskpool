@@ -6,7 +6,7 @@
   <parent>
     <groupId>io.holunda.polyflow</groupId>
     <artifactId>polyflow-taskpool-parent</artifactId>
-    <version>4.6.2</version>
+    <version>4.6.3</version>
   </parent>
 
   <artifactId>polyflow-taskpool-event</artifactId>
@@ -16,10 +16,12 @@
     <dependency>
       <groupId>io.holunda.polyflow</groupId>
       <artifactId>polyflow-taskpool-api</artifactId>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>io.holunda.polyflow</groupId>
       <artifactId>polyflow-datapool-api</artifactId>
+      <version>${project.version}</version>
     </dependency>
 
     <dependency>

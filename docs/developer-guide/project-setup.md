@@ -110,6 +110,14 @@ You can build a release with:
 ```
 
 This will update the versions in the `pom.xml` s accordingly and push the release tag to the `master` branch
+
+When changing the major or minor version, also update the Liquibase baseline
+and `tagDatabase` tags in `polyflow-liquibase` to the same `major.minor`
+value. The Liquibase integration tests derive this value from the module POM
+version and fail the build when the database tag differs. Patch releases do not
+change the Liquibase tag. For example, `4.7.1-SNAPSHOT` requires database tag
+`4.7`. Run `./mvnw verify` before releasing; the release workflow runs these
+tests and cannot publish a mismatched Liquibase tag.
 and update the `develop` branch for the new development version.
 
 ### Trigger a deploy

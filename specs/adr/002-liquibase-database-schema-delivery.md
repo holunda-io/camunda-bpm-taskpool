@@ -18,10 +18,10 @@ The `polyflow-liquibase` module is the distribution artifact for all
 Polyflow-managed database requirements. Consumers apply the schema by
 referencing the appropriate classpath master changelog:
 
-- `db/changelog/polyflow/polyflow-core-changelog.xml` for Axon Framework core
-  database objects;
-- `db/changelog/polyflow/polyflow-view-changelog.xml` for Polyflow view
-  database objects.
+- `db/changelog/polyflow/polyflow-core-changelog.xml` for producer-side
+  aggregate and event-processing objects;
+- `db/changelog/polyflow/polyflow-view-changelog.xml` for consumer-side
+  Polyflow view and event-processing objects.
 
 Every change to a Polyflow-managed database structure must be reflected in
 Liquibase changes in this module. Add an ordered, immutable changeset to the
@@ -41,5 +41,6 @@ database-agnostic Liquibase change types. DB2 and MySQL are out of scope.
 - Schema changes are versioned and can be applied through Liquibase.
 - Database-structure changes must not be completed without the matching
   Liquibase changes.
-- Each supported database has explicit SQL baselines for the core and view
+- Each supported database has explicit SQL baselines for the core, optional
+  saga, event-processing, and view objects. Only core and view are deployment
   master changelogs.

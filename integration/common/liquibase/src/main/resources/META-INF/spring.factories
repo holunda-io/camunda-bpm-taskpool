@@ -1,0 +1,2 @@
+org.springframework.boot.env.EnvironmentPostProcessor=\
+io.holunda.polyflow.liquibase.autoconfigure.PolyflowLiquibaseAdoptionEnvironmentPostProcessor
