@@ -1,209 +1,195 @@
-CREATE TABLE plf_data_entry
+create table PLF_DATA_ENTRY
 (
-  entry_id           VARCHAR(255) NOT NULL,
-  entry_type         VARCHAR(255) NOT NULL,
-  application_name   VARCHAR(255) NOT NULL,
-  date_created       TIMESTAMP    NOT NULL,
-  description        VARCHAR(2048),
-  form_key           VARCHAR(255),
-  date_last_modified TIMESTAMP    NOT NULL,
-  name               VARCHAR(255) NOT NULL,
-  payload            OID,
-  revision           INT8,
-  processing_type    VARCHAR(255) NOT NULL,
-  state              VARCHAR(255) NOT NULL,
-  type               VARCHAR(255) NOT NULL,
-  date_deleted       TIMESTAMP,
-  version_timestamp  INT8,
-  PRIMARY KEY (entry_id, entry_type)
+  ENTRY_ID           varchar(255) not null,
+  ENTRY_TYPE         varchar(255) not null,
+  APPLICATION_NAME   varchar(255) not null,
+  DATE_CREATED       timestamp    not null,
+  DESCRIPTION        varchar(2048),
+  FORM_KEY           varchar(255),
+  DATE_LAST_MODIFIED timestamp    not null,
+  NAME               varchar(255) not null,
+  PAYLOAD            oid,
+  REVISION           int8,
+  PROCESSING_TYPE    varchar(255) not null,
+  STATE              varchar(255) not null,
+  TYPE               varchar(255) not null,
+  DATE_DELETED       timestamp,
+  VERSION_TIMESTAMP  int8,
+  constraint PK_DATA_ENTRY primary key (ENTRY_ID, ENTRY_TYPE)
 );
 
-CREATE TABLE plf_data_entry_authorizations
+create table PLF_DATA_ENTRY_AUTHORIZATIONS
 (
-  entry_id             VARCHAR(255) NOT NULL,
-  entry_type           VARCHAR(255) NOT NULL,
-  authorized_principal VARCHAR(255) NOT NULL,
-  PRIMARY KEY (entry_id, entry_type, authorized_principal)
+  ENTRY_ID             varchar(255) not null,
+  ENTRY_TYPE           varchar(255) not null,
+  AUTHORIZED_PRINCIPAL varchar(255) not null,
+  constraint PK_DATA_ENTRY_AUTH primary key (ENTRY_ID, ENTRY_TYPE, AUTHORIZED_PRINCIPAL),
+  constraint FK_DATA_ENTRY_AUTH_ENTRY
+    foreign key (ENTRY_ID, ENTRY_TYPE)
+    references PLF_DATA_ENTRY
 );
 
-CREATE TABLE plf_data_entry_payload_attributes
+create table PLF_DATA_ENTRY_PAYLOAD_ATTRIBUTES
 (
-  entry_id   VARCHAR(255) NOT NULL,
-  entry_type VARCHAR(255) NOT NULL,
-  path       VARCHAR(255) NOT NULL,
-  value      VARCHAR(255) NOT NULL,
-  PRIMARY KEY (entry_id, entry_type, path, value)
+  ENTRY_ID   varchar(255) not null,
+  ENTRY_TYPE varchar(255) not null,
+  PATH       varchar(255) not null,
+  VALUE      varchar(255) not null,
+  constraint PK_DATA_ENTRY_ATTR primary key (ENTRY_ID, ENTRY_TYPE, PATH, VALUE),
+  constraint FK_DATA_ENTRY_ATTR_ENTRY
+    foreign key (ENTRY_ID, ENTRY_TYPE)
+    references PLF_DATA_ENTRY
 );
 
-CREATE TABLE plf_data_entry_protocol
+create table PLF_DATA_ENTRY_PROTOCOL
 (
-  id                VARCHAR(255) NOT NULL,
-  log_details       VARCHAR(2048),
-  log_message       VARCHAR(2048),
-  processing_type   VARCHAR(255) NOT NULL,
-  state             VARCHAR(255) NOT NULL,
-  time              TIMESTAMP    NOT NULL,
-  username          VARCHAR(255),
-  entry_id          VARCHAR(255) NOT NULL,
-  entry_type        VARCHAR(255) NOT NULL,
-  PRIMARY KEY (id)
+  ID                varchar(255) not null,
+  LOG_DETAILS       varchar(2048),
+  LOG_MESSAGE       varchar(2048),
+  PROCESSING_TYPE   varchar(255) not null,
+  STATE             varchar(255) not null,
+  TIME              timestamp    not null,
+  USERNAME          varchar(255),
+  ENTRY_ID          varchar(255) not null,
+  ENTRY_TYPE        varchar(255) not null,
+  constraint PK_DATA_ENTRY_PROTOCOL primary key (ID),
+  constraint FK_DATA_ENTRY_PROTOCOL_ENTRY
+    foreign key (ENTRY_ID, ENTRY_TYPE)
+    references PLF_DATA_ENTRY
 );
 
-CREATE TABLE plf_proc_def
+create table PLF_PROC_DEF
 (
-  proc_def_id             VARCHAR(255) NOT NULL,
-  application_name        VARCHAR(255) NOT NULL,
-  description             VARCHAR(2048),
-  name                    VARCHAR(255) NOT NULL,
-  proc_def_key            VARCHAR(255) NOT NULL,
-  proc_def_version        INT4         NOT NULL,
-  start_form_key          VARCHAR(255),
-  startable_from_tasklist BOOLEAN,
-  version_tag             VARCHAR(255),
-  PRIMARY KEY (proc_def_id)
+  PROC_DEF_ID             varchar(255) not null,
+  APPLICATION_NAME        varchar(255) not null,
+  DESCRIPTION             varchar(2048),
+  NAME                    varchar(255) not null,
+  PROC_DEF_KEY            varchar(255) not null,
+  PROC_DEF_VERSION        int4         not null,
+  START_FORM_KEY          varchar(255),
+  STARTABLE_FROM_TASKLIST boolean,
+  VERSION_TAG             varchar(255),
+  constraint PK_PROC_DEF primary key (PROC_DEF_ID)
 );
 
-CREATE TABLE plf_proc_def_authorizations
+create table PLF_PROC_DEF_AUTHORIZATIONS
 (
-  proc_def_id                  VARCHAR(255) NOT NULL,
-  authorized_starter_principal VARCHAR(255) NOT NULL,
-  PRIMARY KEY (proc_def_id, authorized_starter_principal)
+  PROC_DEF_ID                  varchar(255) not null,
+  AUTHORIZED_STARTER_PRINCIPAL varchar(255) not null,
+  constraint PK_PROC_DEF_AUTH primary key (PROC_DEF_ID, AUTHORIZED_STARTER_PRINCIPAL),
+  constraint FK_PROC_DEF_AUTH_PROC_DEF
+    foreign key (PROC_DEF_ID)
+    references PLF_PROC_DEF
 );
 
-CREATE TABLE plf_proc_instance
+create table PLF_PROC_INSTANCE
 (
-  instance_id         VARCHAR(255) NOT NULL,
-  business_key        VARCHAR(255),
-  delete_reason       VARCHAR(2048),
-  end_activity_id     VARCHAR(255),
-  application_name    VARCHAR(255) NOT NULL,
-  source_def_id       VARCHAR(255) NOT NULL,
-  source_def_key      VARCHAR(255) NOT NULL,
-  source_execution_id VARCHAR(255) NOT NULL,
-  source_instance_id  VARCHAR(255) NOT NULL,
-  source_name         VARCHAR(255) NOT NULL,
-  source_type         VARCHAR(255) NOT NULL,
-  source_tenant_id    VARCHAR(255),
-  start_activity_id   VARCHAR(255),
-  start_user_id       VARCHAR(255),
-  run_state           VARCHAR(255) NOT NULL,
-  super_instance_id   VARCHAR(255),
-  PRIMARY KEY (instance_id)
+  INSTANCE_ID         varchar(255) not null,
+  BUSINESS_KEY        varchar(255),
+  DELETE_REASON       varchar(2048),
+  END_ACTIVITY_ID     varchar(255),
+  APPLICATION_NAME    varchar(255) not null,
+  SOURCE_DEF_ID       varchar(255) not null,
+  SOURCE_DEF_KEY      varchar(255) not null,
+  SOURCE_EXECUTION_ID varchar(255) not null,
+  SOURCE_INSTANCE_ID  varchar(255) not null,
+  SOURCE_NAME         varchar(255) not null,
+  SOURCE_TYPE         varchar(255) not null,
+  SOURCE_TENANT_ID    varchar(255),
+  START_ACTIVITY_ID   varchar(255),
+  START_USER_ID       varchar(255),
+  RUN_STATE           varchar(255) not null,
+  SUPER_INSTANCE_ID   varchar(255),
+  constraint PK_PROC_INSTANCE primary key (INSTANCE_ID)
 );
 
-CREATE TABLE plf_task
+create table PLF_TASK
 (
-  task_id             VARCHAR(255) NOT NULL,
-  assignee_id         VARCHAR(255),
-  business_key        VARCHAR(255),
-  date_created        TIMESTAMP    NOT NULL,
-  description         VARCHAR(2048),
-  date_due            TIMESTAMP,
-  date_follow_up      TIMESTAMP,
-  form_key            VARCHAR(255),
-  name                VARCHAR(255) NOT NULL,
-  owner_id            VARCHAR(255),
-  payload             OID,
-  priority            INT4,
-  application_name    VARCHAR(255) NOT NULL,
-  source_def_id       VARCHAR(255) NOT NULL,
-  source_def_key      VARCHAR(255) NOT NULL,
-  source_execution_id VARCHAR(255) NOT NULL,
-  source_instance_id  VARCHAR(255) NOT NULL,
-  source_name         VARCHAR(255) NOT NULL,
-  source_type         VARCHAR(255) NOT NULL,
-  source_tenant_id    VARCHAR(255),
-  task_def_key        VARCHAR(255) NOT NULL,
-  PRIMARY KEY (task_id)
+  TASK_ID             varchar(255) not null,
+  ASSIGNEE_ID         varchar(255),
+  BUSINESS_KEY        varchar(255),
+  DATE_CREATED        timestamp    not null,
+  DESCRIPTION         varchar(2048),
+  DATE_DUE            timestamp,
+  DATE_FOLLOW_UP      timestamp,
+  FORM_KEY            varchar(255),
+  NAME                varchar(255) not null,
+  OWNER_ID            varchar(255),
+  PAYLOAD             oid,
+  PRIORITY            int4,
+  APPLICATION_NAME    varchar(255) not null,
+  SOURCE_DEF_ID       varchar(255) not null,
+  SOURCE_DEF_KEY      varchar(255) not null,
+  SOURCE_EXECUTION_ID varchar(255) not null,
+  SOURCE_INSTANCE_ID  varchar(255) not null,
+  SOURCE_NAME         varchar(255) not null,
+  SOURCE_TYPE         varchar(255) not null,
+  SOURCE_TENANT_ID    varchar(255),
+  TASK_DEF_KEY        varchar(255) not null,
+  constraint PK_TASK primary key (TASK_ID)
 );
 
-CREATE TABLE plf_task_authorizations
+create table PLF_TASK_AUTHORIZATIONS
 (
-  task_id              VARCHAR(255) NOT NULL,
-  authorized_principal VARCHAR(255) NOT NULL,
-  PRIMARY KEY (task_id, authorized_principal)
+  TASK_ID              varchar(255) not null,
+  AUTHORIZED_PRINCIPAL varchar(255) not null,
+  constraint PK_TASK_AUTH primary key (TASK_ID, AUTHORIZED_PRINCIPAL),
+  constraint FK_TASK_AUTH_TASK
+    foreign key (TASK_ID)
+    references PLF_TASK
 );
 
-CREATE TABLE plf_task_correlations
+create table PLF_TASK_CORRELATIONS
 (
-  task_id    VARCHAR(255) NOT NULL,
-  entry_id   VARCHAR(255) NOT NULL,
-  entry_type VARCHAR(255) NOT NULL,
-  PRIMARY KEY (task_id, entry_id, entry_type)
+  TASK_ID    varchar(255) not null,
+  ENTRY_ID   varchar(255) not null,
+  ENTRY_TYPE varchar(255) not null,
+  constraint PK_TASK_CORRELATION primary key (TASK_ID, ENTRY_ID, ENTRY_TYPE),
+  constraint FK_TASK_CORRELATION_TASK
+    foreign key (TASK_ID)
+    references PLF_TASK
 );
 
-CREATE TABLE plf_task_payload_attributes
+create table PLF_TASK_PAYLOAD_ATTRIBUTES
 (
-  task_id VARCHAR(255) NOT NULL,
-  path    VARCHAR(255) NOT NULL,
-  value   VARCHAR(255) NOT NULL,
-  PRIMARY KEY (task_id, path, value)
+  TASK_ID varchar(255) not null,
+  PATH    varchar(255) not null,
+  VALUE   varchar(255) not null,
+  constraint PK_TASK_ATTR primary key (TASK_ID, PATH, VALUE),
+  constraint FK_TASK_ATTR_TASK
+    foreign key (TASK_ID)
+    references PLF_TASK
 );
 
-create table plf_data_entry_correlations
+create table PLF_DATA_ENTRY_CORRELATIONS
 (
-  owning_entry_type varchar(255) not null,
-  owning_entry_id   varchar(64)  not null,
-  entry_type        varchar(255) not null,
-  entry_id          varchar(64)  not null,
-  primary key (owning_entry_type, owning_entry_id, entry_type, entry_id)
+  OWNING_ENTRY_TYPE varchar(255) not null,
+  OWNING_ENTRY_ID   varchar(64)  not null,
+  ENTRY_TYPE        varchar(255) not null,
+  ENTRY_ID          varchar(64)  not null,
+  constraint PK_DATA_ENTRY_CORRELATION primary key (OWNING_ENTRY_TYPE, OWNING_ENTRY_ID, ENTRY_TYPE, ENTRY_ID)
 );
 
-create view plf_view_task_and_data_entry_payload as
+create view PLF_VIEW_TASK_AND_DATA_ENTRY_PAYLOAD as
 (
-(select pc.task_id, dea.path, dea.value
- from plf_task_correlations pc
-        join plf_data_entry_payload_attributes dea on pc.entry_id = dea.entry_id AND pc.entry_type = dea.entry_type)
+(select PC.TASK_ID, DEA.PATH, DEA.VALUE
+ from PLF_TASK_CORRELATIONS PC
+        join PLF_DATA_ENTRY_PAYLOAD_ATTRIBUTES DEA on PC.ENTRY_ID = DEA.ENTRY_ID and PC.ENTRY_TYPE = DEA.ENTRY_TYPE)
 union
-select *
-from plf_task_payload_attributes);
+select TASK_ID, PATH, VALUE
+from PLF_TASK_PAYLOAD_ATTRIBUTES);
 
-create view plf_view_data_entry_payload as
+create view PLF_VIEW_DATA_ENTRY_PAYLOAD as
 (
-select *
-from plf_data_entry_payload_attributes
+select ENTRY_ID, ENTRY_TYPE, PATH, VALUE
+from PLF_DATA_ENTRY_PAYLOAD_ATTRIBUTES
 union
-(select ec.owning_entry_id   as entry_id,
-        ec.owning_entry_type as entry_type,
-        ep.path              as path,
-        ep.value as value
- from plf_data_entry_correlations ec
-   join plf_data_entry_payload_attributes ep
+(select EC.OWNING_ENTRY_ID   as ENTRY_ID,
+        EC.OWNING_ENTRY_TYPE as ENTRY_TYPE,
+        EP.PATH              as PATH,
+        EP.VALUE as VALUE
+ from PLF_DATA_ENTRY_CORRELATIONS EC
+   join PLF_DATA_ENTRY_PAYLOAD_ATTRIBUTES EP
  on
-   ec.entry_id = ep.entry_id and ec.entry_type = ep.entry_type)
+   EC.ENTRY_ID = EP.ENTRY_ID and EC.ENTRY_TYPE = EP.ENTRY_TYPE)
 );
-
-ALTER TABLE plf_data_entry_authorizations
-  ADD CONSTRAINT FK_authorizations_have_data_entry
-    FOREIGN KEY (entry_id, entry_type)
-      REFERENCES plf_data_entry;
-
-ALTER TABLE plf_data_entry_payload_attributes
-  ADD CONSTRAINT FK_payload_attributes_have_data_entry
-    FOREIGN KEY (entry_id, entry_type)
-      REFERENCES plf_data_entry;
-
-ALTER TABLE plf_data_entry_protocol
-  ADD CONSTRAINT FK_protocol_have_data_entry
-    FOREIGN KEY (entry_id, entry_type)
-      REFERENCES plf_data_entry;
-
-ALTER TABLE plf_proc_def_authorizations
-  ADD CONSTRAINT FK_authorizations_have_proc_def
-    FOREIGN KEY (proc_def_id)
-      REFERENCES plf_proc_def;
-
-ALTER TABLE plf_task_authorizations
-  ADD CONSTRAINT FK_authorizations_have_task
-    FOREIGN KEY (task_id)
-      REFERENCES plf_task;
-
-ALTER TABLE plf_task_correlations
-  ADD CONSTRAINT FK_correlation_have_task
-    FOREIGN KEY (task_id)
-      REFERENCES plf_task;
-
-ALTER TABLE plf_task_payload_attributes
-  ADD CONSTRAINT FK_payload_attributes_have_task
-    FOREIGN KEY (task_id)
-      REFERENCES plf_task;

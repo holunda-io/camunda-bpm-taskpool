@@ -29,13 +29,13 @@ jobs:
         run: chmod +x ./mvnw
 
       - name: Build with Maven
-        run: ./mvnw clean verify -U -B -Dhttp.keepAlive=false -Dmaven.wagon.http.pool=false -Dmaven.wagon.httpconnectionManager.ttlSeconds=120
+        run: ./mvnw clean verify -U -Dhttp.keepAlive=false -Dmaven.wagon.http.pool=false -Dmaven.wagon.httpconnectionManager.ttlSeconds=120
 
       - name: Prepare I-Tests
         run: mkdir -p target/jgiven-reports/json
 
       - name: Run I-Tests with Maven
-        run: ./mvnw integration-test failsafe:verify -Pitest -B -T4
+        run: ./mvnw integration-test failsafe:verify -Pitest -T4
 
       - name: Upload coverage information
         uses: codecov/codecov-action@v7

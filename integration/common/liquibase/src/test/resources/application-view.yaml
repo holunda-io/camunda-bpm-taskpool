@@ -1,0 +1,11 @@
+spring:
+  datasource:
+    url: ${test.datasource.url}
+    username: test
+    password: Po1!Flow
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+  liquibase:
+    change-log: classpath:db/changelog/polyflow/polyflow-view-changelog.xml

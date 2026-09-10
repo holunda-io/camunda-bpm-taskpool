@@ -29,9 +29,10 @@
     <mockito-kotlin.version>6.3.0</mockito-kotlin.version>
     <jgiven.version>2.0.3</jgiven.version>
     <jgiven-kotlin.version>2.0.2.1</jgiven-kotlin.version>
+    <detekt.version>1.23.8</detekt.version>
 
-    <pattern.class.itest>**/*ITest.*</pattern.class.itest>
-    <pattern.package.itest>**/itest/**/*.*</pattern.package.itest>
+    <pattern.class.itest>**/*ITest</pattern.class.itest>
+    <pattern.package.itest>**/itest/**/*</pattern.package.itest>
   </properties>
 
   <dependencyManagement>
@@ -432,27 +433,8 @@
         </plugin>
 
         <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-failsafe-plugin</artifactId>
           <version>3.6.0</version>
-          <executions>
-            <execution>
-              <goals>
-                <goal>integration-test</goal>
-              </goals>
-            </execution>
-          </executions>
-          <configuration>
-            <useSystemClassLoader>false</useSystemClassLoader>
-            <includes>
-              <include>${pattern.class.itest}</include>
-              <include>${pattern.package.itest}</include>
-            </includes>
-            <!-- Sets the VM argument line used when integration tests are run. -->
-            <!-- prevent the annoying ForkedBooter process from stealing window focus on Mac OS -->
-            <!-- the add-opens is required for XStream -->
-            <argLine>-Djava.awt.headless=true @{failsafeArgLine} -XX:+StartAttachListener --add-opens java.base/java.lang.invoke=ALL-UNNAMED --add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/java.util=ALL-UNNAMED</argLine>
-          </configuration>
         </plugin>
 
         <!-- javadoc for kotlin -->
@@ -562,6 +544,51 @@
     </profile>
 
     <profile>
+      <id>detekt</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>maven-antrun-plugin</artifactId>
+            <version>3.1.0</version>
+            <executions>
+              <execution>
+                <id>detekt</id>
+                <configuration>
+                  <target name="detekt">
+                    <java taskname="detekt"
+                          dir="${project.basedir}"
+                          fork="true"
+                          failonerror="true"
+                          classname="io.gitlab.arturbosch.detekt.cli.Main"
+                          classpathref="maven.plugin.classpath">
+                      <arg value="--input"/>
+                      <arg value="${project.basedir}/src/main/kotlin"/>
+                      <arg value="--config"/>
+                      <arg value="${maven.multiModuleProjectDirectory}/detekt.yml"/>
+                    </java>
+                  </target>
+                </configuration>
+                <goals>
+                  <goal>run</goal>
+                </goals>
+              </execution>
+            </executions>
+            <dependencies>
+              <dependency>
+                <groupId>io.gitlab.arturbosch.detekt</groupId>
+                <artifactId>detekt-cli</artifactId>
+                <version>${detekt.version}</version>
+              </dependency>
+            </dependencies>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <profile>
       <id>itest</id>
       <activation>
         <activeByDefault>false</activeByDefault>
@@ -570,6 +597,7 @@
         <skipFrontend>true</skipFrontend>
       </properties>
       <build>
+        <defaultGoal>integration-test failsafe:verify</defaultGoal>
         <plugins>
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
@@ -582,6 +610,24 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-failsafe-plugin</artifactId>
+            <executions>
+              <execution>
+                <goals>
+                  <goal>integration-test</goal>
+                </goals>
+              </execution>
+            </executions>
+            <configuration>
+              <useSystemClassLoader>false</useSystemClassLoader>
+              <includes>
+                <include>${pattern.class.itest}</include>
+                <include>${pattern.package.itest}</include>
+              </includes>
+              <!-- Sets the VM argument line used when integration tests are run. -->
+              <!-- prevent the annoying ForkedBooter process from stealing window focus on Mac OS -->
+              <!-- the add-opens is required for XStream -->
+              <argLine>-Djava.awt.headless=true @{failsafeArgLine} -XX:+StartAttachListener --add-opens java.base/java.lang.invoke=ALL-UNNAMED --add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/java.util=ALL-UNNAMED</argLine>
+            </configuration>
           </plugin>
         </plugins>
       </build>

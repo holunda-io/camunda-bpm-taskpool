@@ -33,6 +33,11 @@ read-model views.
 - Keep public API modules independent of concrete view and integration implementations.
 - Keep documentation in Markdown and add published pages to `mkdocs.yml` navigation when they should be reachable in the site.
 - Follow [ADR-000](specs/adr/000-adr-conventions.md) for ADR format and numbering.
+- In Liquibase SQL, explicitly name primary keys, foreign keys, unique constraints, and indexes with `PK_`, `FK_`, `UK_`, and `IDX_` prefixes. Derive the remaining name from the owning table and referenced object or constrained/indexed columns; use concise names that fit Oracle's 30-character identifier limit.
+- In a Liquibase baseline, define columns and constraints in `CREATE TABLE` whenever the referenced table has already been created. Reserve `ALTER TABLE` for schema evolution that cannot be expressed during initial object creation.
+- In Liquibase SQL, write schema-object and column names in `CAPITAL_CASE`; write SQL keywords and data types in lowercase.
+- In Liquibase view definitions, enumerate every selected column; do not use `SELECT *`, including within `UNION` branches.
+- Keep the two Liquibase deployment masters aligned with the runtime sides: `core` is the producer side (aggregate plus event processing) and `view` is the consumer side (projections plus event processing). Saga baseline SQL remains optional and is not included by either master. Shared event-processing changesets must use one logical Liquibase path so a monolith applies them once.
 
 ## 5. Working Agreements
 
@@ -43,3 +48,4 @@ read-model views.
 - For a request introduced as `New feature`, clarify the scope until it is understood, create the ADR and user-facing documentation, then wait for an explicit
   implementation request. Do not implement during the planning phase.
 - Create tests or run lint/format tasks only when explicitly requested. Do not add tests for guarantees already provided by the type system.
+- Public Kotlin classes, objects, companion objects, and functions require KDoc. Before committing Kotlin changes, run Detekt for the changed module: `./mvnw -P detekt -pl <module-path> antrun:run@detekt`. The command applies the repository's `detekt.yml` and fails on documentation-rule violations.
