@@ -1,0 +1,150 @@
+/*
+ * General customizations
+ */
+ /* Customize logo size */
+
+.md-header__button.md-logo :-webkit-any(img,svg) {
+  /* height: 100%; */
+  width: 100%;
+}
+
+/* Disable title text*/
+.md-header__title .md-ellipsis {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important; /* Fix for https://github.com/twbs/bootstrap/issues/25686 */
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+[data-md-color-scheme="default"] {
+  /*
+   Polyflow color scheme
+   */
+   --monochrome-80: #3e3e3e;
+   --background-white: #ffffff;
+   --monochrome-70: #4c4c4c;
+   --secondary-100: #ebf9fa;
+   --background-blue: #0a0b31;
+   --monochrome-20: #cccccc;
+   --monochrome-50: #7f7f7f;
+   --monochrome-5: #f2f2f2;
+   --accent-success-100: #00cc75;
+   --accent-error-100: #b3003e;
+   --accent-error-10: #f2e0e6;
+   --accent-1-100: #6bdce0;
+   --accent-3-100: #830289;
+   --accent-4-100: #016db3;
+   --pumpkin-orange: #fb7b00;
+   --royal: #0d0f7e;
+
+
+   --md-primary-fg-color: var(--accent-4-100);
+   --md-accent-fg-color: var(--pumpkin-orange);
+   --md-footer-bg-color: var(--accent-4-100);
+}
+
+
+[data-md-color-scheme="polyflow"] {
+
+  /*
+   Polyflow color scheme
+   */
+  --monochrome-80: #3e3e3e;
+  --background-white: #ffffff;
+  --monochrome-70: #4c4c4c;
+  --secondary-100: #ebf9fa;
+  --background-blue: #0a0b31;
+  --monochrome-20: #cccccc;
+  --monochrome-50: #7f7f7f;
+  --monochrome-5: #f2f2f2;
+  --accent-success-100: #00cc75;
+  --accent-error-100: #b3003e;
+  --accent-error-10: #f2e0e6;
+  --accent-1-100: #6bdce0;
+  --accent-3-100: #830289;
+  --accent-4-100: #016db3;
+  --pumpkin-orange: #fb7b00;
+  --royal: #0d0f7e;
+
+  /*
+   Material color customizations
+   */
+  --md-default-bg-color: var(--background-blue);
+  --md-default-fg-color: var(--background-white);
+  --md-default-fg-color--light: var(--monochrome-5);
+  --md-default-fg-color--dark: var(--secondary-100);
+
+  --md-accent-fg-color: var(--pumpkin-orange);
+  --md-primary-fg-color: var(--background-blue);
+  --md-footer-bg-color: var(--accent-4-100);
+  --md-typeset-a-color: var(--accent-1-100);
+  --md-typeset-color: var(--monochrome-5);
+/*
+Code
+*/
+  --md-code-fg-color: hsla(var(--md-hue),18%,86%,1);
+  --md-code-bg-color: var(--background-blue);
+  --md-code-hl-color: var(--accent-4-100);
+  --md-code-hl-number-color: var(--pumpkin-orange);
+  --md-code-hl-special-color: #f06090;
+  --md-code-hl-function-color: #c973d9;
+  --md-code-hl-constant-color: #9383e2;
+  --md-code-hl-keyword-color: #6791e0;
+  --md-code-hl-string-color: #2fb170;
+  --md-code-hl-name-color: var(--md-code-fg-color);
+  --md-code-hl-operator-color: var(--md-default-fg-color--light);
+  --md-code-hl-punctuation-color: var(--md-default-fg-color--light);
+  --md-code-hl-comment-color: var(--md-default-fg-color--light);
+  --md-code-hl-generic-color: var(--md-default-fg-color--light);
+  --md-code-hl-variable-color: var(--md-default-fg-color--light);
+}
+
+/* Background of the page */
+body[data-md-color-scheme="polyflow"] {
+  background-image: url(../assets/img/bg.svg);
+  background-size: 1840px 3200px;
+  background-repeat: no-repeat;
+  background-position: 50% 300px;
+}
+
+[data-md-color-scheme="polyflow"] .md-typeset .md-content__button {
+  color: var(--md-default-fg-color);
+}
+
+/* Shift tabs to the right to align the text */
+[data-md-color-scheme="polyflow"] .md-tabs {
+  margin-left: 250px;
+}
+
+/* more margins in the sidebar nav */
+[data-md-color-scheme="polyflow"] .md-nav {
+  margin-top: 1rem;
+  margin-left: 0.1rem;
+}
+
+/* sidebar nav colors */
+[data-md-color-scheme="polyflow"] .md-sidebar__scrollwrap {
+  background-color: var(--md-footer-bg-color);
+  background-image: linear-gradient(to bottom,var(--md-footer-bg-color) 0%,var(--md-default-bg-color) 100%);
+}
+
+[data-md-color-scheme="polyflow"] .md-nav--integrated .md-nav__link[for=__toc]~.md-nav {
+  border-left: .05rem solid var(--md-accent-fg-color);
+}
+
+[data-md-color-scheme="polyflow"] .note code {
+  background-color: var(--monochrome-5);
+}
+
+/* footer */
+[data-md-color-scheme="polyflow"] .md-footer {
+  background-image: linear-gradient(to right,var(--md-footer-bg-color) 0%,var(--md-default-bg-color) 100%);
+}
+[data-md-color-scheme="polyflow"] .md-footer-meta {
+  background-color: transparent;
+}
