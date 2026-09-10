@@ -10,6 +10,7 @@ Add the Liquibase artifact alongside the Polyflow modules used by your
 application:
 
 ```xml
+
 <dependency>
   <groupId>io.holunda.polyflow</groupId>
   <artifactId>polyflow-liquibase</artifactId>
@@ -58,16 +59,17 @@ There are two deployment changelogs:
 Choose the includes according to the service's responsibility, not according
 to the database product:
 
-| Service deployment | Include in the service master changelog |
-| --- | --- |
-| Monolith: engine, core, event processing, and JPA views in one service | Core and view masters |
-| Producer: engine, core aggregate model, and event processing | Core master |
-| Consumer: JPA views and event processing | View master |
-| Central platform service that hosts both core and views | Core and view masters |
+| Service deployment                                                     | Include in the service master changelog |
+|------------------------------------------------------------------------|-----------------------------------------|
+| Monolith: engine, core, event processing, and JPA views in one service | Core and view masters                   |
+| Producer: engine, core aggregate model, and event processing           | Core master                             |
+| Consumer: JPA views and event processing                               | View master                             |
+| Central platform service that hosts both core and views                | Core and view masters                   |
 
 For a monolith or central platform service, include both:
 
 ```xml
+
 <include file="classpath:db/changelog/polyflow/polyflow-core-changelog.xml"/>
 <include file="classpath:db/changelog/polyflow/polyflow-view-changelog.xml"/>
 ```
@@ -75,12 +77,14 @@ For a monolith or central platform service, include both:
 For separated services, the producer includes only the core master:
 
 ```xml
+
 <include file="classpath:db/changelog/polyflow/polyflow-core-changelog.xml"/>
 ```
 
 The consumer includes only the view master:
 
 ```xml
+
 <include file="classpath:db/changelog/polyflow/polyflow-view-changelog.xml"/>
 ```
 
@@ -116,8 +120,8 @@ for the one-time `changelog-sync` and release-tag procedure.
 ### Application adoption mode
 
 The Liquibase module provides a one-shot Spring Boot adoption mode for
-deployments that cannot use the Liquibase CLI. It is explicitly enabled and
-uses the application's normal datasource and root changelog:
+deployments that cannot use the Liquibase CLI (see official docs of Liquibse).
+It is explicitly enabled and uses the application's normal datasource and root changelog:
 
 ```yaml
 polyflow:
@@ -168,10 +172,10 @@ Oracle's 30-character identifier limit.
 Write schema-object and column names in `CAPITAL_CASE`. Write SQL keywords and
 data types in lowercase, for example `create table PLF_TASK (...)`.
 
-Baseline SQL declares columns and constraints in each `CREATE TABLE` statement
-whenever the referenced object is already available. `ALTER TABLE` is reserved
+Baseline SQL declares columns and constraints in each `create table` statement
+whenever the referenced object is already available. `alter table` is reserved
 for later schema evolution that cannot be represented during initial object
 creation.
 
 View definitions enumerate their selected columns explicitly, including every
-branch of a `UNION`; they do not use `select *`.
+branch of a `union`; they do not use `select *`.
