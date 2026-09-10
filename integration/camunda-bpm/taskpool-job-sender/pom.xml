@@ -6,7 +6,7 @@
   <parent>
     <groupId>io.holunda.polyflow</groupId>
     <artifactId>polyflow-integration-camunda-bpm-parent</artifactId>
-    <version>4.6.3-SNAPSHOT</version>
+    <version>4.6.3</version>
   </parent>
 
   <artifactId>polyflow-camunda-bpm-taskpool-job-sender</artifactId>
