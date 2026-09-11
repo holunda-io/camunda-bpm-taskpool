@@ -2,14 +2,14 @@
 
 ## What to build
 
-Run the final validation for the compact Spring Boot 4 migration and update the migration/release documentation to match the verified path. The docs should state that Camunda remains provided, the collector stays on Jackson 2, and the rest of Polyflow defaults to Jackson 3.
+Run the final validation for the compact Spring Boot 4 migration and update the migration/release documentation to match the verified path. The docs should state that Camunda remains provided and Polyflow stays on Jackson 2.
 
 ## Acceptance criteria
 
 - [x] Full unit tests pass on the Spring Boot 4 line.
 - [x] Full integration tests pass on the Spring Boot 4 line, or any environment-specific exclusions are documented.
 - [x] Migration documentation no longer states that Camunda Enterprise is required merely for Polyflow's provided Camunda dependency.
-- [x] Migration documentation explains the Jackson 3 default and collector-scoped Jackson 2 compatibility lane.
+- [x] Migration documentation explains that Jackson 2 remains the supported Polyflow JSON path.
 - [x] Release notes identify required consumer actions for Spring Boot 4 and Jackson behavior.
 
 ## Verification evidence

@@ -1,6 +1,6 @@
 package io.holunda.polyflow.datapool
 
-import tools.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.ObjectMapper
 import io.github.oshai.kotlinlogging.KotlinLogging
 import io.holunda.polyflow.datapool.projector.DataEntryProjectionSupplier
 import io.holunda.polyflow.datapool.projector.DataEntryProjector

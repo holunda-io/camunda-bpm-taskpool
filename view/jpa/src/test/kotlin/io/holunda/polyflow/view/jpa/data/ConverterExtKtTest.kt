@@ -1,8 +1,8 @@
 package io.holunda.polyflow.view.jpa.data
 
 
-import tools.jackson.databind.ObjectMapper
-import tools.jackson.databind.json.JsonMapper
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.json.JsonMapper
 import io.holixon.axon.gateway.query.RevisionValue
 import io.holunda.camunda.taskpool.api.business.*
 import io.holunda.polyflow.view.jpa.payload.PayloadAttribute

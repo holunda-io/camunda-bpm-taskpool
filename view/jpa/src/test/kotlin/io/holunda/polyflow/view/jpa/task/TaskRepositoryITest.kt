@@ -1,6 +1,6 @@
 package io.holunda.polyflow.view.jpa.task
 
-import tools.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.ObjectMapper
 import io.holunda.camunda.taskpool.api.business.ProcessingType
 import io.holunda.camunda.variable.serializer.toJsonPathsWithValues
 import io.holunda.camunda.variable.serializer.toPayloadJson

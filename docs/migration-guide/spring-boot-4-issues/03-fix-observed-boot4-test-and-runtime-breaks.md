@@ -15,4 +15,4 @@ Fix the small set of Spring Boot 4 breaks discovered after the all-at-once migra
 ## Blocked by
 
 - Issue 1: Perform a minimal Spring Boot 4 migration pass
-- Issue 2: Default to Jackson 3 while keeping the collector on Jackson 2
+- Issue 2: Preserve Jackson 2 support during Spring Boot 4 migration

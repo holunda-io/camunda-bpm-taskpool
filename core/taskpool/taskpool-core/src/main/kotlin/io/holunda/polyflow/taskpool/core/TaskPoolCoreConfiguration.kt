@@ -1,7 +1,6 @@
 package io.holunda.polyflow.taskpool.core
 
-import tools.jackson.databind.ObjectMapper
-import tools.jackson.databind.json.JsonMapper
+import com.fasterxml.jackson.databind.ObjectMapper
 import io.holunda.polyflow.bus.jackson.JsonAutoDetectAnyVisibility
 import io.holunda.polyflow.taskpool.core.process.ProcessDefinitionAggregate
 import io.holunda.polyflow.taskpool.core.process.ProcessInstanceAggregate
@@ -13,6 +12,7 @@ import org.axonframework.eventsourcing.eventstore.EventStore
 import org.axonframework.messaging.annotation.ParameterResolverFactory
 import org.axonframework.modelling.command.Aggregate
 import org.axonframework.modelling.command.AggregateNotFoundException
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
@@ -75,6 +75,7 @@ class TaskPoolCoreConfiguration {
    * Configures Jackson's object mapper.
    * @param object mapper to configure.
    */
+  @Autowired
   fun configureJackson(objectMapper: ObjectMapper) {
     objectMapper.configurePolyflowJacksonObjectMapperForTaskPool()
   }
@@ -115,7 +116,6 @@ fun <T> Optional<T>.ifPresentOrElse(presentConsumer: (T) -> Unit, missingCallbac
  * Extension function to configure Jackson Object Mapper.
  */
 fun ObjectMapper.configurePolyflowJacksonObjectMapperForTaskPool(): ObjectMapper {
-  return rebuild<JsonMapper, JsonMapper.Builder>()
-    .addMixIn(TaskAggregate::class.java, JsonAutoDetectAnyVisibility::class.java)
-    .build()
+  addMixIn(TaskAggregate::class.java, JsonAutoDetectAnyVisibility::class.java)
+  return this
 }

@@ -1,7 +1,6 @@
 package io.holunda.polyflow.datapool.core
 
-import tools.jackson.databind.ObjectMapper
-import tools.jackson.databind.json.JsonMapper
+import com.fasterxml.jackson.databind.ObjectMapper
 import io.holunda.polyflow.bus.jackson.JsonAutoDetectAnyVisibility
 import io.holunda.polyflow.datapool.core.business.CreateOrUpdateCommandHandler
 import io.holunda.polyflow.datapool.core.business.DataEntryAggregate
@@ -15,6 +14,7 @@ import org.axonframework.eventsourcing.SnapshotTriggerDefinition
 import org.axonframework.eventsourcing.Snapshotter
 import org.axonframework.eventsourcing.eventstore.EventStore
 import org.axonframework.messaging.annotation.ParameterResolverFactory
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.context.annotation.Bean
@@ -107,6 +107,7 @@ class DataPoolCoreAxonConfiguration {
    * Setup object mapper with configuration required for Polyflow.
    * @param objectMapper Jackson object mapper to configure.
    */
+  @Autowired
   fun configureJackson(objectMapper: ObjectMapper) {
     objectMapper.configurePolyflowJacksonObjectMapperForDatapool()
   }
@@ -116,7 +117,6 @@ class DataPoolCoreAxonConfiguration {
  * Extension function for Jackson Object Mapper configuration.
  */
 fun ObjectMapper.configurePolyflowJacksonObjectMapperForDatapool(): ObjectMapper {
-  return rebuild<JsonMapper, JsonMapper.Builder>()
-    .addMixIn(DataEntryAggregate::class.java, JsonAutoDetectAnyVisibility::class.java)
-    .build()
+  addMixIn(DataEntryAggregate::class.java, JsonAutoDetectAnyVisibility::class.java)
+  return this
 }

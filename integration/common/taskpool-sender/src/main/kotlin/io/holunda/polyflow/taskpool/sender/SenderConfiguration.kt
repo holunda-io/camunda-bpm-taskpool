@@ -1,6 +1,6 @@
 package io.holunda.polyflow.taskpool.sender
 
-import tools.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.ObjectMapper
 import io.github.oshai.kotlinlogging.KotlinLogging
 import io.holunda.polyflow.bus.jackson.config.FallbackPayloadObjectMapperAutoConfiguration.Companion.PAYLOAD_OBJECT_MAPPER
 import io.holunda.polyflow.taskpool.sender.gateway.*

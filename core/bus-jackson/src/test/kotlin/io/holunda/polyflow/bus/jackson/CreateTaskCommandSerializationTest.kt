@@ -1,7 +1,7 @@
 package io.holunda.polyflow.bus.jackson
 
-import tools.jackson.module.kotlin.jacksonObjectMapper
-import tools.jackson.module.kotlin.readValue
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.module.kotlin.readValue
 import io.holunda.camunda.taskpool.api.task.CreateTaskCommand
 import io.holunda.camunda.taskpool.api.task.GenericReference
 import org.assertj.core.api.Assertions.assertThat

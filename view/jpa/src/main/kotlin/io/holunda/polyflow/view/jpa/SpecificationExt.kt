@@ -365,7 +365,7 @@ internal fun List<Criterion.PayloadEntryCriterion>.toOrDataEntrySpecification(in
 /**
  * Compose multiple specifications into one specification using conjunction.
  */
-internal fun <T> composeAnd(specifications: List<Specification<T>>): Specification<T> {
+internal fun <T : Any> composeAnd(specifications: List<Specification<T>>): Specification<T> {
   return when (specifications.size) {
     0 -> alwaysTrue()
     1 -> specifications[0]
@@ -376,7 +376,7 @@ internal fun <T> composeAnd(specifications: List<Specification<T>>): Specificati
 /**
  * Compose multiple specifications into one specification using disjunction.
  */
-internal fun <T> composeOr(specifications: List<Specification<T>>): Specification<T> {
+internal fun <T : Any> composeOr(specifications: List<Specification<T>>): Specification<T> {
   return when (specifications.size) {
     0 -> alwaysTrue()
     1 -> specifications[0]
@@ -384,6 +384,6 @@ internal fun <T> composeOr(specifications: List<Specification<T>>): Specificatio
   }
 }
 
-private fun <T> alwaysTrue(): Specification<T> {
+private fun <T : Any> alwaysTrue(): Specification<T> {
   return Specification { root, query, builder -> builder.conjunction() }
 }
