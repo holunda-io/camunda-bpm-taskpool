@@ -157,6 +157,7 @@ class MongoViewService(
       .collectList()
       .map { DataEntriesQueryResult(elements = it).slice(query) }
       .toFuture()
+      .thenApply { requireNotNull(it) }
 
   /**
    * Retrieves a list of all data entries of given entry type and id.
@@ -166,7 +167,7 @@ class MongoViewService(
     dataEntryRepository
       .findNotDeletedById(dataIdentityString(entryType = query.entryType, entryId = query.entryId))
       .map { it.dataEntry() }
-      .toFuture()
+      .toNonNullFuture()
 
   /**
    * Retrieves a list of all data entries of given entry type (and optional id).
@@ -178,7 +179,7 @@ class MongoViewService(
       .map { it.dataEntry() }
       .collectList()
       .map { DataEntriesQueryResult(elements = it) }
-      .toFuture()
+      .toNonNullFuture()
 
   /**
    * Retrieves a list of all data entries.
@@ -189,7 +190,7 @@ class MongoViewService(
       .map { it.dataEntry() }
       .collectList()
       .map { DataEntriesQueryResult(elements = it) }
-      .toFuture()
+      .toNonNullFuture()
 
   /**
    * Retrieves a list of all user tasks for current user.
@@ -209,7 +210,7 @@ class MongoViewService(
       ).map { it.task() }
     }.collectList()
       .map { TaskQueryResult(it) }
-      .toFuture()
+      .toNonNullFuture()
 
   /**
    * Retrieves a list of all tasks of a given process application.
@@ -221,14 +222,14 @@ class MongoViewService(
     ).map { it.task() }
       .collectList()
       .map { TaskQueryResult(it) }
-      .toFuture()
+      .toNonNullFuture()
 
   /**
    * Retrieves a task for given task id.
    */
   @QueryHandler
   override fun query(query: TaskForIdQuery): CompletableFuture<Optional<Task>> {
-    return taskRepository.findNotDeletedById(query.id).map { Optional.of(it.task()) }.defaultIfEmpty(Optional.empty()).toFuture()
+    return taskRepository.findNotDeletedById(query.id).map { Optional.of(it.task()) }.defaultIfEmpty(Optional.empty()).toNonNullFuture()
   }
 
   /**
@@ -247,7 +248,7 @@ class MongoViewService(
   @QueryHandler
   override fun query(query: TaskWithDataEntriesForIdQuery): CompletableFuture<Optional<TaskWithDataEntries>> {
     return taskRepository.findNotDeletedById(query.id).flatMap { tasksWithDataEntries(it.task()) }.map { Optional.of(it) }.defaultIfEmpty(Optional.empty())
-      .toFuture()
+      .toNonNullFuture()
   }
 
   /**
@@ -274,14 +275,14 @@ class MongoViewService(
       .collectList()
       // FIXME: replace by mongo paging
       .map { TasksWithDataEntriesQueryResult(it).slice(query = query) }
-      .toFuture()
+      .toNonNullFuture()
 
   /**
    * Retrieves a task count for application.
    */
   @QueryHandler
   override fun query(query: TaskCountByApplicationQuery): CompletableFuture<List<ApplicationWithTaskCount>> =
-    taskRepository.findTaskCountsByApplication().collectList().toFuture()
+    taskRepository.findTaskCountsByApplication().collectList().toNonNullFuture()
 
   /**
    * Delivers task created event.
@@ -530,7 +531,7 @@ class MongoViewService(
   // find the newly created document in the database yet by the time we process the delete event (especially when readPreference is secondary, so we read from
   // another node than we write to). If we expect a document to exist and don't find it, we wait for a while and periodically try to find it again. Only if
   // after a certain number of retries the document is still not there, we assume it was already deleted (e.g. because the event has been processed before).
-  private inline fun <T> Mono<T>.retryIfEmpty(
+  private inline fun <T : Any> Mono<T>.retryIfEmpty(
     numRetries: Long = 5,
     firstBackoff: Duration = Duration.ofMillis(100),
     crossinline logMessage: () -> String
@@ -540,7 +541,7 @@ class MongoViewService(
         logger.debug { "${logMessage()}, but will retry." }
       })
     ).retryWhen(Retry.backoff(numRetries, firstBackoff))
-      .onErrorMap { if (it is IllegalStateException && it.cause is MonoIsEmptyException) it.cause else it }
+      .onErrorMap { if (it is IllegalStateException && it.cause is MonoIsEmptyException) it.cause!! else it }
       .onErrorResume(MonoIsEmptyException::class.java) {
         logger.warn { "${logMessage()} and retries are exhausted." }
         Mono.empty()
