@@ -14,6 +14,7 @@ read-model views.
   - `bus-jackson`, `spring-utils`: shared infrastructure modules.
 - `integration`:
   - `camunda-bpm`: Camunda engine integrations, collectors, and Spring Boot modules.
+  - `process-engine-api`: process-engine API integrations, collectors, and Spring Boot modules.
   - `common`: reusable senders, serializers, and support integrations.
 - `view`: query APIs and simple, JPA, MongoDB, and URL-resolver view implementations.
 - `docs`: published documentation; user-facing feature documentation normally belongs in `docs/reference-guide`.
