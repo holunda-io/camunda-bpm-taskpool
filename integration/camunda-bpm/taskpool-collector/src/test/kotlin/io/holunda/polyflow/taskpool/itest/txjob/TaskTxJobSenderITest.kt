@@ -157,7 +157,7 @@ internal class TaskTxJobSenderITest {
   }
 
   private fun doInTransaction(operation: Runnable) {
-    txTemplate.execute<Any> {
+    txTemplate.execute<Any?> {
       operation.run()
       null
     }

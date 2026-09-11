@@ -34,22 +34,6 @@
 
       <dependency>
         <groupId>io.holunda.polyflow</groupId>
-        <artifactId>polyflow-bus-jackson</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>io.holunda.polyflow</groupId>
-        <artifactId>polyflow-liquibase</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>io.holunda.polyflow</groupId>
-        <artifactId>polyflow-spring-utils</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>io.holunda.polyflow</groupId>
         <artifactId>polyflow-datapool-api</artifactId>
         <version>${project.version}</version>
       </dependency>
