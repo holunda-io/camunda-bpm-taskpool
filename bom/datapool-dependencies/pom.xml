@@ -6,7 +6,7 @@
   <parent>
     <groupId>io.holunda.polyflow</groupId>
     <artifactId>polyflow-parent</artifactId>
-    <version>4.6.2-SNAPSHOT</version>
+    <version>4.6.4-SNAPSHOT</version>
     <relativePath>../parent/pom.xml</relativePath>
   </parent>
 
@@ -34,12 +34,23 @@
 
       <dependency>
         <groupId>io.holunda.polyflow</groupId>
-        <artifactId>polyflow-datapool-api</artifactId>
+        <artifactId>polyflow-bus-jackson</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>io.holunda.polyflow</groupId>
-        <artifactId>polyflow-datapool-collector</artifactId>
+        <artifactId>polyflow-liquibase</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.holunda.polyflow</groupId>
+        <artifactId>polyflow-spring-utils</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.holunda.polyflow</groupId>
+        <artifactId>polyflow-datapool-api</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>

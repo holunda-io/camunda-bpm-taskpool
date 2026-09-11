@@ -6,11 +6,11 @@
   <parent>
     <groupId>io.holunda.polyflow</groupId>
     <artifactId>polyflow-parent</artifactId>
-    <version>4.6.2-SNAPSHOT</version>
+    <version>4.6.4-SNAPSHOT</version>
     <relativePath>../../bom/parent/pom.xml</relativePath>
   </parent>
 
-  <artifactId>polyflow-integration-camunda-bpm-engine-parent</artifactId>
+  <artifactId>polyflow-integration-camunda-bpm-parent</artifactId>
   <name>POM: integration/${project.artifactId}</name>
   <packaging>pom</packaging>
 

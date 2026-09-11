@@ -6,7 +6,7 @@
   <parent>
     <groupId>io.holunda.polyflow</groupId>
     <artifactId>polyflow-view-parent</artifactId>
-    <version>4.6.2-SNAPSHOT</version>
+    <version>4.6.4-SNAPSHOT</version>
   </parent>
 
   <artifactId>polyflow-view-api</artifactId>
@@ -16,10 +16,12 @@
     <dependency>
       <groupId>io.holunda.polyflow</groupId>
       <artifactId>polyflow-taskpool-event</artifactId>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>io.holunda.polyflow</groupId>
       <artifactId>polyflow-datapool-event</artifactId>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>io.holixon.axon.gateway</groupId>

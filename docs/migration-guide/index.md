@@ -1,9 +1,5 @@
 This guide contains hints for upgrading to newer versions whenever there are breaking changes.
 
-## Migrating to Spring Boot 4
-
-See [Migrating to Spring Boot 4](spring-boot-4.md) for the verified upgrade path and [Spring Boot 4 Release Notes](spring-boot-4-release-notes.md) for the required consumer actions.
-
 ## Adopting an existing Polyflow schema
 
 An installation that created Polyflow tables before adopting the
@@ -57,7 +53,7 @@ polyflow:
 
 Alternatively, you might want to set it as environment variables:
 
-```
+``` 
 POLYFLOW_LIQUIBASE_ADOPTION_ENABLED=true
 ```
 
@@ -79,8 +75,7 @@ the initial adoption of a verified existing schema.
 
 ## Migrating to 4.x
 
-Version 4.x upgrades the Spring Boot dependency from 2.x to 3.x, which also requires upgrading Camunda to >=7.20 and Axon to >=4.7. It also means that Hibernate
-6 is used now,
+Version 4.x upgrades the Spring Boot dependency from 2.x to 3.x, which also requires upgrading Camunda to >=7.20 and Axon to >=4.7. It also means that Hibernate 6 is used now,
 which changes the way database sequences are created for sequence generators.
 
 Axon uses sequence generators for its tables and thus if you come from an older Hibernate version, you probably have a sequence called `hibernate_sequence` in
@@ -93,3 +88,7 @@ to `legacy` to restore the old behavior. In the Spring application properties, y
 ```properties
 spring.jpa.properties.hibernate.id.db_structure_naming_strategy=legacy
 ```
+
+## Migrating to Spring Boot 4
+
+See [Migrating to Spring Boot 4](spring-boot-4.md) for the verified upgrade path and [Spring Boot 4 Release Notes](spring-boot-4-release-notes.md) for the required consumer actions.

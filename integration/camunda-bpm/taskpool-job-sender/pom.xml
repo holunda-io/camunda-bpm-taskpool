@@ -5,8 +5,8 @@
 
   <parent>
     <groupId>io.holunda.polyflow</groupId>
-    <artifactId>polyflow-integration-camunda-bpm-engine-parent</artifactId>
-    <version>4.6.2-SNAPSHOT</version>
+    <artifactId>polyflow-integration-camunda-bpm-parent</artifactId>
+    <version>4.6.4-SNAPSHOT</version>
   </parent>
 
   <artifactId>polyflow-camunda-bpm-taskpool-job-sender</artifactId>
@@ -16,10 +16,12 @@
     <dependency>
       <groupId>io.holunda.polyflow</groupId>
       <artifactId>polyflow-taskpool-api</artifactId>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>io.holunda.polyflow</groupId>
       <artifactId>polyflow-taskpool-sender</artifactId>
+      <version>${project.version}</version>
     </dependency>
 
     <!-- Engine is provided -->

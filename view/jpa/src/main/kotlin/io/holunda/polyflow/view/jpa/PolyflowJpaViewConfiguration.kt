@@ -4,7 +4,6 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 import jakarta.annotation.PostConstruct
 import org.axonframework.eventhandling.deadletter.jpa.DeadLetterEntry
 import org.axonframework.eventhandling.tokenstore.jpa.TokenEntry
-import org.axonframework.modelling.saga.repository.jpa.SagaEntry
 import org.springframework.boot.persistence.autoconfigure.EntityScan
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.ComponentScan
@@ -23,8 +22,6 @@ private val logger = KotlinLogging.logger {}
     PolyflowJpaViewConfiguration::class,
     // for the token
     TokenEntry::class,
-    // we are a projection, Sagas might be needed too.
-    SagaEntry::class,
     // Dead letter
     DeadLetterEntry::class
   ]
