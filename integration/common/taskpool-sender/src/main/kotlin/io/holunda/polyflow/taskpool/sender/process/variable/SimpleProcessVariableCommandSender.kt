@@ -1,6 +1,6 @@
 package io.holunda.polyflow.taskpool.sender.process.variable
 
-import tools.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.ObjectMapper
 import io.github.oshai.kotlinlogging.KotlinLogging
 import io.holunda.camunda.taskpool.api.process.variable.ChangeProcessVariablesForExecutionCommand
 import io.holunda.camunda.taskpool.api.process.variable.ProcessVariableCreate

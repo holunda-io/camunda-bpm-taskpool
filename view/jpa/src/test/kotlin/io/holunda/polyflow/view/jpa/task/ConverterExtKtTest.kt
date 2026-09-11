@@ -1,7 +1,7 @@
 package io.holunda.polyflow.view.jpa.task
 
-import tools.jackson.databind.ObjectMapper
-import tools.jackson.databind.json.JsonMapper
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.json.JsonMapper
 import io.holunda.camunda.taskpool.api.task.ProcessReference
 import io.holunda.camunda.taskpool.api.task.TaskAttributeUpdatedEngineEvent
 import io.holunda.polyflow.view.jpa.data.DataEntryId

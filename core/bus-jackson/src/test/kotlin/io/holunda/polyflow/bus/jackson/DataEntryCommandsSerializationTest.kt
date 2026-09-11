@@ -1,7 +1,9 @@
 package io.holunda.polyflow.bus.jackson
 
-import tools.jackson.module.kotlin.jacksonObjectMapper
-import tools.jackson.module.kotlin.readValue
+import com.fasterxml.jackson.databind.SerializationFeature
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.module.kotlin.readValue
 import io.holunda.camunda.taskpool.api.business.*
 import org.assertj.core.api.Assertions.assertThat
 import org.camunda.bpm.engine.variable.Variables
@@ -11,7 +13,9 @@ import org.junit.jupiter.api.Test
 
 internal class DataEntryCommandsSerializationTest {
   private val om = jacksonObjectMapper().configurePolyflowJacksonObjectMapper()
+    .registerModule(JavaTimeModule())
     .apply {
+      configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
     }
 
   @Test

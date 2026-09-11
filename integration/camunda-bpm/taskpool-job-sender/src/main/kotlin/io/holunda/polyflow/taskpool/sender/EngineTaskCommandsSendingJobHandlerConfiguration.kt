@@ -1,7 +1,7 @@
 package io.holunda.polyflow.taskpool.sender
 
-import tools.jackson.databind.ObjectMapper
-import tools.jackson.module.kotlin.readValue
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.kotlin.readValue
 import org.camunda.bpm.engine.impl.jobexecutor.JobHandlerConfiguration
 
 /**

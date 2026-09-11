@@ -1,6 +1,6 @@
 package io.holunda.polyflow.view.jpa.data
 
-import tools.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.holunda.camunda.taskpool.api.business.ProcessingType
 import io.holunda.camunda.variable.serializer.toJsonPathsWithValues
 import io.holunda.polyflow.view.jpa.auth.AuthorizationPrincipal.Companion.group

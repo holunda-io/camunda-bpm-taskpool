@@ -94,6 +94,12 @@
                 <requireJavaVersion>
                   <version>17</version>
                 </requireJavaVersion>
+                <bannedDependencies>
+                  <excludes>
+                    <exclude>org.springframework.boot:*:*:*:compile</exclude>
+                    <exclude>org.springframework:*:*:*:compile</exclude>
+                  </excludes>
+                </bannedDependencies>
               </rules>
             </configuration>
           </execution>

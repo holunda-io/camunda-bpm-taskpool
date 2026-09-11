@@ -25,6 +25,7 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter</artifactId>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.axonframework</groupId>
@@ -45,7 +46,7 @@
       <artifactId>polyflow-bus-jackson</artifactId>
     </dependency>
     <dependency>
-      <groupId>tools.jackson.core</groupId>
+      <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-databind</artifactId>
       <scope>provided</scope>
     </dependency>
