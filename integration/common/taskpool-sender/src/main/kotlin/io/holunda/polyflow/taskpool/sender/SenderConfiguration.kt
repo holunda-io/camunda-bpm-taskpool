@@ -24,14 +24,12 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Configuration
 
 private val logger = KotlinLogging.logger {}
 
 /**
  * Main configuration of the taskpool sender component.
  */
-@Configuration
 @EnableConfigurationProperties(SenderProperties::class)
 class SenderConfiguration(private val senderProperties: SenderProperties) {
 

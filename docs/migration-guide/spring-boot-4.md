@@ -41,14 +41,3 @@ Generate them with:
 ```
 
 The persistence descriptor uses the Jakarta Persistence 3 namespace and current Hibernate dialect names. Consumers with copied or custom persistence descriptors should make the equivalent updates.
-
-## Verification
-
-The complete 32-module reactor was verified on macOS with Java 17.0.18 and Maven 3.9.2:
-
-```bash
-./mvnw test
-./mvnw -Pitest verify
-```
-
-Both commands pass. The integration run includes the Camunda/H2 scenarios and the Testcontainers-backed MariaDB and MongoDB suites; no environment-specific exclusions were needed. A working Docker-compatible container runtime is required for the container-backed suites.
