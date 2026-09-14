@@ -11,7 +11,6 @@ import org.springframework.context.annotation.Configuration
  */
 @AutoConfiguration
 @ConditionalOnMissingBean(ProcessVariablesCorrelator::class)
-@Configuration
 class FallbackProcessVariablesCorrelatorConfiguration {
   /**
    * Creates the empty correlator used when neither a custom nor property-configured correlator is available.

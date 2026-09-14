@@ -10,7 +10,6 @@ import org.springframework.context.annotation.Configuration
  * No @Configuration required.
  * Configuration used via auto-configuration.
  */
-@Configuration
 @EnableConfigurationProperties(TasklistUrlProperties::class)
 class FallbackTasklistUrlResolverAutoConfiguration {
 

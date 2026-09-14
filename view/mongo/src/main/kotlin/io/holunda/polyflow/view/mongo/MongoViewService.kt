@@ -163,11 +163,11 @@ class MongoViewService(
    * Retrieves a list of all data entries of given entry type and id.
    */
   @QueryHandler
-  override fun query(query: DataEntryForIdentityQuery, metaData: MetaData): CompletableFuture<DataEntry> =
+  override fun query(query: DataEntryForIdentityQuery, metaData: MetaData): CompletableFuture<DataEntry?> =
     dataEntryRepository
       .findNotDeletedById(dataIdentityString(entryType = query.entryType, entryId = query.entryId))
       .map { it.dataEntry() }
-      .toNonNullFuture()
+      .toFuture()
 
   /**
    * Retrieves a list of all data entries of given entry type (and optional id).

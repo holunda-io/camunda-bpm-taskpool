@@ -14,7 +14,6 @@ private val logger = KotlinLogging.logger {}
 /**
  * No @configuration required, used as autoconfiguration.
  */
-@Configuration
 class FallbackPayloadObjectMapperAutoConfiguration {
 
   /**

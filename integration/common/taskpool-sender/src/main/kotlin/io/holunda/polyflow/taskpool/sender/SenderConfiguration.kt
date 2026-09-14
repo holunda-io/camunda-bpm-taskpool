@@ -31,7 +31,6 @@ private val logger = KotlinLogging.logger {}
 /**
  * Main configuration of the taskpool sender component.
  */
-@Configuration
 @EnableConfigurationProperties(SenderProperties::class)
 class SenderConfiguration(private val senderProperties: SenderProperties) {
 

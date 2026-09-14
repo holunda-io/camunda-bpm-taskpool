@@ -21,7 +21,6 @@ import org.springframework.context.annotation.Import
 /**
  * Polyflow sender configuration.
  */
-@Configuration
 @EnableConfigurationProperties(DataPoolSenderProperties::class)
 @Import(ApplicationNameBeanPostProcessor::class)
 class DataEntrySenderConfiguration(

@@ -19,7 +19,6 @@ import org.springframework.context.annotation.Configuration
 /**
  * Spring configuration building task sender, using Camunda job to decouple from originated transaction..
  */
-@Configuration
 class CamundaJobSenderConfiguration(
   private val senderProperties: SenderProperties
 ) {

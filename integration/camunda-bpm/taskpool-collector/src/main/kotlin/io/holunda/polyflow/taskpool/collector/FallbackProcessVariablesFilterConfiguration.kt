@@ -11,7 +11,6 @@ import org.springframework.context.annotation.Configuration
  */
 @AutoConfiguration
 @ConditionalOnMissingBean(ProcessVariablesFilter::class)
-@Configuration
 class FallbackProcessVariablesFilterConfiguration {
   /**
    * Creates the empty filter used when neither a custom nor property-configured filter is available.
