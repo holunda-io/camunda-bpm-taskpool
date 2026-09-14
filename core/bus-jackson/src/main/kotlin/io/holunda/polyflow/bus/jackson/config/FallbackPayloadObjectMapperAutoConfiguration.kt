@@ -7,7 +7,6 @@ import io.holunda.polyflow.bus.jackson.configurePolyflowJacksonObjectMapper
 import io.toolisticon.spring.condition.ConditionalOnMissingQualifiedBean
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Configuration
 
 private val logger = KotlinLogging.logger {}
 

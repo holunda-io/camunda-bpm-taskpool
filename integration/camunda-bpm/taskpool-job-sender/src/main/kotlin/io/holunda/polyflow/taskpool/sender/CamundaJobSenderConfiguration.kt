@@ -14,7 +14,6 @@ import org.camunda.bpm.engine.spring.SpringProcessEnginePlugin
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Configuration
 
 /**
  * Spring configuration building task sender, using Camunda job to decouple from originated transaction..
