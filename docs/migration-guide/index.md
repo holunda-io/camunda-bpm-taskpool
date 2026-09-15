@@ -75,7 +75,7 @@ the initial adoption of a verified existing schema.
 
 ## Migrating to Spring Boot 4
 
-See [Migrating to Spring Boot 4](spring-boot-4.md) for the verified upgrade path and [Spring Boot 4 Release Notes](spring-boot-4-release-notes.md) for the required consumer actions.
+See [Migrating to Spring Boot 4](spring-boot-4.md) for the verified upgrade path and required consumer actions.
 
 ## Adopting an existing Polyflow schema
 

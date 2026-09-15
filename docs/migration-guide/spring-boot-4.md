@@ -1,6 +1,12 @@
 # Migrating to Spring Boot 4
 
-Polyflow's Spring Boot 4 line is built and tested with Spring Boot `4.1.1`, Java 17, and Camunda 7.24. The migration keeps the existing Camunda 7 Community Edition integration and preserves Polyflow's existing Jackson 2 JSON infrastructure.
+Polyflow's Spring Boot 4 line is built and tested with Spring Boot `4.0.8`, Java 17, and Camunda 7.24. The migration keeps the existing Camunda 7 Community Edition integration and preserves Polyflow's existing Jackson 2 JSON infrastructure.
+
+## Breaking changes
+
+- `spring.data.mongodb.uri` has moved to `spring.mongodb.uri` for applications using the MongoDB view.
+- Spring Boot 4's Testcontainers 2 dependency management uses renamed artifacts. Consumer tests should replace the old `junit-jupiter`, `mongodb`, and `mariadb` Testcontainers artifact IDs with `testcontainers-junit-jupiter`, `testcontainers-mongodb`, and `testcontainers-mariadb` respectively.
+- Custom JPA setup must be compatible with Jakarta Persistence 3 and Hibernate 7. Polyflow's DDL generation now uses current dialect names and Jakarta Persistence schema generation.
 
 ## Required consumer actions
 
@@ -9,8 +15,6 @@ Polyflow's Spring Boot 4 line is built and tested with Spring Boot `4.1.1`, Java
 3. Continue to use Jackson 2 types (`com.fasterxml.jackson.*`) when interacting with Polyflow JSON APIs or when providing the qualified `payloadObjectMapper` bean.
 4. Rename `spring.data.mongodb.uri` to `spring.mongodb.uri` in applications using the MongoDB view.
 5. If the application maintains custom Testcontainers-based tests, use the Testcontainers 2 artifact names, such as `testcontainers-junit-jupiter`, `testcontainers-mongodb`, and `testcontainers-mariadb`.
-
-See the [Spring Boot 4 release notes](spring-boot-4-release-notes.md) for a compact checklist of the release-level changes.
 
 ## Camunda remains a provided dependency
 
@@ -25,19 +29,3 @@ Spring Boot 4 support preserves Polyflow's existing Jackson 2 contract for JSON 
 - Jackson core, databind, datatype, and module APIs used by Polyflow remain in `com.fasterxml.jackson.*`.
 - Applications that inject or customize Polyflow's `payloadObjectMapper` should continue to provide a Jackson 2 `com.fasterxml.jackson.databind.ObjectMapper`.
 - The Camunda collector/Spin path continues to use Jackson 2 as before.
-
-## Persistence and test infrastructure changes
-
-Spring Boot 4 manages Hibernate 7 and Testcontainers 2. The Polyflow JPA DDL generator no longer uses the old Hibernate Maven plugin. It now exercises Jakarta Persistence schema generation through a focused test and writes these files to `view/jpa/target`:
-
-- `h2_ddl.sql`
-- `mssql_ddl.sql`
-- `pgsql_ddl.sql`
-
-Generate them with:
-
-```bash
-./mvnw -Pgenerate-sql -f view/jpa
-```
-
-The persistence descriptor uses the Jakarta Persistence 3 namespace and current Hibernate dialect names. Consumers with copied or custom persistence descriptors should make the equivalent updates.
