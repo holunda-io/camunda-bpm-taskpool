@@ -15,7 +15,7 @@ interface ReactiveDataEntryApi {
    * @param metaData metadata for the query, may be empty.
    * @return query result.
    */
-  fun query(query: DataEntryForIdentityQuery, metaData: MetaData = MetaData.emptyInstance()): CompletableFuture<DataEntry>
+  fun query(query: DataEntryForIdentityQuery, metaData: MetaData = MetaData.emptyInstance()): CompletableFuture<DataEntry?>
 
   /**
    * Query data entries for type.

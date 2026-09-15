@@ -2,15 +2,14 @@ package io.holunda.polyflow.variable.serializer
 
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.holunda.camunda.variable.serializer.EqualityPathFilter.Companion.all
 import io.holunda.camunda.variable.serializer.EqualityPathFilter.Companion.eqExclude
 import io.holunda.camunda.variable.serializer.EqualityPathFilter.Companion.eqInclude
 import io.holunda.camunda.variable.serializer.EqualityPathFilter.Companion.none
 import io.holunda.camunda.variable.serializer.toJsonPathsWithValues
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.assertj.core.api.Assertions.assertThat
 import org.camunda.bpm.engine.variable.Variables.createVariables
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.text.SimpleDateFormat
 import java.time.Instant
@@ -19,14 +18,11 @@ import java.util.*
 internal class JsonPathWithValueTest {
 
   private val now = Date.from(Instant.now())
-  private val mapper = jacksonObjectMapper()
-
-  @BeforeEach
-  fun `setup jackson`() {
-    mapper.dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'")
-    mapper.registerModule(JavaTimeModule())
-    mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
-    mapper.configure(SerializationFeature.WRITE_DATE_TIMESTAMPS_AS_NANOSECONDS, false)
+  private val mapper = jacksonObjectMapper().apply {
+    dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'")
+    registerModule(JavaTimeModule())
+    configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
+    configure(SerializationFeature.WRITE_DATE_TIMESTAMPS_AS_NANOSECONDS, false)
   }
 
   @Test

@@ -120,4 +120,3 @@ fun ObjectMapper.configurePolyflowJacksonObjectMapperForDatapool(): ObjectMapper
   addMixIn(DataEntryAggregate::class.java, JsonAutoDetectAnyVisibility::class.java)
   return this
 }
-

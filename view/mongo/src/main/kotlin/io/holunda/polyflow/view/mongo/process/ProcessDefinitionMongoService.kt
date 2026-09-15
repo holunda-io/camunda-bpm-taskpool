@@ -3,6 +3,7 @@ package io.holunda.polyflow.view.mongo.process
 import io.github.oshai.kotlinlogging.KotlinLogging
 import io.holunda.camunda.taskpool.api.process.definition.ProcessDefinitionRegisteredEvent
 import io.holunda.polyflow.view.ProcessDefinition
+import io.holunda.polyflow.view.mongo.toNonNullFuture
 import io.holunda.polyflow.view.query.process.ProcessDefinitionsStartableByUserQuery
 import io.holunda.polyflow.view.query.process.ReactiveProcessDefinitionApi
 import org.axonframework.eventhandling.EventHandler
@@ -76,7 +77,7 @@ class ProcessDefinitionMongoService(
           .map { it.toProcessDefinition() }
           .filter { query.applyFilter(it) }
       }
-      .toFuture()
+      .toNonNullFuture()
 
   }
 }

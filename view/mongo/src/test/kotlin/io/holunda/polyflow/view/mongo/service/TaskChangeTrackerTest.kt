@@ -282,6 +282,7 @@ internal class TaskChangeTrackerTest {
         resumeToken(resumeToken),
         null,
         null,
+        null,
         Document("body", taskDocument(taskId, deleted, deleteTime)),
         null,
         null,

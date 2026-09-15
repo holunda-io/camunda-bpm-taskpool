@@ -13,7 +13,12 @@ import java.time.ZoneOffset
 
 class VariableSerializerTest {
 
-  private val mapper = jacksonObjectMapper()
+  private val mapper = jacksonObjectMapper().apply {
+    dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'")
+    registerModule(JavaTimeModule())
+    configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
+    configure(SerializationFeature.WRITE_DATE_TIMESTAMPS_AS_NANOSECONDS, false)
+  }
 
   @Test
   fun `should return the empty map`() {
@@ -50,12 +55,6 @@ class VariableSerializerTest {
 
   @Test
   fun `should transform pojo with instant to map`() {
-
-    mapper.dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'")
-    mapper.registerModule(JavaTimeModule())
-    mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
-    mapper.configure(SerializationFeature.WRITE_DATE_TIMESTAMPS_AS_NANOSECONDS, false)
-
     val now = Instant.parse("2020-10-15T07:20:05.871641Z")
     val pojo = Pojo5(key = "value", ts = now, date = now.atOffset(ZoneOffset.UTC))
     val result = serialize(pojo, mapper)
