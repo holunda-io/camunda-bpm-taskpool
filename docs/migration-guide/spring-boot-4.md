@@ -6,7 +6,7 @@ Polyflow's Spring Boot 4 line is built and tested with Spring Boot `4.0.8`, Java
 
 - `spring.data.mongodb.uri` has moved to `spring.mongodb.uri` for applications using the MongoDB view.
 - Spring Boot 4's Testcontainers 2 dependency management uses renamed artifacts. Consumer tests should replace the old `junit-jupiter`, `mongodb`, and `mariadb` Testcontainers artifact IDs with `testcontainers-junit-jupiter`, `testcontainers-mongodb`, and `testcontainers-mariadb` respectively.
-- Custom JPA setup must be compatible with Jakarta Persistence 3 and Hibernate 7. Polyflow's DDL generation now uses current dialect names and Jakarta Persistence schema generation.
+- Custom JPA setup must be compatible with Jakarta Persistence 3 and Hibernate 7.
 
 ## Required consumer actions
 
