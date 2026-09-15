@@ -5,6 +5,7 @@ import io.holunda.camunda.taskpool.api.task.TaskAttributeUpdatedEngineEvent
 import io.holunda.camunda.taskpool.api.task.TaskCreatedEngineEvent
 import io.holunda.camunda.taskpool.api.task.UpdateAttributeTaskCommand
 import io.holunda.camunda.taskpool.model.Task
+import org.camunda.bpm.engine.variable.Variables
 
 /**
  * Constructs a task representation from create command.
@@ -23,7 +24,7 @@ fun Task.Companion.from(command: CreateTaskCommand): Task = Task().apply {
   candidateUsers = command.candidateUsers
   candidateGroups = command.candidateGroups
   assignee = command.assignee
-  payload = command.payload
+  payload = Variables.fromMap(command.payload)
   correlations = command.correlations
   businessKey = command.businessKey
   followUpDate = command.followUpDate
@@ -41,7 +42,7 @@ fun Task.Companion.from(command: UpdateAttributeTaskCommand): Task = Task().appl
   priority = command.priority
   owner = command.owner
   dueDate = command.dueDate
-  payload = command.payload
+  payload = Variables.fromMap(command.payload)
   correlations = command.correlations
   businessKey = command.businessKey
   followUpDate = command.followUpDate
