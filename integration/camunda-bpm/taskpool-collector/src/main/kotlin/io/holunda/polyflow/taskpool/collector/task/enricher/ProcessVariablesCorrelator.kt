@@ -39,5 +39,18 @@ open class ProcessVariablesCorrelator(vararg correlations: ProcessVariableCorrel
     }
     return result
   }
-}
 
+  /**
+   * Returns variable names required to create correlations for a task.
+   *
+   * @param processDefinitionKey key of the process definition that owns the task.
+   * @param taskDefinitionKey key of the task definition receiving the correlations.
+   * @return names of the referenced process variables.
+   */
+  fun variableNamesFor(processDefinitionKey: ProcessDefinitionKey, taskDefinitionKey: TaskDefinitionKey): Set<VariableName> {
+    val processCorrelations = all[processDefinitionKey] ?: return emptySet()
+    return processCorrelations.globalCorrelations
+      .plus(processCorrelations.correlations[taskDefinitionKey].orEmpty())
+      .mapTo(mutableSetOf()) { it.entryIdVariableName }
+  }
+}

@@ -29,9 +29,34 @@ class TaskVariableLoader(
   /**
    * Retrieves typed variables from the context of a command.
    * @param command command context.
+   * @param deserializeValues whether variable values should be deserialized.
    * @return variable map.
    */
-  fun <T : TaskIdentity> getTypeVariables(command: T): VariableMap {
+  fun <T : TaskIdentity> getTypeVariables(command: T, deserializeValues: Boolean = true): VariableMap =
+    loadTypeVariables(command, variableNames = null, deserializeValues = deserializeValues)
+
+  /**
+   * Retrieves selected typed variables from the context of a command.
+   *
+   * @param command command context.
+   * @param variableNames names of variables to retrieve.
+   * @param deserializeValues whether variable values should be deserialized.
+   * @return variable map.
+   */
+  fun <T : TaskIdentity> getTypeVariables(
+    command: T,
+    variableNames: Collection<String>,
+    deserializeValues: Boolean = true
+  ): VariableMap {
+    if (variableNames.isEmpty()) return Variables.createVariables()
+    return loadTypeVariables(command, variableNames, deserializeValues)
+  }
+
+  private fun <T : TaskIdentity> loadTypeVariables(
+    command: T,
+    variableNames: Collection<String>?,
+    deserializeValues: Boolean
+  ): VariableMap {
     return if (command.isHistoric()) {
       // Task updated
       // This is a historic command which is processed from a command context listener on command context close. Accessing variables at this point will try to add
@@ -44,11 +69,11 @@ class TaskVariableLoader(
         commandExecutor.execute { innerContext ->
           val task = taskService.createTaskQuery().taskId(command.id).singleResult()
           if (task != null) {
-            taskService.getVariablesTyped(command.id)
+            readTaskVariables(command.id, variableNames, deserializeValues)
           } else {
             val execution = runtimeService.createExecutionQuery().executionId(command.sourceReference.executionId).singleResult()
             if (execution != null) {
-              runtimeService.getVariablesTyped(command.sourceReference.executionId)
+              readExecutionVariables(command.sourceReference.executionId, variableNames, deserializeValues)
             } else {
               logger.debug { "ENRICHER-004: Could not enrich variables from running execution ${command.sourceReference.executionId}, since it doesn't exist (anymore)." }
               Variables.createVariables()
@@ -73,9 +98,23 @@ class TaskVariableLoader(
       }
     } else {
       // Create task
-      taskService.getVariablesTyped(command.id)
+      readTaskVariables(command.id, variableNames, deserializeValues)
     }
   }
+
+  private fun readTaskVariables(taskId: String, variableNames: Collection<String>?, deserializeValues: Boolean): VariableMap =
+    if (variableNames == null) {
+      taskService.getVariablesTyped(taskId, deserializeValues)
+    } else {
+      taskService.getVariablesTyped(taskId, variableNames, deserializeValues)
+    }
+
+  private fun readExecutionVariables(executionId: String, variableNames: Collection<String>?, deserializeValues: Boolean): VariableMap =
+    if (variableNames == null) {
+      runtimeService.getVariablesTyped(executionId, deserializeValues)
+    } else {
+      runtimeService.getVariablesTyped(executionId, variableNames, deserializeValues)
+    }
 }
 
 /**
@@ -87,4 +126,3 @@ fun Any.isHistoric(): Boolean =
     is UpdateAttributesHistoricTaskCommand, is UpdateAssignmentTaskCommand -> true
     else -> throw IllegalArgumentException("Unexpected command received: '$this'")
   }
-

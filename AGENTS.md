@@ -47,5 +47,6 @@ read-model views.
   usage, and configuration.
 - For a request introduced as `New feature`, clarify the scope until it is understood, create the ADR and user-facing documentation, then wait for an explicit
   implementation request. Do not implement during the planning phase.
-- Create tests or run lint/format tasks only when explicitly requested. Do not add tests for guarantees already provided by the type system.
+- Every code change requires focused automated test coverage and execution of the relevant tests. Do not add tests for guarantees already provided by the type system.
+- Write tests with JUnit and Mockito-Kotlin. Use Mockito-Kotlin extensions such as `whenever` rather than backticked Mockito `when`; use AssertJ for assertions. JUnit assertions are not allowed.
 - Public Kotlin classes, objects, companion objects, and functions require KDoc. Before committing Kotlin changes, run Detekt for the changed module: `./mvnw -P detekt -pl <module-path> antrun:run@detekt`. The command applies the repository's `detekt.yml` and fails on documentation-rule violations.

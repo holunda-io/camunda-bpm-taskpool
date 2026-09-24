@@ -41,6 +41,23 @@ open class ProcessVariablesFilter(
     return variableFilters.isNotEmpty() && variableFilters.all { it.filter("__not_relevant", variableName) }
   }
 
+  /**
+   * Returns whether an applicable filter can exclude variables for the task.
+   *
+   * @param processDefinitionKey key of the process definition to evaluate.
+   * @param taskDefinitionKey key of the task definition to evaluate.
+   * @return `true` when an applicable filter can exclude variables.
+  */
+  fun hasRestrictionsFor(processDefinitionKey: ProcessDefinitionKey, taskDefinitionKey: TaskDefinitionKey): Boolean =
+    filtersFor(processDefinitionKey).any { it.restricts(taskDefinitionKey) }
+
+  private fun VariableFilter.restricts(taskDefinitionKey: TaskDefinitionKey): Boolean =
+    when (this) {
+      is ProcessVariableFilter -> filterType == FilterType.INCLUDE || processVariables.isNotEmpty()
+      is TaskVariableFilter -> taskVariables[taskDefinitionKey]?.let { filterType == FilterType.INCLUDE || it.isNotEmpty() } ?: false
+      else -> true
+    }
+
   private fun filtersFor(processDefinitionKey: ProcessDefinitionKey): List<VariableFilter> =
     processSpecificFilters[processDefinitionKey] ?: commonFilters
 }
