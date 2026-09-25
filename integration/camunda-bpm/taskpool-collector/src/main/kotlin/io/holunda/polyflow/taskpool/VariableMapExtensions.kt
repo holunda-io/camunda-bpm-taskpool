@@ -20,9 +20,9 @@ fun VariableMap.putAllTyped(source: VariableMap) {
  */
 inline fun VariableMap.filterKeys(predicate: (String) -> Boolean): VariableMap {
   val result = Variables.createVariables()
-  for (entry in this) {
-    if (predicate(entry.key)) {
-      result[entry.key] = entry.value
+  for (key in keys) {
+    if (predicate(key)) {
+      result.putValueTyped(key, getValueTyped(key))
     }
   }
   return result

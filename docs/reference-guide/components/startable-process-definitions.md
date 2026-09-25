@@ -48,14 +48,14 @@ refresh job.
 
 For every registered definition, Polyflow publishes the following information:
 
-| Field | Source |
-|---|---|
-| `processDefinitionId`, `processDefinitionKey`, `processDefinitionVersion` | Camunda process definition |
-| `processName`, `processDescription`, `processVersionTag` | BPMN process metadata |
-| `applicationName` | `polyflow.integration.collector.camunda.application-name` |
-| `formKey` | Camunda start form, if present |
-| `startableFromTasklist` | Camunda's startable-in-tasklist setting |
-| `candidateStarterUsers`, `candidateStarterGroups` | Camunda candidate starter identity links |
+| Field                                                                     | Source                                                    |
+|---------------------------------------------------------------------------|-----------------------------------------------------------|
+| `processDefinitionId`, `processDefinitionKey`, `processDefinitionVersion` | Camunda process definition                                |
+| `processName`, `processDescription`, `processVersionTag`                  | BPMN process metadata                                     |
+| `applicationName`                                                         | `polyflow.integration.collector.camunda.application-name` |
+| `formKey`                                                                 | Camunda start form, if present                            |
+| `startableFromTasklist`                                                   | Camunda's startable-in-tasklist setting                   |
+| `candidateStarterUsers`, `candidateStarterGroups`                         | Camunda candidate starter identity links                  |
 
 Model candidate starters on the BPMN process, for example with Camunda's
 `camunda:candidateStarterUsers` and `camunda:candidateStarterGroups`
@@ -64,8 +64,7 @@ does not resolve group memberships itself.
 
 ### Configure candidate starters in Camunda 7 Modeler
 
-Camunda 7 Modeler supports candidate starters directly. Select the BPMN process
-(click the process or the canvas) and use **General → Candidate Starter
+Camunda 7 Modeler supports candidate starters directly. Select the BPMN process (click the process or the canvas) and use **General → Candidate Starter
 Configuration** in the properties panel to enter **Candidate Starter Users**
 and **Candidate Starter Groups**. The modeler writes the corresponding
 `camunda:candidateStarterUsers` and `camunda:candidateStarterGroups`
@@ -98,10 +97,10 @@ that use JPA should select the desired version when their process catalogue
 contains multiple versions.
 
 !!! warning
-    The current JPA view filters by candidate starter authorization but does not
-    filter `startableFromTasklist`. A process-starter application using that
-    view should apply this field as an additional filter until the view behavior
-    is aligned with the query contract.
+The current JPA view filters by candidate starter authorization but does not
+filter `startableFromTasklist`. A process-starter application using that
+view should apply this field as an additional filter until the view behavior
+is aligned with the query contract.
 
 With the View API client, a caller can issue the query as follows:
 
@@ -184,12 +183,12 @@ axon:
 The `source` value in Axon's processor configuration is a Spring bean name. It
 is not a Kafka topic name. The following names therefore have distinct roles:
 
-| Name | Role | Must match |
-|---|---|---|
-| `polyflow-process-definition` | Kafka topic | The producer route and the message source's `topics` list |
-| `kafkaMessageSourcePolyflowProcessDefinition` | Spring `StreamableKafkaMessageSource` bean name | `axon.eventhandling.processors[...].source` |
-| `polyflowProcessDefinition` | Spring qualifier for the Kafka `ConsumerFactory` | The qualifier on the message-source parameter |
-| `io.holunda.polyflow.view.jpa.service.process.definition` | Axon processing group | The JPA process-definition projection |
+| Name                                                      | Role                                             | Must match                                                |
+|-----------------------------------------------------------|--------------------------------------------------|-----------------------------------------------------------|
+| `polyflow-process-definition`                             | Kafka topic                                      | The producer route and the message source's `topics` list |
+| `kafkaMessageSourcePolyflowProcessDefinition`             | Spring `StreamableKafkaMessageSource` bean name  | `axon.eventhandling.processors[...].source`               |
+| `polyflowProcessDefinition`                               | Spring qualifier for the Kafka `ConsumerFactory` | The qualifier on the message-source parameter             |
+| `io.holunda.polyflow.view.jpa.service.process.definition` | Axon processing group                            | The JPA process-definition projection                     |
 
 The Kafka example keeps its topic names in a custom
 `polyflow.axon.kafka` properties class. Add a corresponding property, for

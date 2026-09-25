@@ -299,7 +299,7 @@ of the correlator:
 
 ```kotlin
 @Bean
-fun process-variablesCorrelator() = ProcessVariablesCorrelator(
+fun processVariablesCorrelator() = ProcessVariablesCorrelator(
 
     ProcessVariableCorrelation(
       "process_approval_process",
