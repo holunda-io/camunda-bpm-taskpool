@@ -4,3 +4,5 @@
 spring:
   application:
     name: Foo
+  liquibase:
+    enabled: false

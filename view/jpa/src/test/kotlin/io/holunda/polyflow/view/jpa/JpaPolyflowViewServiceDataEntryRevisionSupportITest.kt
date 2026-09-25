@@ -12,6 +12,8 @@ import io.holunda.camunda.taskpool.api.business.Modification
 import io.holunda.camunda.taskpool.api.business.ProcessingType
 import io.holunda.camunda.variable.serializer.serialize
 import io.holunda.polyflow.view.auth.User
+import io.holunda.polyflow.view.jpa.data.DataEntryId
+import io.holunda.polyflow.view.jpa.data.DataEntryRepository
 import io.holunda.polyflow.view.jpa.itest.TestApplication
 import io.holunda.polyflow.view.query.data.DataEntriesForUserQuery
 import io.holunda.polyflow.view.query.data.DataEntriesQuery
@@ -22,6 +24,7 @@ import org.axonframework.eventhandling.GenericEventMessage
 import org.axonframework.eventsourcing.eventstore.EventStore
 import org.axonframework.messaging.GenericMessage
 import org.axonframework.queryhandling.QueryGateway
+import org.awaitility.Awaitility.await
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -36,6 +39,7 @@ import java.util.*
 import java.util.concurrent.Callable
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
 
 private val logger = KotlinLogging.logger {}
 
@@ -64,6 +68,9 @@ internal class JpaPolyflowViewServiceDataEntryRevisionSupportITest {
 
   @Autowired
   lateinit var objectMapper: ObjectMapper
+
+  @Autowired
+  lateinit var dataEntryRepository: DataEntryRepository
 
   private val id = UUID.randomUUID().toString()
   private val now = Instant.now()
@@ -107,7 +114,18 @@ internal class JpaPolyflowViewServiceDataEntryRevisionSupportITest {
       )
     )
 
+    awaitProjectionRevision(1)
+
     send_event_update_with_revision(2)
+
+    awaitProjectionRevision(2)
+  }
+
+  private fun awaitProjectionRevision(revision: Long) {
+    await().atMost(3, TimeUnit.SECONDS).untilAsserted {
+      assertThat(dataEntryRepository.findById(DataEntryId(entryType = "io.polyflow.test", entryId = id)))
+        .hasValueSatisfying { entry -> assertThat(entry.revision).isEqualTo(revision) }
+    }
   }
 
   @AfterEach

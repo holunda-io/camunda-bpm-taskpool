@@ -9,7 +9,7 @@ import org.hibernate.type.descriptor.jdbc.BinaryJdbcType
 import org.hibernate.type.descriptor.sql.internal.DdlTypeImpl
 import java.sql.Types
 
-@Suppress("unused") // used in application.yaml
+@Deprecated("POSTGRES with different blob handling")
 class NoToastPostgresSQLDialect(info: DialectResolutionInfo) : PostgreSQLDialect(info) {
 
   override fun registerColumnTypes(typeContributions: TypeContributions, serviceRegistry: ServiceRegistry) {
