@@ -73,6 +73,11 @@ introduced after the adopted baseline.
 Do not enable adoption to bypass a pending release migration; it is only for
 the initial adoption of a verified existing schema.
 
+## Migrating to Spring Boot 4
+
+See [Migrating to Spring Boot 4](spring-boot-4.md) for the verified upgrade path and required consumer actions.
+
+
 ## Migrating to 4.x
 
 Version 4.x upgrades Spring Boot from 2.x to 3.x, which also requires Camunda >= 7.20 and Axon >= 4.7. It also uses Hibernate

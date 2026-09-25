@@ -4,11 +4,11 @@ import io.holunda.polyflow.view.mongo.TaskPoolMongoViewConfiguration
 import org.axonframework.extensions.mongo.MongoTemplate
 import org.junit.jupiter.api.AfterEach
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest
+import org.springframework.boot.data.mongodb.test.autoconfigure.DataMongoTest
 import org.springframework.test.context.*
-import org.testcontainers.containers.MongoDBContainer
 import org.testcontainers.junit.jupiter.Container
 import org.testcontainers.junit.jupiter.Testcontainers
+import org.testcontainers.mongodb.MongoDBContainer
 
 
 @TestPropertySource(
@@ -29,7 +29,7 @@ class PolyflowMongoServiceEventHandlerChangeTrackingITest : PolyflowMongoService
     @DynamicPropertySource
     @JvmStatic
     fun setProperties(registry: DynamicPropertyRegistry) {
-      registry.add("spring.data.mongodb.uri") { mongoDBContainer.replicaSetUrl }
+      registry.add("spring.mongodb.uri") { mongoDBContainer.replicaSetUrl }
     }
   }
 
@@ -41,4 +41,3 @@ class PolyflowMongoServiceEventHandlerChangeTrackingITest : PolyflowMongoService
     mongoDBContainer.clear()
   }
 }
-

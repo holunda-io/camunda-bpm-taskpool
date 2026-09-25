@@ -119,4 +119,3 @@ fun ObjectMapper.configurePolyflowJacksonObjectMapperForTaskPool(): ObjectMapper
   addMixIn(TaskAggregate::class.java, JsonAutoDetectAnyVisibility::class.java)
   return this
 }
-

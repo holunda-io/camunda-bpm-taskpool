@@ -31,10 +31,14 @@
         <artifactId>polyflow-spring-utils</artifactId>
         <version>${project.version}</version>
       </dependency>
-
       <dependency>
         <groupId>io.holunda.polyflow</groupId>
         <artifactId>polyflow-datapool-api</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.holunda.polyflow</groupId>
+        <artifactId>polyflow-datapool-collector</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
