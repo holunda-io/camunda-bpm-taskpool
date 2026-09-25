@@ -2632,21 +2632,21 @@ want to increase the logging level, please setup it e.g. in your <code>applicati
 <h3 id="db-tables">DB Tables<a class="headerlink" href="#db-tables" title="Permanent link">#</a></h3>
 <p>The JPA View uses several tables to store the results. These are:</p>
 <ul>
-<li><code>PLF_DATA_ENTRY</code>: table for business data entries</li>
-<li><code>PLF_DATA_ENTRY_AUTHORIZATIONS</code>: table for authorization information of data entries</li>
-<li><code>PLF_DATA_ENTRY_PAYLOAD_ATTRIBUTES</code>: table for data entry attribute search index</li>
-<li><code>PLF_DATA_ENTRY_PROTOCOL</code>: table for data entry protocol entry (users, groups)</li>
-<li><code>PLF_PROC_DEF</code>: table for process definitions</li>
-<li><code>PLF_PROC_DEF_AUTHORIZATIONS</code>: table for authorization information of process definitions </li>
-<li><code>PLF_PROC_INSTANCE</code>: table for process instances</li>
-<li><code>PLF_TASK</code>: table for user tasks</li>
-<li><code>PLF_TASK_AUTHORIZATIONS</code>: table for authorization information of user tasks</li>
-<li><code>PLF_TASK_CORRELATIONS</code>: table for user task correlation information</li>
-<li><code>PLF_TASK_PAYLOAD_ATTRIBUTES</code>: table for user task attribute search index</li>
-<li><code>PLF_VIEW_TASK_AND_DATA_ENTRY_PAYLOAD</code>: view for convenient taskWithDataEntry queries execution</li>
-<li><code>PLF_DATA_ENTRY_PAYLOAD_ATTRIBUTES</code>: view for convenient data entry queries with correlations</li>
-<li><code>TOKEN_ENTRY</code>: table for Axon processor tokens</li>
-<li><code>DEAD_LETTER_ENTRY</code>: table for Axon event-processor dead letters</li>
+<li><code>plf_data_entry</code>: table for business data entries</li>
+<li><code>plf_data_entry_authorizations</code>: table for authorization information of data entries</li>
+<li><code>plf_data_entry_payload_attributes</code>: table for data entry attribute search index</li>
+<li><code>plf_data_entry_protocol</code>: table for data entry protocol entry (users, groups)</li>
+<li><code>plf_proc_def</code>: table for process definitions</li>
+<li><code>plf_proc_def_authorizations</code>: table for authorization information of process definitions</li>
+<li><code>plf_proc_instance</code>: table for process instances</li>
+<li><code>plf_task</code>: table for user tasks</li>
+<li><code>plf_task_authorizations</code>: table for authorization information of user tasks</li>
+<li><code>plf_task_correlations</code>: table for user task correlation information</li>
+<li><code>plf_task_payload_attributes</code>: table for user task attribute search index</li>
+<li><code>plf_view_task_and_data_entry_payload</code>: view for convenient taskWithDataEntry queries execution</li>
+<li><code>plf_view_data_entry_payload</code>: view for convenient data entry queries with correlations</li>
+<li><code>token_entry</code>: table for Axon processor tokens</li>
+<li><code>dead_letter_entry</code>: table for Axon event-processor dead letters</li>
 </ul>
 <p>Create these tables and views through the Polyflow Liquibase changelog. Add
 <code>polyflow-liquibase</code> to the application and include
@@ -2673,7 +2673,7 @@ aggregate or saga persistence; see <a href="../configuration/persistence.html">P
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="September 25, 2026 14:55:06 UTC">September 25, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="September 25, 2026 19:09:18 UTC">September 25, 2026</span>
   </span>
 
     
