@@ -16,7 +16,7 @@ import org.springframework.test.context.ActiveProfiles
 
 @SpringBootTest(
   classes = [ProcessVariablesPropertiesITest.PropertiesTestApplication::class],
-  webEnvironment = SpringBootTest.WebEnvironment.MOCK
+  webEnvironment = SpringBootTest.WebEnvironment.NONE
 )
 @ActiveProfiles("process-variables-properties-itest")
 internal class ProcessVariablesPropertiesITest {
