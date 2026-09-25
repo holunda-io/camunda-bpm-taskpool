@@ -18,7 +18,7 @@ if the JPA persistence is already used in the project setup.
 
 ### Configuration options
 
-In order to activate the JPA View implementation, please include the following dependency on your classpath:
+To activate the JPA View implementation, include the following dependency on your classpath:
 
 ```xml
 <dependency>
@@ -46,7 +46,7 @@ spring:
     show-sql: false
     open-in-view: true # disable JPA warning
   datasource:
-    url: <jdbc-connnection-string>
+    url: <jdbc-connection-string>
     username: <db-user>
     password: <db-password>
 ```
@@ -78,7 +78,7 @@ stored items are: `task`, `data-entry`, `process-instance` and `process-definiti
 storage of items not required by your application and save space consumption of your database. The property defaults to `data-entry`.
 
 With the `payload-attribute-column-length` property one can specify a maximum length for payload attribute values if they are strings. Values that exceed
-this length will automatically be trimmed to the max length in order to prevent exceptions when handling the event. This is especially necessary because
+this length are automatically trimmed to the maximum length to prevent exceptions while handling the event. This is especially necessary because
 relational databases have limits on the length of composite primary keys. Since the combination of (id, path, value) for tasks or (id, type, path, value) for
 data entries must be unique, the primary key is very large, which limits the amount of space available for the value.
 
@@ -97,7 +97,7 @@ consideration during the search index creation.
 !!! note
     Please make sure you understand that the **payload enrichment** performed during collection and **indexing for search** are two different
     operations. It is perfectly fine to have a large JSON payload attached to the task, but it makes no sense to make the entire payload searchable,
-    at lease using JPA View.
+    at least when using JPA View.
 
 ### Entity Scan
 

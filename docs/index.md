@@ -7,18 +7,18 @@
 * You need to provide a view on the business objects processed by your processes?
 * You want a customized, business-driven audit log for your processes and changes to the business objects?
 
-If you can answer one of the previous questions with yes, Polyflow's libraries might help you.
+If you can answer yes to any of these questions, Polyflow's libraries might help you.
 
 ## How to start?
 
-We provide documentation for different people and different tasks. A good starting point is the
-[Introduction](./introduction/). You might want to look at [Reference Guide](./reference-guide/) containing
-a [Working Example](./examples/) and details about [Usage Scenarios](./examples/scenarios/).
+We provide documentation for different audiences and tasks. A good starting point is the
+[Introduction](./introduction/). You may also want to consult the [Reference Guide](./reference-guide/),
+which includes a [working example](./examples/) and details about [usage scenarios](./examples/scenarios/).
 
 ## Get in touch
 
-If you are missing a feature, have a question regarding usage or deployment, you should definitely get in touch
-with us. There are various ways to do so:
+If you are missing a feature or have questions about usage or deployment, please get in touch.
+You can reach us in several ways:
 
 [![Gitter chat](https://badges.gitter.im/gitterHQ/gitter.png)](https://gitter.im/holunda-io/camunda-bpm-taskpool?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 [![Slack](https://img.shields.io/badge/slack-@holunda/taskpool-green.svg?logo=slack")](https://holunda.slack.com/messages/taskpool/)

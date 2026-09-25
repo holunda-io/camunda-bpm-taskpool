@@ -4,7 +4,7 @@ pageId: view-mongo
 ---
 ### Purpose
 
-The Mongo View is component responsible for creating read-projections of tasks and business data entries. It implements
+The Mongo View is a component responsible for creating read projections of tasks and business data entries. It implements
 the Taskpool and Datapool View API and persists the projection as document collections in a Mongo database.
 
 ### Features
@@ -21,7 +21,7 @@ the Taskpool and Datapool View API and persists the projection as document colle
 
 ### Configuration options
 
-In order to activate the Mongo implementation, please include the following dependency on your classpath:
+To activate the Mongo implementation, include the following dependency on your classpath:
 
 ```xml
 <dependency>
@@ -31,8 +31,8 @@ In order to activate the Mongo implementation, please include the following depe
 </dependency>
 ```
 
-The implementation relies on Spring Data Mongo and needs to activate those. Please add
-the following annotation to any class marked as Spring Configuration loaded during initialization:
+The implementation relies on Spring Data Mongo. Add
+the following annotation to a Spring configuration class loaded during initialisation:
 
 ```java
 @Configuration
@@ -48,7 +48,7 @@ public class MyViewConfiguration {
 }
 ```
 
-In addition, configure a Mongo connection to database called `tasks-payload` using `application.properties` or
+In addition, configure a Mongo connection to a database named `tasks-payload` in `application.properties` or
 `application.yaml`:
 
 ```yml
@@ -60,8 +60,8 @@ spring:
       port: 27017
 ```
 
-The view implementation provides runtime details using standard logging facility. If you
-want to increase the logging level, please set up it e.g. in your `application.yaml`:
+The view implementation provides runtime details through standard logging. To
+increase the logging level, configure it in `application.yaml`:
 
 
 ```yml

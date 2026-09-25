@@ -5,7 +5,7 @@ pageId: engine-datapool-sender
 ### Purpose
 
 Datapool sender is a component usually deployed as a part of the process application (but not necessary) that
-is responsible for collecting the Business Data Events fired by the application in order to allow for creation of
+collects Business Data Events fired by the application to create
 a business data projection. In doing so, it collects and transmits it to Datapool Core.
 
 ### Features
@@ -39,7 +39,7 @@ class MyDataEntryCollectorConfiguration {
 
 ### Command transmission
 
-In order to control sending of commands to command gateway, the command sender activation property
+To control command dispatch to the command gateway, use the command-sender activation property
 `polyflow.integration.sender.data-entry.enabled` (default is `true`) is available. If disabled, the command sender
 will log any command instead of sending it to the command gateway.
 
@@ -61,7 +61,7 @@ Out of the box, Polyflow supplies two command senders to match your deployment s
 
 #### Serialization of payload
 
-By default, the data entry sender will serialize payload of the `DataEntry` into a JSON-Map structure, in order to be received by projections (Data Pool View) 
+By default, the data-entry sender serialises the `DataEntry` payload into a JSON-map structure so that projections (Data Pool View) can receive it.
 and storage of it, independent of the classes which might be not on the classpath of the projection (generic structure instead of a typed Java object structure).
 This serialization can be disabled by the sender property `polyflow.integration.sender.data-entry.serialize-payload=false`. 
 
@@ -71,7 +71,7 @@ The commands sent by the `Datapool Sender` are received by Command Handlers. The
 on the state of the aggregate and other components. The `SimpleDataEntryCommandSender` is informed about the command outcome. By default, it will log the outcome
 to console (success is logged in `DEBUG` log level, errors are using `ERROR` log level).
 
-In some situations it is required to take care of command outcome. A prominent example is to include a metric for command dispatching errors into monitoring. For doing so,
+In some situations, you need to handle the command outcome. For example, you may want to add a command-dispatch-error metric to monitoring. To do so,
 it is possible to provide own handlers for success and error command outcome.
 
 For Data Entry Command Sender (as a part of `Datapool Sender`) please provide a Spring Bean implementing the `io.holunda.polyflow.datapool.sender.DataEntryCommandSuccessHandler`

@@ -23,6 +23,20 @@ Filtering does not create correlations, and correlation does not add a variable
 to the task payload. Configure both when the remote task platform needs both
 the selected payload values and references to business data.
 
+### Safe variable deserialization
+
+When a payload filter can exclude a variable for a task, the collector first
+reads available variable names with Camunda deserialization disabled. It applies
+the configured payload filter, adds variables needed by configured correlations,
+and only then reads that selected set with deserialization enabled. This allows
+a remote standalone engine to contain excluded complex variables whose Java
+classes are not present in the collector deployment. Without an applicable
+restriction, the collector keeps the original single deserialized read.
+
+Variables selected for task payload or correlation must still be deserializable
+by the collector. A variable used only for a correlation remains out of the
+payload unless it also passes the payload filter.
+
 ### Required collector setup
 
 Process-variable enrichment must be active for filtering and correlation to be

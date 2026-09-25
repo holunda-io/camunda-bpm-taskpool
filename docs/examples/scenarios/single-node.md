@@ -2,7 +2,7 @@
 title: Scenario for running on a single node
 ---
 
-This example demonstrates the usage of the Camunda BPM Taskpool deployed in one single node and is built as a SpringBoot application 
+This example demonstrates Camunda BPM Taskpool deployed on a single node. It is a Spring Boot application
 described in the [Deployment](../../introduction/deployment.md) section.
 
 ### System Requirements
@@ -15,8 +15,8 @@ Before you begin, please build the entire project with `./mvnw clean install` fr
 
 ### Start
 
-The demo application consists of one Maven module which can be started by running from command line in
-the `examples/scenarios/single-node-jpa` directory using Maven. Alternatively you can start the packaged application using:
+The demo application consists of one Maven module. Start it with Maven from the
+`examples/scenarios/single-node-jpa` directory, or start the packaged application with:
 
 ```bash
 java -jar target/*.jar

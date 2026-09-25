@@ -2,30 +2,30 @@
 title: Motivation and Goals
 ---
 
-Over the last years, we built various process applications and whole process platforms for our customers using a modern process engine - Camunda Platform 7. In
-doing so, we observed common requirements, in particular with respect to task-oriented frontend applications and were able to extract them. These were
-basic requirements independent of the used frontend technology, and it turned out that some issues occurred every time during the implementation.
+Over recent years, we have built various process applications and complete process platforms for customers using Camunda Platform 7. In
+doing so, we identified common requirements, particularly for task-oriented frontend applications. These requirements were
+independent of the frontend technology used, and the same issues repeatedly arose during implementation.
 
 These were:
 
-* Coping with performance issues of Camunda Platform 7 engine when it comes to **big amounts** of tasks to be shown
+* Addressing Camunda Platform 7 engine performance issues when displaying **large numbers** of tasks
 * Creating high-performance custom queries for preloading **process variables** for tasks
 * Creating high-performance custom queries to preload **business data** associated with the running process instances
 * High-performance re-ordering (sorting) of user tasks
 * High-performance retrieval of **tasks from multiple process engines** to display in a **single task list**
-* Repetitive queries with the same result
+* Avoiding repetitive queries that return the same result
 * Creating a custom view on the **business data items** handled during the process execution
 * Creating a custom **audit log** for the changes performed on the business data items
 
-In our projects we developed solutions to those requirements and gathered experience in applying
-different approaches for that. Some issues listed above result from the fact that data on a single user task is being read
-much more often than written, depending on the user count. For systems with a big amount of users this becomes a serious
-performance issue and needs to be addressed.
+In our projects, we developed solutions for these requirements and gained experience with
+different approaches. Some of the issues above arise because data for a single user task is read
+far more often than it is written. For systems with many users, this becomes a serious
+performance issue that must be addressed.
 
-A possible solution to most of those issues is to create a special component which has a read-optimized representation of user tasks. Such a component acts as a
-cache for tasks and allows for serving a high amount of queries without any performance impact to the process engine itself at the costs of loosing strong
-consistency (and working with eventual-consistent task list). Another component might provide additional business data related to the process tasks.
+A possible solution to most of these issues is a component with a read-optimised representation of user tasks. Such a component acts as a
+task cache and can serve many queries without affecting process-engine performance, at the cost of strong
+consistency (the task list is eventually consistent). Another component can provide business data related to process tasks.
 
-We successfully applied this approach at multiple customers but identified the high initial invest as a main drawback of the solution. The goal of this project
-is to provide such components as free and open source libraries, to be used as a foundation for creation of process platforms for Camunda Platform 7 and other
-engines. They can also be used as an integration layer for custom process applications, custom user task lists and other components of process automation solutions.
+We successfully applied this approach for multiple customers, but identified the high initial investment as its main drawback. The goal of this project
+is to provide these components as free and open-source libraries that form a foundation for process platforms based on Camunda Platform 7 and other
+engines. They can also be used as an integration layer for custom process applications, task lists, and other process-automation components.

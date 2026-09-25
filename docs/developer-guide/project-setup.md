@@ -3,24 +3,23 @@ title: Project Setup
 pageId: 'project-setup'
 ---
 
-If you are interested in developing and building the project please follow the following instruction.
+To develop and build the project, follow these instructions.
 
 ## Version control
 
-To get sources of the project, please execute:
+To obtain the project sources, run:
 
 ```bash
 git clone https://github.com/holunda-io/camunda-bpm-taskpool.git
 cd camunda-bpm-taskpool
 ```
 
-We are using gitflow in our git SCM. That means that you should start from `develop` branch,
-create a `feature/<name>` out of it and once it is completed create a pull request containing
-it. Please squash your commits before submitting and use semantic commit messages, if possible.
+We use Gitflow. Start from the `develop` branch, create a `feature/<name>` branch,
+and create a pull request when the feature is complete. Please squash your commits before submitting and use semantic commit messages where possible.
 
 ## Project Build
 
-Perform the following steps to get a development setup up and running.
+Run the following command to set up the development environment:
 
 ```bash
 ./mvnw clean install
@@ -28,9 +27,8 @@ Perform the following steps to get a development setup up and running.
 
 ## Integration Tests
 
-By default, the build command will ignore the run of `failsafe` Maven plugin executing the integration tests
-(usual JUnit tests with class names ending with ITest). In order to run integration tests, please
-call from your command line:
+By default, the build does not run the `failsafe` Maven plugin, which executes integration tests
+(JUnit tests with class names ending in `ITest`). To run integration tests, execute:
 
 ```bash
 ./mvnw integration-test failsafe:verify -Pitest
@@ -40,9 +38,9 @@ call from your command line:
 
 ### Camunda Version
 
-You can choose the used Camunda version by specifying the profile `camunda-ee` or `camunda-ce`. The default
-version is a Community Edition. Specify `-Pcamunda-ee` to switch to Camunda Enterprise edition. This will
-require a valid Camunda license. You can put it into a file `~/.camunda/license.txt` and it will be detected
+Choose the Camunda version by specifying the `camunda-ee` or `camunda-ce` profile. The default
+is the Community Edition. Specify `-Pcamunda-ee` to switch to Camunda Enterprise Edition. This
+requires a valid Camunda license. Place it in `~/.camunda/license.txt` and it will be detected
 automatically.
 
 ### Database schema
@@ -56,38 +54,37 @@ central Liquibase master changelog; see the [Persistence configuration](../refer
 
 ### Build Documentation
 
-We are using MkDocs for generation of a static site documentation and rely on Markdown as much as possible.
-MkDocs is written in Python 3 and needs to be installed on your machine. For the installation please run the following
-command from your command line:
+We use MkDocs to generate the static documentation site and rely on Markdown where possible.
+MkDocs is written in Python 3 and must be installed on your machine. Run the following commands:
 
 ```bash
 python3 -m pip install --upgrade pip
 python3 -m pip install -r ./docs/requirements.txt
 ```
 
-For creation of documentation, please run:
+To build the documentation, run:
 
 ```bash
 mkdocs build
 ```
 
-The docs are generated into `site` directory.
+The documentation is generated in the `site` directory.
 
 !!! note
-    If you want to develop your docs in 'live' mode, run `mkdocs serve` and access the [http://localhost:8000/](http://localhost:8000/) from your browser.
+    To develop the documentation in live mode, run `mkdocs serve` and open [http://localhost:8000/](http://localhost:8000/) in your browser.
 
 ## Continuous Integration
 
-Travis CI is building all branches on commit hook. In addition, a private-hosted Jenkins CI
-is used to build the releases.
+Travis CI builds all branches on each commit. In addition, a privately hosted Jenkins CI
+builds releases.
 
 ## Release Management
 
-Release management has been set up for use of Sonatype Nexus (= Maven Central)
+Release management is configured for Sonatype Nexus (Maven Central).
 
-### What modules get deployed to repository
+### Which modules are deployed to the repository
 
-Every module is enabled by default. If you want to change this, please provide the property
+Every module is enabled by default. To change this, add the property
 
 ```xml
 <maven.deploy.skip>true</maven.deploy.skip>
@@ -100,7 +97,7 @@ inside the corresponding `pom.xml`. Currently, all examples are _EXCLUDED_ from 
 !!! warning
     This operation requires special permissions.
 
-We use gitflow for development (see [A successful git branching model](http://nvie.com/posts/a-successful-git-branching-model/) for more details). You could use gitflow with native git commands, but then you would have to change the versions in the poms manually. Therefore, we use the [mvn gitflow plugin](https://github.com/aleksandr-m/gitflow-maven-plugin/), which handles this and other things nicely.
+We use Gitflow for development (see [A successful git branching model](http://nvie.com/posts/a-successful-git-branching-model/) for details). You can use Gitflow with native Git commands, but must then change the versions in the POMs manually. Therefore, we use the [mvn gitflow plugin](https://github.com/aleksandr-m/gitflow-maven-plugin/), which handles these tasks.
 
 You can build a release with:
 
@@ -109,7 +106,7 @@ You can build a release with:
 ./mvnw gitflow:release-finish
 ```
 
-This will update the versions in the `pom.xml` s accordingly and push the release tag to the `master` branch
+This updates the versions in the `pom.xml` files and pushes the release tag to the `master` branch.
 
 When changing the major or minor version, also update the Liquibase baseline
 and `tagDatabase` tags in `polyflow-liquibase` to the same `major.minor`
@@ -118,24 +115,23 @@ version and fail the build when the database tag differs. Patch releases do not
 change the Liquibase tag. For example, `4.7.1-SNAPSHOT` requires database tag
 `4.7`. Run `./mvnw verify` before releasing; the release workflow runs these
 tests and cannot publish a mismatched Liquibase tag.
-and update the `develop` branch for the new development version.
+It also updates the `develop` branch for the next development version.
 
 ### Trigger a deploy
 
 !!! warning
     This operation requires special permissions.
 
-Currently, CI allows for deployment of artifacts to Maven Central and is executed using github actions.
-This means, that a push to `master` branch will start the corresponding build job, and if successful the
-artifacts will get into `Staging Repositories` of OSS Sonatype without manual intervention.
+CI currently deploys artifacts to Maven Central by using GitHub Actions.
+A push to the `master` branch starts the corresponding build job; when it succeeds, the
+artifacts are placed in OSS Sonatype staging repositories without manual intervention.
 
 ### Run deploy from local machine
 
 !!! warning
     This operation requires special permissions.
 
-If you still want to execute the deployment from your local machine, you need to have GPG keys at place and
-to execute the following command on the `master` branch:
+To deploy from your local machine, you need GPG keys configured and must run the following command on the `master` branch:
 
 ```bash
 export GPG_KEYNAME="<keyname>"
@@ -148,5 +144,5 @@ export GPG_PASSPHRASE="<secret>"
 !!! warning
      This operation requires special permissions.
 
-The deployment job will publish the artifacts to Nexus OSS staging repositories. Currently, all snapshots get into OSS Sonatype Snapshot
-repository and all releases to Maven Central automatically.
+The deployment job publishes artifacts to Nexus OSS staging repositories. Snapshots are published to the OSS Sonatype Snapshot
+repository, and releases are published to Maven Central automatically.

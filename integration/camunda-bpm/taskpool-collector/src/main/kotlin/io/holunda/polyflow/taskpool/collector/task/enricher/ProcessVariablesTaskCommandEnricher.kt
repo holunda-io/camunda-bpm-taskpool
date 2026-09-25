@@ -17,8 +17,26 @@ open class ProcessVariablesTaskCommandEnricher(
 
   override fun <T : TaskIdentityWithPayloadAndCorrelations> enrich(command: T): T {
 
-    // load variables typed
-    val variablesTyped = taskVariableLoader.getTypeVariables(command)
+    val variablesTyped = if (processVariablesFilter.hasRestrictionsFor(command.sourceReference.definitionKey, command.taskDefinitionKey)) {
+      // Load variable names without deserializing values. This prevents excluded
+      // complex variables from requiring their application classes on the engine.
+      val availableVariables = taskVariableLoader.getTypeVariables(command, deserializeValues = false)
+      val payloadVariables = processVariablesFilter.filterVariables(
+        command.sourceReference.definitionKey,
+        command.taskDefinitionKey,
+        availableVariables
+      )
+      val variableNames = payloadVariables.keys + processVariablesCorrelator.variableNamesFor(
+        command.sourceReference.definitionKey,
+        command.taskDefinitionKey
+      )
+
+      // Deserialize only payload and correlation variables.
+      taskVariableLoader.getTypeVariables(command, variableNames)
+    } else {
+      // Preserve the single read when no filter restricts the payload.
+      taskVariableLoader.getTypeVariables(command)
+    }
 
     // Payload enrichment
     command.payload.putAllTyped(
@@ -43,4 +61,3 @@ open class ProcessVariablesTaskCommandEnricher(
     return command
   }
 }
-
