@@ -977,6 +977,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../reference-guide/components/startable-process-definitions.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Publishing Startable Process Definitions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../reference-guide/components/camunda-starter.html" class="md-nav__link">
         
   
@@ -2493,33 +2521,32 @@
 
   <h1>Deployment Strategies</h1>
 
-<p>Several deployment scenarios of the components are possible depending on your requirements and available infrastructure.</p>
+<p>Several component deployment scenarios are possible, depending on your requirements and available infrastructure.</p>
 <p>The simplest setup is to run all components on a single node. A more advanced scenario is to distribute components over the network and connect them.</p>
 <p>For the corresponding Axon service responsibilities and runtime configuration,
 see <a href="../reference-guide/configuration/service-configuration.html">Service Configuration</a>.</p>
-<p>In doing so, one of the challenging issues for distribution and connecting microservices is a setup of messaging technology supporting required message exchange
-patterns (MEPs) for a CQRS system. Because of different semantics of commands, events and queries and additional requirements of event-sourced persistence a
-special implementation of command bus, event bus and event store is required. In particular, two scenarios can be distinguished: using Axon Server or using a
-different distribution technology.</p>
+<p>One challenge in distributing and connecting microservices is setting up messaging technology that supports the required message-exchange
+patterns (MEPs) for a CQRS system. Because commands, events, and queries have different semantics, and event-sourced persistence has additional requirements,
+the command bus, event bus, and event store need specialised implementations. In particular, two scenarios are possible: using Axon Server or another
+distribution technology.</p>
 <h2 id="single-node-deployment">Single node deployment<a class="headerlink" href="#single-node-deployment" title="Permanent link">#</a></h2>
-<p>The easiest scenario is the <strong>Single Node Deployment</strong>. It provides all functional features of the Polyflow library, but is not addressing any of performance,
-scalability, autonomy and reliability requirements. It works almost without additional infrastructure and is ideal to start with.</p>
+<p>The simplest scenario is the <strong>Single Node Deployment</strong>. It provides all functional features of the Polyflow library but does not address performance,
+scalability, autonomy, or reliability requirements. It requires almost no additional infrastructure and is ideal for getting started.</p>
 <p>In a single node scenario the following configuration is used:</p>
 <ul>
 <li>All buses are local (command bus, event bus, query bus)</li>
-<li>Camunda BPM Integration components, Core components and View components are all deployed in the same node</li>
-<li>JPA-Based event storage is used, persisting the domain events in a RDBMS, along with Camunda-specific DB tables.</li>
-<li>Simple (In-memory) View or JPA view is used to provide query projections of <code>taskpool</code> and <code>datapool</code></li>
+<li>Camunda BPM integration, Core, and View components are all deployed on the same node.</li>
+<li>JPA-based event storage persists domain events in an RDBMS alongside Camunda-specific database tables.</li>
+<li>A Simple (in-memory) View or JPA View provides query projections for <code>taskpool</code> and <code>datapool</code>.</li>
 </ul>
 <p>Check the following diagram for more details:</p>
-<p><img alt="Deployment of all component in a single node" src="../img/deployment-single.png" /></p>
+<p><img alt="Deployment of all components on a single node" src="../img/deployment-single.png" /></p>
 <h2 id="multiple-node-deployment">Multiple node deployment<a class="headerlink" href="#multiple-node-deployment" title="Permanent link">#</a></h2>
-<p>The more advanced scenario is to separate the <strong>Process Platform components</strong> from <strong>Process Application components</strong>, compare
-the <a href="concepts.html">concepts section</a>. Especially, it is helpful if you intend to build a central <strong>Process Platform</strong> and multiple <strong>Process applications</strong> using
-it.</p>
-<p>In general, this is one of the main use cases for Polyflow framework itself, but the distribution aspects adds technical complexity to the resulting
-architecture. Especially, following the architecture blueprint of Axon Framework, the three buses (Command bus, Event bus and Query bus) needs to be distributed
-and act as connecting infrastructure between components.</p>
+<p>The more advanced scenario separates <strong>Process Platform components</strong> from <strong>Process Application components</strong>; see
+the <a href="concepts.html">concepts section</a>. It is particularly useful when you want to build a central <strong>Process Platform</strong> used by multiple <strong>Process Applications</strong>.</p>
+<p>This is one of the main use cases for the Polyflow framework, but distribution adds technical complexity to the resulting
+architecture. Following the Axon Framework architecture blueprint, the three buses (command, event, and query) must be distributed
+and act as the connecting infrastructure between components.</p>
 <h3 id="distribution-using-axon-server-core-component-as-part-of-process-platform">Distribution using Axon Server (core component as part of process platform)<a class="headerlink" href="#distribution-using-axon-server-core-component-as-part-of-process-platform" title="Permanent link">#</a></h3>
 <p>Requirements:</p>
 <ul>
@@ -2527,16 +2554,15 @@ and act as connecting infrastructure between components.</p>
 <li>distributed command bus</li>
 <li>distributed event bus</li>
 </ul>
-<p>Axon Server provides an implementation for this requirement leading to a distributed buses and a central Event Store. It is easy to use, easy to configure and
-easy to run. If you need a HA setup, you will need the Enterprise license of Axon Server. Essentially, if you don't have another HA ready-to use messaging, this
-scenario might be your way to go.</p>
+<p>Axon Server provides the required distributed buses and a central Event Store. It is straightforward to use, configure, and run. A high-availability setup
+requires an Axon Server Enterprise license. This scenario may be a good fit if you do not already have high-availability messaging infrastructure.</p>
 <p>This scenario supports:</p>
 <ul>
 <li>central Process Platform components (core components and their projections)</li>
 <li>free choice for projection persistence (since Axon Server supports event replay)</li>
 <li>no direct synchronous communication between <strong>Process Platform</strong> and <strong>Process Application</strong> is required (e.g. via REST, since it is routed via command, event
   and query bus)</li>
-<li>central components should to be HA available </li>
+<li>central components should be highly available</li>
 <li>support routing of interaction task commands</li>
 </ul>
 <p>The following diagram depicts the distribution of the components and the messaging:</p>
@@ -2547,9 +2573,8 @@ scenario might be your way to go.</p>
 <li>Event store</li>
 <li>distributed event bus</li>
 </ul>
-<p>Axon Server provides an implementation for this requirement leading to a distributed buses and a central Event Store. It is easy to use, easy to configure and
-easy to run. If you need a HA setup, you will need the Enterprise license of Axon Server. Essentially, if you don't have another HA ready-to use messaging, this
-scenario might be your way to go.</p>
+<p>Axon Server provides the required distributed buses and a central Event Store. It is straightforward to use, configure, and run. A high-availability setup
+requires an Axon Server Enterprise license. This scenario may be a good fit if you do not already have high-availability messaging infrastructure.</p>
 <p>This scenario supports:</p>
 <ul>
 <li>Core components deployed locally to the process engine (including task pool and data pool and their projections)</li>
@@ -2560,8 +2585,8 @@ scenario might be your way to go.</p>
 <p>The following diagram depicts the distribution of the components and the messaging:</p>
 <p><img alt="Deployment of Polyflow with Axon server, local core components" src="../img/deployment-axon-server-events-only.png" /></p>
 <h3 id="distribution-without-axon-server">Distribution without Axon Server<a class="headerlink" href="#distribution-without-axon-server" title="Permanent link">#</a></h3>
-<p>If you already have another messaging at place, like Kafka or RabbitMQ, you might skip the usage of Axon Server. In doing so, you will be responsible for
-distribution of events and will need to surrender some features.</p>
+<p>If you already have another messaging system, such as Kafka or RabbitMQ, you may not need Axon Server. In that case, you are responsible for
+distributing events and must forgo some features.</p>
 <p>This scenario supports:</p>
 <ul>
 <li>Core components deployed locally to the process engine (including task pool and data pool and their projections)</li>
@@ -2591,7 +2616,7 @@ distribution of events and will need to surrender some features.</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="September 10, 2026 09:46:15 UTC">September 10, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="September 25, 2026 14:55:06 UTC">September 25, 2026</span>
   </span>
 
     

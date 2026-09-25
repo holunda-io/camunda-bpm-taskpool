@@ -876,6 +876,34 @@
   
   
     <li class="md-nav__item">
+      <a href="startable-process-definitions.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Publishing Startable Process Definitions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="camunda-starter.html" class="md-nav__link">
         
   
@@ -2572,7 +2600,7 @@ like <code>attribute=value&amp;attrubute2=value2&amp;task.name=taskname</code>).
 and generic query paging and sorting.</p>
 <h2 id="feature-support-matrix">Feature support matrix<a class="headerlink" href="#feature-support-matrix" title="Permanent link">#</a></h2>
 <h3 id="task-api">Task API<a class="headerlink" href="#task-api" title="Permanent link">#</a></h3>
-<p>The Task API allows to query for tasks handled by the task-pool.</p>
+<p>The Task API lets you query tasks managed by the task pool.</p>
 <table>
 <thead>
 <tr>
@@ -2692,7 +2720,7 @@ and generic query paging and sorting.</p>
 </tbody>
 </table>
 <h3 id="process-definition-api">Process Definition API<a class="headerlink" href="#process-definition-api" title="Permanent link">#</a></h3>
-<p>The Process Definition API allows to query for process definitions handled by the task-pool.</p>
+<p>The Process Definition API lets you query process definitions managed by the task pool.</p>
 <table>
 <thead>
 <tr>
@@ -2716,7 +2744,7 @@ and generic query paging and sorting.</p>
 </tbody>
 </table>
 <h3 id="process-instance-api">Process Instance API<a class="headerlink" href="#process-instance-api" title="Permanent link">#</a></h3>
-<p>The Process Instance API allows to query for process instances handled by the task-pool.</p>
+<p>The Process Instance API lets you query process instances managed by the task pool.</p>
 <table>
 <thead>
 <tr>
@@ -2740,7 +2768,7 @@ and generic query paging and sorting.</p>
 </tbody>
 </table>
 <h3 id="process-variable-api-incubation">Process Variable API (incubation)<a class="headerlink" href="#process-variable-api-incubation" title="Permanent link">#</a></h3>
-<p>The Process Variable API allows to query for process variables handled by the task-pool.</p>
+<p>The Process Variable API lets you query process variables managed by the task pool.</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
 <p>The Process Variable API is supporting revision-aware queries, which are currently only supported by JPA and In-Memory implementations.  </p>
@@ -2768,7 +2796,7 @@ and generic query paging and sorting.</p>
 </tbody>
 </table>
 <h3 id="data-entry-api">Data Entry API<a class="headerlink" href="#data-entry-api" title="Permanent link">#</a></h3>
-<p>The Data Entry API allows to query for data entries handled by the data-pool.</p>
+<p>The Data Entry API lets you query data entries managed by the data pool.</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
 <p>The Data Entry API supports revision-aware queries by JPA and In-Memory implementations <strong>ONLY</strong>.</p>
@@ -2822,7 +2850,7 @@ and generic query paging and sorting.</p>
 <h2 id="revision-aware-query-support">Revision-aware query support<a class="headerlink" href="#revision-aware-query-support" title="Permanent link">#</a></h2>
 <p>Projections can be built in a way, that they support and store event revision information transported by the event metadata. By doing so, you might send an
 update of the model by specifying the update revision and are waiting for the eventually consistent event delivery to the projection of this update.
-In order to achieve this, you might specify the minimum revision the query result must fulfill in order to match your query request. See <a href="https://github.com/holixon/axon-gateway-extension">axon-gateway-extension</a>
+To achieve this, specify the minimum revision that a query result must fulfil to match the request. See <a href="https://github.com/holixon/axon-gateway-extension">axon-gateway-extension</a>.
 for more details. Please note, that not all implementations are implementing this feature. Especially, Mongo DB View is currently <strong>NOT SUPPORTING</strong> Revision Aware queries. </p>
 <h2 id="filtering-paging-and-sorting">Filtering, Paging and Sorting<a class="headerlink" href="#filtering-paging-and-sorting" title="Permanent link">#</a></h2>
 <p>Task API and Data Entries API supports filtering, paging and sorting in queries resulting in multiple results. For Task API these are <code>AllTasksQuery</code>, <code>TasksForGroupQuery</code>, <code>TasksForUserQuery</code>, <code>TasksForCandidateUserAndGroupQuery</code>,
@@ -2836,7 +2864,7 @@ The queries implement the <code>PageableSortableQuery</code> interface, allowing
 </code></pre></div>
 The <code>page</code> parameter denotes the page number to deliver (starting with <code>0</code>). The <code>size</code> parameter denotes the number of elements on a page. By default, the <code>page</code> is set to <code>0</code>
 and the size is set to <code>Int.MAX</code>. </p>
-<p>An optional <code>sort</code> list allows to sort the results by multiple field attributes. The format of the <code>sort</code> string is <code>&lt;+|-&gt;fieldName</code>, <code>+fieldName</code> means sort by <code>fieldName</code> ascending,
+<p>An optional <code>sort</code> list lets you sort results by multiple fields. The format of a <code>sort</code> string is <code>&lt;+|-&gt;fieldName</code>; <code>+fieldName</code> sorts by <code>fieldName</code> in ascending order,
 <code>-fieldName</code> means sort by <code>fieldName</code> descending. The field must be a direct member of the result (<code>Task</code> for queries on <code>Task</code> and <code>TaskWithDataEntries</code> or <code>DataEntry</code>) and must be one of the following type:</p>
 <ul>
 <li>java.lang.Integer</li>
@@ -2916,7 +2944,7 @@ and <code>data.entryType=info.polyflow.Order</code> will deliver data entries of
 process name, <code>task.textSearch%some-substring</code> makes a special OR-combined like-search on task name, task description and task process name. </p>
 </div>
 <p>If the field name does not have one of the above prefixes, it is considered as an attribute inside the payload of data entry or enriched variables of a user task. For example, imagine
-you have a data entry with payload attributes <code>{ "attribute": "value", "another": 45 }</code>. In order to search for those, just specify <code>attribute=value</code> in your filter criteria.</p>
+you have a data entry with payload attributes <code>{ "attribute": "value", "another": 45 }</code>. To search for these entries, specify <code>attribute=value</code> in the filter criteria.</p>
 <div class="admonition info">
 <p class="admonition-title">Info</p>
 <p>When filtering in the Task API, only the queries that include Data Entries (<code>AllTasksWithDataEntriesQuery</code>, <code>TasksWithDataEntriesForGroupQuery</code>, <code>TasksWithDataEntriesForUserQuery</code>)
@@ -2952,7 +2980,7 @@ customer name would first get OR-composed before being AND-composed with the tas
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="October 10, 2024 12:29:19 UTC">October 10, 2024</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="September 25, 2026 14:55:06 UTC">September 25, 2026</span>
   </span>
 
     

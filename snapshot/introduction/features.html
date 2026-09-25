@@ -982,6 +982,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../reference-guide/components/startable-process-definitions.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Publishing Startable Process Definitions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../reference-guide/components/camunda-starter.html" class="md-nav__link">
         
   
@@ -2503,29 +2531,28 @@
 library provides a backend from which task lists can be served.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>If you are using taskpool with Camunda Platform 7, it can be seen as a replacement resp. add-on for Camunda's <code>TaskService</code>.</p>
+<p>When you use Taskpool with Camunda Platform 7, it can serve as a replacement for or extension of Camunda's <code>TaskService</code>.</p>
 </div>
 <p>The <code>taskpool</code> library provides the following features:</p>
 <ul>
 <li>Task mirroring: provides a list of tasks in the system including all standard task attributes provided by the process engine</li>
-<li>Include additional attributes that are important for processing</li>
-<li>Reacts on all task life cycle events fired by the process engine, automatically publishes user tasks to the <code>taskpool</code></li>
-<li>High performance queries: creates read-optimized projections including task-, process- and business data</li>
+<li>Includes additional attributes that are important for processing.</li>
+<li>Reacts to all task lifecycle events fired by the process engine and automatically publishes user tasks to the <code>taskpool</code>.</li>
+<li>Provides high-performance queries through read-optimised projections of task, process, and business data.</li>
 <li>Centralized task list: running several Camunda BPM Engines in several applications is a common use case for larger companies. From the user's perspective, it
   is not feasible to login to several task lists and check for relevant user tasks. The demand for a centralized task list can be addressed by using the
   central <code>taskpool</code> component to which tasks from several process engines are transmitted over the network.</li>
-<li>Data enrichment: all scenarios, in which the data is not stored in the process payload, result in a cascade of queries executed after fetching the tasks. In
-  contrast to that, the usage of the <code>taskpool</code> library with a data enrichment plugin mechanism allows for caching additional business data along with the task
-  information.</li>
+<li>Data enrichment: when data is not stored in the process payload, fetching tasks can trigger a cascade of queries. The <code>taskpool</code> library's data-enrichment
+  plugin mechanism can cache additional business data alongside task information.</li>
 </ul>
 <h2 id="data-pool">Data Pool<a class="headerlink" href="#data-pool" title="Permanent link">#</a></h2>
 <p>Each process instance works on one or more business objects and a business object's lifecycle usually spans a longer period of time than the process instance
 runtime. It's a common requirement to search for these business objects (independently of process tasks) and get a list of these objects including their current
 statuses (e.g. DRAFT, IN_PROGRESS, COMPLETED). The <code>datapool</code> library provides the necessary features to implement a high-performance Business Object View:</p>
 <ul>
-<li>Business object API providing additional attributes important for processing</li>
-<li>Business object modification API for creating an audit log (aka business object history)</li>
-<li>Authorization API for business objects</li>
+<li>A business-object API that provides additional processing attributes.</li>
+<li>A business-object modification API for creating an audit log (business-object history).</li>
+<li>An authorisation API for business objects.</li>
 </ul>
 <h2 id="process-definition-pool">Process Definition Pool<a class="headerlink" href="#process-definition-pool" title="Permanent link">#</a></h2>
 <p>A process repository provides a list of running instances and a list of process definitions deployed in the process engines connected to the library. It
@@ -2536,7 +2563,7 @@ provides the following features:</p>
 <li>Reacts on life cycle events of process instance</li>
 </ul>
 <h2 id="process-instance-pool">Process Instance Pool<a class="headerlink" href="#process-instance-pool" title="Permanent link">#</a></h2>
-<p>All process instances started, suspended, resumed, completed aor deleted in the process engine are reflected in the <code>process instance pool</code> component.</p>
+<p>All process instances that are started, suspended, resumed, completed, or deleted in the process engine are reflected in the <code>process instance pool</code> component.</p>
 <h2 id="process-variable-pool">Process Variable Pool<a class="headerlink" href="#process-variable-pool" title="Permanent link">#</a></h2>
 <p>Along with business data entities being modified during the execution of the business processes, the business process instance itself holds a collection of
 so-called process variables, representing the state of the execution. In contrast to the business data entities, their lifecycle is bound to the lifecycle of
@@ -2568,7 +2595,7 @@ instance, which is provided by the <code>taskpool</code> library.</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 14, 2022 15:55:45 UTC">November 14, 2022</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="September 25, 2026 14:55:06 UTC">September 25, 2026</span>
   </span>
 
     

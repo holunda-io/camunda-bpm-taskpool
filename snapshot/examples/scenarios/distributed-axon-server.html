@@ -868,6 +868,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../reference-guide/components/startable-process-definitions.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Publishing Startable Process Definitions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../reference-guide/components/camunda-starter.html" class="md-nav__link">
         
   
@@ -2512,19 +2540,19 @@
 
   <h1>Distributed using Axon Server</h1>
 
-<p>This example is demonstrating the usage of the Polyflow components distributed with help of Axon Server.
-It provides two applications for demonstration purposes: the process application and the process platform. 
-Both applications are built as SpringBoot applications.</p>
+<p>This example demonstrates Polyflow components distributed with Axon Server.
+It provides two applications: the process application and the process platform.
+Both are built as Spring Boot applications.</p>
 <p>The following configuration is used in the distributed scenario with Axon Server:</p>
 <ul>
 <li>Bus distribution is provided by Axon Server Connector (command bus, event bus, query bus)</li>
-<li>Axon Server is used as Event Store</li>
-<li>Postgresql is used as a database for:<ul>
+<li>Axon Server is used as the Event Store.</li>
+<li>PostgreSQL is used as the database for:<ul>
 <li>Camunda BPM Engine</li>
 <li>Process Application Datasource</li>
 </ul>
 </li>
-<li>Mongo is used as persistence for projection view (<code>mongo-view</code>)</li>
+<li>Mongo is used to persist the projection view (<code>mongo-view</code>).</li>
 </ul>
 <h3 id="system-requirements">System Requirements<a class="headerlink" href="#system-requirements" title="Permanent link">#</a></h3>
 <ul>
@@ -2533,24 +2561,23 @@ Both applications are built as SpringBoot applications.</p>
 <li>Docker Compose</li>
 </ul>
 <h3 id="preparations">Preparations<a class="headerlink" href="#preparations" title="Permanent link">#</a></h3>
-<p>Before you begin, please build the entire project with <code>mvn clean install</code> from the command line in the project root directory.</p>
-<p>You will need some backing services (Axon Server, PostgreSQL, MongoDB) and you can easily start them locally
-by using the provided <code>docker-compose.yml</code> file.</p>
-<p>Before you start change the directory to <code>examples/scenarios/distributed-axon-server</code>:
-Now, start required containers. The easiest way to do so is to run:</p>
+<p>Before you begin, build the entire project with <code>./mvnw clean install</code> from the project root directory.</p>
+<p>You need backing services (Axon Server, PostgreSQL, and MongoDB), which you can start locally
+with the provided <code>docker-compose.yml</code> file.</p>
+<p>Change to <code>examples/scenarios/distributed-axon-server</code>, then start the required containers:</p>
 <div class="highlight"><pre><span></span><code>docker-compose<span class="w"> </span>up<span class="w"> </span>-d
 </code></pre></div>
-<p>To verify it is running, open your browser <a href="http://localhost:8024/">http://localhost:8024/</a>. You should see
+<p>To verify that it is running, open <a href="http://localhost:8024/">http://localhost:8024/</a> in your browser. You should see
 the Axon Server administration console.</p>
 <h3 id="start">Start<a class="headerlink" href="#start" title="Permanent link">#</a></h3>
-<p>The demo application consists of several Maven modules. In order to start the example, you will need to start only two
-of them in the following order:</p>
+<p>The demo application consists of several Maven modules. To start the example, start these two
+in the following order:</p>
 <ol>
 <li>taskpool-application (process platform)</li>
 <li>process-application (example process application)</li>
 </ol>
-<p>The modules can be started by running from command line in the <code>examples/scenarios/distributed-axon-server</code> directory using Maven or start the
-packaged application using:</p>
+<p>Start the modules with Maven from the <code>examples/scenarios/distributed-axon-server</code> directory, or start the
+packaged applications with:</p>
 <div class="highlight"><pre><span></span><code>java<span class="w"> </span>-jar<span class="w"> </span>process-platform-jpa/target/*.jar
 java<span class="w"> </span>-jar<span class="w"> </span>taskpool-application/target/*.jar
 </code></pre></div>
@@ -2586,7 +2613,7 @@ java<span class="w"> </span>-jar<span class="w"> </span>taskpool-application/tar
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="October 11, 2023 08:39:39 UTC">October 11, 2023</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="September 25, 2026 14:55:06 UTC">September 25, 2026</span>
   </span>
 
     

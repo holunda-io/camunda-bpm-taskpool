@@ -695,7 +695,7 @@
   <a href="#activate-polyflow-support" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Activate Polyflow Support
+        Activate Polyflow support
       
     </span>
   </a>
@@ -703,10 +703,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#configure-your-polyflow-provisioning" class="md-nav__link">
+  <a href="#configure-polyflow-provisioning" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Configure your Polyflow provisioning
+        Configure Polyflow provisioning
       
     </span>
   </a>
@@ -924,6 +924,34 @@
     
   
     Camunda BPM Engine Taskpool Collector
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference-guide/components/startable-process-definitions.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Publishing Startable Process Definitions
   
 
     
@@ -2460,16 +2488,16 @@
 
   <h1>Getting Started</h1>
 
-<p>This guide is describing steps required to configure an existing Camunda BPM Spring Boot Process Application and
-connect to <strong>existing Process Platform</strong>.</p>
+<p>This guide describes the steps required to configure an existing Camunda BPM Spring Boot process application and
+connect it to an <strong>existing Process Platform</strong>.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>The following steps assume that you have already chosen one of the distribution scenarios and set-up the <strong>Core components</strong>. This is a pre-requirement for the following steps to work.</p>
+<p>These steps assume that you have already chosen a deployment scenario and set up the <strong>Core components</strong>. This is a prerequisite for the steps below.</p>
 </div>
 <h2 id="add-dependency-to-polyflow-integration-starter">Add dependency to Polyflow integration starter<a class="headerlink" href="#add-dependency-to-polyflow-integration-starter" title="Permanent link">#</a></h2>
 <p>Apart from the example application, you might be interested in integrating Polyflow Taskpool and Datapool into your existing
 application. To do so, you need to enable your Camunda BPM process engine to use the library.
-For doing so, add the <code>polyflow-integration-camunda-bpm-springboot-starter</code> library. In Maven, add the following dependency
+Add the <code>polyflow-integration-camunda-bpm-springboot-starter</code> library. In Maven, add the following dependency
 to your <code>pom.xml</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">&lt;dependency&gt;</span>
 <span class="w">  </span><span class="nt">&lt;groupId&gt;</span>io.holunda.polyflow<span class="nt">&lt;/groupId&gt;</span>
@@ -2477,8 +2505,8 @@ to your <code>pom.xml</code>:</p>
 <span class="w">  </span><span class="nt">&lt;version&gt;</span>${polyflow.version}<span class="nt">&lt;/version&gt;</span>
 <span class="nt">&lt;/dependency&gt;</span>
 </code></pre></div>
-<h2 id="activate-polyflow-support">Activate Polyflow Support<a class="headerlink" href="#activate-polyflow-support" title="Permanent link">#</a></h2>
-<p>Now, find your SpringBoot application class and add an annotation to it:</p>
+<h2 id="activate-polyflow-support">Activate Polyflow support<a class="headerlink" href="#activate-polyflow-support" title="Permanent link">#</a></h2>
+<p>Then find your Spring Boot application class and add the annotation:</p>
 <div class="highlight"><pre><span></span><code><span class="nd">@SpringBootApplication</span>
 <span class="nd">@EnableTaskpoolEngineSupport</span>
 <span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">MyApplication</span><span class="w"> </span><span class="p">{</span>
@@ -2488,7 +2516,7 @@ to your <code>pom.xml</code>:</p>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
-<h2 id="configure-your-polyflow-provisioning">Configure your Polyflow provisioning<a class="headerlink" href="#configure-your-polyflow-provisioning" title="Permanent link">#</a></h2>
+<h2 id="configure-polyflow-provisioning">Configure Polyflow provisioning<a class="headerlink" href="#configure-polyflow-provisioning" title="Permanent link">#</a></h2>
 <p>Finally, add the following block to your <code>application.yml</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">camunda</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">bpm</span><span class="p">:</span>
@@ -2536,8 +2564,8 @@ to your <code>pom.xml</code>:</p>
 <span class="w">        </span><span class="nt">defaultApplicationTemplate</span><span class="p">:</span><span class="w"> </span><span class="s">"http://localhost:${server.port}/${applicationName}"</span>
 <span class="w">        </span><span class="nt">defaultProcessTemplate</span><span class="p">:</span><span class="w"> </span><span class="s">"/${formKey}?userId=%userId%"</span>
 </code></pre></div>
-<p>Now, start your process engine. If you run into a user task, you should see on the console how this is passed to task pool.</p>
-<p>For more details on the configuration of different options, please consult the <a href="../reference-guide/components/">Polyflow Components</a> sections.</p>
+<p>Start your process engine. When it reaches a user task, the console should show that the task was passed to the task pool.</p>
+<p>For details about the available configuration options, see <a href="../reference-guide/components/">Polyflow Components</a>.</p>
 
 
 
@@ -2558,7 +2586,7 @@ to your <code>pom.xml</code>:</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="January 15, 2024 11:43:47 UTC">January 15, 2024</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="September 25, 2026 14:55:06 UTC">September 25, 2026</span>
   </span>
 
     

@@ -868,6 +868,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../reference-guide/components/startable-process-definitions.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Publishing Startable Process Definitions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../reference-guide/components/camunda-starter.html" class="md-nav__link">
         
   
@@ -1885,10 +1913,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#story-board" class="md-nav__link">
+  <a href="#storyboard" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Story board
+        Storyboard
       
     </span>
   </a>
@@ -2482,89 +2510,89 @@
 
   <h1>Example Approval</h1>
 
-<p>Along with library modules several example modules and applications are provided, demonstrating the main features of the solution.
-This includes a series of example applications for usage in different <a href="./scenarios/">Usage Scenarios</a>. They all share the same
+<p>Alongside the library modules, several example modules and applications demonstrate the solution's main features.
+This includes example applications for different <a href="./scenarios/">usage scenarios</a>. They all share the same
 business process described in the next section.</p>
 <h2 id="business-context-approval">Business context: Approval<a class="headerlink" href="#business-context-approval" title="Permanent link">#</a></h2>
 <p><img alt="Approval Process" src="../img/process_approve_request.png" /></p>
-<p>Take a look on the process model above. Imagine you are building a system that responsible for management of all approval requests
-in the company. Using this system, you can submit requests which then get eventually approved or rejected. Sometimes, the <strong>approver</strong>
-doesn't approve or reject, but returns the request back to the <strong>originator</strong> for correction (that is the person, who submitted the request).
-Then, the <strong>originator</strong> can amend the request and resubmit it or cancel the request.</p>
-<p>An approval request is modelled in the following way. The <strong>subject</strong>  describes what the request is about, the <strong>applicant</strong> is the
-person whom it is about (can be different from <strong>originator</strong>). Finally, the <strong>amount</strong> and <strong>currency</strong> denote the costs of the request.
+<p>Consider the process model above. Imagine that you are building a system to manage all approval requests
+in a company. Users can submit requests that are eventually approved or rejected. Sometimes, the <strong>approver</strong>
+returns a request to the <strong>originator</strong> for correction instead (the originator is the person who submitted it).
+The <strong>originator</strong> can then amend, resubmit, or cancel the request.</p>
+<p>An approval request is modelled as follows. The <strong>subject</strong> describes what the request is about, and the <strong>applicant</strong> is the
+person it concerns (who may differ from the <strong>originator</strong>). The <strong>amount</strong> and <strong>currency</strong> denote the request cost.
 All requests must be stored for compliance purposes.</p>
-<p>The request is initially created in <code>DRAFT</code> mode. It gets to state <code>IN PROGRESS</code> as soon as the process is started and will
-eventually get to <code>ACCEPTED</code> or <code>REJECTED</code> as a final state.</p>
-<p>For sample purposes two groups of users are created: The Muppet Show (<code>Kermit</code>, <code>Piggy</code>, <code>Gonzo</code> and <code>Fozzy</code>) and The Avengers (<code>Ironman</code>,
-<code>Hulk</code>).  <code>Gonzo</code> and <code>Fozzy</code> are responsible for approvals.</p>
+<p>The request is initially created in the <code>DRAFT</code> state. It changes to <code>IN PROGRESS</code> when the process starts and eventually reaches
+the final <code>ACCEPTED</code> or <code>REJECTED</code> state.</p>
+<p>For this example, two user groups are created: The Muppet Show (<code>Kermit</code>, <code>Piggy</code>, <code>Gonzo</code>, and <code>Fozzy</code>) and The Avengers (<code>Ironman</code>,
+<code>Hulk</code>). <code>Gonzo</code> and <code>Fozzy</code> are responsible for approvals.</p>
 <h2 id="process-run">Process Run<a class="headerlink" href="#process-run" title="Permanent link">#</a></h2>
-<p>Let's play the following run through this process model.</p>
+<p>The following sequence runs through the process model:</p>
 <ul>
 <li><code>Ironman</code> submits an Advanced Training request on behalf of <code>Hulk</code></li>
-<li>The request costs are provided in wrong currency and <code>Gonzo</code> returns the request to <code>Ironman</code> for correction (EUR instead of USD)</li>
-<li><code>Ironman</code> changes the currency to USD and re-submits the request</li>
+<li>The request cost is provided in the wrong currency, so <code>Gonzo</code> returns the request to <code>Ironman</code> for correction (EUR instead of USD)</li>
+<li><code>Ironman</code> changes the currency to USD and resubmits the request</li>
 <li><code>Gonzo</code> is out of office, so <code>Fozzy</code> takes over and approves the request</li>
 </ul>
 <h2 id="running-examples">Running Examples<a class="headerlink" href="#running-examples" title="Permanent link">#</a></h2>
-<p>To run the example please consult the <a href="./scenarios/">Usage Scenarios</a> section.</p>
+<p>To run the example, see <a href="./scenarios/">Usage Scenarios</a>.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Since the process application includes Camunda BPM engine, you can use the standard Camunda webapps by navigating to <a href="http://localhost:8080/camunda/app/">http://localhost:8080/camunda/app/</a>. The default user and password are <code>admin / admin</code>.</p>
+<p>Because the process application includes the Camunda BPM engine, you can use the standard Camunda webapps at <a href="http://localhost:8080/camunda/app/">http://localhost:8080/camunda/app/</a>. The default credentials are <code>admin / admin</code>.</p>
 </div>
-<h2 id="story-board">Story board<a class="headerlink" href="#story-board" title="Permanent link">#</a></h2>
-<p>The following storyboard can be used to understand the mechanics behind the provided implementation:</p>
-<p>TIP: In this storyboard, we assume you started the single node scenario and the application runs locally
-on http://localhost:8080. Please adjust the URLs accordingly, if you started differently.</p>
+<h2 id="storyboard">Storyboard<a class="headerlink" href="#storyboard" title="Permanent link">#</a></h2>
+<p>The following storyboard explains the provided implementation:</p>
+<p>TIP: This storyboard assumes that you started the single-node scenario and the application runs locally
+at http://localhost:8080. Adjust the URLs if you started it differently.</p>
 <ul>
 <li>
-<p>To start the approval process for a given request open your browser and navigate to the <code>Example Tasklist</code>:
-<a href="http://localhost:8080/polyflow/">http://localhost:8080/polyflow/</a>. Please note that the selected user is <code>Ironman</code>.</p>
+<p>To start the approval process for a request, open the <code>Example Tasklist</code> in your browser:
+<a href="http://localhost:8080/polyflow/">http://localhost:8080/polyflow/</a>. The selected user is <code>Ironman</code>.</p>
 </li>
 <li>
-<p>Open the menu (<code>Start new...</code>) in and select 'Request Approval'. You should see the start form for the example
+<p>Open the <code>Start new...</code> menu and select <code>Request Approval</code>. You should see the start form for the example
 approval process.</p>
 </li>
 </ul>
 <p><img alt="New approval process start form" src="../img/example_start_form.png" /></p>
 <ul>
 <li>
-<p>Select <code>Advanced Training</code> from one of predefined templates and click <em>Start</em>. The start form will disappear and redirect back to
+<p>Select <code>Advanced Training</code> from a predefined template and click <em>Start</em>. The start form disappears and redirects to
 the empty <code>Tasklist</code>.</p>
 </li>
 <li>
-<p>Since you are still acting as <code>Ironman</code> there are nothing you can do here. Please switch the user to <code>Gonzo</code>
-in the top right corner and you should see the user task <code>Approve Request</code> from process <code>Request Approval</code>.</p>
+<p>Because you are still acting as <code>Ironman</code>, there is nothing to do here. Switch the user to <code>Gonzo</code>
+in the top-right corner. You should see the <code>Approve Request</code> user task from the <code>Request Approval</code> process.</p>
 </li>
 </ul>
 <p><img alt="Task list with task description" src="../img/example_tasklist_approve_description.png" /></p>
 <ul>
-<li>Examine the task details by clicking <em>Data</em> tab in <em>Details</em> column. You can see the data of the request correlated to
+<li>Examine the task details by clicking the <em>Data</em> tab in the <em>Details</em> column. You can see the request data correlated with
 the current process instance.</li>
 </ul>
 <p><img alt="Task list with task data" src="../img/example_tasklist_approve_data.png" /></p>
 <ul>
-<li>Click on the task name and you will see the user task form of the <code>Approve Request</code> task. Select the option
-<code>Return request to originator</code> and click complete.</li>
+<li>Click the task name to open the <code>Approve Request</code> user-task form. Select
+<code>Return request to originator</code> and click <em>Complete</em>.</li>
 </ul>
 <p><img alt="Example User Task Form Approve Request" src="../img/example_approve_request.png" /></p>
 <ul>
-<li>Switch to <code>Workpieces</code> and you should see the request business object. Examine the approval request by clicking
-<em>Data</em>, <em>Audit</em> and <em>Description</em> tabs in <em>Details</em> column.</li>
+<li>Switch to <code>Workpieces</code> to see the request business object. Examine the approval request by clicking
+the <em>Data</em>, <em>Audit</em>, and <em>Description</em> tabs in the <em>Details</em> column.</li>
 </ul>
 <p><img alt="Example Archive View" src="../img/example_archive_business_object.png" /></p>
 <ul>
-<li>Change user back to <code>Ironman</code> and switch back to the <code>Tasklist</code> and open the <code>Amend request</code>task. Change the currency to
-<code>USD</code> and re-submit the request.</li>
+<li>Change the user back to <code>Ironman</code>, switch to the <code>Tasklist</code>, and open the <code>Amend request</code> task. Change the currency to
+<code>USD</code> and resubmit the request.</li>
 </ul>
 <p><img alt="Example User Task Form Amend Request" src="../img/example_amend_request.png" /></p>
 <ul>
 <li>
-<p>Change user back to <code>Fozzy</code>, open the <code>Approve Request</code> task and approve the request by selecting the appropriate option.</p>
+<p>Change the user back to <code>Fozzy</code>, open the <code>Approve Request</code> task, and approve the request by selecting the appropriate option.</p>
 </li>
 <li>
-<p>Switch to <code>Workpieces</code> and you should still see the request business object, even after the process is finished. Examine the approval
-request by clicking <em>Data</em>, <em>Audit</em> and <em>Description</em> tabs in <em>Details</em> column.</p>
+<p>Switch to <code>Workpieces</code>; the request business object remains visible after the process finishes. Examine the approval
+request by clicking the <em>Data</em>, <em>Audit</em>, and <em>Description</em> tabs in the <em>Details</em> column.</p>
 </li>
 </ul>
 
@@ -2587,7 +2615,7 @@ request by clicking <em>Data</em>, <em>Audit</em> and <em>Description</em> tabs 
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="July 5, 2021 10:13:54 UTC">July 5, 2021</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="September 25, 2026 14:55:06 UTC">September 25, 2026</span>
   </span>
 
     

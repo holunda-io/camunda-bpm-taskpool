@@ -876,6 +876,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../components/startable-process-definitions.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Publishing Startable Process Definitions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../components/camunda-starter.html" class="md-nav__link">
         
   
@@ -2473,16 +2501,16 @@
 
 <p>As described in <a href="../../introduction/deployment.html#distribution-using-axon-server-core-component-as-part-of-process-engine">Distribution using Axon Server (core component as part of process engine)</a> 
 you might want to deploy your Polyflow Core Components (Taskpool Core and Datapool Core) inside your process application. If you are doing so,
-you should there are two important decisions to make:</p>
+there are two important decisions to make:</p>
 <ul>
-<li>How the Camunda transaction is related to Transaction (Unit of Work) or Polyflow?</li>
+<li>How is the Camunda transaction related to Polyflow's transaction (Unit of Work)?</li>
 <li>How to isolate Polyflow Core components from each other if deployed multiple times?</li>
 </ul>
 <h2 id="transactional-support-of-integration-components">Transactional support of integration components<a class="headerlink" href="#transactional-support-of-integration-components" title="Permanent link">#</a></h2>
-<p>The integration components support different transactional behavior inside the command sender components. To be more precise, 
-after the task collector has collected the commands from the integration points with Camunda, you can set up if the data is passed 
-to the Command Dispatching component (command bus) inside the same transaction or in a separate transaction.</p>
-<p>The relevant property to set this up is <code>polyflow.integration.sender.task.send-within-transaction</code>, like you can see in the following example: </p>
+<p>The integration components support different transactional behaviour in their command senders. After the task collector
+collects commands from Camunda integration points, you can choose whether to pass them to the command-dispatching component
+(command bus) in the same transaction or in a separate transaction.</p>
+<p>Use <code>polyflow.integration.sender.task.send-within-transaction</code> to configure this behaviour:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">polyflow</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">integration</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">sender</span><span class="p">:</span>
@@ -2492,9 +2520,9 @@ to the Command Dispatching component (command bus) inside the same transaction o
 <span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">tx</span>
 <span class="w">        </span><span class="nt">send-within-transaction</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"> </span>
 </code></pre></div>
-<p>If set to true, the transaction will be shared between the Camunda Task Lifecycle and command dispatching components. The commands are passed to
-a special <code>CommandListGateway</code> responsible for sending commands one by one. This component allows to integrate a success and failure handlers to 
-react to command sending and any failures there. To do so, you need to implement two interfaces and provide bean factories for them:</p>
+<p>When set to <code>true</code>, the Camunda task lifecycle and command-dispatching components share a transaction. Commands are passed to
+a <code>CommandListGateway</code>, which sends them one at a time. You can integrate success and failure handlers to
+respond to command outcomes. To do so, implement the two interfaces and provide beans for them:</p>
 <p><div class="highlight"><pre><span></span><code><span class="w">  </span><span class="nd">@Bean</span>
 <span class="w">  </span><span class="nd">@Primary</span>
 <span class="w">  </span><span class="kd">fun</span><span class="w"> </span><span class="nf">myCommandSuccessHandler</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="nc">CommandErrorHandler</span><span class="w"> </span><span class="p">{</span>
@@ -2514,18 +2542,17 @@ react to command sending and any failures there. To do so, you need to implement
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">}</span>
 </code></pre></div>
-By doing so, you can propagate the exception and prevent the initial transaction from commit, if something goes wrong during command dispatch.</p>
-<p>Another approach for dealing with errors is to minimize their occurrence, by deploying the Core Components inside the same deployment unit as the 
-process engine itself. To demonstrate this scenario, we created a scenario in Polyflow examples <a href="../../examples/scenarios/distributed-axon-server-local.html">Distributed with Axon Server Events Only</a>.</p>
-<p>By using this deployment strategy, ever process engine deployment includes the <a href="../components/core-taskpool.html">Core components</a> and are taking
-care of maintaining their state and receiving commands from the integration components. By doing so, you preserve a mean of locality of the tasks
-originated in a process engine.</p>
+This lets you propagate an exception and prevent the initial transaction from committing if command dispatch fails.</p>
+<p>Another way to minimise errors is to deploy Core components in the same deployment unit as the
+process engine. The Polyflow examples demonstrate this in <a href="../../examples/scenarios/distributed-axon-server-local.html">Distributed with Axon Server Events Only</a>.</p>
+<p>With this deployment strategy, every process-engine deployment includes the <a href="../components/core-taskpool.html">Core components</a>, which
+maintain their state and receive commands from the integration components. This preserves locality for tasks
+originating in a process engine.</p>
 <h2 id="isolating-polyflow-components">Isolating Polyflow Components<a class="headerlink" href="#isolating-polyflow-components" title="Permanent link">#</a></h2>
-<p>One of the problems that occurs if you use this deployment strategy with Axon Server is that you will get multiple Command Handlers in runtime
-which are capable of receiving Engine Task Commands. A good way to solve this problem is to prevent Polyflow from registering the Command Handlers 
-in Axon Server.</p>
-<p>Since we are using the <code>Axon-Gateway-Extension</code> library in the Polyflow, you can make use of the <code>DispatchAwareCommandBus</code> by configuring the 
-following properties, which limit the registration of Polyflow Command Handlers in Axon Server:</p>
+<p>With this deployment strategy and Axon Server, multiple command handlers capable of receiving Engine Task Commands run at the same time.
+Prevent Polyflow from registering these command handlers in Axon Server to avoid the conflict.</p>
+<p>Because Polyflow uses the <code>Axon-Gateway-Extension</code> library, you can configure <code>DispatchAwareCommandBus</code> with the
+following properties to limit registration of Polyflow command handlers in Axon Server:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">axon-gateway</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">command</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">dispatch-aware</span><span class="p">:</span>
@@ -2535,8 +2562,8 @@ following properties, which limit the registration of Polyflow Command Handlers 
 <span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">io.holunda.camunda.taskpool.api</span>
 <span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">io.holunda.camunda.datapool.api</span>
 </code></pre></div>
-<p>By doing so, the Polyflow Command Handlers (parts of the Core Components) are registered on the local segmet of the command bus only and don't 
-interfere with each other.</p>
+<p>As a result, the Polyflow command handlers (part of the Core components) are registered only on the command bus's local segment and do not
+interfere with one another.</p>
 
 
 
@@ -2557,7 +2584,7 @@ interfere with each other.</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 14, 2022 15:55:45 UTC">November 14, 2022</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="September 25, 2026 14:55:06 UTC">September 25, 2026</span>
   </span>
 
     

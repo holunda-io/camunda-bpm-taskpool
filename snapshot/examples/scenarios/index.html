@@ -863,6 +863,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../reference-guide/components/startable-process-definitions.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Publishing Startable Process Definitions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../reference-guide/components/camunda-starter.html" class="md-nav__link">
         
   
@@ -2400,20 +2428,19 @@
 
   <h1>Scenarios Overview</h1>
 
-<p>Depending on your requirements and infrastructure available several deployment scenarios of the components is possible.</p>
+<p>Several component deployment scenarios are possible, depending on your requirements and available infrastructure.</p>
 <p>The simplest setup is to run all components on a single node. A more advanced scenario is to distribute components and connect them.</p>
-<p>In doing so, one of the challenging issues for distribution and connecting microservices is a setup of messaging technology
-supporting required message exchange patterns (MEPs) for a CQRS system. Because of different semantics of commands,
-events and queries and additional requirements of event-sourced persistence a special implementation of
-command bus, event bus and event store is required. In particular, two scenarios can be distinguished: using Axon Server
-or using a different distribution technology.</p>
-<p>The provided <a href="../example-approval.html">Example application</a> is implemented several times demonstrating the following usage scenarios:</p>
+<p>One challenge in distributing and connecting microservices is setting up messaging technology that supports the required message-exchange
+patterns (MEPs) for a CQRS system. Because commands, events, and queries have different semantics, and event-sourced persistence has additional requirements,
+the command bus, event bus, and event store need specialised implementations. In particular, two scenarios are possible: using Axon Server
+or another distribution technology.</p>
+<p>The provided <a href="../example-approval.html">example application</a> is implemented several times to demonstrate the following usage scenarios:</p>
 <ul>
 <li><a href="single-node.html">Single Node Scenario</a></li>
 <li><a href="distributed-axon-server.html">Distributed Scenario using Axon Server</a></li>
 <li><a href="distributed-axon-server-local.html">Distributed Scenario using Axon Server with Local Polyflow Core</a></li>
 </ul>
-<p>It is a good idea to understand the single node scenario first and then move on to more elaborated scenarios.</p>
+<p>Start with the single-node scenario before moving on to more advanced scenarios.</p>
 
 
 
@@ -2434,7 +2461,7 @@ or using a different distribution technology.</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 14, 2022 15:55:45 UTC">November 14, 2022</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="September 25, 2026 14:55:06 UTC">September 25, 2026</span>
   </span>
 
     

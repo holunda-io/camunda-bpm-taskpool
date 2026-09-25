@@ -876,6 +876,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../components/startable-process-definitions.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Publishing Startable Process Definitions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../components/camunda-starter.html" class="md-nav__link">
         
   
@@ -1713,10 +1741,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#event-souring-repository" class="md-nav__link">
+  <a href="#event-sourcing-repository" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Event Souring Repository
+        Event-sourcing repository
       
     </span>
   </a>
@@ -2500,9 +2528,9 @@
   <h1>Datapool Aggregate Tuning</h1>
 
 <h2 id="core-datapool-aggregate-tuning">Core Datapool Aggregate Tuning<a class="headerlink" href="#core-datapool-aggregate-tuning" title="Permanent link">#</a></h2>
-<p>Data pool is implemented using DDD Aggregate pattern following the CQRS/ES style. By doing so, the event sourced aggregate
-replays all events to restore its state. In case of Data Entry the aggregate is currently not storing any state, required for
-command validation, so it is possible to optimize the loading process. For this purpose the following options are provided.</p>
+<p>Datapool uses the DDD Aggregate pattern and follows the CQRS/ES style. The event-sourced aggregate
+replays events to restore its state. A Data Entry aggregate currently stores no state required for
+command validation, so the loading process can be optimised. The following options are available.</p>
 <h3 id="configuration-properties">Configuration properties<a class="headerlink" href="#configuration-properties" title="Permanent link">#</a></h3>
 <table>
 <thead>
@@ -2516,7 +2544,7 @@ command validation, so it is possible to optimize the loading process. For this 
 <tbody>
 <tr>
 <td><code>snapshot-threshold</code></td>
-<td>Threshold of events to create a snapshot of the dat entry aggregate</td>
+<td>Event threshold for creating a snapshot of the data-entry aggregate</td>
 <td>Long</td>
 <td>5</td>
 </tr>
@@ -2534,14 +2562,13 @@ command validation, so it is possible to optimize the loading process. For this 
 </tr>
 </tbody>
 </table>
-<h3 id="event-souring-repository">Event Souring Repository<a class="headerlink" href="#event-souring-repository" title="Permanent link">#</a></h3>
-<p>By default, the <code>EventSourcingRepository</code> for every Aggregate is provided by Axon Framework. This repository is supporting
-loading from snapshots and will load tha last snapshot and all events occurred after the snapshot. Alternatively, you can set
+<h3 id="event-sourcing-repository">Event-sourcing repository<a class="headerlink" href="#event-sourcing-repository" title="Permanent link">#</a></h3>
+<p>By default, Axon Framework provides an <code>EventSourcingRepository</code> for every aggregate. This repository supports
+loading from snapshots and loads the latest snapshot and all events that occurred after it. Alternatively, set
 the repository to <code>io.holunda.polyflow.datapool.core.repository.FirstEventOnlyEventSourcingRepository</code>. This repository loads
-the first event only to restore the state. This special repository is using the first event and saves space by not creating any
-snapshots.</p>
+only the first event to restore the state and saves space by not creating snapshots.</p>
 <h3 id="deletion-strategy">Deletion strategy<a class="headerlink" href="#deletion-strategy" title="Permanent link">#</a></h3>
-<p>The data entries can be marked as deleted. If set to <code>strict</code>, no updates can be sent to this data entry, otherwise the update will undelete (re-create) the data entry.</p>
+<p>Data entries can be marked as deleted. When set to <code>strict</code>, no updates can be sent to a deleted data entry; otherwise, an update restores it.</p>
 
 
 
@@ -2562,7 +2589,7 @@ snapshots.</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 9, 2022 08:51:01 UTC">November 9, 2022</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="September 25, 2026 14:55:06 UTC">September 25, 2026</span>
   </span>
 
     

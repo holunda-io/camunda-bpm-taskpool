@@ -876,6 +876,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../components/startable-process-definitions.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Publishing Startable Process Definitions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../components/camunda-starter.html" class="md-nav__link">
         
   
@@ -1757,6 +1785,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#safe-variable-deserialization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Safe variable deserialization
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#required-collector-setup" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2587,6 +2626,17 @@ configuration file, or a configuration service.</p>
 <p>Filtering does not create correlations, and correlation does not add a variable
 to the task payload. Configure both when the remote task platform needs both
 the selected payload values and references to business data.</p>
+<h3 id="safe-variable-deserialization">Safe variable deserialization<a class="headerlink" href="#safe-variable-deserialization" title="Permanent link">#</a></h3>
+<p>When a payload filter can exclude a variable for a task, the collector first
+reads available variable names with Camunda deserialization disabled. It applies
+the configured payload filter, adds variables needed by configured correlations,
+and only then reads that selected set with deserialization enabled. This allows
+a remote standalone engine to contain excluded complex variables whose Java
+classes are not present in the collector deployment. Without an applicable
+restriction, the collector keeps the original single deserialized read.</p>
+<p>Variables selected for task payload or correlation must still be deserializable
+by the collector. A variable used only for a correlation remains out of the
+payload unless it also passes the payload filter.</p>
 <h3 id="required-collector-setup">Required collector setup<a class="headerlink" href="#required-collector-setup" title="Permanent link">#</a></h3>
 <p>Process-variable enrichment must be active for filtering and correlation to be
 applied to task commands:</p>
@@ -2881,7 +2931,7 @@ property model.</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="September 8, 2026 19:20:15 UTC">September 8, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="September 25, 2026 14:55:06 UTC">September 25, 2026</span>
   </span>
 
     

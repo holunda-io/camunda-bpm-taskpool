@@ -876,6 +876,34 @@
   
   
     <li class="md-nav__item">
+      <a href="startable-process-definitions.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Publishing Startable Process Definitions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="camunda-starter.html" class="md-nav__link">
         
   
@@ -2527,7 +2555,7 @@ if the JPA persistence is already used in the project setup.</p>
 <li>provides single query API supporting single and subscription queries</li>
 </ul>
 <h3 id="configuration-options">Configuration options<a class="headerlink" href="#configuration-options" title="Permanent link">#</a></h3>
-<p>In order to activate the JPA View implementation, please include the following dependency on your classpath:</p>
+<p>To activate the JPA View implementation, include the following dependency on your classpath:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">&lt;dependency&gt;</span>
 <span class="w">  </span><span class="nt">&lt;groupId&gt;</span>io.holunda.polyflow<span class="nt">&lt;/groupId&gt;</span>
 <span class="w">  </span><span class="nt">&lt;artifactId&gt;</span>polyflow-view-jpa<span class="nt">&lt;/artifactId&gt;</span>
@@ -2547,7 +2575,7 @@ if the JPA persistence is already used in the project setup.</p>
 <span class="w">    </span><span class="nt">show-sql</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
 <span class="w">    </span><span class="nt">open-in-view</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"> </span><span class="c1"># disable JPA warning</span>
 <span class="w">  </span><span class="nt">datasource</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;jdbc-connnection-string&gt;</span>
+<span class="w">    </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;jdbc-connection-string&gt;</span>
 <span class="w">    </span><span class="nt">username</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;db-user&gt;</span>
 <span class="w">    </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;db-password&gt;</span>
 </code></pre></div>
@@ -2573,7 +2601,7 @@ In addition, the <code>stored-items</code> property is holding a set of items to
 stored items are: <code>task</code>, <code>data-entry</code>, <code>process-instance</code> and <code>process-definition</code>. By setting this property, you can disable
 storage of items not required by your application and save space consumption of your database. The property defaults to <code>data-entry</code>.</p>
 <p>With the <code>payload-attribute-column-length</code> property one can specify a maximum length for payload attribute values if they are strings. Values that exceed
-this length will automatically be trimmed to the max length in order to prevent exceptions when handling the event. This is especially necessary because
+this length are automatically trimmed to the maximum length to prevent exceptions while handling the event. This is especially necessary because
 relational databases have limits on the length of composite primary keys. Since the combination of (id, path, value) for tasks or (id, type, path, value) for
 data entries must be unique, the primary key is very large, which limits the amount of space available for the value.</p>
 <p>The <code>include-correlated-data-entries-in-data-entry-queries</code> flag controls whether a data entry query (<code>DataEntriesForUserQuery</code> or <code>DataEntriesQuery</code>) considers
@@ -2588,7 +2616,7 @@ consideration during the search index creation.</p>
 <p class="admonition-title">Note</p>
 <p>Please make sure you understand that the <strong>payload enrichment</strong> performed during collection and <strong>indexing for search</strong> are two different
 operations. It is perfectly fine to have a large JSON payload attached to the task, but it makes no sense to make the entire payload searchable,
-at lease using JPA View.</p>
+at least when using JPA View.</p>
 </div>
 <h3 id="entity-scan">Entity Scan<a class="headerlink" href="#entity-scan" title="Permanent link">#</a></h3>
 <p>The JPA View utilizes Spring Data repositories and Hibernate entities inside the persistence layer. As a result, it declares a <code>@EntityScan</code> 
@@ -2645,7 +2673,7 @@ aggregate or saga persistence; see <a href="../configuration/persistence.html">P
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="September 10, 2026 09:46:15 UTC">September 10, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="September 25, 2026 14:55:06 UTC">September 25, 2026</span>
   </span>
 
     

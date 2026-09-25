@@ -868,6 +868,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../reference-guide/components/startable-process-definitions.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Publishing Startable Process Definitions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../reference-guide/components/camunda-starter.html" class="md-nav__link">
         
   
@@ -2302,6 +2330,28 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#configure-a-kafka-view-receiver" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configure a Kafka view receiver
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#publishing-startable-process-definitions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Publishing startable process definitions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#system-requirements" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2559,6 +2609,102 @@ persistence of the query model.</p>
 <p><img alt="Process Application to Kafka Messaging" src="../../img/scenario_process_application_to_kafka_detail.png" /></p>
 <h4 id="from-kafka-to-tasklist-api">From Kafka to Tasklist API<a class="headerlink" href="#from-kafka-to-tasklist-api" title="Permanent link">#</a></h4>
 <p><img alt="Kafka to Tasklist API Messaging" src="../../img/scenario_kafka_to_tasklist_detail.png" /></p>
+<h3 id="configure-a-kafka-view-receiver">Configure a Kafka view receiver<a class="headerlink" href="#configure-a-kafka-view-receiver" title="Permanent link">#</a></h3>
+<p>The view application consumes Axon events from Kafka with a
+<code>StreamableKafkaMessageSource</code>. It needs an Axon Kafka consumer configuration,
+one message source for each topic it consumes, and a tracking event processor
+bound to each source. The example uses separate task and data-entry topics; a
+view can add further sources for other event types.</p>
+<p>Add Axon's Kafka Spring Boot starter to the view application:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">&lt;dependency&gt;</span>
+<span class="w">  </span><span class="nt">&lt;groupId&gt;</span>org.axonframework.extensions.kafka<span class="nt">&lt;/groupId&gt;</span>
+<span class="w">  </span><span class="nt">&lt;artifactId&gt;</span>axon-kafka-spring-boot-starter<span class="nt">&lt;/artifactId&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+</code></pre></div>
+<p>The shared Kafka configuration identifies the broker, configures the consumer,
+and selects tracking processing:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">axon</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">serializer</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">events</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">jackson</span>
+<span class="w">    </span><span class="nt">messages</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">jackson</span>
+<span class="w">    </span><span class="nt">general</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">jackson</span>
+<span class="w">  </span><span class="nt">axonserver</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">  </span><span class="nt">kafka</span><span class="p">:</span>
+<span class="w">    </span><span class="c1"># Required by the Axon Kafka extension even when explicit sources are used.</span>
+<span class="w">    </span><span class="nt">defaulttopic</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">not_used_but_must_be_set_to_some_value</span>
+<span class="w">    </span><span class="nt">client-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">taskpool-view</span>
+<span class="w">    </span><span class="nt">consumer</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">bootstrap-servers</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">localhost:29092</span>
+<span class="w">      </span><span class="nt">event-processor-mode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TRACKING</span>
+<span class="w">      </span><span class="nt">auto-offset-reset</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">earliest</span>
+<span class="w">    </span><span class="nt">properties</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">security.protocol</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PLAINTEXT</span>
+</code></pre></div>
+<p>For each Kafka topic, define a <code>ConsumerFactory</code> and a
+<code>StreamableKafkaMessageSource</code> Spring bean. The source subscribes to the topic
+and converts its records back into Axon event messages. This abbreviated
+example is equivalent to the task and data-entry sources in the example
+application:</p>
+<div class="highlight"><pre><span></span><code><span class="nd">@Bean</span>
+<span class="nd">@Qualifier</span><span class="p">(</span><span class="s">"polyflowTask"</span><span class="p">)</span>
+<span class="kd">fun</span><span class="w"> </span><span class="nf">kafkaConsumerFactoryPolyflowTask</span><span class="p">(</span>
+<span class="w">  </span><span class="n">properties</span><span class="p">:</span><span class="w"> </span><span class="n">KafkaProperties</span>
+<span class="p">):</span><span class="w"> </span><span class="n">ConsumerFactory</span><span class="o">&lt;</span><span class="kt">String</span><span class="p">,</span><span class="w"> </span><span class="n">ByteArray</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">properties</span><span class="p">.</span><span class="na">clientId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"polyflow-task-</span><span class="si">$</span><span class="n">hostname</span><span class="s">"</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">DefaultConsumerFactory</span><span class="p">(</span><span class="n">properties</span><span class="p">.</span><span class="na">buildConsumerProperties</span><span class="p">())</span>
+<span class="p">}</span>
+
+<span class="nd">@Bean</span><span class="p">(</span><span class="s">"kafkaMessageSourcePolyflowTask"</span><span class="p">)</span>
+<span class="kd">fun</span><span class="w"> </span><span class="nf">kafkaMessageSourcePolyflowTask</span><span class="p">(</span>
+<span class="w">  </span><span class="n">kafkaProperties</span><span class="p">:</span><span class="w"> </span><span class="n">KafkaProperties</span><span class="p">,</span>
+<span class="w">  </span><span class="nd">@Qualifier</span><span class="p">(</span><span class="s">"polyflowTask"</span><span class="p">)</span><span class="w"> </span><span class="n">consumerFactory</span><span class="p">:</span><span class="w"> </span><span class="n">ConsumerFactory</span><span class="o">&lt;</span><span class="kt">String</span><span class="p">,</span><span class="w"> </span><span class="n">ByteArray</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">  </span><span class="n">kafkaFetcher</span><span class="p">:</span><span class="w"> </span><span class="n">Fetcher</span><span class="o">&lt;</span><span class="kt">String</span><span class="p">,</span><span class="w"> </span><span class="n">ByteArray</span><span class="p">,</span><span class="w"> </span><span class="n">KafkaEventMessage</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">  </span><span class="nd">@Qualifier</span><span class="p">(</span><span class="s">"eventSerializer"</span><span class="p">)</span><span class="w"> </span><span class="n">serializer</span><span class="p">:</span><span class="w"> </span><span class="n">Serializer</span><span class="p">,</span>
+<span class="w">  </span><span class="n">messageConverter</span><span class="p">:</span><span class="w"> </span><span class="n">KafkaMessageConverter</span><span class="o">&lt;</span><span class="kt">String</span><span class="p">,</span><span class="w"> </span><span class="n">ByteArray</span><span class="o">&gt;</span>
+<span class="p">):</span><span class="w"> </span><span class="n">StreamableKafkaMessageSource</span><span class="o">&lt;</span><span class="kt">String</span><span class="p">,</span><span class="w"> </span><span class="n">ByteArray</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span>
+<span class="w">  </span><span class="n">StreamableKafkaMessageSource</span>
+<span class="w">    </span><span class="p">.</span><span class="na">builder</span><span class="o">&lt;</span><span class="kt">String</span><span class="p">,</span><span class="w"> </span><span class="n">ByteArray</span><span class="o">&gt;</span><span class="p">()</span>
+<span class="w">    </span><span class="p">.</span><span class="na">topics</span><span class="p">(</span><span class="n">listOf</span><span class="p">(</span><span class="s">"polyflow-task"</span><span class="p">))</span>
+<span class="w">    </span><span class="p">.</span><span class="na">consumerFactory</span><span class="p">(</span><span class="n">consumerFactory</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="na">serializer</span><span class="p">(</span><span class="n">serializer</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="na">fetcher</span><span class="p">(</span><span class="n">kafkaFetcher</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="na">messageConverter</span><span class="p">(</span><span class="n">messageConverter</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="na">bufferFactory</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="n">SortedKafkaMessageBuffer</span><span class="p">(</span><span class="n">kafkaProperties</span><span class="p">.</span><span class="na">fetcher</span><span class="p">.</span><span class="na">bufferSize</span><span class="p">)</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="p">.</span><span class="na">build</span><span class="p">()</span>
+</code></pre></div>
+<p>The <code>source</code> in the following processor configuration is the Spring bean name,
+not the Kafka topic name. The topic is selected by the source bean's <code>topics</code>
+list. The qualifier only selects the <code>ConsumerFactory</code> to inject into that
+bean.</p>
+<div class="highlight"><pre><span></span><code><span class="nt">axon</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">eventhandling</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">processors</span><span class="p">:</span>
+<span class="w">      </span><span class="s">"[io.holunda.polyflow.view.jpa.service.task]"</span><span class="p p-Indicator">:</span>
+<span class="w">        </span><span class="nt">source</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kafkaMessageSourcePolyflowTask</span>
+<span class="w">        </span><span class="nt">mode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TRACKING</span>
+<span class="w">        </span><span class="nt">threadCount</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">        </span><span class="nt">batchSize</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">      </span><span class="s">"[io.holunda.polyflow.view.jpa.service.data]"</span><span class="p p-Indicator">:</span>
+<span class="w">        </span><span class="nt">source</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kafkaMessageSourcePolyflowData</span>
+<span class="w">        </span><span class="nt">mode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TRACKING</span>
+<span class="w">        </span><span class="nt">threadCount</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">        </span><span class="nt">batchSize</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+</code></pre></div>
+<p><code>StreamableKafkaMessageSource</code> is used with Axon tracking processors and does
+not use Kafka consumer groups. Axon's tracking token records each view
+processor's progress instead. Kafka delivery is at-least-once, so projections
+must tolerate repeated events.</p>
+<h3 id="publishing-startable-process-definitions">Publishing startable process definitions<a class="headerlink" href="#publishing-startable-process-definitions" title="Permanent link">#</a></h3>
+<p>The example routes only the event payload types configured under
+<code>polyflow.axon.kafka.topics</code>. To expose startable process definitions in the
+separate view, add a route for
+<code>ProcessDefinitionRegisteredEvent</code>, create the selected Kafka topic, and
+configure the process-definition view processor to consume it. See
+<a href="../../reference-guide/components/startable-process-definitions.html#distributed-with-kafka">Publishing Startable Process Definitions</a>
+for the producer mapping and view-processor configuration.</p>
 <h3 id="system-requirements">System Requirements<a class="headerlink" href="#system-requirements" title="Permanent link">#</a></h3>
 <ul>
 <li>JDK 11</li>
@@ -2573,8 +2719,8 @@ by using the provided <code>docker-compose.yml</code> file.</p>
 <div class="highlight"><pre><span></span><code>docker-compose<span class="w"> </span>up<span class="w"> </span>-d
 </code></pre></div>
 <h3 id="start">Start<a class="headerlink" href="#start" title="Permanent link">#</a></h3>
-<p>The demo application consists of several Maven modules. In order to start the example, you will need to start only two
-of them in the following order:</p>
+<p>The demo application consists of several Maven modules. To start the example, start these two
+in the following order:</p>
 <ol>
 <li>taskpool-application (process platform)</li>
 <li>process-application (example process application)</li>
@@ -2614,7 +2760,7 @@ java<span class="w"> </span>-jar<span class="w"> </span>process-platform-view-on
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="October 11, 2023 08:39:39 UTC">October 11, 2023</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="September 25, 2026 14:55:06 UTC">September 25, 2026</span>
   </span>
 
     
