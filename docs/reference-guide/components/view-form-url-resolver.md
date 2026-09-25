@@ -10,7 +10,7 @@ is designed exactly for this purpose, if this resolution is static and can be pe
 
 ### Configuration
 
-In order to use the `form-url-resolver` please add the following dependency to your project:
+To use `form-url-resolver`, add the following dependency to your project:
 
 ```xml
 <dependency>
@@ -68,7 +68,6 @@ resolved (see [View API](view-api.md)). The keys in the configuration are:
 * Value of attribute `processDefinitionKey` for processes
 * Value of attribute `taskDefinitionKey` for tasks
 * Value of attribute `entryType` for data entries
-
 
 
 

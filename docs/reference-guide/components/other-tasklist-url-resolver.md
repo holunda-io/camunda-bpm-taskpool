@@ -2,13 +2,13 @@
 
 ### Purpose
 
-The Tasklist URL Resolver is a helper component helping to provide the URL of the task list for other components. It is not use by other components,
-but is helpful, if you complete tasks using SPA on the side of the process application and needs a redirection target resolution of the task list 
+The Tasklist URL Resolver is a helper component that provides the task-list URL to other components. It is not used by other components,
+but is useful when tasks are completed through an SPA in the process application and a task-list redirect target is needed
 after completion.
 
 ### Usage and Configuration
 
-To use Tasklist URL Resolver please add the following artifact to your classpath:
+To use Tasklist URL Resolver, add the following artifact to your classpath:
 
 ```xml
 <dependency>
@@ -26,7 +26,7 @@ polyflow:
       tasklist-url: http://my-task-list.application.url/
 ```
 
-or provide your own implementation of the `TasklistUrlResolver` interface as Spring Bean in your configuration:
+or provide your own `TasklistUrlResolver` implementation as a Spring bean:
 
 ```java
 
@@ -43,5 +43,3 @@ class MyConfiguration {
 
 
 ```
-.
-

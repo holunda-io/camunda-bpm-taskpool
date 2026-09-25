@@ -1,4 +1,4 @@
-This is a root of configuration reference guide.
+This is the root of the configuration reference guide.
 
 Here are some dedicated articles:
 

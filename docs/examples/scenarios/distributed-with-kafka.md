@@ -164,8 +164,8 @@ docker-compose up -d
 
 ### Start
 
-The demo application consists of several Maven modules. In order to start the example, you will need to start only two
-of them in the following order:
+The demo application consists of several Maven modules. To start the example, start these two
+in the following order:
 
 1. taskpool-application (process platform)
 2. process-application (example process application)

@@ -8,7 +8,7 @@ pageId: engine-interaction-client
 
 ### Purpose
 
-This component performs changes delivered by Camunda Interaction Events on Camunda BPM engine.
+This component applies changes delivered by Camunda Interaction Events to the Camunda BPM engine.
 The following Camunda Interaction Events are supported:
 
 * Claim User Task
@@ -19,7 +19,7 @@ The following Camunda Interaction Events are supported:
 
 ### Usage and configuration
 
-To use Camunda Engine Interaction Client please add the following artifact to your classpath:
+To use Camunda Engine Interaction Client, add the following artifact to your classpath:
 
 ```xml
 <dependency>
@@ -28,7 +28,7 @@ To use Camunda Engine Interaction Client please add the following artifact to yo
 </dependency>
 ```
 
-In your `application.yml` configure the application name of your process engine, to receive commands:
+In `application.yml`, configure the process-engine application name that receives commands:
 
 ```yml
 polyflow:

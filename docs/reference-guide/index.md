@@ -1,7 +1,6 @@
-This reference guide is a primary source of information in order to understand how Polyflow components are used and how to configure them.
+This reference guide explains how to use and configure Polyflow components.
 It is divided into tow major sections:
 
 * [Components](components)
 * [Configuration](configuration)
-
 

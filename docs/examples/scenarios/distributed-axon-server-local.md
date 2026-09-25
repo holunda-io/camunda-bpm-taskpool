@@ -1,20 +1,20 @@
 ---
-title: Distributed Scenario using Axon Server using Local
+title: Distributed Scenario Using Axon Server with Local Core
 ---
 
-This example is demonstrating the usage of the Polyflow components distributed with help of Axon Server.
-It provides two applications for demonstration purposes: the process application and the process platform. 
-Both applications are built as SpringBoot applications.
+This example demonstrates Polyflow components distributed with Axon Server.
+It provides two applications: the process application and the process platform.
+Both are built as Spring Boot applications.
 
 The following configuration is used in the distributed scenario with Axon Server:
 
-* Bus distribution is provided by Axon Server Connector (event bus only)
-* Polyflow Core Components (task pool and data pool) are deployed **aside the process application**
-* Axon Server is used as Event Store
-* Postgresql is used as a database for:
+* The Axon Server Connector distributes the event bus only.
+* Polyflow Core components (Taskpool and Datapool) are deployed **alongside the process application**.
+* Axon Server is used as the Event Store.
+* PostgreSQL is used as the database for:
     - Camunda BPM Engine
     - Process Application Datasource
-* JPA is used as persistence for projection view (`view-jpa`)
+* JPA persists the projection view (`view-jpa`).
 
 
 ### System Requirements
@@ -25,13 +25,13 @@ The following configuration is used in the distributed scenario with Axon Server
 
 ### Preparations
 
-Before you begin, please build the entire project with `mvn clean install` from the command line in the project root directory.
+Before you begin, build the entire project with `./mvnw clean install` from the project root directory.
 
-You will need some backing services (Axon Server, PostgreSQL) and you can easily start them locally
-by using the provided `docker-compose.yml` file.
+You need backing services (Axon Server and PostgreSQL), which you can start locally
+with the provided `docker-compose.yml` file.
 
-Before you start change the directory to `examples/scenarios/distributed-axon-server-local-polyflow` and run a preparation script `.docker/setup.sh`.
-You can do it with the following code from your command line (you need to do it once):
+Change to `examples/scenarios/distributed-axon-server-local-polyflow` and run the `.docker/setup.sh` preparation script.
+Run it once from the command line:
 
 
 ```bash
@@ -39,26 +39,26 @@ cd examples/scenarios/distributed-axon-server-local-polyflow
 .docker/setup.sh
 ```
 
-Now, start required containers. The easiest way to do so is to run:
+Then start the required containers:
 
 
 ```bash
 docker-compose up -d
 ```
 
-To verify it is running, open your browser [http://localhost:8024/](http://localhost:8024/). You should see
+To verify that it is running, open [http://localhost:8024/](http://localhost:8024/) in your browser. You should see
 the Axon Server administration console.
 
 ### Start
 
-The demo application consists of several Maven modules. In order to start the example, you will need to start only two
-of them in the following order:
+The demo application consists of several Maven modules. To start the example, start these two
+in the following order:
 
 1. process-platform-view-only (process platform)
 2. process-application-local-polyflow (example process application)
 
-The modules can be started by running from command line in the `examples/scenarios/distributed-axon-server-local-polyflow` directory using Maven or start the
-packaged application using:
+Start the modules with Maven from the `examples/scenarios/distributed-axon-server-local-polyflow` directory, or start the
+packaged applications with:
 
 
 ```bash

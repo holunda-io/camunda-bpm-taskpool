@@ -1,17 +1,17 @@
 As described in [Distribution using Axon Server (core component as part of process engine)](../../introduction/deployment.md#distribution-using-axon-server-core-component-as-part-of-process-engine) 
 you might want to deploy your Polyflow Core Components (Taskpool Core and Datapool Core) inside your process application. If you are doing so,
-you should there are two important decisions to make:
+there are two important decisions to make:
 
-* How the Camunda transaction is related to Transaction (Unit of Work) or Polyflow?
+* How is the Camunda transaction related to Polyflow's transaction (Unit of Work)?
 * How to isolate Polyflow Core components from each other if deployed multiple times?
 
 ## Transactional support of integration components
 
-The integration components support different transactional behavior inside the command sender components. To be more precise, 
-after the task collector has collected the commands from the integration points with Camunda, you can set up if the data is passed 
-to the Command Dispatching component (command bus) inside the same transaction or in a separate transaction.
+The integration components support different transactional behaviour in their command senders. After the task collector
+collects commands from Camunda integration points, you can choose whether to pass them to the command-dispatching component
+(command bus) in the same transaction or in a separate transaction.
 
-The relevant property to set this up is `polyflow.integration.sender.task.send-within-transaction`, like you can see in the following example: 
+Use `polyflow.integration.sender.task.send-within-transaction` to configure this behaviour:
 
 ```yaml
 
@@ -26,9 +26,9 @@ polyflow:
 
 ```
 
-If set to true, the transaction will be shared between the Camunda Task Lifecycle and command dispatching components. The commands are passed to
-a special `CommandListGateway` responsible for sending commands one by one. This component allows to integrate a success and failure handlers to 
-react to command sending and any failures there. To do so, you need to implement two interfaces and provide bean factories for them:
+When set to `true`, the Camunda task lifecycle and command-dispatching components share a transaction. Commands are passed to
+a `CommandListGateway`, which sends them one at a time. You can integrate success and failure handlers to
+respond to command outcomes. To do so, implement the two interfaces and provide beans for them:
 
 ```kotlin
 
@@ -52,23 +52,22 @@ react to command sending and any failures there. To do so, you need to implement
   }
 
 ```
-By doing so, you can propagate the exception and prevent the initial transaction from commit, if something goes wrong during command dispatch.
+This lets you propagate an exception and prevent the initial transaction from committing if command dispatch fails.
 
-Another approach for dealing with errors is to minimize their occurrence, by deploying the Core Components inside the same deployment unit as the 
-process engine itself. To demonstrate this scenario, we created a scenario in Polyflow examples [Distributed with Axon Server Events Only](../../examples/scenarios/distributed-axon-server-local.md).
+Another way to minimise errors is to deploy Core components in the same deployment unit as the
+process engine. The Polyflow examples demonstrate this in [Distributed with Axon Server Events Only](../../examples/scenarios/distributed-axon-server-local.md).
 
-By using this deployment strategy, ever process engine deployment includes the [Core components](../components/core-taskpool.md) and are taking
-care of maintaining their state and receiving commands from the integration components. By doing so, you preserve a mean of locality of the tasks
-originated in a process engine.
+With this deployment strategy, every process-engine deployment includes the [Core components](../components/core-taskpool.md), which
+maintain their state and receive commands from the integration components. This preserves locality for tasks
+originating in a process engine.
 
 ## Isolating Polyflow Components
 
-One of the problems that occurs if you use this deployment strategy with Axon Server is that you will get multiple Command Handlers in runtime
-which are capable of receiving Engine Task Commands. A good way to solve this problem is to prevent Polyflow from registering the Command Handlers 
-in Axon Server.
+With this deployment strategy and Axon Server, multiple command handlers capable of receiving Engine Task Commands run at the same time.
+Prevent Polyflow from registering these command handlers in Axon Server to avoid the conflict.
 
-Since we are using the `Axon-Gateway-Extension` library in the Polyflow, you can make use of the `DispatchAwareCommandBus` by configuring the 
-following properties, which limit the registration of Polyflow Command Handlers in Axon Server:
+Because Polyflow uses the `Axon-Gateway-Extension` library, you can configure `DispatchAwareCommandBus` with the
+following properties to limit registration of Polyflow command handlers in Axon Server:
 
 ```yaml
 
@@ -83,5 +82,5 @@ axon-gateway:
 
 ```
 
-By doing so, the Polyflow Command Handlers (parts of the Core Components) are registered on the local segmet of the command bus only and don't 
-interfere with each other.
+As a result, the Polyflow command handlers (part of the Core components) are registered only on the command bus's local segment and do not
+interfere with one another.

@@ -19,7 +19,7 @@ and generic query paging and sorting.
 
 ### Task API
 
-The Task API allows to query for tasks handled by the task-pool.
+The Task API lets you query tasks managed by the task pool.
 
 | Query Type                         | Description                                                                                                                                    | Payload types                   | In-Memory | JPA        | Mongo DB |
 |------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------|-----------|------------|----------|
@@ -40,7 +40,7 @@ The Task API allows to query for tasks handled by the task-pool.
 
 ### Process Definition API
 
-The Process Definition API allows to query for process definitions handled by the task-pool.
+The Process Definition API lets you query process definitions managed by the task pool.
 
 | Query Type                              | Description                                                | Payload types           | In-Memory | JPA   | Mongo DB |
 |-----------------------------------------|------------------------------------------------------------|-------------------------|-----------|-------|----------|
@@ -49,7 +49,7 @@ The Process Definition API allows to query for process definitions handled by th
 
 ### Process Instance API
 
-The Process Instance API allows to query for process instances handled by the task-pool.
+The Process Instance API lets you query process instances managed by the task pool.
 
 | Query Type                    | Description                                                             | Payload types         | In-Memory | JPA   | Mongo DB |
 |-------------------------------|-------------------------------------------------------------------------|-----------------------|-----------|-------|----------|
@@ -58,7 +58,7 @@ The Process Instance API allows to query for process instances handled by the ta
 
 ### Process Variable API (incubation)
 
-The Process Variable API allows to query for process variables handled by the task-pool.
+The Process Variable API lets you query process variables managed by the task pool.
 
 !!! warning
     The Process Variable API is supporting revision-aware queries, which are currently only supported by JPA and In-Memory implementations.  
@@ -70,7 +70,7 @@ The Process Variable API allows to query for process variables handled by the ta
 
 ### Data Entry API
 
-The Data Entry API allows to query for data entries handled by the data-pool.
+The Data Entry API lets you query data entries managed by the data pool.
 
 !!! warning
     The Data Entry API supports revision-aware queries by JPA and In-Memory implementations **ONLY**.
@@ -88,7 +88,7 @@ The Data Entry API allows to query for data entries handled by the data-pool.
 
 Projections can be built in a way, that they support and store event revision information transported by the event metadata. By doing so, you might send an
 update of the model by specifying the update revision and are waiting for the eventually consistent event delivery to the projection of this update.
-In order to achieve this, you might specify the minimum revision the query result must fulfill in order to match your query request. See [axon-gateway-extension](https://github.com/holixon/axon-gateway-extension)
+To achieve this, specify the minimum revision that a query result must fulfil to match the request. See [axon-gateway-extension](https://github.com/holixon/axon-gateway-extension).
 for more details. Please note, that not all implementations are implementing this feature. Especially, Mongo DB View is currently **NOT SUPPORTING** Revision Aware queries. 
 
 ## Filtering, Paging and Sorting
@@ -107,7 +107,7 @@ interface PageableSortableQuery {
 The `page` parameter denotes the page number to deliver (starting with `0`). The `size` parameter denotes the number of elements on a page. By default, the `page` is set to `0`
 and the size is set to `Int.MAX`. 
 
-An optional `sort` list allows to sort the results by multiple field attributes. The format of the `sort` string is `<+|->fieldName`, `+fieldName` means sort by `fieldName` ascending,
+An optional `sort` list lets you sort results by multiple fields. The format of a `sort` string is `<+|->fieldName`; `+fieldName` sorts by `fieldName` in ascending order,
 `-fieldName` means sort by `fieldName` descending. The field must be a direct member of the result (`Task` for queries on `Task` and `TaskWithDataEntries` or `DataEntry`) and must be one of the following type:
 
 * java.lang.Integer
@@ -136,7 +136,7 @@ Following operations are supported:
     process name, `task.textSearch%some-substring` makes a special OR-combined like-search on task name, task description and task process name. 
 
 If the field name does not have one of the above prefixes, it is considered as an attribute inside the payload of data entry or enriched variables of a user task. For example, imagine
-you have a data entry with payload attributes `{ "attribute": "value", "another": 45 }`. In order to search for those, just specify `attribute=value` in your filter criteria.
+you have a data entry with payload attributes `{ "attribute": "value", "another": 45 }`. To search for these entries, specify `attribute=value` in the filter criteria.
 
 !!! info
     When filtering in the Task API, only the queries that include Data Entries (`AllTasksWithDataEntriesQuery`, `TasksWithDataEntriesForGroupQuery`, `TasksWithDataEntriesForUserQuery`)

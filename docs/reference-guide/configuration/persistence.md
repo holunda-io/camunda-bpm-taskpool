@@ -120,7 +120,7 @@ for the one-time `changelog-sync` and release-tag procedure.
 ### Application adoption mode
 
 The Liquibase module provides a one-shot Spring Boot adoption mode for
-deployments that cannot use the Liquibase CLI (see official docs of Liquibse).
+deployments that cannot use the Liquibase CLI (see the official Liquibase documentation).
 It is explicitly enabled and uses the application's normal datasource and root changelog:
 
 ```yaml

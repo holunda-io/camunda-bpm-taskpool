@@ -1,43 +1,42 @@
 ---
 title: Deployment Scenarios
 ---
-Several deployment scenarios of the components are possible depending on your requirements and available infrastructure.
+Several component deployment scenarios are possible, depending on your requirements and available infrastructure.
 
 The simplest setup is to run all components on a single node. A more advanced scenario is to distribute components over the network and connect them.
 
 For the corresponding Axon service responsibilities and runtime configuration,
 see [Service Configuration](../reference-guide/configuration/service-configuration.md).
 
-In doing so, one of the challenging issues for distribution and connecting microservices is a setup of messaging technology supporting required message exchange
-patterns (MEPs) for a CQRS system. Because of different semantics of commands, events and queries and additional requirements of event-sourced persistence a
-special implementation of command bus, event bus and event store is required. In particular, two scenarios can be distinguished: using Axon Server or using a
-different distribution technology.
+One challenge in distributing and connecting microservices is setting up messaging technology that supports the required message-exchange
+patterns (MEPs) for a CQRS system. Because commands, events, and queries have different semantics, and event-sourced persistence has additional requirements,
+the command bus, event bus, and event store need specialised implementations. In particular, two scenarios are possible: using Axon Server or another
+distribution technology.
 
 ## Single node deployment
 
-The easiest scenario is the **Single Node Deployment**. It provides all functional features of the Polyflow library, but is not addressing any of performance,
-scalability, autonomy and reliability requirements. It works almost without additional infrastructure and is ideal to start with.
+The simplest scenario is the **Single Node Deployment**. It provides all functional features of the Polyflow library but does not address performance,
+scalability, autonomy, or reliability requirements. It requires almost no additional infrastructure and is ideal for getting started.
 
 In a single node scenario the following configuration is used:
 
 * All buses are local (command bus, event bus, query bus)
-* Camunda BPM Integration components, Core components and View components are all deployed in the same node
-* JPA-Based event storage is used, persisting the domain events in a RDBMS, along with Camunda-specific DB tables.
-* Simple (In-memory) View or JPA view is used to provide query projections of `taskpool` and `datapool`
+* Camunda BPM integration, Core, and View components are all deployed on the same node.
+* JPA-based event storage persists domain events in an RDBMS alongside Camunda-specific database tables.
+* A Simple (in-memory) View or JPA View provides query projections for `taskpool` and `datapool`.
 
 Check the following diagram for more details:
 
-![Deployment of all component in a single node](../img/deployment-single.png)
+![Deployment of all components on a single node](../img/deployment-single.png)
 
 ## Multiple node deployment
 
-The more advanced scenario is to separate the **Process Platform components** from **Process Application components**, compare
-the [concepts section](concepts.md). Especially, it is helpful if you intend to build a central **Process Platform** and multiple **Process applications** using
-it.
+The more advanced scenario separates **Process Platform components** from **Process Application components**; see
+the [concepts section](concepts.md). It is particularly useful when you want to build a central **Process Platform** used by multiple **Process Applications**.
 
-In general, this is one of the main use cases for Polyflow framework itself, but the distribution aspects adds technical complexity to the resulting
-architecture. Especially, following the architecture blueprint of Axon Framework, the three buses (Command bus, Event bus and Query bus) needs to be distributed
-and act as connecting infrastructure between components.
+This is one of the main use cases for the Polyflow framework, but distribution adds technical complexity to the resulting
+architecture. Following the Axon Framework architecture blueprint, the three buses (command, event, and query) must be distributed
+and act as the connecting infrastructure between components.
 
 ### Distribution using Axon Server (core component as part of process platform)
 
@@ -47,9 +46,8 @@ Requirements:
 - distributed command bus
 - distributed event bus
 
-Axon Server provides an implementation for this requirement leading to a distributed buses and a central Event Store. It is easy to use, easy to configure and
-easy to run. If you need a HA setup, you will need the Enterprise license of Axon Server. Essentially, if you don't have another HA ready-to use messaging, this
-scenario might be your way to go.
+Axon Server provides the required distributed buses and a central Event Store. It is straightforward to use, configure, and run. A high-availability setup
+requires an Axon Server Enterprise license. This scenario may be a good fit if you do not already have high-availability messaging infrastructure.
 
 This scenario supports:
 
@@ -57,7 +55,7 @@ This scenario supports:
 - free choice for projection persistence (since Axon Server supports event replay)
 - no direct synchronous communication between **Process Platform** and **Process Application** is required (e.g. via REST, since it is routed via command, event
   and query bus)
-- central components should to be HA available 
+- central components should be highly available
 - support routing of interaction task commands
 
 The following diagram depicts the distribution of the components and the messaging:
@@ -71,9 +69,8 @@ Requirements:
 - Event store
 - distributed event bus
 
-Axon Server provides an implementation for this requirement leading to a distributed buses and a central Event Store. It is easy to use, easy to configure and
-easy to run. If you need a HA setup, you will need the Enterprise license of Axon Server. Essentially, if you don't have another HA ready-to use messaging, this
-scenario might be your way to go.
+Axon Server provides the required distributed buses and a central Event Store. It is straightforward to use, configure, and run. A high-availability setup
+requires an Axon Server Enterprise license. This scenario may be a good fit if you do not already have high-availability messaging infrastructure.
 
 This scenario supports:
 
@@ -89,8 +86,8 @@ The following diagram depicts the distribution of the components and the messagi
 
 ### Distribution without Axon Server
 
-If you already have another messaging at place, like Kafka or RabbitMQ, you might skip the usage of Axon Server. In doing so, you will be responsible for
-distribution of events and will need to surrender some features.
+If you already have another messaging system, such as Kafka or RabbitMQ, you may not need Axon Server. In that case, you are responsible for
+distributing events and must forgo some features.
 
 This scenario supports:
 

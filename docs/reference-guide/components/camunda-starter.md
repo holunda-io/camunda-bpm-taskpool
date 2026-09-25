@@ -1,17 +1,17 @@
 ---
-title: Camunda Engine Taskpool Support SpringBoot Starter
+title: Camunda Engine Taskpool Support Spring Boot Starter
 pageId: engine-starter
 ---
 
 ### Purpose
 
-The Polyflow Camunda Platform 7 SpringBoot Starter is a convenience module providing a single
-module dependency to be included in the process application. It includes all process application
+The Polyflow Camunda Platform 7 Spring Boot Starter is a convenience module that provides a single
+dependency for a process application. It includes all process-application
 modules and provides meaningful defaults for their options.
 
 ### Configuration
 
-In order to enable the starter, please put the following dependency on your class path:
+To enable the starter, add the following dependency to your classpath:
 
 ```xml
 <dependency>
@@ -20,9 +20,9 @@ In order to enable the starter, please put the following dependency on your clas
 </dependency>
 ```
 
-The included `TaskpoolEngineSupportConfiguration` is a SpringBoot AutoConfiguration that configures the required components.
-If you want to configure it manually, please add the `@EnableTaskpoolEngineSupport` annotation on any `@Configuration` annotated
-class of your SpringBoot application.
+The included `TaskpoolEngineSupportConfiguration` is a Spring Boot auto-configuration that configures the required components.
+To configure it manually, add the `@EnableTaskpoolEngineSupport` annotation to any `@Configuration`-annotated
+class in your Spring Boot application.
 
 The `@EnableTaskpoolEngineSupport` annotation has the same effect as the following block of annotations:
 

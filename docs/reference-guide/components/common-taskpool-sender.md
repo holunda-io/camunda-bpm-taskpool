@@ -7,7 +7,7 @@ as commands.
 ### Features
 
 * Allows fine-grained control of transactional behaviour during command sending
-* Allows to integrate custom success and error handling
+* Allows custom success and error handling to be integrated
 
 ### Usage and configuration
 
@@ -33,7 +33,7 @@ class MyDataEntryCollectorConfiguration {
 }
 ```
 
-In order to control sending of commands to command sender, the command sender activation property
+To control command dispatch to the command sender, use the command-sender activation property
 `polyflow.integration.sender.task.enabled` is available. If disabled, the command sender
 will log any command instead of aggregating sending it to the command gateway.
 
@@ -83,7 +83,7 @@ perform the transmission of the commands to the Command Bus. This sender is in p
 
 #### Serialization of payload
 
-By default, the data entry sender will serialize payload of the `DataEntry` into a JSON-Map structure, in order to be received by projections (Data Pool View)
+By default, the data-entry sender serialises the `DataEntry` payload into a JSON-map structure so that projections (Data Pool View) can receive it.
 and storage of it, independent of the classes which might be not on the classpath of the projection (generic structure instead of a typed Java object structure).
 This serialization can be disabled by the sender property `polyflow.integration.sender.task.serialize-payload=false`.
 
@@ -95,7 +95,7 @@ on the state of the aggregate and other components. The `AxonCommandListGateway`
 to console (success is logged in `DEBUG` log level, errors are using `ERROR` log level).
 
 In some situations it is required to take care of command outcome. A prominent example is to include a metric for command dispatching errors into monitoring.
-For doing so, it is possible to provide own handlers for success and error command outcome. For this purpose, please provide a Spring Bean implementing
+You can provide custom handlers for successful and failed command outcomes. To do so, provide a Spring bean that implements
 the `CommandSuccessHandler`and `CommandErrorHandler` accordingly.
 
 Here is an example, how such a handler may look like:
@@ -135,5 +135,4 @@ fun taskCommandErrorHandler(): CommandErrorHandler = object : LoggingTaskCommand
 | `SENDER-016` | `INFO`   |                       | Taskpool process instance command distribution is disabled by property.                            |                                        |
 | `SENDER-017` | `INFO`   |                       | Taskpool process variable commands will be distributed over command bus.                           |                                        |
 | `SENDER-018` | `INFO`   |                       | Taskpool process variable command distribution is disabled by property.                            |                                        |
-
 

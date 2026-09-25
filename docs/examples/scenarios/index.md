@@ -2,20 +2,19 @@
 title: Usage Scenarios
 ---
 
-Depending on your requirements and infrastructure available several deployment scenarios of the components is possible.
+Several component deployment scenarios are possible, depending on your requirements and available infrastructure.
 
 The simplest setup is to run all components on a single node. A more advanced scenario is to distribute components and connect them.
 
-In doing so, one of the challenging issues for distribution and connecting microservices is a setup of messaging technology
-supporting required message exchange patterns (MEPs) for a CQRS system. Because of different semantics of commands,
-events and queries and additional requirements of event-sourced persistence a special implementation of
-command bus, event bus and event store is required. In particular, two scenarios can be distinguished: using Axon Server
-or using a different distribution technology.
+One challenge in distributing and connecting microservices is setting up messaging technology that supports the required message-exchange
+patterns (MEPs) for a CQRS system. Because commands, events, and queries have different semantics, and event-sourced persistence has additional requirements,
+the command bus, event bus, and event store need specialised implementations. In particular, two scenarios are possible: using Axon Server
+or another distribution technology.
 
-The provided [Example application](../example-approval.md) is implemented several times demonstrating the following usage scenarios:
+The provided [example application](../example-approval.md) is implemented several times to demonstrate the following usage scenarios:
 
 * [Single Node Scenario](single-node.md)
 * [Distributed Scenario using Axon Server](distributed-axon-server.md)
 * [Distributed Scenario using Axon Server with Local Polyflow Core](distributed-axon-server-local.md)
 
-It is a good idea to understand the single node scenario first and then move on to more elaborated scenarios.
+Start with the single-node scenario before moving on to more advanced scenarios.
