@@ -17,9 +17,8 @@ spring:
       connection-test-query: select 1 from dual;
       schema: PUBLIC
     driver-class-name: org.h2.Driver
-  flyway:
-    enabled: true
-    locations: "classpath:db/migrations/h2-postgresql"
+  liquibase:
+    change-log: classpath:db/changelog/polyflow/polyflow-view-changelog.xml
 
 polyflow:
   view:
@@ -43,4 +42,3 @@ axon:
       [io.holunda.polyflow.view.jpa.service.data]:
         mode: subscribing
         source: eventBus
-

@@ -50,6 +50,10 @@ Polyflow publishes PostgreSQL database changes through the
 applications include the required Polyflow master changelogs from their
 central Liquibase master changelog; see the [Persistence configuration](../reference-guide/configuration/persistence.md).
 
+Integration tests follow the same rule: use the `polyflow-liquibase` test
+dependency and the appropriate core or view master changelog. Do not add
+Flyway migrations for Polyflow tables.
+
 
 
 ### Build Documentation

@@ -18,9 +18,8 @@ spring:
       connection-test-query: select 1 from dual;
       schema: PUBLIC
     driver-class-name: org.h2.Driver
-  flyway:
-    enabled: true
-    locations: "classpath:db/migrations/h2-postgresql"
+  liquibase:
+    change-log: classpath:db/changelog/collector-test-changelog.xml
 camunda:
   bpm:
     default-serialization-format: application/json
@@ -44,4 +43,3 @@ polyflow:
       task:
         type: txjob
         send-within-transaction: true
-
