@@ -1,6 +1,0 @@
-create view PLF_VIEW_TASK_AND_DATA_ENTRY_PAYLOAD as
-((select pc.TASK_ID, dea.PATH, dea.VALUE
-  from PLF_TASK_CORRELATIONS pc
-         join PLF_DATA_ENTRY_PAYLOAD_ATTRIBUTES dea on pc.ENTRY_ID = dea.ENTRY_ID and pc.ENTRY_TYPE = dea.ENTRY_TYPE)
-union
-select * from PLF_TASK_PAYLOAD_ATTRIBUTES);

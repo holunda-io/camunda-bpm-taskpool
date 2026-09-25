@@ -2,16 +2,14 @@ spring:
   jpa:
     open-in-view: true # disable JPA warning
     show-sql: false
-    database-platform: org.hibernate.dialect.MariaDBDialect
     generate-ddl: false
-    hibernate.ddl-auto: none
+    hibernate.ddl-auto: validate
   datasource:
     url: jdbc:tc:mariadb:10.11:///testDb
     username: sa
     password: sa
-  flyway:
-    enabled: true
-    locations: "classpath:db/migrations/mariadb"
+  liquibase:
+    change-log: classpath:db/changelog/polyflow/polyflow-view-changelog.xml
 
 polyflow:
   view:
@@ -35,4 +33,3 @@ axon:
       [io.holunda.polyflow.view.jpa.service.data]:
         mode: subscribing
         source: eventBus
-

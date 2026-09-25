@@ -4,8 +4,9 @@ import com.thoughtworks.xstream.XStream
 import com.thoughtworks.xstream.security.AnyTypePermission
 import org.axonframework.eventhandling.deadletter.jpa.DeadLetterEntry
 import org.axonframework.eventhandling.tokenstore.jpa.TokenEntry
+import org.axonframework.eventsourcing.eventstore.inmemory.InMemoryEventStorageEngine
 import org.axonframework.eventsourcing.eventstore.jpa.DomainEventEntry
-import org.axonframework.modelling.saga.repository.jpa.SagaEntry
+import org.axonframework.modelling.saga.repository.inmemory.InMemorySagaStore
 import org.axonframework.serialization.Serializer
 import org.axonframework.serialization.xml.XStreamSerializer
 import org.springframework.beans.factory.annotation.Qualifier
@@ -20,7 +21,7 @@ import org.springframework.context.annotation.Import
 @Import(ObjectMapperConfiguration::class)
 @ComponentScan(basePackages = ["io.holunda.polyflow.view.jpa"])
 @EntityScan(
-  basePackageClasses = [TokenEntry::class, SagaEntry::class, DomainEventEntry::class, DeadLetterEntry::class]
+  basePackageClasses = [TokenEntry::class, DeadLetterEntry::class]
 )
 class TestApplication {
 
@@ -28,4 +29,9 @@ class TestApplication {
   @Qualifier("eventSerializer")
   fun myEventSerializer(): Serializer = XStreamSerializer.builder().xStream(XStream().apply { addPermission(AnyTypePermission.ANY) }).build()
 
+  @Bean
+  fun sagaStore() = InMemorySagaStore()
+
+  @Bean
+  fun inMemoryEventStorageEngine() = InMemoryEventStorageEngine()
 }

@@ -121,21 +121,21 @@ logging.level:
 
 The JPA View uses several tables to store the results. These are:
 
-* `PLF_DATA_ENTRY`: table for business data entries
-* `PLF_DATA_ENTRY_AUTHORIZATIONS`: table for authorization information of data entries
-* `PLF_DATA_ENTRY_PAYLOAD_ATTRIBUTES`: table for data entry attribute search index
-* `PLF_DATA_ENTRY_PROTOCOL`: table for data entry protocol entry (users, groups)
-* `PLF_PROC_DEF`: table for process definitions
-* `PLF_PROC_DEF_AUTHORIZATIONS`: table for authorization information of process definitions 
-* `PLF_PROC_INSTANCE`: table for process instances
-* `PLF_TASK`: table for user tasks
-* `PLF_TASK_AUTHORIZATIONS`: table for authorization information of user tasks
-* `PLF_TASK_CORRELATIONS`: table for user task correlation information
-* `PLF_TASK_PAYLOAD_ATTRIBUTES`: table for user task attribute search index
-* `PLF_VIEW_TASK_AND_DATA_ENTRY_PAYLOAD`: view for convenient taskWithDataEntry queries execution
-* `PLF_DATA_ENTRY_PAYLOAD_ATTRIBUTES`: view for convenient data entry queries with correlations
-* `TOKEN_ENTRY`: table for Axon processor tokens
-* `DEAD_LETTER_ENTRY`: table for Axon event-processor dead letters
+* `plf_data_entry`: table for business data entries
+* `plf_data_entry_authorizations`: table for authorization information of data entries
+* `plf_data_entry_payload_attributes`: table for data entry attribute search index
+* `plf_data_entry_protocol`: table for data entry protocol entry (users, groups)
+* `plf_proc_def`: table for process definitions
+* `plf_proc_def_authorizations`: table for authorization information of process definitions
+* `plf_proc_instance`: table for process instances
+* `plf_task`: table for user tasks
+* `plf_task_authorizations`: table for authorization information of user tasks
+* `plf_task_correlations`: table for user task correlation information
+* `plf_task_payload_attributes`: table for user task attribute search index
+* `plf_view_task_and_data_entry_payload`: view for convenient taskWithDataEntry queries execution
+* `plf_view_data_entry_payload`: view for convenient data entry queries with correlations
+* `token_entry`: table for Axon processor tokens
+* `dead_letter_entry`: table for Axon event-processor dead letters
 
 Create these tables and views through the Polyflow Liquibase changelog. Add
 `polyflow-liquibase` to the application and include

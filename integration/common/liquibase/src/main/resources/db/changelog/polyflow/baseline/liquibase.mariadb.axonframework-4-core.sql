@@ -1,9 +1,9 @@
-create table if not exists DOMAIN_EVENT_ENTRY
+create table if not exists domain_event_entry
 (
   GLOBAL_INDEX         bigint auto_increment not null,
   EVENT_IDENTIFIER     varchar(255) not null,
-  META_DATA            longblob,
-  PAYLOAD              longblob     not null,
+  META_DATA            blob,
+  PAYLOAD              blob         not null,
   PAYLOAD_REVISION     varchar(255),
   PAYLOAD_TYPE         varchar(255) not null,
   TIME_STAMP           varchar(255) not null,
@@ -16,14 +16,14 @@ create table if not exists DOMAIN_EVENT_ENTRY
   constraint UK_DOMAIN_EVENT_EVENT_ID unique (EVENT_IDENTIFIER)
 );
 
-create table if not exists SNAPSHOT_EVENT_ENTRY
+create table if not exists snapshot_event_entry
 (
   AGGREGATE_IDENTIFIER varchar(255) not null,
   SEQUENCE_NUMBER      bigint       not null,
   TYPE                 varchar(255) not null,
   EVENT_IDENTIFIER     varchar(255) not null,
-  META_DATA            longblob,
-  PAYLOAD              longblob     not null,
+  META_DATA            blob,
+  PAYLOAD              blob         not null,
   PAYLOAD_REVISION     varchar(255),
   PAYLOAD_TYPE         varchar(255) not null,
   TIME_STAMP           varchar(255) not null,
@@ -32,4 +32,4 @@ create table if not exists SNAPSHOT_EVENT_ENTRY
   constraint UK_SNAPSHOT_EVENT_EVENT_ID unique (EVENT_IDENTIFIER)
 );
 
-create sequence if not exists DOMAIN_EVENT_ENTRY_SEQ start with 1 increment by 50;
+create sequence if not exists domain_event_entry_seq start with 1 increment by 50;

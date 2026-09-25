@@ -1,4 +1,4 @@
-create table PLF_DATA_ENTRY
+create table plf_data_entry
 (
   ENTRY_ID           varchar(255) not null,
   ENTRY_TYPE         varchar(255) not null,
@@ -9,7 +9,7 @@ create table PLF_DATA_ENTRY
   FORM_KEY           varchar(255),
   DATE_LAST_MODIFIED datetime(6) not null,
   NAME               varchar(255) not null,
-  PAYLOAD            longtext,
+  PAYLOAD            tinytext,
   REVISION           bigint,
   PROCESSING_TYPE    varchar(255) not null,
   STATE              varchar(255) not null,
@@ -18,7 +18,7 @@ create table PLF_DATA_ENTRY
   constraint PK_DATA_ENTRY primary key (ENTRY_ID, ENTRY_TYPE)
 );
 
-create table PLF_DATA_ENTRY_AUTHORIZATIONS
+create table plf_data_entry_authorizations
 (
   ENTRY_ID             varchar(255) not null,
   ENTRY_TYPE           varchar(255) not null,
@@ -26,10 +26,10 @@ create table PLF_DATA_ENTRY_AUTHORIZATIONS
   constraint PK_DATA_ENTRY_AUTH primary key (ENTRY_ID, ENTRY_TYPE, AUTHORIZED_PRINCIPAL),
   constraint FK_DATA_ENTRY_AUTH_ENTRY
     foreign key (ENTRY_ID, ENTRY_TYPE)
-    references PLF_DATA_ENTRY (ENTRY_ID, ENTRY_TYPE)
+    references plf_data_entry (ENTRY_ID, ENTRY_TYPE)
 );
 
-create table PLF_DATA_ENTRY_PAYLOAD_ATTRIBUTES
+create table plf_data_entry_payload_attributes
 (
   ENTRY_ID   varchar(64)  not null,
   ENTRY_TYPE varchar(128) not null,
@@ -38,10 +38,10 @@ create table PLF_DATA_ENTRY_PAYLOAD_ATTRIBUTES
   constraint PK_DATA_ENTRY_ATTR primary key (ENTRY_ID, ENTRY_TYPE, PATH, VALUE),
   constraint FK_DATA_ENTRY_ATTR_ENTRY
     foreign key (ENTRY_ID, ENTRY_TYPE)
-    references PLF_DATA_ENTRY (ENTRY_ID, ENTRY_TYPE)
+    references plf_data_entry (ENTRY_ID, ENTRY_TYPE)
 );
 
-create table PLF_DATA_ENTRY_PROTOCOL
+create table plf_data_entry_protocol
 (
   ID              varchar(255) not null,
   LOG_DETAILS     varchar(255),
@@ -55,10 +55,10 @@ create table PLF_DATA_ENTRY_PROTOCOL
   constraint PK_DATA_ENTRY_PROTOCOL primary key (ID),
   constraint FK_DATA_ENTRY_PROTOCOL_ENTRY
     foreign key (ENTRY_ID, ENTRY_TYPE)
-    references PLF_DATA_ENTRY (ENTRY_ID, ENTRY_TYPE)
+    references plf_data_entry (ENTRY_ID, ENTRY_TYPE)
 );
 
-create table PLF_PROC_DEF
+create table plf_proc_def
 (
   PROC_DEF_ID             varchar(255) not null,
   APPLICATION_NAME        varchar(255) not null,
@@ -72,17 +72,17 @@ create table PLF_PROC_DEF
   constraint PK_PROC_DEF primary key (PROC_DEF_ID)
 );
 
-create table PLF_PROC_DEF_AUTHORIZATIONS
+create table plf_proc_def_authorizations
 (
   PROC_DEF_ID                  varchar(255) not null,
   AUTHORIZED_STARTER_PRINCIPAL varchar(255) not null,
   constraint PK_PROC_DEF_AUTH primary key (PROC_DEF_ID, AUTHORIZED_STARTER_PRINCIPAL),
   constraint FK_PROC_DEF_AUTH_PROC_DEF
     foreign key (PROC_DEF_ID)
-    references PLF_PROC_DEF (PROC_DEF_ID)
+    references plf_proc_def (PROC_DEF_ID)
 );
 
-create table PLF_PROC_INSTANCE
+create table plf_proc_instance
 (
   INSTANCE_ID         varchar(255) not null,
   BUSINESS_KEY        varchar(255),
@@ -103,7 +103,7 @@ create table PLF_PROC_INSTANCE
   constraint PK_PROC_INSTANCE primary key (INSTANCE_ID)
 );
 
-create table PLF_TASK
+create table plf_task
 (
   TASK_ID             varchar(255) not null,
   ASSIGNEE_ID         varchar(255),
@@ -115,7 +115,7 @@ create table PLF_TASK
   FORM_KEY            varchar(255),
   NAME                varchar(255) not null,
   OWNER_ID            varchar(255),
-  PAYLOAD             longtext,
+  PAYLOAD             tinytext,
   PRIORITY            integer,
   APPLICATION_NAME    varchar(255) not null,
   SOURCE_DEF_ID       varchar(255) not null,
@@ -129,17 +129,17 @@ create table PLF_TASK
   constraint PK_TASK primary key (TASK_ID)
 );
 
-create table PLF_TASK_AUTHORIZATIONS
+create table plf_task_authorizations
 (
   TASK_ID              varchar(255) not null,
   AUTHORIZED_PRINCIPAL varchar(255) not null,
   constraint PK_TASK_AUTH primary key (TASK_ID, AUTHORIZED_PRINCIPAL),
   constraint FK_TASK_AUTH_TASK
     foreign key (TASK_ID)
-    references PLF_TASK (TASK_ID)
+    references plf_task (TASK_ID)
 );
 
-create table PLF_TASK_CORRELATIONS
+create table plf_task_correlations
 (
   TASK_ID    varchar(255) not null,
   ENTRY_ID   varchar(255) not null,
@@ -147,10 +147,10 @@ create table PLF_TASK_CORRELATIONS
   constraint PK_TASK_CORRELATION primary key (TASK_ID, ENTRY_ID, ENTRY_TYPE),
   constraint FK_TASK_CORRELATION_TASK
     foreign key (TASK_ID)
-    references PLF_TASK (TASK_ID)
+    references plf_task (TASK_ID)
 );
 
-create table PLF_TASK_PAYLOAD_ATTRIBUTES
+create table plf_task_payload_attributes
 (
   TASK_ID varchar(255) not null,
   PATH    varchar(255) not null,
@@ -158,10 +158,10 @@ create table PLF_TASK_PAYLOAD_ATTRIBUTES
   constraint PK_TASK_ATTR primary key (TASK_ID, PATH, VALUE),
   constraint FK_TASK_ATTR_TASK
     foreign key (TASK_ID)
-    references PLF_TASK (TASK_ID)
+    references plf_task (TASK_ID)
 );
 
-create table PLF_DATA_ENTRY_CORRELATIONS
+create table plf_data_entry_correlations
 (
 	OWNING_ENTRY_TYPE varchar(255) not null,
 	OWNING_ENTRY_ID varchar(64) not null,
@@ -170,26 +170,26 @@ create table PLF_DATA_ENTRY_CORRELATIONS
 	constraint PK_DATA_ENTRY_CORRELATION primary key (OWNING_ENTRY_TYPE, OWNING_ENTRY_ID, ENTRY_TYPE, ENTRY_ID)
 );
 
-create view PLF_VIEW_TASK_AND_DATA_ENTRY_PAYLOAD as
+create view plf_view_task_and_data_entry_payload as
 (
 (select PC.TASK_ID, DEA.PATH, DEA.VALUE
- from PLF_TASK_CORRELATIONS PC
-          join PLF_DATA_ENTRY_PAYLOAD_ATTRIBUTES DEA on PC.ENTRY_ID = DEA.ENTRY_ID and PC.ENTRY_TYPE = DEA.ENTRY_TYPE)
+ from plf_task_correlations PC
+          join plf_data_entry_payload_attributes DEA on PC.ENTRY_ID = DEA.ENTRY_ID and PC.ENTRY_TYPE = DEA.ENTRY_TYPE)
 union
 select TASK_ID, PATH, VALUE
-from PLF_TASK_PAYLOAD_ATTRIBUTES);
+from plf_task_payload_attributes);
 
-create view PLF_VIEW_DATA_ENTRY_PAYLOAD as
+create view plf_view_data_entry_payload as
 (
 select ENTRY_ID, ENTRY_TYPE, PATH, VALUE
-from PLF_DATA_ENTRY_PAYLOAD_ATTRIBUTES
+from plf_data_entry_payload_attributes
 union
 (select EC.OWNING_ENTRY_ID   as ENTRY_ID,
         EC.OWNING_ENTRY_TYPE as ENTRY_TYPE,
         EP.PATH              as PATH,
         EP.VALUE             as VALUE
- from PLF_DATA_ENTRY_CORRELATIONS EC
-          join PLF_DATA_ENTRY_PAYLOAD_ATTRIBUTES EP
+ from plf_data_entry_correlations EC
+          join plf_data_entry_payload_attributes EP
                on
                    EC.ENTRY_ID = EP.ENTRY_ID and EC.ENTRY_TYPE = EP.ENTRY_TYPE)
 );

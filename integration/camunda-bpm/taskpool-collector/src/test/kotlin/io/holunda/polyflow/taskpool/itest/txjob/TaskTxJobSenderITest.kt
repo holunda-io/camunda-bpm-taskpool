@@ -104,7 +104,7 @@ internal class TaskTxJobSenderITest {
    * The create command should contain the local variables.
    */
   @Test
-  @Disabled("Find out why the local listener update always gt into the next TX and how to deal with it")
+  @Disabled("Find out why the local listener update always get into the next TX and how to deal with it")
   fun `updates variables with create listener`() {
 
     doInTransaction {

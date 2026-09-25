@@ -170,7 +170,10 @@ Use concise, unambiguous abbreviations where needed to keep names within
 Oracle's 30-character identifier limit.
 
 Write schema-object and column names in `CAPITAL_CASE`. Write SQL keywords and
-data types in lowercase, for example `create table PLF_TASK (...)`.
+data types in lowercase, for example `create table PLF_TASK (...)`. MariaDB
+baselines are the exception for Hibernate-managed tables, views, and sequences:
+they use lowercase physical names because MariaDB can treat object names as
+case-sensitive.
 
 Baseline SQL declares columns and constraints in each `create table` statement
 whenever the referenced object is already available. `alter table` is reserved

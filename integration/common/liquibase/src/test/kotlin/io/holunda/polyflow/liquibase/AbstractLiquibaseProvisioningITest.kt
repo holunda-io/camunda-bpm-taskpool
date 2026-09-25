@@ -41,7 +41,7 @@ abstract class AbstractCoreLiquibaseProvisioningITest(
 ) {
   @Test
   fun `provisions the core schema through Liquibase`() = fixture.withApplication(databaseName, "core") { jdbcTemplate ->
-    assertThat(jdbcTemplate.queryForObject("select count(*) from DOMAIN_EVENT_ENTRY", Int::class.java)).isZero()
+    assertThat(jdbcTemplate.queryForObject("select count(*) from domain_event_entry", Int::class.java)).isZero()
     assertThat(jdbcTemplate.queryForObject("select count(*) from DATABASECHANGELOG where ID = 'core-baseline-4.6'", Int::class.java))
       .isEqualTo(1)
     assertThat(jdbcTemplate.queryForObject("select count(*) from DATABASECHANGELOG where TAG = ?", Int::class.java, expectedReleaseTag))
@@ -56,10 +56,10 @@ abstract class AbstractViewLiquibaseProvisioningITest(
 ) {
   @Test
   fun `provisions the view schema through Liquibase`() = fixture.withApplication(databaseName, "view") { jdbcTemplate ->
-    assertThat(jdbcTemplate.queryForObject("select count(*) from PLF_TASK", Int::class.java)).isZero()
-    assertThat(jdbcTemplate.queryForObject("select count(*) from PLF_VIEW_DATA_ENTRY_PAYLOAD", Int::class.java)).isZero()
-    assertThat(jdbcTemplate.queryForObject("select count(*) from TOKEN_ENTRY", Int::class.java)).isZero()
-    assertThat(jdbcTemplate.queryForObject("select count(*) from DEAD_LETTER_ENTRY", Int::class.java)).isZero()
+    assertThat(jdbcTemplate.queryForObject("select count(*) from plf_task", Int::class.java)).isZero()
+    assertThat(jdbcTemplate.queryForObject("select count(*) from plf_view_data_entry_payload", Int::class.java)).isZero()
+    assertThat(jdbcTemplate.queryForObject("select count(*) from token_entry", Int::class.java)).isZero()
+    assertThat(jdbcTemplate.queryForObject("select count(*) from dead_letter_entry", Int::class.java)).isZero()
     assertThat(jdbcTemplate.queryForObject("select count(*) from DATABASECHANGELOG where ID = 'event-baseline-4.6'", Int::class.java))
       .isEqualTo(1)
     assertThat(jdbcTemplate.queryForObject("select count(*) from DATABASECHANGELOG where ID = 'view-baseline-4.6'", Int::class.java))
