@@ -18,7 +18,7 @@ if the JPA persistence is already used in the project setup.
 
 ### Configuration options
 
-In order to activate the JPA View implementation, please include the following dependency on your classpath:
+To activate the JPA View implementation, include the following dependency on your classpath:
 
 ```xml
 <dependency>
@@ -46,7 +46,7 @@ spring:
     show-sql: false
     open-in-view: true # disable JPA warning
   datasource:
-    url: <jdbc-connnection-string>
+    url: <jdbc-connection-string>
     username: <db-user>
     password: <db-password>
 ```
@@ -78,7 +78,7 @@ stored items are: `task`, `data-entry`, `process-instance` and `process-definiti
 storage of items not required by your application and save space consumption of your database. The property defaults to `data-entry`.
 
 With the `payload-attribute-column-length` property one can specify a maximum length for payload attribute values if they are strings. Values that exceed
-this length will automatically be trimmed to the max length in order to prevent exceptions when handling the event. This is especially necessary because
+this length are automatically trimmed to the maximum length to prevent exceptions while handling the event. This is especially necessary because
 relational databases have limits on the length of composite primary keys. Since the combination of (id, path, value) for tasks or (id, type, path, value) for
 data entries must be unique, the primary key is very large, which limits the amount of space available for the value.
 
@@ -97,7 +97,7 @@ consideration during the search index creation.
 !!! note
     Please make sure you understand that the **payload enrichment** performed during collection and **indexing for search** are two different
     operations. It is perfectly fine to have a large JSON payload attached to the task, but it makes no sense to make the entire payload searchable,
-    at lease using JPA View.
+    at least when using JPA View.
 
 ### Entity Scan
 
@@ -121,21 +121,21 @@ logging.level:
 
 The JPA View uses several tables to store the results. These are:
 
-* `PLF_DATA_ENTRY`: table for business data entries
-* `PLF_DATA_ENTRY_AUTHORIZATIONS`: table for authorization information of data entries
-* `PLF_DATA_ENTRY_PAYLOAD_ATTRIBUTES`: table for data entry attribute search index
-* `PLF_DATA_ENTRY_PROTOCOL`: table for data entry protocol entry (users, groups)
-* `PLF_PROC_DEF`: table for process definitions
-* `PLF_PROC_DEF_AUTHORIZATIONS`: table for authorization information of process definitions 
-* `PLF_PROC_INSTANCE`: table for process instances
-* `PLF_TASK`: table for user tasks
-* `PLF_TASK_AUTHORIZATIONS`: table for authorization information of user tasks
-* `PLF_TASK_CORRELATIONS`: table for user task correlation information
-* `PLF_TASK_PAYLOAD_ATTRIBUTES`: table for user task attribute search index
-* `PLF_VIEW_TASK_AND_DATA_ENTRY_PAYLOAD`: view for convenient taskWithDataEntry queries execution
-* `PLF_DATA_ENTRY_PAYLOAD_ATTRIBUTES`: view for convenient data entry queries with correlations
-* `TOKEN_ENTRY`: table for Axon processor tokens
-* `DEAD_LETTER_ENTRY`: table for Axon event-processor dead letters
+* `plf_data_entry`: table for business data entries
+* `plf_data_entry_authorizations`: table for authorization information of data entries
+* `plf_data_entry_payload_attributes`: table for data entry attribute search index
+* `plf_data_entry_protocol`: table for data entry protocol entry (users, groups)
+* `plf_proc_def`: table for process definitions
+* `plf_proc_def_authorizations`: table for authorization information of process definitions
+* `plf_proc_instance`: table for process instances
+* `plf_task`: table for user tasks
+* `plf_task_authorizations`: table for authorization information of user tasks
+* `plf_task_correlations`: table for user task correlation information
+* `plf_task_payload_attributes`: table for user task attribute search index
+* `plf_view_task_and_data_entry_payload`: view for convenient taskWithDataEntry queries execution
+* `plf_view_data_entry_payload`: view for convenient data entry queries with correlations
+* `token_entry`: table for Axon processor tokens
+* `dead_letter_entry`: table for Axon event-processor dead letters
 
 Create these tables and views through the Polyflow Liquibase changelog. Add
 `polyflow-liquibase` to the application and include

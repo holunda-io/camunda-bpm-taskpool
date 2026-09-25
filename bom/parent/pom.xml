@@ -6,7 +6,7 @@
   <parent>
     <groupId>io.holunda.polyflow</groupId>
     <artifactId>polyflow-root</artifactId>
-    <version>4.6.3</version>
+    <version>4.6.4</version>
     <relativePath>../../pom.xml</relativePath>
   </parent>
 
@@ -457,7 +457,7 @@
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>build-helper-maven-plugin</artifactId>
-          <version>3.6.1</version>
+          <version>3.6.2</version>
           <executions>
             <execution>
               <phase>generate-sources</phase>
@@ -496,7 +496,7 @@
         <!-- Install -->
         <plugin>
           <artifactId>maven-install-plugin</artifactId>
-          <version>3.1.4</version>
+          <version>3.2.0</version>
         </plugin>
       </plugins>
     </pluginManagement>
@@ -552,7 +552,7 @@
         <plugins>
           <plugin>
             <artifactId>maven-antrun-plugin</artifactId>
-            <version>3.1.0</version>
+            <version>3.2.0</version>
             <executions>
               <execution>
                 <id>detekt</id>

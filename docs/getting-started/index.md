@@ -3,18 +3,18 @@
 title: Integration Guide
 ---
 
-This guide is describing steps required to configure an existing Camunda BPM Spring Boot Process Application and
-connect to **existing Process Platform**.
+This guide describes the steps required to configure an existing Camunda BPM Spring Boot process application and
+connect it to an **existing Process Platform**.
 
 !!! note
-    The following steps assume that you have already chosen one of the distribution scenarios and set-up the **Core components**. This is a pre-requirement for the following steps to work.
+    These steps assume that you have already chosen a deployment scenario and set up the **Core components**. This is a prerequisite for the steps below.
 
 
 ## Add dependency to Polyflow integration starter
 
 Apart from the example application, you might be interested in integrating Polyflow Taskpool and Datapool into your existing
 application. To do so, you need to enable your Camunda BPM process engine to use the library.
-For doing so, add the `polyflow-integration-camunda-bpm-springboot-starter` library. In Maven, add the following dependency
+Add the `polyflow-integration-camunda-bpm-springboot-starter` library. In Maven, add the following dependency
 to your `pom.xml`:
 
 ``` xml
@@ -25,9 +25,9 @@ to your `pom.xml`:
 </dependency>
 ```
 
-## Activate Polyflow Support
+## Activate Polyflow support
 
-Now, find your SpringBoot application class and add an annotation to it:
+Then find your Spring Boot application class and add the annotation:
 
 
 ``` java
@@ -41,7 +41,7 @@ public class MyApplication {
 }
 ```
 
-## Configure your Polyflow provisioning
+## Configure Polyflow provisioning
 
 Finally, add the following block to your `application.yml`:
 
@@ -96,6 +96,6 @@ polyflow:
 
 ```
 
-Now, start your process engine. If you run into a user task, you should see on the console how this is passed to task pool.
+Start your process engine. When it reaches a user task, the console should show that the task was passed to the task pool.
 
-For more details on the configuration of different options, please consult the [Polyflow Components](../reference-guide/components/) sections.
+For details about the available configuration options, see [Polyflow Components](../reference-guide/components/).

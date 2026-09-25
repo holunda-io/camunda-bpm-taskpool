@@ -5,10 +5,10 @@ pageId: view-simple
 
 ## Purpose
 
-The In-Memory View is component responsible for creating read-projections of tasks and business data entries. It implements
+The In-Memory View is a component responsible for creating read projections of tasks and business data entries. It implements
 the Taskpool and Datapool View API and persists the projection in memory. The projection is transient and relies on event
-replay on every application start. It is good for demonstration purposes if the number of events is manageable small,
-but will fail to delivery high performance results on a large number of items.
+replay on every application start. It is suitable for demonstrations when the number of events is manageable,
+but does not deliver high performance for large numbers of items.
 
 ### Features
 
@@ -19,7 +19,7 @@ but will fail to delivery high performance results on a large number of items.
 
 ### Configuration options
 
-In order to activate the in-memory implementation, please include the following dependency on your classpath:
+To activate the in-memory implementation, include the following dependency on your classpath:
 
 ```xml
 <dependency>
@@ -30,7 +30,7 @@ In order to activate the in-memory implementation, please include the following 
 ```
 
 Then, add the following annotation to any class marked as Spring Configuration
-loaded during initialization:
+that is loaded during initialisation:
 
 ```java
 @Configuration
@@ -40,8 +40,8 @@ public class MyViewConfiguration {
 }
 ```
 
-The view implementation provides runtime details using standard logging facility. If you
-want to increase the logging level, please setup it e.g. in your `application.yaml`:
+The view implementation provides runtime details through standard logging. To
+increase the logging level, configure it in `application.yaml`:
 
 ```yml
 logging.level.io.holunda.polyflow.view.simple: DEBUG

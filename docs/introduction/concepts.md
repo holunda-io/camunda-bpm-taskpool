@@ -2,41 +2,38 @@
 title: Concepts
 ---
 
-There are many scenarios in which the usage of a process engine as a component inside the orchestration layer makes a lot of sense. Depending on the scenario the
-resulting architecture of your application may vary. The following section explains the core concepts and building blocks of the architecture we want to support
-and address by the Polyflow libraries.
+Using a process engine in the orchestration layer is useful in many scenarios. The resulting application architecture depends on the scenario. This section
+explains the core concepts and building blocks supported by the Polyflow libraries.
 
 ## The 10,000 feet view
 
 The two main building blocks of the solution are **Process Application** and **Process Platform**. Sometimes you unite them inside the same deployment unit, but
-we differentiate them to make their responsibilities more clear.
+we distinguish them to clarify their responsibilities.
 
-A **Process Application** implements the main business logic of the solution. It integrates the process engine that is responsible for execution the processes 
-and orchestrates the business functions. During this execution user tasks are created and performed by the user and the business data objects are modified. 
-For this purpose, the process application provides user interfaces for user tasks and business data operations.
+A **Process Application** implements the solution's main business logic. It integrates a process engine that executes processes
+and orchestrates business functions. During execution, users create and complete user tasks, and business data objects are modified.
+The process application provides user interfaces for user tasks and business-data operations.
 
-A **Process Platform** serves as an integration point of one or multiple process applications. It might integrate with a company's Single Sign-On (SSO) solution and
-Identity & Authorization Management, be part of Intranet portal solution. It provides __process agnostic__ user **task list** and **business object list**.
+A **Process Platform** serves as an integration point for one or more process applications. It can integrate with a company's Single Sign-On (SSO) and
+identity and access-management solutions, or be part of an intranet portal. It provides a __process-agnostic__ **task list** and **business object list**.
 
 ## Task-oriented applications
 
 The core concept of a task-oriented solution is to model the underlying business process and to split the user interaction into parts represented by the **user
-tasks**. Every user task is an abstraction of an operation needed to be performed by the user of the system. Usually, they include some sort of call-to-action 
-including the input fields to be able to input user's decision. Examples of user tasks are **Confirm Order**, **Verify Quotation**, **Validate Document**.
+tasks**. Every user task abstracts an operation that a system user must perform. It normally includes a call to action
+and fields for recording the user's decision. Examples include **Confirm Order**, **Verify Quotation**, and **Validate Document**.
 
-User experience plays a significant role in acceptance of the overall solution. In order to access the user task a special UI, called **user task form** is
-used. Every **user task form** is presenting only that limited part of the overall information to the user which is required to complete the user task. This
-limitation is important in order to avoid distraction and foster focus on the user task.
+User experience plays a significant role in acceptance of the overall solution. Users access each task through a dedicated UI called a **user task form**.
+Each form presents only the information required to complete that task. This limitation avoids distraction and keeps the user focused on the task.
 
-Since there might be multiple process instances running concurrently, a user might see multiple user tasks in the same time. A special view listing all user
-tasks available for a user is called **task list**. The application of different user task assignment strategies may be useful to get optimal processing.
+Because multiple process instances may run concurrently, a user may see several user tasks at once. A view that lists the tasks
+available to a user is called a **task list**. Different task-assignment strategies can help optimise processing.
 
-Along with **user tasks forms**, representing the actual work the user has to complete, a data-oriented view on business processes is a common requirement. It
-concentrates on the data being processed and display the **business data entities** involved in the business processes (sometimes called **Workpieces**).
-Depending on your application, business data entities might be created before the running through business processes and usually the lifecycle of them spans
-over the business process execution. Examples of business data entities are **Order**, **Shipment** or **Document**. In order to display the state of an
-individual business data entity a special **Business Data Form** is designed.
+Alongside **user task forms**, which represent the work users complete, a data-oriented business-process view is a common requirement. It
+focuses on the data being processed and displays the **business data entities** involved in business processes (sometimes called **workpieces**).
+Depending on the application, business data entities may be created before a process runs, and their lifecycle usually extends
+beyond process execution. Examples include an **Order**, **Shipment**, or **Document**. A dedicated **Business Data Form** displays the state of an
+individual business data entity.
 
-And since there are multiple of them in the overall application, a special view to search and list them, a so-called **Business Entry List** or **Workpieces
-List** is developed. Sometimes you are interested in business data entries in a particular processing status and develop a special view for them, for
-example: **Current Workpiece List** or **Archive List**.
+Because an application contains multiple entities, it also needs a view to search and list them: a **Business Entry List** or **Workpieces
+List**. You may also need views for business data entries in a particular processing state, such as a **Current Workpiece List** or **Archive List**.

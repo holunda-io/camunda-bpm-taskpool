@@ -106,6 +106,7 @@ nav:
     - Integration Components:
       - Camunda BPM Engine Interaction Client: reference-guide/components/camunda-interaction-client.md
       - Camunda BPM Engine Taskpool Collector: reference-guide/components/camunda-taskpool-collector.md
+      - Publishing Startable Process Definitions: reference-guide/components/startable-process-definitions.md
       - Camunda BPM Engine Taskpool SpringBoot Starter: reference-guide/components/camunda-starter.md
       - Taskpool Sender: reference-guide/components/common-taskpool-sender.md
       - Datapool Sender: reference-guide/components/common-datapool-sender.md

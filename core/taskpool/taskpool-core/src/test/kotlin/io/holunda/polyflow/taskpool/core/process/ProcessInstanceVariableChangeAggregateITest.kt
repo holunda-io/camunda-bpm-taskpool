@@ -24,7 +24,6 @@ import java.util.*
  * - if task doesn't exist, create it and handle the update command
  * - if it does exist just load and handle the update command
  */
-@ExtendWith(SpringExtension::class)
 @SpringBootTest(classes = [TestApplication::class])
 @ActiveProfiles("itest")
 class ProcessInstanceVariableChangeAggregateITest {

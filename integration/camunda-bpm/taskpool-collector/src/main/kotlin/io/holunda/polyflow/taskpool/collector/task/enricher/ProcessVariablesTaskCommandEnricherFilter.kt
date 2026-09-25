@@ -35,4 +35,3 @@ enum class FilterType {
    */
   EXCLUDE
 }
-

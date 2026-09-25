@@ -9,7 +9,6 @@ import org.springframework.context.annotation.PropertySource
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit.jupiter.SpringExtension
 
-@ExtendWith(SpringExtension::class)
 @SpringBootTest(classes = [PropertiesTestApplication::class], webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @ActiveProfiles("properties-itest")
 @PropertySource

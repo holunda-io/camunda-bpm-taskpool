@@ -17,7 +17,8 @@ import org.springframework.context.annotation.Import
 import org.springframework.context.annotation.Primary
 import org.springframework.test.context.ActiveProfiles
 
-@SpringBootTest(classes = [CamundaTaskpoolCollectorPropertiesITest.PropertiesTestApplication::class], webEnvironment = SpringBootTest.WebEnvironment.MOCK)
+@SpringBootTest(classes = [CamundaTaskpoolCollectorPropertiesITest.PropertiesTestApplication::class],
+  webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @ActiveProfiles("properties-itest")
 internal class CamundaTaskpoolCollectorPropertiesITest {
 

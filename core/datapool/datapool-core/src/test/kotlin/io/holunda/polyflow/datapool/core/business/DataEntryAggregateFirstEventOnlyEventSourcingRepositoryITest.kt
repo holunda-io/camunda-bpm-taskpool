@@ -10,17 +10,14 @@ import org.axonframework.eventhandling.EventMessage
 import org.camunda.bpm.engine.variable.Variables
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
-import org.springframework.test.context.junit.jupiter.SpringExtension
 
 private val logger = KotlinLogging.logger {}
 
 @SpringBootTest(classes = [TestApplication::class])
 @ActiveProfiles("itest-first-event-only")
-@ExtendWith(SpringExtension::class)
 internal class DataEntryAggregateFirstEventOnlyEventSourcingRepositoryITest {
 
   @Autowired

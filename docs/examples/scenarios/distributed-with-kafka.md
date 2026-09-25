@@ -30,6 +30,119 @@ persistence of the query model.
 
 ![Kafka to Tasklist API Messaging](../../img/scenario_kafka_to_tasklist_detail.png)
 
+### Configure a Kafka view receiver
+
+The view application consumes Axon events from Kafka with a
+`StreamableKafkaMessageSource`. It needs an Axon Kafka consumer configuration,
+one message source for each topic it consumes, and a tracking event processor
+bound to each source. The example uses separate task and data-entry topics; a
+view can add further sources for other event types.
+
+Add Axon's Kafka Spring Boot starter to the view application:
+
+```xml
+<dependency>
+  <groupId>org.axonframework.extensions.kafka</groupId>
+  <artifactId>axon-kafka-spring-boot-starter</artifactId>
+</dependency>
+```
+
+The shared Kafka configuration identifies the broker, configures the consumer,
+and selects tracking processing:
+
+```yaml
+axon:
+  serializer:
+    events: jackson
+    messages: jackson
+    general: jackson
+  axonserver:
+    enabled: false
+  kafka:
+    # Required by the Axon Kafka extension even when explicit sources are used.
+    defaulttopic: not_used_but_must_be_set_to_some_value
+    client-id: taskpool-view
+    consumer:
+      bootstrap-servers: localhost:29092
+      event-processor-mode: TRACKING
+      auto-offset-reset: earliest
+    properties:
+      security.protocol: PLAINTEXT
+```
+
+For each Kafka topic, define a `ConsumerFactory` and a
+`StreamableKafkaMessageSource` Spring bean. The source subscribes to the topic
+and converts its records back into Axon event messages. This abbreviated
+example is equivalent to the task and data-entry sources in the example
+application:
+
+```kotlin
+@Bean
+@Qualifier("polyflowTask")
+fun kafkaConsumerFactoryPolyflowTask(
+  properties: KafkaProperties
+): ConsumerFactory<String, ByteArray> {
+  properties.clientId = "polyflow-task-$hostname"
+  return DefaultConsumerFactory(properties.buildConsumerProperties())
+}
+
+@Bean("kafkaMessageSourcePolyflowTask")
+fun kafkaMessageSourcePolyflowTask(
+  kafkaProperties: KafkaProperties,
+  @Qualifier("polyflowTask") consumerFactory: ConsumerFactory<String, ByteArray>,
+  kafkaFetcher: Fetcher<String, ByteArray, KafkaEventMessage>,
+  @Qualifier("eventSerializer") serializer: Serializer,
+  messageConverter: KafkaMessageConverter<String, ByteArray>
+): StreamableKafkaMessageSource<String, ByteArray> =
+  StreamableKafkaMessageSource
+    .builder<String, ByteArray>()
+    .topics(listOf("polyflow-task"))
+    .consumerFactory(consumerFactory)
+    .serializer(serializer)
+    .fetcher(kafkaFetcher)
+    .messageConverter(messageConverter)
+    .bufferFactory {
+      SortedKafkaMessageBuffer(kafkaProperties.fetcher.bufferSize)
+    }
+    .build()
+```
+
+The `source` in the following processor configuration is the Spring bean name,
+not the Kafka topic name. The topic is selected by the source bean's `topics`
+list. The qualifier only selects the `ConsumerFactory` to inject into that
+bean.
+
+```yaml
+axon:
+  eventhandling:
+    processors:
+      "[io.holunda.polyflow.view.jpa.service.task]":
+        source: kafkaMessageSourcePolyflowTask
+        mode: TRACKING
+        threadCount: 1
+        batchSize: 1
+      "[io.holunda.polyflow.view.jpa.service.data]":
+        source: kafkaMessageSourcePolyflowData
+        mode: TRACKING
+        threadCount: 1
+        batchSize: 1
+```
+
+`StreamableKafkaMessageSource` is used with Axon tracking processors and does
+not use Kafka consumer groups. Axon's tracking token records each view
+processor's progress instead. Kafka delivery is at-least-once, so projections
+must tolerate repeated events.
+
+### Publishing startable process definitions
+
+The example routes only the event payload types configured under
+`polyflow.axon.kafka.topics`. To expose startable process definitions in the
+separate view, add a route for
+`ProcessDefinitionRegisteredEvent`, create the selected Kafka topic, and
+configure the process-definition view processor to consume it. See
+[Publishing Startable Process Definitions](../../reference-guide/components/startable-process-definitions.md#distributed-with-kafka)
+for the producer mapping and view-processor configuration.
+
 ### System Requirements
 
 * JDK 11
@@ -51,8 +164,8 @@ docker-compose up -d
 
 ### Start
 
-The demo application consists of several Maven modules. In order to start the example, you will need to start only two
-of them in the following order:
+The demo application consists of several Maven modules. To start the example, start these two
+in the following order:
 
 1. taskpool-application (process platform)
 2. process-application (example process application)

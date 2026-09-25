@@ -4,18 +4,18 @@ pageId: engine-datapool-collector
 ---
 ### Purpose
 
-Taskpool Collector is a component deployed as a part of the process application
-(aside with Camunda BPM Engine) that is responsible for collecting information from
-the Camunda BPM Engine. It detects the _intent_ of the operations executed inside the engine
-and creates the corresponding commands for the Taskpool. The commands are enriched with data and transmitted to
-other Taskpool components (via Command Bus).
+Taskpool Collector is deployed as part of a process application
+(alongside the Camunda BPM engine) and collects information from
+the engine. It detects the _intent_ of operations executed inside the engine
+and creates the corresponding Taskpool commands. The commands are enriched with data and sent to
+other Taskpool components through the command bus.
 
-In the following description, we use the terms _event_ and _command_. Event denotes an entity
-received from Camunda BPM Engine (from delegate event listener or from history event listener)
-which is passed over to the Taskpool Collector using internal **Spring eventing** mechanism. The Taskpool
-Collector converts the series of such events into a Taskpool Command - an entity carrying an intent
-of change inside the Taskpool core. Please note that _event_ has another meaning in CQRS/ES systems
-and other components of the Taskpool, but in the context of Taskpool Collector an event always originates from
+This description uses the terms _event_ and _command_. An event is an entity
+received from the Camunda BPM engine through a delegate or history event listener,
+then passed to Taskpool Collector through the internal **Spring eventing** mechanism. Taskpool
+Collector converts these events into a Taskpool command—an entity that represents an intended
+change in Taskpool Core. Note that _event_ has a different meaning in CQRS/ES systems
+and other Taskpool components; in the Taskpool Collector context, an event always originates from
 Spring eventing.
 
 ### Features
@@ -25,7 +25,7 @@ Spring eventing.
 - Collection of process variable change events
 - Collection of task events and history events
 - Creation of task engine commands
-- Collection of tasks assignment information
+- Collection of task-assignment information
 - Enrichment of task engine commands with process variables
 - Attachment of correlation information to task engine commands
 - Transmission of commands to Axon command bus
@@ -35,15 +35,15 @@ Spring eventing.
 
 ![Taskpool collector building blocks](../../img/collector-building-blocks.png)
 
-The Taskpool Collector consists of several components which can be divided into the following groups:
+Taskpool Collector consists of several components, divided into the following groups:
 
-- Event collectors services are responsible for gathering information and forming commands
-- Processors are performing command manipulation (e.g. command enrichment with payload and data correlation)
-- Command senders are part of `command-sender` component and are responsible for accumulating commands and sending them to Axon Command List Gateway
+- Event collector services gather information and form commands.
+- Processors manipulate commands, for example by enriching them with payload and data correlations.
+- Command senders are part of the `command-sender` component. They accumulate commands and send them to Axon Command List Gateway.
 
 ### Usage and configuration
 
-In order to enable collector component, include the Maven dependency to your process application:
+To enable the collector component, add the Maven dependency to your process application:
 
 ```xml
 
@@ -55,7 +55,7 @@ In order to enable collector component, include the Maven dependency to your pro
 
 ```
 
-Then activate the Taskpool Collector by providing the annotation on any Spring Configuration:
+Then activate Taskpool Collector by adding the annotation to a Spring configuration class:
 
 ```java
 @Configuration
@@ -82,12 +82,12 @@ By default, Taskpool Collector registers Spring Event Listener to the following 
   ** HistoricVariableUpdateEventEntity
   ** HistoricDetailVariableInstanceUpdateEntity
 
-The events are transformed into corresponding commands and passed over to the processor layer. Until Camunda Platform 7.19, the eventing
-is fired using custom listeners only and polyflow components don't rely on that but rather on own implementation of built-in (unskippable) listeners.
-For this purpose, it is important to disable Camunda Platform custom listeners by setting `camunda.bpm.eventing.task` property to `false`.   
+The events are transformed into corresponding commands and passed to the processor layer. Until Camunda Platform 7.19, eventing
+is triggered only through custom listeners. Polyflow components do not rely on these; instead, they use their own implementation of built-in, non-skippable listeners.
+Therefore, disable Camunda Platform custom listeners by setting `camunda.bpm.eventing.task` to `false`.
 
 During collection of task information, you can control which listeners are registered. By default, all listeners are considered but you can change
-this behaviour by setting values of two properties:
+this behaviour by setting two properties:
 
 ```yaml
 
@@ -99,12 +99,12 @@ polyflow:
           excluded-task-event-names: assignment, delete
           excluded-history-event-names: add-identity-link, delete-identity-link
 ```
-This particular setting is helpful, if you want to disable assignment in the engine entirely and want to provide you own custom task assignment algorithm or
-use assignment based on process variables (see below for more details).
+This setting is useful when you want to disable engine assignment entirely and provide your own task-assignment algorithm or
+use assignment based on process variables (see below).
 
 ### Task commands enrichment
 
-Alongside with attributes received from the Camunda BPM engine, the engine task commands
+Alongside the attributes received from the Camunda BPM engine, engine task commands
 can be enriched with additional attributes.
 
 There are three enrichment modes available controlled by the `polyflow.integration.collector.camunda.task.enricher.type` property:
@@ -116,8 +116,8 @@ There are three enrichment modes available controlled by the `polyflow.integrati
 #### Process variable enrichment
 
 In particular cases, the data enclosed into task attributes is not sufficient for the task list or other user-related components. The information may be
-available as process variables and need to be attached to the task in the taskpool. This is where _Process Variable Task Enricher_ can be used. For this
-purpose, active it, setting the property `polyflow.integration.collector.camunda.task.enricher.type` to `process-variables` and the enricher will
+available as process variables and must be attached to the task in the task pool. Use _Process Variable Task Enricher_ for this purpose.
+Activate it by setting `polyflow.integration.collector.camunda.task.enricher.type` to `process-variables`; the enricher then
 put process variables into the task payload.
 
 You can control what variables will be put into task command payload by providing the Process Variables Filter.
@@ -238,12 +238,11 @@ public class MyTaskCollectorConfiguration {
 ### Data Correlation
 
 Apart from task payload attached by the enricher, the so-called _Correlation_ with data entries can
-be configured. The data correlation allows to attach one or several references (that is a pair of values `entry-type` and `entryId`) of
-business data entry(ies) to a task. In the projection (which is used for querying of tasks) these correlations are resolved and the
-information from business data events can be shown together with task information.
+be configured. Data correlation attaches one or more references (a pair of `entry-type` and `entryId` values) to a
+business data entry and task. In the projection used for task queries, these correlations are resolved and
+information from business data events can be shown alongside task information.
 
-The correlation to data events can be configured by providing a `ProcessVariablesCorrelator` bean. Here is
-an example how this can be done:
+Configure data-event correlation by providing a `ProcessVariablesCorrelator` bean. For example:
 
 ```kotlin
 @Bean
@@ -287,19 +286,18 @@ polyflow:
                         entry-type: customer
 ```
 
-The process variable correlator holds a list of process variable correlations - one for every process
-definition key. Every `ProcessVariableCorrelation` configures for all tasks or for an individual task by providing a so-called correlation
-map. A correlation map is keyed by the name of a process variable inside Camunda Process Engine and holds the type of business data entry as value.
+The process-variable correlator holds a list of process-variable correlations, one for each process
+definition key. Each `ProcessVariableCorrelation` configures correlations for all tasks or for an individual task through a correlation
+map. A correlation map is keyed by a Camunda process-engine variable name and contains the business-data entry type as its value.
 
 Here is an example. Imagine the process instance is storing the id of an approval request in a process variable called
-`varRequestId`. The system responsible for storing approval requests fires data entry events supplying the
-data and using the entry type `io.my.approvalRequest` and the id of the request as `entryId`. In order to
-create a correlation in task `task_approve_request` of the `process_approval_process` we would provide the following configuration
-of the correlator:
+`varRequestId`. The system that stores approval requests fires data-entry events containing the
+data, with `io.my.approvalRequest` as the entry type and the request ID as `entryId`. To
+create a correlation for task `task_approve_request` of `process_approval_process`, configure the correlator as follows:
 
 ```kotlin
 @Bean
-fun process-variablesCorrelator() = ProcessVariablesCorrelator(
+fun processVariablesCorrelator() = ProcessVariablesCorrelator(
 
     ProcessVariableCorrelation(
       "process_approval_process",
@@ -314,8 +312,8 @@ fun process-variablesCorrelator() = ProcessVariablesCorrelator(
 ```
 
 If the process instance now contains the approval request id `"4711"` in the process variable `varRequestId`
-and the process reaches the task `task_approve_request`, the task will get the following correlation created
-(here written in JSON):
+and the process reaches task `task_approve_request`, the following correlation is created
+(shown here as JSON):
 
 ```json
 "correlations": [
@@ -330,7 +328,7 @@ and the process reaches the task `task_approve_request`, the task will get the f
 | Message Code     | Severity | Logger*               | Description                                                                                                                 | Meaning  |
 |------------------|----------|:----------------------|:----------------------------------------------------------------------------------------------------------------------------|:---------| 
 | `COLLECTOR-001`  | `INFO`   |                       | Task commands will be collected.                                                                                            |          |
-| `COLLECTOR-002`  | `INFO`   |                       | Task commands not be collected.                                                                                             |          |
+| `COLLECTOR-002`  | `INFO`   |                       | Task commands will not be collected.                                                                                         |          |
 | `COLLECTOR-005`  | `TRACE`  | `.process.definition` | Sending process definition command: $command                                                                                |          |
 | `COLLECTOR-006`  | `TRACE`  | `.process.instance`   | Sending process instance command: $command                                                                                  |          |
 | `COLLECTOR-007`  | `TRACE`  | `.process.variable`   | Sending process variable command: $command                                                                                  |          |
@@ -344,14 +342,14 @@ and the process reaches the task `task_approve_request`, the task will get the f
 
 User task assignment is a core functionality for every process application fostering task-oriented work. By default, Taskpool Collector uses
 information from Camunda User Task and maps that one-to-one to properties of the user task commands. The task attribute
-`assignee`, `candidate-users` and `candidate-groupss` are mapped to the corresponding attributes automatically.
+`assignee`, `candidate-users`, and `candidate-groups` are mapped to the corresponding attributes automatically.
 
-To control the task assignment mode you can configure Taskpool Collector using application properties. The property 
+To control the task-assignment mode, configure Taskpool Collector through application properties. The property
 `polyflow.integration.collector.camunda.task.assigner.type` has the following values:
 
 * `no`: No additional assignment takes place, the Camunda task attributes are used (default)
 * `process-variables`: Use process variables for assignment information, see below
-* `custom`: User provides own implementation implementing a bean implementing `TaskAssigner` interface.
+* `custom`: Provide your own `TaskAssigner` implementation as a bean.
 
 If the value is set to `process-variables`, you can set up a constant mapping defining the process variables carrying the assignment
 information. The corresponding properties are:
@@ -371,10 +369,10 @@ polyflow:
 
 ### Task Importer
 
-Alongside with the event-based Task Collector based on Camunda Eventing, there exists a dedicated service which can query Camunda database for existing
-user tasks and publish the results. In order to avoid duplications in tasks, the collected tasks are filtered by a special filter. Currently, you may choose
-between the supplied `eventstore` filter or supply your own `custom` filter by providing your own implementation of a `EngineTaskCommandFilter` interface as 
-a Spring Bean. If you want to use this task importer facility, you need to activate it first in your application configuration.
+Alongside the event-based Task Collector based on Camunda Eventing, a dedicated service can query the Camunda database for existing
+user tasks and publish the results. To avoid duplicate tasks, collected tasks are filtered. You can choose
+the supplied `eventstore` filter or provide a `custom` filter by implementing `EngineTaskCommandFilter` as
+a Spring bean. To use this task-import facility, activate it in the application configuration.
 
 The following property block is used for configuration:
 
@@ -389,5 +387,5 @@ polyflow:
             task-filter-type: eventstore
 ```
 
-By doing so, the `TaskServiceCollectorService` Bean is made available and can be used to trigger the import. The `eventstore` filter is useful in scenarios,
-in which the [Taskpool Core](./core-taskpool) is deployed alonside with Taskpool Collector as part of the Process Application or Process Engine.
+This makes `TaskServiceCollectorService` available to trigger the import. The `eventstore` filter is useful when
+[Taskpool Core](./core-taskpool) is deployed alongside Taskpool Collector as part of the process application or process engine.

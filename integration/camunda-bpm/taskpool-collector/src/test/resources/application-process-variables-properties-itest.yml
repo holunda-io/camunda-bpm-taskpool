@@ -1,6 +1,8 @@
 spring:
   application:
     name: process-variables-properties-itest
+  liquibase:
+    enabled: false
 
 polyflow:
   integration:

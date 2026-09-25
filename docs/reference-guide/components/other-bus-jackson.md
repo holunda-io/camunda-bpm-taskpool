@@ -1,11 +1,11 @@
 ### Purpose
 
-The component is a helper component if you configure your Axon busses (command, event, query) to use Jackson for serialization of messages.
-It provides helper Jackson Modules to configure serialization of classes used by Polyflow. 
+This helper component is for Axon buses (command, event, and query) configured to use Jackson for message serialization.
+It provides Jackson modules for serialising classes used by Polyflow.
 
 #### Configuration and Usage
 
-To use the component, please add the following dependency to your classpath
+To use the component, add the following dependency to your classpath:
 
 ```xml
 <dependency>
@@ -29,11 +29,9 @@ class MyConfiguration {
 }
 ```
 
-If you are not using Jackson for serialization of Axon messages (commands, events and queries) you
-are ready to go.
+If you are not using Jackson to serialise Axon messages (commands, events, and queries), no further configuration is required.
 
-If you want to use Jackson as Axon message serialization message format the following configuration
-is required. In your application properties, set-up the following properties:
+To use Jackson as the Axon message-serialization format, add the following application properties:
 
 ```yaml
 axon:
@@ -43,7 +41,7 @@ axon:
     general: jackson 
 ```
 
-In addition, define configure the `ObjectMapper` to be used by Axon Framework:
+In addition, configure the `ObjectMapper` used by Axon Framework:
 
 ```kotlin
 

@@ -11,8 +11,13 @@ on:
       - '!develop'
       - '!snapshot-producer'
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build:
+    name: Build and test the library
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -29,13 +34,13 @@ jobs:
         run: chmod +x ./mvnw
 
       - name: Build with Maven
-        run: ./mvnw clean verify -U -Dhttp.keepAlive=false -Dmaven.wagon.http.pool=false -Dmaven.wagon.httpconnectionManager.ttlSeconds=120
+        run: ./mvnw clean verify -U -Dstyle.color=always
 
       - name: Prepare I-Tests
         run: mkdir -p target/jgiven-reports/json
 
       - name: Run I-Tests with Maven
-        run: ./mvnw integration-test failsafe:verify -Pitest -T4
+        run: ./mvnw integration-test failsafe:verify -Pitest -T4 -Dstyle.color=always
 
       - name: Upload coverage information
         uses: codecov/codecov-action@v7

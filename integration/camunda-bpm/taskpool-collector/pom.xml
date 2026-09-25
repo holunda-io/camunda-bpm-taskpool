@@ -6,7 +6,7 @@
   <parent>
     <groupId>io.holunda.polyflow</groupId>
     <artifactId>polyflow-integration-camunda-bpm-parent</artifactId>
-    <version>4.6.3</version>
+    <version>4.6.4</version>
   </parent>
 
   <artifactId>polyflow-camunda-bpm-taskpool-collector</artifactId>
@@ -66,8 +66,14 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.flywaydb</groupId>
-      <artifactId>flyway-core</artifactId>
+      <groupId>org.liquibase</groupId>
+      <artifactId>liquibase-core</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.holunda.polyflow</groupId>
+      <artifactId>polyflow-liquibase</artifactId>
+      <version>${project.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>

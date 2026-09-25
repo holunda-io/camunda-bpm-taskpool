@@ -11,7 +11,7 @@ parties interested in changes.
 
 ### Component activation
 
-In order to activate Datapool Core component, please include the following dependency to your application
+To activate the Datapool Core component, add the following dependency to your application:
 
 ```xml
 <dependency>
@@ -71,4 +71,4 @@ of replaying all events ever emitted by the aggregate.
 The special repository uses the fact that `Data Entry Aggregate Root` state is not changed by update events and the first event it emits during creation 
 already contains everything the aggregates require during loading.
 
-In order to select the strategy best matching your use case, please consult the [configuration section](../configuration/core-datapool-aggregate-tuning.md). 
+To select the strategy that best matches your use case, see the [configuration section](../configuration/core-datapool-aggregate-tuning.md).

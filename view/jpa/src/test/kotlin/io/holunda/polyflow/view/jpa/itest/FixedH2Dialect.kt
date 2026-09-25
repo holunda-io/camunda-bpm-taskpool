@@ -7,7 +7,7 @@ import org.hibernate.service.ServiceRegistry
 import org.hibernate.type.descriptor.sql.internal.DdlTypeImpl
 import java.sql.Types
 
-@Suppress("unused") // used in application-itest.yaml
+@Deprecated("H2 dialect for PostgresMode with different blob handling")
 class FixedH2Dialect(info: DialectResolutionInfo) : H2Dialect(info) {
   override fun registerColumnTypes(typeContributions: TypeContributions, serviceRegistry: ServiceRegistry) {
     super.registerColumnTypes(typeContributions, serviceRegistry)
