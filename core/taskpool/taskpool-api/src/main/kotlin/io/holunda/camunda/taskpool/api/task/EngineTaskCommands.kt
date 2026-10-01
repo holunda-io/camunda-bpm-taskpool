@@ -313,7 +313,7 @@ data class UpdateAttributesHistoricTaskCommand(
   /**
    * Task payload.
    */
-  override val payload: VariableMap = Variables.createVariables(),
+  override val payload: VariableMap = Variables.createVariables(), //TODO; This should be a mutalbe map
   /**
    * Task correlations.
    */

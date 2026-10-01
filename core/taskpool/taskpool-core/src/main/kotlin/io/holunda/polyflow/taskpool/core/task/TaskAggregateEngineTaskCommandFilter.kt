@@ -7,18 +7,16 @@ import io.holunda.polyflow.taskpool.core.loadOptional
 import org.axonframework.eventsourcing.EventSourcingRepository
 import org.axonframework.messaging.GenericMessage
 import org.axonframework.messaging.unitofwork.DefaultUnitOfWork
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
+import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression
 import org.springframework.stereotype.Component
 
 /**
  * Filter checking the tasks in the event store.
  */
 @Component
-@ConditionalOnProperty(
-  prefix = "polyflow.integration.collector.camunda.task.importer",
-  name = ["task-filter-type"],
-  havingValue = "eventstore",
-  matchIfMissing = false
+@ConditionalOnExpression(
+  "'\${polyflow.integration.collector.camunda.task.importer.task-filter-type:}' == 'eventstore' || " +
+    "'\${polyflow.integration.collector.processengineapi.task.importer.task-filter-type:}' == 'eventstore'"
 )
 class TaskAggregateEngineTaskCommandFilter(
   private val eventSourcingRepository: EventSourcingRepository<TaskAggregate>
