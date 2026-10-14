@@ -27,6 +27,9 @@ class TaskCreatedEngineEvent3To4Upcaster : AbstractSourceReferenceElementRemovin
  */
 @AnnotatedEventUpcaster(TaskCompletedEngineEvent3To4Upcaster.RESULT_OBJECT_TYPE, "3")
 class TaskCompletedEngineEvent3To4Upcaster : AbstractSourceReferenceElementRemovingUpcaster() {
+  /**
+   * Declares the serialized type produced by this upcaster.
+   */
   companion object {
     const val RESULT_OBJECT_TYPE = "io.holunda.camunda.taskpool.api.task.TaskCompletedEngineEvent"
   }
@@ -39,6 +42,9 @@ class TaskCompletedEngineEvent3To4Upcaster : AbstractSourceReferenceElementRemov
  */
 @AnnotatedEventUpcaster(TaskDeletedEngineEvent3To4Upcaster.RESULT_OBJECT_TYPE, "3")
 class TaskDeletedEngineEvent3To4Upcaster : AbstractSourceReferenceElementRemovingUpcaster() {
+  /**
+   * Declares the serialized type produced by this upcaster.
+   */
   companion object {
     const val RESULT_OBJECT_TYPE = "io.holunda.camunda.taskpool.api.task.TaskDeletedEngineEvent"
   }
@@ -51,6 +57,9 @@ class TaskDeletedEngineEvent3To4Upcaster : AbstractSourceReferenceElementRemovin
  */
 @AnnotatedEventUpcaster(TaskAssignedEngineEvent3To4Upcaster.RESULT_OBJECT_TYPE, "3")
 class TaskAssignedEngineEvent3To4Upcaster : AbstractSourceReferenceElementRemovingUpcaster() {
+  /**
+   * Declares the serialized type produced by this upcaster.
+   */
   companion object {
     const val RESULT_OBJECT_TYPE = "io.holunda.camunda.taskpool.api.task.TaskAssignedEngineEvent"
   }
@@ -64,6 +73,9 @@ class TaskAssignedEngineEvent3To4Upcaster : AbstractSourceReferenceElementRemovi
  */
 @AnnotatedEventUpcaster(TaskAttributeUpdatedEngineEvent3To4Upcaster.RESULT_OBJECT_TYPE, "3")
 class TaskAttributeUpdatedEngineEvent3To4Upcaster : AbstractSourceReferenceElementRemovingUpcaster() {
+  /**
+   * Declares the serialized type produced by this upcaster.
+   */
   companion object {
     const val RESULT_OBJECT_TYPE = "io.holunda.camunda.taskpool.api.task.TaskAttributeUpdatedEngineEvent"
   }
@@ -76,6 +88,9 @@ class TaskAttributeUpdatedEngineEvent3To4Upcaster : AbstractSourceReferenceEleme
  */
 @AnnotatedEventUpcaster(TaskCandidateGroupChanged1To4Upcaster.RESULT_OBJECT_TYPE, "1")
 class TaskCandidateGroupChanged1To4Upcaster : AbstractSourceReferenceElementRemovingUpcaster() {
+  /**
+   * Declares the serialized type produced by this upcaster.
+   */
   companion object {
     const val RESULT_OBJECT_TYPE = "io.holunda.camunda.taskpool.api.task.TaskCandidateGroupChanged"
   }
@@ -88,6 +103,9 @@ class TaskCandidateGroupChanged1To4Upcaster : AbstractSourceReferenceElementRemo
  */
 @AnnotatedEventUpcaster(TaskCandidateUserChanged1To4Upcaster.RESULT_OBJECT_TYPE, "1")
 class TaskCandidateUserChanged1To4Upcaster : AbstractSourceReferenceElementRemovingUpcaster() {
+  /**
+   * Declares the serialized type produced by this upcaster.
+   */
   companion object {
     const val RESULT_OBJECT_TYPE = "io.holunda.camunda.taskpool.api.task.TaskCandidateUserChanged"
   }
@@ -100,6 +118,9 @@ class TaskCandidateUserChanged1To4Upcaster : AbstractSourceReferenceElementRemov
  */
 @AnnotatedEventUpcaster(TaskClaimedEvent2To4Upcaster.RESULT_OBJECT_TYPE, "2")
 class TaskClaimedEvent2To4Upcaster : AbstractSourceReferenceElementRemovingUpcaster() {
+  /**
+   * Declares the serialized type produced by this upcaster.
+   */
   companion object {
     const val RESULT_OBJECT_TYPE = "io.holunda.camunda.taskpool.api.task.TaskClaimedEvent"
   }
@@ -112,6 +133,9 @@ class TaskClaimedEvent2To4Upcaster : AbstractSourceReferenceElementRemovingUpcas
  */
 @AnnotatedEventUpcaster(TaskUnclaimedEvent2To4Upcaster.RESULT_OBJECT_TYPE, "2")
 class TaskUnclaimedEvent2To4Upcaster : AbstractSourceReferenceElementRemovingUpcaster() {
+  /**
+   * Declares the serialized type produced by this upcaster.
+   */
   companion object {
     const val RESULT_OBJECT_TYPE = "io.holunda.camunda.taskpool.api.task.TaskUnclaimedEvent"
   }
@@ -124,6 +148,9 @@ class TaskUnclaimedEvent2To4Upcaster : AbstractSourceReferenceElementRemovingUpc
  */
 @AnnotatedEventUpcaster(TaskToBeCompletedEvent2To4Upcaster.RESULT_OBJECT_TYPE, "2")
 class TaskToBeCompletedEvent2To4Upcaster : AbstractSourceReferenceElementRemovingUpcaster() {
+  /**
+   * Declares the serialized type produced by this upcaster.
+   */
   companion object {
     const val RESULT_OBJECT_TYPE = "io.holunda.camunda.taskpool.api.task.TaskToBeCompletedEvent"
   }
@@ -136,6 +163,9 @@ class TaskToBeCompletedEvent2To4Upcaster : AbstractSourceReferenceElementRemovin
  */
 @AnnotatedEventUpcaster(TaskDeferredEvent2To4Upcaster.RESULT_OBJECT_TYPE, "2")
 class TaskDeferredEvent2To4Upcaster : AbstractSourceReferenceElementRemovingUpcaster() {
+  /**
+   * Declares the serialized type produced by this upcaster.
+   */
   companion object {
     const val RESULT_OBJECT_TYPE = "io.holunda.camunda.taskpool.api.task.TaskDeferredEvent"
   }
@@ -148,6 +178,9 @@ class TaskDeferredEvent2To4Upcaster : AbstractSourceReferenceElementRemovingUpca
  */
 @AnnotatedEventUpcaster(TaskUndeferredEvent2To4Upcaster.RESULT_OBJECT_TYPE, "2")
 class TaskUndeferredEvent2To4Upcaster : AbstractSourceReferenceElementRemovingUpcaster() {
+  /**
+   * Declares the serialized type produced by this upcaster.
+   */
   companion object {
     const val RESULT_OBJECT_TYPE = "io.holunda.camunda.taskpool.api.task.TaskUndeferredEvent"
   }
@@ -163,6 +196,9 @@ private val logger = KotlinLogging.logger {}
  */
 abstract class AbstractSourceReferenceElementRemovingUpcaster : AnnotationBasedSingleEventUpcaster() {
 
+  /**
+   * Lists source-reference element names whose duplicate representation is removed.
+   */
   companion object {
     val TAG_NAMES = arrayOf("instanceId", "executionId", "definitionId", "definitionKey", "name", "applicationName")
   }

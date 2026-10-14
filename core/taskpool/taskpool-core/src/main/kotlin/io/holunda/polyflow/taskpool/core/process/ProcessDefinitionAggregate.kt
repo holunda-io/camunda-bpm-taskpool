@@ -1,6 +1,12 @@
 package io.holunda.polyflow.taskpool.core.process
 
 import io.holunda.camunda.taskpool.api.process.definition.ProcessDefinitionRegisteredEvent
+import io.holunda.camunda.taskpool.api.process.definition.SuspendProcessDefinitionCommand
+import io.holunda.camunda.taskpool.api.process.definition.ActivateProcessDefinitionCommand
+import io.holunda.camunda.taskpool.api.process.definition.UnregisterProcessDefinitionCommand
+import io.holunda.camunda.taskpool.mapper.process.suspendEvent
+import io.holunda.camunda.taskpool.mapper.process.activateEvent
+import io.holunda.camunda.taskpool.mapper.process.unregisterEvent
 import io.holunda.camunda.taskpool.api.process.definition.RegisterProcessDefinitionCommand
 import io.holunda.camunda.taskpool.mapper.process.registerEvent
 import io.holunda.polyflow.taskpool.core.TaskPoolCoreConfiguration
@@ -25,6 +31,27 @@ class ProcessDefinitionAggregate() {
    */
   fun handle(command: RegisterProcessDefinitionCommand) {
     AggregateLifecycle.apply(command.registerEvent())
+  }
+
+  /**
+   * Applies the lifecycle event for a suspended definition.
+   */
+  fun handle(command: SuspendProcessDefinitionCommand) {
+    AggregateLifecycle.apply(command.suspendEvent())
+  }
+
+  /**
+   * Applies the lifecycle event for an activated definition.
+   */
+  fun handle(command: ActivateProcessDefinitionCommand) {
+    AggregateLifecycle.apply(command.activateEvent())
+  }
+
+  /**
+   * Applies the lifecycle event for an unregistered definition.
+   */
+  fun handle(command: UnregisterProcessDefinitionCommand) {
+    AggregateLifecycle.apply(command.unregisterEvent())
   }
 
   /**

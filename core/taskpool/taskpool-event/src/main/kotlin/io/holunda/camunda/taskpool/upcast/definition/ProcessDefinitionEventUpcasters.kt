@@ -51,6 +51,9 @@ class ProcessDefinitionEventXMLNullTo1Upcaster : AnnotationBasedSingleEventUpcas
 @AnnotatedEventUpcaster("io.holunda.camunda.taskpool.api.task.ProcessDefinitionRegisteredEvent", representationContentType = JSON)
 class ProcessDefinitionEventJSONNullTo1Upcaster : AnnotationBasedSingleEventUpcaster() {
 
+  /**
+   * Declares the serialized type produced by this upcaster.
+   */
   companion object {
     const val RESULT_OBJECT_TYPE = "io.holunda.camunda.taskpool.api.process.definition.ProcessDefinitionRegisteredEvent"
   }
@@ -67,4 +70,36 @@ class ProcessDefinitionEventJSONNullTo1Upcaster : AnnotationBasedSingleEventUpca
       Function.identity()
     )
   }
+}
+
+/**
+ * Upcasts registered process-definition events from revision 1 to revision 2 by adding an empty payload map.
+ */
+@AnnotatedEventUpcaster(ProcessDefinitionRegisteredEvent1To2Upcaster.EVENT_TYPE, "1")
+class ProcessDefinitionRegisteredEvent1To2Upcaster : AnnotationBasedSingleEventUpcaster() {
+
+  /**
+   * Declares the serialized type produced by this upcaster.
+   */
+  companion object {
+    const val EVENT_TYPE = "io.holunda.camunda.taskpool.api.process.definition.ProcessDefinitionRegisteredEvent"
+  }
+
+  /**
+   * Adds an empty Camunda variable map if the historic event has no payload element.
+   *
+   * @param representation historic event representation.
+   * @return revision-two event representation.
+   */
+  override fun doUpcast(representation: IntermediateEventRepresentation): IntermediateEventRepresentation =
+    representation.upcastPayload(SimpleSerializedType(EVENT_TYPE, "2"), Document::class.java) { document ->
+      document.apply {
+        if (selectNodes("//payload").isEmpty()) {
+          rootElement.addElement("payload").apply {
+            addAttribute("class", "org.camunda.bpm.engine.variable.impl.VariableMapImpl")
+            addElement("variables")
+          }
+        }
+      }
+    }
 }

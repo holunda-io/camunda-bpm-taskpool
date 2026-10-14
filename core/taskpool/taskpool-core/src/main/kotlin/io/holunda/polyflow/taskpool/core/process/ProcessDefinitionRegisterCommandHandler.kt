@@ -1,6 +1,9 @@
 package io.holunda.polyflow.taskpool.core.process
 
 import io.holunda.camunda.taskpool.api.process.definition.RegisterProcessDefinitionCommand
+import io.holunda.camunda.taskpool.api.process.definition.SuspendProcessDefinitionCommand
+import io.holunda.camunda.taskpool.api.process.definition.ActivateProcessDefinitionCommand
+import io.holunda.camunda.taskpool.api.process.definition.UnregisterProcessDefinitionCommand
 import org.axonframework.commandhandling.CommandHandler
 import org.axonframework.eventsourcing.EventSourcingRepository
 import org.springframework.context.annotation.Lazy
@@ -22,5 +25,29 @@ class ProcessDefinitionRegisterCommandHandler(
   fun register(command: RegisterProcessDefinitionCommand) {
     eventSourcingRepository.loadOrCreate(command.processDefinitionId) { ProcessDefinitionAggregate() }
       .execute { it.handle(command) }
+  }
+
+  /**
+   * Submits a suspension command to its definition aggregate.
+   */
+  @CommandHandler
+  fun suspend(command: SuspendProcessDefinitionCommand) {
+    eventSourcingRepository.load(command.processDefinitionId).execute { it.handle(command) }
+  }
+
+  /**
+   * Submits an activation command to its definition aggregate.
+   */
+  @CommandHandler
+  fun activate(command: ActivateProcessDefinitionCommand) {
+    eventSourcingRepository.load(command.processDefinitionId).execute { it.handle(command) }
+  }
+
+  /**
+   * Submits an unregistration command to its definition aggregate.
+   */
+  @CommandHandler
+  fun unregister(command: UnregisterProcessDefinitionCommand) {
+    eventSourcingRepository.load(command.processDefinitionId).execute { it.handle(command) }
   }
 }
