@@ -56,11 +56,18 @@ For every registered definition, Polyflow publishes the following information:
 | `formKey`                                                                 | Camunda start form, if present                            |
 | `startableFromTasklist`                                                   | Camunda's startable-in-tasklist setting                   |
 | `candidateStarterUsers`, `candidateStarterGroups`                         | Camunda candidate starter identity links                  |
+| `state`                                                                    | `ACTIVE` when registered; later updated by lifecycle events |
+| `payload`                                                                  | Optional typed metadata supplied by a definition enricher |
 
 Model candidate starters on the BPMN process, for example with Camunda's
 `camunda:candidateStarterUsers` and `camunda:candidateStarterGroups`
 attributes. The collector copies the resulting user and group identifiers; it
 does not resolve group memberships itself.
+
+Registration is only the first stage of a definition's lifecycle. Polyflow also
+publishes suspension, reactivation, and unregistration when a definition or its
+deployment is deleted. Configure property- or custom-based definition metadata and
+read the deletion guarantees in the [process-definition lifecycle guide](process-definition-lifecycle.md).
 
 ### Configure candidate starters in Camunda 7 Modeler
 

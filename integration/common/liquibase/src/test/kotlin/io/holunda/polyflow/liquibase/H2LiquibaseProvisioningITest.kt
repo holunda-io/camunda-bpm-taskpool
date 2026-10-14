@@ -16,19 +16,21 @@ internal class H2LiquibaseProvisioningITest : AbstractLiquibaseTestFixture() {
 
   @Test
   fun `adopts an existing core schema through the application`() {
-    withApplication(CORE_DATABASE, "core") { jdbcTemplate ->
+    val adoptionDatabase = "${CORE_DATABASE}_adoption"
+
+    withApplication(adoptionDatabase, "core") { jdbcTemplate ->
       jdbcTemplate.execute("delete from DATABASECHANGELOG")
     }
 
     SpringApplicationBuilder(LiquibaseTestApplication::class.java)
       .profiles("core")
       .properties(
-        "test.datasource.url=${jdbcUrl(CORE_DATABASE)}",
+        "test.datasource.url=${jdbcUrl(adoptionDatabase)}",
         "polyflow.liquibase.adoption.enabled=true"
       )
       .run()
 
-    DriverManager.getConnection(jdbcUrl(CORE_DATABASE)).use { connection ->
+    DriverManager.getConnection(jdbcUrl(adoptionDatabase)).use { connection ->
       connection.createStatement().use { statement ->
         statement.executeQuery("select count(*) from DATABASECHANGELOG where ID = 'core-baseline-4.6'").use { result ->
           result.next()

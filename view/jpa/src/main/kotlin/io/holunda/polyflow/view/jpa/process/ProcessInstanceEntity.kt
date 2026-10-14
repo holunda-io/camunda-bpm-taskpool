@@ -28,5 +28,11 @@ class ProcessInstanceEntity(
   var sourceReference: SourceReferenceEmbeddable,
   @Column(name = "RUN_STATE", length = 64, nullable = false)
   @Enumerated(EnumType.STRING)
-  var state: ProcessInstanceState
+  var state: ProcessInstanceState,
+  @Lob
+  @Column(name = "PAYLOAD")
+  var payload: String? = null,
+  @Lob
+  @Column(name = "CORRELATIONS")
+  var correlations: String? = null,
 )

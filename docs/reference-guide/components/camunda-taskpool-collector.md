@@ -324,22 +324,54 @@ and the process reaches task `task_approve_request`, the following correlation i
 
 ### Process-instance lifecycle enrichment
 
-The same task enricher configuration also enriches process-instance start, suspend,
-resume, finish, and cancellation commands. When
-`polyflow.integration.collector.camunda.task.enricher.type=process-variables`, the
-collector applies the configured `ProcessVariablesFilter` and
-`ProcessVariablesCorrelator` to the process-instance command before it is sent.
+Process-instance events contain two enriched maps: `payload`, which holds selected
+process variables, and `correlations`, which holds business-data references. The
+collector enriches start, suspend, resume, finish, and cancellation commands before
+they are sent to Taskpool Core. The emitted `ProcessInstanceStartedEvent`,
+`ProcessInstanceSuspendedEvent`, `ProcessInstanceResumedEvent`,
+`ProcessInstanceEndedEvent`, and `ProcessInstanceCancelledEvent` retain those maps.
 
-Only process-level filter rules and global correlation definitions apply to a
-lifecycle event. Task-specific filter rules and task-specific correlations are not
-applicable because the event does not identify a user task. Consequently, one
-process-variable configuration supplies consistent payload selection and business
-data references for both task and process-instance events.
+This feature deliberately reuses task process-variable configuration; there is no
+second filter or correlator configuration for instances. Enable it with the same
+setting used for task enrichment:
 
-For running process instances, variables are read from the runtime service. For
-finished or cancelled instances, the collector falls back to Camunda history after
-the runtime instance has been removed. Configure a Camunda history level that
-retains historic variable instances when a final payload is required on end events.
+```yaml
+polyflow:
+  integration:
+    collector:
+      camunda:
+        process-instance:
+          enabled: true
+        task:
+          enricher:
+            type: process-variables
+```
+
+The configured `ProcessVariablesFilter` selects lifecycle payload. A
+process-definition-specific filter takes precedence over a global filter, exactly
+as it does for task enrichment. Since a lifecycle event has no user-task key, only
+process-level variable rules participate; task-specific rules are ignored.
+
+The configured `ProcessVariablesCorrelator` creates lifecycle correlations from
+the matching process definition's *global* correlation rules. Task-specific
+correlations are intentionally ignored. This gives tasks and lifecycle events a
+consistent process-level business-data identity without pretending that an
+instance event belongs to a particular user task.
+
+For running instances, variables are read from Camunda's runtime service. After a
+finished or cancelled instance is removed from runtime, the collector falls back to
+historic variables. Configure a Camunda history level that retains historic
+variable instances when final payload or correlations are required. If neither
+runtime nor history supplies a variable, the corresponding maps remain empty.
+
+Existing serialized process-instance events are upcast with empty payload and
+correlation maps. Consumers can process old and new event streams with the same
+event types. The View API exposes both maps on `ProcessInstance`; Simple and JPA
+projections persist them, while the Mongo process view currently projects process
+definitions only.
+
+For property syntax, precedence rules, and serializer considerations, see
+[Remote engine process-variable configuration](../configuration/remote-engine-process-variable-configuration.md).
 
 ### Message codes
 
