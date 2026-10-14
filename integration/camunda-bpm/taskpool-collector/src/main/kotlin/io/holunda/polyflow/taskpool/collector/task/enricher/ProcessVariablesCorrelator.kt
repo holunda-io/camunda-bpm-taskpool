@@ -41,6 +41,22 @@ open class ProcessVariablesCorrelator(vararg correlations: ProcessVariableCorrel
   }
 
   /**
+   * Correlates process-level variables for a process-instance lifecycle event.
+   *
+   * Only global correlations apply because lifecycle events are not associated with a task definition.
+   */
+  open fun correlateVariables(processDefinitionKey: ProcessDefinitionKey, variables: VariableMap): CorrelationMap {
+    val result = newCorrelations()
+    val processCorrelations = all[processDefinitionKey] ?: return result
+    processCorrelations.globalCorrelations.forEach {
+      if (variables.containsKey(it.entryIdVariableName)) {
+        result.addCorrelation(it.entryType, variables.getValue(it.entryIdVariableName).toString())
+      }
+    }
+    return result
+  }
+
+  /**
    * Returns variable names required to create correlations for a task.
    *
    * @param processDefinitionKey key of the process definition that owns the task.
@@ -53,4 +69,13 @@ open class ProcessVariablesCorrelator(vararg correlations: ProcessVariableCorrel
       .plus(processCorrelations.correlations[taskDefinitionKey].orEmpty())
       .mapTo(mutableSetOf()) { it.entryIdVariableName }
   }
+
+  /**
+   * Returns process-variable names required by global correlations for a lifecycle event.
+   *
+   * @param processDefinitionKey key of the process definition that owns the instance.
+   * @return names of the process variables referenced by global correlation definitions.
+   */
+  fun variableNamesFor(processDefinitionKey: ProcessDefinitionKey): Set<VariableName> =
+    all[processDefinitionKey]?.globalCorrelations?.mapTo(mutableSetOf()) { it.entryIdVariableName } ?: emptySet()
 }

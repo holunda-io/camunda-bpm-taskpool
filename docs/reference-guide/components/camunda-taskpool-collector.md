@@ -27,6 +27,7 @@ Spring eventing.
 - Creation of task engine commands
 - Collection of task-assignment information
 - Enrichment of task engine commands with process variables
+- Enrichment of process-instance lifecycle commands with process variables
 - Attachment of correlation information to task engine commands
 - Transmission of commands to Axon command bus
 - Provision of properties for a process application
@@ -320,6 +321,25 @@ and the process reaches task `task_approve_request`, the following correlation i
   { "entry-type": "approvalRequest", "entryId": "4711" }
 ]
 ```
+
+### Process-instance lifecycle enrichment
+
+The same task enricher configuration also enriches process-instance start, suspend,
+resume, finish, and cancellation commands. When
+`polyflow.integration.collector.camunda.task.enricher.type=process-variables`, the
+collector applies the configured `ProcessVariablesFilter` and
+`ProcessVariablesCorrelator` to the process-instance command before it is sent.
+
+Only process-level filter rules and global correlation definitions apply to a
+lifecycle event. Task-specific filter rules and task-specific correlations are not
+applicable because the event does not identify a user task. Consequently, one
+process-variable configuration supplies consistent payload selection and business
+data references for both task and process-instance events.
+
+For running process instances, variables are read from the runtime service. For
+finished or cancelled instances, the collector falls back to Camunda history after
+the runtime instance has been removed. Configure a Camunda history level that
+retains historic variable instances when a final payload is required on end events.
 
 ### Message codes
 

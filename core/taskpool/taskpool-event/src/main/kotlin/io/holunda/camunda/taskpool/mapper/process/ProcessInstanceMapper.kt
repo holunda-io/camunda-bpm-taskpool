@@ -13,7 +13,9 @@ fun StartProcessInstanceCommand.startedEvent() = ProcessInstanceStartedEvent(
   businessKey = this.businessKey,
   startUserId = this.startUserId,
   startActivityId = this.startActivityId,
-  superInstanceId = this.superInstanceId
+  superInstanceId = this.superInstanceId,
+  payload = this.payload,
+  correlations = this.correlations,
 )
 
 /**
@@ -24,7 +26,9 @@ fun FinishProcessInstanceCommand.finishedEvent() = ProcessInstanceEndedEvent(
   sourceReference = this.sourceReference,
   businessKey = this.businessKey,
   endActivityId = this.endActivityId,
-  superInstanceId = this.superInstanceId
+  superInstanceId = this.superInstanceId,
+  payload = this.payload,
+  correlations = this.correlations,
 )
 
 /**
@@ -33,6 +37,9 @@ fun FinishProcessInstanceCommand.finishedEvent() = ProcessInstanceEndedEvent(
 fun ResumeProcessInstanceCommand.resumedEvent() = ProcessInstanceResumedEvent(
   processInstanceId = this.processInstanceId,
   sourceReference = this.sourceReference,
+  businessKey = this.businessKey,
+  payload = this.payload,
+  correlations = this.correlations,
 )
 
 /**
@@ -41,6 +48,9 @@ fun ResumeProcessInstanceCommand.resumedEvent() = ProcessInstanceResumedEvent(
 fun SuspendProcessInstanceCommand.suspendedEvent() = ProcessInstanceSuspendedEvent(
   processInstanceId = this.processInstanceId,
   sourceReference = this.sourceReference,
+  businessKey = this.businessKey,
+  payload = this.payload,
+  correlations = this.correlations,
 )
 
 /**
@@ -52,7 +62,9 @@ fun CancelProcessInstanceCommand.cancelledEvent() = ProcessInstanceCancelledEven
   businessKey = this.businessKey,
   endActivityId = this.endActivityId,
   superInstanceId = this.superInstanceId,
-  deleteReason = this.deleteReason
+  deleteReason = this.deleteReason,
+  payload = this.payload,
+  correlations = this.correlations,
 )
 
 /**
