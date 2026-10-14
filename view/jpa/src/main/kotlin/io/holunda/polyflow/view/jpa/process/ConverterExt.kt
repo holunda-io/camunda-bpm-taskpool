@@ -1,18 +1,15 @@
 package io.holunda.polyflow.view.jpa.process
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import io.holunda.camunda.taskpool.api.process.definition.ProcessDefinitionRegisteredEvent
-import io.holunda.camunda.taskpool.api.process.instance.ProcessInstanceCancelledEvent
-import io.holunda.camunda.taskpool.api.process.instance.ProcessInstanceEndedEvent
-import io.holunda.camunda.taskpool.api.process.instance.ProcessInstanceStartedEvent
+import io.holunda.camunda.taskpool.api.process.instance.*
 import io.holunda.camunda.taskpool.api.task.CaseReference
 import io.holunda.camunda.taskpool.api.task.GenericReference
 import io.holunda.camunda.taskpool.api.task.ProcessReference
 import io.holunda.camunda.taskpool.api.task.SourceReference
-import io.holunda.polyflow.view.ProcessDefinition
-import io.holunda.polyflow.view.ProcessDefinitionState
-import com.fasterxml.jackson.databind.ObjectMapper
 import io.holunda.camunda.variable.serializer.toPayloadJson
 import io.holunda.camunda.variable.serializer.toPayloadVariableMap
+import io.holunda.polyflow.view.ProcessDefinition
 import io.holunda.polyflow.view.ProcessInstance
 import io.holunda.polyflow.view.ProcessInstanceState
 import io.holunda.polyflow.view.jpa.auth.AuthorizationPrincipal
@@ -35,10 +32,10 @@ fun ProcessDefinitionRegisteredEvent.toEntity(objectMapper: ObjectMapper) = Proc
   startFormKey = this.formKey,
   startableFromTasklist = this.startableFromTasklist,
   authorizedStarterPrincipals =
-  this.candidateStarterGroups.map { name -> group(name) }
-    .plus(this.candidateStarterUsers.map { name -> user(name) })
-    .map { it.toString() }
-    .toMutableSet(),
+    this.candidateStarterGroups.map { name -> group(name) }
+      .plus(this.candidateStarterUsers.map { name -> user(name) })
+      .map { it.toString() }
+      .toMutableSet(),
   payload = this.payload.toPayloadJson(objectMapper),
 )
 
@@ -166,6 +163,7 @@ fun SourceReferenceEmbeddable.toSourceReference() = when (this.sourceType) {
     applicationName = this.applicationName,
     tenantId = this.tenantId
   )
+
   "PROCESS" -> ProcessReference(
     instanceId = this.instanceId,
     executionId = this.executionId,
@@ -175,6 +173,7 @@ fun SourceReferenceEmbeddable.toSourceReference() = when (this.sourceType) {
     applicationName = this.applicationName,
     tenantId = this.tenantId
   )
+
   "GENERIC" -> GenericReference(
     instanceId = this.instanceId,
     executionId = this.executionId,
@@ -184,5 +183,6 @@ fun SourceReferenceEmbeddable.toSourceReference() = when (this.sourceType) {
     applicationName = this.applicationName,
     tenantId = this.tenantId
   )
+
   else -> throw IllegalArgumentException("Unexpected source reference of type ${this.sourceType}")
 }
