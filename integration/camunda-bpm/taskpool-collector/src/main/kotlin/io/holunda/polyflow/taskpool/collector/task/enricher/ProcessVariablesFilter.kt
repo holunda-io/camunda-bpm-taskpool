@@ -30,6 +30,21 @@ open class ProcessVariablesFilter(
   }
 
   /**
+   * Filters variables for a process-instance lifecycle event.
+   *
+   * Task-specific filters are intentionally ignored because a lifecycle event is not associated with a user task.
+   *
+   * @param processDefinitionKey key of the process definition that owns the instance.
+   * @param variables variables available from the process engine.
+   * @return variables that pass every applicable process-level filter.
+   */
+  fun filterVariables(processDefinitionKey: ProcessDefinitionKey, variables: VariableMap): VariableMap {
+    val variableFilters = filtersFor(processDefinitionKey).filterIsInstance<ProcessVariableFilter>()
+    if (variableFilters.isEmpty()) return variables
+    return variables.filterKeys { variableName -> variableFilters.all { it.filter("__not_relevant", variableName) } }
+  }
+
+  /**
    * Checks whether a variable is included by the filters applicable to a process definition.
    *
    * @param processDefinitionKey key of the process definition to evaluate.
@@ -50,6 +65,15 @@ open class ProcessVariablesFilter(
   */
   fun hasRestrictionsFor(processDefinitionKey: ProcessDefinitionKey, taskDefinitionKey: TaskDefinitionKey): Boolean =
     filtersFor(processDefinitionKey).any { it.restricts(taskDefinitionKey) }
+
+  /**
+   * Returns whether an applicable process-level filter can exclude variables for a lifecycle event.
+   *
+   * @param processDefinitionKey key of the process definition to evaluate.
+   * @return `true` when process-level filters can exclude a variable.
+   */
+  fun hasRestrictionsFor(processDefinitionKey: ProcessDefinitionKey): Boolean =
+    filtersFor(processDefinitionKey).filterIsInstance<ProcessVariableFilter>().any { it.restricts("__not_relevant") }
 
   private fun VariableFilter.restricts(taskDefinitionKey: TaskDefinitionKey): Boolean =
     when (this) {

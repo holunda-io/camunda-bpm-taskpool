@@ -73,7 +73,7 @@ class SimpleProcessInstanceService(
   fun on(event: ProcessInstanceSuspendedEvent, metaData: MetaData) {
     val processInstance = processInstances[event.processInstanceId]
     if (processInstance != null) {
-      processInstances[event.processInstanceId] = processInstance.copy(state = ProcessInstanceState.SUSPENDED)
+      processInstances[event.processInstanceId] = processInstance.copy(state = ProcessInstanceState.SUSPENDED, payload = event.payload, correlations = event.correlations)
       revisionSupport.updateRevision(event.processInstanceId, RevisionValue.fromMetaData(metaData))
       logger.debug { "SIMPLE-VIEW-43: Process instance suspended $event." }
       updateProcessInstanceQuery(event.processInstanceId)
@@ -87,7 +87,7 @@ class SimpleProcessInstanceService(
   fun on(event: ProcessInstanceResumedEvent, metaData: MetaData) {
     val processInstance = processInstances[event.processInstanceId]
     if (processInstance != null) {
-      processInstances[event.processInstanceId] = processInstance.copy(state = ProcessInstanceState.RUNNING)
+      processInstances[event.processInstanceId] = processInstance.copy(state = ProcessInstanceState.RUNNING, payload = event.payload, correlations = event.correlations)
       revisionSupport.updateRevision(event.processInstanceId, RevisionValue.fromMetaData(metaData))
       logger.debug { "SIMPLE-VIEW-44: Process instance resumed $event." }
       updateProcessInstanceQuery(event.processInstanceId)

@@ -11,7 +11,8 @@ private val logger = KotlinLogging.logger {}
  * Processes commands sent via Spring Eventing and delegates them to taskpool command sender.
  */
 class ProcessDefinitionProcessor(
-  private val processDefinitionCommandSender: ProcessDefinitionCommandSender
+  private val processDefinitionCommandSender: ProcessDefinitionCommandSender,
+  private val enricher: ProcessDefinitionCommandEnricher,
 ) {
 
   /**
@@ -20,9 +21,10 @@ class ProcessDefinitionProcessor(
    */
   @EventListener
   fun process(command: ProcessDefinitionCommand) {
+    val enrichedCommand = enricher.enrich(command)
     if (logger.isTraceEnabled()) {
-      logger.trace { "COLLECTOR-005: Sending process definition command: $command" }
+      logger.trace { "COLLECTOR-005: Sending process definition command: $enrichedCommand" }
     }
-    processDefinitionCommandSender.send(command)
+    processDefinitionCommandSender.send(enrichedCommand)
   }
 }

@@ -1,6 +1,7 @@
 package io.holunda.polyflow.view.jpa.process
 
 import jakarta.persistence.*
+import io.holunda.polyflow.view.ProcessDefinitionState
 
 /**
  * Entity to store process definitions.
@@ -35,5 +36,11 @@ class ProcessDefinitionEntity(
     ]
   )
   @Column(name = "AUTHORIZED_STARTER_PRINCIPAL", nullable = false)
-  var authorizedStarterPrincipals: MutableSet<String> = mutableSetOf()
+  var authorizedStarterPrincipals: MutableSet<String> = mutableSetOf(),
+  @Enumerated(EnumType.STRING)
+  @Column(name = "STATE", nullable = false)
+  var state: ProcessDefinitionState = ProcessDefinitionState.ACTIVE,
+  @Lob
+  @Column(name = "PAYLOAD")
+  var payload: String? = null,
 )

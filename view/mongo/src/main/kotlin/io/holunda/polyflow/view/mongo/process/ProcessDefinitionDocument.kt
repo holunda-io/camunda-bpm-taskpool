@@ -1,6 +1,8 @@
 package io.holunda.polyflow.view.mongo.process
 
 import io.holunda.polyflow.view.ProcessDefinition
+import io.holunda.polyflow.view.ProcessDefinitionState
+import org.camunda.bpm.engine.variable.Variables
 import io.holunda.polyflow.view.mongo.process.ProcessDefinitionDocument.Companion.COLLECTION
 import org.springframework.data.annotation.Id
 import org.springframework.data.annotation.TypeAlias
@@ -24,7 +26,9 @@ data class ProcessDefinitionDocument(
   val formKey: String? = null,
   val startableFromTasklist: Boolean = true,
   val candidateStarterUsers: Set<String> = setOf(),
-  val candidateStarterGroups: Set<String> = setOf()
+  val candidateStarterGroups: Set<String> = setOf(),
+  val state: ProcessDefinitionState = ProcessDefinitionState.ACTIVE,
+  val payload: Map<String, Any> = emptyMap(),
 ) {
 
   /**
@@ -50,7 +54,9 @@ data class ProcessDefinitionDocument(
       formKey = this.formKey,
       startableFromTasklist = this.startableFromTasklist,
       candidateStarterUsers = this.candidateStarterUsers,
-      candidateStarterGroups = this.candidateStarterGroups
+      candidateStarterGroups = this.candidateStarterGroups,
+      state = this.state,
+      payload = Variables.fromMap(this.payload),
     )
 
 }

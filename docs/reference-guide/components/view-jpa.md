@@ -142,3 +142,16 @@ Create these tables and views through the Polyflow Liquibase changelog. Add
 `polyflow-view-changelog.xml` from the application's central master
 changelog. It includes the required event-processing tables but not optional
 aggregate or saga persistence; see [Persistence configuration](../configuration/persistence.md).
+
+### Process lifecycle persistence
+
+Liquibase 4.7 evolves existing process tables without modifying the 4.6 baseline.
+`PLF_PROC_DEF` receives `STATE` and serialized `PAYLOAD` columns; existing rows
+are migrated to `ACTIVE`. `PLF_PROC_INSTANCE` receives serialized `PAYLOAD` and
+`CORRELATIONS` columns. A `NULL` serialized value is read as an empty map, so
+existing rows remain valid without storing artificial `{}` values.
+
+Use the database-specific 4.7 Liquibase scripts through the normal master
+changelog rather than executing them manually. This preserves Liquibase checksums
+and applies identical migration semantics to H2, PostgreSQL, MariaDB, SQL Server,
+and Oracle.

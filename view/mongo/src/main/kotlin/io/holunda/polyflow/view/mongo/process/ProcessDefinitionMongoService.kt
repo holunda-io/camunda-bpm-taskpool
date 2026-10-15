@@ -2,6 +2,10 @@ package io.holunda.polyflow.view.mongo.process
 
 import io.github.oshai.kotlinlogging.KotlinLogging
 import io.holunda.camunda.taskpool.api.process.definition.ProcessDefinitionRegisteredEvent
+import io.holunda.camunda.taskpool.api.process.definition.ProcessDefinitionSuspendedEvent
+import io.holunda.camunda.taskpool.api.process.definition.ProcessDefinitionActivatedEvent
+import io.holunda.camunda.taskpool.api.process.definition.ProcessDefinitionUnregisteredEvent
+import io.holunda.polyflow.view.ProcessDefinitionState
 import io.holunda.polyflow.view.ProcessDefinition
 import io.holunda.polyflow.view.query.process.ProcessDefinitionsStartableByUserQuery
 import io.holunda.polyflow.view.query.process.ReactiveProcessDefinitionApi
@@ -43,7 +47,8 @@ class ProcessDefinitionMongoService(
       candidateStarterGroups = event.candidateStarterGroups,
       candidateStarterUsers = event.candidateStarterUsers,
       formKey = event.formKey,
-      startableFromTasklist = event.startableFromTasklist
+      startableFromTasklist = event.startableFromTasklist,
+      payload = event.payload.toMap(),
     )
 
     processDefinitionRepository.save(entry)
@@ -55,6 +60,28 @@ class ProcessDefinitionMongoService(
         )
       }
       .block()
+  }
+
+  /**
+   * Marks the definition as suspended.
+   */
+  @EventHandler
+  fun on(event: ProcessDefinitionSuspendedEvent) = updateState(event.processDefinitionId, ProcessDefinitionState.SUSPENDED)
+
+  /**
+   * Marks the definition as active.
+   */
+  @EventHandler
+  fun on(event: ProcessDefinitionActivatedEvent) = updateState(event.processDefinitionId, ProcessDefinitionState.ACTIVE)
+
+  /**
+   * Deletes the unregistered definition document.
+   */
+  @EventHandler
+  fun on(event: ProcessDefinitionUnregisteredEvent) { processDefinitionRepository.deleteById(event.processDefinitionId).block() }
+
+  private fun updateState(id: String, state: ProcessDefinitionState) {
+    processDefinitionRepository.findById(id).map { it.copy(state = state) }.flatMap(processDefinitionRepository::save).block()
   }
 
   @QueryHandler

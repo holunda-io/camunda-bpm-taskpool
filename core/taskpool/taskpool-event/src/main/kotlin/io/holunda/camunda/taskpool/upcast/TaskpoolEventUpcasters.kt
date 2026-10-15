@@ -2,6 +2,12 @@ package io.holunda.camunda.taskpool.upcast
 
 import io.holunda.camunda.taskpool.upcast.definition.ProcessDefinitionEventJSONNullTo1Upcaster
 import io.holunda.camunda.taskpool.upcast.definition.ProcessDefinitionEventXMLNullTo1Upcaster
+import io.holunda.camunda.taskpool.upcast.definition.ProcessDefinitionRegisteredEvent1To2Upcaster
+import io.holunda.camunda.taskpool.upcast.process.ProcessInstanceCancelledEvent1To2Upcaster
+import io.holunda.camunda.taskpool.upcast.process.ProcessInstanceEndedEvent2To3Upcaster
+import io.holunda.camunda.taskpool.upcast.process.ProcessInstanceResumedEvent1To2Upcaster
+import io.holunda.camunda.taskpool.upcast.process.ProcessInstanceStartedEvent1To2Upcaster
+import io.holunda.camunda.taskpool.upcast.process.ProcessInstanceSuspendedEvent1To2Upcaster
 import io.holunda.camunda.taskpool.upcast.task.*
 import org.axonframework.serialization.upcasting.event.EventUpcaster
 import org.axonframework.serialization.upcasting.event.EventUpcasterChain
@@ -16,6 +22,12 @@ import org.axonframework.serialization.upcasting.event.EventUpcasterChain
 fun taskpoolEventUpcasters(): List<EventUpcaster> = listOf(
   ProcessDefinitionEventJSONNullTo1Upcaster(),
   ProcessDefinitionEventXMLNullTo1Upcaster(),
+  ProcessDefinitionRegisteredEvent1To2Upcaster(),
+  ProcessInstanceStartedEvent1To2Upcaster(),
+  ProcessInstanceEndedEvent2To3Upcaster(),
+  ProcessInstanceCancelledEvent1To2Upcaster(),
+  ProcessInstanceSuspendedEvent1To2Upcaster(),
+  ProcessInstanceResumedEvent1To2Upcaster(),
   TaskCreatedEngineEvent3To4Upcaster(),
   TaskCompletedEngineEvent3To4Upcaster(),
   TaskDeletedEngineEvent3To4Upcaster(),
