@@ -1000,6 +1000,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#process-instance-lifecycle-enrichment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Process-instance lifecycle enrichment
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#message-codes" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1056,6 +1067,34 @@
     
   
     Publishing Startable Process Definitions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="process-definition-lifecycle.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Process-definition lifecycle collection
   
 
     
@@ -2626,6 +2665,7 @@ Spring eventing.</p>
 <li>Creation of task engine commands</li>
 <li>Collection of task-assignment information</li>
 <li>Enrichment of task engine commands with process variables</li>
+<li>Enrichment of process-instance lifecycle commands with process variables</li>
 <li>Attachment of correlation information to task engine commands</li>
 <li>Transmission of commands to Axon command bus</li>
 <li>Provision of properties for a process application</li>
@@ -2875,6 +2915,47 @@ and the process reaches task <code>task_approve_request</code>, the following co
 <span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="nt">"entry-type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"approvalRequest"</span><span class="p">,</span><span class="w"> </span><span class="nt">"entryId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"4711"</span><span class="w"> </span><span class="p">}</span>
 <span class="p">]</span>
 </code></pre></div>
+<h3 id="process-instance-lifecycle-enrichment">Process-instance lifecycle enrichment<a class="headerlink" href="#process-instance-lifecycle-enrichment" title="Permanent link">#</a></h3>
+<p>Process-instance events contain two enriched maps: <code>payload</code>, which holds selected
+process variables, and <code>correlations</code>, which holds business-data references. The
+collector enriches start, suspend, resume, finish, and cancellation commands before
+they are sent to Taskpool Core. The emitted <code>ProcessInstanceStartedEvent</code>,
+<code>ProcessInstanceSuspendedEvent</code>, <code>ProcessInstanceResumedEvent</code>,
+<code>ProcessInstanceEndedEvent</code>, and <code>ProcessInstanceCancelledEvent</code> retain those maps.</p>
+<p>This feature deliberately reuses task process-variable configuration; there is no
+second filter or correlator configuration for instances. Enable it with the same
+setting used for task enrichment:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">polyflow</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">integration</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">collector</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">camunda</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">process-instance</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">        </span><span class="nt">task</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">enricher</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">process-variables</span>
+</code></pre></div>
+<p>The configured <code>ProcessVariablesFilter</code> selects lifecycle payload. A
+process-definition-specific filter takes precedence over a global filter, exactly
+as it does for task enrichment. Since a lifecycle event has no user-task key, only
+process-level variable rules participate; task-specific rules are ignored.</p>
+<p>The configured <code>ProcessVariablesCorrelator</code> creates lifecycle correlations from
+the matching process definition's <em>global</em> correlation rules. Task-specific
+correlations are intentionally ignored. This gives tasks and lifecycle events a
+consistent process-level business-data identity without pretending that an
+instance event belongs to a particular user task.</p>
+<p>For running instances, variables are read from Camunda's runtime service. After a
+finished or cancelled instance is removed from runtime, the collector falls back to
+historic variables. Configure a Camunda history level that retains historic
+variable instances when final payload or correlations are required. If neither
+runtime nor history supplies a variable, the corresponding maps remain empty.</p>
+<p>Existing serialized process-instance events are upcast with empty payload and
+correlation maps. Consumers can process old and new event streams with the same
+event types. The View API exposes both maps on <code>ProcessInstance</code>; Simple and JPA
+projections persist them, while the Mongo process view currently projects process
+definitions only.</p>
+<p>For property syntax, precedence rules, and serializer considerations, see
+<a href="../configuration/remote-engine-process-variable-configuration.html">Remote engine process-variable configuration</a>.</p>
 <h3 id="message-codes">Message codes<a class="headerlink" href="#message-codes" title="Permanent link">#</a></h3>
 <blockquote>
 <p>Please note that the logger root hierarchy is <code>io.holunda.polyflow.taskpool.collector</code></p>
@@ -3023,7 +3104,7 @@ a Spring bean. To use this task-import facility, activate it in the application 
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="September 25, 2026 14:55:06 UTC">September 25, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="October 15, 2026 15:27:25 UTC">October 15, 2026</span>
   </span>
 
     
