@@ -11,7 +11,8 @@ private val logger = KotlinLogging.logger {}
  * Default process instance processor.
  */
 class ProcessInstanceProcessor(
-  private val processInstanceCommandSender: ProcessInstanceCommandSender
+  private val processInstanceCommandSender: ProcessInstanceCommandSender,
+  private val enricher: ProcessInstanceVariablesEnricher,
 ) {
 
   /**
@@ -20,9 +21,10 @@ class ProcessInstanceProcessor(
    */
   @EventListener
   fun process(command: ProcessInstanceCommand) {
+    val enrichedCommand = enricher.enrich(command)
     if (logger.isTraceEnabled()) {
-      logger.trace { "COLLECTOR-006: Sending process instance command: $command" }
+      logger.trace { "COLLECTOR-006: Sending process instance command: $enrichedCommand" }
     }
-    processInstanceCommandSender.send(command)
+    processInstanceCommandSender.send(enrichedCommand)
   }
 }

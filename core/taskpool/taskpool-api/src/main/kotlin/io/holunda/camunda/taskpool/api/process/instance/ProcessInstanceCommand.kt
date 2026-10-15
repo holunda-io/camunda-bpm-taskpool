@@ -1,102 +1,228 @@
 package io.holunda.camunda.taskpool.api.process.instance
 
+import io.holunda.camunda.taskpool.api.business.CorrelationMap
+import io.holunda.camunda.taskpool.api.business.WithCorrelations
+import io.holunda.camunda.taskpool.api.business.newCorrelations
 import io.holunda.camunda.taskpool.api.task.SourceReference
+import io.holunda.camunda.taskpool.api.task.WithPayload
 import org.axonframework.modelling.command.TargetAggregateIdentifier
+import org.axonframework.serialization.Revision
+import org.camunda.bpm.engine.variable.VariableMap
+import org.camunda.bpm.engine.variable.Variables
 
 /**
- * Command related to process instance.
+ * A command describing a lifecycle change of a process instance.
  */
-interface ProcessInstanceCommand {
+interface ProcessInstanceCommand : WithPayload, WithCorrelations {
+  /**
+   * Identifies the Camunda source from which this lifecycle change originated.
+   */
   val sourceReference: SourceReference
+
+  /**
+   * Identifies the process-instance aggregate receiving this command.
+   */
   val processInstanceId: String
+
+  /**
+   * Whether the collector has deliberately completed payload and correlation enrichment.
+   */
+  var enriched: Boolean
 }
 
 /**
- * Informs about a process instance started in the engine.
+ * Records that a process instance started in the engine.
  */
+@Revision("2")
 data class StartProcessInstanceCommand(
-
-  @TargetAggregateIdentifier
-  override val processInstanceId: String,
+  /**
+   * Identifies the process-instance aggregate.
+   */
+  @TargetAggregateIdentifier override val processInstanceId: String,
+  /**
+   * Identifies the engine source of the process instance.
+   */
   override val sourceReference: SourceReference,
-
-  /** the business key of the process instance  */
-  val businessKey: String? = null,
-
-  /** the id of the user that started the process instance  */
+  /**
+   * Business key supplied when the process instance was started, if any.
+   */
+  override val businessKey: String? = null,
+  /**
+   * Identifies the user that started the process instance, if supplied by Camunda.
+   */
   val startUserId: String? = null,
-
-  /** the id of the super case instance  */
+  /**
+   * Identifies the calling super process or case instance, if any.
+   */
   val superInstanceId: String? = null,
-
-  /** id of the activity which started the process instance  */
-  val startActivityId: String? = null
-
+  /**
+   * Identifies the activity that started this process instance, if available.
+   */
+  val startActivityId: String? = null,
+  /**
+   * Process variables selected for publication with this lifecycle change.
+   */
+  override val payload: VariableMap = Variables.createVariables(),
+  /**
+   * Business-data references derived from the selected process variables.
+   */
+  override val correlations: CorrelationMap = newCorrelations(),
+  /**
+   * Whether enrichment has been performed, including deliberately empty enrichment.
+   */
+  override var enriched: Boolean = false,
 ) : ProcessInstanceCommand
 
 /**
- * Informs about a process instance ended in the engine.
+ * Base type for commands that end a process instance.
  */
 abstract class EndProcessInstanceCommand : ProcessInstanceCommand
 
 /**
- * Informs about a process instance finished in the engine.
+ * Records that a process instance finished normally or was internally terminated.
  */
+@Revision("2")
 data class FinishProcessInstanceCommand(
-  @TargetAggregateIdentifier
-  override val processInstanceId: String,
+  /**
+   * Identifies the process-instance aggregate.
+   */
+  @TargetAggregateIdentifier override val processInstanceId: String,
+  /**
+   * Identifies the engine source of the process instance.
+   */
   override val sourceReference: SourceReference,
-
-  /** the business key of the process instance  */
-  val businessKey: String? = null,
-
-  /** the id of the super case instance  */
+  /**
+   * Business key associated with the process instance, if any.
+   */
+  override val businessKey: String? = null,
+  /**
+   * Identifies the calling super process or case instance, if any.
+   */
   val superInstanceId: String? = null,
-
-  /** id of the activity which ended the process instance */
+  /**
+   * Identifies the activity at which the process instance ended, if available.
+   */
   val endActivityId: String?,
-): EndProcessInstanceCommand()
+  /**
+   * Process variables selected for publication with this lifecycle change.
+   */
+  override val payload: VariableMap = Variables.createVariables(),
+  /**
+   * Business-data references derived from the selected process variables.
+   */
+  override val correlations: CorrelationMap = newCorrelations(),
+  /**
+   * Whether enrichment has been performed, including deliberately empty enrichment.
+   */
+  override var enriched: Boolean = false,
+) : EndProcessInstanceCommand()
 
 /**
- * Informs about a process instance cancelled by the user in the engine.
+ * Records that a user or external actor cancelled a process instance.
  */
+@Revision("2")
 data class CancelProcessInstanceCommand(
-  @TargetAggregateIdentifier
-  override val processInstanceId: String,
+  /**
+   * Identifies the process-instance aggregate.
+   */
+  @TargetAggregateIdentifier override val processInstanceId: String,
+  /**
+   * Identifies the engine source of the process instance.
+   */
   override val sourceReference: SourceReference,
-
-  /** the business key of the process instance  */
-  val businessKey: String? = null,
-
-  /** the id of the super case instance  */
+  /**
+   * Business key associated with the process instance, if any.
+   */
+  override val businessKey: String? = null,
+  /**
+   * Identifies the calling super process or case instance, if any.
+   */
   val superInstanceId: String? = null,
-
-  /** id of the activity which ended the process instance */
+  /**
+   * Identifies the activity at which the process instance ended, if available.
+   */
   val endActivityId: String?,
-
-  /** the reason why this process instance was cancelled (deleted) */
-  val deleteReason: String?
-): EndProcessInstanceCommand()
+  /**
+   * Camunda's deletion reason for the cancellation, if supplied.
+   */
+  val deleteReason: String?,
+  /**
+   * Process variables selected for publication with this lifecycle change.
+   */
+  override val payload: VariableMap = Variables.createVariables(),
+  /**
+   * Business-data references derived from the selected process variables.
+   */
+  override val correlations: CorrelationMap = newCorrelations(),
+  /**
+   * Whether enrichment has been performed, including deliberately empty enrichment.
+   */
+  override var enriched: Boolean = false,
+) : EndProcessInstanceCommand()
 
 /**
- * Informs about a process instance updated in the engine.
+ * Base type for commands that change the availability of a process instance.
  */
 abstract class UpdateProcessInstanceCommand : ProcessInstanceCommand
 
 /**
- * Informs about a process instance suspended in the engine.
+ * Records that a process instance was suspended.
  */
+@Revision("2")
 data class SuspendProcessInstanceCommand(
-  @TargetAggregateIdentifier
-  override val processInstanceId: String,
+  /**
+   * Identifies the process-instance aggregate.
+   */
+  @TargetAggregateIdentifier override val processInstanceId: String,
+  /**
+   * Identifies the engine source of the process instance.
+   */
   override val sourceReference: SourceReference,
+  /**
+   * Business key associated with the process instance, if any.
+   */
+  override val businessKey: String? = null,
+  /**
+   * Process variables selected for publication with this lifecycle change.
+   */
+  override val payload: VariableMap = Variables.createVariables(),
+  /**
+   * Business-data references derived from the selected process variables.
+   */
+  override val correlations: CorrelationMap = newCorrelations(),
+  /**
+   * Whether enrichment has been performed, including deliberately empty enrichment.
+   */
+  override var enriched: Boolean = false,
 ) : UpdateProcessInstanceCommand()
 
 /**
- * Informs about a process instance resumed in the engine.
+ * Records that a suspended process instance was resumed.
  */
+@Revision("2")
 data class ResumeProcessInstanceCommand(
-  @TargetAggregateIdentifier
-  override val processInstanceId: String,
+  /**
+   * Identifies the process-instance aggregate.
+   */
+  @TargetAggregateIdentifier override val processInstanceId: String,
+  /**
+   * Identifies the engine source of the process instance.
+   */
   override val sourceReference: SourceReference,
+  /**
+   * Business key associated with the process instance, if any.
+   */
+  override val businessKey: String? = null,
+  /**
+   * Process variables selected for publication with this lifecycle change.
+   */
+  override val payload: VariableMap = Variables.createVariables(),
+  /**
+   * Business-data references derived from the selected process variables.
+   */
+  override val correlations: CorrelationMap = newCorrelations(),
+  /**
+   * Whether enrichment has been performed, including deliberately empty enrichment.
+   */
+  override var enriched: Boolean = false,
 ) : UpdateProcessInstanceCommand()

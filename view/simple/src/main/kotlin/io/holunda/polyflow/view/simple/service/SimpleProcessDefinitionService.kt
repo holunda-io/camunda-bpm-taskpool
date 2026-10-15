@@ -2,7 +2,11 @@ package io.holunda.polyflow.view.simple.service
 
 import io.github.oshai.kotlinlogging.KotlinLogging
 import io.holunda.camunda.taskpool.api.process.definition.ProcessDefinitionRegisteredEvent
+import io.holunda.camunda.taskpool.api.process.definition.ProcessDefinitionSuspendedEvent
+import io.holunda.camunda.taskpool.api.process.definition.ProcessDefinitionActivatedEvent
+import io.holunda.camunda.taskpool.api.process.definition.ProcessDefinitionUnregisteredEvent
 import io.holunda.polyflow.view.ProcessDefinition
+import io.holunda.polyflow.view.ProcessDefinitionState
 import io.holunda.polyflow.view.query.process.ProcessDefinitionApi
 import io.holunda.polyflow.view.query.process.ProcessDefinitionsStartableByUserQuery
 import org.axonframework.config.ProcessingGroup
@@ -45,7 +49,8 @@ class SimpleProcessDefinitionService(
       candidateStarterGroups = event.candidateStarterGroups,
       candidateStarterUsers = event.candidateStarterUsers,
       formKey = event.formKey,
-      startableFromTasklist = event.startableFromTasklist
+      startableFromTasklist = event.startableFromTasklist,
+      payload = event.payload,
     )
 
     processDefinitions
@@ -53,6 +58,35 @@ class SimpleProcessDefinitionService(
       .add(entry)
 
     queryUpdateEmitter.emit(ProcessDefinitionsStartableByUserQuery::class.java, { query -> query.applyFilter(entry) }, entry)
+  }
+
+  /**
+   * Marks the affected definition as suspended.
+   */
+  @EventHandler
+  fun on(event: ProcessDefinitionSuspendedEvent) = updateState(event.processDefinitionId, ProcessDefinitionState.SUSPENDED)
+
+  /**
+   * Marks the affected definition as active.
+   */
+  @EventHandler
+  fun on(event: ProcessDefinitionActivatedEvent) = updateState(event.processDefinitionId, ProcessDefinitionState.ACTIVE)
+
+  /**
+   * Removes an unregistered definition from the projection.
+   */
+  @EventHandler
+  fun on(event: ProcessDefinitionUnregisteredEvent) {
+    processDefinitions.values.forEach { definitions -> definitions.removeIf { it.processDefinitionId == event.processDefinitionId } }
+  }
+
+  private fun updateState(processDefinitionId: String, state: ProcessDefinitionState) {
+    processDefinitions.values.forEach { definitions ->
+      definitions.firstOrNull { it.processDefinitionId == processDefinitionId }?.let { definition ->
+        definitions.remove(definition)
+        definitions.add(definition.copy(state = state))
+      }
+    }
   }
 
   @QueryHandler

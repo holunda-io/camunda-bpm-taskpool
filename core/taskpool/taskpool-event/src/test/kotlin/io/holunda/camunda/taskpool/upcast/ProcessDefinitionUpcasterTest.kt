@@ -5,6 +5,7 @@ import com.thoughtworks.xstream.XStream
 import io.holunda.camunda.taskpool.api.process.definition.ProcessDefinitionRegisteredEvent
 import io.holunda.camunda.taskpool.upcast.definition.ProcessDefinitionEventJSONNullTo1Upcaster
 import io.holunda.camunda.taskpool.upcast.definition.ProcessDefinitionEventXMLNullTo1Upcaster
+import io.holunda.camunda.taskpool.upcast.definition.ProcessDefinitionRegisteredEvent1To2Upcaster
 import org.assertj.core.api.Assertions.assertThat
 import org.axonframework.eventhandling.EventData
 import org.axonframework.messaging.MetaData
@@ -112,6 +113,24 @@ class ProcessDefinitionUpcasterTest {
 
     assertThat(event).isNotNull
 
+  }
+
+  @Test
+  fun shouldAddEmptyPayloadToRevisionOneEvent() {
+    val document = SAXReader().read(StringReader("""
+      <io.holunda.camunda.taskpool.api.process.definition.ProcessDefinitionRegisteredEvent>
+        <processDefinitionId>id</processDefinitionId>
+      </io.holunda.camunda.taskpool.api.process.definition.ProcessDefinitionRegisteredEvent>
+    """.trimIndent()))
+    val serializer = XStreamSerializer.builder().xStream(XStream().apply { allowTypeHierarchy(Any::class.java) }).build()
+    val entry: EventData<Document> = SimpleEventData(
+      metaData = SimpleSerializedObject(DocumentHelper.createDocument(), Document::class.java, SimpleSerializedType(MetaData::class.java.name, null)),
+      payload = SimpleSerializedObject(document, Document::class.java, SimpleSerializedType(ProcessDefinitionRegisteredEvent1To2Upcaster.EVENT_TYPE, "1"))
+    )
+    val result = EventUpcasterChain(ProcessDefinitionRegisteredEvent1To2Upcaster()).upcast(Stream.of(InitialEventRepresentation(entry, serializer))).toList()
+
+    assertThat((result.single().data.data as Document).selectNodes("//payload/variables")).hasSize(1)
+    assertThat(result.single().type.revision).isEqualTo("2")
   }
 
 }

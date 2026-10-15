@@ -181,12 +181,18 @@ Process definition collection allows for storage of startable process definition
 This information is in particular interesting, if you are building a process-starter component and want to react
 dynamically on processes deployed in your landscape.
 
+The document also contains `state` (`ACTIVE` or `SUSPENDED`) and an optional typed
+`payload` map. Suspension and activation update the stored document; unregistration
+removes it. A process-starter should only present `ACTIVE` definitions. The Mongo
+view does not currently project process-instance lifecycle payloads or correlations.
+
 
 ```json
 {
     "_id" : "process_approve_request:1:91f2ff26-a64b-11e9-b117-3e6d125b91e2",
     "processDefinitionKey" : "process_approve_request",
     "processDefinitionVersion" : 1,
+    "state" : "ACTIVE",
     "applicationName" : "example-process-approval",
     "processName" : "Request Approval",
     "processDescription" : "This is a wonderful process.",
@@ -196,7 +202,11 @@ dynamically on processes deployed in your landscape.
     "candidateStarterGroups" : [
         "muppetshow",
         "avengers"
-    ]
+    ],
+    "payload" : {
+        "domain" : "approvals",
+        "visible" : true
+    }
 }
 ```
 

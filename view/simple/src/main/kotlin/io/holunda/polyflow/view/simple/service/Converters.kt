@@ -91,7 +91,9 @@ fun ProcessInstanceStartedEvent.toProcessInstance(): ProcessInstance = ProcessIn
   superInstanceId = this.superInstanceId,
   startActivityId = this.startActivityId,
   startUserId = this.startUserId,
-  state = ProcessInstanceState.RUNNING
+  state = ProcessInstanceState.RUNNING,
+  payload = this.payload,
+  correlations = this.correlations,
 )
 
 /**
@@ -106,7 +108,9 @@ fun ProcessInstanceEndedEvent.toProcessInstance(processInstance: ProcessInstance
   endActivityId = this.endActivityId,
   startActivityId = processInstance?.startActivityId,
   startUserId = processInstance?.startUserId,
-  state = ProcessInstanceState.FINISHED
+  state = ProcessInstanceState.FINISHED,
+  payload = this.payload,
+  correlations = this.correlations,
 )
 
 /**
@@ -122,7 +126,9 @@ fun ProcessInstanceCancelledEvent.toProcessInstance(processInstance: ProcessInst
   deleteReason = this.deleteReason,
   startActivityId = processInstance?.startActivityId,
   startUserId = processInstance?.startUserId,
-  state = ProcessInstanceState.CANCELLED
+  state = ProcessInstanceState.CANCELLED,
+  payload = this.payload,
+  correlations = this.correlations,
 )
 
 /**

@@ -41,6 +41,11 @@ The Task API lets you query tasks managed by the task pool.
 ### Process Definition API
 
 The Process Definition API lets you query process definitions managed by the task pool.
+`ProcessDefinition.state` identifies whether a definition is `ACTIVE` or
+`SUSPENDED`; `ProcessDefinition.payload` contains optional typed metadata supplied
+by process-definition enrichment. An unregistered definition is removed from a
+view and is no longer returned. Process-starter clients should only offer active
+definitions.
 
 | Query Type                              | Description                                                | Payload types           | In-Memory | JPA   | Mongo DB |
 |-----------------------------------------|------------------------------------------------------------|-------------------------|-----------|-------|----------|
@@ -50,6 +55,11 @@ The Process Definition API lets you query process definitions managed by the tas
 ### Process Instance API
 
 The Process Instance API lets you query process instances managed by the task pool.
+`ProcessInstance.payload` contains selected process variables captured at the
+latest lifecycle event. `ProcessInstance.correlations` contains corresponding
+process-level business-data references. Both maps are empty for historic events
+created before enrichment and may be empty when no applicable filter, correlator,
+runtime variable, or historic variable exists.
 
 | Query Type                    | Description                                                             | Payload types         | In-Memory | JPA   | Mongo DB |
 |-------------------------------|-------------------------------------------------------------------------|-----------------------|-----------|-------|----------|

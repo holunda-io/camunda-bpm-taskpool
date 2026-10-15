@@ -2,6 +2,11 @@ package io.holunda.polyflow.view.jpa
 
 import io.github.oshai.kotlinlogging.KotlinLogging
 import io.holunda.camunda.taskpool.api.process.definition.ProcessDefinitionRegisteredEvent
+import io.holunda.camunda.taskpool.api.process.definition.ProcessDefinitionSuspendedEvent
+import io.holunda.camunda.taskpool.api.process.definition.ProcessDefinitionActivatedEvent
+import io.holunda.camunda.taskpool.api.process.definition.ProcessDefinitionUnregisteredEvent
+import com.fasterxml.jackson.databind.ObjectMapper
+import io.holunda.polyflow.view.ProcessDefinitionState
 import io.holunda.polyflow.view.ProcessDefinition
 import io.holunda.polyflow.view.jpa.JpaPolyflowViewProcessDefinitionService.Companion.PROCESSING_GROUP
 import io.holunda.polyflow.view.jpa.auth.AuthorizationPrincipal
@@ -31,7 +36,8 @@ private val logger = KotlinLogging.logger {}
 class JpaPolyflowViewProcessDefinitionService(
   val processDefinitionRepository: ProcessDefinitionRepository,
   val queryUpdateEmitter: QueryUpdateEmitter,
-  val polyflowJpaViewProperties: PolyflowJpaViewProperties
+  val polyflowJpaViewProperties: PolyflowJpaViewProperties,
+  val objectMapper: ObjectMapper,
 ) : ProcessDefinitionApi {
 
   /**
@@ -44,7 +50,7 @@ class JpaPolyflowViewProcessDefinitionService(
   @QueryHandler
   override fun query(query: ProcessDefinitionsStartableByUserQuery): List<ProcessDefinition> {
     val authorizedPrincipals: Set<AuthorizationPrincipal> = setOf(user(query.user.username)).plus(query.user.groups.map { group(it) })
-    return processDefinitionRepository.findAll(isStarterAuthorizedFor(authorizedPrincipals)).map { it.toProcessDefinition() }
+    return processDefinitionRepository.findAll(isStarterAuthorizedFor(authorizedPrincipals)).map { it.toProcessDefinition(objectMapper) }
   }
 
   /**
@@ -56,13 +62,38 @@ class JpaPolyflowViewProcessDefinitionService(
     if (isDisabledByProperty()) return
 
     val entity = processDefinitionRepository.save(
-      event.toEntity()
+      event.toEntity(objectMapper)
     )
     emitProcessDefinitionUpdate(entity)
   }
 
+  /**
+   * Stores the suspended lifecycle state.
+   */
+  @EventHandler
+  fun on(event: ProcessDefinitionSuspendedEvent) = setState(event.processDefinitionId, ProcessDefinitionState.SUSPENDED)
+
+  /**
+   * Stores the active lifecycle state.
+   */
+  @EventHandler
+  fun on(event: ProcessDefinitionActivatedEvent) = setState(event.processDefinitionId, ProcessDefinitionState.ACTIVE)
+
+  /**
+   * Deletes the unregistered definition projection.
+   */
+  @EventHandler
+  fun on(event: ProcessDefinitionUnregisteredEvent) { processDefinitionRepository.deleteById(event.processDefinitionId) }
+
+  private fun setState(id: String, state: ProcessDefinitionState) {
+    processDefinitionRepository.findById(id).ifPresent { entity ->
+      entity.state = state
+      emitProcessDefinitionUpdate(processDefinitionRepository.save(entity))
+    }
+  }
+
   private fun emitProcessDefinitionUpdate(entity: ProcessDefinitionEntity) {
-    queryUpdateEmitter.updateProcessDefinitionQuery(entity.toProcessDefinition())
+    queryUpdateEmitter.updateProcessDefinitionQuery(entity.toProcessDefinition(objectMapper))
   }
 
   private fun isDisabledByProperty(): Boolean {

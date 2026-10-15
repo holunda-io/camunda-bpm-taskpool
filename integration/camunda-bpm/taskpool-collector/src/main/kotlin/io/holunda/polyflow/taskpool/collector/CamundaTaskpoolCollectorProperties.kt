@@ -234,7 +234,63 @@ data class CamundaProcessDefinitionCollectorProperties(
   /**
    * Disable by default.
    */
-  val enabled: Boolean = false
+  val enabled: Boolean = false,
+
+  /**
+   * Configuration of additional process-definition payload attributes.
+   */
+  @NestedConfigurationProperty
+  val enricher: ProcessDefinitionEnricherProperties = ProcessDefinitionEnricherProperties(),
+)
+
+/**
+ * Properties for enriching process-definition commands from configured attributes.
+ */
+data class ProcessDefinitionEnricherProperties(
+  /**
+   * Selects the process-definition enricher implementation.
+   */
+  val type: ProcessDefinitionEnricherType = ProcessDefinitionEnricherType.no,
+
+  /**
+   * Attribute sets applied globally or to a specific process-definition key.
+   */
+  val attributes: List<ProcessDefinitionAttributeProperties> = emptyList(),
+)
+
+/**
+ * Available process-definition enricher implementations.
+ */
+enum class ProcessDefinitionEnricherType {
+  /**
+   * Does not enrich process-definition commands.
+   */
+  no,
+
+  /**
+   * Adds attributes defined in application properties.
+   */
+  property,
+
+  /**
+   * Expects an application-provided [io.holunda.polyflow.taskpool.collector.process.definition.ProcessDefinitionCommandEnricher] bean.
+   */
+  custom,
+}
+
+/**
+ * An attribute set scoped globally or to one process-definition key.
+ */
+data class ProcessDefinitionAttributeProperties(
+  /**
+   * Process-definition key to scope this set to, or null to apply globally.
+   */
+  val processDefinitionKey: String? = null,
+
+  /**
+   * Typed YAML values to add to the command payload.
+   */
+  val values: Map<String, Any> = emptyMap(),
 )
 
 

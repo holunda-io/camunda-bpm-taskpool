@@ -1,6 +1,7 @@
 package io.holunda.polyflow.view.jpa
 
 import io.github.oshai.kotlinlogging.KotlinLogging
+import com.fasterxml.jackson.databind.ObjectMapper
 import io.holixon.axon.gateway.query.QueryResponseMessageResponseType
 import io.holunda.camunda.taskpool.api.process.instance.*
 import io.holunda.polyflow.view.jpa.JpaPolyflowViewProcessInstanceService.Companion.PROCESSING_GROUP
@@ -27,7 +28,8 @@ private val logger = KotlinLogging.logger {}
 class JpaPolyflowViewProcessInstanceService(
   val processInstanceRepository: ProcessInstanceRepository,
   val queryUpdateEmitter: QueryUpdateEmitter,
-  val polyflowJpaViewProperties: PolyflowJpaViewProperties
+  val polyflowJpaViewProperties: PolyflowJpaViewProperties,
+  val objectMapper: ObjectMapper,
 ) : ProcessInstanceApi {
 
   /**
@@ -41,7 +43,7 @@ class JpaPolyflowViewProcessInstanceService(
   override fun query(query: ProcessInstancesByStateQuery): QueryResponseMessage<ProcessInstanceQueryResult> {
     return QueryResponseMessageResponseType.asQueryResponseMessage(
       payload = ProcessInstanceQueryResult(
-        elements = processInstanceRepository.findAll(hasStates(query.states)).map { it.toProcessInstance() }
+        elements = processInstanceRepository.findAll(hasStates(query.states)).map { it.toProcessInstance(objectMapper) }
       )
     )
   }
@@ -55,7 +57,7 @@ class JpaPolyflowViewProcessInstanceService(
     if (isDisabledByProperty()) return
 
     val entity = processInstanceRepository.save(
-      event.toEntity()
+      event.toEntity(objectMapper)
     )
     emitProcessInstanceUpdate(entity)
   }
@@ -70,7 +72,7 @@ class JpaPolyflowViewProcessInstanceService(
 
     processInstanceRepository.findById(event.processInstanceId).ifPresent {
       val entity = processInstanceRepository.save(
-        it.cancelInstance(event)
+        it.cancelInstance(event, objectMapper)
       )
       emitProcessInstanceUpdate(entity)
     }
@@ -86,7 +88,7 @@ class JpaPolyflowViewProcessInstanceService(
 
     processInstanceRepository.findById(event.processInstanceId).ifPresent {
       val entity = processInstanceRepository.save(
-        it.suspendInstance()
+        it.suspendInstance(event, objectMapper)
       )
       emitProcessInstanceUpdate(entity)
     }
@@ -102,7 +104,7 @@ class JpaPolyflowViewProcessInstanceService(
 
     processInstanceRepository.findById(event.processInstanceId).ifPresent {
       val entity = processInstanceRepository.save(
-        it.resumeInstance()
+        it.resumeInstance(event, objectMapper)
       )
       emitProcessInstanceUpdate(entity)
     }
@@ -118,14 +120,14 @@ class JpaPolyflowViewProcessInstanceService(
 
     processInstanceRepository.findById(event.processInstanceId).ifPresent {
       val entity = processInstanceRepository.save(
-        it.finishInstance(event)
+        it.finishInstance(event, objectMapper)
       )
       emitProcessInstanceUpdate(entity)
     }
   }
 
   private fun emitProcessInstanceUpdate(entity: ProcessInstanceEntity) {
-    queryUpdateEmitter.updateProcessInstanceQuery(entity.toProcessInstance())
+    queryUpdateEmitter.updateProcessInstanceQuery(entity.toProcessInstance(objectMapper))
   }
 
   private fun isDisabledByProperty(): Boolean {
