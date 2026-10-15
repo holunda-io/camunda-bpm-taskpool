@@ -29,8 +29,8 @@ class ProcessDefinitionLifecycleCommandInterceptor(
    * @param commandContext active Camunda command context.
    * @return command result.
    */
-  override fun <T : Any> execute(command: Command<T>): T {
-    val commandContext = requireNotNull(Context.getCommandContext()) { "A lifecycle command requires a Camunda command context." }
+  override fun <T> execute(command: Command<T>): T {
+    val commandContext = Context.getCommandContext() ?: return next.execute(command)
     val lifecycleCommands = commandsFor(command, commandContext)
     val result = next.execute(command)
     if (lifecycleCommands.isNotEmpty()) {
