@@ -8,6 +8,13 @@
 ![Logo](docs/img/Positive@2x.png)
 ## Polyflow Taskpool and Datapool
 
+This is an experimental branch, as a POC to remove Camunda as a dependency from the collector and using [Process Engine API](https://github.com/bpm-crafters/process-engine-api) instead.
+This gives the using application the freedom to choose any supported process engine. Of course this comes with some limitations. Currently only simple task sender is supported and there is no support for process definitions at all. 
+The resulting version has been testes with [process-engine-adapter-camunda-7](https://github.com/bpm-crafters/process-engine-adapters-camunda-7) 2026.06.01 (embedded) and
+[process-engine-adapter-camunda-platform-c8](https://github.com/bpm-crafters/process-engine-adapters-camunda-8) 2025.05.2 (due to spring version compatibility issues) and some limitations (e.g. canidates is a string containing an array (might already be fixed in a newer version of the c8 adapter)).
+
+
+
 > A component library for building enterprise-wide process platforms with multiple process engines like Camunda Platform.
 
 In the last years, we built different process applications on behalf of the customer several times. It turned out that some issues occurred every
