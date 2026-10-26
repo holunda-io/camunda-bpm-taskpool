@@ -414,7 +414,7 @@
 
         <plugin>
           <artifactId>maven-surefire-plugin</artifactId>
-          <version>3.6.0</version>
+          <version>3.6.1</version>
           <configuration>
             <useSystemClassLoader>false</useSystemClassLoader>
             <runOrder>random</runOrder>
@@ -434,7 +434,7 @@
 
         <plugin>
           <artifactId>maven-failsafe-plugin</artifactId>
-          <version>3.6.0</version>
+          <version>3.6.1</version>
         </plugin>
 
         <!-- javadoc for kotlin -->
