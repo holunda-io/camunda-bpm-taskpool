@@ -1,0 +1,6 @@
+#
+# I-Test properties justifying that no properties are needed to start Spring Boot with Camunda Task Pool collector.
+#
+spring:
+  application:
+    name: Foo
